@@ -1,0 +1,2 @@
+GetSystemClock GetSystemClock#include <system.c>
+sprintf sprintf#include <stdlib.c>
