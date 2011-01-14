@@ -9,6 +9,7 @@
 	#include "const.h"
 	#include "typedef.h"
 	#include "delay.c"
+	#include "digitalw.c"
 
 	// UBW32 built-in leds
     #define LED4        4//PORTEbits.RE3	// green led
@@ -42,10 +43,10 @@ u8 SwitchDebounce(u8 pin, u16 ms)
 
 	while(1)
 	{
-		state1 = (pin == 1 ? 1 : 0);		// Met l'état de la pin dans state1
-		Delayms(ms);						// anti-rebond 50 milisecondes
-		state2 = (pin == 1 ? 1 : 0);		// Met l'état de la pin dans state2
-		if(state2 == state1) return state1;	// Si l'etat est stable pendant 50 ms
+		state1 = (digitalread(pin) == 1 ? 1 : 0);		// Met l'état de la pin dans state1
+		Delayms(ms);									// anti-rebond 50 milisecondes
+		state2 = (digitalread(pin) == 1 ? 1 : 0);		// Met l'état de la pin dans state2
+		if(state2 == state1) return state1;				// Si l'etat est stable pendant 50 ms
 	}
 }
 

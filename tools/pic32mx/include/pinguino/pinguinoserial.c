@@ -24,12 +24,13 @@
 #ifndef __PINGUINOSERIAL_C
 	#define __PINGUINOSERIAL_C
 
+#include "stdlib.c"
 #include "serial.c"
 #include "typedef.h"
 
 void serial1init(u32 speed)
 {
-	SerialConfigure(	UART1, UART_ENABLE,	UART_RX_TX_ENABLED,	speed);
+	SerialConfigure(UART1, UART_ENABLE,	UART_RX_TX_ENABLED,	speed);
 }
 
 void serial1printf(char *fmt, ...)		
@@ -37,7 +38,7 @@ void serial1printf(char *fmt, ...)
 	va_list args;
 
 	va_start(args, fmt);
-	printf(SerialUART1WriteChar, fmt, args);
+	pprintf(SerialUART1WriteChar, fmt, args);
 	va_end(args);
 }
 

@@ -1,9 +1,10 @@
 /**	----------------------------------------------------------------------------
-	---------- mymacro.h
+	---------- macro.h
+	---------- rblanchot@gmail.com
 	--------------------------------------------------------------------------**/
 
-#ifndef __MYMACRO
-	#define __MYMACRO
+#ifndef __MACRO_H
+	#define __MACRO_H
 
 	/// ASM
 
@@ -11,16 +12,17 @@
 	#define clrwdt()		{_asm clrwdt _endasm;}
 	#define reset()			{_asm reset _endasm;}
 	#define sleep()			{OSCCONbits.IDLEN = 0;\
-					_asm sleep _endasm;}
+							_asm sleep _endasm;}
 
 	/// C
 
-	#define NoEndLoop	while(1)
+	#define NoEndLoop		while(1)
 
 	/// BYTES
 
-	#define high8(x)		(unsigned char) (x >> 8)
-	#define low8(x)			(unsigned char) (x & 0xFF)
+	#define high8(x)			(unsigned char) (x >> 8)
+	#define low8(x)				(unsigned char) (x & 0xFF)
+	#define make16(low,high)	(low | (high << 8))
 
 	/// BITWISE OPERATION
 

@@ -1114,8 +1114,12 @@ class Pinguino(wx.Frame):
         for line in lines:
             # count only data record
             if line[7:9:1] == "00":
-                byte = "0x" + line[1:3:1]
-                codesize = codesize + int(byte, 0)
+                if self.board_menu.IsChecked(self.ID_P8X):
+                    # filter records below 0x2000 (by RASM)
+                    if int(line[3:7:1],16) >= int("2000", 16): 
+                        codesize = codesize + int(line[1:3:1], 16)
+                if self.board_menu.IsChecked(self.ID_P32X):
+                    codesize = codesize + int(line[1:3:1], 16)
         fichier.close()
         self.displaymsg("\n" + self.lang.ugettext("code size: ") + str(codesize) + " / " + str(totalspace) + self.lang.ugettext(" bytes") + " (" + str(100*codesize/totalspace) + "% used)", 0)
 

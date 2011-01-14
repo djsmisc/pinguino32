@@ -23,7 +23,7 @@ void setup()
 	//	find all sensors on the bus and get their Rom Code
 	//
 	
-	//DS18B20.Find(ONEWIREBUS);
+	//DS18B20.find(ONEWIREBUS);
 }
 
 void loop()
@@ -31,9 +31,9 @@ void loop()
 	TEMPERATURE t;
 	u8 temp[4];
 	// if you want to read temperature from sensor #1 with max. resolution :
-	// if (myDS18B20Read(ONEWIREBUS, 1, RES12BIT, &t))
+	// if (DS18B20.read(ONEWIREBUS, 1, RES12BIT, &t))
 	// if you have only one sensor on the bus, just skip rom detection
-	if (DS18B20.Read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
+	if (DS18B20.read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
 	{
 		// send temperature on usb bus
 		temp[0] = t.sign;			// t.sign is unsigned  char (1 byte)

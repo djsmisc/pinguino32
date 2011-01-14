@@ -4,7 +4,7 @@
 	PURPOSE:		alternative printf and sprintf functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 nov. 2010
-	LAST RELEASE:	15 nov. 2010
+	LAST RELEASE:	13 janv. 2011
 	----------------------------------------------------------------------------
 	TODO : floating point support + sprintf + vsprintf ?
 	----------------------------------------------------------------------------
@@ -29,9 +29,9 @@
 #include <stdarg.h>
 
 typedef void (*stdout) (int);	// type of :	void foo(int x)
-static stdout putchar;			// then : 		void putchar(int x)
+static stdout pputchar;			// then : 		void pputchar(int x)
 
-static void printchar(char **str, int c)
+static void pprintchar(char **str, int c)
 {
 	if (str)
 	{
@@ -40,15 +40,15 @@ static void printchar(char **str, int c)
 	}
 	else
 	{
-		//(void)putchar(c);
-		putchar(c);
+		//(void)pputchar(c);
+		pputchar(c);
 	}
 }
 
 #define PAD_RIGHT 1
 #define PAD_ZERO 2
 
-static int prints(char **out, const char *string, int width, int pad)
+static int pprints(char **out, const char *string, int width, int pad)
 {
 	register int pc = 0;
 	int padchar = ' ';
@@ -69,18 +69,18 @@ static int prints(char **out, const char *string, int width, int pad)
 	{
 		for ( ; width > 0; --width)
 		{
-			printchar(out, padchar);
+			pprintchar(out, padchar);
 			++pc;
 		}
 	}
 	for ( ; *string ; ++string)
 	{
-		printchar(out, *string);
+		pprintchar(out, *string);
 		++pc;
 	}
 	for ( ; width > 0; --width)
 	{
-		printchar(out, padchar);
+		pprintchar(out, padchar);
 		++pc;
 	}
 
@@ -90,7 +90,7 @@ static int prints(char **out, const char *string, int width, int pad)
 /* the following should be enough for 32 bit int */
 #define PRINT_BUF_LEN 12
 
-static int printi(char **out, int i, int b, int sg, int width, int pad, int letbase)
+static int pprinti(char **out, int i, int b, int sg, int width, int pad, int letbase)
 {
 	char print_buf[PRINT_BUF_LEN];
 	char *s;
@@ -101,7 +101,7 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 	{
 		print_buf[0] = '0';
 		print_buf[1] = '\0';
-		return prints(out, print_buf, width, pad);
+		return pprints(out, print_buf, width, pad);
 	}
 
 	if (sg && b == 10 && i < 0)
@@ -126,7 +126,7 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 	{
 		if (width && (pad & PAD_ZERO))
 		{
-			printchar(out, '-');
+			pprintchar(out, '-');
 			++pc;
 			--width;
 		}
@@ -136,10 +136,10 @@ static int printi(char **out, int i, int b, int sg, int width, int pad, int letb
 		}
 	}
 
-	return pc + prints(out, s, width, pad);
+	return pc + pprints(out, s, width, pad);
 }
 
-static int print(char **out, const char *format, va_list args)
+static int pprint(char **out, const char *format, va_list args)
 {
 	int width, pad;
 	register int pc = 0;
@@ -175,37 +175,37 @@ static int print(char **out, const char *format, va_list args)
 				//char *s = (char *)va_arg(args, int);
 				char *s = va_arg(args, char*);
 				//s = va_arg(args, char*);
-				pc += prints(out, s?s:"(null)", width, pad);
+				pc += pprints(out, s?s:"(null)", width, pad);
 				continue;
 			}
 			if (*format == 'd')
 			{
-				pc += printi(out, va_arg(args, int), 10, 1, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, int), 10, 1, width, pad, 'a');
 				continue;
 			}
 			if (*format == 'x')
 			{
-				pc += printi(out, va_arg(args, int), 16, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, int), 16, 0, width, pad, 'a');
 				continue;
 			}
 			if (*format == 'X')
 			{
-				pc += printi(out, va_arg(args, int), 16, 0, width, pad, 'A');
+				pc += pprinti(out, va_arg(args, int), 16, 0, width, pad, 'A');
 				continue;
 			}
 			if (*format == 'b')
 			{
-				pc += printi(out, va_arg(args, int), 2, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, int), 2, 0, width, pad, 'a');
 				continue;
 			}
 			if (*format == 'o')
 			{
-				pc += printi(out, va_arg(args, int), 8, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, int), 8, 0, width, pad, 'a');
 				continue;
 			}
 			if (*format == 'u')
 			{
-				pc += printi(out, va_arg(args, int), 10, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, int), 10, 0, width, pad, 'a');
 				continue;
 			}
 			if (*format == 'c')
@@ -214,19 +214,19 @@ static int print(char **out, const char *format, va_list args)
 				scr[0] = (char)va_arg(args, int);
 				//scr[0] = va_arg(args, char);
 				scr[1] = '\0';
-				pc += prints(out, scr, width, pad);
+				pc += pprints(out, scr, width, pad);
 				continue;
 			}
 			if (*format == 'f')
 			{
-				pc += prints(out, "not yet implemented\0", width, pad);
+				pc += pprints(out, "not yet implemented\0", width, pad);
 				continue;
 			}
 		}
 		else
 		{
 		abort:
-			printchar(out, *format);
+			pprintchar(out, *format);
 			++pc;
 		}
 	}
@@ -235,23 +235,23 @@ static int print(char **out, const char *format, va_list args)
 	return pc;
 }
 
-//int printf(stdout func, const char *format, ...)
-int printf(stdout func, const char *format, va_list args)
+//int pprintf(stdout func, const char *format, ...)
+int pprintf(stdout func, const char *format, va_list args)
 {
 	//va_list args;
     
-	putchar = func;
+	pputchar = func;
 	//va_start( args, format );
-    return print(0, format, args);
+    return pprint(0, format, args);
 }
 
 //int sprintf(char *out, const char *format, ...)
-int sprintf(char *out, const char *format, va_list args)
+int psprintf(char *out, const char *format, va_list args)
 {
 	//va_list args;
 
 	//va_start(args, format);
-	return print(&out, format, args);
+	return pprint(&out, format, args);
 }
 
 #endif

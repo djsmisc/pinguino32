@@ -368,8 +368,8 @@ void SerialPrintf(u8 port, char *fmt, ...)
 	va_start(args, fmt);
 	switch (port)
 	{
-		case UART1:	printf(SerialUART1WriteChar, fmt, args); break;
-		case UART2: printf(SerialUART2WriteChar, fmt, args); break;
+		case UART1:	pprintf(SerialUART1WriteChar, fmt, args); break;
+		case UART2: pprintf(SerialUART2WriteChar, fmt, args); break;
 	}
 	va_end(args);
 }
