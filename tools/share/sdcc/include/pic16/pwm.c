@@ -29,6 +29,7 @@
 	#include <pic18fregs.h>
 	#include <digitalw.c>
 	#include <system.c>
+	#include <interrupt.c>
 
 	#define CCP1 12
 	#define CCP2 11
@@ -47,17 +48,17 @@
 	----------------------------------------------------------------------------
 	let's say p = TMR2 Prescale Value
 	PWM Period 	= [(PR2) + 1] * 4 * TOSC * p
-	[(PR2) + 1] = PWM Period / (4 * TOSC * p)
-	PWM Period 	= 1 / PWM Frequency
-	[(PR2) + 1] = (1/PWM Frequency) / (4 * 1/FOSC * p)
-	[(PR2) + 1] = FOSC / (4 * PWM Frequency * p)
-	[(PR2) + 1] = FOSC / PWM Frequency / 4 / p
+	so [(PR2) + 1] = PWM Period / (4 * TOSC * p)
+	but PWM Period 	= 1 / PWM Frequency
+	so [(PR2) + 1] = (1/PWM Frequency) / (4 * 1/FOSC * p)
+	and [(PR2) + 1] = FOSC / (4 * PWM Frequency * p)
+	then [(PR2) + 1] = FOSC / PWM Frequency / 4 / p
 	--------------------------------------------------------------------------*/
 
 	void PWM_set_frequency(u32 freq)
 	{
 		// PR2+1 calculation
-		_pr2_plus1 = GetSystemClock() / 1000000 / 4 / freq;	// FOSC / (4 * PWM Frequency)
+		_pr2_plus1 = GetSystemClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
 
 		// Timer2 prescaler calculation
 		// PR2 max value is 255, so PR2+1 max value is 256
@@ -135,6 +136,7 @@
 		}
 
 		// TMR2 configuration
+		intUsed[INT_TMR2] = INT_USED;		// tell interrupt.c we use TMR2
 		//PIR1bits.TMR2IF = 0;				// reset this flag for the next test
 		T2CON = _t2con;						// Timer2 prescaler
 		T2CONbits.TMR2ON = ON;				// enable Timer2

@@ -11,7 +11,7 @@
 	--------------------------------------------------------------------------*/
 
 #define LINE_OUT 12			// Buzzer or speaker must be connected
-						// to pin 11 (RC1/CCP2) or 12 (RC2/CCP1) 
+									// to pin 11 (RC1/CCP2) or 12 (RC2/CCP1) 
 
 // partitions
 
@@ -29,7 +29,7 @@ const u8 gamme[] =	{
 const u8 jinglebells[] =	{
 	E,R1_2,E,R1_2,E,R1,
 	E,R1_2,E,R1_2,E,R1,
-	E,R1_2,G,R1_2,C,R1_2,D,R1_2,E,R1,
+	E,R1_2,G,R1_2,C,R1_2,D,R1_2,E,R2,
 	F,R1_2,F,R1_2,F,R1_2,F,R1,
 	E,R1_2,E,R1_2,E,R1,
 	D,R1_2,D,R1_2,E,R1_2,D,R1,

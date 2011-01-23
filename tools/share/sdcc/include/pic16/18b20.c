@@ -410,11 +410,21 @@
 	---------- CRC
 	----------------------------------------------------------------------------
 	* Arguments:
-	* Description:
+	* Description:	Update the CRC for transmitted and received data using
+					the CCITT 16bit algorithm (X^16 + X^12 + X^5 + 1).
 	--------------------------------------------------------------------------*/
 
 	u8 DS18B20_crc(u8 x)
 	{
+/*		TODO:
+		unsigned char ser_data;
+		static unsigned int crc;
+		crc = (unsigned char)(crc >> 8) | (crc << 8);
+		crc ^= ser_data;
+		crc ^= (unsigned char)(crc & 0xff) >> 4;
+		crc ^= (crc << 8) << 4;
+		crc ^= ((crc & 0xff) << 4) << 1;
+*/
 		dowcrc = dscrc_table[dowcrc^x];
 		return dowcrc;
 	}
