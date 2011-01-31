@@ -1,12 +1,7 @@
-#ifndef __STDIO_H
-#include <stdio.h> // for size_t
-#endif
+//#include <stdio.h> // for size_t
+//#include <stdlib.h>
 
-#ifndef __STDLIB_H__
-#include <stdlib.h>
-#endif
-
-#pragma library c
+//#pragma library c
 
 #define DEC 10
 #define HEX 16
@@ -55,25 +50,25 @@
 #define LCD_5x10DOTS 0x04
 #define LCD_5x8DOTS 0x00
 
-uint8_t _rs_pin = 8; // LOW: command.  HIGH: character.
-uint8_t _rw_pin = -1; // LOW: write to LCD.  HIGH: read from LCD.
-uint8_t _enable_pin = 9; // activated by a HIGH pulse.
-uint8_t _data_pins[8];
+u8 _rs_pin = 8; // LOW: command.  HIGH: character.
+u8 _rw_pin = -1; // LOW: write to LCD.  HIGH: read from LCD.
+u8 _enable_pin = 9; // activated by a HIGH pulse.
+u8 _data_pins[8];
 
-uint8_t _displayfunction;
-uint8_t _displaycontrol;
-uint8_t _displaymode;
+u8 _displayfunction;
+u8 _displaycontrol;
+u8 _displaymode;
 
-uint8_t _initialized;
+u8 _initialized;
 
-uint8_t _numlines,_currline;
+u8 _numlines,_currline;
 
-void lcd(uint8_t rs, uint8_t enable, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3, 
-			uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
-void init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t enable, 
-			uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-			uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
-void begin(uint8_t lines, uint8_t dotsize);
+void lcd(u8 rs, u8 enable, u8 d0, u8 d1, u8 d2, u8 d3, 
+			u8 d4, u8 d5, u8 d6, u8 d7);
+void init(u8 fourbitmode, u8 rs, u8 rw, u8 enable, 
+			u8 d0, u8 d1, u8 d2, u8 d3,
+			u8 d4, u8 d5, u8 d6, u8 d7);
+void begin(u8 lines, u8 dotsize);
 void noAutoscroll(void);
 void autoscroll(void);
 void rightToLeft(void);
@@ -88,13 +83,13 @@ void display();
 void noDisplay();
 void clear();
 void home();
-void printNumber(unsigned long n, uint8_t base);
-void printFloat(float number, uint8_t digits);
+void printNumber(u16 n, u8 base);
+void printFloat(float number, u8 digits);
 void lcdPrint(char *string);
-void setCursor(uint8_t col, uint8_t row);
+void setCursor(u8 col, u8 row);
 void command(uchar value);
 void write(uchar value);
-void send(uint8_t value, uint8_t mode);
-void write8bits(uint8_t value);
-void write4bits(uint8_t value);
+void send(u8 value, u8 mode);
+void write8bits(u8 value);
+void write4bits(u8 value);
 void pulseEnable(void);

@@ -26,9 +26,15 @@
 #ifndef __SPI_C
 	#define __SPI_C
 
+	#include <digitalw.c>
 	#include <stdarg.h>
 	#include <stdlib.c>
 
+	// pins
+	#define SPI_DATA_IN 					0		// RB0 = SDI
+	#define SPI_CLOCK						1		// RB1 = SCK
+	#define SPI_DATA_OUT					9		// RC7 = SDO
+	#define SPI_SLAVE_SELECT				17		// RA5 = SS
 	// bus mode
 	#define SPI_MODE_00						0
 	#define SPI_MODE_01						1
@@ -42,13 +48,13 @@
 	#define SPI_MASTER_MODE_CLOCK_FOSC16	0b0001
 	#define SPI_MASTER_MODE_CLOCK_FOSC4		0b0000
 	// smp phase
-	#define SPI_SLEW_RATE_ENABLE		0
-	#define SPI_SLEW_RATE_DISABLE		128
-	#define SPI_STANDARD_SPEED_MODE		0
-	#define SPI_HIGH_SPEED_MODE			128
+	#define SPI_SLEW_RATE_ENABLE			0
+	#define SPI_SLEW_RATE_DISABLE			128
+	#define SPI_STANDARD_SPEED_MODE			0
+	#define SPI_HIGH_SPEED_MODE				128
 
 /*	----------------------------------------------------------------------------
-	ex. OpenSPI(SPI_MASTER_MODE_CLOCK_FOSC4, SPI_MODE_00, SPI_HIGH_SPEED_MODE)
+	ex. SPI_init(SPI_MASTER_MODE_CLOCK_FOSC4, SPI_MODE_00, SPI_HIGH_SPEED_MODE)
 	--------------------------------------------------------------------------*/
 
 	void SPI_init(u8 sync_mode, u8 bus_mode, u8 smp_phase)
@@ -81,18 +87,18 @@
 		switch (sync_mode)
 		{
 			case SPI_SLAVE_MODE_WITH_SS:// slave mode w /SS enable
-				TRISAbits.TRISA5 = 1;	// define /SS pin as input
+				pinmode(SPI_SLAVE_SELECT, INPUT);// TRISAbits.TRISA5 = 1;	// define /SS pin as input
 			case SPI_SLAVE_MODE_WITHOUT_SS:	// slave mode w/o /SS enable
-				TRISBbits.TRISB1 = 1;	// define clock pin as input
+				pinmode(SPI_CLOCK, INPUT);// TRISBbits.TRISB1 = 1;	// define clock pin as input
 				SSPSTATbits.SMP = 0;	// must be cleared in slave SPI mode
 				break;
 			default:					// master mode, define clock pin as output
-				TRISBbits.TRISB1 = 0;	// define clock pin as output
+				pinmode(SPI_CLOCK, OUTPUT);// TRISBbits.TRISB1 = 0;	// define clock pin as output
 				break;
 		}
 
-		TRISC &= 0x7F;					// define SDO as output (master or slave)
-		TRISB |= 0x01;					// define SDI as input (master or slave)
+		pinmode(SPI_DATA_OUT, OUTPUT);	// TRISC &= 0x7F; // define SDO as output (master or slave)
+		pinmode(SPI_DATA_IN, INPUT);	// TRISB |= 0x01; // define SDI as input (master or slave)
 		SSPCON1bits.SSPEN = 1;			// enable synchronous serial port
 	}
 

@@ -196,6 +196,156 @@
 	volatile u8 preloadL[4];
 
 /*	----------------------------------------------------------------------------
+	---------- detachInterrupt
+	----------------------------------------------------------------------------
+	@author		Regis Blanchot <rblanchot@gmail.com>
+	@descr		Disable the interrupt
+	@param		inter:		interrupt number
+	--------------------------------------------------------------------------*/
+
+void detachInterrupt(u8 inter)
+{
+	intUsed[inter] = INT_NOT_USED;	// This interrupt is no longer used
+
+	switch(inter)
+	{
+		case INT_INT0:
+			INTCONbits.INT0IE = INT_DISABLE;
+			break;
+		case INT_INT1:
+			INTCON3bits.INT1IE = INT_DISABLE;
+			break;
+		case INT_INT2:
+			INTCON3bits.INT2IE = INT_DISABLE;
+			break;
+		case INT_TMR0:
+			INTCONbits.TMR0IE = INT_DISABLE;
+			break;
+		case INT_TMR1:
+			PIE1bits.TMR1IE = INT_DISABLE;
+			break;
+		case INT_TMR2:
+			PIE1bits.TMR2IE = INT_DISABLE;
+			break;
+		case INT_TMR3:
+			PIE2bits.TMR3IE = INT_DISABLE;
+			break;
+		case INT_RB:
+			INTCONbits.RBIE = INT_DISABLE;
+			break;
+		case INT_USB:
+			PIE2bits.USBIE = INT_DISABLE;
+			break;
+		case INT_AD:
+			PIE1bits.ADIE = INT_DISABLE;
+			break;
+		case INT_RC:
+			PIE1bits.RCIE = INT_DISABLE;
+			break;
+		case INT_TX:
+			PIE1bits.TXIE = INT_DISABLE;
+			break;
+		case INT_CCP1:
+			PIE1bits.CCP1IE = INT_DISABLE;
+			break;
+		case INT_CCP2:
+			PIE2bits.CCP2IE = INT_DISABLE;
+			break;
+		case INT_OSCF:
+			PIE2bits.OSCFIE = INT_DISABLE;
+			break;
+		case INT_CM:
+			PIE2bits.CMIE = INT_DISABLE;
+			break;
+		case INT_EE:
+			PIE2bits.EEIE = INT_DISABLE;
+			break;
+		case INT_BCL:
+			PIE2bits.BCLIE = INT_DISABLE;
+			break;
+		case INT_HLVD:
+			PIE2bits.HLVDIE = INT_DISABLE;
+			break;
+		#ifdef PIC18F4550
+		case INT_SSP:
+			PIE1bits.SSPIE = INT_DISABLE;
+			break;
+		#endif
+	}
+}
+
+/*	----------------------------------------------------------------------------
+	---------- int_init
+	----------------------------------------------------------------------------
+	@author		Régis Blanchot <rblanchot@gmail.com>
+	@descr		Disable all the interrupt
+	--------------------------------------------------------------------------*/
+
+void int_init()
+{
+	u8 i;
+	
+	RCONbits.IPEN = 1;					// Enable HP/LP interrupts
+	INTCONbits.GIEH = 1;				// Enable HP interrupts
+	INTCONbits.GIEL = 1;				// Enable LP interrupts
+
+	for (i = 0; i < INT_NUM; i++)		// Disable all interrupts
+		detachInterrupt(i);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- int_start
+	----------------------------------------------------------------------------
+	@author		Régis Blanchot <rblanchot@gmail.com>
+	@descr		Start all timers together
+	--------------------------------------------------------------------------*/
+
+void int_start()
+{
+	#ifdef TMR0INT
+		T0CONbits.TMR0ON = ON;
+	#endif
+
+	#ifdef TMR1INT
+		T1CONbits.TMR1ON = ON;
+	#endif
+
+	#ifdef TMR2INT
+		T2CONbits.TMR2ON = ON;
+	#endif
+
+	#ifdef TMR3INT
+		T3CONbits.TMR3ON = ON;
+	#endif
+}
+
+/*	----------------------------------------------------------------------------
+	---------- int_stop
+	----------------------------------------------------------------------------
+	@author		Régis Blanchot <rblanchot@gmail.com>
+	@descr		Stop all timers together
+	--------------------------------------------------------------------------*/
+
+void int_stop()
+{
+	#ifdef TMR0INT
+		T0CONbits.TMR0ON = OFF;
+	#endif
+
+	#ifdef TMR1INT
+		T1CONbits.TMR1ON = OFF;
+	#endif
+
+	#ifdef TMR2INT
+		T2CONbits.TMR2ON = OFF;
+	#endif
+
+	#ifdef TMR3INT
+		T3CONbits.TMR3ON = OFF;
+	#endif
+}
+
+/*	----------------------------------------------------------------------------
 	---------- OnTimerX
 	----------------------------------------------------------------------------
 	@author		Regis Blanchot <rblanchot@gmail.com>
@@ -223,21 +373,21 @@ void OnTimer0(callback func, u8 timediv, u16 delay)
 				// 1 us = 1.000 ns = 12 cy
 				preloadH[INT_TMR0] = high8(0xFFFF - 12);
 				preloadL[INT_TMR0] =  low8(0xFFFF - 12);
-				_t0con = T0_ON & T0_16BIT & T0_CLK & T0_PS_OFF;
+				_t0con = T0_OFF & T0_16BIT & T0_CLK & T0_PS_OFF;
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR0] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR0] =  low8(0xFFFF - 1500);
-				_t0con = T0_ON & T0_16BIT & T0_CLK & T0_PS_ON & T0_PS_1_8;
+				_t0con = T0_OFF & T0_16BIT & T0_CLK & T0_PS_ON & T0_PS_1_8;
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
 				// 12.000.000 / 256 = 46875
 				preloadH[INT_TMR0] = high8(0xFFFF - 46875);
 				preloadL[INT_TMR0] =  low8(0xFFFF - 46875);
-				_t0con = T0_ON & T0_16BIT & T0_CLK & T0_PS_ON & T0_PS_1_256;
+				_t0con = T0_OFF & T0_16BIT & T0_CLK & T0_PS_ON & T0_PS_1_256;
 				break;
 		}
 
@@ -275,14 +425,14 @@ void OnTimer1(callback func, u8 timediv, u16 delay)
 				// 1us = 1.000 ns = 12 cy
 				preloadH[INT_TMR1] = high8(0xFFFF - 12);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 12);
-				_t1con = T1_ON & T1_16BIT & T1_PS_1_1 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+				_t1con = T1_OFF & T1_16BIT & T1_PS_1_1 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
 				break;
 			case INT_MILLISEC:
 				// 1ms = 1.000.000ns = 12.000 cy
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR1] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 1500);
-				_t1con = T1_ON & T1_16BIT & T1_PS_1_8 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+				_t1con = T1_OFF & T1_16BIT & T1_PS_1_8 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
@@ -291,7 +441,7 @@ void OnTimer1(callback func, u8 timediv, u16 delay)
 				preloadH[INT_TMR1] = high8(0xFFFF - 60000); // 62500
 				preloadL[INT_TMR1] =  low8(0xFFFF - 60000);
 				intCountLimit[INT_TMR1] = delay * 25;
-				_t1con = T1_ON & T1_16BIT & T1_PS_1_8 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+				_t1con = T1_OFF & T1_16BIT & T1_PS_1_8 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
 				break;
 		}
 
@@ -330,20 +480,20 @@ void OnTimer2(callback func, u8 timediv, u16 delay)
 			case INT_MICROSEC:
 				// 1us = 12 cy
 				_pr2 = 12;
-				_t2con = T2_ON & T2_PS_1_1 & T2_POST_1_1;
+				_t2con = T2_OFF & T2_PS_1_1 & T2_POST_1_1;
 				break;
 			case INT_MILLISEC:
 				// 1ms = 12.000 cy
 				// 12.000 / 15 / 16 = 50
 				_pr2 = 50;
-				_t2con = T2_ON & T2_POST_1_15 & T2_PS_1_16;
+				_t2con = T2_OFF & T2_POST_1_15 & T2_PS_1_16;
 				break;
 			case INT_SEC:
 				// 1sec = 12.000.000 cy
 				// 12.000.000 / 15 / 16 = 50.000 = 200 * 25
 				_pr2 = 250;
 				intCountLimit[INT_TMR2] = delay * 200;
-				_t2con = T2_ON & T2_POST_1_15 & T2_PS_1_16;
+				_t2con = T2_OFF & T2_POST_1_15 & T2_PS_1_16;
 				break;
 		}
 
@@ -380,14 +530,14 @@ void OnTimer3(callback func, u8 timediv, u16 delay)
 				// 1us = 1.000 ns = 12 cy
 				preloadH[INT_TMR3] = high8(0xFFFF - 12);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 12);
-				_t3con = T3_ON & T3_16BIT & T3_PS_1_1 & T3_INT_CLK;
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_1 & T3_INT_CLK;
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR3] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 1500);
-				_t3con = T3_ON & T3_16BIT & T3_PS_1_8 & T3_INT_CLK;
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_INT_CLK;
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
@@ -396,7 +546,7 @@ void OnTimer3(callback func, u8 timediv, u16 delay)
 				preloadH[INT_TMR3] = high8(0xFFFF - 60000);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 60000);
 				intCountLimit[INT_TMR3] = delay * 25;
-				_t3con = T3_ON & T3_16BIT & T3_PS_1_8 & T3_INT_CLK;
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_INT_CLK;
 				break;
 		}
 
@@ -839,6 +989,7 @@ void userinterrupt()
 	#ifdef TMR0INT || CNTR0INT
 	if (INTCONbits.TMR0IE && INTCONbits.TMR0IF)
 	{
+		T0CONbits.TMR0ON = OFF;
 		TMR0H = preloadH[INT_TMR0];
 		TMR0L = preloadL[INT_TMR0];
 		INTCONbits.TMR0IF = 0;
@@ -852,6 +1003,7 @@ void userinterrupt()
 	#ifdef TMR1INT || CNTR1INT
 	if (PIE1bits.TMR1IE && PIR1bits.TMR1IF)
 	{
+		T1CONbits.TMR1ON = OFF;
 		TMR1H = preloadH[INT_TMR1];
 		TMR1L = preloadL[INT_TMR1];
 		PIR1bits.TMR1IF = 0;
@@ -865,6 +1017,7 @@ void userinterrupt()
 	#ifdef TMR2INT
 	if (PIE1bits.TMR2IE && PIR1bits.TMR2IF)
 	{
+		T2CONbits.TMR2ON = OFF;
 		PIR1bits.TMR2IF = 0;
 		if (intCount[INT_TMR2]++ >= intCountLimit[INT_TMR2])
 		{
@@ -877,6 +1030,7 @@ void userinterrupt()
 	#ifdef TMR3INT || CNTR3INT
 	if (PIE2bits.TMR3IE && PIR2bits.TMR3IF)
 	{
+		T3CONbits.TMR3ON = OFF;
 		TMR3H = preloadH[INT_TMR3];
 		TMR3L = preloadL[INT_TMR3];
 		PIR2bits.TMR3IF = 0;
@@ -973,101 +1127,7 @@ void userinterrupt()
 	}
 	#endif
 	#endif
-}
-
-/*	----------------------------------------------------------------------------
-	---------- detachInterrupt
-	----------------------------------------------------------------------------
-	@author		Regis Blanchot <rblanchot@gmail.com>
-	@descr		Disable the interrupt
-	@param		inter:		interrupt number
-	--------------------------------------------------------------------------*/
-
-void detachInterrupt(u8 inter)
-{
-	intUsed[inter] = INT_NOT_USED;	// This interrupt is no longer used
-
-	switch(inter)
-	{
-		case INT_INT0:
-			INTCONbits.INT0IE = INT_DISABLE;
-			break;
-		case INT_INT1:
-			INTCON3bits.INT1IE = INT_DISABLE;
-			break;
-		case INT_INT2:
-			INTCON3bits.INT2IE = INT_DISABLE;
-			break;
-		case INT_TMR0:
-			INTCONbits.TMR0IE = INT_DISABLE;
-			break;
-		case INT_TMR1:
-			PIE1bits.TMR1IE = INT_DISABLE;
-			break;
-		case INT_TMR2:
-			PIE1bits.TMR2IE = INT_DISABLE;
-			break;
-		case INT_TMR3:
-			PIE2bits.TMR3IE = INT_DISABLE;
-			break;
-		case INT_RB:
-			INTCONbits.RBIE = INT_DISABLE;
-			break;
-		case INT_USB:
-			PIE2bits.USBIE = INT_DISABLE;
-			break;
-		case INT_AD:
-			PIE1bits.ADIE = INT_DISABLE;
-			break;
-		case INT_RC:
-			PIE1bits.RCIE = INT_DISABLE;
-			break;
-		case INT_TX:
-			PIE1bits.TXIE = INT_DISABLE;
-			break;
-		case INT_CCP1:
-			PIE1bits.CCP1IE = INT_DISABLE;
-			break;
-		case INT_CCP2:
-			PIE2bits.CCP2IE = INT_DISABLE;
-			break;
-		case INT_OSCF:
-			PIE2bits.OSCFIE = INT_DISABLE;
-			break;
-		case INT_CM:
-			PIE2bits.CMIE = INT_DISABLE;
-			break;
-		case INT_EE:
-			PIE2bits.EEIE = INT_DISABLE;
-			break;
-		case INT_BCL:
-			PIE2bits.BCLIE = INT_DISABLE;
-			break;
-		case INT_HLVD:
-			PIE2bits.HLVDIE = INT_DISABLE;
-			break;
-		case INT_SSP:
-			#ifdef PIC18F4550
-			PIE1bits.SSPIE = INT_DISABLE;
-			#endif
-			break;
-	}
-}
-
-/*	----------------------------------------------------------------------------
-	---------- init_INT
-	----------------------------------------------------------------------------
-	@author		Régis Blanchot <rblanchot@gmail.com>
-	@descr		Disable all the interrupt
-	@param		inter:		interrupt number
-	--------------------------------------------------------------------------*/
-
-void int_init()
-{
-	u8 i;
-	
-	for (i = 0; i < INT_NUM; i++)
-		detachInterrupt(i);
+	int_start();
 }
 
 #endif

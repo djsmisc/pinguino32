@@ -1,4 +1,7 @@
 
+
+
+#
 #define BIN 5
 #define BYTE 2
 #define DEC 1
@@ -11,6 +14,8 @@
 #define OFF 0
 #define ON 1
 #define OUTPUT 0
+#define PIC18F4550
+#define TMR0INT
 #define TRUE 1
-#include <delay.c>
-#include <digitalw.c>
+#include <interrupt.c>
+#include <lcdlib.c>
