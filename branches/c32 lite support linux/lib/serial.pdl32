@@ -1,0 +1,7 @@
+Serial.init serial1init#include <pinguinoserial.c>
+Serial.begin serial1init#include <pinguinoserial.c>
+Serial.printf serial1printf#include <pinguinoserial.c>
+Serial.getkey serial1getkey#include <pinguinoserial.c>
+Serial.available serial1available#include <pinguinoserial.c>
+Serial.read serial1read#include <pinguinoserial.c>
+Serial.flush serial1flush#include <pinguinoserial.c>
