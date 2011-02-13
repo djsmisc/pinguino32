@@ -18,6 +18,15 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -------------------------------------------------------------------------*/
+#ifdef PIC32_PINGUINO
+#include <proc/p32mx440f256h.h>
+#endif
+#ifdef EMPEROR460
+#include <proc/p32mx460f512l.h>
+#endif
+#ifdef UBW32
+#include <proc/p32mx460f512l.h>
+#endif
 
 #include <system.c>
 #include "../tmp/define.h"

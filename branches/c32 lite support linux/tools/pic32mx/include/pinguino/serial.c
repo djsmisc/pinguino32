@@ -20,12 +20,12 @@
 	License along with this library; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
-
+	
+	// 13 feb.2011 jp mandon added #define for RX/TX pin on 32mx440f256h
+	
 #ifndef __SERIAL_C
 	#define __SERIAL_C
 
-	#include <p32xxxx.h>
-	//#include "const.h"
 	#include "stdlib.c"
 	#include "system.c"
 	#include "interrupt.c"
@@ -284,8 +284,14 @@ void SerialPinConfigure(u8 port)
 	switch (port)
 	{
 		case UART1:
+			#ifdef __32MX460F512L__
 			TRISFbits.TRISF8 = OUTPUT;	// RF8 / U1TX output
 			TRISFbits.TRISF2 = INPUT;	// RF2 / U1RX input
+			#endif
+			#ifdef __32MX440F256H__
+			TRISDbits.TRISD1 = OUTPUT;	// RF8 / U1TX output
+			TRISDbits.TRISD0 = INPUT;	// RF2 / U1RX input
+			#endif			
 			break;
 		case UART2:
 			TRISFbits.TRISF5 = OUTPUT;	// RF5 / U2TX output

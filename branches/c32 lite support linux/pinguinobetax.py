@@ -110,6 +110,7 @@ class Pinguino(wx.Frame):
     c32name=""
     ld32name=""
     o2hname=""
+    processor32=""
         
 # ------------------------------------------------------------------------------
 # id
@@ -121,6 +122,10 @@ class Pinguino(wx.Frame):
     ID_BOARD = wx.NewId()
     ID_COMPILER = wx.NewId()
     ID_COMPILER32 = wx.NewId()
+    ID_TOOLS = wx.NewId()
+    PINGUINO_OLIMEX = wx.NewId()
+    EMPEROR460 = wx.NewId()
+    UBW32 = wx.NewId()
     ID_THEME1 = 1000
 
     # id debug menu
@@ -258,6 +263,20 @@ class Pinguino(wx.Frame):
             self.board_menu.Check(self.ID_P8X,True)
         else:
             self.board_menu.Check(self.ID_P32X,True)
+        #------------------------------ select development tool
+        self.devtool_menu=wx.Menu()
+        self.devtool_menu.AppendRadioItem(self.PINGUINO_OLIMEX,"Pinguino OLIMEX",_("your board"))
+        self.devtool_menu.AppendRadioItem(self.EMPEROR460,"EMPEROR 460",_("your board"))
+        self.devtool_menu.AppendRadioItem(self.UBW32,"UBW32",_("your board"))
+        self.pref_menu.AppendMenu(self.ID_TOOLS,_("32 bits development tools"),self.devtool_menu)
+        if self.config.ReadInt('devtool',-1)==1:
+            self.devtool_menu.Check(self.PINGUINO_OLIMEX,True)
+        elif self.config.ReadInt('devtool',-1)==2:
+            self.devtool_menu.Check(self.EMPEROR460,True)
+        elif self.config.ReadInt('devtool',-1)==3:
+            self.devtool_menu.Check(self.UBW32,True)
+        self.OnSelectTools(wx.Event)
+        
         #------------------------------ select path for 32 bits compiler            
         self.compiler_menu=wx.Menu()
         if self.Pinguino32XFolder=="":
@@ -370,6 +389,9 @@ class Pinguino(wx.Frame):
         self.Bind(wx.EVT_MENU,self.OnCompilerPath,id=self.ID_COMPILER)
         self.Bind(wx.EVT_MENU,self.OnSelectBoard,id=self.ID_P8X)
         self.Bind(wx.EVT_MENU,self.OnSelectBoard,id=self.ID_P32X)
+        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.PINGUINO_OLIMEX)
+        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.EMPEROR460)
+        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.UBW32)        
          
         # icons bar
         self.Bind(wx.EVT_TOOL, self.OnVerify, id=self.ID_VERIFY)
@@ -484,7 +506,13 @@ class Pinguino(wx.Frame):
             self.config.Write('pinguino32Xfolder',self.Pinguino32XFolder)
         self.config.Write('c32name',self.c32name)
         self.config.Write('ld32name',self.ld32name)
-        self.config.Write('o2hname',self.o2hname)    
+        self.config.Write('o2hname',self.o2hname)
+        if self.devtool_menu.IsChecked(self.PINGUINO_OLIMEX):
+                self.config.WriteInt('devtool',1)
+        if self.devtool_menu.IsChecked(self.EMPEROR460):
+                self.config.WriteInt('devtool',2)
+        if self.devtool_menu.IsChecked(self.UBW32):
+                self.config.WriteInt('devtool',3)                
         self.config.Flush()
         # ----------------------------------------------------------------------
         # deinitialize the frame manager
@@ -558,7 +586,18 @@ class Pinguino(wx.Frame):
             self.reservedword=[]
             self.libinstructions=[]
             self.readlib()
-            
+
+    def OnSelectTools(self,event):
+        if self.devtool_menu.IsChecked(self.PINGUINO_OLIMEX):
+            self.processor32="32MX440F256H"
+            self.devtool="PIC32_PINGUINO"
+        if self.devtool_menu.IsChecked(self.EMPEROR460):
+            self.processor32="32MX460F512L"
+            self.devtool="EMPEROR460"
+        if self.devtool_menu.IsChecked(self.UBW32):
+            self.processor32="32MX460F512L"
+            self.devtool="UBW32"
+        
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
 # ------------------------------------------------------------------------------
@@ -705,7 +744,7 @@ class Pinguino(wx.Frame):
         # adding fixed reserved word
         fixed_rw=("setup","loop","HIGH","LOW","INPUT","OUTPUT","void","FOSC","MIPS","ON","OFF","TRUE","FALSE")
         for i in range(len(fixed_rw)):
-            self.reservedword.append(fixed_rw[i]) 
+            self.reservedword.append(fixed_rw[i])
         
     def OnVerify(self, event):
         global lang
@@ -1071,7 +1110,9 @@ class Pinguino(wx.Frame):
             chemin = os.path.dirname(filename)
             fichier = open(sys.path[0] + "/tmp/stdout", 'w+')
             sortie = Popen([self.Pinguino32XFolder + "/bin/"+self.c32name,
-                        "-mprocessor=32MX460F512L",
+                        "-mprocessor="+self.processor32,
+                        "-D __"+self.processor32+"__",
+                        "-D "+self.devtool,
                         "-I" + sys.path[0] + "/tools/pic32mx/include/pinguino/",
                         "-I" + sys.path[0] + "/tools/pic32mx/include/",
                         "-I" + chemin + "/",
@@ -1132,6 +1173,8 @@ class Pinguino(wx.Frame):
                           "-f" + sys.path[0]+"/source/Makefile",
                           "COMPILER="+self.Pinguino32XFolder+'/bin/'+self.c32name,
                           "O2H="+self.Pinguino32XFolder+'/bin/'+self.o2hname,
+                          "PROCESSOR="+self.processor32,
+                          "DEVTOOL="+self.devtool,
                           "SOURCE="+sys.path[0].replace(" ","\\ ")],                                                
                           stdout=fichier,stderr=STDOUT)
             sortie.communicate()

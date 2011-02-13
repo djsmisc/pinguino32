@@ -23,17 +23,61 @@
 
 // 02 dec.2010 tested from 0 to 31 OK except PORTA pin
 // probably an alternate function on this port, to be fixed
+// fixed by regis blanchot in system.c
+// 13 feb.2011 updated for EMPEROR 460 and PIC32_PINGUINO
 
 #ifndef __DIGITALW_C
 	#define __DIGITALW_C
 	
-	//#include <pinguino.h>
-	#include <p32mx460f512l.h>
+	#include <p32xxxx.h>
 	#include "typedef.h"
 
-#define UBW32
+// #define for PIC32_PINGUINO
 
-// define for UBW32, to be updated for Pinguino32x board
+#ifdef PIC32_PINGUINO
+
+const u32 portmask[]=
+				 {3,3,3,3,3,3,3,3,
+				  3,3,3,3,3,3,1,1,
+				  1,1,3,3,4,4,4,4,
+				  4,4,4,4,5,5};
+				  
+const u32 pinmask[]={0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,
+				  0x100,0x200,0x400,0x800,0x1000,0x2000,0x02,0x04,
+				  0x08,0x10,0x200,0x400,0x01,0x02,0x04,0x08,
+				  0x10,0x20,0x40,0x80,0x02,0x08};
+
+#endif
+
+// define for EMPEROR 460 board
+
+#ifdef EMPEROR460
+
+const u32 portmask[]=
+				 {2,6,6,6,6,0,0,4,
+				  1,1,1,1,1,1,0,0,
+				  1,1,1,1,0,5,5,1,
+				  1,1,1,3,3,5,5,5,
+				  5,5,0,0,0,0,0,0,
+				  2,2,2,4,4,4,6,4,
+				  4,4,6,6,6,4,4,0,
+				  0,6,6,5,5,3,3,3,
+				  3,3,3,3,3,3,2,2,
+				  3,3,3,3,3};
+
+const u32 pinmask[]={0x10,0x40,0x80,0x100,0x200,0x01,0x100,0x200,
+				  0x20,0x10,0x08,0x04,0x02,0x01,0x200,0x400,
+				  0x100,0x200,0x400,0x800,0x02,0x2000,0x1000,0x1000,
+				  0x2000,0x4000,0x8000,0x4000,0x8000,0x10,0x08,0x04,
+				  0x100,0x04,0x08,0x10,0x20,0x4000,0x8000,0x08,
+				  0x04,0x02,0x80,0x40,0x30,0x8000,0x10,0x08,
+				  0x04,0x2000,0x1000,0x4000,0x02,0x01,0x80,0x40,
+				  0x01,0x02,0x02,0x01,0x80,0x40,0x30,0x10,
+				  0x2000,0x1000,0x08,0x04,0x02,0x4000,0x2000,0x01,
+				  0x800,0x400,0x200,0x8000,0x4000};
+#endif				  
+
+// define for UBW32
 
 #ifdef UBW32
 
@@ -66,9 +110,11 @@ void pinmode(u8 pin,u8 state)
 {
 	switch (portmask[pin])
 	{
+		#ifndef __32MX440F256H__
 		case 0: if (state) TRISASET=pinmask[pin];
 				else TRISACLR=pinmask[pin];
 				break;
+		#endif
 		case 1: if (state) TRISBSET=pinmask[pin];
 				else TRISBCLR=pinmask[pin];
 				break;
@@ -94,9 +140,11 @@ void digitalwrite(u8 pin,u8 state)
 {
 	switch (portmask[pin])
 	{
+		#ifndef __32MX440F256H__
 		case 0: if (state) PORTASET=pinmask[pin];
 				else PORTACLR=pinmask[pin];
 				break;
+		#endif
 		case 1: if (state) PORTBSET=pinmask[pin];
 				else PORTBCLR=pinmask[pin];
 				break;
@@ -122,8 +170,10 @@ u8 digitalread(u8 pin)
 {
 	switch (portmask[pin])
 	{
+		#ifndef __32MX440F256H__
 		case 0: return((PORTA&pinmask[pin])!=0);
 				break;
+		#endif
 		case 1: return((PORTB&pinmask[pin])!=0);
 				break;
 		case 2: return((PORTC&pinmask[pin])!=0);
@@ -143,9 +193,7 @@ u8 digitalread(u8 pin)
 
 void toggle(u8 pin)
 {
-	u8 val;
-	val = digitalread(pin);
-	digitalwrite(pin, val^1);
+	digitalwrite(pin, digitalread(pin)^1);
 }
 
 #endif
