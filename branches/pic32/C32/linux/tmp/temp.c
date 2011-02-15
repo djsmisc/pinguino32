@@ -1,27 +1,26 @@
 //
 //
 
-int i;
-int caractere;
+
+
+float i,j;
+float result;
+char chaine[10];
 
 void setup()
 {
-for (i=0;i<8;i++) 	{
-				pinmode(i,OUTPUT);
-				digitalwrite(i,LOW);
-				}
 serial1init(9600);
 }
 
 void loop()
 {
-if (serial1available())
+i=45;
+j=2;
+result=powf(i,j);
+if ((result>2024.0)&&(result<2025.0)) 
 	{
-	digitalwrite(0,HIGH);
-	caractere=serial1read();
-	serial1printf("test");
-	if (caractere=='A') digitalwrite(1,digitalread(1)^1);
+	Serial.print("OK");
+	Serial.print("\n\r");
 	}
 }
-
 

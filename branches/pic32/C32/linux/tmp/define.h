@@ -13,5 +13,5 @@
 #define ON 1
 #define OUTPUT 0
 #define TRUE 1
-#include <digitalw.c>
+#include <math.h>
 #include <pinguinoserial.c>
