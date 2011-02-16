@@ -1,5 +1,0 @@
-In file included from /home/mandon/c32 linux/source/main32.c:34:
-/home/mandon/c32 linux/source/user.c: In function `loop':
-/home/mandon/c32 linux/source/user.c:22: error: `Serial' undeclared (first use in this function)
-/home/mandon/c32 linux/source/user.c:22: error: (Each undeclared identifier is reported only once
-/home/mandon/c32 linux/source/user.c:22: error: for each function it appears in.)
