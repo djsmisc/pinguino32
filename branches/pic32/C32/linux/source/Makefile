@@ -13,7 +13,7 @@ build:
 	cd $(SOURCE)/source; $(MAKE) COMPILER=$(COMPILER) link
 
 link:
-	$(CC) $(ELF_FLAGS) -D $(BOARD) -mprocessor=$(MODEL) -I "../tools/pic32mx/include/" -I "../tools/pic32mx/include/pinguino/" -I "../obj/non-free/" -o main32.elf main32.o "../obj/non-free/crt0.S" "../obj/non-free/processor.o" -lm -lc
+	$(CC) $(ELF_FLAGS) -D $(BOARD) -mprocessor=$(MODEL) -I "../tools/pic32mx/include/" -I "../tools/pic32mx/include/pinguino/" -I "../obj/non-free/" -o main32.elf main32.o "../obj/non-free/crt0.S" "../obj/non-free/processor.o" -lm -lc -lgcc
 	$(OBJC) -O ihex main32.elf main32.hex
 	#This remove wrong routine
 	grep --binary --invert-match '^:040000059D006000FA' main32.hex > temp
