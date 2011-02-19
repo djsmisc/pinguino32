@@ -1,5 +1,6 @@
 
 
+
 #define BIN 5
 #define BYTE 2
 #define DEC 1
@@ -13,5 +14,6 @@
 #define ON 1
 #define OUTPUT 0
 #define TRUE 1
-#include <analog.c>
+#include <delay.c>
+#include <millis.c>
 #include <pinguinoserial.c>

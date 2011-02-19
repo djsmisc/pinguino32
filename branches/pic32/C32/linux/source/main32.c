@@ -44,6 +44,9 @@ int main(void)
 	#ifdef __ANALOG__
 		analog_init();
     #endif
+    #ifdef __MILLIS__
+		millis_init();
+    #endif    
 	setup();
 	while (1)
 	{
