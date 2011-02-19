@@ -1,7 +1,5 @@
 
 
-
-
 #define BIN 5
 #define BYTE 2
 #define DEC 1
@@ -15,7 +13,5 @@
 #define ON 1
 #define OUTPUT 0
 #define TRUE 1
+#include <analog.c>
 #include <pinguinoserial.c>
-#include <setjmp.h>
-#include <stdio.h>
-#include <stdlib.h>

@@ -26,4 +26,5 @@ sin sinf#include <math.h>
 cos cosf#include <math.h>
 tan tanf#include <math.h>
 randomSeed srand#include <stdlib.h>
+pulseIn pulseIn#include <pulse.c>
 

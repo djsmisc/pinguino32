@@ -10,6 +10,8 @@
 		U1TX = RF8 (pin 53) = White
 	--------------------------------------------------------------------------*/
 
+#include <serial.c>
+
 const u8 mainMenu[] =
 {
 	"\n"\
@@ -54,7 +56,7 @@ u32 baudrate;
 void setup()
 {
 	baudrate = 9600;	// 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, until Sys. Clock / 4
-	Serial.Configure(UART1, UART_ENABLE, UART_RX_TX_ENABLED,	baudrate);
+	serial_Configure(UART1, UART_ENABLE, UART_RX_TX_ENABLED,	baudrate);
 
 /*	---Use one of these forms------------------------------------------------------------
 	SerialConfigure(	UART1, 0x8000, 0x1400, 9600);
@@ -97,92 +99,92 @@ void loop()
 	long l = 115200;
 	//float f = 3.14159265; // floating point support is not yet implemented in printf
 
-	Serial.Printf(UART1, "%s\n", mainMenu);
-	mainItem = Serial.GetKey(UART1);
+	serial_Printf(UART1, "%s\n", mainMenu);
+	mainItem = serial_GetKey(UART1);
 	mainItem -= '0';
 
 	switch (mainItem)
 	{
 		case 0:
-			Serial.Printf(UART1, "\n");
-			Serial.Printf(UART1, "**************************\n");
-			Serial.Printf(UART1, "*      Serial32 Demo     *\n");
-			Serial.Printf(UART1, "**************************\n");
-			Serial.Printf(UART1, "\n");
-			Serial.Printf(UART1, "string = %s\n", string);
-			Serial.Printf(UART1, "character = \"%c\"\n", c);
-			Serial.Printf(UART1, "signed char = %d / unsigned char = %u\n", -c, -c);
-			Serial.Printf(UART1, "signed int = %d / unsigned int = %u\n", -i, -i);
-			Serial.Printf(UART1, "signed long = %d / unsigned long = %u\n", -l, -l);
-			Serial.Printf(UART1, "decimal[%d] = hexa[0x%X] = binary[0b%016b] = octal[%o]\n", i, i, i, i);
+			serial_printf(UART1, "\n");
+			serial_printf(UART1, "**************************\n");
+			serial_printf(UART1, "*      Serial32 Demo     *\n");
+			serial_printf(UART1, "**************************\n");
+			serial_printf(UART1, "\n");
+			serial_printf(UART1, "string = %s\n", string);
+			serial_printf(UART1, "character = \"%c\"\n", c);
+			serial_printf(UART1, "signed char = %d / unsigned char = %u\n", -c, -c);
+			serial_printf(UART1, "signed int = %d / unsigned int = %u\n", -i, -i);
+			serial_printf(UART1, "signed long = %d / unsigned long = %u\n", -l, -l);
+			serial_printf(UART1, "decimal[%d] = hexa[0x%X] = binary[0b%016b] = octal[%o]\n", i, i, i, i);
 			//SerialPrintf(UART1, "float = %f\n", f);
-			Serial.Printf(UART1, "justif: \"%-10s\"\n", "left");
-			Serial.Printf(UART1, "justif: \"%10s\"\n", "right");
-			Serial.Printf(UART1, " 3: %04d zero padded\n", 3);
-			Serial.Printf(UART1, " 3: %-4d left justif.\n", 3);
-			Serial.Printf(UART1, " 3: %4d right justif.\n", 3);
-			Serial.Printf(UART1, "-3: %04d zero padded\n", -3);
-			Serial.Printf(UART1, "-3: %-4d left justif.\n", -3);
-			Serial.Printf(UART1, "-3: %4d right justif.\n", -3);
-			Serial.Printf(UART1, "\n");
-			Serial.Printf(UART1, "Press Any Key to continue ...\n");
-			Serial.GetKey(UART1);
+			serial_printf(UART1, "justif: \"%-10s\"\n", "left");
+			serial_printf(UART1, "justif: \"%10s\"\n", "right");
+			serial_printf(UART1, " 3: %04d zero padded\n", 3);
+			serial_printf(UART1, " 3: %-4d left justif.\n", 3);
+			serial_printf(UART1, " 3: %4d right justif.\n", 3);
+			serial_printf(UART1, "-3: %04d zero padded\n", -3);
+			serial_printf(UART1, "-3: %-4d left justif.\n", -3);
+			serial_printf(UART1, "-3: %4d right justif.\n", -3);
+			serial_printf(UART1, "\n");
+			serial_printf(UART1, "Press Any Key to continue ...\n");
+			serial_GetKey(UART1);
 			break;
 		case 1:
-			Serial.Printf(UART1, "**************************\n");
-			Serial.Printf(UART1, "* System Clock is %2uMHz *\n", GetSystemClock()/1000000);
-			Serial.Printf(UART1, "**************************\n");
-			Serial.Printf(UART1, "Press Any Key to continue ...\n");
-			Serial.GetKey(UART1);
+			serial_Printf(UART1, "**************************\n");
+			serial_Printf(UART1, "* System Clock is %2uMHz *\n", GetSystemClock()/1000000);
+			serial_Printf(UART1, "**************************\n");
+			serial_Printf(UART1, "Press Any Key to continue ...\n");
+			serial_GetKey(UART1);
 			break;
 		case 2:
-			Serial.Printf(UART1, "******************************\n");
-			Serial.Printf(UART1, "* Peripheral Clock is %2uMHz *\n", GetPeripheralClock()/1000000);
-			Serial.Printf(UART1, "******************************\n");
-			Serial.Printf(UART1, "Press Any Key to continue ...\n");
-			Serial.GetKey(UART1);
+			serial_Printf(UART1, "******************************\n");
+			serial_Printf(UART1, "* Peripheral Clock is %2uMHz *\n", GetPeripheralClock()/1000000);
+			serial_Printf(UART1, "******************************\n");
+			serial_Printf(UART1, "Press Any Key to continue ...\n");
+			serial_GetKey(UART1);
 			break;
 		case 3:
-			Serial.Printf(UART1, "**************************************\n");
-			Serial.Printf(UART1, "* Actual BAUD rate is %8u bauds *\n", SerialGetDataRate(UART1));
-			Serial.Printf(UART1, "**************************************\n");
-			Serial.Printf(UART1, "Press Any Key to continue ...\n");
-			Serial.GetKey(UART1);
+			serial_Printf(UART1, "**************************************\n");
+			serial_Printf(UART1, "* Actual BAUD rate is %8u bauds *\n", SerialGetDataRate(UART1));
+			serial_Printf(UART1, "**************************************\n");
+			serial_Printf(UART1, "Press Any Key to continue ...\n");
+			serial_GetKey(UART1);
 			break;
 		case 4:
 			baudrate = baudrate << 1;
-			Serial.Printf(UART1, "BAUD rate was %u and will be %u bauds\n", SerialGetDataRate(UART1), baudrate);
-			Serial.Printf(UART1, "Press Any Character after re-configuring you terminal\n");
-			Serial.GetKey(UART1);
-			Serial.SetDataRate(UART1, baudrate);
-			Serial.Printf(UART1, "New BAUD rate is %u bauds\n", SerialGetDataRate(UART1));
-			Serial.Printf(UART1, "Press Any Key to continue ...\n");
-			Serial.GetKey(UART1);
+			serial_Printf(UART1, "BAUD rate was %u and will be %u bauds\n", SerialGetDataRate(UART1), baudrate);
+			serial_Printf(UART1, "Press Any Character after re-configuring you terminal\n");
+			serial_GetKey(UART1);
+			serial_SetDataRate(UART1, baudrate);
+			serial_Printf(UART1, "New BAUD rate is %u bauds\n", SerialGetDataRate(UART1));
+			serial_Printf(UART1, "Press Any Key to continue ...\n");
+			serial_GetKey(UART1);
 			break;
 		case 5:
 			baudrate = baudrate >> 1;
-			Serial.Printf(UART1, "BAUD rate was %u and will be %u bauds\n", SerialGetDataRate(UART1), baudrate);
-			Serial.Printf(UART1, "Press Any Character after re-configuring you terminal\n");
-			Serial.GetKey(UART1);
-			Serial.SetDataRate(UART1, baudrate);
-			Serial.Printf(UART1, "New BAUD rate is %u bauds\n", SerialGetDataRate(UART1));
-			Serial.Printf(UART1, "Press Any Key to continue ...\n");
-			Serial.GetKey(UART1);
+			serial_Printf(UART1, "BAUD rate was %u and will be %u bauds\n", SerialGetDataRate(UART1), baudrate);
+			serial_Printf(UART1, "Press Any Character after re-configuring you terminal\n");
+			serial_GetKey(UART1);
+			serial_SetDataRate(UART1, baudrate);
+			serial_Printf(UART1, "New BAUD rate is %u bauds\n", SerialGetDataRate(UART1));
+			serial_Printf(UART1, "Press Any Key to continue ...\n");
+			serial_GetKey(UART1);
 			break;
 		case 6:
-			Serial.Printf(UART1, "%s", lineMenu);
-			lineItem = Serial.GetKey(UART1);
+			serial_Printf(UART1, "%s", lineMenu);
+			lineItem = serial_GetKey(UART1);
 			lineItem = lineItem - '0';
-			Serial.Printf(UART1, "Press Any Character after re-configuring you terminal\n");
-			Serial.GetKey(UART1);
-			Serial.SetLineControl(UART1, lineControl[lineItem]);
+			serial_Printf(UART1, "Press Any Character after re-configuring you terminal\n");
+			serial_GetKey(UART1);
+			serial_SetLineControl(UART1, lineControl[lineItem]);
 			break;
 		case 7:
-			Serial.Printf(UART1, "Type a message (less than 100 characters) and press return\n");
-			Serial.GetDataBuffer(UART1);
-			Serial.Printf(UART1, "You Typed:\n\n%s\n\n", UART1SerialBuffer);
-			Serial.Printf(UART1, "\n\nPress any key to continue");
-			Serial.GetKey(UART1);
+			serial_Printf(UART1, "Type a message (less than 100 characters) and press return\n");
+			serial_GetDataBuffer(UART1);
+			serial_Printf(UART1, "You Typed:\n\n%s\n\n", UART1SerialBuffer);
+			serial_Printf(UART1, "\n\nPress any key to continue");
+			serial_GetKey(UART1);
 			break;
 	}
 }
