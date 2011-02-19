@@ -35,7 +35,15 @@
 
 int main(void) 
 {
+	#ifdef PIC32_PINGUINO
+		TRISDbits.TRISD9=1;		// because PORTB is shared with SDA on Olimex board
+		TRISDbits.TRISD10=1;	// because PORTB is shared with SCL on Olimex board
+	#endif	
+	AD1PCFG=0xFFFF;			// set port B as digital	
 	SystemConfig(80000000);	// default clock frequency is 80Mhz
+	#ifdef __ANALOG__
+		analog_init();
+    #endif
 	setup();
 	while (1)
 	{

@@ -19,7 +19,7 @@ if (Serial.available())
 	{
 	digitalWrite(0,HIGH);
 	caractere=Serial.read();
-	Serial.print("test");
+	Serial.printf("test");
 	if (caractere=='A') digitalWrite(1,digitalRead(1)^1);
 	}
 }

@@ -5,3 +5,4 @@ pinMode pinmode#include <digitalw.c>
 digitalRead digitalread#include <digitalw.c>
 toggle toggle#include <digitalw.c>
 sprintf sprintf#include <stdlib.c>
+analogRead analogRead#include <analog.c>
