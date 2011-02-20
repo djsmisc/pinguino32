@@ -33,7 +33,7 @@ void millis_init(void)
 	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 	T2CON=0;
 	TMR2=0x00;
-	PR2=0x9C40;
+	PR2=0x9C40;		// 1 mS
 	IPC2SET = 0x0000000D;
 	IFS0CLR = 0x00000100;
 	IEC0SET = 0x00000100;
@@ -41,7 +41,7 @@ void millis_init(void)
 	_millis = 0;
 }
 
-long millis()
+u32 millis()
 {
 	return(_millis);
 }
