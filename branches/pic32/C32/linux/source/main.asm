@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.9.0 #5416 (Aug  9 2009) (UNIX)
-; This file was generated Sun Feb 13 00:46:34 2011
+; This file was generated Sun Feb 20 16:46:39 2011
 ;--------------------------------------------------------
 ; PIC16 port for the Microchip 16-bit core micros
 ;--------------------------------------------------------
@@ -12,9 +12,8 @@
 ;--------------------------------------------------------
 ; public variables in this module
 ;--------------------------------------------------------
-	global _led1
-	global _led2
-	global _tempo
+	global _compteur
+	global _i
 	global _Delayms
 	global _Delayus
 	global _digitalwrite
@@ -305,13 +304,10 @@ r0x07	res	1
 r0x08	res	1
 
 udata_main_0	udata
-_led1	res	2
+_i	res	2
 
 udata_main_1	udata
-_led2	res	2
-
-udata_main_2	udata
-_tempo	res	2
+_compteur	res	2
 
 ;--------------------------------------------------------
 ; global & static initialisations
@@ -319,7 +315,7 @@ _tempo	res	2
 ; ; Starting pCode block
 S_main__high_priority_isr	code	0X002020
 _high_priority_isr:
-;	.line	121; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	void high_priority_isr(void) interrupt
+;	.line	121; /home/mandon/c32 linux/source/main.c	void high_priority_isr(void) interrupt
 	MOVFF	WREG, POSTDEC1
 	MOVFF	STATUS, POSTDEC1
 	MOVFF	BSR, POSTDEC1
@@ -329,7 +325,7 @@ _high_priority_isr:
 	MOVFF	FSR0H, POSTDEC1
 	MOVFF	PCLATH, POSTDEC1
 	MOVFF	PCLATU, POSTDEC1
-;	.line	178; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	}
+;	.line	178; /home/mandon/c32 linux/source/main.c	}
 	MOVFF	PREINC1, PCLATU
 	MOVFF	PREINC1, PCLATH
 	MOVFF	PREINC1, FSR0H
@@ -344,7 +340,7 @@ _high_priority_isr:
 ; ; Starting pCode block
 S_main__low_priority_isr	code	0X004000
 _low_priority_isr:
-;	.line	181; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	void low_priority_isr(void) interrupt
+;	.line	181; /home/mandon/c32 linux/source/main.c	void low_priority_isr(void) interrupt
 	MOVFF	WREG, POSTDEC1
 	MOVFF	STATUS, POSTDEC1
 	MOVFF	BSR, POSTDEC1
@@ -354,7 +350,7 @@ _low_priority_isr:
 	MOVFF	FSR0H, POSTDEC1
 	MOVFF	PCLATH, POSTDEC1
 	MOVFF	PCLATU, POSTDEC1
-;	.line	186; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	}
+;	.line	186; /home/mandon/c32 linux/source/main.c	}
 	MOVFF	PREINC1, PCLATU
 	MOVFF	PREINC1, PCLATH
 	MOVFF	PREINC1, FSR0H
@@ -370,197 +366,193 @@ _low_priority_isr:
 ; ; Starting pCode block
 S_main__pinguino_main	code
 _pinguino_main:
-;	.line	54; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	PIE1 = 0;
+;	.line	54; /home/mandon/c32 linux/source/main.c	PIE1 = 0;
 	CLRF	_PIE1
-;	.line	55; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	PIE2 = 0;
+;	.line	55; /home/mandon/c32 linux/source/main.c	PIE2 = 0;
 	CLRF	_PIE2
-;	.line	56; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+;	.line	56; /home/mandon/c32 linux/source/main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
 	MOVLW	0x0f
 	MOVWF	_ADCON1
-;	.line	71; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	setup();
+;	.line	71; /home/mandon/c32 linux/source/main.c	setup();
 	CALL	_setup
-_00247_DS_:
-;	.line	115; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	loop();
+_00264_DS_:
+;	.line	115; /home/mandon/c32 linux/source/main.c	loop();
 	CALL	_loop
-	BRA	_00247_DS_
+	BRA	_00264_DS_
 	RETURN	
 
 ; ; Starting pCode block
 S_main__loop	code
 _loop:
-;	.line	17; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	void loop() 
+;	.line	15; /home/mandon/c32 linux/source/user.c	void loop(void)
 	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-_00239_DS_:
-;	.line	22; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	digitalwrite(led1,HIGH);		// led 1 high
+	BANKSEL	_compteur
+;	.line	17; /home/mandon/c32 linux/source/user.c	for (compteur=0;compteur<8;compteur++)		// pour compteur variant de 0 a 7
+	CLRF	_compteur, B
+; removed redundant BANKSEL
+	CLRF	(_compteur + 1), B
+_00249_DS_:
+	BANKSEL	(_compteur + 1)
+	MOVF	(_compteur + 1), W, B
+	ADDLW	0x80
+	ADDLW	0x80
+	BNZ	_00258_DS_
+	MOVLW	0x08
+; removed redundant BANKSEL
+	SUBWF	_compteur, W, B
+_00258_DS_:
+	BTFSC	STATUS, 0
+	BRA	_00253_DS_
+;	.line	19; /home/mandon/c32 linux/source/user.c	digitalwrite(compteur,HIGH);				// allume la led compteur
 	CLRF	POSTDEC1
 	MOVLW	0x01
 	MOVWF	POSTDEC1
-	BANKSEL	(_led1 + 1)
-	MOVF	(_led1 + 1), W, B
+	BANKSEL	(_compteur + 1)
+	MOVF	(_compteur + 1), W, B
 	MOVWF	POSTDEC1
 ; removed redundant BANKSEL
-	MOVF	_led1, W, B
+	MOVF	_compteur, W, B
 	MOVWF	POSTDEC1
 	CALL	_digitalwrite
 	MOVLW	0x04
 	ADDWF	FSR1L, F
-;	.line	23; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	digitalwrite(led2,LOW);		// led 2 low
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	BANKSEL	(_led2 + 1)
-	MOVF	(_led2 + 1), W, B
-	MOVWF	POSTDEC1
+	BANKSEL	_compteur
+;	.line	20; /home/mandon/c32 linux/source/user.c	if (compteur==0) digitalwrite(7,LOW);		// si led courante=0 eteindre la led 7
+	MOVF	_compteur, W, B
 ; removed redundant BANKSEL
-	MOVF	_led2, W, B
+	IORWF	(_compteur + 1), W, B
+	BNZ	_00247_DS_
+	CLRF	POSTDEC1
+	CLRF	POSTDEC1
+	CLRF	POSTDEC1
+	MOVLW	0x07
 	MOVWF	POSTDEC1
 	CALL	_digitalwrite
 	MOVLW	0x04
 	ADDWF	FSR1L, F
-;	.line	24; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	Delayms(tempo);				// wait 0,5 second
-	MOVFF	_tempo, r0x00
-	MOVFF	(_tempo + 1), r0x01
-	CLRF	WREG
-	BANKSEL	(_tempo + 1)
-	BTFSC	(_tempo + 1), 7
+	BRA	_00248_DS_
+_00247_DS_:
+	BANKSEL	_compteur
+;	.line	21; /home/mandon/c32 linux/source/user.c	else digitalwrite(compteur-1,LOW);			// sinon eteindre la led d'indice -1
+	MOVF	_compteur, W, B
+	ADDLW	0xff
+	MOVWF	r0x00
 	MOVLW	0xff
-	MOVWF	r0x02
-; #	MOVWF	r0x03
-; #	MOVF	r0x03, W
-	MOVWF	POSTDEC1
-	MOVF	r0x02, W
-	MOVWF	POSTDEC1
-	MOVF	r0x01, W
+; removed redundant BANKSEL
+	ADDWFC	(_compteur + 1), W, B
+	CLRF	POSTDEC1
+	CLRF	POSTDEC1
 	MOVWF	POSTDEC1
 	MOVF	r0x00, W
+	MOVWF	POSTDEC1
+	CALL	_digitalwrite
+	MOVLW	0x04
+	ADDWF	FSR1L, F
+_00248_DS_:
+;	.line	22; /home/mandon/c32 linux/source/user.c	Delayms(500);							// attendre 500 milli-Secondes
+	CLRF	POSTDEC1
+	CLRF	POSTDEC1
+	MOVLW	0x01
+	MOVWF	POSTDEC1
+	MOVLW	0xf4
 	MOVWF	POSTDEC1
 	CALL	_Delayms
 	MOVLW	0x04
 	ADDWF	FSR1L, F
-;	.line	25; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	digitalwrite(led1,LOW);		// led 1 low
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	BANKSEL	(_led1 + 1)
-	MOVF	(_led1 + 1), W, B
-	MOVWF	POSTDEC1
+	BANKSEL	_compteur
+;	.line	17; /home/mandon/c32 linux/source/user.c	for (compteur=0;compteur<8;compteur++)		// pour compteur variant de 0 a 7
+	INCF	_compteur, F, B
+	BNC	_10276_DS_
 ; removed redundant BANKSEL
-	MOVF	_led1, W, B
-	MOVWF	POSTDEC1
-	CALL	_digitalwrite
-	MOVLW	0x04
-	ADDWF	FSR1L, F
-;	.line	26; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	digitalwrite(led2,HIGH);		// led 2 high
-	CLRF	POSTDEC1
-	MOVLW	0x01
-	MOVWF	POSTDEC1
-	BANKSEL	(_led2 + 1)
-	MOVF	(_led2 + 1), W, B
-	MOVWF	POSTDEC1
-; removed redundant BANKSEL
-	MOVF	_led2, W, B
-	MOVWF	POSTDEC1
-	CALL	_digitalwrite
-	MOVLW	0x04
-	ADDWF	FSR1L, F
-;	.line	27; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	Delayms(tempo);				// wait 0,5 second
-	MOVFF	_tempo, r0x00
-	MOVFF	(_tempo + 1), r0x01
-	CLRF	WREG
-	BANKSEL	(_tempo + 1)
-	BTFSC	(_tempo + 1), 7
-	MOVLW	0xff
-	MOVWF	r0x02
-; #	MOVWF	r0x03
-; #	MOVF	r0x03, W
-	MOVWF	POSTDEC1
-	MOVF	r0x02, W
-	MOVWF	POSTDEC1
-	MOVF	r0x01, W
-	MOVWF	POSTDEC1
-	MOVF	r0x00, W
-	MOVWF	POSTDEC1
-	CALL	_Delayms
-	MOVLW	0x04
-	ADDWF	FSR1L, F
-	BRA	_00239_DS_
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
+	INCF	(_compteur + 1), F, B
+_10276_DS_:
+	BRA	_00249_DS_
+_00253_DS_:
 	MOVFF	PREINC1, r0x00
 	RETURN	
 
 ; ; Starting pCode block
 S_main__setup	code
 _setup:
-	BANKSEL	_led1
-;	.line	10; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	led1=0;					// led 1 is connected on pin 1
-	CLRF	_led1, B
+	BANKSEL	_i
+;	.line	6; /home/mandon/c32 linux/source/user.c	for (i=0;i<8;i++) 
+	CLRF	_i, B
 ; removed redundant BANKSEL
-	CLRF	(_led1 + 1), B
-;	.line	11; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	led2=1;					// led 2 is connected on pin 2
-	MOVLW	0x01
-	BANKSEL	_led2
-	MOVWF	_led2, B
+	CLRF	(_i + 1), B
+_00233_DS_:
+	BANKSEL	(_i + 1)
+	MOVF	(_i + 1), W, B
+	ADDLW	0x80
+	ADDLW	0x80
+	BNZ	_00241_DS_
+	MOVLW	0x08
 ; removed redundant BANKSEL
-	CLRF	(_led2 + 1), B
-;	.line	12; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	tempo=500;				// tempo for blink is 500 mS
-	MOVLW	0xf4
-	BANKSEL	_tempo
-	MOVWF	_tempo, B
-	MOVLW	0x01
-; removed redundant BANKSEL
-	MOVWF	(_tempo + 1), B
-;	.line	13; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	pinmode(led1,OUTPUT);		// pin 1 is an output
-	MOVLW	0x00
+	SUBWF	_i, W, B
+_00241_DS_:
+	BC	_00237_DS_
+;	.line	8; /home/mandon/c32 linux/source/user.c	pinmode(i,OUTPUT);		// definit les broches 0 a 7 en sortie
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	CALL	_pinmode
-	MOVLW	0x04
-	ADDWF	FSR1L, F
-;	.line	14; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/user.c	pinmode(led2,OUTPUT);		// pin 7 is an output
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	BANKSEL	(_led2 + 1)
-	MOVF	(_led2 + 1), W, B
+	BANKSEL	(_i + 1)
+	MOVF	(_i + 1), W, B
 	MOVWF	POSTDEC1
 ; removed redundant BANKSEL
-	MOVF	_led2, W, B
+	MOVF	_i, W, B
 	MOVWF	POSTDEC1
 	CALL	_pinmode
 	MOVLW	0x04
 	ADDWF	FSR1L, F
+;	.line	9; /home/mandon/c32 linux/source/user.c	digitalwrite(i,LOW);			// fixe un niveau 0 sur les sorties
+	CLRF	POSTDEC1
+	CLRF	POSTDEC1
+	BANKSEL	(_i + 1)
+	MOVF	(_i + 1), W, B
+	MOVWF	POSTDEC1
+; removed redundant BANKSEL
+	MOVF	_i, W, B
+	MOVWF	POSTDEC1
+	CALL	_digitalwrite
+	MOVLW	0x04
+	ADDWF	FSR1L, F
+	BANKSEL	_i
+;	.line	6; /home/mandon/c32 linux/source/user.c	for (i=0;i<8;i++) 
+	INCF	_i, F, B
+	BNC	_20277_DS_
+; removed redundant BANKSEL
+	INCF	(_i + 1), F, B
+_20277_DS_:
+	BRA	_00233_DS_
+_00237_DS_:
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epapout_init	code
 _epapout_init:
-;	.line	42; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	void epapout_init() { return; }
+;	.line	42; /home/mandon/c32 linux/source/main.c	void epapout_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epapin_init	code
 _epapin_init:
-;	.line	41; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	void epapin_init() { return; }
+;	.line	41; /home/mandon/c32 linux/source/main.c	void epapin_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_out	code
 _epap_out:
-;	.line	40; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	void epap_out() { return; }
+;	.line	40; /home/mandon/c32 linux/source/main.c	void epap_out() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_in	code
 _epap_in:
-;	.line	39; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/source/main.c	void epap_in() { return; }
+;	.line	39; /home/mandon/c32 linux/source/main.c	void epap_in() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__toggle	code
 _toggle:
-;	.line	93; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	void toggle(u8 pin)
+;	.line	93; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	void toggle(u8 pin)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -568,7 +560,7 @@ _toggle:
 	MOVFF	r0x02, POSTDEC1
 	MOVLW	0x02
 	MOVFF	PLUSW2, r0x00
-;	.line	96; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	val = digitalread(pin);
+;	.line	96; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	val = digitalread(pin);
 	CLRF	r0x01
 	CLRF	POSTDEC1
 	MOVF	r0x00, W
@@ -577,7 +569,7 @@ _toggle:
 	MOVWF	r0x02
 	MOVLW	0x02
 	ADDWF	FSR1L, F
-;	.line	97; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	digitalwrite(pin, val^1);
+;	.line	97; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	digitalwrite(pin, val^1);
 	MOVLW	0x01
 	XORWF	r0x02, F
 	CLRF	POSTDEC1
@@ -599,7 +591,7 @@ _toggle:
 ; ; Starting pCode block
 S_main__pinmode	code
 _pinmode:
-;	.line	69; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	void pinmode(int input, int state)
+;	.line	69; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	void pinmode(int input, int state)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -617,7 +609,7 @@ _pinmode:
 	MOVFF	PLUSW2, r0x02
 	MOVLW	0x05
 	MOVFF	PLUSW2, r0x03
-;	.line	71; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	switch (port[input])
+;	.line	71; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	switch (port[input])
 	MOVLW	LOW(_port)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -666,7 +658,7 @@ _00203_DS_:
 	GOTO	_00187_DS_
 	GOTO	_00191_DS_
 _00183_DS_:
-;	.line	73; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 0: if (state) TRISB=TRISB | mask[input];
+;	.line	73; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 0: if (state) TRISB=TRISB | mask[input];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00185_DS_
@@ -690,7 +682,7 @@ _00183_DS_:
 	IORWF	_TRISB, F
 	BRA	_00196_DS_
 _00185_DS_:
-;	.line	74; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else TRISB=TRISB & (255-mask[input]);
+;	.line	74; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else TRISB=TRISB & (255-mask[input]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -712,10 +704,10 @@ _00185_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_TRISB, F
-;	.line	75; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
+;	.line	75; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00196_DS_
 _00187_DS_:
-;	.line	76; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 1: if (state) TRISC=TRISC | mask[input];
+;	.line	76; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 1: if (state) TRISC=TRISC | mask[input];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00189_DS_
@@ -739,7 +731,7 @@ _00187_DS_:
 	IORWF	_TRISC, F
 	BRA	_00196_DS_
 _00189_DS_:
-;	.line	77; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else TRISC=TRISC & (255-mask[input]);
+;	.line	77; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else TRISC=TRISC & (255-mask[input]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -761,10 +753,10 @@ _00189_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_TRISC, F
-;	.line	78; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
+;	.line	78; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00196_DS_
 _00191_DS_:
-;	.line	79; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 2: if (state) TRISA=TRISA | mask[input];
+;	.line	79; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 2: if (state) TRISA=TRISA | mask[input];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00193_DS_
@@ -788,7 +780,7 @@ _00191_DS_:
 	IORWF	_TRISA, F
 	BRA	_00196_DS_
 _00193_DS_:
-;	.line	80; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else TRISA=TRISA & (255-mask[input]);
+;	.line	80; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else TRISA=TRISA & (255-mask[input]);
 	CLRF	r0x02
 	BTFSC	r0x01, 7
 	SETF	r0x02
@@ -809,7 +801,7 @@ _00193_DS_:
 ; #	MOVF	r0x00, W
 	ANDWF	_TRISA, F
 _00196_DS_:
-;	.line	90; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	}
+;	.line	90; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	}
 	MOVFF	PREINC1, r0x06
 	MOVFF	PREINC1, r0x05
 	MOVFF	PREINC1, r0x04
@@ -823,7 +815,7 @@ _00196_DS_:
 ; ; Starting pCode block
 S_main__digitalread	code
 _digitalread:
-;	.line	44; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	int digitalread(int input)
+;	.line	44; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	int digitalread(int input)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -835,7 +827,7 @@ _digitalread:
 	MOVFF	PLUSW2, r0x00
 	MOVLW	0x03
 	MOVFF	PLUSW2, r0x01
-;	.line	46; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	switch (port[input])
+;	.line	46; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	switch (port[input])
 	MOVLW	LOW(_port)
 	ADDWF	r0x00, W
 	MOVWF	r0x02
@@ -884,7 +876,7 @@ _00178_DS_:
 	GOTO	_00162_DS_
 	GOTO	_00166_DS_
 _00158_DS_:
-;	.line	48; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 0: if ((PORTB & mask[input])!=0) return (1);
+;	.line	48; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 0: if ((PORTB & mask[input])!=0) return (1);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x02
@@ -909,12 +901,12 @@ _00158_DS_:
 	MOVLW	0x01
 	BRA	_00171_DS_
 _00160_DS_:
-;	.line	49; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else return (0);
+;	.line	49; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else return (0);
 	CLRF	PRODL
 	CLRF	WREG
 	BRA	_00171_DS_
 _00162_DS_:
-;	.line	51; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 1: if ((PORTC & mask[input])!=0) return (1);
+;	.line	51; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 1: if ((PORTC & mask[input])!=0) return (1);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x02
@@ -939,12 +931,12 @@ _00162_DS_:
 	MOVLW	0x01
 	BRA	_00171_DS_
 _00164_DS_:
-;	.line	52; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else return (0);
+;	.line	52; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else return (0);
 	CLRF	PRODL
 	CLRF	WREG
 	BRA	_00171_DS_
 _00166_DS_:
-;	.line	54; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 2: if ((PORTA & mask[input])!=0) return (1);
+;	.line	54; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 2: if ((PORTA & mask[input])!=0) return (1);
 	CLRF	r0x02
 	BTFSC	r0x01, 7
 	SETF	r0x02
@@ -967,12 +959,12 @@ _00166_DS_:
 	MOVLW	0x01
 	BRA	_00171_DS_
 _00168_DS_:
-;	.line	55; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else return (0);
+;	.line	55; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else return (0);
 	CLRF	PRODL
 	CLRF	WREG
 	BRA	_00171_DS_
 _00170_DS_:
-;	.line	66; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	return (0);
+;	.line	66; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	return (0);
 	CLRF	PRODL
 	CLRF	WREG
 _00171_DS_:
@@ -987,7 +979,7 @@ _00171_DS_:
 ; ; Starting pCode block
 S_main__digitalwrite	code
 _digitalwrite:
-;	.line	20; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	void digitalwrite(int output,int state)
+;	.line	20; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	void digitalwrite(int output,int state)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -1005,7 +997,7 @@ _digitalwrite:
 	MOVFF	PLUSW2, r0x02
 	MOVLW	0x05
 	MOVFF	PLUSW2, r0x03
-;	.line	22; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	switch (port[output])
+;	.line	22; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	switch (port[output])
 	MOVLW	LOW(_port)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -1054,7 +1046,7 @@ _00153_DS_:
 	GOTO	_00137_DS_
 	GOTO	_00141_DS_
 _00133_DS_:
-;	.line	24; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 0: if (state) PORTB=PORTB | mask[output]; 
+;	.line	24; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 0: if (state) PORTB=PORTB | mask[output]; 
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00135_DS_
@@ -1078,7 +1070,7 @@ _00133_DS_:
 	IORWF	_PORTB, F
 	BRA	_00146_DS_
 _00135_DS_:
-;	.line	25; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else PORTB=PORTB & (255-mask[output]);
+;	.line	25; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else PORTB=PORTB & (255-mask[output]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -1100,10 +1092,10 @@ _00135_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_PORTB, F
-;	.line	26; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
+;	.line	26; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00146_DS_
 _00137_DS_:
-;	.line	27; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 1: if (state) PORTC=PORTC | mask[output];
+;	.line	27; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 1: if (state) PORTC=PORTC | mask[output];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00139_DS_
@@ -1127,7 +1119,7 @@ _00137_DS_:
 	IORWF	_PORTC, F
 	BRA	_00146_DS_
 _00139_DS_:
-;	.line	28; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else PORTC=PORTC & (255-mask[output]);
+;	.line	28; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else PORTC=PORTC & (255-mask[output]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -1149,10 +1141,10 @@ _00139_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_PORTC, F
-;	.line	29; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
+;	.line	29; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00146_DS_
 _00141_DS_:
-;	.line	30; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 2: if (state) PORTA=PORTA | mask[output];
+;	.line	30; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	case 2: if (state) PORTA=PORTA | mask[output];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00143_DS_
@@ -1176,7 +1168,7 @@ _00141_DS_:
 	IORWF	_PORTA, F
 	BRA	_00146_DS_
 _00143_DS_:
-;	.line	31; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else PORTA=PORTA & (255-mask[output]);
+;	.line	31; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	else PORTA=PORTA & (255-mask[output]);
 	CLRF	r0x02
 	BTFSC	r0x01, 7
 	SETF	r0x02
@@ -1197,7 +1189,7 @@ _00143_DS_:
 ; #	MOVF	r0x00, W
 	ANDWF	_PORTA, F
 _00146_DS_:
-;	.line	41; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	}
+;	.line	41; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/digitalw.c	}
 	MOVFF	PREINC1, r0x06
 	MOVFF	PREINC1, r0x05
 	MOVFF	PREINC1, r0x04
@@ -1211,7 +1203,7 @@ _00146_DS_:
 ; ; Starting pCode block
 S_main__Delayus	code
 _Delayus:
-;	.line	16; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	void Delayus(int microsecondes)
+;	.line	16; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	void Delayus(int microsecondes)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -1222,7 +1214,7 @@ _Delayus:
 	MOVFF	PLUSW2, r0x00
 	MOVLW	0x03
 	MOVFF	PLUSW2, r0x01
-;	.line	20; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	for (i=0;i<microsecondes;i++);
+;	.line	20; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	for (i=0;i<microsecondes;i++);
 	CLRF	r0x02
 	CLRF	r0x03
 _00119_DS_:
@@ -1248,7 +1240,7 @@ _00123_DS_:
 ; ; Starting pCode block
 S_main__Delayms	code
 _Delayms:
-;	.line	9; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	void Delayms(unsigned long milliseconde)
+;	.line	9; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	void Delayms(unsigned long milliseconde)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -1267,7 +1259,7 @@ _Delayms:
 	MOVFF	PLUSW2, r0x02
 	MOVLW	0x05
 	MOVFF	PLUSW2, r0x03
-;	.line	13; /home/mandon/programmation/pinguino32/branches/c32 lite support linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	for (i=0;i<milliseconde;i++) delay10ktcy(1);
+;	.line	13; /home/mandon/c32 linux/tools/bin/../share/sdcc/include/pic16/arduinodelay.c	for (i=0;i<milliseconde;i++) delay10ktcy(1);
 	CLRF	r0x04
 	CLRF	r0x05
 	CLRF	r0x06
@@ -1320,9 +1312,9 @@ _port:
 
 
 ; Statistics:
-; code size:	 2142 (0x085e) bytes ( 1.63%)
-;           	 1071 (0x042f) words
-; udata size:	    6 (0x0006) bytes ( 0.33%)
+; code size:	 2100 (0x0834) bytes ( 1.60%)
+;           	 1050 (0x041a) words
+; udata size:	    4 (0x0004) bytes ( 0.22%)
 ; access size:	    9 (0x0009) bytes
 
 

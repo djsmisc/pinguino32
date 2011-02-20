@@ -104,6 +104,7 @@ class Pinguino(wx.Frame):
     processor="18f2550"
     reservedword=[]
     libinstructions=[]
+    regobject=[]
     rw=[]
     THEME=[]
     Pinguino32XFolder=""
@@ -725,10 +726,12 @@ class Pinguino(wx.Frame):
                 # check content of the PDL file
                 libfile=open(sys.path[0]+"/lib/"+i,'r')
                 for line in libfile:
-                    instruction=line[0:line.find(" ")]
-                    cnvinstruction=line[line.find(" ")+1:line.find("#")]
-                    libpath=line[line.find("#")+1:len(line)]    
-                    self.libinstructions.append([instruction,cnvinstruction,libpath])
+                    if line!="\n":                      
+                        instruction=line[0:line.find(" ")]
+                        cnvinstruction=line[line.find(" ")+1:line.find("#")]
+                        libpath=line[line.find("#")+1:len(line)]    
+                        self.libinstructions.append([instruction,cnvinstruction,libpath])
+                        self.regobject.append(re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+"[ ]*\("))
                 libfile.close()
         if len(self.libinstructions)!=0:    
             for i in range(len(self.libinstructions)):
@@ -1064,8 +1067,8 @@ class Pinguino(wx.Frame):
             ligne=ligne+"\r\n"
         
         for i in range(len(self.libinstructions)):
-            pattern="(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(self.libinstructions[i][0])+"[ ]*\("
-            if re.search(pattern,line):
+            #pattern="(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(self.libinstructions[i][0])+"[ ]*\("
+            if re.search(self.regobject[i],line):
                 line=line.replace(str(self.libinstructions[i][0]),str(self.libinstructions[i][1]))
                 if self.notindefine("#"+str(self.libinstructions[i][2]))==1:
                     self.adddefine("#"+str(self.libinstructions[i][2]))        
