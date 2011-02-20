@@ -25,7 +25,6 @@
 #define __MILLIS__
 
 #include <interrupt.c>
-#include <digitalw.c>
 
 u32 _millis;
 
