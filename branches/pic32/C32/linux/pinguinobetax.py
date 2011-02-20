@@ -837,7 +837,8 @@ class Pinguino(wx.Frame):
                     sortie=Popen([sys.path[0]+"/tools/bin/ubw32",
                                 "-w",
                                 filename+".hex",
-                                "-r"],
+                                "-r",
+                                "-n"],
                                 stdout=fichier,stderr=STDOUT)
                     sortie.communicate()
                     fichier.seek(0)

@@ -1,25 +1,51 @@
-int compteur;		// definit une variable entiere pour le compteur
-int i;				// variable servant a l'initialisation
+/*
+ * LCD routines for use with pinguino board, based on LiquidCrystal lib from Arduino project.
+ * By Marcus Fazzi (Anunakin)
+ * Pins, Schematics and more info: 
+ * http://pinguino.koocotte.org/index.php/LCD_Example
+ * http://anunakin.blogspot.com/2010/08/pinguino-clock.html
+ */
 
-void setup(void)
+
+#define LED 1
+long counter;
+
+void setup(){
+//
+//
+	
+//
+	lcd(0, 2, 3, 4, 5, 6, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	
+//
+	begin(4, 0);
+	
+	/* Debug */
+	pinmode(LED, OUTPUT);		// LED on pin 13
+	
+}
+ 
+void loop()
 {
-   for (i=0;i<8;i++) 
-	{
-	pinmode(i,OUTPUT);		// definit les broches 0 a 7 en sortie
-	digitalwrite(i,LOW);			// fixe un niveau 0 sur les sorties
+//
+	home();
+//
+	lcdPrint("Pinguino32X");	// Output char
+		
+	Delayms(500);
+	while(1){
+	home();
+	lcdPrint("Hello World!");
+	
+	setCursor(0, 1);
+	printNumber(counter, 10);
+	
+	digitalwrite(LED,HIGH);
+	Delayms(250);
+	digitalwrite(LED,LOW);
+	Delayms(250);
+	counter++;
 	}
 }
 
-
-
-void loop(void)
-{
-for (compteur=0;compteur<8;compteur++)		// pour compteur variant de 0 a 7
-	{
-	digitalwrite(compteur,HIGH);				// allume la led compteur
-	if (compteur==0) digitalwrite(7,LOW);		// si led courante=0 eteindre la led 7
-	else digitalwrite(compteur-1,LOW);			// sinon eteindre la led d'indice -1
-	Delayms(500);							// attendre 500 milli-Secondes
-	}
-}
 
