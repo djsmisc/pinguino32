@@ -46,6 +46,9 @@ int main(void)
     #endif
     #ifdef __MILLIS__
 		millis_init();
+    #endif
+    #ifdef __PWM__
+    	pwm_init();
     #endif    
 	setup();
 	while (1)

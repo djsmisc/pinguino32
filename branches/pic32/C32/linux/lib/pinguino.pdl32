@@ -7,3 +7,10 @@ digitalRead digitalread#include <digitalw.c>
 toggle toggle#include <digitalw.c>
 sprintf sprintf#include <stdlib.c>
 analogRead analogRead#include <analog.c>
+pow powf#include <math.h>
+sqrt sqrtf#include <math.h>
+abs fabsf#include <math.h>
+sin sinf#include <math.h>
+cos cosf#include <math.h>
+tan tanf#include <math.h>
+analogWrite analogwrite#include <pwm.c>
