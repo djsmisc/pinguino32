@@ -67,6 +67,23 @@
 	#include <digitalw.c>
 	#include <pwm.c>
 
+	void noTone(u8 pin)
+	{
+		PWM_set_frequency(0);					// note (range 1..14)
+		PWM_set_percent_dutycycle(pin, 0);		// silence
+		//pinmode(pin, INPUT);
+		//CCP1CON = 0;							// stop sound = stop pwm
+		//T2CONbits.TMR2ON = OFF;				// disable Timer2 = stop pwm = stop sound
+	}
+
+	void Tone(u8 pin, u16 freq, u16 duration)
+	{
+		PWM_set_frequency(freq);
+		PWM_set_percent_dutycycle(pin, 50);
+		Delayms(duration);						// length of sound in ms 
+		noTone(pin);
+	}
+
 /*	----------------------------------------------------------------------------
 	Sound
 	----------------------------------------------------------------------------
@@ -82,6 +99,7 @@
 	Between 50% and 100% is the same as between 0% and 50%.
 	----------------------------------------------------------------------------
 	TODO:				Using timer to replace the Delayms function
+						vol is no more used
 	--------------------------------------------------------------------------*/
 
 	void Sound(u8 pin, u8 note, u16 duration, u8 vol)
@@ -97,17 +115,7 @@
 		if (vol > 10) vol = 10;					// max. volume is 10
 		vol = vol * 5;							// max. volume is reach for 50% duty
 
-		PWM_set_frequency(freq[note-1]);		// note (range 1..13)
-		PWM_set_percent_dutycycle(pin, vol);	// volume adjustment
-
-		Delayms(duration);						// length of sound in ms 
-
-		PWM_set_frequency(0);					// note (range 1..14)
-		PWM_set_percent_dutycycle(pin, 0);		// silence
-
-		//pinmode(pin, INPUT);
-		//CCP1CON = 0;							// stop sound = stop pwm
-		//T2CONbits.TMR2ON = OFF;					// disable Timer2 = stop pwm = stop sound
+		Tone(pin, freq[note-1], duration);
 	}
 
 /*	----------------------------------------------------------------------------
