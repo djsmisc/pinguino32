@@ -244,5 +244,51 @@ u8 I2C_get(u8 adress)
 	return (byte);
 }
 
+/**	----------------------------------------------------------------------------
+	---------- Send the start, device address and r_w command
+	----------------------------------------------------------------------------
+	For 7 bits address Device:
+		Divice address Format = 0 A6 A5 A4 A3 A2 A1 A0
+		were: A6:A0 7 bits Device address,
+	For 10 bits address Device:                
+		Divice address Format = 1 1 1 1 0 0 A9 A8 A7 A6 A5 A4 A3 A2 A1 A0
+		were: A9:A0 are Device address,
+	r_w			read (1) or write (0) parameter
+	----------------------------------------------------------------------------
+	If the device is busy then it resends until accepted
+	--------------------------------------------------------------------------*/
+
+void I2C_sendID(u16 DeviceID, u8 r_w)
+{         
+	u8 temp;
+
+	if (DeviceID > 0x00FF)
+	{         
+		temp = (DeviceID >> 7) & 0x06;	// set A9 and A8 to temp.bit2 and temp.bit1
+		temp = temp | 0xF0 | r_w;		// set DeviceID address Hi format = 11110(A9A8)(R/W)
+		I2C_start();
+		if (I2C_writechar(temp) != 1)
+		{
+			do {
+				I2C_restart();
+			} while ( I2C_writechar(temp) != 1);
+			temp = (DeviceID << 1 & 0xFE) | r_w;
+			I2C_writechar(temp);
+		}
+	}
+	else
+	{         
+		temp = DeviceID << 1 & 0xFE;
+		temp = temp | r_w;
+		I2C_start();
+		if (I2C_writechar(temp) != 1)
+		{
+			do {
+				I2C_restart();
+			} while (I2C_writechar(temp) != 1);
+		}
+	}
+}
+
 #endif
 
