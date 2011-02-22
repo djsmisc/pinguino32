@@ -1,10 +1,13 @@
 /**	----------------------------------------------------------------------------
 	---------- macro.h
 	---------- rblanchot@gmail.com
+	---------- Part of Pinguino - http://www.pinguino.cc/
 	--------------------------------------------------------------------------**/
 
 #ifndef __MACRO_H
 	#define __MACRO_H
+
+	#include <const.h>
 
 	/// ASM
 
@@ -13,6 +16,8 @@
 	#define reset()			{_asm reset _endasm;}
 	#define sleep()			{OSCCONbits.IDLEN = 0;\
 							_asm sleep _endasm;}
+	//#define interrupts()	sei()
+	//#define noInterrupts()	cli()
 
 	/// C
 
@@ -20,9 +25,28 @@
 
 	/// BYTES
 
+	//#define lowByte(w) 			((uint8_t) ((w) & 0xff))
+	//#define highByte(w) 		((uint8_t) ((w) >> 8))
 	#define high8(x)			(unsigned char) (x >> 8)
 	#define low8(x)				(unsigned char) (x & 0xFF)
 	#define make16(low,high)	(low | (high << 8))
+
+	/// MATH
+
+	#define min(a,b) ((a)<(b)?(a):(b))
+	#define max(a,b) ((a)>(b)?(a):(b))
+	#define abs(x) ((x)>0?(x):-(x))
+	#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+	#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+	#define radians(deg) ((deg)*DEG_TO_RAD)
+	#define degrees(rad) ((rad)*RAD_TO_DEG)
+	#define sq(x) ((x)*(x))
+
+	/// CLOCK
+
+	//#define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
+	//#define clockCyclesToMicroseconds(a) ( (a) / clockCyclesPerMicrosecond() )
+	//#define microsecondsToClockCycles(a) ( (a) * clockCyclesPerMicrosecond() )
 
 	/// BITWISE OPERATION
 
@@ -51,4 +75,9 @@
 	#define BitClear(octet, n) \
 		(octet & !(1 << n))
 
+	#define BitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
+	
+	#define bit(b) (1 << (b))
+
 #endif
+
