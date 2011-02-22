@@ -29,4 +29,11 @@ cos cosf#include <math.h>
 tan tanf#include <math.h>
 randomSeed srand#include <stdlib.h>
 pulseIn pulseIn#include <pulse.c>
+BitRead bitRead
+BitSet bitSet
+BitSet bitWrite
+BitClear bitClear
+low8 lowByte
+high8 highByte
+bit bit
 
