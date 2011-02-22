@@ -1,0 +1,14 @@
+u8 u8#include <typedef.h>
+s8 s8#include <typedef.h>
+u16 u16#include <typedef.h>
+s16 s16#include <typedef.h>
+u32 u32#include <typedef.h>
+s32 s32#include <typedef.h>
+char char
+int int
+long long
+const const
+bool bool
+float float
+register register
+

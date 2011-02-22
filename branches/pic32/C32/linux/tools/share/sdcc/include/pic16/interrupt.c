@@ -850,7 +850,7 @@ void OnCompareAll(callback func, u8 config)
 				func:		function called when interrupt occured
 	--------------------------------------------------------------------------*/
 
-#ifdef RCINT || TXINT || ADINT || OSCFINT || EEINT || HLVDINT || BCLINT || USBINT
+#ifdef RCINT || TXINT || ADINT || OSCFINT || EEINT || HLVDINT || BCLINT || USBINT || SSPINT
 void OnEvent(u8 inter, callback func)
 {
 	if (intUsed[inter] == INT_NOT_USED)
@@ -934,6 +934,8 @@ void OnUSB(callback func)		{	OnEvent(INT_USB, func);	}
 
 #ifdef SSPINT
 void OnParallel(callback func)	{	OnEvent(INT_SSP, func);	}
+void OnI2CRequest(callback func)	{	OnEvent(INT_SSP, func);	}
+void OnI2CReceive(callback func)	{	OnEvent(INT_SSP, func);	}
 #endif
 
 /*	----------------------------------------------------------------------------
