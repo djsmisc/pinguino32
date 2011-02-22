@@ -6,12 +6,10 @@ char c = 65;
 int i = 333;
 long l = 115200;
 float f = 3.14159265; // floating point support is not yet implemented in printf
+
 void setup()
 {
 	Serial.begin(9600);
-}
-void loop()
-{
 	Serial.printf("\r\n");
 	Serial.printf("**************************\r\n");
 	Serial.printf("*** Serial Printf Demo ***\r\n");
@@ -33,6 +31,21 @@ void loop()
 	Serial.printf("-3: %-4d left justif.\r\n", -3);
 	Serial.printf("-3: %4d right justif.\r\n", -3);
 	Serial.printf("\r\n");
+
+	Serial.printf("Press Any Key ...\r\n");
+	c = Serial.getkey();
+	Serial.printf("You pressed Key %c\r\n",c);
+	Serial.printf("\r\n");
+
 	Serial.printf("Press Any Key to continue ...\r\n");
-	Serial.getkey();
+	c = Serial.getkey();
+
+}
+
+void loop()
+{
+	Serial.printf("Write Any Texte ...\r\n");
+	string = Serial.getstring();
+	Serial.printf("You wrote : %s\r\n", string);
+	Serial.printf("\r\n");
 }

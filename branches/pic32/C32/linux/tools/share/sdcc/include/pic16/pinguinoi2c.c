@@ -1,12 +1,12 @@
 /*	----------------------------------------------------------------------------
-	FILE:			i2c.c
+	FILE:			pinguinoi2c.c
 	PROJECT:		pinguino
 	PURPOSE:		I2C functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	03 apr. 2010
-	LAST RELEASE:	14 jan. 2011
+	LAST RELEASE:	09 feb. 2011
 	----------------------------------------------------------------------------
-	TODO : 
+	TODO : slave modes improvement
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -31,22 +31,18 @@
 	#include "macro.h"
 	#include "typedef.h"
 
-	// Horloge I2C
-	#define FOSC		48
-	#define FI2C		100	// 100kHz (10µs)
-	#define I2C_SPEED	( (FOSC * 250) / FI2C ) - 1
+	// Maybe you will have to comment this one
+	#define FOSC			48
 
 	// Mode I2C
-	#define I2C_WRITE	0
-	#define I2C_READ	1
+	#define I2C_WRITE		0
+	#define I2C_READ		1
+	#define I2C_MASTER		0
+	#define I2C_SLAVE		1
+	#define I2C_SLEW_OFF	0
+	#define I2C_SLEW_ON		1
 
-	/// Devices
-
-	#define PCF8574_ADDRESS BIN(01001110)	// adress = 0 1 0 0 A2 A1 A0 0 = 0x4E
-
-	/// VARIABLES GLOBALES
-
-	extern OCTET myPCF8574_data;	// les registres du PCF8574
+	/// PROTOTYPES
 
 	void I2C_init();
 	void I2C_wait();
@@ -61,24 +57,45 @@
 	u8 I2C_get(u8);
 
 /**	----------------------------------------------------------------------------
-	---------- VARIABLES GLOBALES
+	---------- FOR TEST ONLY
 	--------------------------------------------------------------------------*/
 
-OCTET myPCF8574_data;	// les registres du PCF8574
+	//#define PCF8574_ADDRESS BIN(01001110)	// adress = 0 1 0 0 A2 A1 A0 0 = 0x4E
+	//extern OCTET myPCF8574_data;	// les registres du PCF8574
+	//OCTET myPCF8574_data;	// les registres du PCF8574
 
 /**	----------------------------------------------------------------------------
 	---------- Open the I2C bus
 	----------------------------------------------------------------------------
+	SSPSTAT.SMP: Slew Rate Control bit
+	In Master or Slave mode:
+	1 = Slew Mode Off = Standard Speed mode (100 kHz and 1 MHz)
+	0 = Slew Mode On = High-Speed mode (400 kHz)
 	--------------------------------------------------------------------------*/
 
-void I2C_init()
+void I2C_init(u8 mode, u8 speed)
 {
 	TRISBbits.TRISB0 = INPUT;
 	TRISBbits.TRISB1 = INPUT;
-	SSPCON1 = BIN(00101000);	// Master Mode
+	switch (mode)
+	{
+		case I2C_SLAVE_MODE:
+			SSPCON1 = 0b00101111;		// Slave mode, 10-bit address with Start and Stop bit interrupts enabled
+			break;
+		default:
+			SSPCON1 = 0b00101000;		// Master Mode, clock = FOSC/(4 * (SSPADD + 1))
+	}
 	SSPCON2 = 0;
-	SSPSTAT = BIN(10000000);	// Slew Mode Off
-	SSPADD = I2C_SPEED;
+	switch (mode)
+	{
+		case I2C_SLEW_ON:
+			SSPSTAT = 0b00000000;		// Slew Mode On
+			SSPADD = 119;				// 100kHz = FOSC/(4 * (SSPADD + 1))
+			//SSPADD = 11;				// 1MHz = FOSC/(4 * (SSPADD + 1))
+		default:
+			SSPSTAT = 0b10000000;		// Slew Mode Off
+			SSPADD = 29;				// 400kHz = FOSC/(4 * (SSPADD + 1))
+	}
 	PIR1bits.SSPIF = 0;
 	PIR2bits.BCLIF = 0;
 }

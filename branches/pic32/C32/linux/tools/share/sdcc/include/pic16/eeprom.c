@@ -3,6 +3,8 @@
 	PROJECT:		pinguino
 	PURPOSE:		Routines d'écriture et de lecture en eeprom
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
+					EEPROM_read8 & EEPROM_write8 are (c) Raphael Wimmer.
+					Licensed under GNU GPL v2 or higher
 	FIRST RELEASE:	09 avril 2010
 	LAST RELEASE:	14 jan. 2011
 	----------------------------------------------------------------------------
@@ -35,6 +37,7 @@
 	---------- myEEPROM_read8()
 	----------------------------------------------------------------------------
 	---------- Routine de lecture en eeprom
+	---------- (c) Raphael Wimmer. Licensed under GNU GPL v2 or higher
 	--------------------------------------------------------------------------*/
 
 u8 EEPROM_read8(u8 address)
@@ -68,6 +71,7 @@ u16 EEPROM_read16(u8 address)
 	---------- myEEPROM_write8()
 	----------------------------------------------------------------------------
 	---------- Routine d'écriture d'un 8-bit en eeprom
+	---------- (c) Raphael Wimmer. Licensed under GNU GPL v2 or higher
 	--------------------------------------------------------------------------*/
 
 void EEPROM_write8(u8 address, u8 mydata)
@@ -78,10 +82,10 @@ void EEPROM_write8(u8 address, u8 mydata)
 	EECON1bits.EEPGD = 0;
 	EECON1bits.CFGS = 0;
 	EECON1bits.WREN = 1;	// enable writes to data EEPROM
-	INTCONbits.GIE = 0;	// disable interrupts
+	INTCONbits.GIE = 0;		// disable interrupts
 	EECON2 = 0x55;
 	EECON2 = 0x0AA;
-	EECON1bits.WR = 1;	// start writing
+	EECON1bits.WR = 1;		// start writing
 	while (EECON1bits.WR)
 	{
 		nop();
