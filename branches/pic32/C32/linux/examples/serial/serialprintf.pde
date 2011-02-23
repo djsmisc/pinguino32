@@ -34,18 +34,19 @@ void setup()
 
 	Serial.printf("Press Any Key ...\r\n");
 	c = Serial.getkey();
-	Serial.printf("You pressed Key %c\r\n",c);
+	Serial.printf("You pressed Key %c\r\n", c);
 	Serial.printf("\r\n");
 
 	Serial.printf("Press Any Key to continue ...\r\n");
 	c = Serial.getkey();
-
 }
 
 void loop()
 {
+	u8 *buffer;
+	
 	Serial.printf("Write Any Texte ...\r\n");
-	string = Serial.getstring();
-	Serial.printf("You wrote : %s\r\n", string);
+	buffer = Serial.getstring();
+	Serial.printf("You wrote : %s\r\n", buffer);
 	Serial.printf("\r\n");
 }
