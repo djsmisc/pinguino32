@@ -22,3 +22,4 @@ lcd.setCursor setCursor#include <lcdlib.c>
 lcd.command command#include <lcdlib.c>
 lcd.write write#include <lcdlib.c>
 lcd.send send#include <lcdlib.c>
+lcd.printf lcdprintf#include <lcdlib.c>
