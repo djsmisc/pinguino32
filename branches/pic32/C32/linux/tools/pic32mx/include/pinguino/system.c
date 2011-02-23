@@ -1,6 +1,11 @@
 /*	----------------------------------------------------------------------------
 	system.c
 	Régis Blanchot
+	
+	Modified FAZZI 23/02/2011
+	- Removed  asm("di")/asm("ei") from GetCP0Count/SetCP0Count
+	- Added AD1PCFG = 0xFFFF to SystemConfig(), now all pins of PORTB as digital IOs
+	
 	--------------------------------------------------------------------------*/
 
 #ifndef __SYSTEM_C
@@ -236,7 +241,8 @@ void SystemConfig(u32 cpuCoreFrequency)
 {
 	SetSystemClock(cpuCoreFrequency);
 	SetFlashWaitStates();
-	DDPCONbits.JTAGEN=0;		// PORTA is used as digital instead of JTAG	
+	DDPCONbits.JTAGEN=0;		// PORTA is used as digital instead of JTAG
+	AD1PCFG = 0xFFFF;			// All pins of PORTB as digital IOs
 }
 
 /*	----------------------------------------------------------------------------
@@ -245,12 +251,7 @@ void SystemConfig(u32 cpuCoreFrequency)
 
 u32 GetCP0Count()
 {
-	u32 count;
-
-	asm("di"); // Disable all interrupts
-	count = _CP0_GET_COUNT();
-	asm("ei"); // Enable all interrupts
-	return count;
+	return _CP0_GET_COUNT();
 }
 
 /*	----------------------------------------------------------------------------
@@ -259,9 +260,7 @@ u32 GetCP0Count()
 
 void SetCP0Count(u32 count)
 {
-	asm("di"); // Disable all interrupts
 	_CP0_SET_COUNT(count);
-	asm("ei"); // Enable all interrupts
 }
 
 #endif

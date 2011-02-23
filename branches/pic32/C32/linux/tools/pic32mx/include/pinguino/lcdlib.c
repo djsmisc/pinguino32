@@ -11,8 +11,6 @@
 #ifndef __LCDLIB_C__
 #define __LCDLIB_C__
 
-#pragma library c
-
 //Arduino like delays
 #include <delay.c>
 
@@ -26,11 +24,11 @@
 /** Positive pulse on E */
 void pulseEnable(void) {
   digitalwrite(_enable_pin, LOW);
-  Delayus(1);    
+  Delayus(1);
   digitalwrite(_enable_pin, HIGH);
   Delayus(1);    // enable pulse must be >450ns
   digitalwrite(_enable_pin, LOW);
-  Delayus(100);   // commands need > 37us to settle
+  Delayus(50);   // commands need > 37us to settle
 }
 
 /** Write using 4bits mode */
@@ -39,7 +37,6 @@ void write4bits(unsigned char value) {
 	for (i = 0; i < 4; i++) {		
 		digitalwrite(_data_pins[i], (value >> i) & 0x01);
 	}
-
 	pulseEnable();
 }
 
@@ -55,9 +52,8 @@ void write8bits(unsigned char value) {
 /** Send data to LCD 8 or 4 bits */
 void send(unsigned char value, unsigned char mode) {
 	digitalwrite(_rs_pin, mode);
-  
-	if (_displayfunction & LCD_8BITMODE) {
-		write8bits(value); 
+    if (_displayfunction & LCD_8BITMODE) {
+		write8bits(value);
 	} else {
 		write4bits(value>>4);
 		write4bits(value);
@@ -339,7 +335,7 @@ void init(unsigned char fourbitmode, unsigned char rs, unsigned char rw, unsigne
 void lcd(unsigned char rs, unsigned char enable, unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3, 
 			unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7) {
 	
-	init(((d4 + d5 + d6 + d7)==0), rs, -1, enable, d0, d1, d2, d3, d4, d5, d6, d7);		
+	init(((d4 + d5 + d6 + d7)==0), rs, 99, enable, d0, d1, d2, d3, d4, d5, d6, d7);
 	
 }
 #endif
