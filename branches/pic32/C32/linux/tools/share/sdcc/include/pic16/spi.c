@@ -28,7 +28,7 @@
 
 	#include <digitalw.c>
 	#include <stdarg.h>
-	#include <stdlib.c>
+	#include <stdio.c>
 
 	// pins
 	#define SPI_DATA_IN 					0		// RB0 = SDI
@@ -138,7 +138,7 @@
 		va_list args;
 
 		va_start(args, fmt);
-		printf(SPI_write, fmt, args);
+		pprintf(SPI_write, fmt, args);
 		va_end(args);
 	}
 
