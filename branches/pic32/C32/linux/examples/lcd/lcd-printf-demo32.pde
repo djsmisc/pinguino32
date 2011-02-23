@@ -1,5 +1,5 @@
 /*	----------------------------------------------------------------------------
-	lcd.printf demo
+	lcd.printf demo for 32-bit
 	<rblanchot@gmail.com>
 	----------------------------------------------------------------------------
 	---------- LCD 2x16
@@ -16,16 +16,13 @@
 	16 - LED- (GND)
 	---------------------------------------------------------------------------*/
  
-// Comment line above if you using a pinguino with PIC18F2550.
-//#define PIC18F4550
-
 // Global vars
 
-u8 s  = 0;
-u8 m  = 0;
+u8 s = 0;
+u8 m = 0;
 u8 h = 0;
 
-// This function is called every sec. by timer 0
+// This function is called every sec.
 
 void tick()
 {
@@ -54,19 +51,19 @@ void tick()
 
 void setup()
 {
-	// 4 bits mode, last four pins arenot used
-	lcd(8, 9, 0, 1, 2, 3, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	// UBW 32 mapping - 4 bits mode
+	//lcd(0, 2, 3, 4, 5, 6, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	lcd(72, 71, 70, 69, 68, 67, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 
 	// LCD format
 	lcd.begin(2, 0); // lines, dotsize
 
 	lcd.home(); // 0, 0
 	lcd.printf(" lcd.printf demo");
-	
-	// Timer0 call function tick() every sec.
-	OnTimer0(tick, INT_MILLISEC, 1000);
 }
  
 void loop()
 {
+	tick();
+	delay(1000);
 }
