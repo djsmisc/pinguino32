@@ -17,6 +17,10 @@
 //Arduino like DigitalWrite and Read
 #include <digitalw.c>
 
+// pinguino stdio own library
+#include <stdio.c>
+#include <stdarg.h>
+
 #ifndef __LCDLIB_H__
 #include <lcdlib.h>
 #endif
@@ -86,6 +90,17 @@ void lcdPrint(char *string) {
 	for( i=0; string[i]; i++) {
 		write(string[i]);
 	}
+}
+
+/** Write formated string on LCD **/
+//  added 23/02/2011 rblanchot@gmail.com
+void lcdprintf(char *fmt, ...)
+{
+	va_list args;
+
+	va_start(args, fmt);
+	pprintf(write, fmt, args);
+	va_end(args);
 }
 
 /** Print a number on LCD */

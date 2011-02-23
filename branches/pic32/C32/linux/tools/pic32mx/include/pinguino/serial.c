@@ -26,7 +26,7 @@
 #ifndef __SERIAL_C
 	#define __SERIAL_C
 
-	#include "stdlib.c"
+	#include "stdio.c"
 	#include "system.c"
 	#include "interrupt.c"
 
@@ -432,6 +432,26 @@ u8 SerialGetKey(u8 port)
 	c = SerialRead(port);
 	SerialFlush(port);
 	return (c);
+}
+
+/*	----------------------------------------------------------------------------
+	SerialGetString
+	--------------------------------------------------------------------------*/
+
+u8 * SerialGetString(u8 port)
+{
+	u8 *buffer;
+	u8 c;
+	u8 i = 0;
+
+	buffer = (u8 *) malloc(80);
+	do {
+		c = SerialGetKey(port);
+		SerialPrintf(port, "%c", c);
+		buffer[i++] = c;
+	} while (c != '\r');
+	buffer[i] = '\0';
+	return (buffer);
 }
 
 /*	----------------------------------------------------------------------------

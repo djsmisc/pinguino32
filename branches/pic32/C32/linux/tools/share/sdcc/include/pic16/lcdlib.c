@@ -1,4 +1,4 @@
-/*
+ /*
  * LCD routines for use with pinguino board, based on LiquidCrystal lib from Arduino project.
  * Port by Marcus Fazzi (anunakin@gmail.com)
  * LiquidCrystal original Arduino site: 
@@ -15,7 +15,7 @@
 #include <arduinodelay.c>		//Arduino like delays
 #include <digitalw.c>			//Arduino like DigitalWrite and Read
 #include <lcdlib.h>
-#include <stdlib.c>
+#include <stdio.c>
 #include <stdarg.h>
 
 /** Positive pulse on E */
@@ -82,7 +82,7 @@ void lcdprintf(char *fmt, ...)
 	va_list args;
 
 	va_start(args, fmt);
-	printf(write, fmt, args);
+	pprintf(write, fmt, args);
 	va_end(args);
 }
 

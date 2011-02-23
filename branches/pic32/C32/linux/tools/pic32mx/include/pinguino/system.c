@@ -12,7 +12,6 @@
 	#define __SYSTEM_C
 
 	#include <p32xxxx.h>
-	//#include <cp0defs.h>
 	#include "const.h"
 	#include "typedef.h"
 
@@ -251,7 +250,12 @@ void SystemConfig(u32 cpuCoreFrequency)
 
 u32 GetCP0Count()
 {
-	return _CP0_GET_COUNT();
+	u32 count;
+
+	//asm("di"); // Disable all interrupts
+	count = _CP0_GET_COUNT();
+	//asm("ei"); // Enable all interrupts
+	return count;
 }
 
 /*	----------------------------------------------------------------------------
@@ -260,7 +264,9 @@ u32 GetCP0Count()
 
 void SetCP0Count(u32 count)
 {
+	//asm("di"); // Disable all interrupts
 	_CP0_SET_COUNT(count);
+	//asm("ei"); // Enable all interrupts
 }
 
 #endif

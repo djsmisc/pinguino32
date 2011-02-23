@@ -28,9 +28,10 @@
 #ifndef __PINGUINOSERIAL
 #define __PINGUINOSERIAL
 
+#include <stdlib.h>
 #include <stdarg.h>
-//#include <stdlib.h>
-#include <stdlib.c>
+#include <stdio.c>
+//#include <typedef.h>
 
 #define FLOAT 10
 
@@ -121,25 +122,54 @@ void serial_flush(void)
 	rpointer=1;
 }
 
-// 
+/*	----------------------------------------------------------------------------
+	serial_printf()
+	rblanchot@gmail.com
+	write formated string on the serial port
+	--------------------------------------------------------------------------*/
 
-unsigned char serial_getkey()
+void serial_printf(char *fmt, ...)
 {
-	unsigned char c;
+	va_list args;
+
+	va_start(args, fmt);
+	pprintf(serial_putchar, fmt, args);
+	va_end(args);
+}
+
+/*	----------------------------------------------------------------------------
+	serial_getkey()
+	rblanchot@gmail.com
+	--------------------------------------------------------------------------*/
+
+u8 serial_getkey()
+{
+	u8 c;
 	while (!(serial_available()));
 	c = serial_read();
 	serial_flush();
 	return (c);
 }
 
-// write formated string on the serial port
-void serial_printf(char *fmt, ...)
-{
-	va_list args;
+/*	----------------------------------------------------------------------------
+	serial_getstring()
+	rblanchot@gmail.com
+	--------------------------------------------------------------------------*/
 
-	va_start(args, fmt);
-	printf(serial_putchar, fmt, args);
-	va_end(args);
+u8 * serial_getstring()
+{
+	u8 buffer[80];
+	u8 c;
+	u8 i = 0;
+
+	//buffer = (u8 *) malloc(80);
+	do {
+		c = serial_getkey();
+		serial_printf("%c", c);
+		buffer[i++] = c;
+	} while (c != '\r');
+	buffer[i] = '\0';
+	return (buffer);
 }
 
 /*******************************************************************************

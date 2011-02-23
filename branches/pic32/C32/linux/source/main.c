@@ -57,9 +57,6 @@ void pinguino_main(void)
 
 	#ifdef USERINT
 	int_init();							// Disable all interrupts
-	RCONbits.IPEN = 1;					// Enable HP/LP interrupts
-	INTCONbits.GIEH = 1;				// Enable HP interrupts
-	INTCONbits.GIEL = 1;				// Enable LP interrupts
 	#endif
 
     #ifdef __USB__
@@ -69,6 +66,10 @@ void pinguino_main(void)
     #endif
 
     setup();
+
+	#ifdef USERINT
+	int_start();							// Enable all timers interrupts
+	#endif
 
     #ifdef ANALOG
 	analog_init();
