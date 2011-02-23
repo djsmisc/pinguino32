@@ -39,9 +39,9 @@
 #define LCD_5x10DOTS 0x04
 #define LCD_5x8DOTS 0x00
 
-unsigned char _rs_pin = 8; // LOW: command.  HIGH: character.
-unsigned char _rw_pin = -1; // LOW: write to LCD.  HIGH: read from LCD.
-unsigned char _enable_pin = 9; // activated by a HIGH pulse.
+unsigned char _rs_pin; // LOW: command.  HIGH: character.
+unsigned char _rw_pin; // LOW: write to LCD.  HIGH: read from LCD. NOT IMPLEMENTED! Connect RW to GND.
+unsigned char _enable_pin; // activated by a HIGH pulse.
 unsigned char _data_pins[8];
 
 unsigned char _displayfunction;
