@@ -4,7 +4,7 @@
 	PURPOSE:		
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 	FIRST RELEASE:	19 feb. 2011
-	LAST RELEASE:	19 feb. 2011
+	LAST RELEASE:	26 feb. 2011
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -25,12 +25,12 @@
 #define __ANALOG__
 
 #ifdef PIC32_PINGUINO
-u16 __analogmask[]={0x0002,0x0004,0x0008,0x0010,0x0100,0x0200,0x0000,0x0000,
-					0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0002,0x0004,
-					0x0008,0x0010,0x0100,0x0200};
-u16 __bufmask[]=   {0x0004,0x0008,0x000C,0x0010,0x0020,0x0024,0x0000,0x0000,
-					0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0004,0x0008,
-					0x000C,0x0010,0x0100,0x0200};
+u16 __analogmask[]={0x0002,0x0004,0x0008,0x0010,0x0100,0x0200,0x0800,0x0400,
+		    		0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0002,0x0004,
+		    		0x0008,0x0010,0x0100,0x0200,0x0800,0x0400};
+u16 __bufmask[]=   {0x0004,0x0008,0x000C,0x0010,0x0020,0x0024,0x002C,0x0028,
+		    		0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0004,0x0008,
+		    		0x000C,0x0010,0x0020,0x0024,0x002C,0x0028};
 #endif
 
 #ifdef EMPEROR460
@@ -71,20 +71,21 @@ u8 IsDigital(u8 pin)
 	
 void analog_init(void)
 {
-	AD1CON1=0x00E0;
 	AD1CSSL = 0;
-	AD1CON2=0x0000;
-	AD1CON3 = 0x1F3F;
-	AD1CON1SET=0x8000;		// turn ADC on
+	AD1CON1=0x00E0;
+	AD1CON2=0;
+	AD1CON3 = 0x8F00;
+	AD1CON1bits.ADON = 1;
 }
 
 u16 analogRead(u8 pin)
 {
+	
 	if (IsDigital(pin)) SetAnalog(pin);	  // set analog
 	AD1CHS=(__bufmask[pin]/4)<<16;		  // select channel
 	AD1CON1bits.SAMP=1;					  // start sampling
 	while (!AD1CON1bits.DONE);			  // wait for conversion
-	return(*(&ADC1BUF0+__bufmask[pin]));  // return selected buffer
+	return(ADC1BUF0+(8*(AD1CON2bits.BUFS&0x01))); // return result
 }
 
 #endif
