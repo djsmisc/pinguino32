@@ -247,10 +247,11 @@ void SystemConfig(u32 cpuCoreFrequency)
 
 u32 GetCP0Count()
 {
-	/*u32 count;
-	asm("di"); // Disable all interrupts
-	count = _CP0_GET_COUNT();
-	asm("ei"); // Enable all interrupts*/
+	//u32 count;
+	//asm("di"); // Disable all interrupts
+	//count = _CP0_GET_COUNT();
+	//asm("ei"); // Enable all interrupts
+	//return count;
 	return _CP0_GET_COUNT();
 }
 

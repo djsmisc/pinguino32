@@ -23,8 +23,8 @@
 	#define WHITELED	1//PORTEbits.RE2	// white led
 
 	// UBW32 built-in buttons
-    #define USERBUTTON  44	// pin 44 = PORTEbits.RE6 = user button
-    #define PROGBUTTON  43	// pin 43 = PORTEbits.RE7 = prog button
+    #define USERBUTTON  69	// pin 44 = PORTEbits.RE6 = user button
+    #define PROGBUTTON  68	// pin 43 = PORTEbits.RE7 = prog button
 
 /*	----------------------------------------------------------------------------
 	SwitchDebounce()

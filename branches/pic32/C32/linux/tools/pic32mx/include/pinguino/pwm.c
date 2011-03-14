@@ -75,6 +75,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 #ifdef EMPEROR460
 	switch (pin)
 		{
+			case  0:
 			case 72: TRISDCLR=0x01;
 					 OC1CON=0;
 					 OC1R=setpoint;
@@ -83,6 +84,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC1CON|=0x8000;
 					 return 1;
 					 break;
+			case  1:
 			case 69: TRISDCLR=0x02;
 					 OC2CON=0;
 					 OC2R=setpoint;
@@ -91,6 +93,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC2CON|=0x8000;
 					 return 1;
 					 break;
+			case  2:
 			case 68: TRISDCLR=0x04;
 					 OC3CON=0;
 					 OC3R=setpoint;
@@ -99,6 +102,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC3CON|=0x8000;
 					 return 1;
 					 break;
+			case  3:
 			case 67: TRISDCLR=0x08;
 					 OC4CON=0;
 					 OC4R=setpoint;
@@ -107,6 +111,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC4CON|=0x8000;
 					 return 1;
 					 break;
+			case  4:
 			case 66: TRISDCLR=0x10;
 					 OC5CON=0;
 					 OC5R=setpoint;
@@ -121,7 +126,8 @@ u8 analogwrite(u8 pin,u16 setpoint)
 #ifdef UBW32
 	switch (pin)
 		{
-			case 68: TRISDCLR=0x01;
+			case  0:
+			case 40: TRISDCLR=0x01;
 					 OC1CON=0;
 					 OC1R=setpoint;
 					 OC1RS=setpoint;
@@ -129,7 +135,8 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC1CON|=0x8000;
 					 return 1;
 					 break;
-			case 65: TRISDCLR=0x02;
+			case  1:
+			case 43: TRISDCLR=0x02;
 					 OC2CON=0;
 					 OC2R=setpoint;
 					 OC2RS=setpoint;
@@ -137,7 +144,8 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC2CON|=0x8000;
 					 return 1;
 					 break;
-			case 64: TRISDCLR=0x04;
+			case  2:
+			case 44: TRISDCLR=0x04;
 					 OC3CON=0;
 					 OC3R=setpoint;
 					 OC3RS=setpoint;
@@ -145,7 +153,8 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC3CON|=0x8000;
 					 return 1;
 					 break;
-			case 63: TRISDCLR=0x08;
+			case  3:
+			case 45: TRISDCLR=0x08;
 					 OC4CON=0;
 					 OC4R=setpoint;
 					 OC4RS=setpoint;
@@ -153,6 +162,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 					 OC4CON|=0x8000;
 					 return 1;
 					 break;
+			case  4:
 			case 60: TRISDCLR=0x010;
 					 OC5CON=0;
 					 OC5R=setpoint;
