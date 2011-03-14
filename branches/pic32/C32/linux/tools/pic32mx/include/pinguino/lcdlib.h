@@ -75,6 +75,7 @@ void home();
 void printNumber(unsigned long n, unsigned char base);
 void printFloat(float number, unsigned char digits);
 void lcdPrint(char *string);
+void lcdprintf(char *fmt, ...);
 void setCursor(unsigned char col, unsigned char row);
 void command(unsigned char value);
 void write(unsigned char value);
