@@ -1,30 +1,29 @@
-/*-------------------------------------------------------------------------
-  main.c - Application main function
+/*	-------------------------------------------------------------------------
+	main.c - Application main function
 
-             (c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr> 
+	(c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr> 
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--------------------------------------------------------------------------*/
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+	-------------------------------------------------------------------------*/
 
 // this main function was modified by Jean-pierre Mandon 2008/09/19
 // this function is part of Pinguino project
 
-//#pragma stack 0x100 256		// Reserve 256 bytes of stack at 0x100
-
 #include <pic18fregs.h>
-#include <macro.h>
+#include <const.h>
+//#include <macro.h>
 #include "common_types.h"
 #include "boot_iface.h"
 #include "../tmp/define.h"
@@ -51,33 +50,33 @@ void epapout_init() { return; }
 
 void pinguino_main(void) 
 {	
-    PIE1 = 0;
-    PIE2 = 0;
-    ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+	PIE1 = 0;
+	PIE2 = 0;
+	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
 
 	#ifdef USERINT
 	int_init();							// Disable all interrupts
 	#endif
 
-    #ifdef __USB__
+	#ifdef __USB__
 	PIE2bits.USBIE  = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
-    #endif
+	INTCONbits.PEIE = 1;
+	INTCONbits.GIE  = 1;
+	#endif
 
-    setup();
+	setup();
 
 	#ifdef USERINT
 	int_start();							// Enable all timers interrupts
 	#endif
 
-    #ifdef ANALOG
+	#ifdef ANALOG
 	analog_init();
-    #endif
+	#endif
 
-    #ifdef MILLIS
+	#ifdef MILLIS
 	millis_init();
-    #endif
+	#endif
 
     #ifdef SERVOSLIBRARY
     servos_init();

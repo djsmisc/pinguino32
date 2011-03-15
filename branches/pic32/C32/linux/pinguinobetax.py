@@ -291,13 +291,13 @@ class Pinguino(wx.Frame):
         self.HELP = wx.Menu()
         self.ABOUT = wx.MenuItem(self.HELP, self.ID_WEBSITE, _("Website"), "", wx.ITEM_NORMAL)
         self.HELP.AppendItem(self.ABOUT)
-        self.ABOUT = wx.MenuItem(self.HELP, self.ID_BLOG, _("Blog"), "", wx.ITEM_NORMAL)
+        self.ABOUT = wx.MenuItem(self.HELP, self.ID_WIKI, _("Wiki"), "", wx.ITEM_NORMAL)
         self.HELP.AppendItem(self.ABOUT)
         self.ABOUT = wx.MenuItem(self.HELP, self.ID_FORUM, _("Forum"), "", wx.ITEM_NORMAL)
         self.HELP.AppendItem(self.ABOUT)
-        self.ABOUT = wx.MenuItem(self.HELP, self.ID_GROUP, _("Group"), "", wx.ITEM_NORMAL)
+        self.ABOUT = wx.MenuItem(self.HELP, self.ID_BLOG, _("Blog"), "", wx.ITEM_NORMAL)
         self.HELP.AppendItem(self.ABOUT)                                      
-        self.ABOUT = wx.MenuItem(self.HELP, self.ID_WIKI, _("Wiki"), "", wx.ITEM_NORMAL)
+        self.ABOUT = wx.MenuItem(self.HELP, self.ID_GROUP, _("Group"), "", wx.ITEM_NORMAL)
         self.HELP.AppendItem(self.ABOUT) 
         self.ABOUT = wx.MenuItem(self.HELP, self.ID_TUTORIAL, _("Tutorial"), "", wx.ITEM_NORMAL)
         self.HELP.AppendItem(self.ABOUT)
@@ -706,11 +706,11 @@ class Pinguino(wx.Frame):
         info.AddDocWriter('Ivan Ricondo')
         info.AddDocWriter('Jesús Carmona Esteban')
         info.AddDocWriter('Marcus Fazzi')
-        info.AddArtist('france Cadet')
+        info.AddArtist('France Cadet')
         info.AddArtist('Laurent Costes')
         info.AddTranslator('Joan Espinoza Spanish, Portuguese')
         info.AddTranslator('Marin Purgar Croatian')
-        info.AddTranslator('Wim Heirman German')
+        info.AddTranslator('Wim Heirman Dutch')
         info.AddTranslator('Vasile Guta Ciucur Romanian')
         wx.AboutBox(info)  
             
@@ -903,18 +903,18 @@ class Pinguino(wx.Frame):
         
     def website(self,event):
         id=event.GetId()
-        if id==33:
-            webbrowser.open("http://www.hackinglab.org")
-        if id==34:
-            webbrowser.open("http://jpmandon.blogspot.com/")
-        if id==35:
-            webbrowser.open("http://www.italentshare.com/pinguinoforum/")  
-        if id==36:
-            webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1")  
-        if id==37:
-            webbrowser.open("http://pinguino.koocotte.org/index.php/Main_Page")
-        if id==38:
+        if id==ID_WEBSITE:
+            webbrowser.open("http://www.pinguino.cc")
+        if id==ID_WIKI:
+            webbrowser.open("http://wiki.pinguino.cc")
+        if id==ID_FORUM:
+            webbrowser.open("http://forum.pinguino.cc")  
+        if id==ID_BLOG:
+            webbrowser.open("http://blog.pinguino.cc")
+        if id==ID_TUTORIAL:
             webbrowser.open("http://sites.google.com/site/pinguinotutorial/home")                                                
+        if id==ID_GROUP:
+            webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1")  
         
     def displaymsg(self,message,clearpanel):
         """ display message in the log window """
@@ -945,20 +945,23 @@ class Pinguino(wx.Frame):
         #clear old define.h file
         if os.path.exists(sys.path[0]+"/tmp/define.h"):
             os.remove(sys.path[0]+"/tmp/define.h")
+        # rblanchot - 01/03/2011
+        fichier=open(sys.path[0]+"/tmp/define.h",'a')
+        fichier.close()
         # insert standart define for arduino
-        self.adddefine("#define INPUT 1")
-        self.adddefine("#define OUTPUT 0")
-        self.adddefine("#define HIGH 1")
-        self.adddefine("#define LOW 0")
-        self.adddefine("#define DEC 1")
-        self.adddefine("#define BYTE 2")
-        self.adddefine("#define HEX 3")
-        self.adddefine("#define OCTAL 4") 
-        self.adddefine("#define BIN 5")
-        self.adddefine("#define ON 1")
-        self.adddefine("#define OFF 0")
-        self.adddefine("#define TRUE 1")
-        self.adddefine("#define FALSE 0") 
+        #self.adddefine("#define INPUT 1")
+        #self.adddefine("#define OUTPUT 0")
+        #self.adddefine("#define HIGH 1")
+        #self.adddefine("#define LOW 0")
+        #self.adddefine("#define DEC 1")
+        #self.adddefine("#define BYTE 2")
+        #self.adddefine("#define HEX 3")
+        #self.adddefine("#define OCTAL 4") 
+        #self.adddefine("#define BIN 5")
+        #self.adddefine("#define ON 1")
+        #self.adddefine("#define OFF 0")
+        #self.adddefine("#define FALSE 0") 
+        #self.adddefine("#define TRUE !FALSE")
 
         # prepare file      
         path,name=os.path.split(filename)

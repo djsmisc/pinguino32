@@ -7,17 +7,18 @@
 #ifndef __MACRO_H
 	#define __MACRO_H
 
-	#include <const.h>
+	//#include <const.h>
 
 	/// ASM
 
-	#define nop()			{_asm nop _endasm;}
-	#define clrwdt()		{_asm clrwdt _endasm;}
-	#define reset()			{_asm reset _endasm;}
-	#define sleep()			{OSCCONbits.IDLEN = 0;\
-							_asm sleep _endasm;}
-	//#define interrupts()	sei()
-	//#define noInterrupts()	cli()
+	#define nop()					{_asm nop _endasm;}
+	#define clrwdt()				{_asm clrwdt _endasm;}
+	#define reset()				{_asm reset _endasm;}
+	#define sleep()				{OSCCONbits.IDLEN = 0;\
+										_asm sleep _endasm;}
+
+	#define interrupts()			INTCONbits.GIE  = 1;
+	#define noInterrupts()		INTCONbits.GIE  = 0;
 
 	/// C
 
@@ -25,22 +26,20 @@
 
 	/// BYTES
 
-	//#define lowByte(w) 			((uint8_t) ((w) & 0xff))
-	//#define highByte(w) 		((uint8_t) ((w) >> 8))
-	#define high8(x)			(unsigned char) (x >> 8)
-	#define low8(x)				(unsigned char) (x & 0xFF)
+	#define high8(x)				((unsigned char) ((x) >> 8))
+	#define low8(x)				((unsigned char) ((x) & 0xFF))
 	#define make16(low,high)	(low | (high << 8))
 
 	/// MATH
 
-	#define min(a,b) ((a)<(b)?(a):(b))
-	#define max(a,b) ((a)>(b)?(a):(b))
-	#define abs(x) ((x)>0?(x):-(x))
+	#define min(a,b)				((a)<(b)?(a):(b))
+	#define max(a,b)				((a)>(b)?(a):(b))
+	#define abs(x)					((x)>0?(x):-(x))
 	#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
-	#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
-	#define radians(deg) ((deg)*DEG_TO_RAD)
-	#define degrees(rad) ((rad)*RAD_TO_DEG)
-	#define sq(x) ((x)*(x))
+	#define round(x)				((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+	#define radians(deg)			((deg)*DEG_TO_RAD)
+	#define degrees(rad)			((rad)*RAD_TO_DEG)
+	#define sq(x)					((x)*(x))
 
 	/// CLOCK
 
@@ -78,7 +77,7 @@
 	#define BitWrite(value, bit, bitvalue) \
 		(bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 	
-	#define bit(b) \
+	#define Bit(b) \
 		(1 << (b))
 
 #endif

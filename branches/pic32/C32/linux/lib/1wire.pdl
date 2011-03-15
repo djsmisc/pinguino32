@@ -3,6 +3,7 @@
 1wire.writebit OneWireWriteBit#include <1wire.c>
 1wire.readbyte OneWireReadByte#include <1wire.c>
 1wire.writebyte OneWireWriteByte#include <1wire.c>
+TEMPERATURE TEMPERATURE#include <18b20.c>
 DS18B20.read DS18B20Read#include <18b20.c>
 DS18B20.matchrom DS18B20MatchRom#include <18b20.c>
 DS18B20.readrom DS18B20ReadRom#include <18b20.c>

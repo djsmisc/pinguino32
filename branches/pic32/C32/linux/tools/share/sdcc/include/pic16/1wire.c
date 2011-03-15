@@ -28,6 +28,7 @@
 #ifndef __ONEWIRE_C
 	#define __ONEWIRE_C
 
+	//#include <typedef.h>
 	#include <macro.h>
 	#include <arduinodelay.c>
 	#include <digitalw.c>

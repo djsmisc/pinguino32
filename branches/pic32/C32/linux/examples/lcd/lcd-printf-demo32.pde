@@ -15,55 +15,22 @@
 	15 - LED+ (R = 470 Ohm to +5V)
 	16 - LED- (GND)
 	---------------------------------------------------------------------------*/
- 
-// Global vars
-
-u8 s = 0;
-u8 m = 0;
-u8 h = 0;
-
-// This function is called every sec.
-
-void tick()
-{
-	s++;
-	
-	if (s > 59)
-	{
-		s = 0;
-		m++;
-	}
-	
-	if (m > 59)
-	{
-		m = 0;
-		h++;
-	}
-	
-	if (h > 23)
-	{
-		h = 0;
-	}
-	
-	lcd.setCursor(4, 1);
-	lcd.printf("%02u:%02u:%02u", h, m, s);
-}
 
 void setup()
 {
 	// UBW 32 mapping - 4 bits mode
 	//lcd(0, 2, 3, 4, 5, 6, 0, 0, 0, 0); // RS, E, D4 ~ D8	
-	lcd(72, 71, 70, 69, 68, 67, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	lcd(36, 37, 38, 39, 40, 41, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 
 	// LCD format
 	lcd.begin(2, 0); // lines, dotsize
 
 	lcd.home(); // 0, 0
-	lcd.printf(" lcd.printf demo");
+	lcd.printf("Sys.Clock: %02uMHz", GetSystemClock()/1000000);
+	lcd.setCursor(0, 1);
+	lcd.printf("Per.Clock: %02uMHz", GetPeripheralClock()/1000000);
 }
  
 void loop()
 {
-	tick();
-	delay(1000);
 }

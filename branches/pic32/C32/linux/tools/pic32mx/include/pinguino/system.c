@@ -92,7 +92,7 @@ void SystemLock()
 	assume the device is locked
 	--------------------------------------------------------------------------*/
 
-void reset()
+void Reset()
 {
 	SystemUnlock();
 	// set SWRST bit to arm reset

@@ -1,33 +1,57 @@
 /*	----------------------------------------------------------------------------
 	A Tiny Basic Interpreter
 	----------------------------------------------------------------------------
-	author:			unknown
-	modified by:	Régis Blanchot
-	first release:	03/01/2011
-	last update:	16/02/2011
-	pinguino ide:	X
-	pinguino board: UBW32
-	compiler:		C32
+	author:				unknown
+	modified by:		Régis Blanchot
+	first release:		03/01/2011
+	last update:		26/02/2011
+	pinguino ide:		X
+	pinguino board:	tested with UBW32
+	compiler:			C32
 	----------------------------------------------------------------------------
 	TODO:
-		- add number to lines to edit them easily
-		LIST
-		10 PRINT "Arduino"
-		10 PRINT "Pinguino"
-		LIST
-		10 PRINT "Pinguino"
+		- EDITOR
+			- ADD numline line (add a line to the program)
+			- DEL numline (delete a line in the program)
+			- CLS (clear current screen)
+			- HELP (list all Basic functions)
+		- LANGUAGE		argument		comment
+			- REM		 					(add comment to the program)
+			- INPUT		numpin
+			- OUTPUT		numpin
+			- HIGH		numpin		(turn pin numpin to High) 
+			- LOW			numpin		(turn pin numpin to Low)
+			- PAUSE		ms				(delay for ms milliseconds)
+			- TOGGLE		numpin
+			- BUTTON		numpin		(read switch status)
+			- POT			numpin
+			- PULSIN		numpin, status, variable
+			- PULSOUT	numpin, period
+			- PWM			numpin, dutycycle, frequency
+			- RANDOM
+			- READ		numbyte 		(read byte number numbyte of eeprom)
+			- WRITE		numbyte 		(write byte number numbyte of eeprom)
+			- SERIN		variable
+			- SEROUT		variable
+			- I2CIN
+			- I2COUT
 	--------------------------------------------------------------------------*/
 
-#include <setjmp.h>
 #include <stdlib.h>
 #include <stdio.h>	// sprintf
-#include <string.h>	// strcmp
+#include <string.h>	// strcmp, strcpy
+#include <list.c>		// list management
+#include <setjmp.h>
+
+/*	----------------------------------------------------------------------------
+	Define
+	--------------------------------------------------------------------------*/
 
 #define NUM_LAB	100
 #define LAB_LEN	10 
 #define FOR_NEST	25
 #define SUB_NEST	25
-#define PROG_SIZE 8192
+#define PROG_SIZE 6184	
 
 #define DELIMITER	1
 #define VARIABLE	2
@@ -51,21 +75,10 @@
 #define LOAD 		13
 #define RUN 		14
 #define LIST 		15
-#define END 		16
-
-/*	----------------------------------------------------------------------------
-	Program
-	--------------------------------------------------------------------------*/
-
-// pointeur sur chaînes de caractères constante
-// accès aux éléments par *(program + i)
-char *program = {
-	"start\n",
-	"PRINT \"HELLO WORLD !\"\n",
-	"GOTO start\n",
-	"END\n",
-	"\0"
-};
+#define ADD 		16
+#define DEL 		17
+#define REM 		18
+#define END 		19
 
 /*	----------------------------------------------------------------------------
 	Typedef
@@ -106,31 +119,32 @@ int variables[26] =
 // Commands must be entered lowercase in this table
 commands table[] =
 {
-	"print",	PRINT,\
-	"input",	_INPUT,\
-	"if",		IF,\
+	"print",		PRINT,\
+	"input",		_INPUT,\
+	"if",			IF,\
 	"then",		THEN,\
 	"goto",		GOTO,\
 	"for",		FOR,\
 	"next",		NEXT,\
-	"to",		TO,\
-	"gosub",	GOSUB,\
+	"to",			TO,\
+	"gosub",		GOSUB,\
 	"return",	RETURN,\
 	"load",		LOAD,\
 	"run",		RUN,\
 	"list",		LIST,\
+	"add",		ADD,\
+	"del",		DEL,\
+	"rem",		REM,\
 	"end",		END,\
 	"",			END				// mark end of table
 };
 
 char *prog;							// holds program expression to be analyzed
-
+List *lines;						// holds program lines
 jmp_buf e_buf;						// hold environment for longjmp()
-
 char *token;						// holds token
 char token_type;
 char tok;
-
 label label_table[NUM_LAB];
 for_stack fstack[FOR_NEST];	// stack for FOR/NEXT loop
 char *gstack[SUB_NEST];			// stack for gosub
@@ -145,6 +159,9 @@ int gtos;							// index to top of GOSUB stack
 int  exec_load(void);
 void exec_run(void);
 void exec_list(void);
+void exec_add(char *);
+void exec_del(char *);
+
 void exec_print(void);
 void exec_goto(void);
 void exec_if(void);
@@ -154,6 +171,7 @@ void exec_input(void);
 void exec_gosub(void);
 void exec_return(void);
 
+void prog2list(void);
 void assignment(void);
 void scan_labels(void);
 void find_eol(void);
@@ -182,86 +200,152 @@ void unary(char, int *);
 int  find_var(char *);
 
 /*	----------------------------------------------------------------------------
-	Setup
+	Programs examples (just uncomment the one you want to test)
+	--------------------------------------------------------------------------*/
+
+/*
+const char program[] =
+{
+	"PRINT \"HELLO WORLD !\"\n"
+};
+
+const char program[] =
+{
+	"start\n"\
+	"PRINT \"HELLO WORLD !\"\n"\
+	"GOTO start\n"\
+	"END\n"
+};
+*/
+
+const char program[] =
+{
+	//"N=10\n"\
+	"FOR I=1 TO 10\n"\
+	"PRINT \"HELLO WORLD !\"\n"\
+	"NEXT I\n"\
+	"END\n"
+};
+
+/*	----------------------------------------------------------------------------
+	Setup (rblanchot@gmail.com)
 	--------------------------------------------------------------------------*/
 
 void setup()
 {
-	Serial.begin(9600);
+	u8 i;
+
+	// initialize Serial interface
+	Debug();
+	//Serial.begin(9600);
+
+	// allocate memory for the token
+	token = (char *) malloc(80);
+	if (token == 0)
+	{
+		Serial.printf("Error: allocation failure\n");
+		exit(1);
+	}
 	 
 	// initialize the long jump buffer
 	if(setjmp(e_buf))
 		exit(1);
 
+	// clear screen
+	for (i=0; i<30; i++)
+		Serial.printf("\n");
+	
 	// a tribute to my old VIC20, C64 and C128
 	Serial.printf("***  PINGUINO 32 TINY BASIC V1.0  ***\n");
-	Serial.printf("512K RAM SYSTEM %u BASIC BYTES FREE\n", 524288);
+	Serial.printf("512K RAM SYSTEM %u BASIC BYTES FREE\n", PROG_SIZE);
 	Serial.printf("\n");
-	Serial.printf("READY\n");
 	
-	exec_load();
+	// load a program from memory
+	exec_load_from_memory();
 }
 
 /*	----------------------------------------------------------------------------
-	Main loop
-	1/ LIST
-	2/ RUN
-	3/ LOAD prog.bas
-	4/ ADD numligne EXPRESSION -> shift right +1 all lines from numligne
-	5/ DELLINE numligne -> shift left all lines -1 all lines from numligne
+	Main loop (rblanchot@gmail.com)
+	Wait for Editor commands
+	- LIST
+	- RUN
+	- LOAD prog.bas
+	- ADD numligne EXPRESSION -> shift right +1 all lines from numligne
+	- DELLINE numligne -> shift left all lines -1 all lines from numligne
+	- CLS
 	--------------------------------------------------------------------------*/
 
 void loop()
 {
+	Serial.printf("READY\n");
 	char *exp = Serial.getstring();
 
-	if ( strncmp(exp, "LIST", 4) == 0 )
+	if ( strncmp(exp, "LIST", 4) == 0 || strncmp(exp, "list", 4) == 0 )
 		exec_list();
-	if ( strncmp(exp, "RUN", 3) == 0 )
+	if ( strncmp(exp, "RUN", 3) == 0 || strncmp(exp, "run", 3) == 0 )
 		exec_run();
 /*
-	if (strncmp(exp, "LOAD", 4) == 0 )
+	if ( strncmp(exp, "LOAD", 4) == 0 )
 		exec_load();
-	if (strncmp(exp, "ADD", 3) == 0 )
-		exec_add();
-	if (strncmp(exp, "DEL", 3) == 0 )
-		exec_del();
 */
+	if ( strncmp(exp, "ADD", 3) == 0 || strncmp(exp, "add", 3) == 0 )
+		exec_add(exp);
+	if ( strncmp(exp, "DEL", 3) == 0 || strncmp(exp, "del", 3) == 0 )
+		exec_del(exp);
 }
 
 /*	----------------------------------------------------------------------------
-	List a program
+	List a program (rblanchot@gmail.com)
 	--------------------------------------------------------------------------*/
 
 void exec_list(void)
 {
-	char line=0;
-	//char *list = *prog;
-	
-	while (*(prog+line) != '\0')
+	u16 l, nbitems;
+	char *item;
+
+	// get items number
+	nbitems = list_nb_item(lines);
+	//Serial.printf("nb items = %d\n", nbitems);
+	for (l = 0; l < nbitems; l++)
 	{
-		Serial.printf("%4d %s/n", line, *(prog+line));
-		line++;
+		item = list_item(lines, l+1);
+		if (item != NULL)
+			Serial.printf("%4d %s\n", l+1, item);
 	}
+
+/*	---version 1----------------------------------------------------------------
+	u8 i;
+	u16 l=0;
+	char *car;
+	
+	car = prog;								// program's first character 
+	
+	while (car[0] != '\0')
+	{
+		Serial.printf("%4u ", l);
+		for (i = 0; car[i] != '\n'; i++)
+			Serial.printf("%c", car[i]);
+		Serial.printf("\n");
+		car = car + i + 1;					// next line's first character
+		l++;
+	}
+	--------------------------------------------------------------------------*/
 }
 
 /*	----------------------------------------------------------------------------
-	Run a program
+	Run a program (rblanchot@gmail.com)
 	--------------------------------------------------------------------------*/
 
 void exec_run(void)
 {
-	//char in[80];
-	//int answer;
-	//char *t;
-
-	scan_labels(); 			// find the labels in the program
+	scan_labels(); 				// find the labels in the program
 	ftos = 0; 					// initialize the FOR stack index
 	gtos = 0; 					// initialize the GOSUB stack index
 
 	do
 	{
 		token_type = get_token();
+
 		// check for assignment statement
 		if(token_type == VARIABLE)
 		{
@@ -296,6 +380,8 @@ void exec_run(void)
 				case RETURN:
 					exec_return();
 					break;
+				case REM:
+					break;
 				case END:
 					exit(0);
 			}
@@ -305,13 +391,38 @@ void exec_run(void)
 }
 
 /*	----------------------------------------------------------------------------
-	Load a program
+	Load a program from SD-card (rblanchot@gmail.com)
 	if no name after LOAD -> search for a program in memory
 	--------------------------------------------------------------------------*/
 
+int exec_load_from_memory(void)
+{
+	int i=0;
+	char *buffer;
+
+	// allocate memory for the program
+	buffer = (char *) malloc(PROG_SIZE);
+	if (buffer == 0)
+	{
+		Serial.printf("Error: allocation failure\n");
+		exit(1);
+	}
+
+	// basic strncpy(buffer, program, PROG_SIZE);
+	for (i = 0; i < PROG_SIZE && program[i] != '\0'; i++)
+		buffer[i] = program[i];
+	for (; i < PROG_SIZE; i++)
+		buffer[i] = '\0';
+
+	prog = buffer;
+	//free(buffer);
+	prog2list();
+}
+
 int exec_load(void)
 {
-	//FILE *fp;
+/*
+	FILE *fp;
 
 	int i=0;
 	char *buffer;
@@ -325,41 +436,85 @@ int exec_load(void)
 		exit(1);
 	}
 
-/*
 	// get the name of the file
 	get_token();
-	if (token != "")
+
+	// open the file
+	if(!(fp=fopen(token, "rb")))
+		return 0;
+
+	i = 0;
+
+	do
 	{
-		// open the file
-		if(!(fp=fopen(token, "rb")))
-			return 0;
-
-		i = 0;
-
-		do
-		{
-			*buffer = getc(fp);
-			buffer++;
-			i++;
-		}
-		while(!feof(fp) && i < PROG_SIZE);
-		fclose(fp);
+		*buffer = getc(fp);
+		buffer++;
+		i++;
 	}
-	else
-	{
-*/
-		do
-		{
-			*buffer++ = *program++;
-			i++;
-		}
-		while(program != 0 && i < PROG_SIZE);
-//	}
+	while(!feof(fp) && i < PROG_SIZE);
+	fclose(fp);
 
 	*(buffer-2) = '\0'; // null terminate the program
-
 	prog = buffer;
 */
+}
+
+/*	----------------------------------------------------------------------------
+	Add a line (rblanchot@gmail.com)
+	--------------------------------------------------------------------------*/
+
+void exec_add(char *exp)
+{
+	u16 l;
+	
+	l = strchr(exp, "add");			// traiter le cas des majuscules
+	Serial.printf("%d\n", l);
+}
+
+/*	----------------------------------------------------------------------------
+	Del a line (rblanchot@gmail.com)
+	--------------------------------------------------------------------------*/
+
+void exec_del(char *exp)
+{
+}
+
+/*	----------------------------------------------------------------------------
+	Make a list from program's lines (rblanchot@gmail.com)
+	--------------------------------------------------------------------------*/
+
+void prog2list(void)
+{
+	u16 l;
+	char *car;
+	char *temp;
+	
+	temp = (char *) malloc(80);
+	if (temp == 0)
+	{
+		Serial.printf("Error: allocation failure\n");
+		exit(1);
+	}
+
+	car = prog;								// program's first character 
+
+	// free all lines or make a new list for the first time
+	if (!lines)
+		list_free_full_simple(lines);
+	else
+		lines = list_new();
+		
+	while (car[0] != '\0')
+	{
+		// how long is this line
+		for (l = 0; car[l] != '\n'; l++)
+			temp[l] = car[l];
+		// make a 0-terminated string
+		temp[l++] = '\0';
+		// add this line to the end of the list
+		lines = list_append(lines, temp);
+		car += l;					// next line's first character
+	}
 }
 
 /*	----------------------------------------------------------------------------
@@ -369,6 +524,8 @@ int exec_load(void)
 void assignment(void)
 {
 	int var, value;
+
+	//Serial.printf("*** entering assignment() ***\n");
 
 	// get the variable name
 	get_token();
@@ -382,7 +539,7 @@ void assignment(void)
  
 	// get the equals sign
 	get_token();
-	if(*token!='=')
+	if (*token != '=')
 	{
 		serror(3);
 		return;
@@ -406,12 +563,17 @@ void exec_print(void)
 	char *str;
 	char last_delim;
 
+	Serial.printf("*** entering exec_print() ***\n");
+
 	do {
 		// get next list item
 		get_token();
-		if(tok==EOL || tok==FINISHED) break;
+		
+		if (tok == EOL || tok == FINISHED)
+			break;
+		
 		// is string
-		if(token_type==QUOTE)
+		if (token_type == QUOTE)
 		{
 			Serial.printf(token);
 			len += strlen(token);
@@ -427,7 +589,7 @@ void exec_print(void)
 		}
 		last_delim = *token; 
 
-		if(*token==';')
+		if (*token == ';')
 		{
 			// compute number of spaces to move to next tab
 			spaces = 8 - (len % 8); 
@@ -440,15 +602,16 @@ void exec_print(void)
 			}
 		}
 		// do nothing
-		else if(*token==',')
+		else if (*token == ',')
 			;
-		else if(tok!=EOL && tok!=FINISHED)
-			serror(0); 
-	} while (*token==';' || *token==',');
+		else if (tok != EOL && tok != FINISHED)
+			serror(0);
+			
+	} while (*token == ';' || *token == ',');
 
-	if(tok==EOL || tok==FINISHED)
+	if (tok == EOL || tok == FINISHED)
 	{
-		if(last_delim != ';' && last_delim!=',')
+		if (last_delim != ';' && last_delim!=',')
 			Serial.printf("\n");
 	}
 	else
@@ -464,7 +627,9 @@ void exec_print(void)
 void scan_labels(void)
 {
 	int addr;
-	char *temp;
+	char *temp;		// address temp points on char
+
+	//Serial.printf("*** entering scan_labels() ***\n");
 
 	label_init();	// zero all labels
 	temp = prog;	// save pointer to top of program
@@ -504,6 +669,8 @@ void scan_labels(void)
 
 void find_eol(void)
 {
+	//Serial.printf("*** entering find_eol() ***\n");
+
 	while (*prog != '\n' && *prog != '\0')
 		++prog;
 	if (*prog)
@@ -519,6 +686,8 @@ void find_eol(void)
 int get_next_label(char *s)
 {
 	register int t;
+
+	//Serial.printf("*** entering get_next_label() ***\n");
 
 	for(t=0;t<NUM_LAB;++t)
 	{
@@ -540,6 +709,8 @@ char *find_label(char *s)
 {
 	register int t;
 
+	//Serial.printf("*** entering find_label() ***\n");
+
 	for(t=0; t<NUM_LAB; ++t)
 	{
 		if(!strcmp(label_table[t].name,s))
@@ -555,6 +726,8 @@ char *find_label(char *s)
 void exec_goto(void)
 {
 	char *loc;
+
+	Serial.printf("*** entering exec_goto() ***\n");
 
 	// get label to go to
 	get_token();
@@ -575,6 +748,8 @@ void exec_goto(void)
 void label_init(void)
 {
 	register int t;
+
+	//Serial.printf("*** entering label_init() ***\n");
 
 	for(t=0; t<NUM_LAB; ++t)
 		label_table[t].name[0]='\0';
@@ -599,7 +774,7 @@ void exec_if(void)
 		serror(0);
 		return;
 	}
-	op=*token;
+	op = *token;
 	// get right expression
 	get_exp(&y);
 	// determine the outcome
@@ -644,6 +819,8 @@ void exec_for(void)
 {
 	for_stack i;
 	int value;
+
+	Serial.printf("*** entering exec_for() ***\n");
 
 	// read the control variable
 	get_token();
@@ -694,6 +871,8 @@ void exec_next(void)
 {
 	for_stack i;
 
+	//Serial.printf("*** entering exec_next() ***\n");
+
 	// read the loop info
 	i = fpop();
 	// increment control variable
@@ -710,6 +889,8 @@ void exec_next(void)
 
 void fpush(for_stack i)
 {
+	//Serial.printf("*** entering fpush() ***\n");
+
 	if(ftos>FOR_NEST)
 		serror(10);
 
@@ -748,7 +929,7 @@ void exec_input(void)
 
 	var = toupper(*token)-'A'; // get the input var
 
-	scanf("%d", &i); // read input
+	scanf("%d", &i); // read input and place it at address from i
 
 	variables[var] = i; // store it
 }
@@ -820,6 +1001,7 @@ char *gpop(void)
 
 void get_exp(int *result)
 {
+	//Serial.printf("*** entering get_exp() ***\n");
 	get_token();
 	if(!*token)
 	{
@@ -865,15 +1047,15 @@ char get_token(void)
 {
 	register char *temp;
 
-	Serial.printf("breakpoint");
-
-	token_type=0;
-	tok=0;
-	temp=token;
+	//Serial.printf("*** entering get_token() ***\n");
+	token_type = 0;
+	tok = 0;
+	temp = token;		// address temp = address token
 
 	// end of file
 	if (*prog == '\0')
 	{
+		//Serial.printf("eof\n");
 		*token = 0;
 		tok = FINISHED;
 		return(token_type = DELIMITER);
@@ -885,6 +1067,7 @@ char get_token(void)
 	// crlf
 	if (*prog == '\r')
 	{
+		//Serial.printf("crlf\n");
 		++prog;
 		++prog;
 		tok = EOL;
@@ -897,6 +1080,7 @@ char get_token(void)
 	// delimiter
 	if (strchr("+-*^/%=;(),><", *prog))
 	{
+		//Serial.printf("delimiter\n");
 		*temp=*prog;
 		prog++; // advance to next position
 		temp++;
@@ -905,8 +1089,9 @@ char get_token(void)
 	}
 		
 	// quoted string
-	if (*prog == '"')
+	if (*prog == '\"')
 	{
+		//Serial.printf("quoted string\n");
 		prog++;
 		while (*prog != '"' && *prog != '\r')
 			*temp++ = *prog++;
@@ -920,7 +1105,8 @@ char get_token(void)
 	// number
 	if (isdigit(*prog))
 	{
-		while(!isdelim(*prog))
+		//Serial.printf("number\n");
+		while (!isdelim(*prog))
 			*temp++ = *prog++;
 		*temp = '\0';
 		return(token_type = NUMBER);
@@ -929,9 +1115,17 @@ char get_token(void)
 	// var or command
 	if (isalpha(*prog))
 	{
-		while(!isdelim(*prog))
-			*temp++ = *prog++;
+		//Serial.printf("var or command\n");
+		// go to delimiter
+		char i=0;
+		while (!isdelim(*prog))
+		{
+			//Serial.printf("%c", *prog);
+			*temp++ = *prog++; 					// variable à l'adresse  temp = variable à l'adresse prog 
+		}
+		//Serial.printf("\n");
 		token_type = STRING;
+		//Serial.printf("token type=%d\n", token_type);
 	}
 
 	*temp = '\0';
@@ -939,6 +1133,7 @@ char get_token(void)
 	// see if a string is a command or a variable
 	if (token_type == STRING)
 	{
+		//Serial.printf("check string\n");
 		tok = look_up(token); // convert to internal rep
 		if(!tok)
 			token_type = VARIABLE;
@@ -946,6 +1141,7 @@ char get_token(void)
 			token_type = COMMAND; // is a command
 	}
 
+	//Serial.printf("token type=%d\n", token_type);
 	return token_type;
 }
 
@@ -991,10 +1187,10 @@ int look_up(char *s)
 	Return true if c is a delimiter
 	--------------------------------------------------------------------------*/
 
-int isdelim(char c) 
+isdelim(char c) 
 {
-	if ( strchr(" ;,+-<>/*%^=()", c) || c==9 || c=='\r' || c==0 ) 
-		return 1;	
+	if ( strchr(" ;,+-<>/*%^=()", c) || c==9 || c=='\r' || c==0 )
+		return 1;
 	return 0;
 }
 
@@ -1055,7 +1251,7 @@ void level4(int *result)
 	int hold; 
 
 	level5(result); 
-	if(*token== '^')
+	if(*token == '^')
 	{
 		get_token(); 
 		level4(&hold); 
@@ -1069,7 +1265,7 @@ void level4(int *result)
 
 void level5(int *result)
 {
-	register char	op; 
+	register char op; 
 
 	op = 0; 
 	if((token_type==DELIMITER) && *token=='+' || *token=='-')
@@ -1154,7 +1350,8 @@ void arith(char o, int *r, int *h)
 				*r = 1; 
 				break; 
 			}
-			for(t=*h-1; t>0; --t) *r = (*r) * ex;
+			for(t=*h-1; t>0; --t)
+				*r = (*r) * ex;
 			break;			 
 	}
 }
@@ -1165,7 +1362,7 @@ void arith(char o, int *r, int *h)
 
 void unary(char o, int *r)
 {
-	if(o=='-')
+	if (o=='-')
 		*r = -(*r);
 }
 

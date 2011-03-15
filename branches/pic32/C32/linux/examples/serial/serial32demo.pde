@@ -22,7 +22,7 @@ const u8 mainMenu[] =
 	"4. Increase BAUD rate\n"\
 	"5. Decrease BAUD rate\n"\
 	"6. Set Line Control\n"\
-	"7. ECHO\n"
+	"7. ECHO\n"\
 	"Please Choose a number\n"
 };
 
@@ -179,8 +179,8 @@ void loop()
 			break;
 		case 7:
 			Serial.Printf(UART1, "Type a message (less than 100 characters) and press return\n");
-			String = Serial.GetString(UART1);
-			Serial.Printf(UART1, "You Typed:\n\n%s\n\n", UART1SerialBuffer);
+			string = Serial.GetString(UART1);
+			Serial.Printf(UART1, "You Typed:\n\n%s\n\n", string);
 			Serial.Printf(UART1, "\n\nPress any key to continue");
 			Serial.GetKey(UART1);
 			break;

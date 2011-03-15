@@ -28,8 +28,8 @@
 
 #include <stdarg.h>
 
-typedef void (*stdout) (int);	// type of :	void foo(int x)
-static stdout pputchar;			// then : 		void pputchar(int x)
+typedef void (* stdout)(char);	// type of :	void foo(char c)
+static stdout pputchar;				// then : 		void pputchar(char c)
 
 static void pprintchar(char **str, int c)
 {

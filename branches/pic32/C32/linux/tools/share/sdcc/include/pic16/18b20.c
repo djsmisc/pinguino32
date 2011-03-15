@@ -1,7 +1,15 @@
-/**	----------------------------------------------------------------------------
-	---------- my18b20.c
+/*	----------------------------------------------------------------------------
+	FILE:				18b20.c
+	PROJECT:			Pinguino
+	PURPOSE:			One wire driver to use with DS18B20 digital temperature sensor.
+	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
+	FIRST RELEASE:	28 sept. 2010
+	LAST RELEASE:	14 jan. 2011
 	----------------------------------------------------------------------------
-
+	this file is based on Maxim AN162 and Microchip AN1199
+	----------------------------------------------------------------------------
+	TODO : 
+	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
 	License as published by the Free Software Foundation; either
@@ -14,26 +22,11 @@
 
 	You should have received a copy of the GNU Lesser General Public
 	License along with this library; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-	----------------------------------------------------------------------------
-	---------- Author			: R. Blanchot <rblanchot@gmail.com>
-	---------- First release	:
-	---------- Last  update 	: 28 septembre 2010
-	---------- Description  	: One wire driver to use with DS18B20 digital
-								  temperature sensor.
-	---------- Compilateur		: SDCC 2.9.0
-	---------- Dev.Board		: Pinguino
-	---------- Dev.Envt			: Pinguino IDE beta 9.2
-	---------- Bootloader		: bootloaderV2.12.hex or bootloaderARDE.hex
-	---------- Programmer		: PUF/Docker
-	---------- MCU				: PIC18F2550
-	---------- Oscillator		: 20.0000 MHz - Fosc = 48 MHz
-	---------- Transfer			: docker -v04d8 write firmware.hex
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
-#ifndef __DS1820_C
-	#define __DS1820_C
+#ifndef __DS18B20_C
+	#define __DS18B20_C
 
 	#include <macro.h>
 	#include <1wire.c>
@@ -45,7 +38,7 @@
 		u16 fraction;	// fractional part
 	} TEMPERATURE;
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- GLOBAL VARIABLES
 	--------------------------------------------------------------------------*/
 
@@ -106,7 +99,7 @@
 	u8 DS18B20GetNext(u8);
 	u8 DS18B20_crc(u8);
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- DS18B20Read()
 	----------------------------------------------------------------------------
 	* Description:	reads the ds18x20 device on the 1-wire bus and returns the temperature
@@ -201,7 +194,7 @@
 		return TRUE;
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- DS18B20Configure()
 	----------------------------------------------------------------------------
 	* Description: writes configuration data to the DS18x20 device
@@ -234,7 +227,7 @@
 		return TRUE;
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- Address a specific slave device on a multidrop or single-drop bus
 	----------------------------------------------------------------------------
 	* Arguments:	pin = pin number where one wire bus is connected.
@@ -258,7 +251,7 @@
 		return TRUE;
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- Reads the ROM Code from a device (when there is only one)
 	----------------------------------------------------------------------------
 	* Arguments:	pin = pin number where one wire bus is connected.
@@ -282,7 +275,7 @@
 		}
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- Find Devices on the one-wire bus
 	----------------------------------------------------------------------------
 	* Arguments: pin number where one wire bus is connected.
@@ -312,7 +305,7 @@
 		}
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- First
 	----------------------------------------------------------------------------
 	* Arguments: pin number where one wire bus is connected.
@@ -327,7 +320,7 @@
 		return DS18B20GetNext(pin);	// call Next and return its return value
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- Next
 	----------------------------------------------------------------------------
 	* Arguments: pin number where one wire bus is connected.
@@ -406,7 +399,7 @@
 		return nxt;
 	}
 
-/**	----------------------------------------------------------------------------
+/*	----------------------------------------------------------------------------
 	---------- CRC
 	----------------------------------------------------------------------------
 	* Arguments:

@@ -7,5 +7,5 @@ void setup()
 void loop()
 {
 	RUNLED = RUNLED ^ 1;
-	delay(100);
+	delay(500);
 }
