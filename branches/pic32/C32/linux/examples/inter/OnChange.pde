@@ -4,7 +4,7 @@
 	author:			Régis Blanchot
 	first release:	19/12/2010
 	last update:	24/12/2010
-	pinguino ide:	9.5
+	pinguino ide:	X
 	wiring:			tsop1738.gif
 	link:				http://www.datelec.fr/detectir/p0.htm
 	----------------------------------------------------------------------------

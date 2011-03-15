@@ -25,9 +25,9 @@
 	#define __PINGUINOSERIAL_C
 
 #include <stdarg.h>
-#include "stdio.c"
-#include "serial.c"
-#include "typedef.h"
+#include <stdio.c>
+#include <serial.c>
+#include <typedef.h>
 
 void serial1init(u32 speed)
 {

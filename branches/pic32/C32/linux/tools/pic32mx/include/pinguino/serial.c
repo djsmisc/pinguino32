@@ -1,6 +1,6 @@
 /*	----------------------------------------------------------------------------
-	FILE:			serial.c
-	PROJECT:		pinguinoX
+	FILE:				serial.c
+	PROJECT:			pinguinoX
 	PURPOSE:		
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 nov. 2010
@@ -26,9 +26,10 @@
 #ifndef __SERIAL_C
 	#define __SERIAL_C
 
-	#include "stdio.c"
-	#include "system.c"
-	#include "interrupt.c"
+	#include <stdio.c>
+	#include <system.c>
+	#include <interrupt.c>
+	#include <typedef.h>
 
 	#define UART1			1
 	#define UART2			2
@@ -38,8 +39,8 @@
 	// -------------------------------------------------------------------------
 
 	// bit 15 ON: UARTx Enable bit
-	#define UART_DISABLE				0x0000
-	#define UART_ENABLE					0x8000
+	#define UART_DISABLE		0x0000
+	#define UART_ENABLE		0x8000
 /*
 	#define UART_PERIPHERAL	0x01
 	#define UART_RX			0x02	// UART Module receiver
@@ -289,8 +290,8 @@ void SerialPinConfigure(u8 port)
 			TRISFbits.TRISF2 = INPUT;	// RF2 / U1RX input
 			#endif
 			#ifdef __32MX440F256H__
-			TRISDbits.TRISD3 = OUTPUT;	// RD3 / U1TX output
-			TRISDbits.TRISD2 = INPUT;	// RD2 / U1RX input
+			TRISDbits.TRISD1 = OUTPUT;	// RF8 / U1TX output
+			TRISDbits.TRISD0 = INPUT;	// RF2 / U1RX input
 			#endif			
 			break;
 		case UART2:
@@ -347,7 +348,7 @@ void SerialConfigure(u8 port, u32 config, u32 enable, u32 baudrate)
 	SerialWriteChar1 : write data bits 0-8 on the UART1
 	--------------------------------------------------------------------------*/
 
-void SerialUART1WriteChar(int c)
+void SerialUART1WriteChar(char c)
 {
 	while (!U1STAbits.TRMT);				// wait transmitter is ready
 	U1TXREG = c;
@@ -357,7 +358,7 @@ void SerialUART1WriteChar(int c)
 	SerialWriteChar2 : write data bits 0-8 on the UART2
 	--------------------------------------------------------------------------*/
 
-void SerialUART2WriteChar(int c)
+void SerialUART2WriteChar(char c)
 {
 	while (!U2STAbits.TRMT);				// wait transmission has completed
 	U2TXREG = c;
@@ -501,6 +502,7 @@ void SerialGetDataBuffer(u8 port)
 
 /*	----------------------------------------------------------------------------
 	SerialInterrupt
+	TODO: move this to interrupt library and add it to main32.c
 	--------------------------------------------------------------------------*/
 
 #pragma interrupt SerialInterrupt ipl3 vector 24
