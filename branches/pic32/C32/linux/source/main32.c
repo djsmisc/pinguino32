@@ -36,7 +36,6 @@
 
 #ifdef UBW32_795
 #define UBW32
-#define _PLIB_DISABLE_LEGACY
 #include <proc/p32mx795f512l.h>
 #include <peripheral/spi_5xx_6xx_7xx.h>
 #endif
