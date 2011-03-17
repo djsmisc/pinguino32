@@ -174,7 +174,6 @@ void drawTool(int x, int y, u8 mode){
 void setup()
 {
   myTouch(11,12,13,14,15);
-
   myGLCD.InitLCD(LANDSCAPE);
   myGLCD.fillScr(255,255,255);
 

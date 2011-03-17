@@ -1,3 +1,4 @@
+ENABLE_tinyFAT_INTEGRATION ENABLE_tinyFAT_INTEGRATION#define _ENABLE_tinyFAT_INTEGRATION_
 myGLCD.InitLCD InitLCD#include <itdb02_graph.c>
 myGLCD.clrScr clrScr#include <itdb02_graph.c>
 myGLCD.fillScr fillScr#include <itdb02_graph.c>

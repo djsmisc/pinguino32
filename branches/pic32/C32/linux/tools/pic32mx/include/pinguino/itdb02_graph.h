@@ -130,7 +130,7 @@
     void drawBitmap(int x, int y, int sx, int sy, unsigned int* data, int scale);
     void drawBitmapR(int x, int y, int sx, int sy, unsigned int* data, int deg, int rox, int roy);
 #ifdef _ENABLE_tinyFAT_INTEGRATION_
-	unsigned char loadBitmap(int x, int y, int sx, int sy, char *filename);
+	unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename);
 #endif
 //private
 	unsigned char fcolorr,fcolorg,fcolorb;

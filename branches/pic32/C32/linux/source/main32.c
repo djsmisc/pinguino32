@@ -20,12 +20,25 @@
 -------------------------------------------------------------------------*/
 #ifdef PIC32_PINGUINO
 #include <proc/p32mx440f256h.h>
+#include <peripheral/spi_3xx_4xx.h>
 #endif
+
 #ifdef EMPEROR460
 #include <proc/p32mx460f512l.h>
+#include <peripheral/spi_3xx_4xx.h>
 #endif
-#ifdef UBW32
+
+#ifdef UBW32_460
+#define UBW32
 #include <proc/p32mx460f512l.h>
+#include <peripheral/spi_3xx_4xx.h>
+#endif
+
+#ifdef UBW32_795
+#define UBW32
+#define _PLIB_DISABLE_LEGACY
+#include <proc/p32mx795f512l.h>
+#include <peripheral/spi_5xx_6xx_7xx.h>
 #endif
 
 #include <system.c>
