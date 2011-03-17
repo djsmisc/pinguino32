@@ -126,7 +126,8 @@ class Pinguino(wx.Frame):
     ID_TOOLS = wx.NewId()
     PINGUINO_OLIMEX = wx.NewId()
     EMPEROR460 = wx.NewId()
-    UBW32 = wx.NewId()
+    UBW32_460 = wx.NewId()
+    UBW32_795 = wx.NewId()
     ID_THEME1 = 1000
 
     # id debug menu
@@ -268,14 +269,17 @@ class Pinguino(wx.Frame):
         self.devtool_menu=wx.Menu()
         self.devtool_menu.AppendRadioItem(self.PINGUINO_OLIMEX,"Pinguino OLIMEX",_("your board"))
         self.devtool_menu.AppendRadioItem(self.EMPEROR460,"EMPEROR 460",_("your board"))
-        self.devtool_menu.AppendRadioItem(self.UBW32,"UBW32",_("your board"))
+        self.devtool_menu.AppendRadioItem(self.UBW32_460,"UBW32 460",_("your board"))
+        self.devtool_menu.AppendRadioItem(self.UBW32_795,"UBW32 795",_("your board"))
         self.pref_menu.AppendMenu(self.ID_TOOLS,_("32 bits development tools"),self.devtool_menu)
         if self.config.ReadInt('devtool',-1)==1:
             self.devtool_menu.Check(self.PINGUINO_OLIMEX,True)
         elif self.config.ReadInt('devtool',-1)==2:
             self.devtool_menu.Check(self.EMPEROR460,True)
         elif self.config.ReadInt('devtool',-1)==3:
-            self.devtool_menu.Check(self.UBW32,True)
+            self.devtool_menu.Check(self.UBW32_460,True)
+        elif self.config.ReadInt('devtool',-1)==4:
+            self.devtool_menu.Check(self.UBW32_795,True)
         self.OnSelectTools(wx.Event)
         
         #------------------------------ select path for 32 bits compiler            
@@ -392,7 +396,8 @@ class Pinguino(wx.Frame):
         self.Bind(wx.EVT_MENU,self.OnSelectBoard,id=self.ID_P32X)
         self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.PINGUINO_OLIMEX)
         self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.EMPEROR460)
-        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.UBW32)        
+        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.UBW32_460)
+        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.UBW32_795)
          
         # icons bar
         self.Bind(wx.EVT_TOOL, self.OnVerify, id=self.ID_VERIFY)
@@ -512,8 +517,10 @@ class Pinguino(wx.Frame):
                 self.config.WriteInt('devtool',1)
         if self.devtool_menu.IsChecked(self.EMPEROR460):
                 self.config.WriteInt('devtool',2)
-        if self.devtool_menu.IsChecked(self.UBW32):
-                self.config.WriteInt('devtool',3)                
+        if self.devtool_menu.IsChecked(self.UBW32_460):
+                self.config.WriteInt('devtool',3)
+        if self.devtool_menu.IsChecked(self.UBW32_795):
+                self.config.WriteInt('devtool',4)
         self.config.Flush()
         # ----------------------------------------------------------------------
         # deinitialize the frame manager
@@ -595,10 +602,12 @@ class Pinguino(wx.Frame):
         if self.devtool_menu.IsChecked(self.EMPEROR460):
             self.processor32="32MX460F512L"
             self.devtool="EMPEROR460"
-        if self.devtool_menu.IsChecked(self.UBW32):
+        if self.devtool_menu.IsChecked(self.UBW32_460):
             self.processor32="32MX460F512L"
-            self.devtool="UBW32"
-        
+            self.devtool="UBW32_460"
+        if self.devtool_menu.IsChecked(self.UBW32_795):
+            self.processor32="32MX795F512L"
+            self.devtool="UBW32_795"
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
 # ------------------------------------------------------------------------------

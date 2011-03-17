@@ -56,7 +56,6 @@
 #define ITDB02_Graph_c
 
 #include <itdb02_graph.h>
-//#include <digitalw.c>
 #include <delay.c>
 
 //define cbi(sfr, bit) (_SFR_char(sfr) &= ~_BV(bit))
@@ -1087,8 +1086,9 @@ unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename)
 	int cx, cy, cp;
 	unsigned int temp, result;
 	char r,g,b;
+	int i;
 
-	res=file.openFile(filename, FILEMODE_BINARY);
+	res=openFile(filename, FILEMODE_BINARY);
 	if (res==NO_ERROR)
 	{
 		fastWriteLow(LCD_CS);  
@@ -1101,7 +1101,7 @@ unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename)
 		}
 		while (result==512)
 		{
-			result=file.readBinary();
+			result=readBinary();
 			switch(result)
 			{
 				case ERROR_WRONG_FILEMODE:
@@ -1113,8 +1113,8 @@ unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename)
 				default:
 					if (orient==PORTRAIT)
 					{
-						for (int i=0; i<result; i+=2)
-							LCD_Write_DATA(file.buffer[i],file.buffer[i+1]);
+						for (i=0; i<result; i+=2)
+							LCD_Write_DATA(buffer[i],buffer[i+1]);
 					}
 					else
 					{
@@ -1124,16 +1124,16 @@ unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename)
 							if (((result-cp)/2)<(sx-cx))
 							{
 								setXY(x+cx, y+cy, x+cx+((result-cp)/2)-1, y+cy);
-								for (int i=(result-cp)-2; i>=0; i-=2)
-									LCD_Write_DATA(file.buffer[cp+i],file.buffer[cp+i+1]);
+								for (i=(result-cp)-2; i>=0; i-=2)
+									LCD_Write_DATA(buffer[cp+i],buffer[cp+i+1]);
 								cx+=((result-cp)/2);
 								cp=result;
 							}
 							else
 							{
 								setXY(x+cx, y+cy, x+sx-1, y+cy);
-								for (int i=sx-cx-1; i>=0; i--)
-									LCD_Write_DATA(file.buffer[cp+(i*2)],file.buffer[cp+(i*2)+1]);
+								for (i=sx-cx-1; i>=0; i--)
+									LCD_Write_DATA(buffer[cp+(i*2)],buffer[cp+(i*2)+1]);
 								cp+=(sx-cx)*2;
 								cx=0;
 								cy++;
@@ -1143,7 +1143,7 @@ unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename)
 					break;
 			}              
 		}
-		file.closeFile();
+		closeFile();
 		if (orient==PORTRAIT)
 			setXY(0,0,239,319);
 		else
