@@ -24,4 +24,4 @@ clean:
 	$(RM) main32.elf
 	$(RM) main32.hex
 	$(RM) $(SOURCE)/obj/non-free/processor.o
-	$(COPY) $(SOURCE)/obj/non-free/$(MODEL)/processor.o $(SOURCE)/obj/non-free/processor.o
+	$(COPY) $(SOURCE)/obj/non-free/$(MODEL)/processor.pic32 $(SOURCE)/obj/non-free/processor.o
