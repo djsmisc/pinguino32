@@ -126,6 +126,7 @@ class Pinguino(wx.Frame):
     ID_TOOLS = wx.NewId()
     PINGUINO_OLIMEX = wx.NewId()
     EMPEROR460 = wx.NewId()
+    EMPEROR795 = wx.NewId()
     UBW32_460 = wx.NewId()
     UBW32_795 = wx.NewId()
     ID_THEME1 = 1000
@@ -269,6 +270,7 @@ class Pinguino(wx.Frame):
         self.devtool_menu=wx.Menu()
         self.devtool_menu.AppendRadioItem(self.PINGUINO_OLIMEX,"Pinguino OLIMEX",_("your board"))
         self.devtool_menu.AppendRadioItem(self.EMPEROR460,"EMPEROR 460",_("your board"))
+        self.devtool_menu.AppendRadioItem(self.EMPEROR795,"EMPEROR 795",_("your board"))
         self.devtool_menu.AppendRadioItem(self.UBW32_460,"UBW32 460",_("your board"))
         self.devtool_menu.AppendRadioItem(self.UBW32_795,"UBW32 795",_("your board"))
         self.pref_menu.AppendMenu(self.ID_TOOLS,_("32 bits development tools"),self.devtool_menu)
@@ -280,6 +282,8 @@ class Pinguino(wx.Frame):
             self.devtool_menu.Check(self.UBW32_460,True)
         elif self.config.ReadInt('devtool',-1)==4:
             self.devtool_menu.Check(self.UBW32_795,True)
+        elif self.config.ReadInt('devtool',-1)==5:
+            self.devtool_menu.Check(self.EMPEROR795,True)
         self.OnSelectTools(wx.Event)
         
         #------------------------------ select path for 32 bits compiler            
@@ -396,6 +400,7 @@ class Pinguino(wx.Frame):
         self.Bind(wx.EVT_MENU,self.OnSelectBoard,id=self.ID_P32X)
         self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.PINGUINO_OLIMEX)
         self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.EMPEROR460)
+        self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.EMPEROR795)
         self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.UBW32_460)
         self.Bind(wx.EVT_MENU, self.OnSelectTools, id=self.UBW32_795)
          
@@ -521,6 +526,8 @@ class Pinguino(wx.Frame):
                 self.config.WriteInt('devtool',3)
         if self.devtool_menu.IsChecked(self.UBW32_795):
                 self.config.WriteInt('devtool',4)
+        if self.devtool_menu.IsChecked(self.EMPEROR795):
+                self.config.WriteInt('devtool',5)
         self.config.Flush()
         # ----------------------------------------------------------------------
         # deinitialize the frame manager
@@ -608,6 +615,9 @@ class Pinguino(wx.Frame):
         if self.devtool_menu.IsChecked(self.UBW32_795):
             self.processor32="32MX795F512L"
             self.devtool="UBW32_795"
+        if self.devtool_menu.IsChecked(self.EMPEROR795):
+            self.processor32="32MX795F512L"
+            self.devtool="EMPEROR795"
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
 # ------------------------------------------------------------------------------
