@@ -27,6 +27,7 @@
 // 13 feb.2011 updated for EMPEROR 460 and PIC32_PINGUINO
 // 15 feb.2011 UBW32 mask fixed by Marcus Fazzi
 // 23 feb.2011 PGC/PGD order for UBW32 mask fixed by Marcus Fazzi
+// 17/18 mar.2011 Added support for MX795 by Marcus Fazzi
 
 #ifndef __DIGITALW_C
 	#define __DIGITALW_C
@@ -51,9 +52,9 @@ const u32 pinmask[]={0x04,0x08,0x01,0x20,0x40,0x80,0x100,0x800,
 
 #endif
 
-// define for EMPEROR 460 board
-
-#ifdef EMPEROR460
+//define for EMPEROR 460/795 boards
+//TODO: remapping all pins
+#ifdef EMPEROR
 
 const u32 portmask[]=
 				 {2,6,6,6,6,0,0,4,
@@ -79,7 +80,7 @@ const u32 pinmask[]={0x10,0x40,0x80,0x100,0x200,0x01,0x100,0x200,
 				  0x800,0x400,0x200,0x8000,0x4000};
 #endif				  
 
-// define for UBW32
+// define for UBW32 460/795 boards
 
 #ifdef UBW32
 

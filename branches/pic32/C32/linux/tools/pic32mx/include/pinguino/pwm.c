@@ -72,7 +72,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 			default: return 0;
 		}		
 #endif
-#ifdef EMPEROR460
+#ifdef EMPEROR
 	switch (pin)
 		{
 			case  0:

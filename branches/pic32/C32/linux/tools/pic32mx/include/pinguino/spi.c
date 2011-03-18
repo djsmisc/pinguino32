@@ -49,7 +49,11 @@
 #define STATBIT		SPI2STATbits.SPIRBF
 #define SPICONF		SPI2CON
 #define CLKSPD		SPI2BRG
+#define	PULLUPS		0xF00 //Use CNPUE = PULLUPS for enable internal pullups 8,9,10,11
 #endif
+
+//Only 795 boards have SPI3 and SPI4
+#if defined(UBW32_795) || defined(EMPEROR795)
 
 #if SPIx == 3
 #define BUFFER		SPI2ABUF
@@ -65,6 +69,7 @@
 #define CLKSPD		SPI3ABRG
 #endif
 
+#endif
 /** 
  * 0x8120,		   SPI->ON/CKE->1/CKP->0/8 bit Master
  * 159,            Fpb / (2 * (SPIxBRG + 1)  :.  80M / (2 * (149 +1)) = 250KHz
@@ -82,9 +87,6 @@ void InitSPI0(){
 unsigned char WriteSPI( unsigned char data_out )
 {
 	BUFFER = data_out;				// write byte to SSPBUF register
-	/*if ( SSPCON1 & 0x80 )			// test if write collision occurred
-		return (-1);				// if WCOL bit is set return negative #
-	else*/
 	while( !STATBIT );	        	// wait until bus cycle complete
 	return (SSPBUF);				// return response data
 }
@@ -95,4 +97,5 @@ unsigned char ReadSPI( void )
 	while ( !STATBIT );			// wait until cycle complete
 	return ( BUFFER );			// return with byte read
 }
+
 #endif

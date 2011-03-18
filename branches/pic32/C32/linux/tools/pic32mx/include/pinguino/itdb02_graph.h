@@ -77,7 +77,7 @@
 #define FONT_LARGE 2
 
 //Pinguino32X, UBW32, EMPEROR and Minimum boards
-#if defined(UBW32) || defined(EMPEROR460)
+#if defined(UBW32) || defined(EMPEROR)
 
 #define LCD_DATA_DIR 	TRISD		//Data Direction Register for Data Port
 #define LCD_DATA_BUS 	PORTD		//Data Bus
