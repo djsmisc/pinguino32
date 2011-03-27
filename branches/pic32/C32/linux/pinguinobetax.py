@@ -112,6 +112,7 @@ class Pinguino(wx.Frame):
     ld32name=""
     o2hname=""
     processor32=""
+    compiler_name=""
         
 # ------------------------------------------------------------------------------
 # id
@@ -174,6 +175,7 @@ class Pinguino(wx.Frame):
         self.c32name=self.config.Read('c32name')
         self.ld32name=self.config.Read('ld32name')
         self.o2hname=self.config.Read('o2hname')
+        self.compiler_name=self.config.Read('compiler_name')
                     
         wx.Frame.__init__(self, parent, id, title, framepos, framesize, style)
         if framepos == ("",""):
@@ -518,6 +520,7 @@ class Pinguino(wx.Frame):
         self.config.Write('c32name',self.c32name)
         self.config.Write('ld32name',self.ld32name)
         self.config.Write('o2hname',self.o2hname)
+        self.config.Write('compilername',self.compiler_name)
         if self.devtool_menu.IsChecked(self.PINGUINO_OLIMEX):
                 self.config.WriteInt('devtool',1)
         if self.devtool_menu.IsChecked(self.EMPEROR460):
@@ -575,6 +578,19 @@ class Pinguino(wx.Frame):
                     filename,extension=os.path.splitext(i)
                     if filename[len(filename)-3:len(filename)]=="gcc":
                         self.c32name=filename
+                        fichier=open(sys.path[0]+"/tmp/stdout",'w+')
+                        sortie=Popen([path+"/bin/"+self.c32name,
+                            "--version"],
+                            stdout=fichier,stderr=STDOUT)
+                        sortie.communicate()
+                        fichier.seek(0)
+                        output=fichier.read()
+                        if output.find("Pinguino")!=-1:
+                            self.compiler_name="Pinguino"
+                        elif output.find("Microchip")!=-1:
+                            self.compiler_name="Microchip"
+                        else:
+                            self.compiler_name="Invalid"
                     if filename[len(filename)-2:len(filename)]=="ld":
                         self.ld32name=filename
                     if filename[len(filename)-7:len(filename)]=="objcopy":
@@ -588,6 +604,7 @@ class Pinguino(wx.Frame):
                 dlg.Destroy()
                 self.Pinguino32XFolder="ERROR"
                 return           
+            print self.compiler_name
                         
             self.Pinguino32XFolder=path
 
@@ -627,6 +644,7 @@ class Pinguino(wx.Frame):
             # Deletes all the tools in the current toolbar
             self.toolbar.ClearTools()
         except:
+            # Create toolbar
             self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
             pass 
         # Get size of new theme's icons
@@ -711,7 +729,7 @@ class Pinguino(wx.Frame):
         info.SetName('Pinguino')
         info.SetVersion(pinguino_version)
         info.SetDescription(description)
-        info.SetCopyright('2008,2009,2010 jean-pierre mandon')
+        info.SetCopyright('2008,2009,2010,2011 jean-pierre mandon')
         info.SetWebSite('http://www.hackinglab.org')
         info.SetLicence(licence)
         info.AddDeveloper('Jean-Pierre Mandon')
@@ -1046,7 +1064,7 @@ class Pinguino(wx.Frame):
         lignes.sort()
         #print lignes
         fichier.close()
-		# save sorted lines
+        # save sorted lines
         fichier = open(sys.path[0]+"/tmp/define.h", "w")
         fichier.writelines(lignes)
         fichier.close()
