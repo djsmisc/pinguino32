@@ -4,7 +4,7 @@
 	PURPOSE:		
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 	FIRST RELEASE:	20 feb. 2011
-	LAST RELEASE:	20 feb. 2011
+	LAST RELEASE:	26 feb. 2011
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -45,7 +45,8 @@ u8 analogwrite(u8 pin,u16 setpoint)
 #ifdef PIC32_PINGUINO
 	switch (pin)
 		{
-			case 2:  TRISDCLR=0x01;
+			case 2:  TRISDSET=0x10;
+					 TRISDCLR=0x01;
 					 OC1CON=0;
 					 OC1R=setpoint;
 					 OC1RS=setpoint;
