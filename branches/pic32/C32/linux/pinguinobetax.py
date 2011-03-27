@@ -175,7 +175,7 @@ class Pinguino(wx.Frame):
         self.c32name=self.config.Read('c32name')
         self.ld32name=self.config.Read('ld32name')
         self.o2hname=self.config.Read('o2hname')
-        self.compiler_name=self.config.Read('compiler_name')
+        self.compiler_name=self.config.Read('compilername')
                     
         wx.Frame.__init__(self, parent, id, title, framepos, framesize, style)
         if framepos == ("",""):
@@ -604,7 +604,6 @@ class Pinguino(wx.Frame):
                 dlg.Destroy()
                 self.Pinguino32XFolder="ERROR"
                 return           
-            print self.compiler_name
                         
             self.Pinguino32XFolder=path
 
@@ -1150,7 +1149,8 @@ class Pinguino(wx.Frame):
             fichier.close()
             return sortie.poll()
 
-    def compile32(self,filename):
+    def compile32(self,filename):       
+            """
             chemin = os.path.dirname(filename)
             fichier = open(sys.path[0] + "/tmp/stdout", 'w+')
             sortie = Popen([self.Pinguino32XFolder + "/bin/"+self.c32name,
@@ -1172,7 +1172,9 @@ class Pinguino(wx.Frame):
                 self.displaymsg(fichier.read(), 0)
             fichier.close()
             return sortie.poll()
-    
+            """
+            return 0
+        
     def link(self,filename):
         # bug 02 replaced sys.path[0] by sys.path[0].replace(" ","\\ ") for path with spaces
         # jean-pierre mandon / guillaume stagnaro 2008/09/06
@@ -1213,20 +1215,36 @@ class Pinguino(wx.Frame):
             print("link "+self.processor)
         else:
             fichier = open(sys.path[0]+"/tmp/stdout", 'w+')
-            sortie=Popen(["make",
-                          "-f" + sys.path[0]+"/source/Makefile",
-                          "COMPILER="+self.Pinguino32XFolder+'/bin/'+self.c32name,
-                          "O2H="+self.Pinguino32XFolder+'/bin/'+self.o2hname,
-                          "PROCESSOR="+self.processor32,
-                          "DEVTOOL="+self.devtool,
-                          "SOURCE="+sys.path[0].replace(" ","\\ ")],                                                
-                          stdout=fichier,stderr=STDOUT)
-            sortie.communicate()
-            fichier.seek(0)
-            if sortie.poll()!=0:
-                self.displaymsg(fichier.read(), 0)
-            fichier.close()     
-            return sortie.poll()
+            if self.compiler_name=="Microchip":
+                sortie=Popen(["make",
+                              "--makefile=" + sys.path[0]+"/source/MakefileMicrochip",
+                              "CMPNAME=MakefileMicrochip",
+                              "COMPILER="+self.Pinguino32XFolder+'/bin/'+self.c32name,
+                              "O2H="+self.Pinguino32XFolder+'/bin/'+self.o2hname,
+                              "PROCESSOR="+self.processor32,
+                              "DEVTOOL="+self.devtool,
+                              "SOURCE="+sys.path[0].replace(" ","\\ ")],                                                
+                              stdout=fichier,stderr=STDOUT)
+            elif self.compiler_name=="Pinguino":
+                sortie=Popen(["make",
+                              "--makefile=" + sys.path[0]+"/source/MakefilePinguino",
+                              "CMPNAME=MakefilePinguino",
+                              "COMPILER="+self.Pinguino32XFolder+'/bin/'+self.c32name,
+                              "O2H="+self.Pinguino32XFolder+'/bin/'+self.o2hname,
+                              "PROCESSOR="+self.processor32,
+                              "DEVTOOL="+self.devtool,
+                              "SOURCE="+sys.path[0].replace(" ","\\ ")],                                                
+                              stdout=fichier,stderr=STDOUT)
+            if self.compiler_name!="Invalid":                
+                sortie.communicate()
+                fichier.seek(0)
+                if sortie.poll()!=0:
+                    self.displaymsg(fichier.read(), 0)
+                fichier.close()     
+                return sortie.poll()
+            else:
+                self.displaymsg("Invalid toolchain",0)
+                return -1
                                      
     def getCodeSize(self, filename):
         if self.board_menu.IsChecked(self.ID_P8X):
