@@ -25,7 +25,11 @@ unsigned int analogread(unsigned char channel)
 {
 unsigned int result=0;
 
+#ifdef PIC18F4550
+ADCON1=0x07;
+#else
 ADCON1=0x0A;
+#endif
 ADCON0=(channel-13)*4;
 ADCON2=0xBD;
 ADCON0bits.ADON=1;
