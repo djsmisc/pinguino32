@@ -20,6 +20,7 @@
 	License along with this library; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
+// 2 .april 2011 fixed conditional compilation for board support  jp.mandon
 
 #ifndef __PWM__
 #define __PWM__
@@ -73,7 +74,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 			default: return 0;
 		}		
 #endif
-#ifdef EMPEROR
+#if defined(EMPEROR460) || defined(EMPEROR795)
 	switch (pin)
 		{
 			case  0:
@@ -124,7 +125,7 @@ u8 analogwrite(u8 pin,u16 setpoint)
 			default: return 0;
 		}		
 #endif
-#ifdef UBW32
+#if defined(UBW32_460) || defined(UBW32_795)
 	switch (pin)
 		{
 			case  0:
