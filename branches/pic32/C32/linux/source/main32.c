@@ -18,34 +18,7 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -------------------------------------------------------------------------*/
-#ifdef PIC32_PINGUINO
-#include <proc/p32mx440f256h.h>
-#include <peripheral/spi_3xx_4xx.h>
-#endif
-
-#ifdef EMPEROR460
-#define EMPEROR
-#include <proc/p32mx460f512l.h>
-#include <peripheral/spi_3xx_4xx.h>
-#endif
-
-#ifdef EMPEROR795
-#define EMPEROR
-#include <proc/p32mx795f512l.h>
-#include <peripheral/spi_5xx_6xx_7xx.h>
-#endif
-
-#ifdef UBW32_460
-#define UBW32
-#include <proc/p32mx460f512l.h>
-#include <peripheral/spi_3xx_4xx.h>
-#endif
-
-#ifdef UBW32_795
-#define UBW32
-#include <proc/p32mx795f512l.h>
-#include <peripheral/spi_5xx_6xx_7xx.h>
-#endif
+#include <proc/p32xxxx.h>
 
 #include <system.c>
 #include "../tmp/define.h"

@@ -3,7 +3,7 @@ CC        = $(COMPILER)
 OBJC      = $(O2H)
 MODEL     = $(PROCESSOR)
 BOARD     = $(DEVTOOL)
-ELF_FLAGS =  -EL -v -march=24kc -msoft-float -lgcc -Wl,--defsym,_min_heap_size=8192 -D__PIC32MX__ -D__32MX460F512L__ -I ../tools/pic32mx/include -T ../tools/pic32mx/lkr/elf32pic32mx.x
+ELF_FLAGS =  -EL -march=24kc -msoft-float -lgcc -Wl,--defsym,_min_heap_size=8192 -D__PIC32MX__ -D__$(MODEL)__ -I ../tools/pic32mx/include -T ../tools/pic32mx/lkr/elf32pic32mx.x
 RM        = rm -f
 COPY      = cp
 
@@ -13,7 +13,7 @@ build:
 		cd $(SOURCE)/source; $(MAKE) -f$(MAKENAME) COMPILER=$(COMPILER) link
 
 link:
-		$(CC) $(ELF_FLAGS) -D $(BOARD) -I "../tools/pic32mx/include/" -I "../tools/pic32mx/include/pinguino/" -I "../obj/non-free/" -o main32.elf main32.o "../obj/non-free/crt0.S" "../obj/non-free/processor.o" -lgcc
+		$(CC) $(ELF_FLAGS) -D $(BOARD) -I "../tools/pic32mx/include/" -I "../tools/pic32mx/include/pinguino/" -I "../tools/pic32mx/include/non-free/" -I "../obj/non-free/" -o main32.elf main32.c "../obj/non-free/crt0.S" "../obj/non-free/processor.o" -lgcc
 		$(OBJC) -O ihex main32.elf main32.hex
 		#This remove wrong routine
 		grep --binary --invert-match '^:040000059D006000FA' main32.hex > temp

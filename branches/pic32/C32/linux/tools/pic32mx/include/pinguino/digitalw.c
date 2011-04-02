@@ -29,11 +29,12 @@
 // 23 feb.2011 PGC/PGD order for UBW32 mask fixed by Marcus Fazzi
 // 17/18 mar.2011 Added support for MX795 by Marcus Fazzi
 // 20 mar.2011 IO mapping for Emperor boards revised by Marcus Fazzi
+// 2 .avr 2011 removed include p32xxxx.h and transfered to main32.c jp.mandon
+// 2 .avr 2011 fixed multiboard support for pinMask jp.mandon
 
 #ifndef __DIGITALW_C
 	#define __DIGITALW_C
 	
-	#include <p32xxxx.h>
 	#include "typedef.h"
 
 // #define for PIC32_PINGUINO
@@ -55,7 +56,7 @@ const u32 pinmask[]={0x04,0x08,0x01,0x20,0x40,0x80,0x100,0x800,
 
 //define for EMPEROR 460/795 boards
 //TODO: remapping all pins
-#ifdef EMPEROR
+#if  defined(EMPEROR460) || defined(EMPEROR795)
 
 const u32 portmask[]=
 				 {2,6,6,6,6,0,4,4, //0-7
@@ -83,7 +84,7 @@ const u32 pinmask[]={0x10,0x40,0x80,0x100,0x200,0x01,0x100,0x200,		//0-7
 
 // define for UBW32 460/795 boards, same for Pinguino Minimum
 
-#ifdef UBW32
+#if defined(UBW32_460) || defined(UBW32_795)
 
 const u32 portmask[]=
 				 {2,6,6,6,6,0,4,4, //0-7

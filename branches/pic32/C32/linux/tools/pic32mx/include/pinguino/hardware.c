@@ -2,6 +2,7 @@
 	hardware.c
 	Régis Blanchot
 	* Added support to Emperor Boards - Marcus Fazzi
+	* 2.april 2011 fixed conditional compilation for board support
 	--------------------------------------------------------------------------*/
 
 #ifndef __HARDWARE_C
@@ -12,7 +13,7 @@
 	#include "delay.c"
 	#include "digitalw.c"
 
-#if defined(UBW32)
+#if defined(UBW32_460) || defined(UBW32_795)
 	// UBW32 built-in leds
     #define LED1		1//PORTEbits.RE2	// white led
     #define LED2		2//PORTEbits.RE1	// red led
@@ -28,7 +29,7 @@
 	#define PROGBUTTON  68	// pin 43 = PORTEbits.RE7 = prog button
     #define USERBUTTON  69	// pin 44 = PORTEbits.RE6 = user button
     
-#elif defined(EMPEROR)
+#elif defined(EMPEROR460) || defined(EMPEROR795)
 	// EMPEROR built-in leds
 	#define LED1		1//PORTEbits.RE2	// white led
 	#define LED2		2//PORTEbits.RE3	// red led

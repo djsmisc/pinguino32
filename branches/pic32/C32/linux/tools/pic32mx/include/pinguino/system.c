@@ -9,7 +9,6 @@
 #ifndef __SYSTEM_C
 	#define __SYSTEM_C
 
-	#include <p32xxxx.h>
 	#include "const.h"
 	#include "typedef.h"
 
