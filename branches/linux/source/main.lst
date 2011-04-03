@@ -1,0 +1,620 @@
+gplink-0.13.7 beta
+Copyright (c) 1998-2005 gputils project
+Listing File Generated: 3-31-2011  21:13:18
+ 
+ 
+Address  Value    Disassembly              Source
+-------  -----    -----------              ------
+                                           ;--------------------------------------------------------
+                                           ; File Created by SDCC : free open source ANSI-C Compiler
+                                           ; Version 2.9.0 #5416 (Aug  9 2009) (UNIX)
+                                           ; This file was generated Thu Mar 31 21:13:18 2011
+                                           ;--------------------------------------------------------
+                                           ; PIC16 port for the Microchip 16-bit core micros
+                                           ;--------------------------------------------------------
+                                           	list	p=18f2550
+                                           
+                                           	radix dec
+                                           
+                                           ;--------------------------------------------------------
+                                           ; public variables in this module
+                                           ;--------------------------------------------------------
+                                           	global _Delayms
+                                           	global _Delayus
+                                           	global _epap_in
+                                           	global _epap_out
+                                           	global _epapin_init
+                                           	global _epapout_init
+                                           	global _setup
+                                           	global _loop
+                                           	global _pinguino_main
+                                           	global _high_priority_isr
+                                           	global _low_priority_isr
+                                           
+                                           ;--------------------------------------------------------
+                                           ; extern variables in this module
+                                           ;--------------------------------------------------------
+                                           	extern _SPPDATAbits
+                                           	extern _SPPCFGbits
+                                           	extern _SPPEPSbits
+                                           	extern _SPPCONbits
+                                           	extern _UFRMLbits
+                                           	extern _UFRMHbits
+                                           	extern _UIRbits
+                                           	extern _UIEbits
+                                           	extern _UEIRbits
+                                           	extern _UEIEbits
+                                           	extern _USTATbits
+                                           	extern _UCONbits
+                                           	extern _UADDRbits
+                                           	extern _UCFGbits
+                                           	extern _UEP0bits
+                                           	extern _UEP1bits
+                                           	extern _UEP2bits
+                                           	extern _UEP3bits
+                                           	extern _UEP4bits
+                                           	extern _UEP5bits
+                                           	extern _UEP6bits
+                                           	extern _UEP7bits
+                                           	extern _UEP8bits
+                                           	extern _UEP9bits
+                                           	extern _UEP10bits
+                                           	extern _UEP11bits
+                                           	extern _UEP12bits
+                                           	extern _UEP13bits
+                                           	extern _UEP14bits
+                                           	extern _UEP15bits
+                                           	extern _PORTAbits
+                                           	extern _PORTBbits
+                                           	extern _PORTCbits
+                                           	extern _PORTDbits
+                                           	extern _PORTEbits
+                                           	extern _LATAbits
+                                           	extern _LATBbits
+                                           	extern _LATCbits
+                                           	extern _LATDbits
+                                           	extern _LATEbits
+                                           	extern _TRISAbits
+                                           	extern _TRISBbits
+                                           	extern _TRISCbits
+                                           	extern _TRISDbits
+                                           	extern _TRISEbits
+                                           	extern _OSCTUNEbits
+                                           	extern _PIE1bits
+                                           	extern _PIR1bits
+                                           	extern _IPR1bits
+                                           	extern _PIE2bits
+                                           	extern _PIR2bits
+                                           	extern _IPR2bits
+                                           	extern _EECON1bits
+                                           	extern _RCSTAbits
+                                           	extern _TXSTAbits
+                                           	extern _T3CONbits
+                                           	extern _CMCONbits
+                                           	extern _CVRCONbits
+                                           	extern _ECCP1ASbits
+                                           	extern _ECCP1DELbits
+                                           	extern _BAUDCONbits
+                                           	extern _CCP2CONbits
+                                           	extern _CCP1CONbits
+                                           	extern _ADCON2bits
+                                           	extern _ADCON1bits
+                                           	extern _ADCON0bits
+                                           	extern _SSPCON2bits
+                                           	extern _SSPCON1bits
+                                           	extern _SSPSTATbits
+                                           	extern _T2CONbits
+                                           	extern _T1CONbits
+                                           	extern _RCONbits
+                                           	extern _WDTCONbits
+                                           	extern _HLVDCONbits
+                                           	extern _OSCCONbits
+                                           	extern _T0CONbits
+                                           	extern _STATUSbits
+                                           	extern _FSR2Hbits
+                                           	extern _BSRbits
+                                           	extern _FSR1Hbits
+                                           	extern _FSR0Hbits
+                                           	extern _INTCON3bits
+                                           	extern _INTCON2bits
+                                           	extern _INTCONbits
+                                           	extern _TBLPTRUbits
+                                           	extern _PCLATHbits
+                                           	extern _PCLATUbits
+                                           	extern _STKPTRbits
+                                           	extern _TOSUbits
+                                           	extern _usb_device_state
+                                           	extern _usb_active_cfg
+                                           	extern _usb_active_alt_setting
+                                           	extern _SPPDATA
+                                           	extern _SPPCFG
+                                           	extern _SPPEPS
+                                           	extern _SPPCON
+                                           	extern _UFRML
+                                           	extern _UFRMH
+                                           	extern _UIR
+                                           	extern _UIE
+                                           	extern _UEIR
+                                           	extern _UEIE
+                                           	extern _USTAT
+                                           	extern _UCON
+                                           	extern _UADDR
+                                           	extern _UCFG
+                                           	extern _UEP0
+                                           	extern _UEP1
+                                           	extern _UEP2
+                                           	extern _UEP3
+                                           	extern _UEP4
+                                           	extern _UEP5
+                                           	extern _UEP6
+                                           	extern _UEP7
+                                           	extern _UEP8
+                                           	extern _UEP9
+                                           	extern _UEP10
+                                           	extern _UEP11
+                                           	extern _UEP12
+                                           	extern _UEP13
+                                           	extern _UEP14
+                                           	extern _UEP15
+                                           	extern _PORTA
+                                           	extern _PORTB
+                                           	extern _PORTC
+                                           	extern _PORTD
+                                           	extern _PORTE
+                                           	extern _LATA
+                                           	extern _LATB
+                                           	extern _LATC
+                                           	extern _LATD
+                                           	extern _LATE
+                                           	extern _TRISA
+                                           	extern _TRISB
+                                           	extern _TRISC
+                                           	extern _TRISD
+                                           	extern _TRISE
+                                           	extern _OSCTUNE
+                                           	extern _PIE1
+                                           	extern _PIR1
+                                           	extern _IPR1
+                                           	extern _PIE2
+                                           	extern _PIR2
+                                           	extern _IPR2
+                                           	extern _EECON1
+                                           	extern _EECON2
+                                           	extern _EEDATA
+                                           	extern _EEADR
+                                           	extern _RCSTA
+                                           	extern _TXSTA
+                                           	extern _TXREG
+                                           	extern _RCREG
+                                           	extern _SPBRG
+                                           	extern _SPBRGH
+                                           	extern _T3CON
+                                           	extern _TMR3L
+                                           	extern _TMR3H
+                                           	extern _CMCON
+                                           	extern _CVRCON
+                                           	extern _ECCP1AS
+                                           	extern _ECCP1DEL
+                                           	extern _BAUDCON
+                                           	extern _CCP2CON
+                                           	extern _CCPR2L
+                                           	extern _CCPR2H
+                                           	extern _CCP1CON
+                                           	extern _CCPR1L
+                                           	extern _CCPR1H
+                                           	extern _ADCON2
+                                           	extern _ADCON1
+                                           	extern _ADCON0
+                                           	extern _ADRESL
+                                           	extern _ADRESH
+                                           	extern _SSPCON2
+                                           	extern _SSPCON1
+                                           	extern _SSPSTAT
+                                           	extern _SSPADD
+                                           	extern _SSPBUF
+                                           	extern _T2CON
+                                           	extern _PR2
+                                           	extern _TMR2
+                                           	extern _T1CON
+                                           	extern _TMR1L
+                                           	extern _TMR1H
+                                           	extern _RCON
+                                           	extern _WDTCON
+                                           	extern _HLVDCON
+                                           	extern _OSCCON
+                                           	extern _T0CON
+                                           	extern _TMR0L
+                                           	extern _TMR0H
+                                           	extern _STATUS
+                                           	extern _FSR2L
+                                           	extern _FSR2H
+                                           	extern _PLUSW2
+                                           	extern _PREINC2
+                                           	extern _POSTDEC2
+                                           	extern _POSTINC2
+                                           	extern _INDF2
+                                           	extern _BSR
+                                           	extern _FSR1L
+                                           	extern _FSR1H
+                                           	extern _PLUSW1
+                                           	extern _PREINC1
+                                           	extern _POSTDEC1
+                                           	extern _POSTINC1
+                                           	extern _INDF1
+                                           	extern _WREG
+                                           	extern _FSR0L
+                                           	extern _FSR0H
+                                           	extern _PLUSW0
+                                           	extern _PREINC0
+                                           	extern _POSTDEC0
+                                           	extern _POSTINC0
+                                           	extern _INDF0
+                                           	extern _INTCON3
+                                           	extern _INTCON2
+                                           	extern _INTCON
+                                           	extern _PRODL
+                                           	extern _PRODH
+                                           	extern _TABLAT
+                                           	extern _TBLPTRL
+                                           	extern _TBLPTRH
+                                           	extern _TBLPTRU
+                                           	extern _PCL
+                                           	extern _PCLATH
+                                           	extern _PCLATU
+                                           	extern _STKPTR
+                                           	extern _TOSL
+                                           	extern _TOSH
+                                           	extern _TOSU
+                                           	extern _delay10ktcy
+                                           ;--------------------------------------------------------
+                                           ;	Equates to used internal registers
+                                           ;--------------------------------------------------------
+                                           STATUS	equ	0xfd8
+                                           PCLATH	equ	0xffa
+                                           PCLATU	equ	0xffb
+                                           WREG	equ	0xfe8
+                                           BSR	equ	0xfe0
+                                           FSR0L	equ	0xfe9
+                                           FSR0H	equ	0xfea
+                                           FSR1L	equ	0xfe1
+                                           FSR2L	equ	0xfd9
+                                           POSTDEC1	equ	0xfe5
+                                           PREINC1	equ	0xfe4
+                                           PLUSW2	equ	0xfdb
+                                           PRODL	equ	0xff3
+                                           PRODH	equ	0xff4
+                                           
+                                           
+                                           ; Internal registers
+                                           .registers	udata_ovr	0x0000
+                                           r0x00	res	1
+                                           r0x01	res	1
+                                           r0x02	res	1
+                                           r0x03	res	1
+                                           r0x04	res	1
+                                           r0x05	res	1
+                                           r0x06	res	1
+                                           r0x07	res	1
+                                           
+                                           ;--------------------------------------------------------
+                                           ; global & static initialisations
+                                           ;--------------------------------------------------------
+                                           ; ; Starting pCode block
+                                           S_main__high_priority_isr	code	0X002020
+                                           _high_priority_isr:
+                                           ;	.line	121; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	void high_priority_isr(void) interrupt
+002020   cfe8     movff	0xfe8, 0xfe5       	MOVFF	WREG, POSTDEC1
+002022   ffe5
+002024   cfd8     movff	0xfd8, 0xfe5       	MOVFF	STATUS, POSTDEC1
+002026   ffe5
+002028   cfe0     movff	0xfe0, 0xfe5       	MOVFF	BSR, POSTDEC1
+00202a   ffe5
+00202c   cff3     movff	0xff3, 0xfe5       	MOVFF	PRODL, POSTDEC1
+00202e   ffe5
+002030   cff4     movff	0xff4, 0xfe5       	MOVFF	PRODH, POSTDEC1
+002032   ffe5
+002034   cfe9     movff	0xfe9, 0xfe5       	MOVFF	FSR0L, POSTDEC1
+002036   ffe5
+002038   cfea     movff	0xfea, 0xfe5       	MOVFF	FSR0H, POSTDEC1
+00203a   ffe5
+00203c   cffa     movff	0xffa, 0xfe5       	MOVFF	PCLATH, POSTDEC1
+00203e   ffe5
+002040   cffb     movff	0xffb, 0xfe5       	MOVFF	PCLATU, POSTDEC1
+002042   ffe5
+                                           ;	.line	182; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	}
+002044   cfe4     movff	0xfe4, 0xffb       	MOVFF	PREINC1, PCLATU
+002046   fffb
+002048   cfe4     movff	0xfe4, 0xffa       	MOVFF	PREINC1, PCLATH
+00204a   fffa
+00204c   cfe4     movff	0xfe4, 0xfea       	MOVFF	PREINC1, FSR0H
+00204e   ffea
+002050   cfe4     movff	0xfe4, 0xfe9       	MOVFF	PREINC1, FSR0L
+002052   ffe9
+002054   cfe4     movff	0xfe4, 0xff4       	MOVFF	PREINC1, PRODH
+002056   fff4
+002058   cfe4     movff	0xfe4, 0xff3       	MOVFF	PREINC1, PRODL
+00205a   fff3
+00205c   cfe4     movff	0xfe4, 0xfe0       	MOVFF	PREINC1, BSR
+00205e   ffe0
+002060   cfe4     movff	0xfe4, 0xfd8       	MOVFF	PREINC1, STATUS
+002062   ffd8
+002064   cfe4     movff	0xfe4, 0xfe8       	MOVFF	PREINC1, WREG
+002066   ffe8
+002068   0010     retfie	0                 	RETFIE	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__low_priority_isr	code	0X004000
+                                           _low_priority_isr:
+                                           ;	.line	185; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	void low_priority_isr(void) interrupt
+004000   cfe8     movff	0xfe8, 0xfe5       	MOVFF	WREG, POSTDEC1
+004002   ffe5
+004004   cfd8     movff	0xfd8, 0xfe5       	MOVFF	STATUS, POSTDEC1
+004006   ffe5
+004008   cfe0     movff	0xfe0, 0xfe5       	MOVFF	BSR, POSTDEC1
+00400a   ffe5
+00400c   cff3     movff	0xff3, 0xfe5       	MOVFF	PRODL, POSTDEC1
+00400e   ffe5
+004010   cff4     movff	0xff4, 0xfe5       	MOVFF	PRODH, POSTDEC1
+004012   ffe5
+004014   cfe9     movff	0xfe9, 0xfe5       	MOVFF	FSR0L, POSTDEC1
+004016   ffe5
+004018   cfea     movff	0xfea, 0xfe5       	MOVFF	FSR0H, POSTDEC1
+00401a   ffe5
+00401c   cffa     movff	0xffa, 0xfe5       	MOVFF	PCLATH, POSTDEC1
+00401e   ffe5
+004020   cffb     movff	0xffb, 0xfe5       	MOVFF	PCLATU, POSTDEC1
+004022   ffe5
+                                           ;	.line	190; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	}
+004024   cfe4     movff	0xfe4, 0xffb       	MOVFF	PREINC1, PCLATU
+004026   fffb
+004028   cfe4     movff	0xfe4, 0xffa       	MOVFF	PREINC1, PCLATH
+00402a   fffa
+00402c   cfe4     movff	0xfe4, 0xfea       	MOVFF	PREINC1, FSR0H
+00402e   ffea
+004030   cfe4     movff	0xfe4, 0xfe9       	MOVFF	PREINC1, FSR0L
+004032   ffe9
+004034   cfe4     movff	0xfe4, 0xff4       	MOVFF	PREINC1, PRODH
+004036   fff4
+004038   cfe4     movff	0xfe4, 0xff3       	MOVFF	PREINC1, PRODL
+00403a   fff3
+00403c   cfe4     movff	0xfe4, 0xfe0       	MOVFF	PREINC1, BSR
+00403e   ffe0
+004040   cfe4     movff	0xfe4, 0xfd8       	MOVFF	PREINC1, STATUS
+004042   ffd8
+004044   cfe4     movff	0xfe4, 0xfe8       	MOVFF	PREINC1, WREG
+004046   ffe8
+004048   0010     retfie	0                 	RETFIE	
+                                           
+                                           ; I code from now on!
+                                           ; ; Starting pCode block
+                                           S_main__pinguino_main	code
+                                           _pinguino_main:
+                                           ;	.line	53; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	PIE1 = 0;
+00255c   6a9d     clrf	0x9d, 0             	CLRF	_PIE1
+                                           ;	.line	54; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	PIE2 = 0;
+00255e   6aa0     clrf	0xa0, 0             	CLRF	_PIE2
+                                           ;	.line	55; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+002560   0e0f     movlw	0xf                	MOVLW	0x0f
+002562   6ec1     movwf	0xc1, 0            	MOVWF	_ADCON1
+                                           ;	.line	67; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	setup();
+002564   ecc0     call	0x2580, 0           	CALL	_setup
+002566   f012
+                                           _00164_DS_:
+                                           ;	.line	115; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	loop();
+002568   ec86     call	0x250c, 0           	CALL	_loop
+00256a   f012
+00256c   d7fd     bra	0x2568               	BRA	_00164_DS_
+00256e   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__loop	code
+                                           _loop:
+                                           ;	.line	7; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/user.c	void loop()
+00250c   c000     movff	0, 0xfe5           	MOVFF	r0x00, POSTDEC1
+00250e   ffe5
+                                           ;	.line	9; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/user.c	RUNLED = RUNLED ^ 1;
+002510   6a00     clrf	0, 0                	CLRF	r0x00
+002512   b880     btfsc	0x80, 0x4, 0       	BTFSC	_PORTAbits, 4
+002514   2a00     incf	0, 0x1, 0           	INCF	r0x00, F
+002516   0e01     movlw	0x1                	MOVLW	0x01
+002518   1a00     xorwf	0, 0x1, 0          	XORWF	r0x00, F
+00251a   5000     movf	0, 0, 0             	MOVF	r0x00, W
+00251c   0b01     andlw	0x1                	ANDLW	0x01
+00251e   38e8     swapf	0xe8, 0, 0         	SWAPF	WREG, W
+002520   6ef4     movwf	0xf4, 0            	MOVWF	PRODH
+002522   5080     movf	0x80, 0, 0          	MOVF	_PORTAbits, W
+002524   0bef     andlw	0xef               	ANDLW	0xef
+002526   10f4     iorwf	0xf4, 0, 0         	IORWF	PRODH, W
+002528   6e80     movwf	0x80, 0            	MOVWF	_PORTAbits
+                                           ;	.line	10; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/user.c	Delayms(500);
+00252a   6ae5     clrf	0xe5, 0             	CLRF	POSTDEC1
+00252c   6ae5     clrf	0xe5, 0             	CLRF	POSTDEC1
+00252e   0e01     movlw	0x1                	MOVLW	0x01
+002530   6ee5     movwf	0xe5, 0            	MOVWF	POSTDEC1
+002532   0ef4     movlw	0xf4               	MOVLW	0xf4
+002534   6ee5     movwf	0xe5, 0            	MOVWF	POSTDEC1
+002536   ecc3     call	0x2386, 0           	CALL	_Delayms
+002538   f011
+00253a   0e04     movlw	0x4                	MOVLW	0x04
+00253c   26e1     addwf	0xe1, 0x1, 0       	ADDWF	FSR1L, F
+00253e   cfe4     movff	0xfe4, 0           	MOVFF	PREINC1, r0x00
+002540   f000
+002542   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__setup	code
+                                           _setup:
+                                           ;	.line	5; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/user.c	}
+002580   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__epapout_init	code
+                                           _epapout_init:
+                                           ;	.line	41; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	void epapout_init() { return; }
+002582   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__epapin_init	code
+                                           _epapin_init:
+                                           ;	.line	40; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	void epapin_init() { return; }
+002584   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__epap_out	code
+                                           _epap_out:
+                                           ;	.line	39; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	void epap_out() { return; }
+002586   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__epap_in	code
+                                           _epap_in:
+                                           ;	.line	38; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/source/main.c	void epap_in() { return; }
+002588   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__Delayus	code
+                                           _Delayus:
+                                           ;	.line	16; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/tools/p8/bin/../share/sdcc/include/pic16/arduinodelay.c	void Delayus(int microsecondes)
+0024ba   cfd9     movff	0xfd9, 0xfe5       	MOVFF	FSR2L, POSTDEC1
+0024bc   ffe5
+0024be   cfe1     movff	0xfe1, 0xfd9       	MOVFF	FSR1L, FSR2L
+0024c0   ffd9
+0024c2   c000     movff	0, 0xfe5           	MOVFF	r0x00, POSTDEC1
+0024c4   ffe5
+0024c6   c001     movff	0x1, 0xfe5         	MOVFF	r0x01, POSTDEC1
+0024c8   ffe5
+0024ca   c002     movff	0x2, 0xfe5         	MOVFF	r0x02, POSTDEC1
+0024cc   ffe5
+0024ce   c003     movff	0x3, 0xfe5         	MOVFF	r0x03, POSTDEC1
+0024d0   ffe5
+0024d2   0e02     movlw	0x2                	MOVLW	0x02
+0024d4   cfdb     movff	0xfdb, 0           	MOVFF	PLUSW2, r0x00
+0024d6   f000
+0024d8   0e03     movlw	0x3                	MOVLW	0x03
+0024da   cfdb     movff	0xfdb, 0x1         	MOVFF	PLUSW2, r0x01
+0024dc   f001
+                                           ;	.line	20; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/tools/p8/bin/../share/sdcc/include/pic16/arduinodelay.c	for (i=0;i<microsecondes;i++);
+0024de   6a02     clrf	0x2, 0              	CLRF	r0x02
+0024e0   6a03     clrf	0x3, 0              	CLRF	r0x03
+                                           _00119_DS_:
+0024e2   5001     movf	0x1, 0, 0           	MOVF	r0x01, W
+0024e4   5c03     subwf	0x3, 0, 0          	SUBWF	r0x03, W
+0024e6   e102     bnz	0x24ec               	BNZ	_00128_DS_
+0024e8   5000     movf	0, 0, 0             	MOVF	r0x00, W
+0024ea   5c02     subwf	0x2, 0, 0          	SUBWF	r0x02, W
+                                           _00128_DS_:
+0024ec   e204     bc	0x24f6                	BC	_00123_DS_
+0024ee   2a02     incf	0x2, 0x1, 0         	INCF	r0x02, F
+0024f0   b0d8     btfsc	0xd8, 0, 0         	BTFSC	STATUS, 0
+0024f2   2a03     incf	0x3, 0x1, 0         	INCF	r0x03, F
+0024f4   d7f6     bra	0x24e2               	BRA	_00119_DS_
+                                           _00123_DS_:
+0024f6   cfe4     movff	0xfe4, 0x3         	MOVFF	PREINC1, r0x03
+0024f8   f003
+0024fa   cfe4     movff	0xfe4, 0x2         	MOVFF	PREINC1, r0x02
+0024fc   f002
+0024fe   cfe4     movff	0xfe4, 0x1         	MOVFF	PREINC1, r0x01
+002500   f001
+002502   cfe4     movff	0xfe4, 0           	MOVFF	PREINC1, r0x00
+002504   f000
+002506   cfe4     movff	0xfe4, 0xfd9       	MOVFF	PREINC1, FSR2L
+002508   ffd9
+00250a   0012     return	0                 	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__Delayms	code
+                                           _Delayms:
+                                           ;	.line	9; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/tools/p8/bin/../share/sdcc/include/pic16/arduinodelay.c	void Delayms(unsigned long milliseconde)
+002386   cfd9     movff	0xfd9, 0xfe5       	MOVFF	FSR2L, POSTDEC1
+002388   ffe5
+00238a   cfe1     movff	0xfe1, 0xfd9       	MOVFF	FSR1L, FSR2L
+00238c   ffd9
+00238e   c000     movff	0, 0xfe5           	MOVFF	r0x00, POSTDEC1
+002390   ffe5
+002392   c001     movff	0x1, 0xfe5         	MOVFF	r0x01, POSTDEC1
+002394   ffe5
+002396   c002     movff	0x2, 0xfe5         	MOVFF	r0x02, POSTDEC1
+002398   ffe5
+00239a   c003     movff	0x3, 0xfe5         	MOVFF	r0x03, POSTDEC1
+00239c   ffe5
+00239e   c004     movff	0x4, 0xfe5         	MOVFF	r0x04, POSTDEC1
+0023a0   ffe5
+0023a2   c005     movff	0x5, 0xfe5         	MOVFF	r0x05, POSTDEC1
+0023a4   ffe5
+0023a6   c006     movff	0x6, 0xfe5         	MOVFF	r0x06, POSTDEC1
+0023a8   ffe5
+0023aa   c007     movff	0x7, 0xfe5         	MOVFF	r0x07, POSTDEC1
+0023ac   ffe5
+0023ae   0e02     movlw	0x2                	MOVLW	0x02
+0023b0   cfdb     movff	0xfdb, 0           	MOVFF	PLUSW2, r0x00
+0023b2   f000
+0023b4   0e03     movlw	0x3                	MOVLW	0x03
+0023b6   cfdb     movff	0xfdb, 0x1         	MOVFF	PLUSW2, r0x01
+0023b8   f001
+0023ba   0e04     movlw	0x4                	MOVLW	0x04
+0023bc   cfdb     movff	0xfdb, 0x2         	MOVFF	PLUSW2, r0x02
+0023be   f002
+0023c0   0e05     movlw	0x5                	MOVLW	0x05
+0023c2   cfdb     movff	0xfdb, 0x3         	MOVFF	PLUSW2, r0x03
+0023c4   f003
+                                           ;	.line	13; /home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/tools/p8/bin/../share/sdcc/include/pic16/arduinodelay.c	for (i=0;i<milliseconde;i++) delay10ktcy(1);
+0023c6   6a04     clrf	0x4, 0              	CLRF	r0x04
+0023c8   6a05     clrf	0x5, 0              	CLRF	r0x05
+0023ca   6a06     clrf	0x6, 0              	CLRF	r0x06
+0023cc   6a07     clrf	0x7, 0              	CLRF	r0x07
+                                           _00105_DS_:
+0023ce   5003     movf	0x3, 0, 0           	MOVF	r0x03, W
+0023d0   5c07     subwf	0x7, 0, 0          	SUBWF	r0x07, W
+0023d2   e108     bnz	0x23e4               	BNZ	_00114_DS_
+0023d4   5002     movf	0x2, 0, 0           	MOVF	r0x02, W
+0023d6   5c06     subwf	0x6, 0, 0          	SUBWF	r0x06, W
+0023d8   e105     bnz	0x23e4               	BNZ	_00114_DS_
+0023da   5001     movf	0x1, 0, 0           	MOVF	r0x01, W
+0023dc   5c05     subwf	0x5, 0, 0          	SUBWF	r0x05, W
+0023de   e102     bnz	0x23e4               	BNZ	_00114_DS_
+0023e0   5000     movf	0, 0, 0             	MOVF	r0x00, W
+0023e2   5c04     subwf	0x4, 0, 0          	SUBWF	r0x04, W
+                                           _00114_DS_:
+0023e4   e20b     bc	0x23fc                	BC	_00109_DS_
+0023e6   0e01     movlw	0x1                	MOVLW	0x01
+0023e8   ec37     call	0x6e, 0             	CALL	_delay10ktcy
+0023ea   f000
+0023ec   2a04     incf	0x4, 0x1, 0         	INCF	r0x04, F
+0023ee   b0d8     btfsc	0xd8, 0, 0         	BTFSC	STATUS, 0
+0023f0   2a05     incf	0x5, 0x1, 0         	INCF	r0x05, F
+0023f2   b0d8     btfsc	0xd8, 0, 0         	BTFSC	STATUS, 0
+0023f4   2a06     incf	0x6, 0x1, 0         	INCF	r0x06, F
+0023f6   b0d8     btfsc	0xd8, 0, 0         	BTFSC	STATUS, 0
+0023f8   2a07     incf	0x7, 0x1, 0         	INCF	r0x07, F
+0023fa   d7e9     bra	0x23ce               	BRA	_00105_DS_
+                                           _00109_DS_:
+0023fc   cfe4     movff	0xfe4, 0x7         	MOVFF	PREINC1, r0x07
+0023fe   f007
+002400   cfe4     movff	0xfe4, 0x6         	MOVFF	PREINC1, r0x06
+002402   f006
+002404   cfe4     movff	0xfe4, 0x5         	MOVFF	PREINC1, r0x05
+002406   f005
+002408   cfe4     movff	0xfe4, 0x4         	MOVFF	PREINC1, r0x04
+00240a   f004
+00240c   cfe4     movff	0xfe4, 0x3         	MOVFF	PREINC1, r0x03
+00240e   f003
+002410   cfe4     movff	0xfe4, 0x2         	MOVFF	PREINC1, r0x02
+002412   f002
+002414   cfe4     movff	0xfe4, 0x1         	MOVFF	PREINC1, r0x01
+002416   f001
+002418   cfe4     movff	0xfe4, 0           	MOVFF	PREINC1, r0x00
+00241a   f000
+00241c   cfe4     movff	0xfe4, 0xfd9       	MOVFF	PREINC1, FSR2L
+00241e   ffd9
+002420   0012     return	0                 	RETURN	
+                                           
+                                           
+                                           
+                                           ; Statistics:
+                                           ; code size:	  472 (0x01d8) bytes ( 0.36%)
+                                           ;           	  236 (0x00ec) words
+                                           ; udata size:	    0 (0x0000) bytes ( 0.00%)
+                                           ; access size:	    8 (0x0008) bytes
+                                           
+                                           
+                                           	end
