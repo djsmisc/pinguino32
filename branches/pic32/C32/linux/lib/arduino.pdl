@@ -1,5 +1,5 @@
-delay Delayms#include <arduinodelay.c>
-delayMicroseconds Delayus#include <arduinodelay.c>
+delay Delayms#include <pinguinodelay.c>
+delayMicroseconds Delayus#include <pinguinodelay.c>
 millis Millis#include <millis.c>
 digitalWrite digitalwrite#include <digitalw.c>
 pinMode pinmode#include <digitalw.c>

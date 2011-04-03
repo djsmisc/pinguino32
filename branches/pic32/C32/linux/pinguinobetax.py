@@ -1198,6 +1198,7 @@ class Pinguino(wx.Frame):
                         "-llibio"+self.processor+".lib",
                         "-llibc18f.lib",
                         "-llibm18f.lib",
+                        "-lpinguinodelay.lib",
                         sys.path[0].replace(" ","\\ ")+"/obj/application_iface.o",
                         sys.path[0].replace(" ","\\ ")+"/obj/usb_descriptors.o",
                         sys.path[0].replace(" ","\\ ")+"/obj/crt0ipinguino.o",
