@@ -1157,6 +1157,7 @@ class Pinguino(wx.Frame):
                 sortie=Popen(["make",
                           "--makefile=" + SOURCE_DIR + "Makefile",
                           "HOME=" + HOME_DIR,
+                          "PDEPATH="+os.path.dirname(self.editor.GetPath()),
                           "PROC=" + self.proc,
                           "BOARD=" + self.board],
                           stdout=fichier, stderr=STDOUT)

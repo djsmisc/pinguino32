@@ -1,6 +1,7 @@
 # ------------------------------------------------------------------------------
 # Makefile / 32-bit Pinguino
-# (c) 2011 Regis Blanchot <rblanchot@gmail.com> 
+# * Regis Blanchot <rblanchot@gmail.com> 
+# * Marcus Fazzi <anunakin@ieee.org>
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
@@ -13,6 +14,7 @@ BINDIR		= $(P32DIR)/bin
 INCDIR		= $(P32DIR)/include
 LKRDIR		= $(P32DIR)/lkr
 OBJDIR		= $(P32DIR)/obj/non-free
+PDE		    = $(PDEPATH)
 
 # ------------------------------------------------------------------------------
 # commands
@@ -30,7 +32,8 @@ CFLAGS		= -EL -march=24kc -x c++ -c\
 					-lstdc++ -lm -lgcc -lc\
 					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
 					-I$(INCDIR)\
-					-I$(INCDIR)/pinguino
+					-I$(INCDIR)/pinguino \
+					-I$(PDE)
 
 ELF_FLAGS	=	-EL -march=24kc -msoft-float\
 					-lstdc++ -lm -lgcc -lc\
@@ -38,6 +41,7 @@ ELF_FLAGS	=	-EL -march=24kc -msoft-float\
 					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
 					-I$(INCDIR)\
 					-I$(INCDIR)/pinguino\
+					-I$(PDE)\
 					-I$(SRCDIR)\
 					-I$(OBJDIR)\
 					-T$(LKRDIR)/elf32pic32mx.x

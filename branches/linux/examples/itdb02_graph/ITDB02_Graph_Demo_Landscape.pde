@@ -15,13 +15,13 @@
 
 void setup()
 {
-  srand(127);
+  //srand(127);
   //Setup the LCD
   myGLCD.InitLCD(LANDSCAPE);
 }
 
 int rnd(int num) {
-	return (int)(rand()%num);
+	return 1;//(int)(rand()%num);
 }
 
 void loop()
