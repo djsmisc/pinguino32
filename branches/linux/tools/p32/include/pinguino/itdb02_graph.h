@@ -77,20 +77,21 @@
 #define FONT_LARGE 2
 
 //Pinguino32X, UBW32, EMPEROR and Minimum boards
-#if defined(UBW32) || defined(EMPEROR)
+#if defined(UBW32_460) || defined(UBW32_795) || defined(EMPEROR460) || defined(EMPEROR795)
 
 #define LCD_DATA_DIR 	TRISD		//Data Direction Register for Data Port
 #define LCD_DATA_BUS 	PORTD		//Data Bus
-#define LCD_CMD_SET		PORTGSET
-#define LCD_CMD_CLR		PORTGCLR
-#define LCD_SET_OUT		TRISGCLR
 
-//Pins 1 2 3 and 4 (RG6,7,8 and RG9) look on digitalw.c for pinmasks and ports
+#define LCD_CMD_SET		PORTESET
+#define LCD_CMD_CLR		PORTECLR
+#define LCD_SET_OUT		TRISECLR
+
+//Pins 54,53,49,48 (RE0,1,2 and RE3) look on digitalw.c for pinmasks and ports
 //Using inline/defines is a bit more fast and use less RAM and Flash, then use digitalw.c pinMode/pinmask array
-#define LCD_RS 			0x40
-#define LCD_WR 			0x80
-#define LCD_CS 			0x100
-#define LCD_REST 		0x200
+#define LCD_RS 			0x1
+#define LCD_WR 			0x2
+#define LCD_CS 			0x4
+#define LCD_REST 		0x8
 
 #else
 //TODO: Test on OLIMEX boards <<<< NOT IMPLEMENTED >>>>

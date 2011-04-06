@@ -55,7 +55,6 @@ const u32 pinmask[]={0x04,0x08,0x01,0x20,0x40,0x80,0x100,0x800,
 #endif
 
 //define for EMPEROR 460/795 boards
-//TODO: remapping all pins
 #if defined(EMPEROR460) || defined(EMPEROR795)
 
 const u32 portmask[]=
