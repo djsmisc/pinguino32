@@ -1,11 +1,10 @@
 // Include libraries used on you user lib, before include that, pinguino IDE works well on it.
 // #include <delay.h>
-#include <arduinodelay.c>
+
 // #include <digitalw.c>
 
 //include "arial_bold_14.h"
 //include "corsiva_12.h"
-#include <ks0108.c>
 
 /**
    * Fonts for displat Text
@@ -31,15 +30,15 @@
   
 void setup(){
 
-	Init(NON_INVERTED);   // initialise the library
-	ClearScreenX();  
-	DrawBitmap(Pinguino, 32,0, BLACK); //draw the bitmap at the given x,y position
+	GLCD.Init(NON_INVERTED);   // initialise the library
+	GLCD.ClearScreenX();  
+	GLCD.DrawBitmap(Pinguino, 32,0, BLACK); //draw the bitmap at the given x,y position
 	delay(5000);
-	ClearScreenX();
-	//SelectFont(System5x7, BLACK);			// select fixed width system font 
-	//SelectFont(Arial_14, BLACK);			// select truetype font
-	//SelectFont(Arial_Bold_14, BLACK); 	// select truetype font
-	//SelectFont(Corsiva_12, BLACK); 		// select truetype font
+	GLCD.ClearScreenX();
+	//GLCD.SelectFont(System5x7, BLACK);			// select fixed width system font 
+	//GLCD.SelectFont(Arial_14, BLACK);			// select truetype font
+	//GLCD.SelectFont(Arial_Bold_14, BLACK); 	// select truetype font
+	//GLCD.SelectFont(Corsiva_12, BLACK); 		// select truetype font
 }
 
 void loop(){ // run over and over again

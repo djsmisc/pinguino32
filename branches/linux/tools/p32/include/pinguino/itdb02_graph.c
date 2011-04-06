@@ -55,6 +55,11 @@
 #ifndef ITDB02_Graph_c
 #define ITDB02_Graph_c
 
+//#ifndef  _MATH_H_
+#include <cmath>
+#include <string.h>
+//#endif
+
 #include <itdb02_graph.h>
 #include <delay.c>
 
@@ -537,7 +542,7 @@ void drawLine(int x1, int y1, int x2, int y2)
 		}
 		drawVLine(x1, y1, y2-y1);
 	}
-	else if (abs(x2-x1)>abs(y2-y1))
+	else if (fabs(x2-x1)>fabs(y2-y1))
 	{
 		delta=(double)(y2-y1)/(x2-x1);
 		ty=(double)y1;
