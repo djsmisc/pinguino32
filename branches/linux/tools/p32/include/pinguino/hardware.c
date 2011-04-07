@@ -45,19 +45,19 @@
 	#define REDLED			4//PORTEbits.RE1	// red led
 
 	// UBW32 built-in buttons
-	#define PROGBUTTON	68	// pin 43 = PORTEbits.RE7 = prog button
-	#define USERBUTTON	69	// pin 44 = PORTEbits.RE6 = user button
+	#define PROGBUTTON	68	//PORTEbits.RE7 = prog button
+	#define USERBUTTON	69	//PORTEbits.RE6 = user button
     
 #elif defined(EMPEROR460) || defined(EMPEROR795)
 	// EMPEROR built-in leds
 	#define LED1			1//PORTEbits.RE2	// blue led
 	#define LED2			2//PORTEbits.RE3	// red led
 
-	#define BLUELED		1//PORTEbits.RE2	// blue led
-	#define REDLED			2//PORTEbits.RE3	// red led
+	#define BLUELED		    1//pin49 PORTEbits.RE2	// blue led
+	#define REDLED			2//pin48 PORTEbits.RE3	// red led
 
 	// UBW32 built-in buttons
-	#define USERBUTTON	68	// pin 44 = PORTEbits.RE7 = user button
+	#define USERBUTTON	68	//PORTEbits.RE7 = user button
 #endif
 
 /*	----------------------------------------------------------------------------
