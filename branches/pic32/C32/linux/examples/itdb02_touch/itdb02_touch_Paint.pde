@@ -8,17 +8,18 @@
 //
 //
 
+#include <hardware.c>
+
 //Pinguino 32X logo!
-//#include "pinguino.c"
+//#include "pinguino32X.c"
 
 //Pinguino
 #include "pinguino.c"
 
-#define LED1 63
-#define LED2 64
+#define LED1 BLUELED
+#define LED2 REDLED
 
-#define USERBT 68
-#define PROGBT 69
+#define USERBT USERBUTTON
 
 //tool color
 u8 rR=0, rG=0, rB=0;
@@ -173,7 +174,7 @@ void drawTool(int x, int y, u8 mode){
 
 void setup()
 {
-  myTouch(11,12,13,14,15);
+  myTouch(1,2,3,4,5); //clk, cs, din, dout, irq
   myGLCD.InitLCD(LANDSCAPE);
   myGLCD.fillScr(255,255,255);
 
@@ -186,7 +187,7 @@ void setup()
   //Show pinguino logo! YEAH!
   myGLCD.fillScr(255, 255, 255);
   myGLCD.drawBitmap (5, 50, 174, 132, pinguino, 1);
-  
+
   myGLCD.fontSize(FONT_LARGE);
   myGLCD.setColor(0,0,0);
   myGLCD.setBackColor(255,255,255);
@@ -210,9 +211,9 @@ void loop()
 
 	while(1){
 	
-		if(!digitalRead(USERBT)){
+		/*if(!digitalRead(USERBT)){
 			myGLCD.drawBitmap (80, 40, 174, 132, pinguino, 1);
-		}
+		}*/
 	
 		if(myTouch.dataAvailable())
 		{
@@ -325,8 +326,8 @@ void loop()
 					
 					drawTool(x,y,0);
 					//touched LED!
-					digitalWrite(LED1, LOW);
-					digitalWrite(LED2, HIGH);
+					//digitalWrite(LED1, LOW);
+					UBW32LedToggle(LED2);
 					
 					analogWrite(77,512);
 					
@@ -345,7 +346,9 @@ void loop()
 			}
 		}
     //run LED!
-    digitalWrite(LED1, HIGH);
+    UBW32LedToggle(LED1);
+    //delay(100);
+    //UBW32LedToggle(LED1);
     digitalWrite(LED2, LOW);
     }
 }
