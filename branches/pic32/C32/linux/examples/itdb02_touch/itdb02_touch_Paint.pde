@@ -1,12 +1,13 @@
-// ITDB02_Touch_Paint(C)2011 Marcus Fazzi
-// blog: http://vivaphp.net
-//
-// This program is a quick demo of how to use the library.
-//
-// This program requires the ITDB02_Graph library (8bit mode)
-// or ITDB02_Graph16 (16bit mode).
-//
-//
+/*
+ * ITDB02_Touch_Paint(C)2011 Marcus Fazzi
+ * blog: http://vivaphp.net
+ *
+ * This program is a quick demo of how to use the library.
+ *
+ * This program requires the ITDB02_Graph library (8bit mode)
+ * or ITDB02_Graph16 (16bit mode).
+ * Tested with Emperor board
+ */
 
 #include <hardware.c>
 
@@ -174,7 +175,7 @@ void drawTool(int x, int y, u8 mode){
 
 void setup()
 {
-  myTouch(1,2,3,4,5); //clk, cs, din, dout, irq
+  myTouch(56,57,58,59,60); //clk, cs, din, dout, irq
   myGLCD.InitLCD(LANDSCAPE);
   myGLCD.fillScr(255,255,255);
 
