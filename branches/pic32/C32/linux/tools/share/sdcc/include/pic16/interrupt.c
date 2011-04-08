@@ -885,9 +885,7 @@ void OnEvent(u8 inter, callback func)
 				PIR2bits.USBIF = 0;
 				break;
 			case INT_SSP:				
-				#ifdef PIC18F4550
 				PIR1bits.SSPIF = 0;
-				#endif
 				break;
 		}
 	}
@@ -1120,7 +1118,7 @@ void userinterrupt()
 		intFunction[INT_HLVD]();
 	}
 	#endif
-	#ifdef PIC18F4550
+
 	#ifdef SSPINT
 	if (PIE1bits.SSPIE && PIR1bits.SSPIF)
 	{
@@ -1128,7 +1126,7 @@ void userinterrupt()
 		intFunction[INT_SSP]();
 	}
 	#endif
-	#endif
+
 	int_start();
 }
 
