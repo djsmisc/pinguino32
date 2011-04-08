@@ -17,8 +17,8 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	--------------------------------------------------------------------------*/
 
-#ifndef __MYSOUND_C
-	#define __MYSOUND_C
+#ifndef __SOUND_C
+	#define __SOUND_C
 
 	// TODO : add flat (bemol, bemolle) notes
 
@@ -63,7 +63,7 @@
 	#define R1_32	1	// thirty-second rest / demisemiquaver rest
 	#define R1_64	0	// sixty-fourth rest / hemidemisemiquaver rest
 
-	#include <arduinodelay.c>
+	#include <delay.c>
 	#include <digitalw.c>
 	#include <pwm.c>
 

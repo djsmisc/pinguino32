@@ -14,7 +14,6 @@ BINDIR		= $(P32DIR)/bin
 INCDIR		= $(P32DIR)/include
 LKRDIR		= $(P32DIR)/lkr
 OBJDIR		= $(P32DIR)/obj/non-free
-PDE		    = $(PDEPATH)
 
 # ------------------------------------------------------------------------------
 # commands
@@ -31,17 +30,17 @@ RM				= rm -f -v
 CFLAGS		= -EL -march=24kc -x c++ -c\
 					-lstdc++ -lm -lgcc -lc\
 					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
-					-I$(INCDIR)\
-					-I$(INCDIR)/pinguino \
-					-I$(PDE)
+					-I$(INCDIR)/non-free\
+					-I$(INCDIR)/pinguino\
+					-I$(PDEDIR)
 
 ELF_FLAGS	=	-EL -march=24kc -msoft-float\
 					-lstdc++ -lm -lgcc -lc\
 					-Wl,--defsym,_min_heap_size=8192\
 					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
-					-I$(INCDIR)\
+					-I$(INCDIR)/non-free\
 					-I$(INCDIR)/pinguino\
-					-I$(PDE)\
+					-I$(PDEDIR)\
 					-I$(SRCDIR)\
 					-I$(OBJDIR)\
 					-T$(LKRDIR)/elf32pic32mx.x
@@ -63,7 +62,7 @@ build:
 		$(CC) $(CFLAGS) $(SRCDIR)/main32.c -o $(SRCDIR)/main32.o
 
 link:
-		$(CC) $(ELF_FLAGS) -o $(SRCDIR)/main32.elf $(SRCDIR)/main32.o $(OBJDIR)/crt0.S $(INCDIR)/p32xxxx.h $(P32DIR)/mips-elf/lib/processor.o
+		$(CC) $(ELF_FLAGS) -o $(SRCDIR)/main32.elf $(SRCDIR)/main32.o $(OBJDIR)/crt0.S $(INCDIR)/non-free/p32xxxx.h $(P32DIR)/mips-elf/lib/processor.o
 		$(OBJC) -O ihex $(SRCDIR)/main32.elf $(SRCDIR)/main32.hex
 
 correct:

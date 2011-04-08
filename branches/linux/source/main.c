@@ -23,7 +23,7 @@
 
 #include <pic18fregs.h>
 #include <const.h>
-//#include <macro.h>
+#include <macro.h>
 #include "common_types.h"
 #include "boot_iface.h"
 #include "../tmp/define.h"

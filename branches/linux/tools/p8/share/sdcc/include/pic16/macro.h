@@ -26,7 +26,9 @@
 
 	/// BYTES
 
+	#define highByte(x)			((unsigned char) ((x) >> 8))
 	#define high8(x)				((unsigned char) ((x) >> 8))
+	#define lowByte(x)			((unsigned char) ((x) & 0xFF))
 	#define low8(x)				((unsigned char) ((x) & 0xFF))
 	#define make16(low,high)	(low | (high << 8))
 

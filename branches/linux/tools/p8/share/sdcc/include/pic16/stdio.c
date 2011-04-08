@@ -1,6 +1,6 @@
 /*	----------------------------------------------------------------------------
 	FILE:			stdio.c
-	PROJECT:		pinguino
+	PROJECT:		pinguino - http://www.pinguino.cc/
 	PURPOSE:		alternative printf and sprintf functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 nov. 2010
@@ -24,14 +24,14 @@
 	--------------------------------------------------------------------------*/
 
 #ifndef __STDIO_C
-	#define __STDIO_C
+#define __STDIO_C
 
 #include <stdarg.h>
 
-typedef void (*stdout) (int);	// type of :	void foo(int x)
-static stdout pputchar;			// then : 		void pputchar(int x)
+typedef void (*stdout) (unsigned char);	// type of :	void foo(char x)
+static stdout pputchar;				// then : 		void pputchar(char x)
 
-static void pprintchar(char **str, int c)
+static void pprintchar(char **str, char c)
 {
 	if (str)
 	{
@@ -40,7 +40,6 @@ static void pprintchar(char **str, int c)
 	}
 	else
 	{
-		//(void)pputchar(c);
 		pputchar(c);
 	}
 }
