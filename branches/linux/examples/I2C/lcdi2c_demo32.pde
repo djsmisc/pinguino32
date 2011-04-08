@@ -69,42 +69,9 @@
 	16 - LED- ???
 	--------------------------------------------------------------------------*/
 
-//
-
-u8 s  = 0;
-u8 m  = 0;
-u8 h = 0;
-
-//
-
-void tick()
-{
-	s++;
-	
-	if (s > 59)
-	{
-		s = 0;
-		m++;
-	}
-	
-	if (m > 59)
-	{
-		m = 0;
-		h++;
-	}
-	
-	if (h > 23)
-	{
-		h = 0;
-	}
-	
-	lcdi2c_setCursor(4, 0); // col, line
-	lcdi2c_printf("%02u:%02u:%02u", h, m, s);
-}
-
 void setup()
 {
-//
+	// é
 	const u8 newcar[8]={
 		0b00000100,
 		0b00001000,
@@ -115,22 +82,18 @@ void setup()
 		0b00001110,
 		0b00000000
 	};
-	lcdi2c_newchar(newcar, 0);		// newcar is assigned to ascii 0
-//
-	lcdi2c_init(16, 2, 0b01001110);// display is 2x16, ic2 address is 01001110 (see above)
-	lcdi2c_backlight();				// turns backlight on
-	lcdi2c_clear();					// clear screen
-	lcdi2c_home();						// set cursor at (0,0)
-	lcdi2c_printf("   lcdi2c demo  ");
-	lcdi2c_setCursor(0, 1);			// set cursor at line 1, col 0
-	lcdi2c_printf(" Regis Blanchot ");
-//
-	lcdi2c_setCursor(2, 1);			// set cursor at line 1, col 2
-	lcdi2c_write(0);					// replace 'e' by 'é'
-	Delayms(5000);						// wait for 2 sec.
-	lcdi2c_clearLine(0);				// clear first line
-//
-	OnTimer0(tick, INT_MILLISEC, 1000);
+	lcdi2c.newchar(newcar, 0);		// newcar is assigned to ascii 0
+	// pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
+	lcdi2c.init(16, 2, 0b01001110);// display is 2x16, ic2 address is 01001110 (see above)
+	lcdi2c.backlight();				// turns backlight on
+	lcdi2c.clear();					// clear screen
+	lcdi2c.home();						// set cursor at (0,0)
+	lcdi2c.printf("   lcdi2c demo  ");
+	lcdi2c.setCursor(0, 1);			// set cursor at line 1, col 0
+	lcdi2c.printf(" Regis Blanchot ");
+	// define new char
+	lcdi2c.setCursor(2, 1);			// set cursor at line 1, col 2
+	lcdi2c.write(0);					// replace 'e' by 'é'
 }
 
 void loop()
@@ -139,27 +102,26 @@ void loop()
 
 /*
 	functions available:
-		void lcdi2c_init(u8, u8, u8);
-		void lcdi2c_backlight();
-		void lcdi2c_noBacklight();
-		void lcdi2c_clear();
-		void lcdi2c_clearLine(u8);
-		void lcdi2c_home();
-		void lcdi2c_noAutoscroll();
-		void lcdi2c_autoscroll();
-		void lcdi2c_rightToLeft();
-		void lcdi2c_leftToRight();
-		void lcdi2c_scrollDisplayRight();
-		void lcdi2c_scrollDisplayLeft();
-		void lcdi2c_blink();
-		void lcdi2c_noBlink();
-		void lcdi2c_cursor();
-		void lcdi2c_noCursor();
-		void lcdi2c_display();
-		void lcdi2c_noDisplay();
-		void lcdi2c_setCursor(u8, u8);
-		void lcdi2c_write(u8);
-		void lcdi2c_printf(u8*, ...);
-		void lcdi2c_newchar(const u8 *, u8);
+		void lcdi2c.init(u8, u8, u8);
+		void lcdi2c.backlight();
+		void lcdi2c.noBacklight();
+		void lcdi2c.clear();
+		void lcdi2c.clearLine(u8);
+		void lcdi2c.home();
+		void lcdi2c.noAutoscroll();
+		void lcdi2c.autoscroll();
+		void lcdi2c.rightToLeft();
+		void lcdi2c.leftToRight();
+		void lcdi2c.scrollDisplayRight();
+		void lcdi2c.scrollDisplayLeft();
+		void lcdi2c.blink();
+		void lcdi2c.noBlink();
+		void lcdi2c.cursor();
+		void lcdi2c.noCursor();
+		void lcdi2c.display();
+		void lcdi2c.noDisplay();
+		void lcdi2c.setCursor(u8, u8);
+		void lcdi2c.write(u8);
+		void lcdi2c.printf(u8*, ...);
+		void lcdi2c.newchar(const u8 *, u8);
 */
-

@@ -4,7 +4,7 @@
 """-------------------------------------------------------------------------
  pinguino
 
-             (c) 2008-2009-2010 Jean-Pierre MANDON <jp.mandon@gmail.com> 
+             (c) 2008-2009-2010-2011 Jean-Pierre MANDON <jp.mandon@gmail.com> 
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -440,7 +440,7 @@ class Pinguino(wx.Frame):
         # initialize all the lib pdl in /lib folder
         self.readlib()
     
-        self.displaymsg(_("Welcome to Pinguino IDE ") + pinguino_version + "\n", 0);
+        self.displaymsg(self.translate("Welcome to Pinguino IDE ") + pinguino_version + "\n", 0);
 
         # check current theme in menu
         id = self.theme_menu.FindItem(self.theme)
@@ -796,9 +796,9 @@ class Pinguino(wx.Frame):
         global lang
         if self.editor.GetPath()==-1:
             dlg = wx.MessageDialog(self,
-            self.lang.ugettext('Open file first !!'),self.lang.ugettext('Warning'),
-            wx.OK | wx.ICON_WARNING
-            )
+            self.translate('Open file first !!'),
+            self.translate('Warning'),
+            wx.OK | wx.ICON_WARNING)
             result=dlg.ShowModal()
             dlg.Destroy()           
             return
@@ -824,14 +824,14 @@ class Pinguino(wx.Frame):
             MAIN_FILE="main32.hex"
         retour=self.compile(filename)
         if retour!=0:
-            self.displaymsg(self.lang.ugettext("error while compiling file ")+filename,0)
+            self.displaymsg(self.translate("error while compiling file ")+filename,0)
         else:
             retour=self.link(filename)
             if os.path.exists(SOURCE_DIR + MAIN_FILE)!=True:
-                self.displaymsg(self.lang.ugettext("error while linking ")+filename+".o",0)
+                self.displaymsg(self.translate("error while linking ")+filename+".o",0)
             else:
                 self.cp(SOURCE_DIR + MAIN_FILE,filename+".hex")
-                self.displaymsg(self.lang.ugettext("compilation done"),0)
+                self.displaymsg(self.translate("compilation done"),0)
                 self.getCodeSize(filename)
                 os.remove(SOURCE_DIR + MAIN_FILE)
                 os.remove(filename+".c")
@@ -867,16 +867,16 @@ class Pinguino(wx.Frame):
                 fichier.close()                                      
             else:
                 dlg = wx.MessageDialog(self,
-                        self.lang.ugettext('File must be verified before upload'),
-                        self.lang.ugettext('Warning!'),
+                        self.translate('File must be verified before upload'),
+                        self.translate('Warning!'),
                         wx.OK | wx.ICON_WARNING)
                 result=dlg.ShowModal()
                 dlg.Destroy()                     
         else:
             dlg = wx.MessageDialog(self,
-                    self.lang.ugettext('File must be saved before upload'),self.lang.ugettext('Warning!'),
-                    wx.OK | wx.ICON_WARNING
-                    )
+                    self.translate('File must be saved before upload'),
+                    self.translate('Warning!'),
+                    wx.OK | wx.ICON_WARNING)
             result=dlg.ShowModal()
             dlg.Destroy()           
         event.Skip()
@@ -889,7 +889,7 @@ class Pinguino(wx.Frame):
         self.PaneFindInfo=wx.aui.AuiPaneInfo()
         self.PaneFindInfo.CloseButton(False)
         self.PaneFindInfo.MaximizeButton(False)
-        self.PaneFindInfo.Caption(self.lang.ugettext("Find"))
+        self.PaneFindInfo.Caption(self.translate("Find"))
         self.PaneFindInfo.CaptionVisible(False)
         self.PaneFindInfo.Dockable(False)
         self.PaneFindInfo.Resizable(False)
@@ -932,20 +932,20 @@ class Pinguino(wx.Frame):
 
     def OnWeb(self,event):
         id=event.GetId()
-        if id==ID_WEBSITE:
+        if id==self.ID_WEBSITE:
             webbrowser.open("http://www.pinguino.cc")
-        if id==ID_WIKI:
+        if id==self.ID_WIKI:
             webbrowser.open("http://wiki.pinguino.cc")
-        if id==ID_FORUM:
+        if id==self.ID_FORUM:
             webbrowser.open("http://forum.pinguino.cc")
-        if id==ID_BLOG:
+        if id==self.ID_BLOG:
             webbrowser.open("http://blog.pinguino.cc")
-        if id==ID_SHOP:
+        if id==self.ID_SHOP:
             webbrowser.open("http://shop.pinguino.cc")
-        if id==ID_GROUP:
+        if id==self.ID_GROUP:
             webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1")
         
-    def displaymsg(self,message,clearpanel):
+    def displaymsg(self, message, clearpanel):
         """ display message in the log window """
         if gui==True:
             if clearpanel==1:
@@ -955,6 +955,15 @@ class Pinguino(wx.Frame):
             if message!="":
                 print message
         return  
+
+    def translate(self, message):
+        """ translate message using gettext if it's possible """
+        # Checking if the host platform is a mac
+        if sys.platform == "mac":
+            return message
+        else:
+            # assume it's a posix or win32 platform
+            return self.lang.ugettext(message)
 
     def cp(self,file1,file2):
         fichier = open(TEMP_DIR + "stdout", 'w+')
@@ -1097,6 +1106,7 @@ class Pinguino(wx.Frame):
                 chemin = os.path.dirname(filename)
                 fichier = open(TEMP_DIR + "stdout", 'w+')
                 sortie = Popen([P8_DIR + "bin/sdcc",
+                        "-V",
                         "-mpic16",
                         "--denable-peeps",
                         "--obanksel=9",
@@ -1113,19 +1123,20 @@ class Pinguino(wx.Frame):
                         stdout=fichier, stderr=STDOUT)
             else:
                 return 0
-                sortie.communicate()
-                if sortie.poll()!=0:
-                    fichier.seek(0)
-                    self.displaymsg(fichier.read(), 0)
+
+            sortie.communicate()
+            if sortie.poll()!=0:
                 fichier.seek(0)
-                line=fichier.readline()
-                if line.find("error")!=-1:
-                    number=line[line.find(":")+1:line.find("error")-2]
-                    self.editor.highlightline(int(number)-1,'red')
-                    self.displaymsg("error line"+" "+number+"\n",1)
-                    self.displaymsg(line[line.find("error")+10:len(line)],0)
-                fichier.close()
-                return sortie.poll()
+                self.displaymsg(fichier.read(), 0)
+            fichier.seek(0)
+            line=fichier.readline()
+            if line.find("error")!=-1:
+                number=line[line.find(":")+1:line.find("error")-2]
+                self.editor.highlightline(int(number)-1,'red')
+                self.displaymsg("error line"+" "+number+"\n",1)
+                self.displaymsg(line[line.find("error")+10:len(line)],0)
+            fichier.close()
+            return sortie.poll()
 
     def link(self,filename):
         if (self.debug_output==1):
@@ -1157,7 +1168,7 @@ class Pinguino(wx.Frame):
                 sortie=Popen(["make",
                           "--makefile=" + SOURCE_DIR + "Makefile",
                           "HOME=" + HOME_DIR,
-                          "PDEPATH=\""+os.path.dirname(self.editor.GetPath())+"\"",
+                          "PDEDIR="+os.path.dirname(self.editor.GetPath()),
                           "PROC=" + self.proc,
                           "BOARD=" + self.board],
                           stdout=fichier, stderr=STDOUT)
@@ -1182,7 +1193,7 @@ class Pinguino(wx.Frame):
                 else:
                     codesize = codesize + int(line[1:3:1], 16)
         fichier.close()
-        self.displaymsg("\n" + self.lang.ugettext("code size: ") + str(codesize) + " / " + str(self.totalspace) + self.lang.ugettext(" bytes") + " (" + str(100*codesize/self.totalspace) + "% used)", 0)
+        self.displaymsg("\n" + self.translate("code size: ") + str(codesize) + " / " + str(self.totalspace) + self.translate(" bytes") + " (" + str(100*codesize/self.totalspace) + "% used)", 0)
 
 
 if __name__ == "__main__":

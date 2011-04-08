@@ -55,19 +55,19 @@
 //Only 795 boards have SPI3 and SPI4
 #if defined(UBW32_795) || defined(EMPEROR795)
 
-#if SPIx == 3
-#define BUFFER		SPI2ABUF
-#define STATBIT		SPI2ASTATbits.SPIRBF
-#define SPICONF		SPI2ACON
-#define CLKSPD		SPI2ABRG
-#endif
+	#if SPIx == 3
+	#define BUFFER		SPI2ABUF
+	#define STATBIT		SPI2ASTATbits.SPIRBF
+	#define SPICONF		SPI2ACON
+	#define CLKSPD		SPI2ABRG
+	#endif
 
-#if SPIx == 4
-#define BUFFER		SPI3ABUF
-#define STATBIT		SPI3ASTATbits.SPIRBF
-#define SPICONF		SPI3ACON
-#define CLKSPD		SPI3ABRG
-#endif
+	#if SPIx == 4
+	#define BUFFER		SPI3ABUF
+	#define STATBIT		SPI3ASTATbits.SPIRBF
+	#define SPICONF		SPI3ACON
+	#define CLKSPD		SPI3ABRG
+	#endif
 
 #endif
 /** 

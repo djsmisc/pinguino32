@@ -14,6 +14,7 @@
 	#endif
 
 	#include <pic18fregs.h>
+	#include <macro.h>
 
 	#define INT_ENABLE			1
 	#define INT_DISABLE			0
