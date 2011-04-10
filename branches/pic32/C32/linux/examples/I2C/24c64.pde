@@ -3,8 +3,6 @@
 
 #include <libI2C.c>
 
-typedef short byte;
-
 byte string[10]={0,0,'A','B','C','D','E','F','G','H'};	// string to write to i2c memory
 // fist byte of string[] is MSB of address to write to
 // second byte is LSB 
@@ -22,7 +20,7 @@ for (i=0;i<8;i++) i2c_buffer[i]=0;
 void loop()
 {
 Serial.print("try to write 8 char to eeprom\n\r");
-i=I2C_write(I2C_address,string,10);
+i=I2C_write(I2C_address,string[0],10);
 I2C_STOP();
 if (i==1)
 	{
@@ -37,7 +35,7 @@ else
 	while(1);
 	}
 Serial.print("try to read 8 bytes to eeprom\n\r");
-I2C_write(I2C_address,address_to_read,2);
+I2C_write(I2C_address,address_to_read[0],2);
 i=I2C_read(I2C_address,8);
 if  (i==1)
 	Serial.print("received 8 bytes from eeprom\n\r");

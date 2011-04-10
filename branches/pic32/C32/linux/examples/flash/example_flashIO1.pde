@@ -95,7 +95,7 @@ for (i=0;i<32;i+=2) buffer[i/2]=ReadFlash(0x6000+i);
 
 // write 32 byte of buffer tab to flash memory at address 0x5000
 
-WriteFlash(0x0000,buffer);
+WriteFlash(0x0000,buffer[0]);
 
 // copy 32 byte from flash memory address 0x6020 to buffer tab
 
@@ -103,7 +103,7 @@ for (i=0;i<32;i+=2) buffer[i/2]=ReadFlash(0x6020+i);
 
 // write 32 byte of buffer tab to flash memory at address 0x5020
 
-WriteFlash(0x0020,buffer);
+WriteFlash(0x0020,buffer[0]);
 
 
 while(1);
