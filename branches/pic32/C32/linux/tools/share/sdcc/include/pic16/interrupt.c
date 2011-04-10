@@ -7,6 +7,7 @@
 	--------------------------------------------------------------------------*/
 
 #ifndef __INTERRUPT
+
 	#define __INTERRUPT
 
 	#ifndef USERINT
@@ -740,6 +741,7 @@ void OnChangePin2(callback func, u8 config)
 #endif
 
 #ifdef RBINT
+
 /*
 PORTB<7:4> Interrupt-on-Change
 Only pins configured as inputs can

@@ -23,7 +23,7 @@
 
 #include <pic18fregs.h>
 #include <const.h>
-//#include <macro.h>
+#include <macro.h>
 #include "common_types.h"
 #include "boot_iface.h"
 #include "../tmp/define.h"
@@ -47,7 +47,7 @@ void epapout_init() { return; }
 // entry point called from the boot.
 
 #include "user.c"
-
+	
 void pinguino_main(void) 
 {	
 	PIE1 = 0;
