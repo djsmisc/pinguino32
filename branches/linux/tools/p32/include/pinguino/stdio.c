@@ -28,10 +28,10 @@
 
 #include <stdarg.h>
 
-typedef void (* stdout)(u8);	// type of :	void foo(u8 c)
-static stdout pputchar;				// then : 		void pputchar(u8 c)
+typedef void (* stdout)(char);	// type of :	void foo(char c)
+static stdout pputchar;				// then : 		void pputchar(char c)
 
-static void pprintchar(u8 **str, int c)
+static void pprintchar(char **str, char c)
 {
 	if (str)
 	{
@@ -47,12 +47,12 @@ static void pprintchar(u8 **str, int c)
 #define PAD_RIGHT 1
 #define PAD_ZERO 2
 
-static int pprints(u8 **out, const u8 *string, int width, int pad)
+static int pprints(char **out, const char *string, int width, int pad)
 {
 	register int pc = 0;
-	int padchar = ' ';
+	char padchar = ' ';
 	int len = 0;
-	const u8 *ptr;
+	const char *ptr;
 
 	if (width > 0)
 	{
@@ -89,10 +89,10 @@ static int pprints(u8 **out, const u8 *string, int width, int pad)
 /* the following should be enough for 32 bit int */
 #define PRINT_BUF_LEN 12
 
-static int pprinti(u8 **out, int i, int b, int sg, int width, int pad, int letbase)
+static int pprinti(char **out, int i, int b, int sg, int width, int pad, int letbase)
 {
-	u8 print_buf[PRINT_BUF_LEN];
-	u8 *s;
+	char print_buf[PRINT_BUF_LEN];
+	char *s;
 	int t, neg = 0, pc = 0;
 	unsigned int u = i;
 
@@ -109,7 +109,7 @@ static int pprinti(u8 **out, int i, int b, int sg, int width, int pad, int letba
 		u = -i;
 	}
 
-	s = print_buf + PRINT_BUF_LEN-1;
+	s = print_buf + PRINT_BUF_LEN - 1;
 	*s = '\0';
 
 	while (u)
@@ -138,11 +138,11 @@ static int pprinti(u8 **out, int i, int b, int sg, int width, int pad, int letba
 	return pc + pprints(out, s, width, pad);
 }
 
-static int pprint(u8 **out, const u8 *format, va_list args)
+static int pprint(char **out, const char *format, va_list args)
 {
 	int width, pad;
 	register int pc = 0;
-	u8 scr[2];
+	char scr[2];
 
 	for (; *format != 0; ++format)
 	{
@@ -150,77 +150,92 @@ static int pprint(u8 **out, const u8 *format, va_list args)
 		{
 			++format;
 			width = pad = 0;
+
 			if (*format == '\0')
 				break;
+
 			if (*format == '%')
 				goto abort;
+
 			if (*format == '-')
 			{
 				++format;
 				pad = PAD_RIGHT;
 			}
+
 			while (*format == '0')
 			{
 				++format;
 				pad |= PAD_ZERO;
 			}
+
 			for ( ; *format >= '0' && *format <= '9'; ++format)
 			{
 				width *= 10;
 				width += *format - '0';
 			}
+
 			if (*format == 's')
 			{
-				//u8 *s = (u8 *)va_arg(args, int);
-				u8 *s = va_arg(args, u8*);
-				//s = va_arg(args, u8*);
+				//char *s = (char *)va_arg(args, int);
+				char *s = va_arg(args, char*);
+				//s = va_arg(args, char*);
 				pc += pprints(out, s?s:"(null)", width, pad);
 				continue;
 			}
+
 			if (*format == 'd')
 			{
 				pc += pprinti(out, va_arg(args, int), 10, 1, width, pad, 'a');
 				continue;
 			}
+
 			if (*format == 'x')
 			{
 				pc += pprinti(out, va_arg(args, int), 16, 0, width, pad, 'a');
 				continue;
 			}
+
 			if (*format == 'X')
 			{
 				pc += pprinti(out, va_arg(args, int), 16, 0, width, pad, 'A');
 				continue;
 			}
+
 			if (*format == 'b')
 			{
 				pc += pprinti(out, va_arg(args, int), 2, 0, width, pad, 'a');
 				continue;
 			}
+
 			if (*format == 'o')
 			{
 				pc += pprinti(out, va_arg(args, int), 8, 0, width, pad, 'a');
 				continue;
 			}
+
 			if (*format == 'u')
 			{
 				pc += pprinti(out, va_arg(args, int), 10, 0, width, pad, 'a');
 				continue;
 			}
+
 			if (*format == 'c')
 			{
-				/* u8 are converted to int then pushed on the stack */
-				scr[0] = (u8)va_arg(args, int);
-				//scr[0] = va_arg(args, u8);
+				/* char are converted to int then pushed on the stack */
+				scr[0] = (char)va_arg(args, int);
+				//scr[0] = va_arg(args, char);
 				scr[1] = '\0';
 				pc += pprints(out, scr, width, pad);
 				continue;
 			}
+
 			if (*format == 'f')
 			{
 				pc += pprints(out, "not yet implemented\0", width, pad);
 				continue;
 			}
+
 		}
 		else
 		{
@@ -234,18 +249,18 @@ static int pprint(u8 **out, const u8 *format, va_list args)
 	return pc;
 }
 
-//int pprintf(stdout func, const u8 *format, ...)
-int pprintf(stdout func, const u8 *format, va_list args)
+//int pprintf(stdout func, const char *format, ...)
+int pprintf(stdout func, const char *format, va_list args)
 {
 	//va_list args;
     
 	pputchar = func;
 	//va_start( args, format );
-    return pprint(0, format, args);
+	return pprint(0, format, args);
 }
 
-//int sprintf(u8 *out, const u8 *format, ...)
-int psprintf(u8 *out, const u8 *format, va_list args)
+//int sprintf(char *out, const char *format, ...)
+int psprintf(char *out, const char *format, va_list args)
 {
 	//va_list args;
 

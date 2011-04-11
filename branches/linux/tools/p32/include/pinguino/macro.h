@@ -13,8 +13,12 @@
 
 	/// BYTES
 
-	#define high8(x)			(unsigned char) (x >> 8)
-	#define low8(x)				(unsigned char) (x & 0xFF)
+	#define highByte(x)			((unsigned char) ((x) >> 8))
+	#define high8(x)				((unsigned char) ((x) >> 8))
+	#define lowByte(x)			((unsigned char) ((x) & 0xFF))
+	#define low8(x)				((unsigned char) ((x) & 0xFF))
+	#define make16(low, high)	(low | (high << 8))
+	#define make32(low, high)	(low | (high << 16))
 
 	/// BITWISE OPERATION
 
@@ -33,7 +37,7 @@
 	#define BitWrite(value, bit, bitvalue) \
 		(bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 	
-	#define bit(b) \
+	#define Bit(b) \
 		(1 << (b))
 
 	/// MATH

@@ -69,10 +69,45 @@
 	16 - LED- ???
 	--------------------------------------------------------------------------*/
 
+#define EACUTE 0
+
+// Global vars
+
+u8 s  = 0;
+u8 m  = 0;
+u8 h = 0;
+
+// This function is called every sec.
+
+void tick()
+{
+	s++;
+	
+	if (s > 59)
+	{
+		s = 0;
+		m++;
+	}
+	
+	if (m > 59)
+	{
+		m = 0;
+		h++;
+	}
+	
+	if (h > 23)
+	{
+		h = 0;
+	}
+	
+	lcdi2c.setCursor(4, 1); // col 4, line 1
+	lcdi2c.printf("%02u:%02u:%02u", h, m, s);
+}
+
 void setup()
 {
-	// é
-	const u8 newcar[8]={
+	// eacute = é
+	const u8 eacute[8]={
 		0b00000100,
 		0b00001000,
 		0b00001110,
@@ -82,22 +117,26 @@ void setup()
 		0b00001110,
 		0b00000000
 	};
-	lcdi2c.newchar(newcar, 0);		// newcar is assigned to ascii 0
 	// pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
-	lcdi2c.init(16, 2, 0b01001110);// display is 2x16, ic2 address is 01001110 (see above)
-	lcdi2c.backlight();				// turns backlight on
-	lcdi2c.clear();					// clear screen
-	lcdi2c.home();						// set cursor at (0,0)
+	lcdi2c.init(16, 2, 0b01001110);		// display is 2x16, ic2 address is 01001110 (see above)
+	lcdi2c.backlight();						// turns backlight on
+	lcdi2c.clear();							// clear screen
+	lcdi2c.home();								// set cursor at (0,0)
 	lcdi2c.printf("   lcdi2c demo  ");
-	lcdi2c.setCursor(0, 1);			// set cursor at line 1, col 0
+	lcdi2c.setCursor(0, 1);					// set cursor at line 1, col 0
 	lcdi2c.printf(" Regis Blanchot ");
 	// define new char
-	lcdi2c.setCursor(2, 1);			// set cursor at line 1, col 2
-	lcdi2c.write(0);					// replace 'e' by 'é'
+	lcdi2c.newchar(eacute, EACUTE);		// eacute is assigned to ascii 0
+	lcdi2c.setCursor(2, 1);					// set cursor at line 1, col 2
+	lcdi2c.write(EACUTE);					// replace 'e' by 'é'
+	delay(5000);								// wait for 5 sec.
+	lcdi2c.clearLine(1);
 }
 
 void loop()
 {
+	tick();
+	delay(1000);
 }
 
 /*
@@ -121,7 +160,7 @@ void loop()
 		void lcdi2c.display();
 		void lcdi2c.noDisplay();
 		void lcdi2c.setCursor(u8, u8);
-		void lcdi2c.write(u8);
-		void lcdi2c.printf(u8*, ...);
+		void lcdi2c.write(char);
+		void lcdi2c.printf(char*, ...);
 		void lcdi2c.newchar(const u8 *, u8);
 */

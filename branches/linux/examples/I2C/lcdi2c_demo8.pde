@@ -104,8 +104,8 @@ void tick()
 
 void setup()
 {
-	// é
-	const u8 newcar[8]={
+	// eacute = é
+	const u8 eacute[8]={
 		0b00000100,
 		0b00001000,
 		0b00001110,
@@ -115,7 +115,6 @@ void setup()
 		0b00001110,
 		0b00000000
 	};
-	lcdi2c.newchar(newcar, 0);		// newcar is assigned to ascii 0
 	// pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
 	lcdi2c.init(16, 2, 0b01001110);// display is 2x16, ic2 address is 01001110 (see above)
 	lcdi2c.backlight();				// turns backlight on
@@ -125,6 +124,7 @@ void setup()
 	lcdi2c.setCursor(0, 1);			// set cursor at line 1, col 0
 	lcdi2c.printf(" Regis Blanchot ");
 	// define new char
+	lcdi2c.newchar(eacute, 0);		// eacute is assigned to ascii 0
 	lcdi2c.setCursor(2, 1);			// set cursor at line 1, col 2
 	lcdi2c.write(0);					// replace 'e' by 'é'
 	delay(5000);						// wait for 2 sec.

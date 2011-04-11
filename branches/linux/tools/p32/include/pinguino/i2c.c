@@ -70,12 +70,14 @@
 
 void I2C_init(u8 module, u8 mode, u8 speed)
 {
-	u32 PBCLK = GetPeripheralClock();
+	u32 pbclk = GetPeripheralClock();
 
 	switch(module)
 	{
 		case I2C1:
-			//I2C1CONbits.ON = 1;					// Enables the I2C module and configures the SDA and SCL pins as serial port pins
+			// Enables the I2C module and configures the SDA and SCL pins as serial port pins
+			//I2C1CONbits.ON = 1;							// conflict with const.h definition
+			I2C1CON |= (1 << 15);							// Set bit 15
 /*
 			switch (mode)
 			{
@@ -90,14 +92,14 @@ void I2C_init(u8 module, u8 mode, u8 speed)
 			switch (mode)
 			{
 				case I2C_SLEW_ON:
-					I2C1CONbits.DISSLW = 0;		// 0 = Slew rate control enabled for High Speed mode (400 kHz)
-					I2C1BRG = (PBCLK / (2 * 400)) - 2;	// 400 kHz
+					I2C1CONbits.DISSLW = 0;						// 0 = Slew rate control enabled for High Speed mode (400 kHz)
+					I2C1BRG = (pbclk / (2 * 400)) - 2;		// 400 kHz
 					break;
 				case I2C_SLEW_OFF:
 				default:
-					I2C1CONbits.DISSLW = 1;		// 1 = Slew rate control disabled for Standard Speed mode (100 kHz); also disabled for 1 MHz mode
-					I2C1BRG = (PBCLK / (2 * 100)) - 2;	// 100 kHz
-					//I2C1BRG = (PBCLK / (2 * 1000)) - 2	// 1000 kHz = 1MHz
+					I2C1CONbits.DISSLW = 1;						// 1 = Slew rate control disabled for Standard Speed mode (100 kHz); also disabled for 1 MHz mode
+					I2C1BRG = (pbclk / (2 * 100)) - 2;		// 100 kHz
+					//I2C1BRG = (pbclk / (2 * 1000)) - 2	// 1000 kHz = 1MHz
 			}
 
 			//SetPriorityIntI2C1(I2C_INT_PRI_1|I2C_INT_SUB_PRI_0);
@@ -112,7 +114,9 @@ void I2C_init(u8 module, u8 mode, u8 speed)
 			break;
 
 		case I2C2:
-			//I2C2CONbits.ON = 1;					// Enables the I2C module and configures the SDA and SCL pins as serial port pins
+			// Enables the I2C module and configures the SDA and SCL pins as serial port pins
+			//I2C2CONbits.ON = 1;							// conflict with const.h definition
+			I2C2CON |= (1 << 15);							// Set bit 15
 /*
 			switch (mode)
 			{
@@ -128,13 +132,13 @@ void I2C_init(u8 module, u8 mode, u8 speed)
 			{
 				case I2C_SLEW_ON:
 					I2C2CONbits.DISSLW = 0;		// 0 = Slew rate control enabled for High Speed mode (400 kHz)
-					I2C2BRG = (PBCLK / (2 * 400)) - 2;	// 400 kHz
+					I2C2BRG = (pbclk / (2 * 400)) - 2;	// 400 kHz
 					break;
 				case I2C_SLEW_OFF:
 				default:
 					I2C2CONbits.DISSLW = 1;		// 1 = Slew rate control disabled for Standard Speed mode (100 kHz); also disabled for 1 MHz mode
-					I2C2BRG = (PBCLK / (2 * 100)) - 2;	// 100 kHz
-					//I2C2BRG = (PBCLK / (2 * 1000)) - 2	// 1000 kHz = 1MHz
+					I2C2BRG = (pbclk / (2 * 100)) - 2;	// 100 kHz
+					//I2C2BRG = (pbclk / (2 * 1000)) - 2	// 1000 kHz = 1MHz
 
 			}
 
