@@ -253,11 +253,11 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
 
 	LCD_EN = HIGH;
 	I2C_send(1, PCF8574_address, PCF8574_data.val);
-	// E Pulse Width > 300ns
+	Delayus(1);// E Pulse Width > 300ns
 
 	LCD_EN = LOW;
 	I2C_send(1, PCF8574_address, PCF8574_data.val);
-	// E Enable Cycle > (300 + 200) = 500ns
+	Delayus(1);// E Enable Cycle > (300 + 200) = 500ns
 }
 
 /*	----------------------------------------------------------------------------
@@ -285,7 +285,7 @@ static void lcdi2c_send8(u8 octet, u8 mode)
 
 void lcdi2c_backlight()
 {
-	Backlight = ON;	// 0 = ON since PCF8574 is logical inverted
+	Backlight = 1;	// 0 = ON since PCF8574 is logical inverted
 	LCD_BL = Backlight;
 	I2C_send(1, PCF8574_address, PCF8574_data.val);
 }
@@ -296,7 +296,7 @@ void lcdi2c_backlight()
 
 void lcdi2c_noBacklight()
 {
-	Backlight = OFF;	// 1 = OFF since PCF8574 is logical inverted
+	Backlight = 0;	// 1 = OFF since PCF8574 is logical inverted
 	LCD_BL = Backlight;
 	I2C_send(1, PCF8574_address, PCF8574_data.val);
 }
@@ -465,7 +465,7 @@ void lcdi2c_clearLine(u8 line)
 	c = code ASCII du caractere
 	--------------------------------------------------------------------------*/
 
-void lcdi2c_write(u8 c)
+void lcdi2c_write(char c)
 {
 	lcdi2c_send8(c, LCD_DATA);
 }
@@ -475,7 +475,7 @@ void lcdi2c_write(u8 c)
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
-void lcdi2c_printf(u8 *fmt, ...)
+void lcdi2c_printf(char *fmt, ...)
 {
 	va_list args;
 
@@ -486,6 +486,8 @@ void lcdi2c_printf(u8 *fmt, ...)
 
 /*	----------------------------------------------------------------------------
 	---------- Définit un caractère personnalisé de 8x8 points.
+	----------------------------------------------------------------------------
+	d'après Nabil Al-HOSSRI <http://nalhossri.free.fr>
 	----------------------------------------------------------------------------
 	Le LCD utilisé admet au maximum 8 caractères spéciaux.
 	char_code : code du caractère à définir (0 <= char_code <= 7)
@@ -550,24 +552,24 @@ void lcdi2c_init(u8 numcol, u8 numline, u8 i2c_address)
 	PCF8574_address = 0b01001110 | i2c_address;
 	PCF8574_data.val = 0;
 
-	I2C_init(1, I2C_MASTER_MODE, I2C_SLEW_OFF);
+	I2C_init(I2C1, I2C_MASTER_MODE, I2C_SLEW_OFF);
 
-	//Delayms(15);								// Wait more than 15 ms after VDD rises to 4.5V
+	Delayms(15);								// Wait more than 15 ms after VDD rises to 4.5V
 	lcdi2c_send4(0x30, LCD_CMD);			// 0x30 - Mode 8 bits
-	//Delayms(5);									// Wait for more than 4.1 ms
+	Delayms(5);									// Wait for more than 4.1 ms
 	lcdi2c_send4(0x30, LCD_CMD);			// 0x30 - Mode 8 bits
-	//Delayus(100);								// Wait more than 100 μs
+	Delayus(100);								// Wait more than 100 μs
 	lcdi2c_send4(0x30, LCD_CMD);			// 0x30 - Mode 8 bits
-	//Delayus(100);								// Wait more than 100 μs
+	Delayus(100);								// Wait more than 100 μs
 	lcdi2c_send4(0x20, LCD_CMD);			// 0x20 - Mode 4 bits
 	lcdi2c_send8(LCD_SYSTEM_SET_4BITS, LCD_CMD); 	// 0x28 - Mode 4 bits - 2 Lignes - 5x8
-	//Delayus(4);				// Wait more than 40 ns
+	Delayus(4);				// Wait more than 40 ns
 	lcdi2c_send8(LCD_DISPLAY_ON, LCD_CMD);		// 0x0C - Display ON + Cursor OFF + Blinking OFF
-	//Delayus(4);				// Wait more than 40 ns
+	Delayus(4);				// Wait more than 40 ns
 	lcdi2c_send8(LCD_DISPLAY_CLEAR, LCD_CMD);    	// 0x01 - Efface l'affichage + init. DDRAM
 	Delayms(2);					// le temps d'execution de Display Clear > 1.64ms
 	lcdi2c_send8(LCD_ENTRY_MODE_SET, LCD_CMD);   	// 0x06 - Increment + Display not shifted (Déplacement automatique du curseur)
-	//Delayus(4);				// Wait more than 40 ns
+	Delayus(4);				// Wait more than 40 ns
 	lcdi2c_newpattern();				// Implante les nouveaux caracteres
 }
 
