@@ -1,5 +1,5 @@
 /*	----------------------------------------------------------------------------
-	FILE:				pcf8574.pde
+	FILE:				pcf8574_demo8.pde
 	PROJECT:			pinguino
 	PURPOSE:			driving led through i2c pcf8574 i/o expander
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>

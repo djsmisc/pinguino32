@@ -4,7 +4,7 @@
 	PURPOSE:			I2C functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	04 mar. 2011
-	LAST RELEASE:	04 mar. 2011
+	LAST RELEASE:	11 apr. 2011
 	----------------------------------------------------------------------------
 	TODO : slave modes improvement
 	----------------------------------------------------------------------------
