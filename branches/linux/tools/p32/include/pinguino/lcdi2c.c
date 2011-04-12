@@ -4,7 +4,7 @@
 	PURPOSE:			driving lcd display through i2c pcf8574 i/o expander
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	29 jul. 2008
-	LAST RELEASE:	06 apr. 2011
+	LAST RELEASE:	11 apr. 2011
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
