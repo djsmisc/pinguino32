@@ -1,0 +1,9 @@
+# Pinguino (PIC18F)
+SYSFS{idVendor}=="04d8", SYSFS{idProduct}=="feaa", MODE="0660",GROUP="plugdev"
+# UBW32/Pinguino32X (PIC32MX)
+SYSFS{idVendor}=="04d8", SYSFS{idProduct}=="003c", MODE="0660",GROUP="plugdev"
+# Pickit 2
+SYSFS{idVendor}=="04d8", SYSFS{idProduct}=="0033", MODE="0660",GROUP="plugdev"
+# Pickit 3
+SYSFS{idVendor}=="04d8", SYSFS{idProduct}=="900a", MODE="0660",GROUP="plugdev"
+
