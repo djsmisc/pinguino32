@@ -2,9 +2,9 @@
 #  -*- coding: UTF-8 -*-
 
 """-------------------------------------------------------------------------
- pinguino
+	pinguino
 
-			 (c) 2008-2009-2010-2011 Jean-Pierre MANDON <jp.mandon@gmail.com> 
+	(c) 2008-2009-2010-2011 Jean-Pierre MANDON <jp.mandon@gmail.com> 
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
 	You should have received a copy of the GNU Lesser General Public
 	License along with this library; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--------------------------------------------------------------------------"""
+	-------------------------------------------------------------------------"""
 
 # $Id: pinguino.py,v beta 2008/09/05 21:36:00 mandon
 # ----------------------------------------------------
@@ -92,8 +92,9 @@ THEME_DIR	= os.path.join(HOME_DIR, 'theme')
 TEMP_DIR		= os.path.join(HOME_DIR, 'tmp')
 SOURCE_DIR	= os.path.join(HOME_DIR, 'source')
 LOCALE_DIR	= os.path.join(HOME_DIR, 'locale')
-P32_DIR		= os.path.join(HOME_DIR, 'tools', 'p32')
-P8_DIR		= os.path.join(HOME_DIR, 'tools', 'p8')
+TOOLS_DIR	= os.path.join(HOME_DIR, 'tools')
+P32_DIR		= os.path.join(TOOLS_DIR, 'p32')
+P8_DIR		= os.path.join(TOOLS_DIR, 'p8')
 APP_CONFIG	= os.path.join(HOME_DIR, '.config')
 
 THEME_DEFAULT = "miniregino"
@@ -817,9 +818,9 @@ class Pinguino(wx.Frame):
 		global lang
 		if self.editor.GetPath()==-1:
 			dlg = wx.MessageDialog(self,
-			self.translate('Open file first !!'),
-			self.translate('Warning'),
-			wx.OK | wx.ICON_WARNING)
+				self.translate('Open file first !!'),
+				self.translate('Warning'),
+				wx.OK | wx.ICON_WARNING)
 			result=dlg.ShowModal()
 			dlg.Destroy()		   
 			return
@@ -846,7 +847,7 @@ class Pinguino(wx.Frame):
 			self.displaymsg(self.translate("error while compiling file ")+filename,0)
 		else:
 			retour=self.link(filename)
-			if os.path.exists(SOURCE_DIR + MAIN_FILE)!=True:
+			if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
 				self.displaymsg(self.translate("error while linking ")+filename+".o",0)
 			else:
 				#self.cp(SOURCE_DIR + MAIN_FILE,filename+".hex")
