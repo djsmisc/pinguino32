@@ -4,6 +4,7 @@
  * The Pinguino32X IDE compressed file for your OS<br>
  * the Pinguino 32 bits compiler for your OS<br>
 The compiler can be downloaded on http://www.hackinglab.org/pinguino/download/compiler32bits/<br>
+
 A supported board need to be used with Pinguino32X:<br>
  * PIC32-PINGUINO from OLIMEX
  * EMPEROR460 from EDTP
@@ -16,6 +17,6 @@ In the preferences menu:
  * Select 32 bits development tools/your board
  * In the 32 bits compiler menu, select the folder of the 32 bits compiler
 
-Either the Pinguino 32 bits compiler can be used or the Microchip 32 bits compiler. For further compatibility, it's better to use the Pinguino 32 bits compiler. This one should evolve to become a C++ compiler in a next release.
- 
-You are now ready to develop with Pinguino on 32 bits boards.
+Either the Pinguino 32 bits compiler can be used or the Microchip 32 bits compiler. For further compatibility, it's better to use the Pinguino 32 bits compiler. This one should evolve to become a C++ compiler in a next release.<br>
+<br> 
+==You are now ready to develop with Pinguino on 32 bits boards.==
