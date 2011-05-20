@@ -49,6 +49,7 @@ CFLAGS		=	-x c -c\
 
 ELF_FLAGS	=	-msoft-float\
 					-Wl,--defsym,_min_heap_size=8192\
+					-Wl,-Map=output.map\
 					-T$(LKRDIR)/elf32pic32mx.x
 
 FLAGS			=	-O2 -EL -march=24kc\
@@ -63,9 +64,6 @@ FLAGS			=	-O2 -EL -march=24kc\
 #					-I$(P32DIR)/bin/$(OSDIR)/mips-elf/include\
 #					-I$(SRCDIR)\
 #					-I$(OBJDIR)/usb
-
-#.PHONY: depend clean
-#.PHONY: clean
 
 all: clean copy build link exec correct
 
