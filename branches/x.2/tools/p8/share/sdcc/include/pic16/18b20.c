@@ -28,7 +28,7 @@
 #ifndef __DS18B20_C
 	#define __DS18B20_C
 
-	#include <macro.h>
+	//#include <macro.h>
 	#include <1wire.c>
 
 	typedef struct

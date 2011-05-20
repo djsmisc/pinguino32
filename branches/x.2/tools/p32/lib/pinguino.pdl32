@@ -18,7 +18,7 @@ min min#include <macro.h>
 max max#include <macro.h>
 abs abs#include <macro.h>
 constrain constrain#include <macro.h>
-map map#include <macro.h>
+map map#include <math.c>
 bitRead BitRead#include <macro.h>
 bitSet BitSet#include <macro.h>
 bitWrite BitSet#include <macro.h>

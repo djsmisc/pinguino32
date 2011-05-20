@@ -74,7 +74,9 @@
 	#define UART_INVERT_RECEIVE_POLARITY	0x00000010
 
 	// bit 3 BRGH: High Baud Rate Enable bit
-	#define UART_ENABLE_HIGH_SPEED		0x00000008
+	//#define UART_ENABLE_HIGH_SPEED		0x00000008
+	#define UART_ENABLE_HIGH_SPEED		1
+	#define UART_ENABLE_STANDARD_SPEED	0
 
 	// bit 2-1 PDSEL<1:0>: Parity and Data Selection bits
     
@@ -169,7 +171,7 @@ void SerialSetDataRate(u8 port, u32 baudrate)
 	if (baudrate > max1) baudrate = max1;
 	if (baudrate < min2) baudrate = min2;
 	max = (min1 + max2) / 2;
-	//if (baudrate > min2 && baudrate < max) speed = STANDARDSPEED;
+	//if (baudrate > min2 && baudrate < max) speed = UART_ENABLE_STANDARD_SPEED;
 	if (baudrate > max && baudrate < max1) speed = UART_ENABLE_HIGH_SPEED;
 
 	switch (port)
@@ -441,18 +443,18 @@ u8 SerialGetKey(u8 port)
 
 u8 * SerialGetString(u8 port)
 {
-	u8 *buffer;
 	u8 c;
 	u8 i = 0;
-
-	buffer = (u8 *) malloc(80);
+	u8 buffer[80];
+	
 	do {
 		c = SerialGetKey(port);
 		SerialPrintf(port, "%c", c);
 		buffer[i++] = c;
 	} while (c != '\r');
 	buffer[i] = '\0';
-	return (buffer);
+
+	return (&buffer);
 }
 
 /*	----------------------------------------------------------------------------
@@ -505,7 +507,7 @@ void SerialGetDataBuffer(u8 port)
 	TODO: move this to interrupt library and add it to main32.c
 	--------------------------------------------------------------------------*/
 
-#pragma interrupt SerialInterrupt ipl3 vector 24
+//#pragma interrupt SerialInterrupt ipl3 vector 24
 void SerialInterrupt(void)
 {
 	// Is this an RX interrupt?

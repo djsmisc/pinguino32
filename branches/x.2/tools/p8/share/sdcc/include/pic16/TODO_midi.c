@@ -3,7 +3,7 @@
 //************************************************************************
 // Based on coding by Thorsten Klose
 
-#include <uart18f2550.c>
+#include <serial.c>
 
 void midi_receive_handler(midi_rec midix)
 {

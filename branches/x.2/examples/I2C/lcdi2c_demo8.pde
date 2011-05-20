@@ -71,8 +71,8 @@
 
 // Global vars
 
-u8 s  = 0;
-u8 m  = 0;
+u8 s = 0;
+u8 m = 0;
 u8 h = 0;
 
 // This function is called every sec. by timer 0
@@ -98,7 +98,7 @@ void tick()
 		h = 0;
 	}
 	
-	lcdi2c.setCursor(4, 0); // col, line
+	lcdi2c.setCursor(4, 1); // col, line
 	lcdi2c.printf("%02u:%02u:%02u", h, m, s);
 }
 
@@ -128,7 +128,7 @@ void setup()
 	lcdi2c.setCursor(2, 1);			// set cursor at line 1, col 2
 	lcdi2c.write(0);					// replace 'e' by 'é'
 	delay(5000);						// wait for 2 sec.
-	lcdi2c.clearLine(0);				// clear first line
+	lcdi2c.clearLine(1);				// clear 2nd line
 	// Timer0 call function tick() every sec.
 	OnTimer0(tick, INT_MILLISEC, 1000);
 }

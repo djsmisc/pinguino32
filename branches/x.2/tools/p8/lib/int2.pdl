@@ -2,6 +2,7 @@ OnTimer0 OnTimer0#define TMR0INT
 OnTimer1 OnTimer1#define TMR1INT
 OnTimer2 OnTimer2#define TMR2INT
 OnTimer3 OnTimer3#define TMR3INT
+OnRTC OnRTC#define TMR1INT
 OnCounter0 OnCounter0#define CNTR0INT
 OnCounter1 OnCounter1#define CNTR1INT
 OnCounter3 OnCounter3#define CNTR3INT

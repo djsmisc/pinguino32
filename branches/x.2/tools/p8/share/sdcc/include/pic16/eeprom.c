@@ -28,10 +28,9 @@
 #ifndef __EEPROM_C
 	#define __EEPROM_C
 
-	#include <pic18fregs.h>
-	#include "typedef.h"
-	#include "macro.h"
-	#include "eeprom.h"
+	//#include <pic18fregs.h>
+	//#include "typedef.h"
+	//#include "macro.h"
 
 /**	----------------------------------------------------------------------------
 	---------- myEEPROM_read8()
@@ -116,3 +115,5 @@ void EEPROM_write16(u8 address, u16 mydata)
 	EEPROM_write8(address,   hibyte);
 	EEPROM_write8(address+1, lobyte);
 }
+
+#endif

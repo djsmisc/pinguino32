@@ -78,41 +78,41 @@ void pinguino_main(void)
 	millis_init();
 	#endif
 
-    #ifdef SERVOSLIBRARY
-    servos_init();
-    #endif
+	#ifdef SERVOSLIBRARY
+	servos_init();
+	#endif
 
-    #ifdef __USBCDC
-    init_CDC();
+	#ifdef __USBCDC
+	init_CDC();
 	PIE2bits.USBIE  = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
-    #endif    
-
-    #ifdef __USBBULK
-    init_bulk();
-	PIE2bits.USBIE  = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
-    #endif
-
-    #ifdef __SERIAL__
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
-    #endif 
-
-    #ifdef MILLIS
-	INTCONbits.TMR0IE= 1;
-	INTCONbits.GIE  = 1;
-    #endif 
-
-    #ifdef SERVOSLIBRARY
 	INTCONbits.PEIE = 1;
 	INTCONbits.GIE  = 1;
-    #endif
-       
-    while (1)
-		loop();
+	#endif    
+
+	#ifdef __USBBULK
+	init_bulk();
+	PIE2bits.USBIE  = 1;
+	INTCONbits.PEIE = 1;
+	INTCONbits.GIE  = 1;
+	#endif
+
+	#ifdef __SERIAL__
+	INTCONbits.PEIE = 1;
+	INTCONbits.GIE  = 1;
+	#endif 
+
+	#ifdef MILLIS
+	INTCONbits.TMR0IE= 1;
+	INTCONbits.GIE  = 1;
+	#endif 
+
+	#ifdef SERVOSLIBRARY
+	INTCONbits.PEIE = 1;
+	INTCONbits.GIE  = 1;
+	#endif
+
+	while (1)
+	loop();
 }
 
 /* Interrupt vectors */

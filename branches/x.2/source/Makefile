@@ -34,59 +34,85 @@ OBJDIR		= $(P32DIR)/obj/non-free
 # commands
 # ------------------------------------------------------------------------------
 
-CC				= $(BINDIR)/mips-elf-g++
+#CC				= $(BINDIR)/mips-elf-g++
+CC				= $(BINDIR)/mips-elf-gcc
 OBJC			= $(BINDIR)/mips-elf-objcopy
-RM				= @rm -f -v
+RM				= rm -f -v
 
 # ------------------------------------------------------------------------------
 # flags
 # ------------------------------------------------------------------------------
 
-CFLAGS		=	-Wall -O2\
-					-EL -march=24kc -x c++ -c\
-					-lstdc++ -lm -lgcc -lc\
-					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
-					-I$(INCDIR)/non-free\
-					-I$(INCDIR)/pinguino\
-					-I$(PDEDIR)\
-					-I$(SRCDIR)\
-					-I$(OBJDIR)
+CFLAGS		=	-x c -c\
+					-O2 -EL -march=24kc\
+					-lstdc++ -lm -lgcc -lc
 
-ELF_FLAGS	=	-O2\
-					-EL -march=24kc -msoft-float\
-					-lstdc++ -lm -lgcc -lc\
+ELF_FLAGS	=	-msoft-float\
 					-Wl,--defsym,_min_heap_size=8192\
-					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
-					-I$(INCDIR)/non-free\
-					-I$(INCDIR)/pinguino\
-					-I$(PDEDIR)\
-					-I$(SRCDIR)\
-					-I$(OBJDIR)\
 					-T$(LKRDIR)/elf32pic32mx.x
 
-#.PHONY: depend clean
-.PHONY: clean
+FLAGS			=	-O2 -EL -march=24kc\
+					-lstdc++ -lm -lgcc -lc\
+					-L$(OBJDIR)/usb/libcdc.a\
+					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
+					-I$(INCDIR)/non-free\
+					-I$(INCDIR)/pinguino\
+					-I$(PDEDIR)\
+					-I$(OBJDIR)
 
-all: build link exec correct
+#					-I$(P32DIR)/bin/$(OSDIR)/mips-elf/include\
+#					-I$(SRCDIR)\
+#					-I$(OBJDIR)/usb
+
+#.PHONY: depend clean
+#.PHONY: clean
+
+all: clean copy build link exec correct
 
 clean:
+	#----------------------------------------------------------------------------
+	#	clean
+	#----------------------------------------------------------------------------
 	$(RM) $(SRCDIR)/main32.o
 	$(RM) $(SRCDIR)/main32.elf
 	$(RM) $(SRCDIR)/main32.hex
 	$(RM) $(OBJDIR)/processor.o
+
+copy:
+	#----------------------------------------------------------------------------
+	#	copy
+	#----------------------------------------------------------------------------
 	cp $(OBJDIR)/$(PROC).o $(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
 
 build:
-	$(CC) $(CFLAGS) $(SRCDIR)/main32.c -o $(SRCDIR)/main32.o
+	#----------------------------------------------------------------------------
+	#	build
+	#----------------------------------------------------------------------------
+	cd $(SRCDIR);\
+	$(CC) $(CFLAGS) $(FLAGS) main32.c -o main32.o
 
 link:
-	$(CC) $(ELF_FLAGS) -o $(SRCDIR)/main32.elf $(SRCDIR)/main32.o $(OBJDIR)/crt0.S $(INCDIR)/non-free/p32xxxx.h $(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
+	#----------------------------------------------------------------------------
+	#	link
+	#----------------------------------------------------------------------------
+	cd $(SRCDIR);\
+	$(CC) $(ELF_FLAGS) $(FLAGS) -o main32.elf main32.o\
+		$(OBJDIR)/usb/libcdc.a\
+		$(OBJDIR)/crt0.S\
+		ISRwrapper.S\
+		$(INCDIR)/non-free/p32xxxx.h\
+		$(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
 
 exec:
+	#----------------------------------------------------------------------------
+	#	exec
+	#----------------------------------------------------------------------------
 	$(OBJC) -O ihex $(SRCDIR)/main32.elf $(SRCDIR)/main32.hex
 
 correct:
-	#This remove wrong routine
-	@grep --binary --invert-match '^:040000059D006000FA' $(SRCDIR)/main32.hex > $(SRCDIR)/temp
-	@mv $(SRCDIR)/temp $(SRCDIR)/main32.hex      
+	#----------------------------------------------------------------------------
+	#	correct
+	#----------------------------------------------------------------------------
+	grep --binary --invert-match '^:040000059D006000FA' $(SRCDIR)/main32.hex > $(SRCDIR)/temp
+	mv $(SRCDIR)/temp $(SRCDIR)/main32.hex      
 

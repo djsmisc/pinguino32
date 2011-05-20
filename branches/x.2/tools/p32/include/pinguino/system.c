@@ -112,11 +112,13 @@ void SystemLock()
 
 void Reset()
 {
+	u16 dummy;
+
 	SystemUnlock();
 	// set SWRST bit to arm reset
 	RSWRSTSET = 1;
 	// read RSWRST register to trigger reset
-	u16 dummy = RSWRST;
+	dummy = RSWRST;
 	// prevent any unwanted code execution until reset occurs
 	while(1);
 }

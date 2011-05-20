@@ -43,7 +43,7 @@ u16 _t3con;							// shadow value of T3CON
 	resolution is 10 bits.
 	--------------------------------------------------------------------------*/
 	
-void pwm_init(void)
+void PWM_init(void)
 {
 	T3CON|=0x8020;		// timer 3 use a 1:4 prescaler for PWM 20 khz
 	PR3=1023;			// resolution is 10 bits ( 0..1023 )

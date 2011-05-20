@@ -85,7 +85,7 @@ import gettext			# to activate multi-language support
 import locale			# to access system localization functionalities
 import webbrowser		# to launch website from the IDE
 
-pinguino_version="Beta X"
+pinguino_version="X.2"
 
 HOME_DIR		= sys.path[0].replace(" ","\\ ")					# for path with spaces
 THEME_DIR	= os.path.join(HOME_DIR, 'theme')
@@ -826,14 +826,14 @@ class Pinguino(wx.Frame):
 			return
 		self.displaymsg("",1)
 		self.displaymsg("Board:\t" + self.board + "\n", 0)
-		self.displaymsg("Proc:\t\t" + self.proc  + "\n", 0)
+		self.displaymsg("Proc: \t" + self.proc  + "\n", 0)
 		self.editor.SaveDirect()
 		filename=self.editor.GetPath()
 		filename,extension=os.path.splitext(filename)
 		if os.path.exists(filename+".hex"):
 			os.remove(filename+".hex")
-		if os.path.exists(SOURCE_DIR+"user.c"):
-			os.remove(SOURCE_DIR+"user.c")
+		if os.path.exists(os.path.join(SOURCE_DIR, "user.c")):
+			os.remove(os.path.join(SOURCE_DIR, "user.c"))
 		retour=self.preprocess(filename)
 		if retour=="error":
 			return
@@ -854,7 +854,7 @@ class Pinguino(wx.Frame):
 				shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")
 				self.displaymsg(self.translate("compilation done"),0)
 				self.getCodeSize(filename)
-				os.remove(SOURCE_DIR + MAIN_FILE)
+				os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
 				os.remove(filename+".c")
 							   
 # ------------------------------------------------------------------------------
@@ -876,7 +876,7 @@ class Pinguino(wx.Frame):
 								filename+".hex"],
 								stdout=fichier,stderr=STDOUT)
 				else:
-					sortie=Popen([os.path.join(P32_DIR, self.osdir, 'bin', 'ubw32'),
+					sortie=Popen([os.path.join(P32_DIR, 'bin', self.osdir, 'bin', 'ubw32'),
 								"-w",
 								filename+".hex",
 								"-r",
@@ -1147,7 +1147,6 @@ class Pinguino(wx.Frame):
 			print("compile " + self.proc)
 		else:
 			if self.arch==8:
-				chemin = os.path.dirname(filename)
 				fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
 				sortie = Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
 						"-mpic16",\
@@ -1158,8 +1157,9 @@ class Pinguino(wx.Frame):
 						"--optimize-df",\
 						"-p" + self.proc,\
 						"-I" + os.path.join(P8_DIR, 'include'),\
-						"-I" + chemin,\
-						"-c",\
+						"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
+						"-I" + os.path.dirname(filename),\
+						"--compile-only",\
 						"-o" + os.path.join(SOURCE_DIR, 'main.o'),\
 						os.path.join(SOURCE_DIR, 'main.c')],\
 						stdout=fichier, stderr=STDOUT)

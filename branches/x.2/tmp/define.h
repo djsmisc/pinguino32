@@ -1,4 +1,6 @@
 
 
+
 #include <delay.c>
-#include <lcdi2c.c>
+#include <digitalw.c>
+#include <spi.c>

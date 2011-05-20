@@ -11,9 +11,9 @@
 #include <usb/usb_config.c>
 #include <usb/picUSB.c>
 #include <usb/usb_bulk.c>
-#include <arduinodelay.c>
+#include <delay.c>
 #ifdef BULKDEBUG
-#include <uart18f2550.c>
+#include <serial.c>
 #endif
 
 void init_bulk()
