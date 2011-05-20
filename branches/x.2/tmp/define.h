@@ -1,6 +1,6 @@
 
 
 
+#include <__cdc.c>
 #include <delay.c>
-#include <digitalw.c>
-#include <spi.c>
+#include <pinguinoserial.c>

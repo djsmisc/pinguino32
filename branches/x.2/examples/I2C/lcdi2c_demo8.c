@@ -71,8 +71,8 @@
 
 //
 
-u8 s  = 0;
-u8 m  = 0;
+u8 s = 0;
+u8 m = 0;
 u8 h = 0;
 
 //
@@ -98,7 +98,7 @@ void tick()
 		h = 0;
 	}
 	
-	lcdi2c_setCursor(4, 0); // col, line
+	lcdi2c_setCursor(4, 1); // col, line
 	lcdi2c_printf("%02u:%02u:%02u", h, m, s);
 }
 
@@ -128,7 +128,7 @@ void setup()
 	lcdi2c_setCursor(2, 1);			// set cursor at line 1, col 2
 	lcdi2c_write(0);					// replace 'e' by 'é'
 	Delayms(5000);						// wait for 2 sec.
-	lcdi2c_clearLine(0);				// clear first line
+	lcdi2c_clearLine(1);				// clear 2nd line
 //
 	OnTimer0(tick, INT_MILLISEC, 1000);
 }

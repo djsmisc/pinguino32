@@ -868,13 +868,17 @@ class Pinguino(wx.Frame):
 			if os.path.exists(filename+".hex"):
 				self.displaymsg("",1)
 				fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
-				if self.arch==8:
-					sortie=Popen([os.path.join(P8_DIR, 'bin', self.osdir, 'docker'),
-								"-v",
-								"04d8",
-								"write",
-								filename+".hex"],
-								stdout=fichier,stderr=STDOUT)
+				if self.arch == 8:
+					if sys.platform == 'win32':
+						sys.argv = ["vascoboot1.3.py",filename+".hex"]
+						execfile(os.path.join(P8_DIR, 'bin', self.osdir, 'vascoboot1.3.py'))
+					else:
+						sortie=Popen([os.path.join(P8_DIR, 'bin', self.osdir, 'docker'),
+									"-v",
+									"04d8",
+									"write",
+									filename+".hex"],
+									stdout=fichier,stderr=STDOUT)
 				else:
 					sortie=Popen([os.path.join(P32_DIR, 'bin', self.osdir, 'bin', 'ubw32'),
 								"-w",
