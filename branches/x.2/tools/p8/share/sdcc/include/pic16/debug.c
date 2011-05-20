@@ -8,7 +8,7 @@
 #ifndef DEBUG
 	#define DEBUG
 
-	#include <uart18f2550.c>
+	#include <serial.c>
 
 	void debug(void)
 	{

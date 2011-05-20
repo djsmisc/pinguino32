@@ -4,7 +4,7 @@
 //UBW32 hardware definitions file
 //That file contains LED pins and Buttons for use with UBW32 and EMPEROR boards
 //Emperor have one USER Button and 2 LEDs only
-#include <hardware.c>
+//#include <hardware.c>
 
 int tempo;					// tempo is an integer
 

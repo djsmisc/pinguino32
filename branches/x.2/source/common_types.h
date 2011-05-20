@@ -23,12 +23,20 @@
 #ifndef VASCO_H_
 #define VASCO_H_
 
+#ifndef __TYPEDEF_H
+#define __TYPEDEF_H
+#endif
+
 /* 8 bits */
-typedef unsigned char u8;
-typedef char s8;
-typedef unsigned char uchar;
-typedef signed char schar;
-typedef unsigned char byte;
+typedef unsigned char			u8;
+typedef char						s8;
+typedef unsigned char			uchar;
+typedef unsigned char			byte;
+typedef unsigned char			BOOL;//bool;					// not compatible with c++
+typedef unsigned char			boolean;	
+typedef signed char				schar;
+//typedef unsigned char 			uint8_t;
+//typedef signed char 				int8_t;
 typedef union
 {
     uchar uc;
@@ -47,11 +55,13 @@ typedef union
 } Char;
 
 /* 16 bits */
-typedef unsigned int  u16;
-typedef int  s16;
-typedef unsigned int uint;
-typedef signed int sint;
-typedef unsigned int  word;
+typedef unsigned int				u16;
+typedef int							s16;
+typedef unsigned int				uint;
+typedef signed int				sint;
+typedef unsigned int				word;
+//typedef int 						int16_t;
+//typedef unsigned int 			uint16_t;
 typedef union
 {
     uint ui;
@@ -61,11 +71,13 @@ typedef union
 
 
 /* 32 bits */
-typedef unsigned long u32;
-typedef long s32;
-typedef unsigned long ulong;
-typedef signed long slong;
-typedef unsigned long dword; 
+typedef unsigned long			u32;
+typedef long						s32;
+typedef unsigned long			ulong;
+typedef signed long				slong;
+typedef unsigned long			dword; 
+//typedef long 						int32_t;
+//typedef unsigned long 			uint32_t;
 typedef union
 {
     ulong ul;
@@ -74,8 +86,10 @@ typedef union
     Char  c[4];
 } Long;
 
-#define TRUE 1
-#define FALSE 0
-#define NULL 0
+//#define TRUE 1
+//#define FALSE 0
+#define FALSE	0 
+#define TRUE	!FALSE
+#define NULL	0
 
 #endif /*VASCO_H_*/

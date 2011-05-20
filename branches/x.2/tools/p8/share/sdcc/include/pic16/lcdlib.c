@@ -12,7 +12,7 @@
 #ifndef __LCD_C
 #define __LCD_C
 
-#include <arduinodelay.c>		//Arduino like delays
+#include <delay.c>		//Arduino like delays
 #include <digitalw.c>			//Arduino like DigitalWrite and Read
 #include <lcdlib.h>
 #include <stdio.c>

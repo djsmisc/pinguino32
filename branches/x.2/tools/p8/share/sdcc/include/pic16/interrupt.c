@@ -1,9 +1,26 @@
 /*	----------------------------------------------------------------------------
-	---------- interrupt.c
+	FILE:				interrupt.c
+	PROJECT:			pinguino
+	PURPOSE:			interrupt routines
+	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
+	FIRST RELEASE:	24-12-2010
+	LAST RELEASE:	17-05-2011
 	----------------------------------------------------------------------------
-	@author				(c)2010 - R. Blanchot <rblanchot@gmail.com>
-	@version			0.4 (last update 24-12-2010)
-	@IDE				Pinguino IDE >= 9.5
+	TODO : 
+	----------------------------------------------------------------------------
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
 #ifndef __INTERRUPT
@@ -14,7 +31,7 @@
 	#endif
 
 	#include <pic18fregs.h>
-	#include <macro.h>
+	//#include <macro.h>
 
 	#define INT_ENABLE			1
 	#define INT_DISABLE			0
@@ -460,6 +477,48 @@ void OnTimer1(callback func, u8 timediv, u16 delay)
 	}
 	#endif
 }
+
+void OnRTC(callback func, u16 delay)
+{
+	u8 _t1con = 0;
+
+	if (intUsed[INT_TMR1] == INT_NOT_USED)
+	{
+		intUsed[INT_TMR1] = INT_USED;
+		intCount[INT_TMR1] = 0;
+		intCountLimit[INT_TMR1] = delay;
+		intFunction[INT_TMR1] = func;
+
+		// Preload TMR1 register pair for 1 mn (60 s = 60 x 1000 x 4 x 250 us) overflow
+		preloadH[INT_TMR1] = 0x80;			// (0xFFFF - 0xFF0F) = 240
+		preloadL[INT_TMR1] = 0x00;			// TMR1L is never preloaded or altered
+
+		// RD16    = 1	Enables register read/write of Timer1 in one 16-bit operation
+		// T1RUN   = 0	Device clock is derived from another source (le quartz 20MHz)
+		// T1CKPS1 = 0	00 = 1:1 Prescale value
+		// T1CKPS0 = 0
+		// T1OSCEN = 1	Timer1 oscillator is on
+		// T1SYNC  = 0	When TMR1CS = 1, Synchronize external clock input
+		// TMR1CS  = 1	External clock from RC0/T1OSO/T13CKI pin (on the rising edge)
+		// TMR1ON  = 0	Stops Timer1
+		_t1con = T1_OFF & T1_16BIT & T1_PS_1_1 & T1_RUN_FROM_ANOTHER & T1_OSC_ON & T1_SYNC_EXT_ON & T1_SOURCE_EXT;
+		//_t1con = 0b10001110;
+
+		IPR1bits.TMR1IP = INT_LOW_PRIORITY;
+		PIE1bits.TMR1IE = INT_ENABLE;
+		PIR1bits.TMR1IF = 0;
+		TMR1H = preloadH[INT_TMR1];
+		TMR1L = preloadL[INT_TMR1];
+		T1CON = _t1con;
+	}
+	#ifdef DEBUG
+	else
+	{
+		serial_printf("Error : interrupt TIMER1 is already used !");
+	}
+	#endif
+}
+
 #endif
 
 #ifdef TMR2INT
@@ -851,7 +910,7 @@ void OnCompareAll(callback func, u8 config)
 				func:		function called when interrupt occured
 	--------------------------------------------------------------------------*/
 
-#ifdef RCINT || TXINT || ADINT || OSCFINT || EEINT || HLVDINT || BCLINT || USBINT || SSPINT
+#if defined (RCINT) || defined(TXINT) || defined(ADINT) || defined(OSCFINT) || defined(EEINT) || defined(HLVDINT) || defined(BCLINT) || defined(USBINT) || defined(SSPINT)
 void OnEvent(u8 inter, callback func)
 {
 	if (intUsed[inter] == INT_NOT_USED)
@@ -987,7 +1046,7 @@ void userinterrupt()
 		intFunction[INT_RB]();
 	}
 	#endif
-	#ifdef TMR0INT || CNTR0INT
+	#if defined (TMR0INT) || defined(CNTR0INT)
 	if (INTCONbits.TMR0IE && INTCONbits.TMR0IF)
 	{
 		T0CONbits.TMR0ON = OFF;
@@ -1001,7 +1060,7 @@ void userinterrupt()
 		}
 	}
 	#endif
-	#ifdef TMR1INT || CNTR1INT
+	#if defined (TMR1INT) || defined(CNTR1INT)
 	if (PIE1bits.TMR1IE && PIR1bits.TMR1IF)
 	{
 		T1CONbits.TMR1ON = OFF;
@@ -1028,7 +1087,7 @@ void userinterrupt()
 		// NB : no need to reload PR2
 	}
 	#endif
-	#ifdef TMR3INT || CNTR3INT
+	#if defined (TMR3INT) || defined(CNTR3INT)
 	if (PIE2bits.TMR3IE && PIR2bits.TMR3IF)
 	{
 		T3CONbits.TMR3ON = OFF;

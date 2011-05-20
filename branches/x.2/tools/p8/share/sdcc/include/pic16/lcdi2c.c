@@ -75,7 +75,7 @@
 #include <lcdi2c.h>
 #include <pcf8574.h>
 #include <stdarg.h>
-#include <arduinodelay.c>
+#include <delay.c>
 #include <pinguinoi2c.c>
 #include <stdio.c>
 

@@ -7,7 +7,8 @@
 	LAST RELEASE:	17 nov. 2010
 	----------------------------------------------------------------------------
 	CHANGELOG:
-	[xx-xx-xx][name][comment] 	----------------------------------------------------------------------------
+	[xx-xx-xx][name][comment]
+ 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
 	License as published by the Free Software Foundation; either
@@ -138,6 +139,17 @@
 	#define INT_FLASH_CONTROL_EVENT			56
 	#define INT_USB							57
 
+/*	----------------------------------------------------------------------------
+	Interrupt Natural Priority
+	----------------------------------------------------------------------------
+	When multiple interrupts are assigned to same group priority and subpriority,
+	they are prioritized by their natural priority. The natural priority is a
+	fixed priority scheme, where the highest natural priority starts at the lowest
+	interrupt vector, meaning that interrupt vector 0 is the highest and interrupt
+	vector 63 is the lowest natural priority. See the interrupt vector table in
+	the respective device data sheet to learn the natural priority order of each IRQ.
+	--------------------------------------------------------------------------*/
+
 	// IPCx: INTERRUPT PRIORITY CONTROL REGISTER
 	#define INT_UART1_ALL_PRIORITY		0x0000001F	// disable all UART1 interrupts
 	#define INT_UART2_ALL_PRIORITY		0x0000001F	// disable all UART2 interrupts
@@ -220,6 +232,15 @@
 
 /*	----------------------------------------------------------------------------
 	IntSetPriority
+	----------------------------------------------------------------------------
+	Interrupt Natural Priority
+	----------------------------------------------------------------------------
+	When multiple interrupts are assigned to same group priority and subpriority,
+	they are prioritized by their natural priority. The natural priority is a
+	fixed priority scheme, where the highest natural priority starts at the lowest
+	interrupt vector, meaning that interrupt vector 0 is the highest and interrupt
+	vector 63 is the lowest natural priority. See the interrupt vector table in
+	the respective device data sheet to learn the natural priority order of each IRQ.
 	----------------------------------------------------------------------------
 	The Interrupt Service Routine (ISR) must clear the associated interrupt flag
 	in the IFSx register before lowering the interrupt priority level to avoid

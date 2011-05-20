@@ -82,8 +82,48 @@
 		#define OR		||
 	#endif
 
-		//lower case (not compatoble with c++)
-		//#define and		&&
-		//#define or		||	
+	//lower case (not compatoble with c++)
+	//#define and		&&
+	//#define or		||	
+
+	#if defined(UBW32_460) || defined(UBW32_795)
+		// UBW32 build-in leds
+		#define LED1			63//PORTEbits.RE2	// white led
+		#define LED2			59//PORTEbits.RE1	// red led
+		#define LED3			58//PORTEbits.RE0	// yellow led
+		#define LED4			64//PORTEbits.RE3	// green led	
+
+		#define WHITELED		63//PORTEbits.RE2	// led1
+		#define GREENLED		59//PORTEbits.RE3	// led2	
+		#define YELLOWLED		58//PORTEbits.RE0	// led3
+		#define REDLED			64//PORTEbits.RE1	// led4
+
+		// UBW32 build-in buttons
+		#define PROGBUTTON	68	//PORTEbits.RE7 = prog button
+		#define USERBUTTON	69	//PORTEbits.RE6 = user button
+		 
+	#elif defined(EMPEROR460) || defined(EMPEROR795)
+		// EMPEROR build-in leds
+		#define LED1			63//PORTEbits.RE2	// blue led
+		#define LED2			59//PORTEbits.RE3	// red led
+
+		#define BLUELED		63//pin49 PORTEbits.RE2	// led1
+		#define REDLED			59//pin48 PORTEbits.RE3	// led2
+
+		// UBW32 build-in buttons
+		#define USERBUTTON	68	//PORTEbits.RE7 = user button
+
+	#elif defined(PIC32_PINGUINO)
+		// OLIMEX build-in leds
+		#define LED1			4	//PORTGbits.RG6	// green led
+		#define LED2			49	//PORTDbits.RD1	// yellow led
+
+		#define GREENLED		4	//PORTGbits.RG6	// led1
+		#define YELLOWLED		49	//PORTDbits.RD1	// led2
+
+		// UBW32 build-in buttons
+		#define USERBUTTON	46	//PORTDbits.RD0 = user button
+
+	#endif
 
 #endif

@@ -24,6 +24,7 @@
 #include <const.h>
 #include <macro.h>
 #include <system.c>
+#include <newlib.c>
 #include "../tmp/define.h"
 
 #include "user.c"
@@ -31,32 +32,47 @@
 int main()
 {
 	#ifdef PIC32_PINGUINO
-		TRISDbits.TRISD9=1;			// because PORTB is shared with SDA on Olimex board
-		TRISDbits.TRISD10=1;			// because PORTB is shared with SCL on Olimex board
+	TRISDbits.TRISD9=1;			// because PORTB is shared with SDA on Olimex board
+	TRISDbits.TRISD10=1;			// because PORTB is shared with SCL on Olimex board
 	#endif	
 
-	SystemConfig(80000000);		// default clock frequency is 80Mhz
-	AD1PCFG = 0xFFFF;				// All pins of PORTB as digital IOs
+	SystemConfig(80000000);			// default clock frequency is 80Mhz
+	AD1PCFG = 0xFFFF;					// All pins of PORTB as digital IOs
 
 	#ifdef __ANALOG__
-		analog_init();
+	analog_init();
 	#endif
 
 	#ifdef __MILLIS__
-		millis_init();
+	millis_init();
 	#endif
 
 	#ifdef __PWM__
-		pwm_init();
+	PWM_init();
+	#endif    
+
+	#ifdef __USBCDC
+	CDC_init();
 	#endif    
 
 	setup();
 
 	while (1)
 	{
+		#ifdef __USBCDC
+		CDCTxService();
+		#endif    
 		loop();
 	}
 
 	return(0);    
 }
+
+#ifndef __SERIAL_C
+void SerialInterrupt(){};
+#endif
+
+#ifndef __MILLIS__
+void Tmr2Interrupt(){};
+#endif
 

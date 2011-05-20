@@ -63,7 +63,7 @@
 	#define R1_32	1	// thirty-second rest / demisemiquaver rest
 	#define R1_64	0	// sixty-fourth rest / hemidemisemiquaver rest
 
-	#include <arduinodelay.c>
+	#include <delay.c>
 	#include <digitalw.c>
 	#include <pwm.c>
 
@@ -112,7 +112,10 @@
 		//const u16 freq[] = {4186,4434,4698,4978,5274,5587,5919,6271,6644,7040,7458,7902,8372};
 		const u16 freq[] = {4189,4437,4687,4966,5281,5597,5905,6250,6637,7075,7425,7894,8333};
 
-		if (vol > 10) vol = 10;					// max. volume is 10
+		if (vol > 10)
+		{
+			vol = 10;					// max. volume is 10
+		}
 		vol = vol * 5;							// max. volume is reach for 50% duty
 
 		Tone(pin, freq[note-1], duration);

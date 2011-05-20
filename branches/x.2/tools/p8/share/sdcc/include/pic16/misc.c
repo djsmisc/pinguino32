@@ -26,8 +26,8 @@
 #ifndef __MISC_C
 	#define __MISC_C
 
-	#include <typedef.h>
-	#include <arduinodelay.c>
+	//#include <typedef.h>
+	#include <delay.c>
 	#include <digitalw.c>
 
 u8 Keyboard_get(u8 pin)					// with for example pin = PORTBbits.RB2
@@ -45,3 +45,9 @@ u8 Keyboard_get(u8 pin)					// with for example pin = PORTBbits.RB2
 			return etat1;				// if state is stable at least 50 ms
 	}
 }
+
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+#endif

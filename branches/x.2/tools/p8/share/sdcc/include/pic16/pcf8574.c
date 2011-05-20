@@ -56,8 +56,8 @@
 #ifndef __PCF8574_C
 	#define __PCF8574_C
 
-#include <typedef.h>
-#include <macro.h>
+//#include <typedef.h>
+//#include <macro.h>
 #include <pinguinoi2c.c>
 #include <pcf8574.h>
 
