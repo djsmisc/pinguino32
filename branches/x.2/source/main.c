@@ -26,12 +26,16 @@
 #include <macro.h>
 #include "common_types.h"
 #include "boot_iface.h"
-#include "../tmp/define.h"
+#include "define.h"
 
 #ifdef __USB__
 #include "../include/usb.h"
 #include <usb.c>
 #endif
+
+//#ifdef SDCARD
+//#include <spi.c>
+//#endif
 
 // only for compatibility with application_iface.o
 #ifndef __USB__
@@ -83,14 +87,14 @@ void pinguino_main(void)
 	#endif
 
 	#ifdef __USBCDC
-	init_CDC();
+	CDC_init();
 	PIE2bits.USBIE  = 1;
 	INTCONbits.PEIE = 1;
 	INTCONbits.GIE  = 1;
 	#endif    
 
 	#ifdef __USBBULK
-	init_bulk();
+	bulk_init();
 	PIE2bits.USBIE  = 1;
 	INTCONbits.PEIE = 1;
 	INTCONbits.GIE  = 1;
@@ -111,8 +115,12 @@ void pinguino_main(void)
 	INTCONbits.GIE  = 1;
 	#endif
 
+//	#ifdef SDCARD
+//	SPI_init();
+//	#endif
+
 	while (1)
-	loop();
+		loop();
 }
 
 /* Interrupt vectors */

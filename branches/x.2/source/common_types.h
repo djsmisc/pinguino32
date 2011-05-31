@@ -31,10 +31,14 @@
 typedef unsigned char			u8;
 typedef char						s8;
 typedef unsigned char			uchar;
+typedef unsigned char			UCHAR;
 typedef unsigned char			byte;
-typedef unsigned char			BOOL;//bool;					// not compatible with c++
+//typedef unsigned char 			BYTE;
+typedef unsigned char			BOOL;
+//typedef unsigned char			bool;					// not compatible with c++
 typedef unsigned char			boolean;	
 typedef signed char				schar;
+typedef signed char				CHAR;
 //typedef unsigned char 			uint8_t;
 //typedef signed char 				int8_t;
 typedef union
@@ -57,9 +61,15 @@ typedef union
 /* 16 bits */
 typedef unsigned int				u16;
 typedef int							s16;
+typedef int							INT;
+typedef unsigned int				UINT;
 typedef unsigned int				uint;
 typedef signed int				sint;
 typedef unsigned int				word;
+typedef short						SHORT;
+typedef unsigned short			USHORT;
+typedef unsigned short			WORD;
+typedef unsigned short			WCHAR;
 //typedef int 						int16_t;
 //typedef unsigned int 			uint16_t;
 typedef union
@@ -76,6 +86,9 @@ typedef long						s32;
 typedef unsigned long			ulong;
 typedef signed long				slong;
 typedef unsigned long			dword; 
+typedef long						LONG;
+typedef unsigned long			ULONG;
+typedef unsigned long			DWORD;
 //typedef long 						int32_t;
 //typedef unsigned long 			uint32_t;
 typedef union

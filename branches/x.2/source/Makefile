@@ -24,8 +24,10 @@
 # HOME, OSDIR, PDEDIR, PROC & BOARD are defined in pinguinobetax.py
 
 SRCDIR		= $(HOME)/source
-P32DIR		= $(HOME)/tools/p32
-BINDIR		= $(P32DIR)/bin/$(OSDIR)/bin
+P32DIR		= $(HOME)/p32
+#BINDIR		= $(P32DIR)/bin/$(OSDIR)/bin
+P32CORE		= $(HOME)/$(OSDIR)/p32
+BINDIR		= $(P32CORE)/bin
 INCDIR		= $(P32DIR)/include
 LKRDIR		= $(P32DIR)/lkr
 OBJDIR		= $(P32DIR)/obj/non-free
@@ -43,23 +45,29 @@ RM				= rm -f -v
 # flags
 # ------------------------------------------------------------------------------
 
-CFLAGS		=	-x c -c\
-					-O2 -EL -march=24kc\
-					-lstdc++ -lm -lgcc -lc
+CFLAGS		=	-O2 -EL -march=24kc\
+					-c\
+					-x c
+#					-pedantic -Wall\
+#					-x c++
+#					-std=c99 
 
-ELF_FLAGS	=	-msoft-float\
+ELF_FLAGS	=	-O2 -EL -march=24kc\
+					-msoft-float\
 					-Wl,--defsym,_min_heap_size=8192\
 					-Wl,-Map=output.map\
 					-T$(LKRDIR)/elf32pic32mx.x
 
-FLAGS			=	-O2 -EL -march=24kc\
-					-lstdc++ -lm -lgcc -lc\
-					-L$(OBJDIR)/usb/libcdc.a\
-					-D__PIC32MX__ -D__$(PROC)__ -D $(BOARD)\
+FLAGS			=	-D __PIC32MX__ -D __$(PROC)__ -D $(BOARD)\
 					-I$(INCDIR)/non-free\
-					-I$(INCDIR)/pinguino\
+					-I$(INCDIR)/pinguino/libc\
+					-I$(INCDIR)/pinguino/basics\
+					-I$(INCDIR)/pinguino/libraries\
 					-I$(PDEDIR)\
-					-I$(OBJDIR)
+					-I$(OBJDIR)\
+					-L$(OBJDIR)/usb/libcdc.a\
+					-lm -lgcc -lc
+#					-lstdc++ -lm -lgcc -lc
 
 #					-I$(P32DIR)/bin/$(OSDIR)/mips-elf/include\
 #					-I$(SRCDIR)\
@@ -80,7 +88,8 @@ copy:
 	#----------------------------------------------------------------------------
 	#	copy
 	#----------------------------------------------------------------------------
-	cp $(OBJDIR)/$(PROC).o $(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
+	#cp $(OBJDIR)/$(PROC).o $(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
+	cp $(OBJDIR)/$(PROC).o $(P32CORE)/mips-elf/lib/processor.o
 
 build:
 	#----------------------------------------------------------------------------
@@ -97,15 +106,17 @@ link:
 	$(CC) $(ELF_FLAGS) $(FLAGS) -o main32.elf main32.o\
 		$(OBJDIR)/usb/libcdc.a\
 		$(OBJDIR)/crt0.S\
-		ISRwrapper.S\
+		$(LKRDIR)/ISRwrapper.S\
 		$(INCDIR)/non-free/p32xxxx.h\
-		$(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
+		$(P32CORE)/mips-elf/lib/processor.o
+#		$(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
 
 exec:
 	#----------------------------------------------------------------------------
 	#	exec
 	#----------------------------------------------------------------------------
-	$(OBJC) -O ihex $(SRCDIR)/main32.elf $(SRCDIR)/main32.hex
+	cd $(SRCDIR);\
+	$(OBJC) -O ihex main32.elf main32.hex
 
 correct:
 	#----------------------------------------------------------------------------
