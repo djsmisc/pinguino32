@@ -84,21 +84,29 @@ import sys
 import gettext			# to activate multi-language support
 import locale			# to access system localization functionalities
 import webbrowser		# to launch website from the IDE
+import argparse		# to write user-friendly command-line interfaces
+#import serial			# adds the !PySerial library
 
-pinguino_version="X.2"
+pinguino_version="x.2"
 
 HOME_DIR		= sys.path[0].replace(" ","\\ ")					# for path with spaces
 THEME_DIR	= os.path.join(HOME_DIR, 'theme')
-TEMP_DIR		= os.path.join(HOME_DIR, 'tmp')
+TEMP_DIR		= os.path.join(HOME_DIR, 'source')
 SOURCE_DIR	= os.path.join(HOME_DIR, 'source')
 LOCALE_DIR	= os.path.join(HOME_DIR, 'locale')
-TOOLS_DIR	= os.path.join(HOME_DIR, 'tools')
-P32_DIR		= os.path.join(TOOLS_DIR, 'p32')
-P8_DIR		= os.path.join(TOOLS_DIR, 'p8')
+#TOOLS_DIR	= os.path.join(HOME_DIR, 'tools')
+#P32_DIR		= os.path.join(TOOLS_DIR, 'p32')
+#P8_DIR		= os.path.join(TOOLS_DIR, 'p8')
+P32_DIR		= os.path.join(HOME_DIR, 'p32')
+P8_DIR		= os.path.join(HOME_DIR, 'p8')
 APP_CONFIG	= os.path.join(HOME_DIR, '.config')
 
 THEME_DEFAULT = "miniregino"
 BOARD_DEFAULT = 1 # Generic 18f2550
+
+serdev = 15								# win32
+serdev = '/dev/tty.usbmodem1912'	# darwin
+serdev = '/dev/ttyACM0'				# linux
 
 gui=False
 
@@ -367,7 +375,9 @@ class Pinguino(wx.Frame):
 		editorsize=self.GetSize()-self.logwindow.GetSize()
 		editorsize=(editorsize[0],editorsize[1])
 		self.EditorPanel = wx.Panel(self,-1,wx.DefaultPosition,wx.Size(400,100))
-		self.pinguinobmp = wx.StaticBitmap(self.EditorPanel, -1, wx.Bitmap(os.path.join(THEME_DIR, 'pinguinodesign.png'), wx.BITMAP_TYPE_ANY))
+		# pinguino.cc colour
+		self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
+		self.pinguinobmp = wx.StaticBitmap(self.EditorPanel, -1, wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
 		self.pinguinobmp.CentreOnParent(wx.BOTH) 
 				
 		# create a PaneInfo structure for editor window 
@@ -619,6 +629,11 @@ class Pinguino(wx.Frame):
 			self.proc="32MX460F512L"
 			self.board="EMPEROR460"
 			self.totalspace = 0x80000;
+		if self.board_menu.IsChecked(self.ID_EMPEROR795):
+			self.arch=32
+			self.proc="32MX795F512L"
+			self.board="EMPEROR795"
+			self.totalspace = 0x80000;
 		if self.board_menu.IsChecked(self.ID_UBW32_460):
 			self.arch=32
 			self.proc="32MX460F512L"
@@ -629,13 +644,9 @@ class Pinguino(wx.Frame):
 			self.proc="32MX795F512L"
 			self.board="UBW32_795"
 			self.totalspace = 0x80000;
-		if self.board_menu.IsChecked(self.ID_EMPEROR795):
-			self.arch=32
-			self.proc="32MX795F512L"
-			self.board="EMPEROR795"
-			self.totalspace = 0x80000;
-		self.reservedword=[]
-		self.libinstructions=[]
+		# clear all the lists before rebuild them
+		del self.reservedword[:]
+		del self.libinstructions[:]
 		self.readlib()
 
 # ------------------------------------------------------------------------------
@@ -737,11 +748,11 @@ class Pinguino(wx.Frame):
 
 		info = wx.AboutDialogInfo()
 
-		info.SetIcon(wx.Icon(THEME_DIR+'logo.png', wx.BITMAP_TYPE_PNG))
+		info.SetIcon(wx.Icon(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_PNG))
 		info.SetName('Pinguino')
 		info.SetVersion(pinguino_version)
 		info.SetDescription(description)
-		info.SetCopyright('2008,2009,2010,2011 jean-pierre mandon')
+		#info.SetCopyright('2008, 2009, 2010, 2011 jean-pierre mandon')
 		info.SetWebSite('http://www.pinguino.cc')
 		info.SetLicence(licence)
 
@@ -871,16 +882,16 @@ class Pinguino(wx.Frame):
 				if self.arch == 8:
 					if sys.platform == 'win32':
 						sys.argv = ["vascoboot1.3.py",filename+".hex"]
-						execfile(os.path.join(P8_DIR, 'bin', self.osdir, 'vascoboot1.3.py'))
+						execfile(os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'vascoboot1.3.py'))
 					else:
-						sortie=Popen([os.path.join(P8_DIR, 'bin', self.osdir, 'docker'),
+						sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'docker'),
 									"-v",
 									"04d8",
 									"write",
 									filename+".hex"],
 									stdout=fichier,stderr=STDOUT)
 				else:
-					sortie=Popen([os.path.join(P32_DIR, 'bin', self.osdir, 'bin', 'ubw32'),
+					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'ubw32'),
 								"-w",
 								filename+".hex",
 								"-r",
@@ -1152,7 +1163,8 @@ class Pinguino(wx.Frame):
 		else:
 			if self.arch==8:
 				fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
-				sortie = Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
+				#sortie = Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
+				sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.sdcc),\
 						"-mpic16",\
 						"--denable-peeps",\
 						"--obanksel=9",\
@@ -1193,7 +1205,8 @@ class Pinguino(wx.Frame):
 		else:
 			fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
 			if self.arch==8:
-				sortie=Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
+				#sortie=Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
+				sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.sdcc),\
 						"-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
 						"--denable-peeps",\
 						"--obanksel=9",\
@@ -1230,7 +1243,7 @@ class Pinguino(wx.Frame):
 			return sortie.poll()
 
 # ------------------------------------------------------------------------------
-# 
+# getCodeSize
 # ------------------------------------------------------------------------------
 
 	def getCodeSize(self, filename):
@@ -1250,13 +1263,83 @@ class Pinguino(wx.Frame):
 		self.displaymsg("\n" + self.translate("code size: ") + str(codesize) + " / " + str(self.totalspace) + self.translate(" bytes") + " (" + str(100*codesize/self.totalspace) + "% used)", 0)
 
 # ------------------------------------------------------------------------------
-# TODO:32-bit non-gui version (with board and proc management)
+# getOptions
+# ------------------------------------------------------------------------------
+
+def getOptions():
+	parser = argparse.ArgumentParser(description='*** Pinguino IDE ***')
+	parser.add_argument('-v', dest='version', action='store_true', default=False, help='show Pinguino IDE version and exit')
+	parser.add_argument('-g', '--generic2550',	dest='board', action='store_true', default=False, help='compile code for Pinguino 18F2550')
+	parser.add_argument('-G', '--generic4550',	dest='board', action='store_true', default=False, help='compile code for Pinguino 18F4550')
+	parser.add_argument('-o', '--olimex440',		dest='board', action='store_true', default=False, help='compile code for Olimex 440 board')
+	parser.add_argument('-e', '--emperor460',		dest='board', action='store_true', default=False, help='compile code for Emperor 460 board')
+	parser.add_argument('-E', '--emperor795',		dest='board', action='store_true', default=False, help='compile code for Emperor 795 board')
+	parser.add_argument('-u', '--ubw460',			dest='board', action='store_true', default=False, help='compile code for UBW 460 board')
+	parser.add_argument('-U', '--ubw795',			dest='board', action='store_true', default=False, help='compile code for UBW 795 board')
+
+	return parser.parse_args()
+
+# ------------------------------------------------------------------------------
+# getBoard
+# ------------------------------------------------------------------------------
+
+def getBoard(arg):
+	if self.board_menu.IsChecked(self.ID_GENERIC_2550):
+		self.arch=8
+		self.proc="18f2550"
+		self.board="PIC18F2550"
+		self.totalspace = 0x7FFF - 0x2000;
+	if self.board_menu.IsChecked(self.ID_GENERIC_4550):
+		self.arch=8
+		self.proc="18f4550"
+		self.board="PIC18F4550"
+		self.totalspace = 0x7FFF - 0x2000;
+	if self.board_menu.IsChecked(self.ID_PINGUINO_OLIMEX):
+		self.arch=32
+		self.proc="32MX440F256H"
+		self.board="PIC32_PINGUINO"
+		self.totalspace = 0x40000;
+	if self.board_menu.IsChecked(self.ID_EMPEROR460):
+		self.arch=32
+		self.proc="32MX460F512L"
+		self.board="EMPEROR460"
+		self.totalspace = 0x80000;
+	if self.board_menu.IsChecked(self.ID_EMPEROR795):
+		self.arch=32
+		self.proc="32MX795F512L"
+		self.board="EMPEROR795"
+		self.totalspace = 0x80000;
+	if self.board_menu.IsChecked(self.ID_UBW32_460):
+		self.arch=32
+		self.proc="32MX460F512L"
+		self.board="UBW32_460"
+		self.totalspace = 0x80000;
+	if self.board_menu.IsChecked(self.ID_UBW32_795):
+		self.arch=32
+		self.proc="32MX795F512L"
+		self.board="UBW32_795"
+		self.totalspace = 0x80000;
+
+# ------------------------------------------------------------------------------
+# MAIN
 # ------------------------------------------------------------------------------
 
 if __name__ == "__main__":
 	app = wx.PySimpleApp(0)
-	if "-nogui" in sys.argv:
-		print "Pinguino IDE " + pinguino_version
+
+# ------------------------------------------------------------------------------
+# ---without-gui----------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+	#options = vars(getOptions())
+	options = getOptions()
+	if options.version == True:
+		print "current version is " + pinguino_version
+		sys.exit(1)
+	if options.board == True:
+		#print sys.argv[1]
+		#getBoard()
+		#sys.exit(1)
 		pobject=Pinguino(None, -1, "")
 		if len(sys.argv) < 3:
 			print "missing filename"
@@ -1289,6 +1372,11 @@ if __name__ == "__main__":
 				os.remove(os.path.join(SOURCE_DIR, "main.hex"))
 				os.remove(name + ".c")	   
 				sys.exit(0)
+
+# ------------------------------------------------------------------------------
+# ---with-gui-------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 	wx.InitAllImageHandlers()
 	gui=True
 	frame_1 = Pinguino(None, -1, "")

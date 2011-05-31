@@ -1,7 +1,7 @@
 #!/bin/bash
 RM="rm -rf"
 LOG="./log"
-PINGUINO="./pinguinobeta9-05.py"
+PINGUINO="./pinguinobeta*.py"
 DONE="compilation done"
 
 RED='\e[31;1m*'

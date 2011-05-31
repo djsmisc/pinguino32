@@ -1,42 +1,28 @@
 gplink-0.13.7 beta
-Map File - Created 5-20-2011  22:18:15
+Map File - Created 5-28-2011  16:15:59
  
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
 S_boot_iface__boot_goto_table       code   0x00001c    program   0x00005e
 S_application_iface__application_data       code   0x002000    program   0x00001a
-                 .idata_i       code   0x00201a    program   0x000004
+S_crt0ipinguino__application_main       code   0x00201a    program   0x000004
 S_usb_descriptors__null_function       code   0x00201e    program   0x000002
 S_main__high_priority_isr       code   0x002020    program   0x00004a
-                    .code       code   0x00206a    program   0x000342
-          S_main__pinmode       code   0x0023ac    program   0x0001f6
-     S_main__digitalwrite       code   0x0025a2    program   0x0001f6
-      S_main__digitalread       code   0x002798    program   0x000168
-             S_main__loop       code   0x002900    program   0x0000e8
-  S_main__digitalPotWrite       code   0x0029e8    program   0x0000c4
-         S_main__SPI_init       code   0x002aac    program   0x0000b6
-          S_main__Delayms       code   0x002b62    program   0x00009c
-S_crt0ipinguino___do_cinit       code   0x002bfe    program   0x000098
-           S_main__toggle       code   0x002c96    program   0x000058
-          S_main__Delayus       code   0x002cee    program   0x000052
-            S_main__setup       code   0x002d40    program   0x000042
-        S_main__SPI_write       code   0x002d82    program   0x000034
-         S_main__SPI_read       code   0x002db6    program   0x000022
-S_crt0ipinguino___startup       code   0x002dd8    program   0x000018
-S_main__SPI_setClockDivider       code   0x002df0    program   0x000018
-    S_main__pinguino_main       code   0x002e08    program   0x000014
-  S_main__SPI_setDataMode       code   0x002e1c    program   0x000014
-                   .cinit       code   0x002e30    program   0x00000e
-S_crt0ipinguino__application_main       code   0x002e3e    program   0x000004
-     S_main__epapout_init       code   0x002e42    program   0x000002
-      S_main__epapin_init       code   0x002e44    program   0x000002
-         S_main__epap_out       code   0x002e46    program   0x000002
-          S_main__epap_in       code   0x002e48    program   0x000002
-  S_main__SPI_setBitOrder       code   0x002e4a    program   0x000002
+                    .code       code   0x00206a    program   0x00031c
+S_crt0ipinguino___do_cinit       code   0x002386    program   0x000098
+S_crt0ipinguino___startup       code   0x00241e    program   0x000018
+    S_main__pinguino_main       code   0x002436    program   0x000014
+                   .cinit       code   0x00244a    program   0x00000e
+                 .idata_i       code   0x002458    program   0x000002
+             S_main__loop       code   0x00245a    program   0x000002
+            S_main__setup       code   0x00245c    program   0x000002
+     S_main__epapout_init       code   0x00245e    program   0x000002
+      S_main__epapin_init       code   0x002460    program   0x000002
+         S_main__epap_out       code   0x002462    program   0x000002
+          S_main__epap_in       code   0x002464    program   0x000002
  S_main__low_priority_isr       code   0x004000    program   0x00004a
-                   .idata      idata   0x000200       data   0x000004
-               .registers      udata   00000000       data   0x000009
+                   .idata      idata   0x000200       data   0x000001
       ustat_boot_iface_00      udata   0x00005d       data   0x000003
             stack_section      udata   0x000100       data   0x000100
       ustat_pic18f2550_00      udata   0x000f62       data   0x000023
@@ -54,37 +40,24 @@ S_crt0ipinguino__application_main       code   0x002e3e    program   0x000004
                            ---------   ---------
                             0x002000    0x002019
                             0x00201e    0x00201f
-                            0x00206a    0x0023ab
+                            0x00206a    0x002385
+                            0x002458    0x002459
+                            0x002386    0x00241d
+                            0x00241e    0x002435
                             0x00201a    0x00201d
-                            0x002bfe    0x002c95
-                            0x002dd8    0x002def
-                            0x002e3e    0x002e41
                             0x002020    0x002069
                             0x004000    0x004049
-                            0x002e08    0x002e1b
-                            0x002900    0x0029e7
-                            0x002d40    0x002d81
-                            0x0029e8    0x002aab
-                            0x002e42    0x002e43
-                            0x002e44    0x002e45
-                            0x002e46    0x002e47
-                            0x002e48    0x002e49
-                            0x002db6    0x002dd7
-                            0x002d82    0x002db5
-                            0x002df0    0x002e07
-                            0x002e1c    0x002e2f
-                            0x002e4a    0x002e4b
-                            0x002aac    0x002b61
-                            0x002c96    0x002ced
-                            0x0023ac    0x0025a1
-                            0x002798    0x0028ff
-                            0x0025a2    0x002797
-                            0x002cee    0x002d3f
-                            0x002b62    0x002bfd
+                            0x002436    0x002449
+                            0x00245a    0x00245b
+                            0x00245c    0x00245d
+                            0x00245e    0x00245f
+                            0x002460    0x002461
+                            0x002462    0x002463
+                            0x002464    0x002465
                             0x00001c    0x000079
-                            0x002e30    0x002e3d
+                            0x00244a    0x002457
  
-                            1914 program addresses used
+                            647 program addresses used
  
                               Symbols
                      Name    Address   Location    Storage File
@@ -119,109 +92,26 @@ _configuration_descriptor   0x0020ce    program     extern usb_descriptors.asm
            _ep_setup_cfg0   0x00234a    program     static usb_descriptors.asm
                 _ep_setup   0x00237a    program     extern usb_descriptors.asm
                 ___uflags   0x000200       data     extern obj/Debug/crt0ipinguino.asm
-               __do_cinit   0x002bfe    program     extern obj/Debug/crt0ipinguino.asm
-                     test   0x002c18    program     static obj/Debug/crt0ipinguino.asm
-                    cont1   0x002c1e    program     static obj/Debug/crt0ipinguino.asm
-                copy_loop   0x002c6c    program     static obj/Debug/crt0ipinguino.asm
-            copy_one_byte   0x002c72    program     static obj/Debug/crt0ipinguino.asm
-             done_copying   0x002c80    program     static obj/Debug/crt0ipinguino.asm
-                     done   0x002c94    program     static obj/Debug/crt0ipinguino.asm
-                __startup   0x002dd8    program     extern obj/Debug/crt0ipinguino.asm
-                   lockup   0x002dee    program     static obj/Debug/crt0ipinguino.asm
-        _application_main   0x002e3e    program     extern obj/Debug/crt0ipinguino.asm
-               _this_mode   0x000201       data     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-              _this_clock   0x000202       data     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _this_role   0x000203       data     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x00   00000000       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x01   0x000001       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x02   0x000002       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x03   0x000003       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x04   0x000004       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x05   0x000005       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x06   0x000006       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x07   0x000007       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    r0x08   0x000008       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+               __do_cinit   0x002386    program     extern obj/Debug/crt0ipinguino.asm
+                     test   0x0023a0    program     static obj/Debug/crt0ipinguino.asm
+                    cont1   0x0023a6    program     static obj/Debug/crt0ipinguino.asm
+                copy_loop   0x0023f4    program     static obj/Debug/crt0ipinguino.asm
+            copy_one_byte   0x0023fa    program     static obj/Debug/crt0ipinguino.asm
+             done_copying   0x002408    program     static obj/Debug/crt0ipinguino.asm
+                     done   0x00241c    program     static obj/Debug/crt0ipinguino.asm
+                __startup   0x00241e    program     extern obj/Debug/crt0ipinguino.asm
+                   lockup   0x002434    program     static obj/Debug/crt0ipinguino.asm
+        _application_main   0x00201a    program     extern obj/Debug/crt0ipinguino.asm
        _high_priority_isr   0x002020    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
         _low_priority_isr   0x004000    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-           _pinguino_main   0x002e08    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00342_DS_   0x002e14    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    _loop   0x002900    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00319_DS_   0x002918    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00334_DS_   0x002924    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00311_DS_   0x00292c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00335_DS_   0x002938    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00314_DS_   0x00296c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00315_DS_   0x002982    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00336_DS_   0x00298e    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00321_DS_   0x0029ca    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00323_DS_   0x0029d2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                   _setup   0x002d40    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-         _digitalPotWrite   0x0029e8    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-            _epapout_init   0x002e42    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-             _epapin_init   0x002e44    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                _epap_out   0x002e46    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                 _epap_in   0x002e48    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                _SPI_read   0x002db6    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00274_DS_   0x002dc4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00275_DS_   0x002dd0    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _SPI_write   0x002d82    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00264_DS_   0x002d9c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00265_DS_   0x002da2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-     _SPI_setClockDivider   0x002df0    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-         _SPI_setDataMode   0x002e1c    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-         _SPI_setBitOrder   0x002e4a    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                _SPI_init   0x002aac    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00232_DS_   0x002ab4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00234_DS_   0x002abc    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00236_DS_   0x002ac4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00213_DS_   0x002ace    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00214_DS_   0x002ad4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00215_DS_   0x002ada    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00216_DS_   0x002ae0    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00217_DS_   0x002ae4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00219_DS_   0x002b0a    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00220_DS_   0x002b1c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00222_DS_   0x002b5e    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                  _toggle   0x002c96    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                 _pinmode   0x0023ac    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00203_DS_   0x00244e    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00183_DS_   0x00245a    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00185_DS_   0x00248e    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00187_DS_   0x0024be    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00189_DS_   0x0024f2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00191_DS_   0x002522    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00193_DS_   0x002556    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00196_DS_   0x002580    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-             _digitalread   0x002798    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00178_DS_   0x002826    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00158_DS_   0x002832    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00160_DS_   0x002868    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00162_DS_   0x00286e    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00164_DS_   0x0028a4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00166_DS_   0x0028aa    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00168_DS_   0x0028dc    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00170_DS_   0x0028e2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00171_DS_   0x0028e6    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-            _digitalwrite   0x0025a2    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00153_DS_   0x002644    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00133_DS_   0x002650    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00135_DS_   0x002684    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00137_DS_   0x0026b4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00139_DS_   0x0026e8    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00141_DS_   0x002718    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00143_DS_   0x00274c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00146_DS_   0x002776    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                 _Delayus   0x002cee    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00119_DS_   0x002d16    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00128_DS_   0x002d20    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00123_DS_   0x002d2a    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                 _Delayms   0x002b62    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00105_DS_   0x002baa    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00114_DS_   0x002bc0    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-               _00109_DS_   0x002bd8    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    _mask   0x002386    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-                    _port   0x002398    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
-          _slaveSelectPin   0x0023aa    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+           _pinguino_main   0x002436    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+               _00136_DS_   0x002442    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+                    _loop   0x00245a    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+                   _setup   0x00245c    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+            _epapout_init   0x00245e    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+             _epapin_init   0x002460    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+                _epap_out   0x002462    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
+                 _epap_in   0x002464    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/source/main.asm
   _usb_active_alt_setting   0x00005d       data     extern boot_iface.asm
           _usb_active_cfg   0x00005e       data     extern boot_iface.asm
         _usb_device_state   0x00005f       data     extern boot_iface.asm
@@ -480,5 +370,5 @@ _configuration_descriptor   0x0020ce    program     extern usb_descriptors.asm
                 _TOSUbits   0x000fff       data     extern libdev18f2550_a-pic18f2550.asm
                    _stack   0x000100       data     extern stack/stack.S
                _stack_end   0x0001ff       data     extern stack/stack.S
-                   _cinit   0x002e30    program     extern  
+                   _cinit   0x00244a    program     extern  
  

@@ -2,7 +2,7 @@
   main32.c - Application main function for Pinguino 32
 
              (c) 2010, 2011 Jean-Pierre Mandon <jp.mandon@gmail.com>
-             (c) 2010, 2011 Regis Blanchot <rblanchot@gmail.com> 
+             (c) 2010, 2011 Régis Blanchot <rblanchot@gmail.com> 
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -24,8 +24,8 @@
 #include <const.h>
 #include <macro.h>
 #include <system.c>
+#include "define.h"
 #include <newlib.c>
-#include "../tmp/define.h"
 
 #include "user.c"
 
@@ -69,10 +69,10 @@ int main()
 }
 
 #ifndef __SERIAL_C
-void SerialInterrupt(){};
+void SerialInterrupt(void){}
 #endif
 
 #ifndef __MILLIS__
-void Tmr2Interrupt(){};
+void Tmr2Interrupt(void){}
 #endif
 
