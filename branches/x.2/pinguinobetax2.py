@@ -22,26 +22,26 @@
 	-------------------------------------------------------------------------"""
 
 # $Id: pinguino.py,v beta 2008/09/05 21:36:00 mandon
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 1 2008/09/06 15:03:00 mandon
 # replaced splittext by split on save in module editeur
 # bug 02 replaced sys.path[0] by sys.path[0].replace(" ","\\ ") for path with spaces only for the linker !!
 # jean-pierre mandon / guillaume stagnaro
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 2 2008/09/19 22:45:00 mandon
 # added support of analogRead instruction in ReplaceWord
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 3 2008/10/12 22:45:00 mandon
 # added support of USB
 # modified digitalWrite, digitalRead and pinMode for better compatibility
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 3.1 2008/10/17 22:45:00 mandon
 # coorected a bug on analogRead for MAC OS X
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 4 2008/11/02 21:40:00 mandon
 # full support of USB Bulk
 # modified buffer for USB up to 2 MBytes/second
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 5 2009/03/08 19:41:00 mandon
 # full support of User Interrupt
 # About dialog modified
@@ -49,36 +49,51 @@
 # implementation of millis() instruction
 # implementation of fast analogWrite on output 11 and 12 ( 3khz PWM ) with 10 bits resolution ( 0..1023 )
 # variable initialisation is now possible in the head of the program
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 6 2009/08/12 19:41:00 mandon
 # full support of UTF8
 # I2C functions
 # eeprom write and read function
 # support of 4800 bauds for serial
 # added CTRL-ESC for inline help in editor
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # $Id: pinguino.py,v beta 7 2009/08/22 17:01:00 mandon
 # full support of 18F4550 with #define PIC18F4550 in source
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # pinguino.py,v beta 8 mandon
 # #define fixed
 # pop up menu can be used in the editor with right click
 # added line number to the editor
 # Unlimited baud rate for function Serial.begin
 # serial rx buffer length can be chosen with directive #RXBUFFERLENGTH, default 128 bytes
-# ----------------------------------------------------
+# ------------------------------------------------------------------------------
 # pinguino.py,v beta 9 mandon
 # modified GUI for logo, colors and windows (switched to wx.aui)
 # fixed and improved the prepocessor, now use regex ( preprocessor function )
 # added readlib function for external libraries
 # changed the help shortkey in editor to CTRL space
+# ------------------------------------------------------------------------------
+# pinguino.py,v beta 9.5 blanchot
+# theme
+# config. file
+# new menus
+# size code
+# ------------------------------------------------------------------------------
+# pinguino.py,v beta x blanchot
+# 8 and 32-bit support
+# different board support
+# multi-platform support
   
+# ------------------------------------------------------------------------------
+# import
+# ------------------------------------------------------------------------------
+
 import wx
 import wx.aui
 import editeur
 import os
 import re
-import shutil			# to make cp function
+import shutil			# to use cp function
 from subprocess import Popen,PIPE,STDOUT
 import sys
 import gettext			# to activate multi-language support
@@ -87,28 +102,68 @@ import webbrowser		# to launch website from the IDE
 import argparse		# to write user-friendly command-line interfaces
 #import serial			# adds the !PySerial library
 
+# ------------------------------------------------------------------------------
+# current version
+# ------------------------------------------------------------------------------
+
 pinguino_version="x.2"
+
+# ------------------------------------------------------------------------------
+# pathes
+# ------------------------------------------------------------------------------
 
 HOME_DIR		= sys.path[0].replace(" ","\\ ")					# for path with spaces
 THEME_DIR	= os.path.join(HOME_DIR, 'theme')
 TEMP_DIR		= os.path.join(HOME_DIR, 'source')
 SOURCE_DIR	= os.path.join(HOME_DIR, 'source')
 LOCALE_DIR	= os.path.join(HOME_DIR, 'locale')
-#TOOLS_DIR	= os.path.join(HOME_DIR, 'tools')
-#P32_DIR		= os.path.join(TOOLS_DIR, 'p32')
-#P8_DIR		= os.path.join(TOOLS_DIR, 'p8')
 P32_DIR		= os.path.join(HOME_DIR, 'p32')
 P8_DIR		= os.path.join(HOME_DIR, 'p8')
 APP_CONFIG	= os.path.join(HOME_DIR, '.config')
 
+# ------------------------------------------------------------------------------
+# boards
+# ------------------------------------------------------------------------------
+
+ID_GENERIC2550 = wx.NewId()	# MUST ALWAYS BE IN FIRST POSITION
+ID_GENERIC4550 = wx.NewId()
+ID_OLIMEX440 = wx.NewId()
+ID_EMPEROR460 = wx.NewId()
+ID_EMPEROR795 = wx.NewId()
+ID_UBW460 = wx.NewId()
+ID_UBW795 = wx.NewId()
+
+board1 =	{ 'arch':8,		'proc':'18f2550',			'board':'PIC18F2550',		'totalspace':0x7fff - 0x2000,	'shortarg':'-g', 'longarg':'--generic2550' }
+board2 =	{ 'arch':8,		'proc':'18f4550',			'board':'PIC18F4550',		'totalspace':0x7fff - 0x2000,	'shortarg':'-G', 'longarg':'--generic4550' }
+board3 =	{ 'arch':32,	'proc':'32MX440F256H',	'board':'PIC32_PINGUINO',	'totalspace':0x40000,			'shortarg':'-o', 'longarg':'--olimex440' }
+board4 =	{ 'arch':32,	'proc':'32MX460F512L',	'board':'EMPEROR460',		'totalspace':0x80000,			'shortarg':'-e', 'longarg':'--emperor460' }
+board5 =	{ 'arch':32,	'proc':'32MX795F512L',	'board':'EMPEROR795',		'totalspace':0x80000,			'shortarg':'-E', 'longarg':'--emperor795' }
+board6 =	{ 'arch':32,	'proc':'32MX460F512L',	'board':'UBW32_460',			'totalspace':0x80000,			'shortarg':'-u', 'longarg':'--ubw460' }
+board7 =	{ 'arch':32,	'proc':'32MX795F512L',	'board':'UBW32_795',			'totalspace':0x80000,			'shortarg':'-U', 'longarg':'--ubw795' }
+
+boardlist = {	ID_GENERIC2550:board1,
+					ID_GENERIC4550:board2,
+					ID_OLIMEX440:board3,
+					ID_EMPEROR460:board4,
+					ID_EMPEROR795:board5,
+					ID_UBW460:board6,
+					ID_UBW795:board7		}
+
+# ------------------------------------------------------------------------------
+# default
+# ------------------------------------------------------------------------------
+
 THEME_DEFAULT = "miniregino"
-BOARD_DEFAULT = 1 # Generic 18f2550
+BOARD_DEFAULT = ID_GENERIC2550
+gui=False
 
 serdev = 15								# win32
 serdev = '/dev/tty.usbmodem1912'	# darwin
 serdev = '/dev/ttyACM0'				# linux
 
-gui=False
+# ------------------------------------------------------------------------------
+# Pinguino Class
+# ------------------------------------------------------------------------------
 
 class Pinguino(wx.Frame):
 	
@@ -132,19 +187,12 @@ class Pinguino(wx.Frame):
 # id
 # ------------------------------------------------------------------------------
 
+	# id board menu
+
 	# id pref menu
 	ID_THEME = wx.NewId()
 	ID_DEBUG = wx.NewId()
 	ID_BOARD = wx.NewId()
-
-	# id board menu
-	ID_GENERIC_2550 = wx.NewId()
-	ID_GENERIC_4550 = wx.NewId()
-	ID_PINGUINO_OLIMEX = wx.NewId()
-	ID_EMPEROR460 = wx.NewId()
-	ID_EMPEROR795 = wx.NewId()
-	ID_UBW32_460 = wx.NewId()
-	ID_UBW32_795 = wx.NewId()
 
 	# id theme menu
 	ID_THEME1 = 1000
@@ -161,7 +209,7 @@ class Pinguino(wx.Frame):
 	ID_WIKI = wx.NewId()
 	ID_TUTORIAL = wx.NewId()
 	ID_SHOP = wx.NewId()
-	ID_ABOUT=wx.NewId()
+	ID_ABOUT = wx.NewId()
 	
 	# other id
 	ID_VERIFY = wx.NewId()
@@ -174,6 +222,7 @@ class Pinguino(wx.Frame):
 		# ----------------------------------------------------------------------
 		# get OS name and define some OS dependant variable
 		# ----------------------------------------------------------------------
+
 		if sys.platform == 'darwin':
 			self.osdir = 'macosx'
 			self.sdcc = 'sdcc'		
@@ -190,8 +239,9 @@ class Pinguino(wx.Frame):
 		# ----------------------------------------------------------------------
 		# load settings from config file
 		# ----------------------------------------------------------------------
+
 		self.config = wx.FileConfig(	localFilename = APP_CONFIG,
-										style = wx.CONFIG_USE_LOCAL_FILE)
+												style = wx.CONFIG_USE_LOCAL_FILE)
 		self.filehistory = wx.FileHistory()
 		self.filehistory.Load(self.config)
 		framesize = (  self.config.ReadInt('Window/Width', -1),
@@ -210,6 +260,7 @@ class Pinguino(wx.Frame):
 		# ----------------------------------------------------------------------
 		# window
 		# ----------------------------------------------------------------------
+
 		wx.Frame.__init__(self, parent, id, title, framepos, framesize, style)
 		if framepos == ("",""):
 			self.Centre()
@@ -301,32 +352,30 @@ class Pinguino(wx.Frame):
 
 		# --- board submenu
 		self.board_menu=wx.Menu()
-		self.board_menu.AppendRadioItem(self.ID_GENERIC_2550,"Generic 18F2550",_("your board"))
-		self.board_menu.AppendRadioItem(self.ID_GENERIC_4550,"Generic 18F4550",_("your board"))
-		self.board_menu.AppendRadioItem(self.ID_PINGUINO_OLIMEX,"OLIMEX 440",_("your board"))
-		self.board_menu.AppendRadioItem(self.ID_EMPEROR460,"EMPEROR 460",_("your board"))
-		self.board_menu.AppendRadioItem(self.ID_EMPEROR795,"EMPEROR 795",_("your board"))
-		self.board_menu.AppendRadioItem(self.ID_UBW32_460,"UBW32 460",_("your board"))
-		self.board_menu.AppendRadioItem(self.ID_UBW32_795,"UBW32 795",_("your board"))
+		self.board_menu.AppendRadioItem(ID_GENERIC2550,"Generic 18F2550",_("your board"))
+		self.board_menu.AppendRadioItem(ID_GENERIC4550,"Generic 18F4550",_("your board"))
+		self.board_menu.AppendRadioItem(ID_OLIMEX440,"OLIMEX 440",_("your board"))
+		self.board_menu.AppendRadioItem(ID_EMPEROR460,"EMPEROR 460",_("your board"))
+		self.board_menu.AppendRadioItem(ID_EMPEROR795,"EMPEROR 795",_("your board"))
+		self.board_menu.AppendRadioItem(ID_UBW460,"UBW32 460",_("your board"))
+		self.board_menu.AppendRadioItem(ID_UBW795,"UBW32 795",_("your board"))
 		self.pref_menu.AppendMenu(self.ID_BOARD,_("Board"),self.board_menu)
 
-		#
-		# TODO : replace number by string to identify boards
-		#
-		if self.config.ReadInt('board',-1)==1:
-			self.board_menu.Check(self.ID_GENERIC_2550,True)
-		if self.config.ReadInt('board',-1)==2:
-			self.board_menu.Check(self.ID_GENERIC_4550,True)
-		if self.config.ReadInt('board',-1)==3:
-			self.board_menu.Check(self.ID_PINGUINO_OLIMEX,True)
-		elif self.config.ReadInt('board',-1)==4:
-			self.board_menu.Check(self.ID_EMPEROR460,True)
-		elif self.config.ReadInt('board',-1)==5:
-			self.board_menu.Check(self.ID_UBW32_460,True)
-		elif self.config.ReadInt('board',-1)==6:
-			self.board_menu.Check(self.ID_UBW32_795,True)
-		elif self.config.ReadInt('board',-1)==7:
-			self.board_menu.Check(self.ID_EMPEROR795,True)
+		# mark current board
+		if self.config.ReadInt('board',-1)==ID_GENERIC2550:
+			self.board_menu.Check(ID_GENERIC2550,True)
+		if self.config.ReadInt('board',-1)==ID_GENERIC4550:
+			self.board_menu.Check(ID_GENERIC4550,True)
+		if self.config.ReadInt('board',-1)==ID_OLIMEX440:
+			self.board_menu.Check(ID_OLIMEX440,True)
+		elif self.config.ReadInt('board',-1)==ID_EMPEROR460:
+			self.board_menu.Check(ID_EMPEROR460,True)
+		elif self.config.ReadInt('board',-1)==ID_EMPEROR795:
+			self.board_menu.Check(ID_EMPEROR795,True)
+		elif self.config.ReadInt('board',-1)==ID_UBW460:
+			self.board_menu.Check(ID_UBW460,True)
+		elif self.config.ReadInt('board',-1)==ID_UBW795:
+			self.board_menu.Check(ID_UBW795,True)
 		self.OnBoard(wx.Event)
 										   
 		# help menu
@@ -349,9 +398,9 @@ class Pinguino(wx.Frame):
 		
 		self.SetMenuBar(self.menu)
 
-		# ------------------------------------------------------------------------------
-		# Load toolbar icons
-		# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# Load toolbar icons
+# ------------------------------------------------------------------------------
 
 		self.DrawToolbar()
 				
@@ -431,13 +480,13 @@ class Pinguino(wx.Frame):
 
 		# pref menu
 		self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_GENERIC_2550)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_GENERIC_4550)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_PINGUINO_OLIMEX)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_EMPEROR460)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_EMPEROR795)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_UBW32_460)
-		self.Bind(wx.EVT_MENU, self.OnBoard, id=self.ID_UBW32_795)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_GENERIC2550)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_GENERIC4550)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_OLIMEX440)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_EMPEROR460)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_EMPEROR795)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_UBW460)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_UBW795)
 		 
 		# icons bar
 		self.Bind(wx.EVT_TOOL, self.OnVerify, id=self.ID_VERIFY)
@@ -557,20 +606,20 @@ class Pinguino(wx.Frame):
 		self.config.WriteInt('Output/Height', h)
 		self.config.Write('Theme/name', self.theme)
 
-		if self.board_menu.IsChecked(self.ID_GENERIC_2550):
-				self.config.WriteInt('board', 1)
-		if self.board_menu.IsChecked(self.ID_GENERIC_4550):
-				self.config.WriteInt('board', 2)
-		if self.board_menu.IsChecked(self.ID_PINGUINO_OLIMEX):
-				self.config.WriteInt('board', 3)
-		if self.board_menu.IsChecked(self.ID_EMPEROR460):
-				self.config.WriteInt('board', 4)
-		if self.board_menu.IsChecked(self.ID_UBW32_460):
-				self.config.WriteInt('board', 5)
-		if self.board_menu.IsChecked(self.ID_UBW32_795):
-				self.config.WriteInt('board', 6)
-		if self.board_menu.IsChecked(self.ID_EMPEROR795):
-				self.config.WriteInt('board', 7)
+		if self.board_menu.IsChecked(ID_GENERIC2550):
+				self.config.WriteInt('board', ID_GENERIC2550)
+		if self.board_menu.IsChecked(ID_GENERIC4550):
+				self.config.WriteInt('board', ID_GENERIC4550)
+		if self.board_menu.IsChecked(ID_OLIMEX440):
+				self.config.WriteInt('board', ID_OLIMEX440)
+		if self.board_menu.IsChecked(ID_EMPEROR460):
+				self.config.WriteInt('board', ID_EMPEROR460)
+		if self.board_menu.IsChecked(ID_UBW460):
+				self.config.WriteInt('board', ID_UBW460)
+		if self.board_menu.IsChecked(ID_UBW795):
+				self.config.WriteInt('board', ID_UBW795)
+		if self.board_menu.IsChecked(ID_EMPEROR795):
+				self.config.WriteInt('board', ID_EMPEROR795)
 		self.config.Flush()
 		# ----------------------------------------------------------------------
 		# deinitialize the frame manager
@@ -609,41 +658,13 @@ class Pinguino(wx.Frame):
 # ------------------------------------------------------------------------------
 
 	def OnBoard(self,event):
-		if self.board_menu.IsChecked(self.ID_GENERIC_2550):
-			self.arch=8
-			self.proc="18f2550"
-			self.board="PIC18F2550"
-			self.totalspace = 0x7FFF - 0x2000;
-		if self.board_menu.IsChecked(self.ID_GENERIC_4550):
-			self.arch=8
-			self.proc="18f4550"
-			self.board="PIC18F4550"
-			self.totalspace = 0x7FFF - 0x2000;
-		if self.board_menu.IsChecked(self.ID_PINGUINO_OLIMEX):
-			self.arch=32
-			self.proc="32MX440F256H"
-			self.board="PIC32_PINGUINO"
-			self.totalspace = 0x40000;
-		if self.board_menu.IsChecked(self.ID_EMPEROR460):
-			self.arch=32
-			self.proc="32MX460F512L"
-			self.board="EMPEROR460"
-			self.totalspace = 0x80000;
-		if self.board_menu.IsChecked(self.ID_EMPEROR795):
-			self.arch=32
-			self.proc="32MX795F512L"
-			self.board="EMPEROR795"
-			self.totalspace = 0x80000;
-		if self.board_menu.IsChecked(self.ID_UBW32_460):
-			self.arch=32
-			self.proc="32MX460F512L"
-			self.board="UBW32_460"
-			self.totalspace = 0x80000;
-		if self.board_menu.IsChecked(self.ID_UBW32_795):
-			self.arch=32
-			self.proc="32MX795F512L"
-			self.board="UBW32_795"
-			self.totalspace = 0x80000;
+		for b in range(len(boardlist)):
+			clef = ID_GENERIC2550 + b
+			if self.board_menu.IsChecked(clef):
+				self.arch			= boardlist[clef]['arch']
+				self.proc			= boardlist[clef]['proc']
+				self.board			= boardlist[clef]['board']
+				self.totalspace	= boardlist[clef]['totalspace']
 		# clear all the lists before rebuild them
 		del self.reservedword[:]
 		del self.libinstructions[:]
@@ -835,8 +856,7 @@ class Pinguino(wx.Frame):
 			result=dlg.ShowModal()
 			dlg.Destroy()		   
 			return
-		self.displaymsg("",1)
-		self.displaymsg("Board:\t" + self.board + "\n", 0)
+		self.displaymsg("Board:\t" + self.board + "\n", 1)
 		self.displaymsg("Proc: \t" + self.proc  + "\n", 0)
 		self.editor.SaveDirect()
 		filename=self.editor.GetPath()
@@ -845,7 +865,7 @@ class Pinguino(wx.Frame):
 			os.remove(filename+".hex")
 		if os.path.exists(os.path.join(SOURCE_DIR, "user.c")):
 			os.remove(os.path.join(SOURCE_DIR, "user.c"))
-		retour=self.preprocess(filename)
+		retour=self.preprocess(filename, self.proc)
 		if retour=="error":
 			return
 		# compilation
@@ -853,18 +873,18 @@ class Pinguino(wx.Frame):
 			MAIN_FILE="main.hex"
 		else:
 			MAIN_FILE="main32.hex"
-		retour=self.compile(filename)
+		retour=self.compile(filename, self.proc, self.arch)
 		if retour!=0:
 			self.displaymsg(self.translate("error while compiling file ")+filename,0)
 		else:
-			retour=self.link(filename)
+			retour=self.link(filename, self.board, self.proc, self.arch)
 			if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
 				self.displaymsg(self.translate("error while linking ")+filename+".o",0)
 			else:
 				#self.cp(SOURCE_DIR + MAIN_FILE,filename+".hex")
 				shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")
-				self.displaymsg(self.translate("compilation done"),0)
-				self.getCodeSize(filename)
+				self.displaymsg(self.translate("compilation done")+"\n",0)
+				self.displaymsg(self.getCodeSize(filename, self.arch, self.totalspace)+"\n",0)
 				os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
 				os.remove(filename+".c")
 							   
@@ -1017,11 +1037,11 @@ class Pinguino(wx.Frame):
 # 
 # ------------------------------------------------------------------------------
 
-	def preprocess(self,filename):
+	def preprocess(self, filename, proc):
 		defineword={}
 		index=0
 		fileline={}
-		
+
 		# delete old define.h and create a new one
 		if os.path.exists(os.path.join(TEMP_DIR, 'define.h')):
 			os.remove(os.path.join(TEMP_DIR, 'define.h'))
@@ -1036,7 +1056,7 @@ class Pinguino(wx.Frame):
 		fichier.close()
 		
 		# check some processors
-		if self.proc=="18f4550":
+		if proc=="18f4550":
 			self.adddefine("#define PIC18F4550")
 
 		# check include
@@ -1068,6 +1088,7 @@ class Pinguino(wx.Frame):
 			resultline = self.replaceword(line)
 			if resultline.find("error")==1:
 				line = resultline
+				print "error " + resultline
 				self.displaymsg("error "+resultline,1)
 				return "error"
 			fileline[nblines] = resultline
@@ -1157,13 +1178,12 @@ class Pinguino(wx.Frame):
 # compile
 # ------------------------------------------------------------------------------
 
-	def compile(self, filename):
+	def compile(self, filename, proc, arch):
 		if (self.debug_output == 1):
-			print("compile " + self.proc)
+			print("compile " + proc)
 		else:
-			if self.arch==8:
+			if arch==8:
 				fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
-				#sortie = Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
 				sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.sdcc),\
 						"-mpic16",\
 						"--denable-peeps",\
@@ -1171,7 +1191,7 @@ class Pinguino(wx.Frame):
 						"--opt-code-size",\
 						"--optimize-cmp",\
 						"--optimize-df",\
-						"-p" + self.proc,\
+						"-p" + proc,\
 						"-I" + os.path.join(P8_DIR, 'include'),\
 						"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 						"-I" + os.path.dirname(filename),\
@@ -1199,13 +1219,12 @@ class Pinguino(wx.Frame):
 # link
 # ------------------------------------------------------------------------------
 
-	def link(self,filename):
+	def link(self, filename, board, proc, arch):
 		if (self.debug_output==1):
-			print("link " + self.proc)
+			print("link " + proc)
 		else:
 			fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
-			if self.arch==8:
-				#sortie=Popen([os.path.join(P8_DIR, 'bin', self.osdir, self.sdcc),\
+			if arch==8:
 				sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.sdcc),\
 						"-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
 						"--denable-peeps",\
@@ -1216,9 +1235,9 @@ class Pinguino(wx.Frame):
 						"--no-crt",\
 						"-Wl-s" + os.path.join(P8_DIR, 'lkr', '18f2550.lkr') + ",-m",\
 						"-mpic16",\
-						"-p" + self.proc,\
+						"-p" + proc,\
 						"-l" + os.path.join(P8_DIR, 'lib', 'libpuf.lib'),\
-						"-llibio" + self.proc + '.lib',\
+						"-llibio" + proc + '.lib',\
 						"-llibc18f.lib",\
 						"-llibm18f.lib",\
 						os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
@@ -1227,17 +1246,21 @@ class Pinguino(wx.Frame):
 						os.path.join(SOURCE_DIR, 'main.o')],\
 						stdout=fichier, stderr=STDOUT)
 			else:
+				# "PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
+				# can't be used with Command Line version since editor isn't used
 				sortie=Popen(["make",
 						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile'),\
 						"HOME=" + HOME_DIR,\
 						"OSDIR=" + self.osdir,\
-						"PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
-						"PROC=" + self.proc,\
-						"BOARD=" + self.board],\
+						"PDEDIR=" + os.path.dirname(filename),\
+						"PROC=" + proc,\
+						"BOARD=" + board],\
 						stdout=fichier, stderr=STDOUT)
 			sortie.communicate()
 			fichier.seek(0)
+			# Check if child process has terminated
 			if sortie.poll()!=0:
+				print fichier.read()
 				self.displaymsg(fichier.read(), 0)
 			fichier.close()	 
 			return sortie.poll()
@@ -1246,21 +1269,22 @@ class Pinguino(wx.Frame):
 # getCodeSize
 # ------------------------------------------------------------------------------
 
-	def getCodeSize(self, filename):
+	def getCodeSize(self, filename, arch, totalspace):
 		codesize = 0
 		fichier = open(filename + ".hex", 'r')
 		lines = fichier.readlines()
 		for line in lines:
 			# count only data record
 			if line[7:9:1] == "00":
-				if self.arch==8:
+				if arch==8:
 					# filter records below 0x2000 (by RASM)
 					if int(line[3:7:1],16) >= int("2000", 16): 
 						codesize = codesize + int(line[1:3:1], 16)
 				else:
 					codesize = codesize + int(line[1:3:1], 16)
 		fichier.close()
-		self.displaymsg("\n" + self.translate("code size: ") + str(codesize) + " / " + str(self.totalspace) + self.translate(" bytes") + " (" + str(100*codesize/self.totalspace) + "% used)", 0)
+		#self.displaymsg("\n" + self.translate("code size: ") + str(codesize) + " / " + str(totalspace) + " " + self.translate("bytes") + " (" + str(100*codesize/totalspace) + "% " + self.translate("used") + ")", 0)
+		return "code size: " + str(codesize) + " / " + str(totalspace) + " bytes" + " (" + str(100*codesize/totalspace) + "% used)"
 
 # ------------------------------------------------------------------------------
 # getOptions
@@ -1268,57 +1292,19 @@ class Pinguino(wx.Frame):
 
 def getOptions():
 	parser = argparse.ArgumentParser(description='*** Pinguino IDE ***')
-	parser.add_argument('-v', dest='version', action='store_true', default=False, help='show Pinguino IDE version and exit')
-	parser.add_argument('-g', '--generic2550',	dest='board', action='store_true', default=False, help='compile code for Pinguino 18F2550')
-	parser.add_argument('-G', '--generic4550',	dest='board', action='store_true', default=False, help='compile code for Pinguino 18F4550')
-	parser.add_argument('-o', '--olimex440',		dest='board', action='store_true', default=False, help='compile code for Olimex 440 board')
-	parser.add_argument('-e', '--emperor460',		dest='board', action='store_true', default=False, help='compile code for Emperor 460 board')
-	parser.add_argument('-E', '--emperor795',		dest='board', action='store_true', default=False, help='compile code for Emperor 795 board')
-	parser.add_argument('-u', '--ubw460',			dest='board', action='store_true', default=False, help='compile code for UBW 460 board')
-	parser.add_argument('-U', '--ubw795',			dest='board', action='store_true', default=False, help='compile code for UBW 795 board')
-
+	parser.add_argument('-v', '--version', dest='version', action='store_true', default=False, help='show Pinguino IDE version and exit')
+	parser.add_argument('-a', '--author', dest='author', action='store_true', default=False, help='show authors of this Pinguino IDE version and exit')
+	parser.add_argument('-f', '--filename', dest='filename', nargs=1, default=False, help='filename to process')
+	for b in range(len(boardlist)):
+		clef = ID_GENERIC2550 + b
+		parser.add_argument(	boardlist[clef]['shortarg'],
+									boardlist[clef]['longarg'],
+									dest='board',
+									const=clef,
+									action='store_const',
+									default=False,
+									help='compile code for ' + boardlist[clef]['board'] + ' board')
 	return parser.parse_args()
-
-# ------------------------------------------------------------------------------
-# getBoard
-# ------------------------------------------------------------------------------
-
-def getBoard(arg):
-	if self.board_menu.IsChecked(self.ID_GENERIC_2550):
-		self.arch=8
-		self.proc="18f2550"
-		self.board="PIC18F2550"
-		self.totalspace = 0x7FFF - 0x2000;
-	if self.board_menu.IsChecked(self.ID_GENERIC_4550):
-		self.arch=8
-		self.proc="18f4550"
-		self.board="PIC18F4550"
-		self.totalspace = 0x7FFF - 0x2000;
-	if self.board_menu.IsChecked(self.ID_PINGUINO_OLIMEX):
-		self.arch=32
-		self.proc="32MX440F256H"
-		self.board="PIC32_PINGUINO"
-		self.totalspace = 0x40000;
-	if self.board_menu.IsChecked(self.ID_EMPEROR460):
-		self.arch=32
-		self.proc="32MX460F512L"
-		self.board="EMPEROR460"
-		self.totalspace = 0x80000;
-	if self.board_menu.IsChecked(self.ID_EMPEROR795):
-		self.arch=32
-		self.proc="32MX795F512L"
-		self.board="EMPEROR795"
-		self.totalspace = 0x80000;
-	if self.board_menu.IsChecked(self.ID_UBW32_460):
-		self.arch=32
-		self.proc="32MX460F512L"
-		self.board="UBW32_460"
-		self.totalspace = 0x80000;
-	if self.board_menu.IsChecked(self.ID_UBW32_795):
-		self.arch=32
-		self.proc="32MX795F512L"
-		self.board="UBW32_795"
-		self.totalspace = 0x80000;
 
 # ------------------------------------------------------------------------------
 # MAIN
@@ -1328,53 +1314,72 @@ if __name__ == "__main__":
 	app = wx.PySimpleApp(0)
 
 # ------------------------------------------------------------------------------
-# ---without-gui----------------------------------------------------------------
+# ---Command Line---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-	#options = vars(getOptions())
 	options = getOptions()
+
 	if options.version == True:
 		print "current version is " + pinguino_version
 		sys.exit(1)
-	if options.board == True:
-		#print sys.argv[1]
-		#getBoard()
-		#sys.exit(1)
-		pobject=Pinguino(None, -1, "")
-		if len(sys.argv) < 3:
+
+	if options.author == True:
+		print "jean-pierre mandon"
+		print "regis blanchot"
+		sys.exit(1)
+
+	if options.board != False:
+		board = boardlist[options.board]['board']
+		proc =  boardlist[options.board]['proc']
+		arch =  boardlist[options.board]['arch']
+		memo =  boardlist[options.board]['totalspace']
+
+		if options.filename == False:
 			print "missing filename"
 			sys.exit(1)
-		if sys.argv[1] == "-nogui":
-			filename=sys.argv[2]
-		else:
-			filename=sys.argv[1]
+		filename=options.filename[0]
 		name,extension=os.path.splitext(filename)
 		if extension != ".pde":
 			print "bad file extension, it should be .pde"
 			sys.exit(1)
-		retour=pobject.preprocess(name)
+
+		pobject=Pinguino(None, -1, "")
+		print "your board is " + board
+		print "the mcu is " + proc
+
+		print "preprocessing ..."
+		retour=pobject.preprocess(name, proc)
 		if retour == "error":
 			print "error while preprocessing " + filename
 			sys.exit(1)
-		retour = pobject.compile(filename)
+
+		print "compiling ..."
+		retour = pobject.compile(filename, proc, arch)
 		if retour != 0:
 			print "error while compiling file " + filename
 			sys.exit(1)
+
+		print "linking ..."
+		retour=pobject.link(filename, board, proc, arch)
+
+		if arch==8:
+			MAIN_FILE="main.hex"
 		else:
-			retour=pobject.link(filename)
-			if os.path.exists(os.path.join(SOURCE_DIR, "main.hex"))!=True:
-				print "error while linking "
-				sys.exit(1)
-			else:
-				#pobject.cp(os.path.join(SOURCE_DIR, "main.hex"), name + ".hex")
-				shutil.copy(os.path.join(SOURCE_DIR, "main.hex"), name + ".hex")
-				print "compilation done"
-				os.remove(os.path.join(SOURCE_DIR, "main.hex"))
-				os.remove(name + ".c")	   
-				sys.exit(0)
+			MAIN_FILE="main32.hex"
+
+		if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
+			print "error while linking "
+			sys.exit(1)
+
+		shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), name + ".hex")
+		print "compilation done"
+		print pobject.getCodeSize(name, arch, memo)
+		os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
+		os.remove(name + ".c")	   
+		sys.exit(0)
 
 # ------------------------------------------------------------------------------
-# ---with-gui-------------------------------------------------------------------
+# ---Graphic User Interface-----------------------------------------------------
 # ------------------------------------------------------------------------------
 
 	wx.InitAllImageHandlers()

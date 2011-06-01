@@ -143,13 +143,13 @@ class editeur(wx.Notebook):
 		self.stcpage[self.GetSelection()].SetSize((x,y-20))
 		self.editeur=self.stcpage[self.GetSelection()]
 	
-# modified by r.blanchot 31/10/2010
+# modified by r.blanchot 31/10/2010, 01/06/2011
    
 	def OpenDialog(self,type,extension,reservedword,rw, filehistory, config):
 		""" Open Dialog and load file in a new editor """ 
 		opendlg = wx.FileDialog(self,
 			message="Choose a file",
-			defaultDir=os.getcwd(), 
+			defaultDir=sys.path[0], #os.getcwd(),
 			defaultFile="",
 			wildcard=type+" (*"+extension+")|*"+extension,
 			style=wx.OPEN  | wx.CHANGE_DIR)

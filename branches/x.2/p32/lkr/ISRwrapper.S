@@ -25,6 +25,7 @@
 # See p32mx440f256h.h etc. for vector assignments for specific processor.
 # Create wrappers for ISRs used in a specific application.
 
-	ISR_wrapper	24,SerialInterrupt	# UART 1
+	ISR_wrapper	24,Serial1Interrupt	# UART 1
+	ISR_wrapper	32,Serial2Interrupt	# UART 2
 	ISR_wrapper	8,Tmr2Interrupt		# TIMER 2
 
