@@ -511,36 +511,40 @@ void SerialGetDataBuffer(u8 port)
 	TODO: move this to interrupt library and add it to main32.c
 	--------------------------------------------------------------------------*/
 
-//#pragma interrupt SerialInterrupt ipl3 vector 24
-void SerialInterrupt(void)
+// vector 24
+void Serial1Interrupt(void)
 {
-	// Is this an RX interrupt?
+	// Is this an RX interrupt from UART1 ?
 	if (IntGetFlag(INT_UART1_RECEIVER))
 	{
 		SerialGetDataBuffer(UART1);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
 		IntClearFlag(INT_UART1_RECEIVER);
 	}
+	// Is this an TX interrupt from UART1 ?
+	if (IntGetFlag(INT_UART1_TRANSMITTER))
+	{
+		IntClearFlag(INT_UART1_TRANSMITTER);
+	}
+}
 
+// vector 32
+void Serial2Interrupt(void)
+{
+	// Is this an RX interrupt from UART2 ?
 	if (IntGetFlag(INT_UART2_RECEIVER))
 	{
 		SerialGetDataBuffer(UART2);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
 		IntClearFlag(INT_UART2_RECEIVER);
 	}
-
-	// We don't care about TX interrupt
-/*
-	if (IFS0bits.U1TXIF)
+	// Is this an TX interrupt from UART2 ?
+	if (IntGetFlag(INT_UART2_TRANSMITTER))
 	{
-		IFS0bits.U1TXIF = 0;
+		IntClearFlag(INT_UART2_TRANSMITTER);
 	}
-	if (IFS1bits.U2TXIF)
-	{
-		IFS1bits.U2TXIF = 0;
-	}
-*/
-	//IFS0CLR = UART1_ALL_INTERRUPT;			// clear any existing event
 }
+
+//IFS0CLR = UART1_ALL_INTERRUPT;			// clear any existing event
 
 #endif	/* __SERIAL_C */
