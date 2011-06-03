@@ -27,6 +27,7 @@ round round#include <macro.h>
 radians radians#include <macro.h>
 degrees degrees#include <macro.h>
 sq sq#include <macro.h>
+bitTest BitTest#include <macro.h>
 bitRead BitRead#include <macro.h>
 bitSet BitSet#include <macro.h>
 bitWrite BitSet#include <macro.h>

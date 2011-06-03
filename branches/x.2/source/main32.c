@@ -69,10 +69,16 @@ int main()
 }
 
 #ifndef __SERIAL_C
-void SerialInterrupt(void){}
+void SerialInterrupt(void)
+{
+	Nop();    
+}
 #endif
 
 #ifndef __MILLIS__
-void Tmr2Interrupt(void){}
+void Tmr2Interrupt(void)
+{
+	Nop();    
+}
 #endif
 

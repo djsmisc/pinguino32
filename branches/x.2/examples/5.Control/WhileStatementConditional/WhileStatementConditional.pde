@@ -39,12 +39,28 @@ int sensorMin = 1023;  // minimum sensor value
 int sensorMax = 0;     // maximum sensor value
 int sensorValue = 0;         // the sensor value
 
+void calibrate() {
+  // turn on the indicator LED to indicate that calibration is happening:
+  digitalWrite(indicatorLedPin, HIGH);
+  // read the sensor:
+  sensorValue = analogRead(sensorPin);
+
+  // record the maximum sensor value
+  if (sensorValue > sensorMax) {
+    sensorMax = sensorValue;
+  }
+
+  // record the minimum sensor value
+  if (sensorValue < sensorMin) {
+    sensorMin = sensorValue;
+  }
+}
 
 void setup() {
   // set the LED pins as outputs and the switch pin as input:
   pinMode(indicatorLedPin, OUTPUT);
-  pinMode (ledPin, OUTPUT);
-  pinMode (buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
 }
 
 void loop() {
@@ -67,22 +83,3 @@ void loop() {
   // fade the LED using the calibrated value:
   analogWrite(ledPin, sensorValue);
 }
-
-void calibrate() {
-  // turn on the indicator LED to indicate that calibration is happening:
-  digitalWrite(indicatorLedPin, HIGH);
-  // read the sensor:
-  sensorValue = analogRead(sensorPin);
-
-  // record the maximum sensor value
-  if (sensorValue > sensorMax) {
-    sensorMax = sensorValue;
-  }
-
-  // record the minimum sensor value
-  if (sensorValue < sensorMin) {
-    sensorMin = sensorValue;
-  }
-}
-
-

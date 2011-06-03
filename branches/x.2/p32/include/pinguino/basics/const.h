@@ -134,6 +134,41 @@
 		#define USERBUTTON	68	//PORTEbits.RE7 = user button
 
 	#elif defined(PIC32_PINGUINO)
+		// Arduino's digital pins
+		#define D0		0
+		#define D1		1
+		#define D2		2
+		#define D3		3
+		#define D4		4
+		#define D5		5
+		#define D6		6
+		#define D7		7
+		#define D8		8
+		#define D9		9
+		#define D10		10
+		#define D11		11
+		#define D12		12
+		#define D13		13
+		// Arduino's analogic pins
+		#if defined(__ANALOG__)
+			#define A0		0
+			#define A1		1
+			#define A2		2
+			#define A3		3
+			#define A4		4
+			#define A5		5
+			#define A6		6
+			#define A7		7
+		#else
+			#define A0		14
+			#define A1		15
+			#define A2		16
+			#define A3		17
+			#define A4		18
+			#define A5		19
+			#define A6		20
+			#define A7		21
+		#endif
 		// OLIMEX build-in leds
 		#define LED1			4	//PORTGbits.RG6	// green led
 		#define LED2			49	//PORTDbits.RD1	// yellow led

@@ -41,6 +41,9 @@
 	#define Bit(b) \
 		(1 << (b))
 
+	#define BitTest(byte,n) \
+	    ((byte&(1<<n))!=0)
+
 	/// MATH
 
 	#define min(a,b) ((a)<(b)?(a):(b))
