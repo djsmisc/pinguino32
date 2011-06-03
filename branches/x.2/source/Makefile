@@ -23,57 +23,64 @@
 # ------------------------------------------------------------------------------
 # HOME, OSDIR, PDEDIR, PROC & BOARD are defined in pinguinobetax.py
 
-SRCDIR		= $(HOME)/source
-P32DIR		= $(HOME)/p32
-#BINDIR		= $(P32DIR)/bin/$(OSDIR)/bin
-P32CORE		= $(HOME)/$(OSDIR)/p32
-BINDIR		= $(P32CORE)/bin
-INCDIR		= $(P32DIR)/include
-LKRDIR		= $(P32DIR)/lkr
-OBJDIR		= $(P32DIR)/obj/non-free
+SRCDIR		=	$(HOME)/source
+P32DIR		=	$(HOME)/p32
+P32CORE		=	$(HOME)/$(OSDIR)/p32
+BINDIR		=	$(P32CORE)/bin
+INCDIR		=	$(P32DIR)/include
+LKRDIR		=	$(P32DIR)/lkr
+OBJDIR		=	$(P32DIR)/obj/non-free
+
+INCLUDEDIRS	=	-I$(INCDIR)/non-free\
+					-I$(INCDIR)/pinguino/basics\
+					-I$(INCDIR)/pinguino/libc\
+					-I$(INCDIR)/pinguino/libraries\
+					-I$(PDEDIR)\
+					-I$(OBJDIR)
+#					-I$(P32DIR)/bin/$(OSDIR)/mips-elf/include\
+#					-I$(SRCDIR)\
+#					-I$(OBJDIR)/usb
+
+LIBDIRS		=	-L$(OBJDIR)/usb/libcdc.a
 
 # ------------------------------------------------------------------------------
 # commands
 # ------------------------------------------------------------------------------
 
-#CC				= $(BINDIR)/mips-elf-g++
-CC				= $(BINDIR)/mips-elf-gcc
-OBJC			= $(BINDIR)/mips-elf-objcopy
-RM				= rm -f -v
+CC				=	$(BINDIR)/mips-elf-gcc
+LIBS			=	-lm -lgcc -lc
+#CC				=	$(BINDIR)/mips-elf-g++
+#LIBS			=	-lstdc++ -lm -lgcc -lc
+OBJC			=	$(BINDIR)/mips-elf-objcopy
+RM				=	rm -f -v
 
 # ------------------------------------------------------------------------------
 # flags
 # ------------------------------------------------------------------------------
 
-CFLAGS		=	-O2 -EL -march=24kc\
-					-c\
-					-x c
-#					-pedantic -Wall\
+#					-O2 -EL -march=24kc\
+#					-c\
 #					-x c++
+#					-x c
+#					-pedantic -Wall\
 #					-std=c99 
+
+CFLAGS		=	$(INCLUDEDIRS)
+
+LDFLAGS		=	$(LIBDIRS) $(LIBS)
 
 ELF_FLAGS	=	-O2 -EL -march=24kc\
 					-msoft-float\
 					-Wl,--defsym,_min_heap_size=8192\
 					-Wl,-Map=output.map\
+					-D __PIC32MX__ -D __$(PROC)__ -D $(BOARD)\
 					-T$(LKRDIR)/elf32pic32mx.x
 
-FLAGS			=	-D __PIC32MX__ -D __$(PROC)__ -D $(BOARD)\
-					-I$(INCDIR)/non-free\
-					-I$(INCDIR)/pinguino/libc\
-					-I$(INCDIR)/pinguino/basics\
-					-I$(INCDIR)/pinguino/libraries\
-					-I$(PDEDIR)\
-					-I$(OBJDIR)\
-					-L$(OBJDIR)/usb/libcdc.a\
-					-lm -lgcc -lc
-#					-lstdc++ -lm -lgcc -lc
+#-------------------------------------------------------------------------------
+#	rules
+#-------------------------------------------------------------------------------
 
-#					-I$(P32DIR)/bin/$(OSDIR)/mips-elf/include\
-#					-I$(SRCDIR)\
-#					-I$(OBJDIR)/usb
-
-all: clean copy build link exec correct
+all: clean copy link exec correct
 
 clean:
 	#----------------------------------------------------------------------------
@@ -88,28 +95,19 @@ copy:
 	#----------------------------------------------------------------------------
 	#	copy
 	#----------------------------------------------------------------------------
-	#cp $(OBJDIR)/$(PROC).o $(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
 	cp $(OBJDIR)/$(PROC).o $(P32CORE)/mips-elf/lib/processor.o
-
-build:
-	#----------------------------------------------------------------------------
-	#	build
-	#----------------------------------------------------------------------------
-	cd $(SRCDIR);\
-	$(CC) $(CFLAGS) $(FLAGS) main32.c -o main32.o
 
 link:
 	#----------------------------------------------------------------------------
 	#	link
 	#----------------------------------------------------------------------------
 	cd $(SRCDIR);\
-	$(CC) $(ELF_FLAGS) $(FLAGS) -o main32.elf main32.o\
-		$(OBJDIR)/usb/libcdc.a\
+	$(CC) $(ELF_FLAGS) $(LDFLAGS) $(CFLAGS) -o main32.elf main32.c\
 		$(OBJDIR)/crt0.S\
 		$(LKRDIR)/ISRwrapper.S\
-		$(INCDIR)/non-free/p32xxxx.h\
-		$(P32CORE)/mips-elf/lib/processor.o
-#		$(P32DIR)/bin/$(OSDIR)/mips-elf/lib/processor.o
+		$(P32CORE)/mips-elf/lib/processor.o\
+		$(OBJDIR)/usb/libcdc.a\
+		$(INCDIR)/non-free/p32xxxx.h
 
 exec:
 	#----------------------------------------------------------------------------
