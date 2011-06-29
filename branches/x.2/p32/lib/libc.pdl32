@@ -18,8 +18,8 @@ va_list va_list#include <stdarg.h>
 va_start va_start#include <stdarg.h>
 va_arg va_arg#include <stdarg.h>
 va_end va_end#include <stdarg.h>
-printf pprintf#include <stdio.c>
-sprintf psprintf#include <stdio.c>
+Printf pprintf#include <stdio.c>
+Sprintf psprintf#include <stdio.c>
 strlen strlen#include <string.c>
 strcmp strcmp#include <string.c>
 strcat strcat#include <string.c>

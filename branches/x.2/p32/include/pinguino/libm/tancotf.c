@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   tancotf.c - Computes tan or cot of a 32-bit float as outlined in [1]
+   tancotf.c - Computes tan or cot of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define P0  0.100000000E+1
 #define P1 -0.958017723E-1
@@ -47,14 +46,13 @@
 //A reasonable choice for YMAX is the integer part of B**(t/2)*PI/2:
 #define YMAX 6433.0
 
-float tancotf(const float x, const int iscotan)
+double tancotf(const double x, const int iscotan)
 {
-    float f, g, xn, xnum, xden;
+    double f, g, xn, xnum, xden;
     int n;
 
     if (fabsf(x) > YMAX)
     {
-        errno = ERANGE;
         return 0.0;
     }
 

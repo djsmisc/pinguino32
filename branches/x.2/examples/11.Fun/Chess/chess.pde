@@ -32,17 +32,16 @@ FUNCPTR validate[7] = { val_empty, val_pawn, val_rook, val_knight,val_bishop,val
 
 void setup()
 { 
-	//CDC.begin(9600);		// 9600,n,8,1 reception en IT
 	movecount   = 1;
 	kingcapture = FALSE;
 	movetype = NO_MOVE;      
 	init_board();
-	CDC.print("\r\n");
-	CDC.print("\r\n");
-	CDC.print("---------------------------------\r\n");
-	CDC.print("- PLAY CHESS WITH YOUR PINGUINO -\r\n");
-	CDC.print("- input example : e2e4          -\r\n");
-	CDC.print("---------------------------------\r\n");
+	CDC.printf("\r\n");
+	CDC.printf("\r\n");
+	CDC.printf("---------------------------------\r\n");
+	CDC.printf("- PLAY CHESS WITH YOUR PINGUINO -\r\n");
+	CDC.printf("- input example : e2e4          -\r\n");
+	CDC.printf("---------------------------------\r\n");
 }
  
 // Control Function for a single player game.
@@ -59,7 +58,7 @@ void loop()
 	if ((movecount+1)%2 == 0)
 	{ 
 		draw_chessboard();
-		CDC.print("Play : ");
+		CDC.printf("Play : ");
 
 		if (!illegal);
 		else
@@ -79,19 +78,19 @@ void loop()
 		if (is_valid_move(to[0],to[1]) && test_singlemove(from,to,board[from[0]][from[1]]))
 		{ 
 			draw_move(from,to,p);
-			CDC.print("\r\n");
-			CDC.print("You play : ");
+			CDC.printf("\r\n");
+			CDC.printf("You play : ");
 			CDC.write(from[1]+'a');
 			CDC.write(from[0]+'1');
-			CDC.print(" -> ");
+			CDC.printf(" -> ");
 			CDC.write(to[1]+'a');
 			CDC.write(to[0]+'1');
-			CDC.print("\r\n");
+			CDC.printf("\r\n");
 			movecount++;
 		}
 		else
 		{ 
-			CDC.print("\r\nIllegal move from this piece\r\n");
+			CDC.printf("\r\nIllegal move from this piece\r\n");
 			illegal = TRUE;
 		}
 
@@ -149,20 +148,20 @@ void loop()
 			p = board[(cpufrom[0])][(cpufrom[1])];
 			draw_move(cpufrom,cputo,p);
 			lastmove = (((p&0x07) != PAWN) && ((p&0x07) != KING)) ? p&0x07 : 0;
-			CDC.print("\r\n");
-			CDC.print("I play : ");
+			CDC.printf("\r\n");
+			CDC.printf("I play : ");
 			CDC.write(cpufrom[1]+'a');
 			CDC.write(cpufrom[0]+'1');
-			CDC.print(" -> ");
+			CDC.printf(" -> ");
 			CDC.write(cputo[1]+'a');
 			CDC.write(cputo[0]+'1');
-			CDC.print("\r\n");
+			CDC.printf("\r\n");
 			movecount++;
 		}
 		//Checkmate.
 		else
 		{
-			CDC.print("Pinguino lost - You win!\r\n");
+			CDC.printf("Pinguino lost - You win!\r\n");
 			movecount++;   
 			while(1);//break;
 		} 
@@ -170,7 +169,7 @@ void loop()
 	// Trying to move CPU piece.
 	else
 	{
-		CDC.print("Well done my friend!\r\n");
+		CDC.printf("Well done my friend!\r\n");
 		while(1);//break;
 	}
 }
@@ -516,19 +515,19 @@ void draw_chessboard(void)
 		{
 			switch (board[i][j])
 			{
-				case 0 : CDC.write(' ');break;
-				case BLACK|PAWN : CDC.write('p');break;
-				case WHITE|PAWN : CDC.write('P');break;
-				case BLACK|ROOK : CDC.write('t');break;
-				case WHITE|ROOK : CDC.write('T');break;
-				case BLACK|KNIGHT : CDC.write('c');break;
-				case WHITE|KNIGHT : CDC.write('C');break;
-				case BLACK|BISHOP : CDC.write('f');break;
-				case WHITE|BISHOP : CDC.write('F');break;
-				case BLACK|QUEEN : CDC.write('r');break;
-				case WHITE|QUEEN : CDC.write('R');break;
-				case BLACK|KING : CDC.write('k');break;
-				case WHITE|KING : CDC.write('K');break;
+				case 0 : CDC.write(' '); break;
+				case BLACK|PAWN : CDC.write('p'); break;
+				case WHITE|PAWN : CDC.write('P'); break;
+				case BLACK|ROOK : CDC.write('t'); break;
+				case WHITE|ROOK : CDC.write('T'); break;
+				case BLACK|KNIGHT : CDC.write('c'); break;
+				case WHITE|KNIGHT : CDC.write('C'); break;
+				case BLACK|BISHOP : CDC.write('f'); break;
+				case WHITE|BISHOP : CDC.write('F'); break;
+				case BLACK|QUEEN : CDC.write('r'); break;
+				case WHITE|QUEEN : CDC.write('R'); break;
+				case BLACK|KING : CDC.write('k'); break;
+				case WHITE|KING : CDC.write('K'); break;
 			}
 			CDC.write('|');
 		}
@@ -536,7 +535,7 @@ void draw_chessboard(void)
 		CDC.write(i+'1');
 		CDC.printf("\r\n%s\r\n", ligne);
 	}
-	CDC.print("  a b c d e f g h\r\n\r\n");
+	CDC.printf("  a b c d e f g h\r\n\r\n");
 }
 
 // lit le coup du jour sur USART, retourne vrai a la fin

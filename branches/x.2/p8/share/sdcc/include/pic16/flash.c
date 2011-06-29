@@ -1,9 +1,8 @@
 /*	----------------------------------------------------------------------------
-	FILE:			flash.c
-	PROJECT:		pinguino
-	PURPOSE:		flash memory functions
+	FILE:				flash.c
+	PROJECT:			pinguino
+	PURPOSE:			flash memory functions
 	PROGRAMER:		jean-pierre mandon <jpmandon@gmail.com>
-					regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	2008
 	LAST RELEASE:	Fixed for Beta 9 2010
 	----------------------------------------------------------------------------

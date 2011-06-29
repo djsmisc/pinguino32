@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   cotf.c - Computes cot(x) where x is a 32-bit float.
+   cotf.c - Computes cot(x) where x is a 32-bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -27,18 +27,16 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float tancotf(const float x, const int iscot);
+double tancotf(const double x, const int iscot);
 
-float cotf(const float x) _MATH_REENTRANT
+double cotf(const double x) _MATH_REENTRANT
 {
-    float y;
+    double y;
 
     y=fabsf(x);
     if (y<1.0E-30) //This one requires more thinking...
     {
-        errno = ERANGE;
         if (x<0.0)
             return -XMAX;
         else

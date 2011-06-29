@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   frexpf.c - Returns the exponent and mantisa of a 32 bit float.
+   frexpf.c - Returns the exponent and mantisa of a 32 bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -27,11 +27,10 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float frexpf(const float x, int *pw2)
+double frexpf(const double x, int *pw2)
 {
-    union float_long fl;
+    union double_long fl;
     long int i;
 
     fl.f=x;

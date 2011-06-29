@@ -28,7 +28,7 @@
 
 #include <math.h>
 
-float floorf (float x) _MATH_REENTRANT
+double floorf (double x) _MATH_REENTRANT
 {
     long r;
     r=x;

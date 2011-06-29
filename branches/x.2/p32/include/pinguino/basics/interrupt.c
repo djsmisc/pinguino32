@@ -37,40 +37,40 @@
 
 	// INTERRUPT ENABLE/DISABLE
 	#define INT_ENABLED						1
-	#define INT_DISABLED					0
+	#define INT_DISABLED						0
 
 	// INTERRUPT VECTOR LOCATION
 	#define INT_CORE_TIMER_VECTOR			0
-	#define INT_CORE_SOFTWARE0_VECTOR		1
-	#define INT_CORE_SOFTWARE1_VECTOR		2
+	#define INT_CORE_SOFTWARE0_VECTOR	1
+	#define INT_CORE_SOFTWARE1_VECTOR	2
 	#define INT_EXTERNAL0_VECTOR			3
 	#define INT_TIMER1_VECTOR				4
-	#define INT_INPUT_CAPTURE1_VECTOR		5  
-	#define INT_OUTPUT_COMPARE1_VECTOR		6   
+	#define INT_INPUT_CAPTURE1_VECTOR	5  
+	#define INT_OUTPUT_COMPARE1_VECTOR	6   
 	#define INT_EXTERNAL1_VECTOR			7          
 	#define INT_TIMER2_VECTOR				8   
-	#define INT_INPUT_CAPTURE2_VECTOR		9  
-	#define INT_OUTPUT_COMPARE2_VECTOR		10   
+	#define INT_INPUT_CAPTURE2_VECTOR	9  
+	#define INT_OUTPUT_COMPARE2_VECTOR	10   
 	#define INT_EXTERNAL2_VECTOR			11          
 	#define INT_TIMER3_VECTOR				12   
-	#define INT_INPUT_CAPTURE3_VECTOR		13  
-	#define INT_OUTPUT_COMPARE3_VECTOR		14   
+	#define INT_INPUT_CAPTURE3_VECTOR	13  
+	#define INT_OUTPUT_COMPARE3_VECTOR	14   
 	#define INT_EXTERNAL3_VECTOR			15          
 	#define INT_TIMER4_VECTOR				16   
-	#define INT_INPUT_CAPTURE4_VECTOR		17  
-	#define INT_OUTPUT_COMPARE4_VECTOR		18   
+	#define INT_INPUT_CAPTURE4_VECTOR	17  
+	#define INT_OUTPUT_COMPARE4_VECTOR	18   
 	#define INT_EXTERNAL4_VECTOR			19          
 	#define INT_TIMER5_VECTOR				20   
-	#define INT_INPUT_CAPTURE5_VECTOR		21  
-	#define INT_OUTPUT_COMPARE5_VECTOR		22   
+	#define INT_INPUT_CAPTURE5_VECTOR	21  
+	#define INT_OUTPUT_COMPARE5_VECTOR	22   
 	#define INT_SPI1_VECTOR					23    
 	#define INT_UART1_VECTOR				24    
 	#define INT_I2C1_VECTOR					25   
 	#define INT_INPUT_CHANGE_VECTOR			26    
 	#define INT_ADC1_CONVERT_DONE_VECTOR	27          
 	#define INT_PARALLEL_MASTER_PORT_VECTOR	28  
-	#define INT_COMPARATOR1_VECTOR			29          
-	#define INT_COMPARATOR2_VECTOR			30          
+	#define INT_COMPARATOR1_VECTOR		29          
+	#define INT_COMPARATOR2_VECTOR		30          
 	#define INT_SPI2_VECTOR					31
 	#define INT_UART2_VECTOR				32
 	#define INT_I2C2_VECTOR					33
@@ -90,25 +90,25 @@
 	#define INT_EXTERNAL0					3
 	#define INT_TIMER1						4
 	#define INT_INPUT_CAPTURE1				5
-	#define INT_OUTPUT_COMPARE1				6
+	#define INT_OUTPUT_COMPARE1			6
 	#define INT_EXTERNAL1					7
 	#define INT_TIMER2						8
 	#define INT_INPUT_CAPTURE2				9
-	#define INT_OUTPUT_COMPARE2				10
+	#define INT_OUTPUT_COMPARE2			10
 	#define INT_EXTERNAL2					11
 	#define INT_TIMER3						12
 	#define INT_INPUT_CAPTURE3				13
-	#define INT_OUTPUT_COMPARE3				14
+	#define INT_OUTPUT_COMPARE3			14
 	#define INT_EXTERNAL3					15
 	#define INT_TIMER4						16
 	#define INT_INPUT_CAPTURE4				17
-	#define INT_OUTPUT_COMPARE4				18
+	#define INT_OUTPUT_COMPARE4			18
 	#define INT_EXTERNAL4					19
 	#define INT_TIMER5						20
 	#define INT_INPUT_CAPTURE5				21
-	#define INT_OUTPUT_COMPARE5				22
+	#define INT_OUTPUT_COMPARE5			22
 	#define INT_SPI1_FAULT					23 
-	#define INT_SPI1_TRANSFER_DONE			24 
+	#define INT_SPI1_TRANSFER_DONE		24 
 	#define INT_SPI1_RECEIVE_DONE			25
 	#define INT_UART1_ERROR					26 
 	#define INT_UART1_RECEIVER				27
@@ -122,7 +122,7 @@
 	#define INT_COMPARATOR1					35
 	#define INT_COMPARATOR2					36
 	#define INT_SPI2_FAULT					37 
-	#define INT_SPI2_TRANSFER_DONE			38 
+	#define INT_SPI2_TRANSFER_DONE		38 
 	#define INT_SPI2_RECEIVE_DONE			39
 	#define INT_UART2_ERROR					40 
 	#define INT_UART2_RECEIVER				41 
@@ -130,13 +130,13 @@
 	#define INT_I2C2_BUS_COLLISION_EVENT	43 
 	#define INT_I2C2_SLAVE_EVENT			44 
 	#define INT_I2C2_MASTER_EVENT			45 
-	#define INT_FAIL_SAFE_CLOCK_MONITOR		46
-	#define INT_REAL_TIME_CLOCK				47
+	#define INT_FAIL_SAFE_CLOCK_MONITOR	46
+	#define INT_REAL_TIME_CLOCK			47
 	#define INT_DMA_CHANNEL_0				48 
 	#define INT_DMA_CHANNEL_1				49 
 	#define INT_DMA_CHANNEL_2				50 
 	#define INT_DMA_CHANNEL_3				51 
-	#define INT_FLASH_CONTROL_EVENT			56
+	#define INT_FLASH_CONTROL_EVENT		56
 	#define INT_USB							57
 
 /*	----------------------------------------------------------------------------
@@ -301,8 +301,15 @@ void IntSetVectorPriority(u8 vector, u8 pri, u8 sub)
 			break;
 		case INT_OUTPUT_COMPARE5_VECTOR:
 			break;
+#if defined(UBW32_460) || defined(EMPEROR460)
 		case INT_SPI1_VECTOR:
+			IFS0bits.SPI1EIF = 0;
+			IFS0bits.SPI1TXIF = 0;
+			IFS0bits.SPI1RXIF  = 0;
+			IPC5bits.SPI1IP = pri;
+			IPC5bits.SPI1IS = sub;
 			break;  
+#endif
 		case INT_UART1_VECTOR:
 			IFS0bits.U1TXIF = 0;
 			IFS0bits.U1RXIF = 0;
@@ -323,6 +330,11 @@ void IntSetVectorPriority(u8 vector, u8 pri, u8 sub)
 		case INT_COMPARATOR2_VECTOR:
 			break;        
 		case INT_SPI2_VECTOR:
+			IFS1bits.SPI2EIF = 0;
+			IFS1bits.SPI2TXIF = 0;
+			IFS1bits.SPI2RXIF  = 0;
+			IPC7bits.SPI2IP = pri;
+			IPC7bits.SPI2IS = sub;
 			break;
 		case INT_UART2_VECTOR:
 			IFS1bits.U2TXIF = 0;
@@ -520,34 +532,40 @@ unsigned int IntGetFlag(u8 numinter)
 /*	----------------------------------------------------------------------------
 	IntEnable
 	----------------------------------------------------------------------------
-	Enables or disables the interrupt.
+	Enables the interrupt.
 	IECx: Interrupt Enable Control Registers
 	--------------------------------------------------------------------------*/
 
-void IntEnable(u8 numinter, u8 enable)
+void IntEnable(u8 numinter)
 {
-	switch (enable)
+	if (numinter > 31)
 	{
-		case INT_ENABLED:
-			if (numinter > 31)
-			{
-				numinter -= 32;
-				BitSet(IEC1, numinter);
-			}
-			else
-			{
-				BitSet(IEC0, numinter);
-			}
-			break;
-		case INT_DISABLED:
-			if (numinter > 31)
-			{
-				numinter -= 32;
-				BitClear(IEC1, numinter);
-			}
-			else
-				BitClear(IEC0, numinter);
-			break;
+		numinter -= 32;
+		BitSet(IEC1, numinter);
+	}
+	else
+	{
+		BitSet(IEC0, numinter);
+	}
+}
+
+/*	----------------------------------------------------------------------------
+	IntDisable
+	----------------------------------------------------------------------------
+	Disables the interrupt.
+	IECx: Interrupt Enable Control Registers
+	--------------------------------------------------------------------------*/
+
+void IntDisable(u8 numinter)
+{
+	if (numinter > 31)
+	{
+		numinter -= 32;
+		BitClear(IEC1, numinter);
+	}
+	else
+	{
+		BitClear(IEC0, numinter);
 	}
 }
 

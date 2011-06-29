@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   logf.c: Computes the natural log of a 32 bit float as outlined in [1].
+   logf.c: Computes the natural log of a 32 bit double as outlined in [1].
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 /*Constans for 24 bits or less (8 decimal digits)*/
 #define A0 -0.5527074855E+0
@@ -42,19 +41,18 @@
 #define C1  0.693359375 /*355.0/512.0*/
 #define C2 -2.121944400546905827679E-4
 
-float logf(const float x) _MATH_REENTRANT
+double logf(const double x) _MATH_REENTRANT
 {
 #if     defined(SDCC_mcs51) && defined(SDCC_MODEL_SMALL) \
     && !defined(SDCC_NOOVERLAY)
     volatile
 #endif
-    float Rz;
-    float f, z, w, znum, zden, xn;
+    double Rz;
+    double f, z, w, znum, zden, xn;
     int n;
 
     if (x<=0.0)
     {
-        errno=EDOM;
         return 0.0;
     }
     f=frexpf(x, &n);

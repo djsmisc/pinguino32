@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   sincoshf.c - Computes sinh or cosh of a 32-bit float as outlined in [1]
+   sincoshf.c - Computes sinh or cosh of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define P0 -0.713793159E+1
 #define P1 -0.190333999E+0
@@ -50,9 +49,9 @@
 #define WBAR 1.05
 #define YBAR 9.0 /*Works for me*/
 
-float sincoshf(const float x, const int iscosh)
+double sincoshf(const double x, const int iscosh)
 {
-    float y, w, z;
+    double y, w, z;
     char sign;
     
     if (x<0.0) { y=-x; sign=1; }
@@ -65,7 +64,6 @@ float sincoshf(const float x, const int iscosh)
             w=y-K1;
             if (w>WMAX)
             {
-                errno=ERANGE;
                 z=XMAX;
             }
             else

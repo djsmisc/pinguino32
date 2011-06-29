@@ -79,10 +79,12 @@
 # new menus
 # size code
 # ------------------------------------------------------------------------------
-# pinguino.py,v beta x blanchot
+# beta x blanchot
 # 8 and 32-bit support
 # different board support
 # multi-platform support
+# debug stream
+
   
 # ------------------------------------------------------------------------------
 # import
@@ -93,14 +95,16 @@ import wx.aui
 import editeur
 import os
 import re
-import shutil			# to use cp function
+import shutil				# to use cp function
 from subprocess import Popen,PIPE,STDOUT
+import threading			# thread functions
 import sys
-import gettext			# to activate multi-language support
-import locale			# to access system localization functionalities
-import webbrowser		# to launch website from the IDE
-import argparse		# to write user-friendly command-line interfaces
-#import serial			# adds the !PySerial library
+import time					# to benchmark algorithms
+import gettext				# to activate multi-language support
+import locale				# to access system localization functionalities
+import webbrowser			# to launch website from the IDE
+import argparse			# to write user-friendly command-line interfaces
+import serial				# adds the PySerial library (http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download)
 
 # ------------------------------------------------------------------------------
 # current version
@@ -125,6 +129,7 @@ APP_CONFIG	= os.path.join(HOME_DIR, '.config')
 # boards
 # ------------------------------------------------------------------------------
 
+# id board menu
 ID_GENERIC2550 = wx.NewId()	# MUST ALWAYS BE IN FIRST POSITION
 ID_GENERIC4550 = wx.NewId()
 ID_OLIMEX440 = wx.NewId()
@@ -157,10 +162,6 @@ THEME_DEFAULT = "miniregino"
 BOARD_DEFAULT = ID_GENERIC2550
 gui=False
 
-serdev = 15								# win32
-serdev = '/dev/tty.usbmodem1912'	# darwin
-serdev = '/dev/ttyACM0'				# linux
-
 # ------------------------------------------------------------------------------
 # Pinguino Class
 # ------------------------------------------------------------------------------
@@ -174,34 +175,42 @@ class Pinguino(wx.Frame):
 	sdcc=""
 	#gcc=""
 	debug_output=0
+	debug_handle=False
+	debug_thread=False
+	debug_flag=False
 	noname=0
 	proc=""
 	arch=8
+	keywordList=[]
 	reservedword=[]
 	libinstructions=[]
 	regobject=[]
 	rw=[]
 	THEME=[]
+	KEYWORD=[]
 		
 # ------------------------------------------------------------------------------
 # id
 # ------------------------------------------------------------------------------
 
-	# id board menu
-
 	# id pref menu
-	ID_THEME = wx.NewId()
 	ID_DEBUG = wx.NewId()
 	ID_BOARD = wx.NewId()
+	ID_THEME = wx.NewId()
 
 	# id theme menu
 	ID_THEME1 = 1000
 
 	# id debug menu
-	ID_USBBULK = wx.NewId()
-	ID_CDC = wx.NewId()
+	ID_DEBUG = wx.NewId()
+	#ID_NODEBUG = wx.NewId()
+	#ID_CDC = wx.NewId()
+	#ID_USBBULK = wx.NewId()
+	#ID_USBHID = wx.NewId()
+	#ID_USBOTG = wx.NewId()
 	
 	# id help menu
+	ID_KEYWORD = wx.NewId()
 	ID_WEBSITE = wx.NewId()
 	ID_BLOG = wx.NewId()
 	ID_FORUM = wx.NewId()
@@ -211,6 +220,9 @@ class Pinguino(wx.Frame):
 	ID_SHOP = wx.NewId()
 	ID_ABOUT = wx.NewId()
 	
+	# id keywords menu
+	ID_KEYWORD1 = 2000
+
 	# other id
 	ID_VERIFY = wx.NewId()
 	ID_UPLOAD = wx.NewId()		
@@ -225,16 +237,22 @@ class Pinguino(wx.Frame):
 
 		if sys.platform == 'darwin':
 			self.osdir = 'macosx'
-			self.sdcc = 'sdcc'		
-			#self.gcc = 'mips-elf-g++'
-		elif sys.platform == 'win32' or sys.platform == 'cygwin':
+			self.debug_port = '/dev/tty.usbmodem1912'
+			self.c8 = 'sdcc'
+			self.u32 = 'ubw32'
+			self.make = 'make'
+		elif sys.platform == 'win32':
 			self.osdir = 'win32'
-			self.sdcc = 'sdcc.exe'
-			#self.gcc = 'mips-elf-g++'
+			self.debug_port = 15
+			self.c8 = 'sdcc.exe'
+			self.u32 = 'mphidflash.exe'
+			self.make = 'make.exe'
 		else:
 			self.osdir = 'linux'
-			self.sdcc = 'sdcc'
-			#self.gcc = 'mips-elf-g++'
+			self.debug_port = '/dev/ttyACM0'
+			self.c8 = 'sdcc'
+			self.u32 = 'ubw32'
+			self.make = 'make'
 
 		# ----------------------------------------------------------------------
 		# load settings from config file
@@ -246,10 +264,14 @@ class Pinguino(wx.Frame):
 		self.filehistory.Load(self.config)
 		framesize = (  self.config.ReadInt('Window/Width', -1),
 					   self.config.ReadInt('Window/Height', -1))
+		if framesize == (0, 0):
+			framesize = (400, 400)
 		framepos = (   self.config.ReadInt('Window/Posx', -1),
 					   self.config.ReadInt('Window/Posy', -1))
 		outputsize = ( self.config.ReadInt('Output/Width', -1),
 					   self.config.ReadInt('Output/Height', -1))
+		if outputsize == (0, 0):
+			outputsize = (400, 250)
 		self.theme =   self.config.Read('Theme/name')
 		if self.theme == '':
 			self.theme = THEME_DEFAULT
@@ -329,25 +351,25 @@ class Pinguino(wx.Frame):
 		# preferences menu
 		self.pref_menu = wx.Menu()
 
-		# ---theme submenu
-		self.theme_menu = wx.Menu()
-		self.GetTheme()
-		i = 0
-		for th in self.themeList:
-			self.THEME.append(wx.MenuItem(self.theme_menu, self.ID_THEME1 + i, th, "", wx.ITEM_CHECK))
-			self.theme_menu.AppendItem(self.THEME[i])
-			i = i + 1
-		self.pref_menu.AppendMenu(self.ID_THEME, _("Themes"), self.theme_menu)
-
 		# ---debug submenu
-		self.debug_menu = wx.Menu()
-		self.USBBULK = wx.MenuItem(self.debug_menu, self.ID_USBBULK, _("USB Bulk"), "", wx.ITEM_CHECK)
-		self.debug_menu.AppendItem(self.USBBULK)
-		self.USBBULK.Enable(False)
-		self.CDC = wx.MenuItem(self.debug_menu, self.ID_CDC, _("CDC (Serial Emulation)"), "", wx.ITEM_CHECK)
-		self.debug_menu.AppendItem(self.CDC)
-		self.CDC.Enable(False)
-		self.pref_menu.AppendMenu(self.ID_DEBUG, _("Debug"), self.debug_menu)
+		self.DEBUG = wx.MenuItem(self.pref_menu, self.ID_DEBUG, _("Debug"), "", wx.ITEM_CHECK)
+		self.pref_menu.AppendItem(self.DEBUG)
+		self.DEBUG.Enable(False)
+		#if self.config.ReadInt('debug',-1)==True:
+		#	self.pref_menu.Check(self.ID_DEBUG,True)
+		#	self.OnDebug(wx.Event)
+
+		#self.debug_menu = wx.Menu()
+		#self.NODEBUG = wx.MenuItem(self.debug_menu, self.ID_NODEBUG, _("No"), "", wx.ITEM_CHECK)
+		#self.debug_menu.AppendItem(self.NODEBUG)
+		#self.NODEBUG.Enable(False)
+		#self.USBBULK = wx.MenuItem(self.debug_menu, self.ID_USBBULK, _("USB Bulk"), "", wx.ITEM_CHECK)
+		#self.debug_menu.AppendItem(self.USBBULK)
+		#self.USBBULK.Enable(False)
+		#self.CDC = wx.MenuItem(self.debug_menu, self.ID_CDC, _("CDC (Serial Emulation)"), "", wx.ITEM_CHECK)
+		#self.debug_menu.AppendItem(self.CDC)
+		#self.CDC.Enable(False)
+		#self.pref_menu.AppendMenu(self.ID_DEBUG, _("Debug"), self.debug_menu)
 		self.menu.Append(self.pref_menu, _("Preferences"))
 
 		# --- board submenu
@@ -360,58 +382,87 @@ class Pinguino(wx.Frame):
 		self.board_menu.AppendRadioItem(ID_UBW460,"UBW32 460",_("your board"))
 		self.board_menu.AppendRadioItem(ID_UBW795,"UBW32 795",_("your board"))
 		self.pref_menu.AppendMenu(self.ID_BOARD,_("Board"),self.board_menu)
-
 		# mark current board
-		if self.config.ReadInt('board',-1)==ID_GENERIC2550:
-			self.board_menu.Check(ID_GENERIC2550,True)
-		if self.config.ReadInt('board',-1)==ID_GENERIC4550:
-			self.board_menu.Check(ID_GENERIC4550,True)
-		if self.config.ReadInt('board',-1)==ID_OLIMEX440:
-			self.board_menu.Check(ID_OLIMEX440,True)
-		elif self.config.ReadInt('board',-1)==ID_EMPEROR460:
-			self.board_menu.Check(ID_EMPEROR460,True)
-		elif self.config.ReadInt('board',-1)==ID_EMPEROR795:
-			self.board_menu.Check(ID_EMPEROR795,True)
-		elif self.config.ReadInt('board',-1)==ID_UBW460:
-			self.board_menu.Check(ID_UBW460,True)
-		elif self.config.ReadInt('board',-1)==ID_UBW795:
-			self.board_menu.Check(ID_UBW795,True)
+		bid = self.config.ReadInt('board',-1)
+		self.board_menu.Check(bid, True)
+		#if self.config.ReadInt('board',-1)==ID_GENERIC2550:
+		#	self.board_menu.Check(ID_GENERIC2550,True)
+		#if self.config.ReadInt('board',-1)==ID_GENERIC4550:
+		#	self.board_menu.Check(ID_GENERIC4550,True)
+		#if self.config.ReadInt('board',-1)==ID_OLIMEX440:
+		#	self.board_menu.Check(ID_OLIMEX440,True)
+		#if self.config.ReadInt('board',-1)==ID_EMPEROR460:
+		#	self.board_menu.Check(ID_EMPEROR460,True)
+		#if self.config.ReadInt('board',-1)==ID_EMPEROR795:
+		#	self.board_menu.Check(ID_EMPEROR795,True)
+		#if self.config.ReadInt('board',-1)==ID_UBW460:
+		#	self.board_menu.Check(ID_UBW460,True)
+		#if self.config.ReadInt('board',-1)==ID_UBW795:
+		#	self.board_menu.Check(ID_UBW795,True)
 		self.OnBoard(wx.Event)
 										   
+		# ---theme submenu
+		self.theme_menu = wx.Menu()
+		self.GetTheme()
+		i = 0
+		for th in self.themeList:
+			self.THEME.append(wx.MenuItem(self.theme_menu, self.ID_THEME1 + i, th, "", wx.ITEM_CHECK))
+			self.theme_menu.AppendItem(self.THEME[i])
+			i = i + 1
+		self.pref_menu.AppendMenu(self.ID_THEME, _("Themes"), self.theme_menu)
+
 		# help menu
-		self.HELP = wx.Menu()
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_WEBSITE, _("Website"), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT)
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_WIKI, _("Wiki"), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT)
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_FORUM, _("Forum"), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT)
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_BLOG, _("Blog"), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT)									  
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_GROUP, _("Group"), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT) 
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_SHOP, _("Shop"), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT)
-		self.ABOUT = wx.MenuItem(self.HELP, self.ID_ABOUT, _("About..."), "", wx.ITEM_NORMAL)
-		self.HELP.AppendItem(self.ABOUT)												
-		self.menu.Append(self.HELP, _("Help"))
+		self.help_menu = wx.Menu()
+
+		# ---keywords submenu
+		# TODO: all keywords on more rows
+		self.keyword_menu = wx.Menu()
+		i = 0
+		for k in self.keywordList:
+			self.KEYWORD.append(wx.MenuItem(self.keyword_menu, self.ID_KEYWORD1 + i, k, "", wx.ITEM_NORMAL))
+			self.keyword_menu.AppendItem(self.KEYWORD[i])
+			i = i + 1
+		self.help_menu.AppendMenu(self.ID_KEYWORD, _("Keywords"), self.keyword_menu)
+		#self.KEYWORD = wx.MenuItem(self.help_menu, self.ID_KEYWORD, _("Keywords"), "", wx.ITEM_NORMAL)
+		#self.help_menu.AppendItem(self.KEYWORD)
+
+		self.WEBSITE = wx.MenuItem(self.help_menu, self.ID_WEBSITE, _("Website"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.WEBSITE)
+		self.WIKI = wx.MenuItem(self.help_menu, self.ID_WIKI, _("Wiki"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.WIKI)
+		self.FORUM = wx.MenuItem(self.help_menu, self.ID_FORUM, _("Forum"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.FORUM)
+		self.BLOG = wx.MenuItem(self.help_menu, self.ID_BLOG, _("Blog"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.BLOG)									  
+		self.GROUP = wx.MenuItem(self.help_menu, self.ID_GROUP, _("Group"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.GROUP) 
+		self.SHOP = wx.MenuItem(self.help_menu, self.ID_SHOP, _("Shop"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.SHOP)
+		self.ABOUT = wx.MenuItem(self.help_menu, self.ID_ABOUT, _("About..."), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.ABOUT)												
+		self.menu.Append(self.help_menu, _("Help"))
 		
+# ------------------------------------------------------------------------------
+# Menu + Icons
+# ------------------------------------------------------------------------------
+
+		# append all menus to the menu bar
 		self.SetMenuBar(self.menu)
 
-# ------------------------------------------------------------------------------
-# Load toolbar icons
-# ------------------------------------------------------------------------------
-
+		# load toolbar icons
 		self.DrawToolbar()
-				
-		# define output window
+
+# ------------------------------------------------------------------------------
+# Output
+# ------------------------------------------------------------------------------
 		
-		self.logwindow = wx.TextCtrl(self, -1, "",wx.DefaultPosition,wx.Size(400,250), style=wx.TE_MULTILINE|wx.TE_READONLY)
+		# create a text control
+		self.logwindow = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, outputsize,\
+			style = wx.NO_BORDER|wx.TE_MULTILINE|wx.TE_READONLY )
 		self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
 		self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255))
 				
 		# create a PaneInfo structure for output window
-		
 		self.PaneOutputInfo=wx.aui.AuiPaneInfo()
 		self.PaneOutputInfo.CloseButton(False)
 		self.PaneOutputInfo.MaximizeButton(True)
@@ -419,26 +470,33 @@ class Pinguino(wx.Frame):
 		self.PaneOutputInfo.Caption("Output")
 		self.PaneOutputInfo.Bottom()
 
-		# create editor panel
+# ------------------------------------------------------------------------------
+# Editor
+# ------------------------------------------------------------------------------
 		
-		editorsize=self.GetSize()-self.logwindow.GetSize()
-		editorsize=(editorsize[0],editorsize[1])
-		self.EditorPanel = wx.Panel(self,-1,wx.DefaultPosition,wx.Size(400,100))
-		# pinguino.cc colour
+		# create editor panel
+		editorsize = (outputsize[0], framesize[1] - outputsize[1])
+		self.EditorPanel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, editorsize)
+		# background with pinguino.cc colour and pinguino logo
 		self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
-		self.pinguinobmp = wx.StaticBitmap(self.EditorPanel, -1, wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
-		self.pinguinobmp.CentreOnParent(wx.BOTH) 
+		background = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
+		if sys.platform == 'win32':
+			background.SetSize(editorsize)
+		self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, background)
+		self.background.CentreOnParent(wx.BOTH) 
 				
 		# create a PaneInfo structure for editor window 
 		# this Paneinfo will be switched when loading a file
-		
 		self.PaneEditorInfo=wx.aui.AuiPaneInfo()
 		self.PaneEditorInfo.CloseButton(False)
 		self.PaneEditorInfo.MaximizeButton(True)
 		self.PaneEditorInfo.Caption(_("Editor"))
 		self.PaneEditorInfo.Top()
 		
-		# add the panes to the manager
+# ------------------------------------------------------------------------------
+# add the panes to the manager
+# ------------------------------------------------------------------------------
+
 		self._mgr.AddPane(self.toolbar, wx.aui.AuiPaneInfo().
 						  Name("toolbar").Caption("Toolbar").
 						  ToolbarPane().Top().Row(1).
@@ -446,7 +504,7 @@ class Pinguino(wx.Frame):
 		self._mgr.AddPane(self.logwindow, self.PaneOutputInfo, '')
 		self._mgr.AddPane(self.EditorPanel, wx.CENTER , '')
 		
-		self.editor = editeur.editeur(self.EditorPanel, -1,self.EditorPanel.GetSize())
+		self.editor = editeur.editeur(self.EditorPanel, wx.ID_ANY, self.EditorPanel.GetSize())
  
 		# tell the manager to 'commit' all the changes just made
 		self._mgr.Update()		
@@ -480,6 +538,7 @@ class Pinguino(wx.Frame):
 
 		# pref menu
 		self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
+		self.Bind(wx.EVT_MENU, self.OnDebug, id=self.ID_DEBUG)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_GENERIC2550)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_GENERIC4550)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_OLIMEX440)
@@ -506,30 +565,79 @@ class Pinguino(wx.Frame):
 		self.Bind(wx.EVT_TOOL, self.editor.selectall, id=wx.ID_SELECTALL)
 
 		# help menu
-		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WEBSITE)	 # website
+		self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD1, id2=self.ID_KEYWORD1 + self.keywordNum)# keywords
+		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WEBSITE)	# website
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_BLOG)		# blog   
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_FORUM)	   # forum
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_GROUP)	   # group		
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WIKI)		# wiki
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_SHOP)		# shop
-		self.Bind(wx.EVT_MENU, self.OnAbout, self.ABOUT)
+		self.Bind(wx.EVT_MENU, self.OnAbout, id=self.ID_ABOUT)	# about
 			   
 		# initialize all the lib pdl in /lib folder
-		self.readlib()
+		# self.readlib() allready called by OnBoard
 	
 		self.displaymsg(self.translate("Welcome to Pinguino IDE ") + pinguino_version + "\n", 0);
 
 		# check current theme in menu
 		id = self.theme_menu.FindItem(self.theme)
 		self.menu.Check(id, True)
-			
+
+# ------------------------------------------------------------------------------
+# Thread
+# ------------------------------------------------------------------------------
+
+	def dthread(self):
+		while self.debug_flag is True:
+			if self.debug_handle:
+				print ">>>debug:"	
+				print self.debug_handle.readline()
+			time.sleep(0.01)
+
+	# create the debug thread			
+	debug_thread = threading.Thread(target=dthread)
+
+# ------------------------------------------------------------------------------
+# OnDebug
+# ------------------------------------------------------------------------------
+
+	def OnDebug(self, event):
+		# mode Debug ?
+		if self.pref_menu.IsChecked(self.ID_DEBUG):
+			# try to open serial port
+			try:
+				self.debug_handle = serial.Serial(self.debug_port)
+			except:
+				pass
+			# is a device connected ?
+			if self.debug_handle:
+				# let's start our thread
+				self.debug_flag = True
+				self.debug_thread.start()
+		else:
+			# stop the thread
+			self.debug_flag = False
+			if self.debug_thread:
+				self.debug_thread.join()
+			if self.debug_handle:
+				self.debug_handle.close()
+
+# ------------------------------------------------------------------------------
+# OnKeyword
+# ------------------------------------------------------------------------------
+
+	def OnKeyword(self, event):
+		# get selected only
+		kid = event.GetId() - self.ID_KEYWORD1
+		webbrowser.open("http://wiki.pinguino.cc/index.php/"+str(self.keywordList[kid]))
+
 # ------------------------------------------------------------------------------
 # OnNew
 # ------------------------------------------------------------------------------
 
 	def OnNew(self, event):
 		try:
-			self.pinguinobmp.Destroy()
+			self.background.Destroy()
 		except:
 			pass 
 		self.editor.New("NoName" + str(self.noname), self.reservedword, self.rw)
@@ -541,7 +649,7 @@ class Pinguino(wx.Frame):
 
 	def OnOpen(self, event):
 		try:
-			self.pinguinobmp.Destroy()
+			self.background.Destroy()
 		except:
 			pass 
 		self.editor.OpenDialog("Pde Files",\
@@ -556,6 +664,10 @@ class Pinguino(wx.Frame):
 # ------------------------------------------------------------------------------
 
 	def OnFileHistory(self, event):
+		try:
+			self.background.Destroy()
+		except:
+			pass 
 		fileNum = event.GetId() - wx.ID_FILE1
 		path = self.filehistory.GetHistoryFile(fileNum)
 		self.filehistory.AddFileToHistory(path)				  # move up the list
@@ -590,7 +702,8 @@ class Pinguino(wx.Frame):
 
 	def OnExit(self, event):
 		try:
-			self.pinguino.close();
+			self.pinguino.close()
+			fclose(self.debug_handle)
 		except:
 			pass		
 		# ---save settings-----------------------------------------------
@@ -601,26 +714,35 @@ class Pinguino(wx.Frame):
 		x, y = self.GetPosition()
 		self.config.WriteInt('Window/Posx', x)
 		self.config.WriteInt('Window/Posy', y)
+
 		w, h = self.logwindow.GetSize()
 		self.config.WriteInt('Output/Width', w)
 		self.config.WriteInt('Output/Height', h)
+
 		self.config.Write('Theme/name', self.theme)
 
 		if self.board_menu.IsChecked(ID_GENERIC2550):
-				self.config.WriteInt('board', ID_GENERIC2550)
+			self.config.WriteInt('board', ID_GENERIC2550)
 		if self.board_menu.IsChecked(ID_GENERIC4550):
-				self.config.WriteInt('board', ID_GENERIC4550)
+			self.config.WriteInt('board', ID_GENERIC4550)
 		if self.board_menu.IsChecked(ID_OLIMEX440):
-				self.config.WriteInt('board', ID_OLIMEX440)
+			self.config.WriteInt('board', ID_OLIMEX440)
 		if self.board_menu.IsChecked(ID_EMPEROR460):
-				self.config.WriteInt('board', ID_EMPEROR460)
+			self.config.WriteInt('board', ID_EMPEROR460)
 		if self.board_menu.IsChecked(ID_UBW460):
-				self.config.WriteInt('board', ID_UBW460)
+			self.config.WriteInt('board', ID_UBW460)
 		if self.board_menu.IsChecked(ID_UBW795):
-				self.config.WriteInt('board', ID_UBW795)
+			self.config.WriteInt('board', ID_UBW795)
 		if self.board_menu.IsChecked(ID_EMPEROR795):
-				self.config.WriteInt('board', ID_EMPEROR795)
+			self.config.WriteInt('board', ID_EMPEROR795)
+
+		if self.pref_menu.IsChecked(self.ID_DEBUG):
+			self.config.WriteInt('debug', True)
+		else:
+			self.config.WriteInt('debug', False)
+
 		self.config.Flush()
+
 		# ----------------------------------------------------------------------
 		# deinitialize the frame manager
 		self._mgr.UnInit()
@@ -666,67 +788,13 @@ class Pinguino(wx.Frame):
 				self.board			= boardlist[clef]['board']
 				self.totalspace	= boardlist[clef]['totalspace']
 		# clear all the lists before rebuild them
+		del self.rw[:]
+		del self.regobject[:]
+		del self.keywordList[:]
 		del self.reservedword[:]
 		del self.libinstructions[:]
 		self.readlib()
 
-# ------------------------------------------------------------------------------
-# Draw toolbar icons
-# ------------------------------------------------------------------------------
-
-	def DrawToolbar(self):
-		try:
-			# Deletes all the tools in the current toolbar
-			self.toolbar.ClearTools()
-		except:
-			# Create toolbar
-			self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
-			pass 
-		# Get size of new theme's icons
-		icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-		iconSize = icon.GetSize()
-		# Update Bitmap size to fit new icons (not sure that it works !)
-		self.toolbar.SetToolBitmapSize(iconSize)
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "new.png"))!=False):
-			self.toolbar.AddLabelTool(wx.ID_NEW, "&New", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "New File", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "open.png"))!=False):			
-			self.toolbar.AddLabelTool(wx.ID_OPEN, "&Open", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "open.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open File", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "save.png"))!=False):			
-			self.toolbar.AddLabelTool(wx.ID_SAVE, "&Save", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "save.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save File", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "stop.png"))!=False):			
-			self.toolbar.AddLabelTool(wx.ID_CLOSE, "&Close", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "stop.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Close File", "")
-		self.toolbar.AddSeparator()
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "undo.png"))!=False):		
-			self.toolbar.AddLabelTool(wx.ID_UNDO, "&Undo", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "undo.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Undo", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "redo.png"))!=False):
-			self.toolbar.AddLabelTool(wx.ID_REDO, "&Redo", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "redo.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Redo", "")
-		self.toolbar.AddSeparator()
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "cut.png"))!=False):		
-			self.toolbar.AddLabelTool(wx.ID_CUT, "&Cut", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "cut.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Cut", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "copy.png"))!=False):
-			self.toolbar.AddLabelTool(wx.ID_COPY, "&Copy", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "copy.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Copy", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "paste.png"))!=False):		
-			self.toolbar.AddLabelTool(wx.ID_PASTE, "&Paste", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "paste.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Paste", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "clear.png"))!=False):
-			self.toolbar.AddLabelTool(wx.ID_CLEAR, "&Clear", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "clear.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Clear", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "select.png"))!=False):
-			self.toolbar.AddLabelTool(wx.ID_SELECTALL, "&Select all", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "select.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Select all", "")
-		self.toolbar.AddSeparator()
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "find.png"))!=False):
-			self.toolbar.AddLabelTool(wx.ID_FIND, "&Find", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "find.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Search in File", "")
-		self.toolbar.AddSeparator()
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "runw.png"))!=False):
-			self.toolbar.AddLabelTool(self.ID_VERIFY, "&Verify", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "runw.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Compile", "")
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "dwn.png"))!=False):
-			self.toolbar.AddLabelTool(self.ID_UPLOAD, "&Upload", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "dwn.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Upload to Pinguino", "")				   
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "debug.png"))!=False):
-			self.toolbar.AddLabelTool(self.ID_USBBULK, "&Debug On/Off", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "debug.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "USB Connexion with Pinguino", "")				   
-		self.toolbar.AddSeparator()
-		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "exit.png"))!=False):		
-			self.toolbar.AddLabelTool(wx.ID_EXIT, "&Exit", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "exit.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Exit Pinguino IDE", "")
-
-		self.toolbar.Realize()		 
-							  
 # ------------------------------------------------------------------------------
 # OnRender:
 # ------------------------------------------------------------------------------
@@ -741,7 +809,7 @@ class Pinguino(wx.Frame):
 
 	def OnResize(self,event):
 		try:
-			self.pinguinobmp.CentreOnParent(wx.BOTH)
+			self.background.CentreOnParent(wx.BOTH)
 		except:
 			pass		
 		self.editor.Resize()
@@ -773,7 +841,7 @@ class Pinguino(wx.Frame):
 		info.SetName('Pinguino')
 		info.SetVersion(pinguino_version)
 		info.SetDescription(description)
-		#info.SetCopyright('2008, 2009, 2010, 2011 jean-pierre mandon')
+		info.SetCopyright('2008, 2009, 2010, 2011 jean-pierre mandon')
 		info.SetWebSite('http://www.pinguino.cc')
 		info.SetLicence(licence)
 
@@ -802,52 +870,12 @@ class Pinguino(wx.Frame):
 		wx.AboutBox(info)  
 			
 # ------------------------------------------------------------------------------
-# readlib:
-# ------------------------------------------------------------------------------
-
-	def readlib(self):
-		# trying to find PDL files to store reserved words
-		if self.arch == 8:
-			libext='.pdl'
-			libdir=P8_DIR
-		else:
-			libext='.pdl32'		
-			libdir=P32_DIR
-		for i in os.listdir(os.path.join(libdir, 'lib')):
-			filename,extension=os.path.splitext(i)
-			if extension==libext:
-				# check content of the PDL file
-				libfile=open(os.path.join(libdir, 'lib', i),'r')
-				for line in libfile:
-					if line!="\n":					  
-						instruction=line[0:line.find(" ")]
-						cnvinstruction=line[line.find(" ")+1:line.find("#")]
-						libpath=line[line.find("#")+1:len(line)]	
-						self.libinstructions.append([instruction,cnvinstruction,libpath])
-						self.regobject.append(re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+"[ ]*\("))
-				libfile.close()
-		if len(self.libinstructions)!=0:	
-			for i in range(len(self.libinstructions)):
-				chaine=self.libinstructions[i][0]
-				self.rw.append(chaine)
-				if chaine.find(".")!=-1:
-					self.reservedword.append(chaine[0:chaine.find(".")])
-					self.reservedword.append(chaine[chaine.find(".")+1:len(chaine)])
-				else:
-					self.reservedword.append(chaine)
-			# sort keywords for short key help
-			self.rw.sort(key=lambda x: x.lower())
-		# adding fixed reserved word
-		fixed_rw=("setup","loop","HIGH","LOW","INPUT","OUTPUT","void","FOSC","MIPS","ON","OFF","TRUE","FALSE")
-		for i in range(len(fixed_rw)):
-			self.reservedword.append(fixed_rw[i])
-		
-# ------------------------------------------------------------------------------
 # OnVerify:
 # ------------------------------------------------------------------------------
 
 	def OnVerify(self, event):
 		global lang
+		t0 = time.time()
 		if self.editor.GetPath()==-1:
 			dlg = wx.MessageDialog(self,
 				self.translate('Open file first !!'),
@@ -879,12 +907,13 @@ class Pinguino(wx.Frame):
 		else:
 			retour=self.link(filename, self.board, self.proc, self.arch)
 			if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
-				self.displaymsg(self.translate("error while linking ")+filename+".o",0)
+				self.displaymsg(self.translate("error while linking")+" "+filename+".o",0)
 			else:
 				#self.cp(SOURCE_DIR + MAIN_FILE,filename+".hex")
 				shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")
 				self.displaymsg(self.translate("compilation done")+"\n",0)
 				self.displaymsg(self.getCodeSize(filename, self.arch, self.totalspace)+"\n",0)
+				self.displaymsg(str(time.time() - t0) + " seconds process time\n",0)
 				os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
 				os.remove(filename+".c")
 							   
@@ -911,7 +940,7 @@ class Pinguino(wx.Frame):
 									filename+".hex"],
 									stdout=fichier,stderr=STDOUT)
 				else:
-					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'ubw32'),
+					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.u32),
 								"-w",
 								filename+".hex",
 								"-r",
@@ -1006,7 +1035,134 @@ class Pinguino(wx.Frame):
 			webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1")
 		
 # ------------------------------------------------------------------------------
-# 
+# Draw toolbar icons
+# ------------------------------------------------------------------------------
+
+	def DrawToolbar(self):
+		try:
+			# Deletes all the tools in the current toolbar
+			self.toolbar.ClearTools()
+		except:
+			# Create toolbar
+			self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
+			pass 
+		# Get size of new theme's icons
+		icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+		iconSize = icon.GetSize()
+		# Update Bitmap size to fit new icons (not sure that it works !)
+		self.toolbar.SetToolBitmapSize(iconSize)
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "new.png"))!=False):
+			self.toolbar.AddLabelTool(wx.ID_NEW, "&New", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "New File", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "open.png"))!=False):			
+			self.toolbar.AddLabelTool(wx.ID_OPEN, "&Open", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "open.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open File", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "save.png"))!=False):			
+			self.toolbar.AddLabelTool(wx.ID_SAVE, "&Save", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "save.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save File", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "stop.png"))!=False):			
+			self.toolbar.AddLabelTool(wx.ID_CLOSE, "&Close", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "stop.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Close File", "")
+		self.toolbar.AddSeparator()
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "undo.png"))!=False):		
+			self.toolbar.AddLabelTool(wx.ID_UNDO, "&Undo", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "undo.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Undo", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "redo.png"))!=False):
+			self.toolbar.AddLabelTool(wx.ID_REDO, "&Redo", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "redo.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Redo", "")
+		self.toolbar.AddSeparator()
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "cut.png"))!=False):		
+			self.toolbar.AddLabelTool(wx.ID_CUT, "&Cut", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "cut.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Cut", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "copy.png"))!=False):
+			self.toolbar.AddLabelTool(wx.ID_COPY, "&Copy", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "copy.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Copy", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "paste.png"))!=False):		
+			self.toolbar.AddLabelTool(wx.ID_PASTE, "&Paste", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "paste.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Paste", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "clear.png"))!=False):
+			self.toolbar.AddLabelTool(wx.ID_CLEAR, "&Clear", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "clear.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Clear", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "select.png"))!=False):
+			self.toolbar.AddLabelTool(wx.ID_SELECTALL, "&Select all", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "select.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Select all", "")
+		self.toolbar.AddSeparator()
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "find.png"))!=False):
+			self.toolbar.AddLabelTool(wx.ID_FIND, "&Find", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "find.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Search in File", "")
+		self.toolbar.AddSeparator()
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "runw.png"))!=False):
+			self.toolbar.AddLabelTool(self.ID_VERIFY, "&Verify", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "runw.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Compile", "")
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "dwn.png"))!=False):
+			self.toolbar.AddLabelTool(self.ID_UPLOAD, "&Upload", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "dwn.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Upload to Pinguino", "")				   
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "debug.png"))!=False):
+			self.toolbar.AddLabelTool(self.ID_DEBUG, "&Debug On/Off", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "debug.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "USB Connexion with Pinguino", "")				   
+		self.toolbar.AddSeparator()
+		if (os.path.exists(os.path.join(THEME_DIR, self.theme, "exit.png"))!=False):		
+			self.toolbar.AddLabelTool(wx.ID_EXIT, "&Exit", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "exit.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Exit Pinguino IDE", "")
+
+		self.toolbar.Realize()		 
+							  
+# ------------------------------------------------------------------------------
+# readlib:
+# ------------------------------------------------------------------------------
+
+	def readlib(self):
+		# trying to find PDL files to store reserved words
+		if self.arch == 8:
+			libext='.pdl'
+			libdir=P8_DIR
+		else:
+			libext='.pdl32'		
+			libdir=P32_DIR
+		for i in os.listdir(os.path.join(libdir, 'lib')):
+			filename,extension=os.path.splitext(i)
+			if extension==libext:
+				# check content of the PDL file
+				libfile=open(os.path.join(libdir, 'lib', i),'r')
+				for line in libfile:
+					if line!="\n":
+						# arduino's instruction
+						instruction=line[0:line.find(" ")]
+						self.keywordList.append(instruction)
+						# library's instruction
+						cnvinstruction=line[line.find(" ")+1:line.find("#")]
+						# path to library
+						libpath=line[line.find("#")+1:len(line)]
+						# append to the list	
+						self.libinstructions.append([instruction,cnvinstruction,libpath])
+						#regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction))+"[ ]*\(")
+						#regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+r"([' ']|['=']|['}']|[',']|[';']|[\t]|[')'].*)")
+						#regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+".*")
+						#regex = re.compile(r'\W%s\W' % re.escape(str(instruction)))
+						regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])%s\W" % re.escape(str(instruction)))
+						self.regobject.append(regex)
+				libfile.close()
+		# clean up the keyword list
+		self.keywordList.sort()
+		self.keywordList = self.ClearRedundancy(self.keywordList)
+		self.keywordNum = len(self.keywordList)
+		# make reserved words list
+		if len(self.libinstructions)!=0:	
+			for i in range(len(self.libinstructions)):
+				chaine=self.libinstructions[i][0]
+				self.rw.append(chaine)
+				pos = chaine.find(".")
+				if pos != -1:
+					self.reservedword.append(chaine[0:pos])
+					self.reservedword.append(chaine[pos+1:len(chaine)])
+				else:
+					self.reservedword.append(chaine)
+			# sort keywords for short key help
+			self.rw.sort(key=lambda x: x.lower())
+		# adding fixed reserved word
+		fixed_rw=("setup","loop","HIGH","LOW","INPUT","OUTPUT","void","FOSC","MIPS","ON","OFF","TRUE","FALSE")
+		for i in range(len(fixed_rw)):
+			self.reservedword.append(fixed_rw[i])
+
+# ------------------------------------------------------------------------------
+# ClearRedundancy:
+# ------------------------------------------------------------------------------
+
+	def ClearRedundancy(self, myList):
+		seen = set()
+		out = []
+		for item in myList:
+			if item not in seen:
+				seen.add(item)
+				out.append(item)
+		return out
+
+# ------------------------------------------------------------------------------
+# displaymsg
 # ------------------------------------------------------------------------------
 
 	def displaymsg(self, message, clearpanel):
@@ -1021,7 +1177,7 @@ class Pinguino(wx.Frame):
 		return  
 
 # ------------------------------------------------------------------------------
-# 
+# translate
 # ------------------------------------------------------------------------------
 
 	def translate(self, message):
@@ -1034,7 +1190,7 @@ class Pinguino(wx.Frame):
 			return self.lang.ugettext(message)
 
 # ------------------------------------------------------------------------------
-# 
+# preprocess
 # ------------------------------------------------------------------------------
 
 	def preprocess(self, filename, proc):
@@ -1095,7 +1251,7 @@ class Pinguino(wx.Frame):
 			nblines += 1	  
 		fichier.close()
 		# save new tmp file
-		fichier = open(os.path.join(TEMP_DIR, 'temp.c'),'w')
+		fichier = open(os.path.join(TEMP_DIR, 'temp.c'), 'w')
 		for i in range(0,nblines):
 			fichier.writelines(fileline[i])
 		fichier.writelines("\r\n")
@@ -1151,27 +1307,28 @@ class Pinguino(wx.Frame):
 # ------------------------------------------------------------------------------
 
 	def replaceword(self,ligne):
-		""" convert pinguino langage in C language """
-		instruction = ""
+		""" convert pinguino language in C language """
+		#instruction = ""
 		line = ligne
-		# delete space and tabs
-		ligne = ligne.replace(" ","")
-		ligne = ligne.replace(chr(9),"")
-		#search comment line
+
+		# search comment line 'cause there's no need to process it
+		ligne = ligne.replace(" ","")			# delete space
+		ligne = ligne.replace(chr(9),"")		# delete tab
 		if ligne[0:2] == "//":
 			ligne = "//\r\n"
 			return ligne
+
 		# remove end line comment
-		if ligne.find("//")!=-1:
-			ligne = ligne[0:ligne.find("/")]
-			ligne = ligne + "\r\n"
-		
+		if line.find("//")!=-1:
+			line = line[0:line.find("/")]
+			line = line + "\r\n"
+
+		# replace pinguino language
 		for i in range(len(self.libinstructions)):
-			#pattern="(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(self.libinstructions[i][0])+"[ ]*\("
-			if re.search(self.regobject[i],line):
-				line = line.replace(str(self.libinstructions[i][0]),str(self.libinstructions[i][1]))
+			if re.search(self.regobject[i], line):
+				line = line.replace(str(self.libinstructions[i][0]), str(self.libinstructions[i][1]))
 				if self.notindefine("#"+str(self.libinstructions[i][2])) == 1:
-					self.adddefine("#"+str(self.libinstructions[i][2]))		
+					self.adddefine("#"+str(self.libinstructions[i][2]))
 		return line
 		
 # ------------------------------------------------------------------------------
@@ -1183,8 +1340,8 @@ class Pinguino(wx.Frame):
 			print("compile " + proc)
 		else:
 			if arch==8:
-				fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
-				sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.sdcc),\
+				fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+				sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
 						"-mpic16",\
 						"--denable-peeps",\
 						"--obanksel=9",\
@@ -1223,9 +1380,9 @@ class Pinguino(wx.Frame):
 		if (self.debug_output==1):
 			print("link " + proc)
 		else:
-			fichier = open(os.path.join(TEMP_DIR, 'stdout'), 'w+')
+			fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
 			if arch==8:
-				sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.sdcc),\
+				sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
 						"-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
 						"--denable-peeps",\
 						"--obanksel=9",\
@@ -1233,13 +1390,16 @@ class Pinguino(wx.Frame):
 						"--optimize-cmp",\
 						"--optimize-df",\
 						"--no-crt",\
-						"-Wl-s" + os.path.join(P8_DIR, 'lkr', '18f2550.lkr') + ",-m",\
+						"-Wl-s" + os.path.join(P8_DIR, 'lkr', proc + '.lkr') + ",-m",\
 						"-mpic16",\
 						"-p" + proc,\
+						"-L" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16'),\
+						"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 						"-l" + os.path.join(P8_DIR, 'lib', 'libpuf.lib'),\
-						"-llibio" + proc + '.lib',\
-						"-llibc18f.lib",\
-						"-llibm18f.lib",\
+						'-llibio' + proc + '.lib',\
+						"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libc18f.lib'),\
+						"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libm18f.lib'),\
+						"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libsdcc.lib'),\
 						os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
 						os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
 						os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
@@ -1248,10 +1408,9 @@ class Pinguino(wx.Frame):
 			else:
 				# "PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
 				# can't be used with Command Line version since editor isn't used
-				sortie=Popen(["make",
-						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile'),\
+				sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.make),\
+						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile.'+self.osdir),\
 						"HOME=" + HOME_DIR,\
-						"OSDIR=" + self.osdir,\
 						"PDEDIR=" + os.path.dirname(filename),\
 						"PROC=" + proc,\
 						"BOARD=" + board],\

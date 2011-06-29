@@ -25,10 +25,13 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
+	// fixed a bug in decimal part of the measure jp.mandon 02 june. 2011
+	
 #ifndef __DS18B20_C
 	#define __DS18B20_C
 
-	//#include <macro.h>
+	#include <macro.h>
+	#include <typedef.h>
 	#include <1wire.c>
 
 	typedef struct
@@ -36,7 +39,7 @@
 		u8  sign;		// sign (1=negative)
 		u8  integer;	// integer part
 		u16 fraction;	// fractional part
-	} TEMPERATURE;
+	} DS18B20_Temperature;
 
 /*	----------------------------------------------------------------------------
 	---------- GLOBAL VARIABLES
@@ -44,7 +47,7 @@
 
 	u8 DS18B20Rom[6][8];	// table of found ROM codes
 	u8 ROM[8];				// ROM Bit
-	u8 lastDiscrep = 0;		// last discrepancy
+	u8 lastDiscrep = 0;	// last discrepancy
 	u8 doneFlag = 0;		// Done flag
 	u8 numROMs;
 	u8 dowcrc;
@@ -66,31 +69,33 @@
 		233,183, 85, 11,136,214, 52,106, 43,117,151,201, 74, 20,246,168,
 		116, 42,200,150, 21, 75,169,247,182,232, 10, 84,215,137,107, 53};
 
-	/// ROM COMMANDS
+	/// DS18B20 ROM COMMANDS
 
-	#define SEARCHROM			0xF0	//
+	#define SEARCHROM				0xF0	//
 	#define READROM				0x33	//
-	#define MATCHROM			0x55	//
+	#define MATCHROM				0x55	//
 	#define SKIPROM				0xCC	//
-	#define ALARM_SEARCH		0xEC	//
+	#define ALARM_SEARCH			0xEC	//
 
 	/// DS18B20 FUNCTION COMMANDS
 
-	#define CONVERT_T			0x44	// Initiates temperature conversion
+	#define CONVERT_T				0x44	// Initiates temperature conversion
 	#define WRITE_SCRATCHPAD	0x4E	// Writes data into scratchpad bytes 2, 3, and 4 (TH, TL and configuration registers)
 	#define READ_SCRATCHPAD		0xBE	// Reads the entire scratchpad including the CRC byte
 	#define COPY_SCRATCHPAD		0x48	// Copies TH, TL, and configuration register data from the scratchpad to EEPROM
-	#define RECALL_E2			0xB8	// Recalls TH, TL, and configuration register data from EEPROM to the scratchpad
+	#define RECALL_E2				0xB8	// Recalls TH, TL, and configuration register data from EEPROM to the scratchpad
 	#define READ_POWER_SUPPLY	0xB4	// Signals DS18B20 power supply mode to the master
 
 	/// MODES
 
-	#define RES12BIT	1				// 12-bit resolution
+	#define RES12BIT	1				// 12-bit resolution (slowest mode)
 	#define RES11BIT	2				// 11-bit resolution
 	#define RES10BIT	3				// 10-bit resolution
-	#define  RES9BIT	4				//  9-bit resolution
+	#define  RES9BIT	4				//  9-bit resolution (quickest mode)
 
-	u8 DS18B20Read(u8, u8, u8, TEMPERATURE *);
+	/// PROTOTYPES
+
+	u8 DS18B20Read(u8, u8, u8, DS18B20_Temperature *);
 	u8 DS18B20MatchRom(u8, u8);
 	void DS18B20ReadRom(u8, u8 *);
 	u8 DS18B20Configure(u8, u8, u8, u8, u8);
@@ -104,26 +109,27 @@
 	----------------------------------------------------------------------------
 	* Description:	reads the ds18x20 device on the 1-wire bus and returns the temperature
 	* Arguments:	pin = pin number where one wire bus is connected.
-					num = index of the sensor
+					num = index of the sensor or SKIPROM
 					resolution = 9 to 12 bit resolution
 					t = temperature pointer
 	--------------------------------------------------------------------------*/
 
-	u8 DS18B20Read(u8 pin, u8 num, u8 resolution, TEMPERATURE * t)
+	u8 DS18B20Read(u8 pin, u8 num, u8 resolution, DS18B20_Temperature * t)
 	{
-		u8 res, busy = 0;
+		u8 res, busy = LOW;
 		u8 temp_lsb, temp_msb;
 
 		switch (resolution)
 		{
-			case RES12BIT:	res = Bin(01100000);	break;	// 12-bit resolution
-			case RES11BIT:	res = Bin(01000000);	break;	// 11-bit resolution
-			case RES10BIT:	res = Bin(00100000);	break;	// 10-bit resolution
-			case  RES9BIT:	res = Bin(00000000);	break;	//  9-bit resolution
-			default:		res = Bin(00000000);	break;	//  9-bit resolution
+			case RES12BIT:	res = 0b01100000;	break;	// 12-bit resolution
+			case RES11BIT:	res = 0b01000000;	break;	// 11-bit resolution
+			case RES10BIT:	res = 0b00100000;	break;	// 10-bit resolution
+			case  RES9BIT:	res = 0b00000000;	break;	//  9-bit resolution
+			default:		res = 0b00000000;	break;	//  9-bit resolution
 			/// NB: The power-up default of these bits is R0 = 1 and R1 = 1 (12-bit resolution)
 		}
-		DS18B20Configure(pin, num, 0, 0, res); // no alarm
+		
+		if (!DS18B20Configure(pin, num, 0, 0, res)) return FALSE; // no alarm
 
 		if (OneWireReset(pin)) return FALSE;
 
@@ -135,12 +141,12 @@
 		else
 		{
 			// Talk to a particular device
-			DS18B20MatchRom(pin, num);
+			if (!DS18B20MatchRom(pin, num)) return FALSE;
 		}
 
 		OneWireWrite(pin, CONVERT_T);		// Start temperature conversion
 
-		while (busy == 0)					// Wait while busy ( = bus is low)
+		while (busy == LOW)					// Wait while busy ( = bus is low)
 			busy = OneWireRead(pin);
 
 		if (OneWireReset(pin)) return FALSE;
@@ -153,14 +159,15 @@
 		else
 		{
 			// Talk to a particular device
-			DS18B20MatchRom(pin, num);
+			if (!DS18B20MatchRom(pin, num)) return FALSE;
 		}
 
 		OneWireWrite(pin, READ_SCRATCHPAD);// Read scratchpad
 
 		temp_lsb = OneWireRead(pin);		// byte 0 of scratchpad : temperature lsb
 		temp_msb = OneWireRead(pin);		// byte 1 of scratchpad : temperature msb
-		OneWireReset(pin);
+
+		if (OneWireReset(pin)) return FALSE;
 
 		// Calculation
 		// ---------------------------------------------------------------------
@@ -171,10 +178,10 @@
 		//	MS BYTE S		S		S		S		S		2^6		2^5 	2^4
 		//	S = SIGN
 
-		if (temp_msb >= Bin(11111000))		// test if temperature is negative
+		if (temp_msb >= 0b11111000)		// test if temperature is negative
 		{		
 			t->sign = 1;
-			temp_msb -= Bin(11111000);
+			temp_msb -= 0b11111000;
 		}
 		else
 		{
@@ -183,12 +190,15 @@
 
 		t->integer = temp_lsb >> 4;			// fractional part is removed, it remains only integer part
 		t->integer |= (temp_msb << 4);		// integer part from temp_msb is added
-	
-		t->fraction = 0;					// fractional part (
+
+/*	
+		t->fraction = 0;					// fractional part
 		if (BitRead(temp_lsb, 0)) t->fraction +=  625;
 		if (BitRead(temp_lsb, 1)) t->fraction += 1250;
 		if (BitRead(temp_lsb, 2)) t->fraction += 2500;
 		if (BitRead(temp_lsb, 3)) t->fraction += 5000;
+*/
+		t->fraction = (temp_lsb & 0x0F) * 625;
 		t->fraction /= 100;					// two digits after decimal 
 
 		return TRUE;

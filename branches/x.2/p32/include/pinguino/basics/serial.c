@@ -39,55 +39,55 @@
 // -------------------------------------------------------------------------
 
 // bit 15 ON: UARTx Enable bit
-#define UART_DISABLE		0x0000
-#define UART_ENABLE		0x8000
+#define UART_DISABLE								0x0000
+#define UART_ENABLE								0x8000
 /*
 #define UART_PERIPHERAL	0x01
 #define UART_RX			0x02	// UART Module receiver
 #define UART_TX			0x04	// UART Module transmitter
 */
 // bit 13 SIDL: Stop in Idle Mode bit
-#define UART_ENABLE_STOP_ON_IDLE	0x00002000
+#define UART_ENABLE_STOP_ON_IDLE				0x00002000
 
 // bit 12 IREN: IrDA Encoder and Decoder Enable bit
-#define UART_ENABLE_IRDA			0x00001000
+#define UART_ENABLE_IRDA						0x00001000
 
 // bit 11 RTSMD: Mode Selection for UxRTS Pin bit
-#define UART_RTS_WHEN_RX_NOT_FULL	0x000
-#define UART_RTS_WHEN_TX_NOT_EMPTY	0x800
+#define UART_RTS_WHEN_RX_NOT_FULL			0x000
+#define UART_RTS_WHEN_TX_NOT_EMPTY			0x800
 
 // bit 9-8 UEN<1:0>: UARTx Enable bits
-#define UART_ENABLE_PINS_BIT_CLOCK	0x300 // UxTX, UxRX, and UxBCLK pins are enabled and used; UxCTS pin is controlled by port latches
-#define UART_ENABLE_PINS_CTS_RTS	0x200 // UxTX, UxRX, UxCTS, and UxRTS pins are enabled and used
-#define UART_ENABLE_PINS_RTS		0x100 // UxTX, UxRX and UxRTS pins are enabled and used; UxCTS pin is controlled by port latches
-#define UART_ENABLE_PINS_TX_RX_ONLY	0x000 // UxTX and UxRX pins are enabled and used; UxCTS and UxRTS/UxBCLK pins are controlled by port latches
+#define UART_ENABLE_PINS_BIT_CLOCK			0x300 // UxTX, UxRX, and UxBCLK pins are enabled and used; UxCTS pin is controlled by port latches
+#define UART_ENABLE_PINS_CTS_RTS				0x200 // UxTX, UxRX, UxCTS, and UxRTS pins are enabled and used
+#define UART_ENABLE_PINS_RTS					0x100 // UxTX, UxRX and UxRTS pins are enabled and used; UxCTS pin is controlled by port latches
+#define UART_ENABLE_PINS_TX_RX_ONLY			0x000 // UxTX and UxRX pins are enabled and used; UxCTS and UxRTS/UxBCLK pins are controlled by port latches
 
 // bit 7 WAKE: Enable Wake-up on Start bit Detect During Sleep mode bit
-#define UART_ENABLE_WAKE_ON_START	0x00000080
+#define UART_ENABLE_WAKE_ON_START			0x00000080
 
 // bit 6 LPBACK: UARTx Loopback Mode Select bit
-#define UART_ENABLE_LOOPBACK		0x00000040
+#define UART_ENABLE_LOOPBACK					0x00000040
 
 // bit 5 ABAUD: Auto-Baud Enable bit
 
 // bit 4 RXINV: Receive Polarity Inversion bit
-#define UART_INVERT_RECEIVE_POLARITY	0x00000010
+#define UART_INVERT_RECEIVE_POLARITY		0x00000010
 
 // bit 3 BRGH: High Baud Rate Enable bit
 //#define UART_ENABLE_HIGH_SPEED		0x00000008
-#define UART_ENABLE_HIGH_SPEED		1
-#define UART_ENABLE_STANDARD_SPEED	0
+#define UART_ENABLE_HIGH_SPEED				1
+#define UART_ENABLE_STANDARD_SPEED			0
 
 // bit 2-1 PDSEL<1:0>: Parity and Data Selection bits
  
-#define UART_9_BITS_NO_PARITY		0b110
-#define UART_8_BITS_ODD_PARITY		0b100
-#define UART_8_BITS_EVEN_PARITY		0b010
-#define UART_8_BITS_NO_PARITY		0b000
+#define UART_9_BITS_NO_PARITY					0b110
+#define UART_8_BITS_ODD_PARITY				0b100
+#define UART_8_BITS_EVEN_PARITY				0b010
+#define UART_8_BITS_NO_PARITY					0b000
 
 // bit 0 STSEL: Stop Selection bit
-#define UART_STOP_BITS_2			0b1	// Enables generation of 2 stop bits per frame.
-#define UART_STOP_BITS_1			0b0	// Enables generation of 1 stop bit per frame (default).
+#define UART_STOP_BITS_2						0b1	// Enables generation of 2 stop bits per frame.
+#define UART_STOP_BITS_1						0b0	// Enables generation of 1 stop bit per frame (default).
 
 // -------------------------------------------------------------------------
 // UxSTA
@@ -101,18 +101,18 @@
 #define UART_INTERRUPT_ON_TX_NOT_FULL		0x0000
 
 // bit 13 UTXINV: Transmit Polarity Inversion bit
-#define UART_INVERT_TRANSMIT_POLARITY	0x20000000
+#define UART_INVERT_TRANSMIT_POLARITY		0x20000000
 
 // bit 12 URXEN: Receiver Enable bit
-#define UART_RX_ENABLED				0x1000	// UARTx receiver is enabled, UxRX pin controlled by UARTx (if ON = 1)
-#define UART_RX_DISABLED			0x0000	// UARTx receiver is disabled, the UxRX pin is ignored by the UARTx module. UxRX pin controlled by PORT.
+#define UART_RX_ENABLED							0x1000	// UARTx receiver is enabled, UxRX pin controlled by UARTx (if ON = 1)
+#define UART_RX_DISABLED						0x0000	// UARTx receiver is disabled, the UxRX pin is ignored by the UARTx module. UxRX pin controlled by PORT.
 
 // bit 11 UTXBRK: Transmit Break bit
 
 // bit 10 UTXEN: Transmit Enable bit
-#define UART_TX_ENABLED			`	0x400	// UARTx transmitter enabled, UxTX pin controlled by UARTx (if ON = 1)
-#define UART_TX_DISABLED			0x1000	// UARTx transmitter disabled, any pending transmission is aborted and buffer is reset. UxTX pin controlled by PORT.
-#define UART_RX_TX_ENABLED			0x1400
+#define UART_TX_ENABLED							0x400	// UARTx transmitter enabled, UxTX pin controlled by UARTx (if ON = 1)
+#define UART_TX_DISABLED						0x1000	// UARTx transmitter disabled, any pending transmission is aborted and buffer is reset. UxTX pin controlled by PORT.
+#define UART_RX_TX_ENABLED						0x1400
 
 // bit 7-6 URXISEL<1:0>: Receive Interrupt Mode Selection bit
 #define UART_INTERRUPT_ON_RX_FULL			0x00C0
@@ -122,25 +122,25 @@
 // bit 5 ADDEN: Address Character Detect (bit 8 of received data = 1)
 
 // UART_CONFIGURATION
-#define UART_SUPPORT_IEEE_485		0x00000900
+#define UART_SUPPORT_IEEE_485					0x00000900
 
 // UART_LINE_STATUS;
-#define UART_TRANSMITTER_NOT_FULL	0x00000200	// The transmitter is able to accept data to transmit.
-#define UART_TRANSMITTER_EMPTY		0x00000100	// The transmitter is empty (no data is available to transmit).
-#define UART_RECEIVER_IDLE			0x00000010	// The receiver is currently idle.
-#define UART_PARITY_ERROR			0x00000008	// A received data parity error was detected.
-#define UART_FRAMING_ERROR			0x00000004	// Data was received that violated the framing protocol
-#define UART_OVERRUN_ERROR			0x00000002	// The UART has received more data than it can buffer.  Data has been lost.
-#define UART_DATA_READY				0x00000001	// UART data has been received and is avaiable in the FIFO.
+#define UART_TRANSMITTER_NOT_FULL			0x00000200	// The transmitter is able to accept data to transmit.
+#define UART_TRANSMITTER_EMPTY				0x00000100	// The transmitter is empty (no data is available to transmit).
+#define UART_RECEIVER_IDLE						0x00000010	// The receiver is currently idle.
+#define UART_PARITY_ERROR						0x00000008	// A received data parity error was detected.
+#define UART_FRAMING_ERROR						0x00000004	// Data was received that violated the framing protocol
+#define UART_OVERRUN_ERROR						0x00000002	// The UART has received more data than it can buffer.  Data has been lost.
+#define UART_DATA_READY							0x00000001	// UART data has been received and is avaiable in the FIFO.
 
 #ifndef SERIALBUFFERLENGTH
-	#define SERIALBUFFERLENGTH 128		// rx buffer length
+	#define SERIALBUFFERLENGTH 128				// rx buffer length
 #endif
 
-char UART1SerialBuffer[SERIALBUFFERLENGTH];	// this is the buffer
-char UART2SerialBuffer[SERIALBUFFERLENGTH];	// this is the buffer
-long UART1wpointer, UART1rpointer;			// write and read pointer
-long UART2wpointer, UART2rpointer;			// write and read pointer
+char UART1SerialBuffer[SERIALBUFFERLENGTH];	// UART1 buffer
+char UART2SerialBuffer[SERIALBUFFERLENGTH];	// UART2 buffer
+long UART1wpointer, UART1rpointer;				// write and read pointer
+long UART2wpointer, UART2rpointer;				// write and read pointer
 
 /*	----------------------------------------------------------------------------
 	SerialSetDataRate()
@@ -319,11 +319,11 @@ void SerialIntConfigure(u8 port, u8 priority, u8 subpriority)
 	{
 		case UART1:
 			IntSetVectorPriority(INT_UART1_VECTOR, priority, subpriority);
-			IntEnable(INT_UART1_RECEIVER, INT_ENABLED);
+			IntEnable(INT_UART1_RECEIVER);
 			break;
 		case UART2:
 			IntSetVectorPriority(INT_UART2_VECTOR, priority, subpriority);
-			IntEnable(INT_UART2_RECEIVER, INT_ENABLED);
+			IntEnable(INT_UART2_RECEIVER);
 			break;
 	}
 }
@@ -473,33 +473,33 @@ void SerialGetDataBuffer(u8 port)
 	switch (port)
 	{
 		case UART1:
-			caractere = U1RXREG;							// read received char
+			caractere = U1RXREG;									// read received char
 			if (UART1wpointer != SERIALBUFFERLENGTH - 1)	// if not last place in buffer
-				newwp = UART1wpointer + 1;					// place=place+1
+				newwp = UART1wpointer + 1;						// place=place+1
 			else
-				newwp = 1;									// else place=1
+				newwp = 1;											// else place=1
 
 			if (UART1rpointer != newwp)						// if read pointer!=write pointer
 				UART1SerialBuffer[UART1wpointer++] = caractere;	// store received char
 
 			if (UART1wpointer == SERIALBUFFERLENGTH)		// if write pointer=length buffer
-				UART1wpointer = 1;							// write pointer = 1
+				UART1wpointer = 1;								// write pointer = 1
 
 			//return UART1SerialBuffer;
 			break;
 
 		case UART2:
-			caractere = U2RXREG;							// read received char
+			caractere = U2RXREG;									// read received char
 			if (UART2wpointer != SERIALBUFFERLENGTH - 1)	// if not last place in buffer
-				newwp = UART2wpointer + 1;					// place=place+1
+				newwp = UART2wpointer + 1;						// place=place+1
 			else
-				newwp = 1;									// else place=1
+				newwp = 1;											// else place=1
 
 			if (UART2rpointer != newwp)						// if read pointer!=write pointer
 				UART2SerialBuffer[UART2wpointer++] = caractere;	// store received char
 
 			if (UART2wpointer == SERIALBUFFERLENGTH)		// if write pointer=length buffer
-				UART2wpointer = 1;							// write pointer = 1
+				UART2wpointer = 1;								// write pointer = 1
 
 			//return UART2SerialBuffer;
 			break;

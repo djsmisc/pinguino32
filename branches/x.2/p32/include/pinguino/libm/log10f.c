@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   log10f.c: Computes the base 10 log of a 32 bit float.
+   log10f.c: Computes the base 10 log of a 32 bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -27,9 +27,8 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float log10f(const float x) _MATH_REENTRANT
+double log10f(const double x) _MATH_REENTRANT
 {
     return logf(x)*0.4342944819;
 }

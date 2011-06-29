@@ -28,7 +28,7 @@
 
 
 // pin SS is the slave select for the digital pot:
-const int slaveSelectPin = SS;
+const int slaveSelectPin = 10;
 
 int digitalPotWrite(int address, int value)
 {

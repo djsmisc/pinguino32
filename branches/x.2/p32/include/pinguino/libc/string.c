@@ -24,14 +24,18 @@
 	--------------------------------------------------------------------------*/
 
 #ifndef __STRING_C
-	#define __STRING_C
+#define __STRING_C
 
+#include <typedef.h>
+
+/*
 int strlen (const char *str)
 {
 	const char *start = str;
 	while (*str++ != '\0');
 	return str - start - 1;
 }
+*/
 
 int strcmp(const char *s1, const char *s2)
 { 
@@ -75,6 +79,7 @@ char * strcpy(char *dst0, const char *src0)
 	return s;
 }
 
+/*
 char * strncpy(char *dest, const char *src, u8 n)
 {
 	u8 i;
@@ -85,6 +90,21 @@ char * strncpy(char *dest, const char *src, u8 n)
 		dest[i] = '\0';
 
 	return dest;
+}
+*/
+
+int memcmp(char *s1, char *s2, unsigned long n)
+{
+	if (n != 0)
+	{
+		unsigned char *p1 = (unsigned char *)s1;
+		unsigned char *p2 = (unsigned char *)s2;
+		do {
+			if (*p1++ != *p2++)
+				return (*--p1 - *--p2);
+		} while (--n != 0);
+	}
+	return (0);
 }
 
 #endif

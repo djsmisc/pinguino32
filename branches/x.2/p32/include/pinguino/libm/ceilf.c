@@ -28,7 +28,7 @@
 
 #include <math.h>
 
-float ceilf(float x) _MATH_REENTRANT
+double ceilf(double x) _MATH_REENTRANT
 {
     long r;
     r=x;

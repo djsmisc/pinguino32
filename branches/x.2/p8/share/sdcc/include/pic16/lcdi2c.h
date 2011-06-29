@@ -218,7 +218,7 @@
 	void lcdi2c_noDisplay();
 	void lcdi2c_setCursor(u8, u8);
 	void lcdi2c_write(u8);
-	void lcdi2c_printf(u8*, ...);
+	void lcdi2c_printf(char*, ...);
 	void lcdi2c_newchar(const u8 *, u8);
 	void lcdi2c_newpattern();
 

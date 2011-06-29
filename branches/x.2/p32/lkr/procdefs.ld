@@ -2,7 +2,7 @@
  * Processor-specific object file.  Contains SFR definitions.
  *************************************************************************/
 
-INPUT("processor.o")
+/*INPUT("processor.o")*/
 
 /* not PIC32 specific, so define them here */
 BMXDUPBA = 0xBF882030;
