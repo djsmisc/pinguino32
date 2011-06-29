@@ -15,7 +15,6 @@
 	----------------------------------------------------------------------*/
 
 #define ONEWIREBUS	0		// 1-wire bus is on pin 0 (RB0), just change it to suit you 
-#define RUNLED PORTAbits.RA4	// for visual debug purposes
 
 void setup()
 {

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   acosf.c - Computes arc cosine of a 32-bit float
+   acosf.c - Computes arc cosine of a 32-bit double
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -28,10 +28,10 @@
 
 #include <math.h>
 
-float asincosf(const float x, const int isacos);
+double asincosf(const double x, const int isacos);
 
-float
-acosf (const float x) _MATH_REENTRANT
+double
+acosf (const double x) _MATH_REENTRANT
 {
   if (x == 1.0)
     return 0.0;

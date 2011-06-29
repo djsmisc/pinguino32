@@ -3,7 +3,6 @@
  *************************************************************************/
 
 INPUT("processor.o")
-/* INPUT("/home/regis/Hobbies/Electronique/Projets/PinguinoIDE/X/branches/linux/tools/p32/obj/non-free/processor.o") */
 
 /* not PIC32 specific, so define them here */
 BMXDUPBA = 0xBF882030;

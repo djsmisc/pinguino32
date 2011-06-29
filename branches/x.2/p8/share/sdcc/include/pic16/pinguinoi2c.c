@@ -57,6 +57,8 @@
 //#include "macro.h"
 //#include "const.h"
 #include <interrupt.c>
+#include <stdio.c>
+#include <stdarg.h>
 
 // Mode I2C
 #define I2C_WRITE			0
@@ -76,6 +78,7 @@ void I2C_master();
 void I2C_slave(u16);   
 void I2C_init(u8, u16);
 void I2C_interrupt();
+void I2C_printf(u8, char *, ...);
 //void I2C_OnRequest(void (*)(void));
 //void IC2_OnReceive(void (*)(void));
 u8 I2C_writechar(u8);
@@ -155,6 +158,22 @@ void I2C_init(u8 mode, u16 sspadd)
 	SSPCON2 = 0;
 	PIR1bits.SSPIF = 0;
 	PIR2bits.BCLIF = 0;
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Send a formated string to the slave
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_printf(u8 address, char *fmt, ...)
+{
+	va_list args;
+
+	va_start(args, fmt);
+	I2C_sendID(address, I2C_WRITE);
+	pprintf(I2C_writechar, fmt, args);
+	I2C_stop();
+	va_end(args);
 }
 
 /*	----------------------------------------------------------------------------

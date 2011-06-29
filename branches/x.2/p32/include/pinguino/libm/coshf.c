@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   coshf.c - Computes cosh(x) where x is a 32-bit float.
+   coshf.c - Computes cosh(x) where x is a 32-bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -28,9 +28,9 @@
 
 #include <math.h>
 
-float sincoshf(const float x, const int iscosh);
+double sincoshf(const double x, const int iscosh);
 
-float coshf(const float x) _MATH_REENTRANT
+double coshf(const double x) _MATH_REENTRANT
 {
     return sincoshf(x, 1);
 }

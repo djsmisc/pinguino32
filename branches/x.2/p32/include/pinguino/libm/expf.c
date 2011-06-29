@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   expf.c - Computes e**x of a 32-bit float as outlined in [1]
+   expf.c - Computes e**x of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define P0      0.2499999995E+0
 #define P1      0.4160288626E-2
@@ -47,10 +46,10 @@
 #define EXPEPS  1.0E-7       /* exp(1.0E-7)=0.0000001 */
 #define K1      1.4426950409 /* 1/ln(2) */
 
-float expf(const float x)
+double expf(const double x)
 {
     int n;
-    float xn, g, r, z, y;
+    double xn, g, r, z, y;
     char sign;
 
     if(x>=0.0)
@@ -64,7 +63,6 @@ float expf(const float x)
     {
         if(sign)
         {
-            errno=ERANGE;
             return XMAX;
         }
         else

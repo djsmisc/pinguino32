@@ -3,8 +3,10 @@
 	pc side : gtkterm --port /dev/ttyACM0
 */
 
+//#include <usb_function_cdc.h>
+
 // char USB_Out_Buffer[64];
-u8 chaine[64];		// unsigned char
+char chaine[64];		// unsigned char
 u8 length;
 
 void setup()

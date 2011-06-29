@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   sincosf.c - Computes sin or cos of a 32-bit float as outlined in [1]
+   sincosf.c - Computes sin or cos of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define r1      (-0.1666665668E+0)
 #define r2      (0.8333025139E-2)
@@ -44,9 +43,9 @@
 /*A reasonable value for YMAX is the int part of PI*B**(t/2)=3.1416*2**(12)*/
 #define YMAX     12867.0
 
-float sincosf(float x, int iscos)
+double sincosf(double x, int iscos)
 {
-    float y, f, r, g, XN;
+    double y, f, r, g, XN;
     int N;
     char sign;
 
@@ -65,7 +64,6 @@ float sincosf(float x, int iscos)
 
     if(y>YMAX)
     {
-        errno=ERANGE;
         return 0.0;
     }
 

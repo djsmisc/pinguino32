@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   asincosf.c - Computes asin or acos of a 32-bit float as outlined in [1]
+   asincosf.c - Computes asin or acos of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define P1  0.933935835E+0
 #define P2 -0.504400557E+0
@@ -47,13 +46,13 @@
    #define myconst const
 #endif
 
-float asincosf(const float x, const int isacos)
+double asincosf(const double x, const int isacos)
 {
-    float y, g, r;
+    double y, g, r;
     int i;
 
-    static myconst float a[2]={ 0.0, QUART_PI };
-    static myconst float b[2]={ HALF_PI, QUART_PI };
+    static myconst double a[2]={ 0.0, QUART_PI };
+    static myconst double b[2]={ HALF_PI, QUART_PI };
 
     y=fabsf(x);
     i=isacos;
@@ -65,7 +64,6 @@ float asincosf(const float x, const int isacos)
             i=1-i;
             if (y > 1.0)
             {
-                errno=EDOM;
                 return 0.0;
             }
             g=(0.5-y)+0.5;

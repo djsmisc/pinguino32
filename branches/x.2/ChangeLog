@@ -1,18 +1,44 @@
+
+	.______    __  .__   __.   _______  __    __   __  .__   __.   ______   
+	|   _  \  |  | |  \ |  |  /  _____||  |  |  | |  | |  \ |  |  /  __  \  
+	|  |_)  | |  | |   \|  | |  |  __  |  |  |  | |  | |   \|  | |  |  |  | 
+	|   ___/  |  | |  . `  | |  | |_ | |  |  |  | |  | |  . `  | |  |  |  | 
+	|  |      |  | |  |\   | |  |__| | |  `--'  | |  | |  |\   | |  `--'  | 
+	| _|      |__| |__| \__|  \______|  \______/  |__| |__| \__|  \______/  
+
+
 /*	-----------------------------------------------------------------------------
 	Pinguino (beta 10)
 	---------------------------------------------------------------------------*/
 
 IDE: (Régis Blanchot & Jean-Pierre Mandon)
 - 32-bit support
-- MIPS-ELF Compiler build from scratch
+- MIPS-ELF Compiler build from scratch (gcc 4.5.2 / binutils 2.21 / newlib 1.19)
 - One IDE for all OS
 - All Pinguino boards supported
-- Command Line Execution improvment (-h -v and boards support)
+- Command Line Execution improvment (-h, -v and boards support)
+- Process benchmarking
+- New Help Menu with link between Keywords and wiki.pinguino.cc
 
 Libraries:
 - newlib.c (Jean-Pierre Mandon)
-- cdc.c (Jean-Pierre Mandon)
 - delay.c (Jesús Carmona Esteban)
+
+- zigbee (Jean-Pierre Mandon)
+ZIG.init
+ZIG.send
+ZIG.read
+
+- __cdc.c (Jean-Pierre Mandon + Régis Blanchot)
+CDC.init
+CDC.puts
+CDC.write
+CDC.print
+CDC.println
+CDC.printf
+CDC.read
+CDC.getKey
+CDC.getString
 
 - SD (Régis Blanchot)
 SD.mount
@@ -140,9 +166,14 @@ Play
 
 - SPI (Régis Blanchot)
 SPI.init
+SPI.begin
 SPI.write
+SPI.transfer
 SPI.read
 SPI.printf
+SPI.mode
+SPI.setDataMode
+SPI.setClockDivider
 
 - GLCD (Marcus Fazzi)
 GLCD.Init

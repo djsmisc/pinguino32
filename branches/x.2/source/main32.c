@@ -69,7 +69,12 @@ int main()
 }
 
 #ifndef __SERIAL_C
-void SerialInterrupt(void)
+void Serial1Interrupt(void)
+{
+	Nop();    
+}
+
+void Serial2Interrupt(void)
 {
 	Nop();    
 }
@@ -81,4 +86,16 @@ void Tmr2Interrupt(void)
 	Nop();    
 }
 #endif
+
+#ifndef __SPI_C
+void SPI1Interrupt(void)
+{
+	Nop();    
+}
+
+void SPI2Interrupt(void)
+{
+	Nop();    
+}
+#endif /* __SPI_C */
 

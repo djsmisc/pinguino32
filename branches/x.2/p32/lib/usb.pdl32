@@ -5,6 +5,6 @@ CDC.print CDCprint#include <__cdc.c>
 CDC.println CDCprintln#include <__cdc.c>
 CDC.printf CDCprintf#include <__cdc.c>
 CDC.read CDCgets#include <__cdc.c>
-CDC.getkey CDCgetkey#include <__cdc.c>
-CDC.getstring CDCgetstring#include <__cdc.c>
+CDC.getKey CDCgetkey#include <__cdc.c>
+CDC.getString CDCgetstring#include <__cdc.c>
 

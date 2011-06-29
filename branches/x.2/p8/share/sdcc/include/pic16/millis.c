@@ -19,7 +19,7 @@ void millis_init(void)
 	_millis = 0;
 }
 
-long millis()
+long Millis()
 {
 	return(_millis);
 }

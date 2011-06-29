@@ -3,7 +3,8 @@
  *
  * Sets all of the bytes of the EEPROM to 0.
  * This example code is in the public domain.
-
+ *
+ * NB : 32-bit PICs have no EEPROM
  */
 
 #include <EEPROM.h>

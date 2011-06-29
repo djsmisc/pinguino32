@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   tanhf.c - Computes tanh(x) where x is a 32-bit float as outlined in [1].
+   tanhf.c - Computes tanh(x) where x is a 32-bit double as outlined in [1].
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define P0 -0.8237728127E+0
 #define P1 -0.3831010665E-2
@@ -45,9 +44,9 @@
 #define P(g) ((P1*g+P0)*g)
 #define Q(g) (Q1*g+Q0)
 
-float tanhf(const float x) _MATH_REENTRANT
+double tanhf(const double x) _MATH_REENTRANT
 {
-    float f, g, r;
+    double f, g, r;
 
     f=fabsf(x);
     if(f>SBIG) r=1.0;

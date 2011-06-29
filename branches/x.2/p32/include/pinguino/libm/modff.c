@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   modff.c - Returns both the integer and fraction of a float.
+   modff.c - Returns both the integer and fraction of a double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -28,7 +28,7 @@
 
 #include <math.h>
 
-float modff(float x, float * y)
+double modff(double x, double * y)
 {
     *y=((int)x);
     return (x-*y);

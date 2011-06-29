@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   powf.c - Computes x**y where x and y are 32-bit floats.
+   powf.c - Computes x**y where x and y are 32-bit doubles.
             WARNING: less that 6 digits accuracy.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
@@ -28,9 +28,8 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float powf(const float x, const float y)
+double powf(const double x, const double y)
 {
     if(y == 0.0) return 1.0;
     if(y==1.0) return x;

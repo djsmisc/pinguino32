@@ -27,7 +27,7 @@
 #ifndef __ANALOG__
 #define __ANALOG__
 
-#ifdef PIC32_PINGUINO
+#if defined(PIC32_PINGUINO)
 
 u16 __analogmask[]={0x0002,0x0004,0x0008,0x0010,0x0100,0x0200,0x0800,0x0400,
 		    		0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0002,0x0004,
@@ -59,7 +59,7 @@ u16 __bufmask[]=   {0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 
 void SetAnalog(u8 pin)
 {
-	#ifdef PIC32_PINGUINO
+	#if defined(PIC32_PINGUINO)
 	if ((pin==4)||(pin==18)) TRISDbits.TRISD9=1;   // analog input 18 is shared with I2C
 	if ((pin==5)||(pin==19)) TRISDbits.TRISD10=1;  // analog input 19 is shared with I2C
 	#endif

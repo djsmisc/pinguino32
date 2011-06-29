@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   sinf.c - Computes sin(x) where x is a 32-bit float.
+   sinf.c - Computes sin(x) where x is a 32-bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -28,9 +28,9 @@
 
 #include <math.h>
 
-float sincosf(float x, int iscos);
+double sincosf(double x, int iscos);
 
-float sinf(float x) _MATH_REENTRANT
+double sinf(double x) _MATH_REENTRANT
 {
     if (x==0.0) return 0.0;
     return sincosf(x, 0);

@@ -1,6 +1,7 @@
 // cdc module for Pinguino32X
 // Jean-Pierre Mandon 2010
 // Based on the Microchip USB stack
+// printf, println, print, write, getKey, getString - Régis Blanchot 2011
 
 #ifndef __USBCDC
 #define __USBCDC
@@ -10,6 +11,17 @@
 #include <delay.c>
 #include <stdio.c>
 #include <stdarg.h>
+
+extern void USBCheckCDCRequest();
+extern void CDCInitEP();
+extern void USBDeviceInit();
+extern void USBDeviceAttach();
+extern void putUSBUSART(char*, char);
+extern char getsUSBUSART(char*, char);
+extern void CDCTxService();
+extern unsigned char cdc_trf_state;
+
+#define mUSBUSARTIsTxTrfReady() (cdc_trf_state==0)
 
 typedef enum
 {
@@ -69,7 +81,7 @@ void INTEnableSystemMultiVectoredInt()
 
 void INTEnableInterrupts()
 {
-	IntEnable(INT_USB, INT_ENABLED);
+	IntEnable(INT_USB);
 }
 
 // this is the Set Line coding CallBack function
@@ -133,23 +145,33 @@ void CDC_init()
 {
 	USBDeviceInit();		// Initializes USB module SFRs and firmware
 	USBDeviceAttach();
-	Delayms(2000);
+	Delayms(1500);
 }
 
 // CDC.puts
 void CDCputs(u8 *buffer, u8 length)
 {
-	putUSBUSART(buffer,length);
-	CDCTxService();
+	int i;
+
+	for (i = 1000; i > 0; --i)
+	{
+		if (mUSBUSARTIsTxTrfReady()) break;
+		CDCTxService();
+	}
+	if (i > 0)
+	{
+		putUSBUSART(buffer,length);
+		CDCTxService();
+	}
 }
 	
 // CDC.read
 u8 CDCgets(u8 *buffer, u8 length)
 {
-	u8 receivedchar;
+	u8 receivedchar;		// the number of captured chars
 	
 	receivedchar=getsUSBUSART(buffer, length);
-	return receivedchar;
+	return receivedchar;	// returns actual number of bytes copied to user buffer
 }
 
 // added by regis blanchot 29/05/2011
@@ -157,16 +179,19 @@ u8 CDCgets(u8 *buffer, u8 length)
 // CDC.write
 void CDCwrite(char c)
 {
-	putUSBUSART(c, 1);
-	CDCTxService();
+	CDCputs(c, 1);
 }
 
 // CDC.printf
 void CDCprintf(char *fmt, ...)
 {
-	va_list args;
+	char		buffer[80];
+	u8			length;
+	va_list	args;
+
 	va_start(args, fmt);
-	pprintf(CDCwrite, fmt, args);
+	length = psprintf(buffer, fmt, args);
+	CDCputs(buffer,length);
 	va_end(args);
 }
 
@@ -212,13 +237,12 @@ void CDCprint(char *fmt,...)
 }
 
 // CDC.getKey
-char * CDCgetkey()
+char CDCgetkey()
 {
-	char c;
-	static char buffer[1];
+	char c[64];	// always get a full packet
 
-	getsUSBUSART(buffer, 1);
-	return (buffer);
+	while ( CDCgets(c, 64) == 0 );
+	return (c[0]);
 }
 
 // CDC.getString

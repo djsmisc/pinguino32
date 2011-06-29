@@ -12,15 +12,16 @@ Pinguino is compatible with arduino/wiring langage.
 
 dependencies:
 
-Linux 		libusb
+Linux 	libusb
 			python 2.5
 			wxpython 2.8
 
 Pinguino is based on open source software:
-	compiler		SDCC 2.9.0		http://sdcc.sourceforge.net/
+	compiler			SDCC 2.9.0		http://sdcc.sourceforge.net/
 	asm/linker		GPUTILS			http://gputils.sourceforge.net/
 	bootloader		VASCO project	http://vasco.gforge.enseeiht.fr/
 	IDE				Python			http://www.python.org/
 			
 Contributions, bug reports and questions are welcome.
 jp.mandon@gmail.com
+rblanchot@gmail.com

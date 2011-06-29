@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   fabsf.c - Returns the absolute value of a 32-bit float.
+   fabsf.c - Returns the absolute value of a 32-bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -27,11 +27,10 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float fabsf(const float x) _MATH_REENTRANT
+double fabsf(const double x) _MATH_REENTRANT
 {
-    union float_long fl;
+    union double_long fl;
 
     fl.f = x;
     fl.l &= 0x7fffffff;

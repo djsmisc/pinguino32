@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   ldexpf.c - Build a float from a mantisa and exponent.
+   ldexpf.c - Build a double from a mantisa and exponent.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -27,11 +27,10 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float ldexpf(const float x, const int pw2)
+double ldexpf(const double x, const int pw2)
 {
-    union float_long fl;
+    union double_long fl;
     long e;
 
     fl.f = x;

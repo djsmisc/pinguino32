@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   atanf.c - Computes arctan of a 32-bit float as outlined in [1]
+   atanf.c - Computes arctan of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,7 +30,6 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
 #define P0 -0.4708325141E+0
 #define P1 -0.5090958253E-1
@@ -50,11 +49,11 @@
    #define myconst const
 #endif
 
-float atanf(const float x) _MATH_REENTRANT
+double atanf(const double x) _MATH_REENTRANT
 {
-    float f, r, g;
+    double f, r, g;
     int n=0;
-	static myconst float a[]={  0.0, 0.5235987756, 1.5707963268, 1.0471975512 };
+	static myconst double a[]={  0.0, 0.5235987756, 1.5707963268, 1.0471975512 };
 
     f=fabsf(x);
     if(f>1.0)

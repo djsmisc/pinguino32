@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   tanf.c - Computes tan(x) where x is a 32-bit float.
+   tanf.c - Computes tan(x) where x is a 32-bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -28,9 +28,9 @@
 
 #include <math.h>
 
-float tancotf(const float x, const int iscot);
+double tancotf(const double x, const int iscot);
 
-float tanf(const float x) _MATH_REENTRANT
+double tanf(const double x) _MATH_REENTRANT
 {
     return tancotf(x, 0);
 }

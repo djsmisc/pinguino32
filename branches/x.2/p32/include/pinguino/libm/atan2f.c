@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   atan2f.c - Computes atan2(x) where x is a 32-bit float.
+   atan2f.c - Computes atan2(x) where x is a 32-bit double.
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -27,15 +27,13 @@
 -------------------------------------------------------------------------*/
 
 #include <math.h>
-#include <errno.h>
 
-float atan2f(const float x, const float y)
+double atan2f(const double x, const double y)
 {
-    float r;
+    double r;
 
     if ((x==0.0) && (y==0.0))
     {
-        errno=EDOM;
         return 0.0;
     }
 

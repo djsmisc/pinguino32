@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------
-   sqrtf.c - Computes square root of a 32-bit float as outlined in [1]
+   sqrtf.c - Computes square root of a 32-bit double as outlined in [1]
 
    Copyright (C) 2001, 2002, Jesus Calvino-Fraga <jesusc At ieee.org>
 
@@ -30,23 +30,21 @@
    elementary functions_, Englewood Cliffs, N.J.:Prentice-Hall, 1980. */
 
 #include <math.h>
-#include <errno.h>
 
-float sqrtf(const float x) _MATH_REENTRANT
+double sqrtf(const double x) _MATH_REENTRANT
 {
-    float f, y;
+    double f, y;
     int n;
 
     if (x==0.0) return x;
     else if (x==1.0) return 1.0;
     else if (x<0.0)
     {
-        errno=EDOM;
         return 0.0;
     }
     f=frexpf(x, &n);
     y=0.41731+0.59016*f; /*Educated guess*/
-    /*For a 24 bit mantisa (float), two iterations are sufficient*/
+    /*For a 24 bit mantisa (double), two iterations are sufficient*/
     y+=f/y;
     y=ldexpf(y, -2) + f/y; /*Faster version of 0.25 * y + f/y*/
 

@@ -57,6 +57,8 @@
 
 #include <itdb02_graph.h>
 #include <delay.c>
+#include <math.h>
+#include <string.c>
 
 //define cbi(sfr, bit) (_SFR_char(sfr) &= ~_BV(bit))
 //define sbi(sfr, bit) (_SFR_char(sfr) |= _BV(bit))
@@ -745,8 +747,8 @@ void rotateChar(char c, int x, int y, int pos, int deg)
 			ch=(SmallFont[temp]); 
 			for(i=0;i<8;i++)
 			{   
-				newx=x+(((i+(pos*8))*cos(radian))-((j)*sin(radian)));
-				newy=y+(((j)*cos(radian))+((i+(pos*8))*sin(radian)));
+				newx=x+(((i+(pos*8))*cosf(radian))-((j)*sinf(radian)));
+				newy=y+(((j)*cosf(radian))+((i+(pos*8))*sinf(radian)));
 
 				setXY(newx,newy,newx+1,newy+1);
 				
@@ -771,8 +773,8 @@ void rotateChar(char c, int x, int y, int pos, int deg)
 			ch=(BigFont[temp]); 
 			for(i=0;i<8;i++)
 			{   
-				newx=x+(((i+(pos*16))*cos(radian))-((j)*sin(radian)));
-				newy=y+(((j)*cos(radian))+((i+(pos*16))*sin(radian)));
+				newx=x+(((i+(pos*16))*cosf(radian))-((j)*sinf(radian)));
+				newy=y+(((j)*cosf(radian))+((i+(pos*16))*sinf(radian)));
 
 				setXY(newx,newy,newx+1,newy+1);
 				
@@ -789,8 +791,8 @@ void rotateChar(char c, int x, int y, int pos, int deg)
 			ch=(BigFont[temp]); 
 			for(i=8;i<16;i++)
 			{   
-				newx=x+(((i+(pos*16))*cos(radian))-((j)*sin(radian)));
-				newy=y+(((j)*cos(radian))+((i+(pos*16))*sin(radian)));
+				newx=x+(((i+(pos*16))*cosf(radian))-((j)*sinf(radian)));
+				newy=y+(((j)*cosf(radian))+((i+(pos*16))*sinf(radian)));
 
 				setXY(newx,newy,newx+1,newy+1);
 				
@@ -1071,8 +1073,8 @@ void drawBitmapR(int x, int y, int sx, int sy, unsigned int* data, int deg, int 
 
 				setColor(r,g,b);
 
-				newx=x+rox+(((tx-rox)*cos(radian))-((ty-roy)*sin(radian)));
-				newy=y+roy+(((ty-roy)*cos(radian))+((tx-rox)*sin(radian)));
+				newx=x+rox+(((tx-rox)*cosf(radian))-((ty-roy)*sinf(radian)));
+				newy=y+roy+(((ty-roy)*cosf(radian))+((tx-rox)*sinf(radian)));
 
 				drawPixel(newx, newy);
 			}

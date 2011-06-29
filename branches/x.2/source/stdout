@@ -1,5 +1,4 @@
-UBW32 found: 241664 bytes free
-Erasing...
-Writing hex file '/home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/examples/4.Communication/USB/CDC/test.hex':..............................................................................................................................................................................................................................................................................................................................................................................................................................
-Resetting device...
-/home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/ubw32 Error: USB write error
+if exist E:\\source\main32.o @del E:\\source\main32.o
+if exist E:\\source\main32.elf @del E:\\source\main32.elf
+Le chemin r‚seau n'a pas ‚t‚ trouv‚.
+make: *** [clean] Error 1

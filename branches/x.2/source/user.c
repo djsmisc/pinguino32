@@ -1,36 +1,20 @@
 /*
-	cdc example
-	
-	if gtkterm doesn't allow connecting to /dev/ttyACM0,
-	you can create a symlink in /dev pointing /dev/ttyUSB0 to /dev/ttyACM0 thus:
-	sudo ln -s /dev/ttyACM0 /dev/ttyUSB0
-	open gtkterm with	:
-	gtkterm --port /dev/ttyUSB0
-	or
-	gtkterm --port /dev/ttyACM0
-*/
+  Blink
+  Turns on an LED on for one second, then off for one second, repeatedly.
+ 
+  This example code is in the public domain.
+ */
 
-
-
-void setup()
-{
-//
-//
-//
+void setup() {                
+//
+//
+  pinmode(13, OUTPUT);     
 }
 
-void loop()
-{
-	u8 i;
-	u8 *buffer="Test\r\n";
-	u8 length;
-
-	length=strlen(buffer);
-//
-//
-	for (i=0; i<length; i++)
-	{
-		putUSBUSART(buffer[i],1);
-		CDCTxService();
-	}
+void loop() {
+  digitalwrite(13, HIGH);   
+  Delayms(100);              
+  digitalwrite(13, LOW);    
+  Delayms(100);              
 }
+

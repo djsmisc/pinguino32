@@ -4,6 +4,8 @@
  * Stores values read from analog input 0 into the EEPROM.
  * These values will stay in the EEPROM when the board is
  * turned off and may be retrieved later by another sketch.
+ *
+ * NB : 32-bit PICs have no EEPROM
  */
 
 #include <EEPROM.h>

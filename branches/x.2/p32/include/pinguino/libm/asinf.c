@@ -28,9 +28,9 @@
 
 #include <math.h>
 
-float asincosf(const float x, const int isacos);
+double asincosf(const double x, const int isacos);
 
-float asinf(const float x) _MATH_REENTRANT
+double asinf(const double x) _MATH_REENTRANT
 {   
          if(x== 1.0) return  HALF_PI;
     else if(x==-1.0) return -HALF_PI;
