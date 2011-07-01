@@ -246,7 +246,7 @@ class Pinguino(wx.Frame):
 			self.debug_port = 15
 			self.c8 = 'sdcc.exe'
 			self.u32 = 'mphidflash.exe'
-			self.make = 'make.exe'
+			self.make = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'make.exe')
 		else:
 			self.osdir = 'linux'
 			self.debug_port = '/dev/ttyACM0'
@@ -293,7 +293,7 @@ class Pinguino(wx.Frame):
 		
 		self.SetTitle('Pinguino IDE ' + pinguino_version)
 		_icon = wx.EmptyIcon()
-		_icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
+		_icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logoX.png'), wx.BITMAP_TYPE_ANY))
 		self.SetIcon(_icon)		   
 
 		self._mgr = wx.aui.AuiManager(self)	  
@@ -479,7 +479,7 @@ class Pinguino(wx.Frame):
 		self.EditorPanel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, editorsize)
 		# background with pinguino.cc colour and pinguino logo
 		self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
-		background = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
+		background = wx.Bitmap(os.path.join(THEME_DIR, 'logoX.png'), wx.BITMAP_TYPE_ANY)
 		if sys.platform == 'win32':
 			background.SetSize(editorsize)
 		self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, background)
@@ -837,7 +837,7 @@ class Pinguino(wx.Frame):
 
 		info = wx.AboutDialogInfo()
 
-		info.SetIcon(wx.Icon(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_PNG))
+		info.SetIcon(wx.Icon(os.path.join(THEME_DIR, 'logoX.png'), wx.BITMAP_TYPE_PNG))
 		info.SetName('Pinguino')
 		info.SetVersion(pinguino_version)
 		info.SetDescription(description)
@@ -861,6 +861,8 @@ class Pinguino(wx.Frame):
 
 		info.AddArtist('France Cadet')
 		info.AddArtist('Laurent Costes')
+		info.AddArtist('Daniel Rodríguez')
+		info.AddArtist('PingüinoVE')
 
 		info.AddTranslator('Joan Espinoza Spanish, Portuguese')
 		info.AddTranslator('Marin Purgar Croatian')
@@ -1408,7 +1410,7 @@ class Pinguino(wx.Frame):
 			else:
 				# "PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
 				# can't be used with Command Line version since editor isn't used
-				sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.make),\
+				sortie=Popen([self.make,\
 						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile.'+self.osdir),\
 						"HOME=" + HOME_DIR,\
 						"PDEDIR=" + os.path.dirname(filename),\

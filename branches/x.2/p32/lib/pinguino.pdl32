@@ -11,8 +11,10 @@ analogRead analogRead#include <analog.c>
 randomSeed srand#include <stdlib.h>
 pulseIn pulseIn#include <pulse.c>
 map map#include <math.c>
-dec2bcd dec2bcd#include <math.c>
-bcd2dec bcd2dec#include <math.c>
+dec2bcd dec2bcd#include <bcd.c>
+bcd2dec bcd2dec#include <bcd.c>
+bin2bcd bin2bcd#include <bcd.c>
+bcd2bin bcd2bin#include <bcd.c>
 pow powf#include <math.h>
 sqrt sqrtf#include <math.h>
 abs fabsf#include <math.h>
