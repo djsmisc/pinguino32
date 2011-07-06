@@ -12,9 +12,13 @@ Pinguino is compatible with arduino/wiring langage.
 
 dependencies:
 
-Linux 	libusb
-			python 2.5
-			wxpython 2.8
+Linux
+- libusb
+- python 2.5
+- wxpython 2.8
+Windows
+- python 2.5
+- wxpython 2.8
 
 Pinguino is based on open source software:
 	compiler			SDCC 2.9.0		http://sdcc.sourceforge.net/

@@ -475,7 +475,7 @@ class Pinguino(wx.Frame):
 # ------------------------------------------------------------------------------
 		
 		# create editor panel
-		editorsize = (outputsize[0], framesize[1] - outputsize[1])
+		editorsize = (outputsize[0], framesize[1] - outputsize[1] - 100)
 		self.EditorPanel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, editorsize)
 		# background with pinguino.cc colour and pinguino logo
 		self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
