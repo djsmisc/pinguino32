@@ -1,10 +1,10 @@
 /*	----------------------------------------------------------------------------
-	FILE:  rtcc.c
-	PROJECT: 	pinguino32
-	PURPOSE: 	Real Time Clock and Calendar functions
-	PROGRAMER: regis blanchot <rblanchot@gmail.com>
+	FILE:  			rtcc.c
+	PROJECT: 		pinguino32
+	PURPOSE: 		Real Time Clock and Calendar functions
+	PROGRAMER: 		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	11 apr. 2011
-	LAST RELEASE:	11 apr. 2011
+	LAST RELEASE:	06 jul. 2011
 	----------------------------------------------------------------------------
 	TODO :
 	----------------------------------------------------------------------------
@@ -34,6 +34,8 @@
 
 // RTCC definitions
 
+extern RTCCAlarmInt = False;
+
 // union/structure for read/write of time into the RTCC device
 typedef union
 {
@@ -43,7 +45,7 @@ typedef union
 		unsigned char	sec;		// BCD codification for seconds, 00-59
 		unsigned char	min;		// BCD codification for minutes, 00-59
 		unsigned char	hour;		// BCD codification for hours, 00-24
-	};								// field access
+	};									// field access
 	unsigned char		b[4];		// byte access
 	unsigned short		w[2];		// 16 bits access
 	unsigned long		l;			// 32 bits access
@@ -58,7 +60,7 @@ typedef union
 		unsigned char	mday;		// BCD codification for day of the month, 01-31
 		unsigned char	mon;		// BCD codification for month, 01-12
 		unsigned char	year;		// BCD codification for years, 00-99
-	};								// field access
+	};									// field access
 	unsigned char		b[4];		// byte access
 	unsigned short		w[2];		// 16 bits access
 	unsigned long		l;			// 32 bits access
@@ -74,16 +76,16 @@ typedef enum
 }rtccRes;
 
 // Repeat alarm every ...
-#define RTCC_ALARM_EVERY_HALF_SECOND	0b000000000000
-#define RTCC_ALARM_EVERY_SECOND 			0b000100000000
-#define RTCC_ALARM_EVERY_TEN_SECONDS	0b001000000000
-#define RTCC_ALARM_EVERY_MINUTE 			0b001100000000
-#define RTCC_ALARM_EVERY_TEN_MINUTES	0b010000000000
-#define RTCC_ALARM_EVERY_HOUR 			0b010100000000
-#define RTCC_ALARM_EVERY_DAY  			0b011000000000
-#define RTCC_ALARM_EVERY_WEEK 			0b011100000000
-#define RTCC_ALARM_EVERY_MONTH 			0b100000000000
-#define RTCC_ALARM_EVERY_YEAR 			0b100100000000 // except when configured for February 29th, once every 4 years
+#define RTCC_ALARM_EVERY_HALF_SECOND	0b0000
+#define RTCC_ALARM_EVERY_SECOND 			0b0001
+#define RTCC_ALARM_EVERY_TEN_SECONDS	0b0010
+#define RTCC_ALARM_EVERY_MINUTE 			0b0011
+#define RTCC_ALARM_EVERY_TEN_MINUTES	0b0100
+#define RTCC_ALARM_EVERY_HOUR 			0b0101
+#define RTCC_ALARM_EVERY_DAY  			0b0110
+#define RTCC_ALARM_EVERY_WEEK 			0b0111
+#define RTCC_ALARM_EVERY_MONTH 			0b1000
+#define RTCC_ALARM_EVERY_YEAR 			0b1001 // except when configured for February 29th, once every 4 years
 
 /*	----------------------------------------------------------------------------
 	RTCC REGISTERS
@@ -96,109 +98,220 @@ typedef enum
 	ALRMDATE 
 	--------------------------------------------------------------------------*/
 
-/*
-void RTCC_WrEnable(int enable)
+/*	-----------------------------------------------------------------------------
+	Conversion routines from bcd to decimal format
+	---------------------------------------------------------------------------*/
+
+rtccTime RTCC_ConvertTime(rtccTime *pTm)
 {
-	if(enable)
-		mSysUnlockOpLock(RTCCONSET=_RTCCON_RTCWREN_MASK);	
-	else
-		RTCCONCLR=_RTCCON_RTCWREN_MASK;
+	rtccTime t0;
+	
+	t0.hour = bcd2bin(pTm->hour);
+	t0.min  = bcd2bin(pTm->min);
+	t0.sec  = bcd2bin(pTm->sec);
+	return t0;
 }
-*/
 
-// Allow a writing into the clock registers
-// In order to perform a write to any of the RTCC timer registers, the RTCWREN bit (RTCCON<3>)
-// must be set. Setting of the RTCWREN bit is only allowed once the device level unlocking
-// sequence has been executed.
+rtccDate RTCC_ConvertDate(rtccDate *pDt)
+{
+	rtccDate d0;
+	
+	d0.wday = bcd2bin(pDt->wday);
+	d0.mday = bcd2bin(pDt->mday);
+	d0.mon  = bcd2bin(pDt->mon);
+	d0.year = bcd2bin(pDt->year);
+	return d0;
+}
 
-void RTCC_Unlock(void)
+/*	-----------------------------------------------------------------------------
+	Allow a writing into the clock registers
+	In order to perform a write to any of the RTCC timer registers, the RTCWREN bit (RTCCON<3>)
+	must be set. Setting of the RTCWREN bit is only allowed once the device level unlocking
+	sequence has been executed.
+	---------------------------------------------------------------------------*/
+
+int RTCC_SetWriteEnable(void)
 {
 	// assume interrupts are disabled
 	// assume the DMA controller is suspended
 	// assume the device is locked
-
 	SystemUnlock();
 	RTCCONSET = 0x8; // set RTCWREN (bit 3) in RTCCONSET
 	SystemLock();
-
 	// re-enable interrupts
 	// re-enable the DMA controller
 }
 
-// Allow a writing into the clock registers
-int RTCC_SetWriteEnable(void)
+int RTCC_SetWriteDisable(void)
 {
-	RTCC_Unlock();
+	// assume interrupts are disabled
+	// assume the DMA controller is suspended
+	// assume the device is locked
+	SystemUnlock();
+	RTCCONCLR = 0x8; // set RTCWREN (bit 3) in RTCCONSET
+	SystemLock();
+	// re-enable interrupts
+	// re-enable the DMA controller
 }
 
-// Check that RTCC is writable
+/*	-----------------------------------------------------------------------------
+	Check that RTCC is writable
+	---------------------------------------------------------------------------*/
+
 int RTCC_GetWriteEnable(void)
 {
 	 return RTCCONbits.RTCWREN!=0;
 }
 
-// RTCC enabled
+/*	-----------------------------------------------------------------------------
+	RTCC module is enabled
+	The write operations have to be enabled in order to be able to toggle the ON control bit.
+	The function doesn't wait for the RTC clock to be on.
+ 	---------------------------------------------------------------------------*/
+
 void RTCC_Enable(void)
 {
+	RTCC_SetWriteEnable();
 	//RTCCON |= (1 << 15);
 	RTCCONSET = 0x8000;			// turn on the RTCC
+	while (!(RTCCON & 0x40));	// wait for clock to be turned on
+	RTCC_SetWriteDisable();
 }
 
-// RTCC disabled
+/*	-----------------------------------------------------------------------------	
+	RTCC module is disabled
+	The write operations have to be enabled in order to be able to toggle the ON control bit.
+	When ON control bit is set to 0, RTCCON.RTCSYNC, RTCCON.HALFSEC and RTCCON.RTCOE are asynchronously reset
+	The function waits for the RTC clock to be off.
+ 	---------------------------------------------------------------------------*/
+
 void RTCC_Disable(void)
 {
+	RTCC_SetWriteEnable();
 	//RTCCON |= !(1 << 15);
 	RTCCONCLR = 0x8000;			// turn off the RTCC
+	// TODO: RTCCON.RTCSYNC, RTCCON.HALFSEC and RTCCON.RTCOE
 	while (RTCCON & 0x40);		// wait for clock to be turned off
+	// bit 6 RTCCLKON: RTCC Clock Enable Status bit
+	RTCC_SetWriteDisable();
 }
 
-// TODO
+/*	-----------------------------------------------------------------------------
+	TODO: check if it works
+	---------------------------------------------------------------------------*/
+
 int RTCC_GetEnable(void)
 {
+	if (RTCCON & 0x8000)
+		return 1;
+	else
+		return 0;
 }
 
-// Check that the Secondary Oscillator (SOSC) is running.
+/*	-----------------------------------------------------------------------------
+	Check that the Secondary Oscillator (SOSC) is running.
+	TODO: find the bug ! It never sends RTCC_CLK_ON.
+	---------------------------------------------------------------------------*/
+
 rtccRes RTCC_GetClockStatus(void)
 {
-	if( (!(OSCCONbits.SOSCEN)) || (!(OSCCONbits.SOSCRDY)) )
+	if ( (!(OSCCONbits.SOSCEN)) || (!(OSCCONbits.SOSCRDY)) )
 		return RTCC_SOSC_NRDY;
-	else if(!(RTCCONbits.RTCCLKON))	// if RTCC Clock is not running
+	else if (!(RTCCONbits.RTCCLKON))	// if RTCC Clock is not running
 		return RTCC_CLK_NRDY;
 	return RTCC_CLK_ON;
 }
 
-// Enable the oscillator for the RTCC
-// To allow the RTCC to be clocked by an external 32.768 kHz crystal, the SOSCEN bit
-// (OSCCON<1>) must be set (refer to Register 6-1 in Section 6. “Oscillators” (DS61112)) in the
-// “PIC32 Family Reference Manual”. This is the only bit outside of the RTCC module with which
-// the user must be concerned for enabling the RTCC. 
+/*	-----------------------------------------------------------------------------
+	Enable the oscillator for the RTCC
+	To allow the RTCC to be clocked by an external 32.768 kHz crystal, the SOSCEN bit
+	(OSCCON<1>) must be set (refer to Register 6-1 in Section 6. “Oscillators” (DS61112)) in the
+	"PIC32 Family Reference Manual”. This is the only bit outside of the RTCC module with which
+	the user must be concerned for enabling the RTCC. 
+	---------------------------------------------------------------------------*/
 
-void RTCC_Init(void)
+void RTCC_StartClock(void)
 {
-	// Enable the Secondary Oscillator for the RTCC
-	// Allow the RTCC to be clocked by an external 32.768 kHz crystal,
-	// An unlock sequence is required before a write to OSCCON can occur
 	SystemUnlock();
 	OSCCONbits.SOSCEN = 1;
 	SystemLock();
+	// Wait for stable SOCSC oscillator output before enabling the RTCC.
+	// This typically requires a 32 ms delay between enabling the SOSC and enabling the RTCC.
+// 1st option
+	Delayms(50);
+// 2nd option
 	// Wait for the SOSC to run
-	while (RTCC_GetClockStatus() != RTCC_CLK_ON);
-	// Unlock sequence must take place for RTCEN to be written
-	RTCC_Unlock();
-	RTCC_Enable();
+	//while (RTCC_GetClockStatus() != RTCC_CLK_ON);
 }
+
+void RTCC_StopClock(void)
+{
+	SystemUnlock();
+	OSCCONbits.SOSCEN = 0;
+	SystemLock();
+}
+
+/*	-----------------------------------------------------------------------------
+	The function initializes the RTCC device.
+		*starts the RTCC clock,
+		*enables the RTCC,
+		*disables RTCC write,
+		*disables the Alarm and the OE,
+		*clears the alarm interrupt flag.
+	---------------------------------------------------------------------------*/
+
+void RTCC_init(void)
+{
+	RTCC_StartClock();
+	RTCC_Enable();
+	RTCC_SetWriteDisable();
+	RTCC_AlarmDisable();
+	RTCC_OutputDisable();
+	IntClearFlag(INT_REAL_TIME_CLOCK);
+}
+
+/*	-----------------------------------------------------------------------------
+	The function shutdowns the RTCC device.
+	*It stops the RTCC clock,
+	*sets the RTCC Off
+	*disables RTCC write
+	*disables the Alarm and the OE.
+	*clears the alarm interrupt flag.
+ 	---------------------------------------------------------------------------*/
 
 void RTCC_Shutdown(void)
 {
+	RTCC_StopClock();
 	RTCC_Disable();
+	RTCC_SetWriteDisable();
+	RTCC_AlarmDisable();
+	RTCC_OutputDisable();
+	IntClearFlag(INT_REAL_TIME_CLOCK);
 }
+
+/*	-----------------------------------------------------------------------------
+	The write is successful only if Write Enable is set.
+	The function will enable the write itself.
+	The routine wait for the CLK to be running before returning.
+	The routine could disable the interrupts for a very short time to be able
+	to update the time and date registers.
+ 	---------------------------------------------------------------------------*/
 
 void RTCC_SetTime(unsigned long tm)
 {
-	RTCC_Disable();
+	RTCC_SetWriteEnable();
+	RTCCONCLR = 0x8000;			// turn off the RTCC
+	Delayus(50);
+	//while (RTCCON & 0x40);		// wait for clock to be turned off
 	RTCTIME = tm;					// Set time
-	RTCC_Enable();
+	RTCCONSET = 0x8000;			// turn on the RTCC
+	//Delayus(50);
+	while (!(RTCCON & 0x40));	// wait for clock to be turned on
+	RTCC_SetWriteDisable();
 }
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
 
 rtccTime RTCC_GetTime(void)
 {
@@ -208,18 +321,32 @@ rtccTime RTCC_GetTime(void)
 		t0.l = RTCTIME;
 		t1.l = RTCTIME;
 	} while (t0.l != t1.l);
-	t0.hour = bcd2bin(t1.hour);
-	t0.min  = bcd2bin(t1.min);
-	t0.sec  = bcd2bin(t1.sec);
 	return t0;
 }
 
+/*	-----------------------------------------------------------------------------
+	The write is successful only if Write Enable is set.
+	The function will enable the write itself.
+	The routine wait for the CLK to be running before returning.
+	The routine could disable the interrupts for a very short time to be able
+	to update the time and date registers.
+	---------------------------------------------------------------------------*/
+
 void RTCC_SetDate(unsigned long dt)
 {
-	RTCC_Disable();
+	RTCC_SetWriteEnable();
+	RTCCONCLR = 0x8000;			// turn off the RTCC
+	//Delayus(50);
+	while (RTCCON & 0x40);		// wait for clock to be turned off
 	RTCDATE = dt;					// Set date
-	RTCC_Enable();
+	RTCCONSET = 0x8000;			// turn on the RTCC
+	//Delayus(50);
+	while (!(RTCCON & 0x40));	// wait for clock to be turned on
+	RTCC_SetWriteDisable();
 }
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
 
 rtccDate RTCC_GetDate(void)
 {
@@ -229,20 +356,33 @@ rtccDate RTCC_GetDate(void)
 		d0.l = RTCDATE;
 		d1.l = RTCDATE;
 	} while (d0.l != d1.l);
-	d0.wday = bcd2bin(d0.wday);
-	d0.mday = bcd2bin(d0.mday);
-	d0.mon  = bcd2bin(d0.mon);
-	d0.year = bcd2bin(d0.year);
 	return d0;
 }
 
+/*	-----------------------------------------------------------------------------
+	The write is successful only if Write Enable is set.
+	The function will enable the write itself.
+	The routine wait for the CLK to be running before returning.
+	The routine could disable the interrupts for a very short time to be able
+	to update the time and date registers.
+	---------------------------------------------------------------------------*/
+
 void RTCC_SetTimeDate(unsigned long tm, unsigned long dt)
 {
-	RTCC_Disable();
+	RTCC_SetWriteEnable();
+	RTCCONCLR = 0x8000;			// turn off the RTCC
+	//Delayus(50);
+	while (RTCCON & 0x40);		// wait for clock to be turned off
 	RTCTIME = tm;					// Set time
 	RTCDATE = dt;					// Set date
-	RTCC_Enable();
+	RTCCONSET = 0x8000;			// turn on the RTCC
+	//Delayus(50);
+	while (!(RTCCON & 0x40));	// wait for clock to be turned on
+	RTCC_SetWriteDisable();
 }
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
 
 void RTCC_GetTimeDate(rtccTime* pTm, rtccDate* pDt)
 {
@@ -257,6 +397,12 @@ void RTCC_GetTimeDate(rtccTime* pTm, rtccDate* pDt)
 	} while ((d0.l != pDt->l) || (t0.l != pTm->l)); // update the user requested data
 }
 
+/*	-----------------------------------------------------------------------------
+	adjust RTCC from +511 to -512 clock pulses every one minute
+	0111111111 = Maximum positive adjustment, adds 511 RTC clock pulses every one minute
+	1000000000 = Minimum negative adjustment, subtracts 512 clock pulses every one minute
+	---------------------------------------------------------------------------*/
+
 void RTCC_SetCalibration(int cal)
 {
 	rtccTime t0;
@@ -266,9 +412,15 @@ void RTCC_SetCalibration(int cal)
 		if ((t0.sec & 0xFF) == 00)			// we're at second 00, wait auto-adjust to be performed
 			while(!(RTCCON & 0x2));			// wait until second half...
 	}
+	RTCC_SetWriteEnable();
 	RTCCONCLR = 0x03FF0000;					// clear the calibration
 	RTCCONSET = cal;
+	RTCC_SetWriteDisable();
 }
+
+/*	-----------------------------------------------------------------------------
+	Return 10-bit clock pulse calibration
+	---------------------------------------------------------------------------*/
 
 int RTCC_GetCalibration(void)
 {
@@ -276,60 +428,55 @@ int RTCC_GetCalibration(void)
 }
 
 /*	-----------------------------------------------------------------------------
-	unsigned long alTime=0x23352300;	// set time to 23hr, 35 min, 23 sec
-	unsigned long alDate=0x06111301;	// set date to Monday 13 Nov 2006
+	The function initializes the RTCC device.
+	*It starts the RTCC clock,
+	*sets the desired time and calibration
+	and enables the RTCC.
+	Disables the Alarm and the OE and further RTCC writes.
+	Clears the alarm interrupt flag.
 	---------------------------------------------------------------------------*/
 
-void RTCC_SetAlarmTime(unsigned long alTime)
+rtccRes RTCC_Open(unsigned long tm, unsigned long dt, int drift)
+{
+	RTCC_StartClock();
+	RTCC_SetTime(tm);
+	RTCC_SetDate(dt);
+	RTCC_SetCalibration(drift);
+	RTCC_Enable();
+	RTCC_AlarmDisable();
+	RTCC_OutputDisable();
+	RTCC_SetWriteDisable();
+	IntClearFlag(INT_REAL_TIME_CLOCK);
+}
+
+/*	-----------------------------------------------------------------------------
+	ALRMEN: Alarm Enable bit(2,3)
+	1 = Alarm is enabled
+	0 = Alarm is disabled
+	(2)Hardware clears the ALRMEN bit anytime the alarm event occurs,
+	when ARPT<7:0> = 00 and	CHIME = 0.
+	(3)This field should not be written when the RTCC ON bit = ‘1’ (RTCCON<15>) and ALRMSYNC = 1.
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetAlarmEnable(int enable)
 {
 	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
-	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
-	ALRMTIME = alTime;
-}
-
-rtccTime RTCC_GetAlarmTime(void)
-{
-	rtccTime	t0;
-	t0.l = ALRMTIME;
-	return t0;
-}
-
-void RTCC_SetAlarmDate(unsigned long alDate)
-{
-	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
-	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
-	ALRMDATE = alDate;
-}
-
-rtccDate RTCC_GetAlarmDate(void)
-{
-	rtccDate	d0;
-	d0.l = ALRMDATE;
-	return d0;
-}
-
-void RTCC_SetAlarmTimeDate(unsigned long alTime, unsigned long alDate)
-{
-	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
-	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
-	ALRMTIME = alTime;
-	ALRMDATE = alDate;
-}
-
-void RTCC_GetAlarmTimeDate(rtccTime* pTm, rtccDate* pDt)
-{
-	pTm->l = ALRMTIME;
-	pDt->l = ALRMDATE;
+	RTCC_Disable();
+	if (enable)
+		RTCALRMbits.ALRMEN = 1;   	// Alarm is enabled
+	else
+		RTCALRMbits.ALRMEN = 0;   	// Alarm is disabled
+	RTCC_Enable();
 }
 
 void RTCC_AlarmEnable(void)
 {
-	RTCALRMbits.ALRMEN = 1;   	// Alarm is enabled
+	RTCC_SetAlarmEnable(True);
 }
 
 void RTCC_AlarmDisable(void)
 {
-	RTCALRMbits.ALRMEN = 0;   	// Alarm is disabled
+	RTCC_SetAlarmEnable(False);
 }
 
 int RTCC_GetAlarmEnable(void)
@@ -344,22 +491,32 @@ int RTCC_GetAlarmEnable(void)
 	return isAlrm0;
 }
 
+/*	-----------------------------------------------------------------------------
+	CHIME: Chime Enable bit(3)
+	1 = Chime is enabled – ARPT<7:0> is allowed to rollover from 0x00 to 0xFF
+	0 = Chime is disabled – ARPT<7:0> stops once it reaches 0x00
+	(3)CHIME should not be written when the RTCC ON bit = ‘1’ (RTCCON<15>) and ALRMSYNC = 1.
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetChimeEnable(int enable)
+{
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
+	//RTCC_Disable();
+	if (enable)
+		RTCALRMbits.CHIME = 1;   	// chime is on
+	else
+		RTCALRMbits.CHIME = 0;   	// chime is off
+	//RTCC_Enable();
+}
+
 void RTCC_ChimeEnable(void)
 {
-	// CHIME should not be written when the RTCC ON bit = ‘1’ (RTCCON<15>) and ALRMSYNC = 1.
-	RTCC_Disable();
-	RTCALRMbits.ALRMSYNC = 0;
-	RTCALRMbits.CHIME = 1;   	// chime is on
-	RTCC_Enable();
+	RTCC_SetChimeEnable(True);
 }
 
 void RTCC_ChimeDisable(void)
 {
-	// CHIME should not be written when the RTCC ON bit = ‘1’ (RTCCON<15>) and ALRMSYNC = 1.
-	RTCC_Disable();
-	RTCALRMbits.ALRMSYNC = 0;
-	RTCALRMbits.CHIME = 0;   	// chime is off
-	RTCC_Enable();
+	RTCC_SetChimeEnable(False);
 }
 
 int RTCC_GetChimeEnable(void)
@@ -378,11 +535,55 @@ int RTCC_GetChimeEnable(void)
 	alarm repeat every year, month, week, day, hour minute ...
 	---------------------------------------------------------------------------*/
 
-void RTCC_SetAlarmRepeat(rpt)
+void RTCC_SetAlarmRepeat(int rpt)
 {
-	RTCALRMSET=0x8000|rpt;
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
+	RTCALRMbits.AMASK = rpt;
 }
 
+void RTCC_AlarmRepeatEveryHalfSecond(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_HALF_SECOND);
+}
+void RTCC_AlarmRepeatEverySecond(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_SECOND);
+}
+void RTCC_AlarmRepeatEveryTenSeconds(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_TEN_SECONDS);
+}
+void RTCC_AlarmRepeatEveryMinute(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_MINUTE);
+}
+void RTCC_AlarmRepeatEveryTenMinutes(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_TEN_MINUTES);
+}
+void RTCC_AlarmRepeatEveryHour(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_HOUR);
+}
+void RTCC_AlarmRepeatEveryDay(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_DAY);
+}
+void RTCC_AlarmRepeatEveryWeek(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_WEEK);
+}
+void RTCC_AlarmRepeatEveryMonth(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_MONTH);
+}
+void RTCC_AlarmRepeatEveryYear(void)
+{
+	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_YEAR);
+}
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
 
 int RTCC_GetAlarmRepeat(void)
 {
@@ -399,12 +600,17 @@ int RTCC_GetAlarmRepeat(void)
 
 /*	-----------------------------------------------------------------------------
 	Alarm will trigger rptCnt times
+	rptCnt has to be a value less then 256
 	---------------------------------------------------------------------------*/
 
 void RTCC_SetAlarmRepeatCount(int rptCnt)
 {
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
 	RTCALRMbits.ARPT = rptCnt;
 }
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
 
 int RTCC_GetAlarmRepeatCount(void)
 {
@@ -418,48 +624,195 @@ int RTCC_GetAlarmRepeatCount(void)
 	return rpt0;
 }
 
+/*	-----------------------------------------------------------------------------
+	The function might wait for the proper Alarm window to safely perform
+	the update of the ALRMTIME register.
+	Interrupts are disabled shortly when properly probing the ALRMSYNC needed.
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetAlarmTime(unsigned long alTime)
+{
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
+	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
+	ALRMTIME = alTime;
+}
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
+
+rtccTime RTCC_GetAlarmTime(void)
+{
+	rtccTime t0;
+	t0.l = ALRMTIME;
+	return t0;
+}
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetAlarmDate(unsigned long alDate)
+{
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
+	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
+	ALRMDATE = alDate;
+}
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
+
+rtccDate RTCC_GetAlarmDate(void)
+{
+	rtccDate d0;
+	d0.l = ALRMDATE;
+	return d0;
+}
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetAlarmTimeDate(unsigned long alTime, unsigned long alDate)
+{
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
+	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
+	ALRMTIME = alTime;
+	ALRMDATE = alDate;
+}
+
+/*	-----------------------------------------------------------------------------
+	---------------------------------------------------------------------------*/
+
+void RTCC_GetAlarmTimeDate(rtccTime* pTm, rtccDate* pDt)
+{
+	pTm->l = ALRMTIME;
+	pDt->l = ALRMDATE;
+}
+
+/*	-----------------------------------------------------------------------------
+	RTCSYNC: RTCC Value Registers Read Synchronization bit
+	1 = RTC Value registers can change while reading, due to a rollover ripple
+	that results in an invalid	data read
+	If the register is read twice and results in the same data, the data can be
+	assumed to be valid
+	0 = RTC Value registers can be read without concern about a rollover ripple
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetSync(int sync)
+{
+	if (sync)
+		RTCCONbits.RTCSYNC = 1;
+	else
+		RTCCONbits.RTCSYNC = 0;
+}
+
 int RTCC_GetSync(void)
 {
 	 return RTCCONbits.RTCSYNC!=0;
 }
+
+void RTCC_SetAlarmSync(int sync)
+{
+	if (sync)
+		RTCALRMbits.ALRMSYNC = 1;
+	else
+		RTCALRMbits.ALRMSYNC = 0;
+}
+
+int RTCC_GetAlarmSync(void)
+{
+	return RTCALRMbits.ALRMSYNC!=0;
+}
+
+/*	-----------------------------------------------------------------------------
+	TRUE if the RTCC is in the second HALF SECOND  interval, FALSE otherwise
+	HALFSEC: Half-Second Status bit(7)
+	1 = Second half period of a second
+	0 = First half period of a second
+	(7)This bit is read-only.
+	It is cleared to ‘0’ on a write to the seconds bit fields (RTCTIME<14:8>).
+	---------------------------------------------------------------------------*/
 
 int RTCC_GetHalfSecond(void)
 {
 	 return RTCCONbits.HALFSEC!=0;
 }
 
-void RTCC_SelectPulseOutput(int secPulse)
+/*	-----------------------------------------------------------------------------
+	RTSECSEL: RTCC Seconds Clock Output Select bit(5)
+	1 = RTCC Seconds Clock is selected for the RTCC pin
+	0 = RTCC Alarm Pulse is selected for the RTCC pin
+	TODO:(5) Requires RTCOE = 1 (RTCCON<0>) for the output to be active.
+	---------------------------------------------------------------------------*/
+
+void RTCC_SecondsPulseOutput(void)
 {
-	if (secPulse)
 		RTCCONbits.RTSECSEL = 1;	// RTCC Seconds Clock is selected for the RTCC pin
-	else
+}
+
+void RTCC_AlarmPulseOutput(void)
+{
 		RTCCONbits.RTSECSEL = 0;	// RTCC Alarm Pulse is selected for the RTCC pin
 }
 
-void RTCC_AlarmPulseHigh(void)
+/*	-----------------------------------------------------------------------------
+	PIV: Alarm Pulse Initial Value bit(3)
+	When ALRMEN = 0, PIV is writable and determines the initial value of the Alarm Pulse.
+	When ALRMEN = 1, PIV is read-only and returns the state of the Alarm Pulse.
+	(3)This field should not be written when the RTCC ON bit = ‘1’ (RTCCON<15>) and ALRMSYNC = 1.
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetAlarmInitialPulse(int enable)
 {
-	RTCALRMbits.ALRMEN = 0;		// Alarm is disabled
-	RTCALRMbits.PIV = 1;			// PIV is writable and determines the initial value of the Alarm Pulse.
-	RTCALRMbits.ALRMEN = 1;		// Alarm is enabled
+	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
+	RTCC_Disable();				// 
+	RTCC_SetAlarmEnable(False);// Alarm is disabled, PIV is writable
+	if (enable)
+		RTCALRMbits.PIV = 1;		// the initial value of the Alarm Pulse is high
+	else
+		RTCALRMbits.PIV = 0;		// the initial value of the Alarm Pulse is low
+	RTCC_SetAlarmEnable(True);	// Alarm is enabled
+	RTCC_Enable();					// 
 }
 
-void RTCC_AlarmPulseLow(void)
+/*	-----------------------------------------------------------------------------
+	1. The RTCC has to be enabled for the output to actually be active.
+	2. This Alarm Pulse output is writable only when the alarm is disabled.
+	3. The function might wait for the proper Alarm window
+		to safely perform the update of the RTCALRM register.
+	4. Interrupts are disabled shortly when properly probing the ALRMSYNC needed.
+	---------------------------------------------------------------------------*/
+ 
+void RTCC_AlarmInitialPulseHigh(void)
 {
-	RTCALRMbits.ALRMEN = 0;		// Alarm is disabled
-	RTCALRMbits.PIV = 0;			// PIV is writable and determines the initial value of the Alarm Pulse.
-	RTCALRMbits.ALRMEN = 1;		// Alarm is enabled
+	RTCC_SetAlarmInitialPulse(HIGH); 
 }
 
-void RTCC_AlarmPulseToggle(void)
+void RTCC_AlarmInitialPulseLow(void)
 {
+	RTCC_SetAlarmInitialPulse(LOW);
 }
 
-int RTCC_GetAlarmPulse(void)
+int RTCC_GetAlarmInitialPulse(void)
 {
 	return RTCALRMbits.PIV!=0;
 }
 
-void RTCC_OutputEnable(int enable)
+void RTCC_AlarmInitialPulseToggle(void)
+{
+	if (RTCC_GetAlarmInitialPulse())
+		RTCC_SetAlarmInitialPulse(LOW);
+	else
+		RTCC_SetAlarmInitialPulse(HIGH);
+}
+
+/*	-----------------------------------------------------------------------------
+	RTCOE: RTCC Output Enable bit(8)
+	1 = RTCC clock output enabled – clock presented onto an I/O
+	0 = RTCC clock output disabled
+	(8)This bit is ANDed with the ON bit (RTCCON<15>) to produce the effective
+	RTCC output enable.
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetOutputEnable(int enable)
 {
 	if(enable)
 		RTCCONbits.RTCOE = 1;
@@ -467,22 +820,62 @@ void RTCC_OutputEnable(int enable)
 		RTCCONbits.RTCOE = 0;
 }
 
+void RTCC_OutputEnable()
+{
+	RTCC_SetOutputEnable(True);
+}
+
+void RTCC_OutputDisable()
+{
+	RTCC_SetOutputEnable(False);
+}
+
 int RTCC_GetOutputEnable(void)
 {
 	 return RTCCONbits.RTCOE!=0;
 }
 
-void RTCC_FreezeEnable(int enable)
+/*	-----------------------------------------------------------------------------
+	RTCC Interrupt Initialization
+	---------------------------------------------------------------------------*/
+
+void RTCC_SetAlarmIntEnable(int enable)
 {
 	if (enable)
-		RTCCONbits.FRZ = 1;
+	{
+		IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
+		IntSetVectorPriority(INT_RTCC_VECTOR, INT_PRIORITY_3, INT_SUBPRIORITY_1);
+		IntClearFlag(INT_REAL_TIME_CLOCK);
+		IntEnable(INT_REAL_TIME_CLOCK);
+	}
 	else
-		RTCCONbits.FRZ = 0;
+	{
+		IntDisable(INT_REAL_TIME_CLOCK);
+	}
 }
 
-int RTCC_GetFreeze(void)
+void RTCC_AlarmIntEnable(void)
 {
-	return RTCCONbits.FRZ!=0;
+	RTCC_SetAlarmIntEnable(True);
+}
+
+void RTCC_AlarmIntDisable(void)
+{
+	RTCC_SetAlarmIntEnable(False);
+}
+
+/*	-----------------------------------------------------------------------------
+	RTCC Interrupt Routine
+	This one is private
+	---------------------------------------------------------------------------*/
+
+void RTCCInterrupt(void)
+{
+	if (IntGetFlag(INT_REAL_TIME_CLOCK))
+	{
+		RTCCAlarmInt = True;
+		IntClearFlag(INT_REAL_TIME_CLOCK);
+	}
 }
 
 #endif	/* __RTCC_C */

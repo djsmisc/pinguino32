@@ -56,6 +56,14 @@
 		#define true	!false
 	#endif
 
+	#ifndef False
+		#define False	0
+	#endif
+
+	#ifndef True 
+		#define True	!False
+	#endif
+
 	#ifndef INPUT
 		#define INPUT	1
 	#endif
@@ -142,6 +150,7 @@
 		#define D4		4
 		#define D5		5
 		#define D6		6
+		#define RTCC	6
 		#define D7		7
 		#define D8		8
 		#define D9		9

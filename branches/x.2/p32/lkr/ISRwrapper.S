@@ -135,4 +135,5 @@ vector_\_XX\()_ISR_wrapper:
 	ISR_wrapper	24,Serial1Interrupt	# UART 1
 	ISR_wrapper	31,SPI2Interrupt		# SPI 2
 	ISR_wrapper	32,Serial2Interrupt	# UART 2
+	ISR_wrapper	35,RTCCInterrupt		# RTCC
 

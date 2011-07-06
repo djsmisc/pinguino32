@@ -55,6 +55,10 @@ int main()
 	CDC_init();
 	#endif    
 
+	#ifdef __RTCC_C
+	RTCC_init();
+	#endif    
+	
 	setup();
 
 	while (1)
@@ -98,4 +102,13 @@ void SPI2Interrupt(void)
 	Nop();    
 }
 #endif /* __SPI_C */
+
+// vector 35
+#ifndef __RTCC_C
+void RTCCInterrupt(void)
+{
+	Nop();    
+}
+#endif /* __RTCC_C */
+
 

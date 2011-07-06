@@ -348,6 +348,9 @@ void IntSetVectorPriority(u8 vector, u8 pri, u8 sub)
 		case INT_FSCM_VECTOR:
 			break;
 		case INT_RTCC_VECTOR:
+			IFS1bits.RTCCIF = 0;
+			IPC8bits.RTCCIP = pri;
+			IPC8bits.RTCCIS = sub;
 			break;
 		case INT_DMA0_VECTOR:
 			break;
@@ -454,6 +457,7 @@ unsigned int IntGetVectorPriority(u8 vector)
 		case INT_FSCM_VECTOR:
 			break;
 		case INT_RTCC_VECTOR:
+			pri = IPC8bits.RTCCIP;
 			break;
 		case INT_DMA0_VECTOR:
 			break;
@@ -472,7 +476,7 @@ unsigned int IntGetVectorPriority(u8 vector)
 }
 
 /*	----------------------------------------------------------------------------
-	IntGetVectorSubPriority
+	TODO:IntGetVectorSubPriority
 	----------------------------------------------------------------------------
 	Gets the interrupt vector's priority.
 	This routine gets the interrupt vector's priority.
@@ -484,7 +488,99 @@ unsigned int IntGetVectorPriority(u8 vector)
 
 unsigned int IntGetVectorSubPriority(u8 vector)
 {
-	return 0;
+	unsigned int sub;
+
+	switch (vector)
+	{
+		case INT_CORE_TIMER_VECTOR:
+			break;
+		case INT_CORE_SOFTWARE0_VECTOR:
+			break;
+		case INT_CORE_SOFTWARE1_VECTOR:
+			break;
+		case INT_EXTERNAL0_VECTOR:
+			break;
+		case INT_TIMER1_VECTOR:
+			break;
+		case INT_INPUT_CAPTURE1_VECTOR:
+			break;
+		case INT_OUTPUT_COMPARE1_VECTOR:
+			break;
+		case INT_EXTERNAL1_VECTOR:
+			break;    
+		case INT_TIMER2_VECTOR:
+			break;
+		case INT_INPUT_CAPTURE2_VECTOR:
+			break;
+		case INT_OUTPUT_COMPARE2_VECTOR:
+			break;
+		case INT_EXTERNAL2_VECTOR:
+			break;    
+		case INT_TIMER3_VECTOR:
+			break;
+		case INT_INPUT_CAPTURE3_VECTOR:
+			break;
+		case INT_OUTPUT_COMPARE3_VECTOR:
+			break;
+		case INT_EXTERNAL3_VECTOR:
+			break;     
+		case INT_TIMER4_VECTOR:
+			break;
+		case INT_INPUT_CAPTURE4_VECTOR:
+			break;
+		case INT_OUTPUT_COMPARE4_VECTOR:
+			break;
+		case INT_EXTERNAL4_VECTOR:
+			break;
+		case INT_TIMER5_VECTOR:
+			break;
+		case INT_INPUT_CAPTURE5_VECTOR:
+			break;
+		case INT_OUTPUT_COMPARE5_VECTOR:
+			break;
+		case INT_SPI1_VECTOR:
+			break;  
+		case INT_UART1_VECTOR:
+			sub = IPC6bits.U1IS;
+			break; 
+		case INT_I2C1_VECTOR:
+			break;
+		case INT_INPUT_CHANGE_VECTOR:
+			break;
+		case INT_ADC1_CONVERT_DONE_VECTOR:
+			break;       
+		case INT_PARALLEL_MASTER_PORT_VECTOR:
+			break;
+		case INT_COMPARATOR1_VECTOR:
+			break;         
+		case INT_COMPARATOR2_VECTOR:
+			break;        
+		case INT_SPI2_VECTOR:
+			break;
+		case INT_UART2_VECTOR:
+			sub = IPC8bits.U2IS;
+			break;
+		case INT_I2C2_VECTOR:
+			break;
+		case INT_FSCM_VECTOR:
+			break;
+		case INT_RTCC_VECTOR:
+			sub = IPC8bits.RTCCIS;
+			break;
+		case INT_DMA0_VECTOR:
+			break;
+		case INT_DMA1_VECTOR:
+			break;
+		case INT_DMA2_VECTOR:
+			break;
+		case INT_DMA3_VECTOR:
+			break;
+		case INT_FCE_VECTOR:
+			break;
+		case INT_USB_VECTOR:
+			break;
+	}
+	return (sub);
 }
 
 /*	----------------------------------------------------------------------------
@@ -629,7 +725,7 @@ unsigned int IntDisableInterrupts()
 
 unsigned int IntEnableInterrupts()
 {
-    unsigned int intStatus;
+	unsigned int intStatus;
 
 	intStatus = _CP0_GET_STATUS(); // Get Status
 	asm("ei"); // Enable all interrupts

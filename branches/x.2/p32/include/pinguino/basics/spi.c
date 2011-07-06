@@ -121,27 +121,17 @@ void SPI_mode(u8 mode)
 
 // Fsck = Fpb / (2 * (SPIxBRG + 1)
 // SPIxBRG = Fpb / (2 * Fsck) - 1 
-void SPI_clock(u8 div)	// (int speed, int clk)
+void SPI_clock(u32 speed)	// (int speed, int clk)
 {
 	u32 Fpb;
 	u32 Fsck;
 	u16 clk;
 
-	if (div < 2) div = 2;
 	Fpb = GetPeripheralClock();
-	Fsck = Fpb / div;
-	if (Fsck > (Fpb / 2))
-	{
-		CLKSPD  = 0;			// use the maximum baud rate possible
-	}
-	else
-	{
-		clk = Fpb / (2 * Fsck) - 1;
-		if (clk > 511) clk = 511;// use the minimum baud rate possible
-		CLKSPD  = clk;
-		//CLKSPD = 0x1;		// use FPB/4 clock frequency
-		//SPICONF = speed;
-	}
+	if (speed>(Fpb/2)) clk=0;
+	else clk=Fpb/(2*speed)-1;
+	if (clk > 511) clk = 511; // use the minimum baud rate possible
+	CLKSPD  = clk;
 }
 
 void SPI_close() //(u8 num)
@@ -217,11 +207,11 @@ void SPI_init()
 	#endif
 	#if (SPIx == 2)
 	// clear any existing SPIx event and Set IPL=3, Subpriority 1
-	IntSetVectorPriority(INT_SPI2_VECTOR, 3, 1);
+	//IntSetVectorPriority(INT_SPI2_VECTOR, 3, 1);
 	// Enable RX, TX and Error interrupts
-	IntEnable(INT_SPI2_FAULT); 
-	IntEnable(INT_SPI2_TRANSFER_DONE); 
-	IntEnable(INT_SPI2_RECEIVE_DONE);
+	//IntEnable(INT_SPI2_FAULT); 
+	//IntEnable(INT_SPI2_TRANSFER_DONE); 
+	//IntEnable(INT_SPI2_RECEIVE_DONE);
 	#endif
 	//Only 795 boards have SPI3 and SPI4
 	#if defined(UBW32_795) || defined(EMPEROR795)
@@ -241,8 +231,8 @@ void SPI_init()
 	IntEnable(INT_SPI4_TRANSFER_DONE); 
 	IntEnable(INT_SPI4_RECEIVE_DONE);
 	#endif
-	#endif
-	SPI_clock(GetPeripheralClock()/4);
+	#endif	
+	SPI_clock(250000);
 	SPI_mode(SPI_MASTER);
 }
 

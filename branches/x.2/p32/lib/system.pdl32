@@ -1,12 +1,16 @@
-SystemUnlock SystemUnlock#include <system.c>
-SystemLock SystemLock#include <system.c>
-Reset Reset#include <system.c>
-GetSystemClock GetSystemClock#include <system.c>
-GetPeripheralClock GetPeripheralClock#include <system.c>
-SetFlashWaitStates SetFlashWaitStates#include <system.c>
-SetSystemClock SetSystemClock#include <system.c>
-SetPeripheralClock SetPeripheralClock#include <system.c>
-SystemConfig SystemConfig#include <system.c>
-GetCP0Count GetCP0Count#include <system.c>
-SetCP0Count SetCP0Count#include <system.c>
+Sys.config SystemConfig#include <system.c>
+Sys.reset Reset#include <system.c>
+Sys.setFlashWaitStates SetFlashWaitStates#include <system.c>
+
+Sys.unlock SystemUnlock#include <system.c>
+Sys.lock SystemLock#include <system.c>
+
+Sys.setClock SetSystemClock#include <system.c>
+Sys.getClock GetSystemClock#include <system.c>
+
+Sys.setPeripheralClock SetPeripheralClock#include <system.c>
+Sys.getPeripheralClock GetPeripheralClock#include <system.c>
+
+Sys.getCP0Count GetCP0Count#include <system.c>
+Sys.setCP0Count SetCP0Count#include <system.c>
 
