@@ -1,29 +1,28 @@
 
-Allocating common symbols
-Common symbol       size              file
+Allocation des symboles communs
+Symbole commun      taille            fichier
 
-UART2rpointer       0x4               /tmp/ccvqxhjU.o
-heap_ptr            0x4               /tmp/ccvqxhjU.o
-UART2wpointer       0x4               /tmp/ccvqxhjU.o
-UART2SerialBuffer   0x80              /tmp/ccvqxhjU.o
-UART1rpointer       0x4               /tmp/ccvqxhjU.o
-UART1SerialBuffer   0x80              /tmp/ccvqxhjU.o
-UART1wpointer       0x4               /tmp/ccvqxhjU.o
+UART2rpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+heap_ptr            0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+UART2wpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+UART2SerialBuffer   0x80              C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+UART1rpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+UART1SerialBuffer   0x80              C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+UART1wpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
 
-Discarded input sections
+Sections d'entrée éliminées
 
- .reginfo       0x0000000000000000       0x18 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .reginfo       0x0000000000000000       0x18 /tmp/ccvqxhjU.o
- .reginfo       0x0000000000000000       0x18 /tmp/cclb9Fvn.o
- .reginfo       0x0000000000000000       0x18 /tmp/ccIzb1MQ.o
- .reginfo       0x0000000000000000       0x18 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/mips-elf/lib/processor.o
- .reginfo       0x0000000000000000       0x18 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .reginfo       0x0000000000000000       0x18 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
- .reginfo       0x0000000000000000       0x18 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/processor.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-Memory Configuration
+Configuration mémoire
 
-Name             Origin             Length             Attributes
+Nom              Origine            Longueur           Attributs
 kseg0_program_mem 0x000000009d006a00 0x000000000007a600 xr
 kseg0_boot_mem   0x000000009d006490 0x0000000000000970
 exception_mem    0x000000009d005000 0x0000000000001000
@@ -34,30 +33,27 @@ config2          0x00000000bfc02ff4 0x0000000000000004
 config1          0x00000000bfc02ff8 0x0000000000000004
 config0          0x00000000bfc02ffc 0x0000000000000004
 boot_software_key 0x00000000a0000000 0x0000000000000004
-kseg1_data_mem   0x00000000a0000004 0x0000000000007ffc
+kseg1_data_mem   0x00000000a0000004 0x0000000000007ffc w !x
 sfrs             0x00000000bf800000 0x0000000000100000
 *default*        0x0000000000000000 0xffffffffffffffff
 
-Linker script and memory map
+Script de l'éditeurs de liens and table de projection mémoire
 
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
                 0x0000000000002000                _min_heap_size = 0x2000
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/libm.a
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/libgcc.a
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/libc.a
-LOAD /tmp/ccvqxhjU.o
-LOAD /tmp/cclb9Fvn.o
-LOAD /tmp/ccIzb1MQ.o
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/mips-elf/lib/processor.o
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/p32/obj/non-free/usb/libcdc.a
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/libgcc.a
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/libgcc.a
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
-                0x0000000000000400                PROVIDE (_min_stack_size, 0x400)
-                0x0000000000000000                PROVIDE (_min_heap_size, 0x0)
-LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/processor.o
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libm.a
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a
+LOAD C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+LOAD C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+LOAD C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
+LOAD C:\Users\jpm\Desktop\x.2\p32\obj\non-free\usb\libcdc.a
+LOAD C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
                 0x00000000bf882030                BMXDUPBA = 0xbf882030
                 0x00000000bf882010                BMXDKPBA = 0xbf882010
                 0x00000000bf882020                BMXDUDBA = 0xbf882020
@@ -83,15 +79,17 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 .config_BFC02FFC
  *(.config_BFC02FFC)
+                0x0000000000000400                PROVIDE (_min_stack_size, 0x400)
+                0x0000000000000000                PROVIDE (_min_heap_size, 0x0)
 
 .reset          0x000000009d006000       0x10
  *(.reset)
- .reset         0x000000009d006000       0x10 /tmp/cclb9Fvn.o
+ .reset         0x000000009d006000       0x10 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
                 0x000000009d006000                _reset
 
 .bev_excpt      0x000000009d006380        0x4
  *(.bev_handler)
- .bev_handler   0x000000009d006380        0x4 /tmp/cclb9Fvn.o
+ .bev_handler   0x000000009d006380        0x4 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
 
 .dbg_excpt      0x000000009d006480        0x0
                 0x000000009d006480                . = (. + DEFINED (_DEBUGGER)?0x8:0x0)
@@ -101,7 +99,7 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 .app_excpt      0x000000009d005180        0x4
  *(.gen_handler)
- .gen_handler   0x000000009d005180        0x4 /tmp/cclb9Fvn.o
+ .gen_handler   0x000000009d005180        0x4 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
 
 .vector_0       0x000000009d005200        0x0
  *(.vector_0)
@@ -137,7 +135,7 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 .vector_8       0x000000009d005300        0xc
  *(.vector_8)
- .vector_8      0x000000009d005300        0xc /tmp/ccIzb1MQ.o
+ .vector_8      0x000000009d005300        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_8) <= (_vector_spacing << 0x5))), function at exception vector 8 too large)
 
 .vector_9       0x000000009d005320        0x0
@@ -202,7 +200,7 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 .vector_24      0x000000009d005500        0xc
  *(.vector_24)
- .vector_24     0x000000009d005500        0xc /tmp/ccIzb1MQ.o
+ .vector_24     0x000000009d005500        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_24) <= (_vector_spacing << 0x5))), function at exception vector 24 too large)
 
 .vector_25      0x000000009d005520        0x0
@@ -231,12 +229,12 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 .vector_31      0x000000009d0055e0        0xc
  *(.vector_31)
- .vector_31     0x000000009d0055e0        0xc /tmp/ccIzb1MQ.o
+ .vector_31     0x000000009d0055e0        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_31) <= (_vector_spacing << 0x5))), function at exception vector 31 too large)
 
 .vector_32      0x000000009d005600        0xc
  *(.vector_32)
- .vector_32     0x000000009d005600        0xc /tmp/ccIzb1MQ.o
+ .vector_32     0x000000009d005600        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_32) <= (_vector_spacing << 0x5))), function at exception vector 32 too large)
 
 .vector_33      0x000000009d005620        0x0
@@ -247,8 +245,9 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
  *(.vector_34)
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_34) <= (_vector_spacing << 0x5))), function at exception vector 34 too large)
 
-.vector_35      0x000000009d005660        0x0
+.vector_35      0x000000009d005660        0xc
  *(.vector_35)
+ .vector_35     0x000000009d005660        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_35) <= (_vector_spacing << 0x5))), function at exception vector 35 too large)
 
 .vector_36      0x000000009d005680        0x0
@@ -365,170 +364,170 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 .startup        0x000000009d006490      0x1bc
  *(.startup)
- .startup       0x000000009d006490      0x1bc /tmp/cclb9Fvn.o
+ .startup       0x000000009d006490      0x1bc C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
 
-.text           0x000000009d006a00     0x26bc
+.text           0x000000009d006a00     0x2884
                 0x000000009d006a00                _text_begin = .
  *(.text .stub .text.* .gnu.linkonce.t.*)
- .text          0x000000009d006a00        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .text          0x000000009d006a00      0x124 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .text          0x000000009d006b24     0x20fc /tmp/ccvqxhjU.o
-                0x000000009d007130                SerialUART1WriteChar
-                0x000000009d007154                SerialUART2WriteChar
-                0x000000009d007178                SystemUnlock
-                0x000000009d0071a0                SystemLock
-                0x000000009d0071b8                Reset
-                0x000000009d0071f4                GetSystemClock
-                0x000000009d007288                GetPeripheralClock
-                0x000000009d0072b4                SetFlashWaitStates
-                0x000000009d007324                SetSystemClock
-                0x000000009d007564                SetPeripheralClock
-                0x000000009d00757c                SystemConfig
-                0x000000009d0075b4                GetCP0Count
-                0x000000009d0075bc                SetCP0Count
-                0x000000009d0075cc                Delayus
-                0x000000009d007660                Delayms
-                0x000000009d007698                pinmode
-                0x000000009d007858                digitalwrite
-                0x000000009d007a18                digitalread
-                0x000000009d007b34                toggle
-                0x000000009d007b68                pprintf
-                0x000000009d007b74                psprintf
-                0x000000009d007b94                IntSetVectorPriority
-                0x000000009d007ca4                IntGetVectorPriority
-                0x000000009d007ce0                IntGetVectorSubPriority
-                0x000000009d007ce8                IntClearFlag
-                0x000000009d007d3c                IntGetFlag
-                0x000000009d007d88                IntEnable
-                0x000000009d007dd4                IntDisable
-                0x000000009d007e28                IntGetInterruptVectorNumber
-                0x000000009d007e38                IntGetInterruptVectorPriority
-                0x000000009d007e48                IntDisableInterrupts
-                0x000000009d007e54                IntEnableInterrupts
-                0x000000009d007e60                IntRestoreInterrupts
-                0x000000009d007e70                IntSetEBASE
-                0x000000009d007e80                IntConfigureSystem
-                0x000000009d007f1c                SerialSetDataRate
-                0x000000009d007fe0                SerialGetDataRate
-                0x000000009d0080c0                SerialEnable
-                0x000000009d0080fc                SerialSetLineControl
-                0x000000009d008138                SerialFlush
-                0x000000009d00816c                SerialPinConfigure
-                0x000000009d0081d0                SerialIntConfigure
-                0x000000009d008258                SerialConfigure
-                0x000000009d0083e8                SerialPrintf
-                0x000000009d008448                SerialAvailable
-                0x000000009d00848c                SerialRead
-                0x000000009d008528                SerialGetKey
-                0x000000009d00859c                SerialGetString
-                0x000000009d008634                SerialGetDataBuffer
-                0x000000009d008700                Serial1Interrupt
-                0x000000009d008754                Serial2Interrupt
-                0x000000009d0087a8                strcmp
-                0x000000009d0087e4                strcat
-                0x000000009d008828                strchr
-                0x000000009d008864                strcpy
-                0x000000009d008888                memcmp
-                0x000000009d0088d0                sbrk
-                0x000000009d0088ec                open
-                0x000000009d0089e0                close
-                0x000000009d0089e8                fstat
-                0x000000009d0089f0                isatty
-                0x000000009d0089f8                lseek
-                0x000000009d008a00                read
-                0x000000009d008a88                write
-                0x000000009d008b54                setup
-                0x000000009d008b60                loop
-                0x000000009d008b98                main
-                0x000000009d008bfc                Tmr2Interrupt
-                0x000000009d008c08                SPI1Interrupt
-                0x000000009d008c14                SPI2Interrupt
- .text          0x000000009d008c20       0x14 /tmp/cclb9Fvn.o
- .text          0x000000009d008c34      0x430 /tmp/ccIzb1MQ.o
-                0x000000009d008c34                vector_8_ISR_wrapper
-                0x000000009d008d40                vector_24_ISR_wrapper
-                0x000000009d008e4c                vector_31_ISR_wrapper
-                0x000000009d008f58                vector_32_ISR_wrapper
- .text          0x000000009d009064        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/mips-elf/lib/processor.o
- .text          0x000000009d009064       0x58 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .text          0x000000009d0090bc        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
- .text          0x000000009d0090bc        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/processor.o
+ .text          0x000000009d006a00        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .text          0x000000009d006a00      0x12c c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .text          0x000000009d006b2c     0x21b4 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+                0x000000009d007138                SerialUART1WriteChar
+                0x000000009d00715c                SerialUART2WriteChar
+                0x000000009d007180                SystemUnlock
+                0x000000009d0071a8                SystemLock
+                0x000000009d0071c0                Reset
+                0x000000009d0071fc                GetSystemClock
+                0x000000009d007290                GetPeripheralClock
+                0x000000009d0072bc                SetFlashWaitStates
+                0x000000009d00732c                SetSystemClock
+                0x000000009d00756c                SetPeripheralClock
+                0x000000009d007584                SystemConfig
+                0x000000009d0075bc                GetCP0Count
+                0x000000009d0075c4                SetCP0Count
+                0x000000009d0075d4                Delayus
+                0x000000009d007668                Delayms
+                0x000000009d0076a0                pinmode
+                0x000000009d007860                digitalwrite
+                0x000000009d007a20                digitalread
+                0x000000009d007b3c                toggle
+                0x000000009d007b70                pprintf
+                0x000000009d007b7c                psprintf
+                0x000000009d007b9c                IntSetVectorPriority
+                0x000000009d007cf4                IntGetVectorPriority
+                0x000000009d007d48                IntGetVectorSubPriority
+                0x000000009d007d9c                IntClearFlag
+                0x000000009d007df0                IntGetFlag
+                0x000000009d007e3c                IntEnable
+                0x000000009d007e88                IntDisable
+                0x000000009d007edc                IntGetInterruptVectorNumber
+                0x000000009d007eec                IntGetInterruptVectorPriority
+                0x000000009d007efc                IntDisableInterrupts
+                0x000000009d007f08                IntEnableInterrupts
+                0x000000009d007f14                IntRestoreInterrupts
+                0x000000009d007f24                IntSetEBASE
+                0x000000009d007f34                IntConfigureSystem
+                0x000000009d007fd0                SerialSetDataRate
+                0x000000009d008094                SerialGetDataRate
+                0x000000009d008174                SerialEnable
+                0x000000009d0081b0                SerialSetLineControl
+                0x000000009d0081ec                SerialFlush
+                0x000000009d008220                SerialPinConfigure
+                0x000000009d008284                SerialIntConfigure
+                0x000000009d00830c                SerialConfigure
+                0x000000009d00849c                SerialPrintf
+                0x000000009d0084fc                SerialAvailable
+                0x000000009d008540                SerialRead
+                0x000000009d0085dc                SerialGetKey
+                0x000000009d008650                SerialGetString
+                0x000000009d0086e8                SerialGetDataBuffer
+                0x000000009d0087b4                Serial1Interrupt
+                0x000000009d008808                Serial2Interrupt
+                0x000000009d00885c                strcmp
+                0x000000009d008898                strcat
+                0x000000009d0088dc                strchr
+                0x000000009d008918                strcpy
+                0x000000009d00893c                memcmp
+                0x000000009d008984                sbrk
+                0x000000009d0089a0                open
+                0x000000009d008a94                close
+                0x000000009d008a9c                fstat
+                0x000000009d008aa4                isatty
+                0x000000009d008aac                lseek
+                0x000000009d008ab4                read
+                0x000000009d008b3c                write
+                0x000000009d008c08                setup
+                0x000000009d008c14                loop
+                0x000000009d008c4c                main
+                0x000000009d008cb0                Tmr2Interrupt
+                0x000000009d008cbc                SPI1Interrupt
+                0x000000009d008cc8                SPI2Interrupt
+                0x000000009d008cd4                RTCCInterrupt
+ .text          0x000000009d008ce0       0x14 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .text          0x000000009d008cf4        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
+ .text          0x000000009d008cf4      0x53c C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+                0x000000009d008cf4                vector_8_ISR_wrapper
+                0x000000009d008e00                vector_24_ISR_wrapper
+                0x000000009d008f0c                vector_31_ISR_wrapper
+                0x000000009d009018                vector_32_ISR_wrapper
+                0x000000009d009124                vector_35_ISR_wrapper
+ .text          0x000000009d009230       0x54 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .text          0x000000009d009284        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
  *(.text.*personality*)
  *(.gnu.warning)
  *(.mips16.fn.*)
  *(.mips16.call.*)
-                0x000000009d0090bc                _text_end = .
+                0x000000009d009284                _text_end = .
 
-.init           0x000000009d0090bc       0x38
- .init          0x000000009d0090bc        0x8 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
-                0x000000009d0090bc                _init
- .init          0x000000009d0090c4       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .init          0x000000009d0090d4       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .init          0x000000009d0090e4       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+.init           0x000000009d009284       0x38
+ .init          0x000000009d009284        0x8 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+                0x000000009d009284                _init
+ .init          0x000000009d00928c       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .init          0x000000009d00929c       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .init          0x000000009d0092ac       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.fini           0x000000009d0090f4       0x28
- .fini          0x000000009d0090f4        0x8 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
-                0x000000009d0090f4                _fini
- .fini          0x000000009d0090fc       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .fini          0x000000009d00910c       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+.fini           0x000000009d0092bc       0x28
+ .fini          0x000000009d0092bc        0x8 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+                0x000000009d0092bc                _fini
+ .fini          0x000000009d0092c4       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .fini          0x000000009d0092d4       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.rodata         0x000000009d00911c      0x188
+.rodata         0x000000009d0092e4      0x188
  *(.rodata .rodata.* .gnu.linkonce.r.*)
  .rodata.str1.4
-                0x000000009d00911c       0x1c /tmp/ccvqxhjU.o
- .rodata        0x000000009d009138      0x16c /tmp/ccvqxhjU.o
-                0x000000009d0091a4                portmask
-                0x000000009d009224                pinmask
+                0x000000009d0092e4       0x1c C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .rodata        0x000000009d009300      0x16c C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+                0x000000009d00936c                portmask
+                0x000000009d0093ec                pinmask
  *(.rodata1)
-                0x000000009d0092a4                . = ALIGN (0x4)
+                0x000000009d00946c                . = ALIGN (0x4)
 
-.sdata2         0x000000009d0092a4        0x0
+.sdata2         0x000000009d00946c        0x0
  *(.sdata2 .sdata2.* .gnu.linkonce.s2.*)
-                0x000000009d0092a4                . = ALIGN (0x4)
+                0x000000009d00946c                . = ALIGN (0x4)
 
-.sbss2          0x000000009d0092a4        0x0
+.sbss2          0x000000009d00946c        0x0
  *(.sbss2 .sbss2.* .gnu.linkonce.sb2.*)
-                0x000000009d0092a4                . = ALIGN (0x4)
+                0x000000009d00946c                . = ALIGN (0x4)
 
 .eh_frame_hdr
  *(.eh_frame_hdr)
 
-.eh_frame       0x000000009d0092a4        0x4
+.eh_frame       0x000000009d00946c        0x4
  *(.eh_frame)
- .eh_frame      0x000000009d0092a4        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .eh_frame      0x000000009d0092a4        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .eh_frame      0x000000009d00946c        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .eh_frame      0x000000009d00946c        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .dbg_data       0x00000000a0000004        0x0
                 0x00000000a0000004                . = (. + DEFINED (_DEBUGGER)?0x200:0x0)
 
-.data           0x00000000a0000004        0x0 load address 0x000000009d0092a8
+.data           0x00000000a0000004        0x0 address de chargement 0x000000009d009470
                 0x00000000a0000004                _data_begin = .
  *(.data .data.* .gnu.linkonce.d.*)
- .data          0x00000000a0000004        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .data          0x00000000a0000004        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .data          0x00000000a0000004        0x0 /tmp/ccvqxhjU.o
- .data          0x00000000a0000004        0x0 /tmp/cclb9Fvn.o
- .data          0x00000000a0000004        0x0 /tmp/ccIzb1MQ.o
- .data          0x00000000a0000004        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/mips-elf/lib/processor.o
- .data          0x00000000a0000004        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .data          0x00000000a0000004        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
- .data          0x00000000a0000004        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/processor.o
+ .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .data          0x00000000a0000004        0x0 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .data          0x00000000a0000004        0x0 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .data          0x00000000a0000004        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
+ .data          0x00000000a0000004        0x0 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
  *(.gnu.linkonce.d.*personality*)
  *(.data1)
-                0x000000009d0092a8                _data_image_begin = LOADADDR (.data)
+                0x000000009d009470                _data_image_begin = LOADADDR (.data)
 
-.ctors          0x00000000a0000004        0x8 load address 0x000000009d0092a8
- .ctors         0x00000000a0000004        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .ctors         0x00000000a0000008        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+.ctors          0x00000000a0000004        0x8 address de chargement 0x000000009d009470
+ .ctors         0x00000000a0000004        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .ctors         0x00000000a0000008        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
-.dtors          0x00000000a000000c        0x8 load address 0x000000009d0092b0
- .dtors         0x00000000a000000c        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .dtors         0x00000000a0000010        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+.dtors          0x00000000a000000c        0x8 address de chargement 0x000000009d009478
+ .dtors         0x00000000a000000c        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .dtors         0x00000000a0000010        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
                 0x00000000a0000010                __DTOR_END__
 
-.jcr            0x00000000a0000014        0x4 load address 0x000000009d0092b8
- .jcr           0x00000000a0000014        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .jcr           0x00000000a0000014        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+.jcr            0x00000000a0000014        0x4 address de chargement 0x000000009d009480
+ .jcr           0x00000000a0000014        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .jcr           0x00000000a0000014        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .eh_frame
  *(.eh_frame)
@@ -538,10 +537,10 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
  *(.got.plt)
  *(.got)
 
-.sdata          0x00000000a0000018        0x4 load address 0x000000009d0092bc
+.sdata          0x00000000a0000018        0x4 address de chargement 0x000000009d009484
                 0x00000000a0000018                _sdata_begin = .
  *(.sdata .sdata.* .gnu.linkonce.s.*)
- .sdata         0x00000000a0000018        0x4 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .sdata         0x00000000a0000018        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
                 0x00000000a0000018                __dso_handle
                 0x00000000a000001c                _sdata_end = .
 
@@ -554,13 +553,13 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
                 0x00000000a000001c                _data_end = .
                 0x00000000a000001c                _bss_begin = .
 
-.sbss           0x00000000a000001c       0x18 load address 0x000000009d0092c0
+.sbss           0x00000000a000001c       0x18 address de chargement 0x000000009d009488
                 0x00000000a000001c                _sbss_begin = .
  *(.dynsbss)
  *(.sbss .sbss.* .gnu.linkonce.sb.*)
- .sbss          0x00000000a000001c        0x4 /tmp/ccvqxhjU.o
+ .sbss          0x00000000a000001c        0x4 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
  *(.scommon)
- .scommon       0x00000000a0000020       0x14 /tmp/ccvqxhjU.o
+ .scommon       0x00000000a0000020       0x14 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
                 0x00000000a0000020                UART2rpointer
                 0x00000000a0000024                heap_ptr
                 0x00000000a0000028                UART2wpointer
@@ -568,20 +567,19 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
                 0x00000000a0000030                UART1wpointer
                 0x00000000a0000034                _sbss_end = .
 
-.bss            0x00000000a0000034      0x170 load address 0x000000009d0092c0
+.bss            0x00000000a0000034      0x170 address de chargement 0x000000009d009488
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
- .bss           0x00000000a0000034        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .bss           0x00000000a0000034       0x20 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .bss           0x00000000a0000054       0x50 /tmp/ccvqxhjU.o
- .bss           0x00000000a00000a4        0x0 /tmp/cclb9Fvn.o
- .bss           0x00000000a00000a4        0x0 /tmp/ccIzb1MQ.o
- .bss           0x00000000a00000a4        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/mips-elf/lib/processor.o
- .bss           0x00000000a00000a4        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .bss           0x00000000a00000a4        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
- .bss           0x00000000a00000a4        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/processor.o
+ .bss           0x00000000a0000034        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .bss           0x00000000a0000034       0x20 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .bss           0x00000000a0000054       0x50 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .bss           0x00000000a00000a4        0x0 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .bss           0x00000000a00000a4        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
+ .bss           0x00000000a00000a4        0x0 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .bss           0x00000000a00000a4        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .bss           0x00000000a00000a4        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
  *(COMMON)
- COMMON         0x00000000a00000a4      0x100 /tmp/ccvqxhjU.o
+ COMMON         0x00000000a00000a4      0x100 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
                 0x00000000a00000a4                UART2SerialBuffer
                 0x00000000a0000124                UART1SerialBuffer
                 0x00000000a00001a4                . = ALIGN (0x4)
@@ -589,23 +587,23 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
                 0x00000000a00001a4                _end = .
                 0x00000000a00001a4                _bss_end = .
 
-.heap           0x00000000a00001a4     0x2000 load address 0x000000009d0092c0
+.heap           0x00000000a00001a4     0x2000 address de chargement 0x000000009d009488
                 0x00000000a00001a4                _heap = .
                 0x00000000a00021a4                . = (. + _min_heap_size)
  *fill*         0x00000000a00001a4     0x2000 00
 
-.stack          0x00000000a00021a4      0x400 load address 0x000000009d0092c0
+.stack          0x00000000a00021a4      0x400 address de chargement 0x000000009d009488
                 0x00000000a00021a4                _splim = .
                 0x00000000a00021a4                _SPLIM = .
                 0x00000000a00025a4                . = (. + _min_stack_size)
  *fill*         0x00000000a00021a4      0x400 00
 
-.ramfunc        0x00000000a0002800        0x0 load address 0x000000009d0092c0
+.ramfunc        0x00000000a0002800        0x0 address de chargement 0x000000009d009488
                 0x00000000a0002800                _ramfunc_begin = .
  *(.ramfunc .ramfunc.*)
                 0x00000000a0002800                . = ALIGN (0x4)
                 0x00000000a0002800                _ramfunc_end = .
-                0x000000009d0092c0                _ramfunc_image_begin = LOADADDR (.ramfunc)
+                0x000000009d009488                _ramfunc_image_begin = LOADADDR (.ramfunc)
                 0x0000000000000000                _ramfunc_length = SIZEOF (.ramfunc)
                 0x00000000000027fc                _bmxdkpba_address = (_ramfunc_begin - ORIGIN (kseg1_data_mem))
                 0x0000000000007ffc                _bmxdudba_address = 0x7ffc
@@ -613,21 +611,20 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
                 0x00000000a0008000                _stack = (_ramfunc_length > 0x0)?(_ramfunc_begin - 0x4):(ORIGIN (kseg1_data_mem) + 0x7ffc)
                 0x0000000000000001                ASSERT (((_min_stack_size + _min_heap_size) <= (_stack - _heap)), Not enough space to allocate both stack and heap.  Reduce heap and/or stack size.)
 
-.pdr            0x0000000000000000      0xa40
+.pdr            0x0000000000000000      0xa80
  *(.pdr)
- .pdr           0x0000000000000000        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .pdr           0x0000000000000000        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .pdr           0x0000000000000000      0x920 /tmp/ccvqxhjU.o
- .pdr           0x0000000000000920       0xa0 /tmp/cclb9Fvn.o
- .pdr           0x00000000000009c0       0x80 /tmp/ccIzb1MQ.o
- .pdr           0x0000000000000a40        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/mips-elf/lib/processor.o
- .pdr           0x0000000000000a40        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .pdr           0x0000000000000a40        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
- .pdr           0x0000000000000a40        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/processor.o
+ .pdr           0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .pdr           0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .pdr           0x0000000000000000      0x940 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .pdr           0x0000000000000940       0xa0 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .pdr           0x00000000000009e0        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
+ .pdr           0x00000000000009e0       0xa0 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .pdr           0x0000000000000a80        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .pdr           0x0000000000000a80        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 .reginfo        0x0000000000000000       0x18
  *(.reginfo)
- .reginfo       0x0000000000000000       0x18 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
 
 .stab
  *(.stab)
@@ -648,25 +645,25 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
  *(.stab.indexstr)
 
 .mdebug.abi32   0x0000000000000000        0x0
- .mdebug.abi32  0x0000000000000000        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .mdebug.abi32  0x0000000000000000        0x0 /tmp/ccvqxhjU.o
- .mdebug.abi32  0x0000000000000000        0x0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .gnu.attributes
                 0x0000000000000000       0x10
  .gnu.attributes
-                0x0000000000000000       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+                0x0000000000000000       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
  .gnu.attributes
-                0x0000000000000010       0x10 /tmp/ccvqxhjU.o
+                0x0000000000000010       0x10 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
  .gnu.attributes
-                0x0000000000000020       0x10 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+                0x0000000000000020       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
-.comment        0x0000000000000000       0x2b
+.comment        0x0000000000000000       0x54
  *(.comment)
- .comment       0x0000000000000000       0x2b /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
-                                         0x2c (size before relaxing)
- .comment       0x0000000000000000       0x2c /tmp/ccvqxhjU.o
- .comment       0x0000000000000000       0x2c /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .comment       0x0000000000000000       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .comment       0x0000000000000012       0x30 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+                                         0x31 (taille avant relaxe)
+ .comment       0x0000000000000042       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .debug
  *(.debug)
@@ -683,27 +680,27 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 .debug_aranges  0x0000000000000000       0x50
  *(.debug_aranges)
  .debug_aranges
-                0x0000000000000000       0x28 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+                0x0000000000000000       0x28 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
  .debug_aranges
-                0x0000000000000028       0x28 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+                0x0000000000000028       0x28 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000      0x160
+.debug_info     0x0000000000000000      0x104
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x0000000000000000       0xb0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_info    0x00000000000000b0       0xb0 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_info    0x0000000000000000       0x82 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_info    0x0000000000000082       0x82 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 .debug_abbrev   0x0000000000000000       0x24
  *(.debug_abbrev)
- .debug_abbrev  0x0000000000000000       0x12 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_abbrev  0x0000000000000012       0x12 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_abbrev  0x0000000000000000       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_abbrev  0x0000000000000012       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.debug_line     0x0000000000000000       0xd4
+.debug_line     0x0000000000000000       0xd6
  *(.debug_line)
- .debug_line    0x0000000000000000       0x69 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_line    0x0000000000000069       0x6b /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_line    0x0000000000000000       0x6a c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_line    0x000000000000006a       0x6c c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 .debug_frame
  *(.debug_frame)
@@ -731,8 +728,8 @@ LOAD /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/
 
 /DISCARD/
  *(.note.GNU-stack)
-OUTPUT(main32.elf elf32-littlemips)
+OUTPUT(C:\Users\jpm\Desktop\x.2\source\main32.elf elf32-littlemips)
 
 .debug_ranges   0x0000000000000000       0x40
- .debug_ranges  0x0000000000000000       0x20 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_ranges  0x0000000000000020       0x20 /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.2/linux/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_ranges  0x0000000000000000       0x20 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_ranges  0x0000000000000020       0x20 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o

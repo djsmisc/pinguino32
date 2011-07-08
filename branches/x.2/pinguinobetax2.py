@@ -278,7 +278,6 @@ class Pinguino(wx.Frame):
 		self.board =   self.config.ReadInt('Board', -1)
 		if self.board == '':
 			self.board = BOARD_DEFAULT
-		
 		# ----------------------------------------------------------------------
 		# window
 		# ----------------------------------------------------------------------
@@ -384,6 +383,8 @@ class Pinguino(wx.Frame):
 		self.pref_menu.AppendMenu(self.ID_BOARD,_("Board"),self.board_menu)
 		# mark current board
 		bid = self.config.ReadInt('board',-1)
+		if bid==-1:
+			bid=ID_GENERIC2550
 		self.board_menu.Check(bid, True)
 		#if self.config.ReadInt('board',-1)==ID_GENERIC2550:
 		#	self.board_menu.Check(ID_GENERIC2550,True)
@@ -475,7 +476,7 @@ class Pinguino(wx.Frame):
 # ------------------------------------------------------------------------------
 		
 		# create editor panel
-		editorsize = (outputsize[0], framesize[1] - outputsize[1] - 100)
+		editorsize = (outputsize[0], framesize[1] - outputsize[1])
 		self.EditorPanel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, editorsize)
 		# background with pinguino.cc colour and pinguino logo
 		self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
@@ -861,8 +862,6 @@ class Pinguino(wx.Frame):
 
 		info.AddArtist('France Cadet')
 		info.AddArtist('Laurent Costes')
-		info.AddArtist('Daniel Rodríguez')
-		info.AddArtist('PingüinoVE')
 
 		info.AddTranslator('Joan Espinoza Spanish, Portuguese')
 		info.AddTranslator('Marin Purgar Croatian')
@@ -1423,7 +1422,17 @@ class Pinguino(wx.Frame):
 			if sortie.poll()!=0:
 				print fichier.read()
 				self.displaymsg(fichier.read(), 0)
-			fichier.close()	 
+			fichier.close()
+			if sys.platform=='win32':
+				if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
+					 fichiersource=open(os.path.join(SOURCE_DIR,"main32tmp.hex"),'r')
+					 fichierdest=open(os.path.join(SOURCE_DIR,"main32.hex"),'w+')
+					 for line in fichiersource:
+					 	if line!=":040000059D006000FA\n":
+					 		fichierdest.writelines(line)
+					 fichiersource.close()
+					 fichierdest.close()
+					 os.remove(os.path.join(SOURCE_DIR,"main32tmp.hex"))
 			return sortie.poll()
 
 # ------------------------------------------------------------------------------
