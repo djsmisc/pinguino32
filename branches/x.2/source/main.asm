@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.9.7 #5938 (Aug 21 2010) (MINGW32)
-; This file was generated Tue Jun 28 17:25:59 2011
+; This file was generated Fri Jul 08 18:13:25 2011
 ;--------------------------------------------------------
 ; PIC16 port for the Microchip 16-bit core micros
 ;--------------------------------------------------------
@@ -307,7 +307,7 @@ r0x08	res	1
 ; ; Starting pCode block
 S_main__high_priority_isr	code	0X002020
 _high_priority_isr:
-;	.line	129; E:\source\main.c	void high_priority_isr(void) interrupt
+;	.line	129; C:\Users\jpm\Desktop\x.2\source\main.c	void high_priority_isr(void) interrupt
 	MOVFF	WREG, POSTDEC1
 	MOVFF	STATUS, POSTDEC1
 	MOVFF	BSR, POSTDEC1
@@ -317,7 +317,7 @@ _high_priority_isr:
 	MOVFF	FSR0H, POSTDEC1
 	MOVFF	PCLATH, POSTDEC1
 	MOVFF	PCLATU, POSTDEC1
-;	.line	190; E:\source\main.c	}
+;	.line	190; C:\Users\jpm\Desktop\x.2\source\main.c	}
 	MOVFF	PREINC1, PCLATU
 	MOVFF	PREINC1, PCLATH
 	MOVFF	PREINC1, FSR0H
@@ -332,7 +332,7 @@ _high_priority_isr:
 ; ; Starting pCode block
 S_main__low_priority_isr	code	0X004000
 _low_priority_isr:
-;	.line	193; E:\source\main.c	void low_priority_isr(void) interrupt
+;	.line	193; C:\Users\jpm\Desktop\x.2\source\main.c	void low_priority_isr(void) interrupt
 	MOVFF	WREG, POSTDEC1
 	MOVFF	STATUS, POSTDEC1
 	MOVFF	BSR, POSTDEC1
@@ -342,7 +342,7 @@ _low_priority_isr:
 	MOVFF	FSR0H, POSTDEC1
 	MOVFF	PCLATH, POSTDEC1
 	MOVFF	PCLATU, POSTDEC1
-;	.line	198; E:\source\main.c	}
+;	.line	198; C:\Users\jpm\Desktop\x.2\source\main.c	}
 	MOVFF	PREINC1, PCLATU
 	MOVFF	PREINC1, PCLATH
 	MOVFF	PREINC1, FSR0H
@@ -358,17 +358,17 @@ _low_priority_isr:
 ; ; Starting pCode block
 S_main__pinguino_main	code
 _pinguino_main:
-;	.line	57; E:\source\main.c	PIE1 = 0;
+;	.line	57; C:\Users\jpm\Desktop\x.2\source\main.c	PIE1 = 0;
 	CLRF	_PIE1
-;	.line	58; E:\source\main.c	PIE2 = 0;
+;	.line	58; C:\Users\jpm\Desktop\x.2\source\main.c	PIE2 = 0;
 	CLRF	_PIE2
-;	.line	59; E:\source\main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+;	.line	59; C:\Users\jpm\Desktop\x.2\source\main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
 	MOVLW	0x0f
 	MOVWF	_ADCON1
-;	.line	71; E:\source\main.c	setup();
+;	.line	71; C:\Users\jpm\Desktop\x.2\source\main.c	setup();
 	CALL	_setup
 _00244_DS_:
-;	.line	123; E:\source\main.c	loop();
+;	.line	123; C:\Users\jpm\Desktop\x.2\source\main.c	loop();
 	CALL	_loop
 	BRA	_00244_DS_
 	RETURN	
@@ -376,7 +376,7 @@ _00244_DS_:
 ; ; Starting pCode block
 S_main__loop	code
 _loop:
-;	.line	17; E:\source\/user.c	digitalwrite(13, LOW);    
+;	.line	17; C:\Users\jpm\Desktop\x.2\source\/user.c	digitalwrite(13, LOW);    
 	CLRF	POSTDEC1
 	MOVLW	0x01
 	MOVWF	POSTDEC1
@@ -386,7 +386,7 @@ _loop:
 	CALL	_digitalwrite
 	MOVLW	0x04
 	ADDWF	FSR1L, F
-;	.line	19; E:\source\/user.c	}
+;	.line	19; C:\Users\jpm\Desktop\x.2\source\/user.c	}
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
@@ -395,7 +395,7 @@ _loop:
 	CALL	_Delayms
 	MOVLW	0x04
 	ADDWF	FSR1L, F
-;	.line	21; E:\source\/user.c	ERROR: no line number 21 in file E:\source\/user.c
+;	.line	21; C:\Users\jpm\Desktop\x.2\source\/user.c	ERROR: no line number 21 in file C:\Users\jpm\Desktop\x.2\source\/user.c
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
@@ -404,7 +404,7 @@ _loop:
 	CALL	_digitalwrite
 	MOVLW	0x04
 	ADDWF	FSR1L, F
-;	.line	23; E:\source\/user.c	ERROR: no line number 23 in file E:\source\/user.c
+;	.line	23; C:\Users\jpm\Desktop\x.2\source\/user.c	ERROR: no line number 23 in file C:\Users\jpm\Desktop\x.2\source\/user.c
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
@@ -418,7 +418,7 @@ _loop:
 ; ; Starting pCode block
 S_main__setup	code
 _setup:
-;	.line	13; E:\source\/user.c	
+;	.line	13; C:\Users\jpm\Desktop\x.2\source\/user.c	
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
 	CLRF	POSTDEC1
@@ -432,31 +432,31 @@ _setup:
 ; ; Starting pCode block
 S_main__epapout_init	code
 _epapout_init:
-;	.line	45; E:\source\main.c	void epapout_init() { return; }
+;	.line	45; C:\Users\jpm\Desktop\x.2\source\main.c	void epapout_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epapin_init	code
 _epapin_init:
-;	.line	44; E:\source\main.c	void epapin_init() { return; }
+;	.line	44; C:\Users\jpm\Desktop\x.2\source\main.c	void epapin_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_out	code
 _epap_out:
-;	.line	43; E:\source\main.c	void epap_out() { return; }
+;	.line	43; C:\Users\jpm\Desktop\x.2\source\main.c	void epap_out() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_in	code
 _epap_in:
-;	.line	42; E:\source\main.c	void epap_in() { return; }
+;	.line	42; C:\Users\jpm\Desktop\x.2\source\main.c	void epap_in() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__toggle	code
 _toggle:
-;	.line	93; E:/p8/share/sdcc/include/pic16/digitalw.c	void toggle(u8 pin)
+;	.line	93; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	void toggle(u8 pin)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -464,7 +464,7 @@ _toggle:
 	MOVFF	r0x02, POSTDEC1
 	MOVLW	0x02
 	MOVFF	PLUSW2, r0x00
-;	.line	96; E:/p8/share/sdcc/include/pic16/digitalw.c	val = digitalread(pin);
+;	.line	96; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	val = digitalread(pin);
 	CLRF	r0x01
 	CLRF	POSTDEC1
 	MOVF	r0x00, W
@@ -473,7 +473,7 @@ _toggle:
 	MOVWF	r0x02
 	MOVLW	0x02
 	ADDWF	FSR1L, F
-;	.line	97; E:/p8/share/sdcc/include/pic16/digitalw.c	digitalwrite(pin, val^1);
+;	.line	97; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	digitalwrite(pin, val^1);
 	MOVLW	0x01
 	XORWF	r0x02, F
 	CLRF	POSTDEC1
@@ -495,7 +495,7 @@ _toggle:
 ; ; Starting pCode block
 S_main__pinmode	code
 _pinmode:
-;	.line	69; E:/p8/share/sdcc/include/pic16/digitalw.c	void pinmode(int input, int state)
+;	.line	69; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	void pinmode(int input, int state)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -513,7 +513,7 @@ _pinmode:
 	MOVFF	PLUSW2, r0x02
 	MOVLW	0x05
 	MOVFF	PLUSW2, r0x03
-;	.line	71; E:/p8/share/sdcc/include/pic16/digitalw.c	switch (port[input])
+;	.line	71; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	switch (port[input])
 	MOVLW	LOW(_port)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -562,7 +562,7 @@ _00203_DS_:
 	GOTO	_00187_DS_
 	GOTO	_00191_DS_
 _00183_DS_:
-;	.line	73; E:/p8/share/sdcc/include/pic16/digitalw.c	case 0: if (state) TRISB=TRISB | mask[input];
+;	.line	73; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 0: if (state) TRISB=TRISB | mask[input];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00185_DS_
@@ -586,7 +586,7 @@ _00183_DS_:
 	IORWF	_TRISB, F
 	BRA	_00196_DS_
 _00185_DS_:
-;	.line	74; E:/p8/share/sdcc/include/pic16/digitalw.c	else TRISB=TRISB & (255-mask[input]);
+;	.line	74; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else TRISB=TRISB & (255-mask[input]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -608,10 +608,10 @@ _00185_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_TRISB, F
-;	.line	75; E:/p8/share/sdcc/include/pic16/digitalw.c	break;
+;	.line	75; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00196_DS_
 _00187_DS_:
-;	.line	76; E:/p8/share/sdcc/include/pic16/digitalw.c	case 1: if (state) TRISC=TRISC | mask[input];
+;	.line	76; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 1: if (state) TRISC=TRISC | mask[input];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00189_DS_
@@ -635,7 +635,7 @@ _00187_DS_:
 	IORWF	_TRISC, F
 	BRA	_00196_DS_
 _00189_DS_:
-;	.line	77; E:/p8/share/sdcc/include/pic16/digitalw.c	else TRISC=TRISC & (255-mask[input]);
+;	.line	77; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else TRISC=TRISC & (255-mask[input]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -657,10 +657,10 @@ _00189_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_TRISC, F
-;	.line	78; E:/p8/share/sdcc/include/pic16/digitalw.c	break;
+;	.line	78; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00196_DS_
 _00191_DS_:
-;	.line	79; E:/p8/share/sdcc/include/pic16/digitalw.c	case 2: if (state) TRISA=TRISA | mask[input];
+;	.line	79; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 2: if (state) TRISA=TRISA | mask[input];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00193_DS_
@@ -684,7 +684,7 @@ _00191_DS_:
 	IORWF	_TRISA, F
 	BRA	_00196_DS_
 _00193_DS_:
-;	.line	80; E:/p8/share/sdcc/include/pic16/digitalw.c	else TRISA=TRISA & (255-mask[input]);
+;	.line	80; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else TRISA=TRISA & (255-mask[input]);
 	CLRF	r0x02
 	BTFSC	r0x01, 7
 	SETF	r0x02
@@ -705,7 +705,7 @@ _00193_DS_:
 ; #	MOVF	r0x00, W
 	ANDWF	_TRISA, F
 _00196_DS_:
-;	.line	90; E:/p8/share/sdcc/include/pic16/digitalw.c	}
+;	.line	90; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	}
 	MOVFF	PREINC1, r0x06
 	MOVFF	PREINC1, r0x05
 	MOVFF	PREINC1, r0x04
@@ -719,7 +719,7 @@ _00196_DS_:
 ; ; Starting pCode block
 S_main__digitalread	code
 _digitalread:
-;	.line	44; E:/p8/share/sdcc/include/pic16/digitalw.c	int digitalread(int input)
+;	.line	44; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	int digitalread(int input)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -731,7 +731,7 @@ _digitalread:
 	MOVFF	PLUSW2, r0x00
 	MOVLW	0x03
 	MOVFF	PLUSW2, r0x01
-;	.line	46; E:/p8/share/sdcc/include/pic16/digitalw.c	switch (port[input])
+;	.line	46; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	switch (port[input])
 	MOVLW	LOW(_port)
 	ADDWF	r0x00, W
 	MOVWF	r0x02
@@ -780,7 +780,7 @@ _00178_DS_:
 	GOTO	_00162_DS_
 	GOTO	_00166_DS_
 _00158_DS_:
-;	.line	48; E:/p8/share/sdcc/include/pic16/digitalw.c	case 0: if ((PORTB & mask[input])!=0) return (1);
+;	.line	48; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 0: if ((PORTB & mask[input])!=0) return (1);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x02
@@ -805,12 +805,12 @@ _00158_DS_:
 	MOVLW	0x01
 	BRA	_00171_DS_
 _00160_DS_:
-;	.line	49; E:/p8/share/sdcc/include/pic16/digitalw.c	else return (0);
+;	.line	49; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else return (0);
 	CLRF	PRODL
 	CLRF	WREG
 	BRA	_00171_DS_
 _00162_DS_:
-;	.line	51; E:/p8/share/sdcc/include/pic16/digitalw.c	case 1: if ((PORTC & mask[input])!=0) return (1);
+;	.line	51; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 1: if ((PORTC & mask[input])!=0) return (1);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x02
@@ -835,12 +835,12 @@ _00162_DS_:
 	MOVLW	0x01
 	BRA	_00171_DS_
 _00164_DS_:
-;	.line	52; E:/p8/share/sdcc/include/pic16/digitalw.c	else return (0);
+;	.line	52; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else return (0);
 	CLRF	PRODL
 	CLRF	WREG
 	BRA	_00171_DS_
 _00166_DS_:
-;	.line	54; E:/p8/share/sdcc/include/pic16/digitalw.c	case 2: if ((PORTA & mask[input])!=0) return (1);
+;	.line	54; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 2: if ((PORTA & mask[input])!=0) return (1);
 	CLRF	r0x02
 	BTFSC	r0x01, 7
 	SETF	r0x02
@@ -863,12 +863,12 @@ _00166_DS_:
 	MOVLW	0x01
 	BRA	_00171_DS_
 _00168_DS_:
-;	.line	55; E:/p8/share/sdcc/include/pic16/digitalw.c	else return (0);
+;	.line	55; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else return (0);
 	CLRF	PRODL
 	CLRF	WREG
 	BRA	_00171_DS_
 _00170_DS_:
-;	.line	66; E:/p8/share/sdcc/include/pic16/digitalw.c	return (0);
+;	.line	66; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	return (0);
 	CLRF	PRODL
 	CLRF	WREG
 _00171_DS_:
@@ -883,7 +883,7 @@ _00171_DS_:
 ; ; Starting pCode block
 S_main__digitalwrite	code
 _digitalwrite:
-;	.line	20; E:/p8/share/sdcc/include/pic16/digitalw.c	void digitalwrite(int output,int state)
+;	.line	20; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	void digitalwrite(int output,int state)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -901,7 +901,7 @@ _digitalwrite:
 	MOVFF	PLUSW2, r0x02
 	MOVLW	0x05
 	MOVFF	PLUSW2, r0x03
-;	.line	22; E:/p8/share/sdcc/include/pic16/digitalw.c	switch (port[output])
+;	.line	22; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	switch (port[output])
 	MOVLW	LOW(_port)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -950,7 +950,7 @@ _00153_DS_:
 	GOTO	_00137_DS_
 	GOTO	_00141_DS_
 _00133_DS_:
-;	.line	24; E:/p8/share/sdcc/include/pic16/digitalw.c	case 0: if (state) PORTB=PORTB | mask[output]; 
+;	.line	24; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 0: if (state) PORTB=PORTB | mask[output]; 
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00135_DS_
@@ -974,7 +974,7 @@ _00133_DS_:
 	IORWF	_PORTB, F
 	BRA	_00146_DS_
 _00135_DS_:
-;	.line	25; E:/p8/share/sdcc/include/pic16/digitalw.c	else PORTB=PORTB & (255-mask[output]);
+;	.line	25; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else PORTB=PORTB & (255-mask[output]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -996,10 +996,10 @@ _00135_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_PORTB, F
-;	.line	26; E:/p8/share/sdcc/include/pic16/digitalw.c	break;
+;	.line	26; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00146_DS_
 _00137_DS_:
-;	.line	27; E:/p8/share/sdcc/include/pic16/digitalw.c	case 1: if (state) PORTC=PORTC | mask[output];
+;	.line	27; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 1: if (state) PORTC=PORTC | mask[output];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00139_DS_
@@ -1023,7 +1023,7 @@ _00137_DS_:
 	IORWF	_PORTC, F
 	BRA	_00146_DS_
 _00139_DS_:
-;	.line	28; E:/p8/share/sdcc/include/pic16/digitalw.c	else PORTC=PORTC & (255-mask[output]);
+;	.line	28; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else PORTC=PORTC & (255-mask[output]);
 	MOVLW	LOW(_mask)
 	ADDWF	r0x00, W
 	MOVWF	r0x04
@@ -1045,10 +1045,10 @@ _00139_DS_:
 ; #	MOVWF	r0x04
 ; #	MOVF	r0x04, W
 	ANDWF	_PORTC, F
-;	.line	29; E:/p8/share/sdcc/include/pic16/digitalw.c	break;
+;	.line	29; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	break;
 	BRA	_00146_DS_
 _00141_DS_:
-;	.line	30; E:/p8/share/sdcc/include/pic16/digitalw.c	case 2: if (state) PORTA=PORTA | mask[output];
+;	.line	30; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	case 2: if (state) PORTA=PORTA | mask[output];
 	MOVF	r0x02, W
 	IORWF	r0x03, W
 	BZ	_00143_DS_
@@ -1072,7 +1072,7 @@ _00141_DS_:
 	IORWF	_PORTA, F
 	BRA	_00146_DS_
 _00143_DS_:
-;	.line	31; E:/p8/share/sdcc/include/pic16/digitalw.c	else PORTA=PORTA & (255-mask[output]);
+;	.line	31; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	else PORTA=PORTA & (255-mask[output]);
 	CLRF	r0x02
 	BTFSC	r0x01, 7
 	SETF	r0x02
@@ -1093,7 +1093,7 @@ _00143_DS_:
 ; #	MOVF	r0x00, W
 	ANDWF	_PORTA, F
 _00146_DS_:
-;	.line	41; E:/p8/share/sdcc/include/pic16/digitalw.c	}
+;	.line	41; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/digitalw.c	}
 	MOVFF	PREINC1, r0x06
 	MOVFF	PREINC1, r0x05
 	MOVFF	PREINC1, r0x04
@@ -1107,7 +1107,7 @@ _00146_DS_:
 ; ; Starting pCode block
 S_main__Delayus	code
 _Delayus:
-;	.line	16; E:/p8/share/sdcc/include/pic16/delay.c	void Delayus(int microsecondes)
+;	.line	16; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/delay.c	void Delayus(int microsecondes)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -1118,7 +1118,7 @@ _Delayus:
 	MOVFF	PLUSW2, r0x00
 	MOVLW	0x03
 	MOVFF	PLUSW2, r0x01
-;	.line	20; E:/p8/share/sdcc/include/pic16/delay.c	for (i=0;i<microsecondes;i++);
+;	.line	20; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/delay.c	for (i=0;i<microsecondes;i++);
 	CLRF	r0x02
 	CLRF	r0x03
 _00119_DS_:
@@ -1144,7 +1144,7 @@ _00123_DS_:
 ; ; Starting pCode block
 S_main__Delayms	code
 _Delayms:
-;	.line	9; E:/p8/share/sdcc/include/pic16/delay.c	void Delayms(unsigned long milliseconde)
+;	.line	9; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/delay.c	void Delayms(unsigned long milliseconde)
 	MOVFF	FSR2L, POSTDEC1
 	MOVFF	FSR1L, FSR2L
 	MOVFF	r0x00, POSTDEC1
@@ -1163,7 +1163,7 @@ _Delayms:
 	MOVFF	PLUSW2, r0x02
 	MOVLW	0x05
 	MOVFF	PLUSW2, r0x03
-;	.line	13; E:/p8/share/sdcc/include/pic16/delay.c	for (i=0;i<milliseconde;i++) delay10ktcy(1);
+;	.line	13; C:/Users/jpm/Desktop/x.2/p8/share/sdcc/include/pic16/delay.c	for (i=0;i<milliseconde;i++) delay10ktcy(1);
 	CLRF	r0x04
 	CLRF	r0x05
 	CLRF	r0x06

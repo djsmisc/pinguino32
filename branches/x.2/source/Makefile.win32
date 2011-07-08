@@ -70,15 +70,10 @@ ELF_FLAGS	=	-O2 -EL -march=24kc \
 					-T$(LKRDIR)\elf32pic32mx.x
 
 #-------------------------------------------------------------------------------
-#	rules
-#correct:
-#	$(BINDIR)\grep.exe --binary --invert-match '^:040000059D006000FA' $(SRCDIR)\main32.hex > $(SRCDIR)\temp
-#	del $(SRCDIR)\main32.hex
-#	ren $(SRCDIR)\temp main32.hex      
+#	rules   
 #-------------------------------------------------------------------------------
 
-# correct
-all: clean copy link exec
+all: clean copy link exec correct
 
 clean:
 	if exist $(SRCDIR)\main32.o $(RM) $(SRCDIR)\main32.o
@@ -99,5 +94,7 @@ link:
 
 exec:
 	$(OBJC) -O ihex $(SRCDIR)\main32.elf $(SRCDIR)\main32.hex
-
+	
+correct:
+	copy $(SRCDIR)\main32.hex $(SRCDIR)\main32tmp.hex   
 
