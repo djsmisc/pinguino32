@@ -1,44 +1,48 @@
-//
-//
-//
+/*
+	Pinguino example to read ds18b20 1wire temperature sensor
+	Result is sent on usb bus and can be read with temp18b20.py
+	author		Régis Blanchot
+	first release	14/09/2010
+	last update	06/10/2010
+	IDE			Pinguino b9.2
+
+	DS18B20 Connection
+	------------------
+	pin 1: GND
+	pin 2: DQ (Data in/out) must be connected to the PIC
+	pin 3: VDD (+5V)
+	NB : 1-wire bus (DQ line) must have 4K7 pull-up resistor (connected to +5V)
+*/
+
+#define ONEWIREBUS	0		
+#define LEDRUN PORTAbits.RA4	
 
 void setup()
 {
-serial_begin(9600);
-serial_printf("Hello");
+//
+//
+//
+	
+//
 }
-
-
-unsigned char i=0;
-long j=0;
-unsigned char receivedbyte;
-unsigned char rxstr[64];
-unsigned char txstr[7]={'M','e','s','s','a','g','e'};
-unsigned char serstr[2]={0,0};
 
 void loop()
 {
+	DS18B20_Temperature t;
+	u8 temp[4];
 //
-receivedbyte=CDCgets(rxstr);
-rxstr[receivedbyte]=0; 
-if (receivedbyte>0)
-	for (i=0;i<receivedbyte;i++)
-		serial_printf(rxstr);
-
-/*
 //
-if (j==5000)
+//
+	if (DS18B20Read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
 	{
-	CDCprint(txstr,7);
-	j=0;
+//
+		temp[0] = t.sign;			
+		temp[1] = t.integer;		
+		temp[2] = high8(t.fraction);	
+		temp[3] = low8(t.fraction);
+		usbsend(temp, 4);			
+		LEDRUN=LEDRUN^1;
+		Delayms(1000);			
 	}
-j++;
-*/
-//
-if (serial_available())
-	{
-	serstr[0]=serial_read();
-	CDCprint(txstr,7);
-//
-	}	
 }
+

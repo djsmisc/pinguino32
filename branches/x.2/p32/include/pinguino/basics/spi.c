@@ -197,39 +197,47 @@ void SPI_init()
 	SPI_close();
 	#if defined(UBW32_460) || defined(EMPEROR460)
 	#if (SPIx == 1)
-	// clear any existing SPIx event and Set IPL=3, Subpriority 1
-	IntSetVectorPriority(INT_SPI1_VECTOR, 3, 1);
-	// Enable RX, TX and Error interrupts
-	IntEnable(INT_SPI1_FAULT); 
-	IntEnable(INT_SPI1_TRANSFER_DONE); 
-	IntEnable(INT_SPI1_RECEIVE_DONE);
+		#ifdef SPI1INT
+		// clear any existing SPIx event and Set IPL=3, Subpriority 1
+		IntSetVectorPriority(INT_SPI1_VECTOR, 3, 1);
+		// Enable RX, TX and Error interrupts
+		IntEnable(INT_SPI1_FAULT); 
+		IntEnable(INT_SPI1_TRANSFER_DONE); 
+		IntEnable(INT_SPI1_RECEIVE_DONE);
+		#endif
 	#endif
 	#endif
 	#if (SPIx == 2)
-	// clear any existing SPIx event and Set IPL=3, Subpriority 1
-	//IntSetVectorPriority(INT_SPI2_VECTOR, 3, 1);
-	// Enable RX, TX and Error interrupts
-	//IntEnable(INT_SPI2_FAULT); 
-	//IntEnable(INT_SPI2_TRANSFER_DONE); 
-	//IntEnable(INT_SPI2_RECEIVE_DONE);
+		#ifdef SPI2INT
+		// clear any existing SPIx event and Set IPL=3, Subpriority 1
+		IntSetVectorPriority(INT_SPI2_VECTOR, 3, 1);
+		Enable RX, TX and Error interrupts
+		IntEnable(INT_SPI2_FAULT); 
+		IntEnable(INT_SPI2_TRANSFER_DONE); 
+		IntEnable(INT_SPI2_RECEIVE_DONE);
+		#endif
 	#endif
 	//Only 795 boards have SPI3 and SPI4
 	#if defined(UBW32_795) || defined(EMPEROR795)
 	#if (SPIx == 3)
-	// clear any existing SPIx event and Set IPL=3, Subpriority 1
-	IntSetVectorPriority(INT_SPI3_VECTOR, 3, 1);
-	// Enable RX, TX and Error interrupts
-	IntEnable(INT_SPI3_FAULT); 
-	IntEnable(INT_SPI3_TRANSFER_DONE); 
-	IntEnable(INT_SPI3_RECEIVE_DONE);
+		#ifdef SPI3INT
+		// clear any existing SPIx event and Set IPL=3, Subpriority 1
+		IntSetVectorPriority(INT_SPI3_VECTOR, 3, 1);
+		// Enable RX, TX and Error interrupts
+		IntEnable(INT_SPI3_FAULT); 
+		IntEnable(INT_SPI3_TRANSFER_DONE); 
+		IntEnable(INT_SPI3_RECEIVE_DONE);
+		#endif
 	#endif
 	#if (SPIx == 4)
-	// clear any existing SPIx event and Set IPL=3, Subpriority 1
-	IntSetVectorPriority(INT_SPI4_VECTOR, 3, 1);
-	// Enable RX, TX and Error interrupts
-	IntEnable(INT_SPI4_FAULT); 
-	IntEnable(INT_SPI4_TRANSFER_DONE); 
-	IntEnable(INT_SPI4_RECEIVE_DONE);
+		#ifdef SPI4INT
+		// clear any existing SPIx event and Set IPL=3, Subpriority 1
+		IntSetVectorPriority(INT_SPI4_VECTOR, 3, 1);
+		// Enable RX, TX and Error interrupts
+		IntEnable(INT_SPI4_FAULT); 
+		IntEnable(INT_SPI4_TRANSFER_DONE); 
+		IntEnable(INT_SPI4_RECEIVE_DONE);
+		#endif
 	#endif
 	#endif	
 	SPI_clock(250000);

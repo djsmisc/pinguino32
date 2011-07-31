@@ -22,9 +22,9 @@ This example code is in the public domain.
  */
 
 int timer = 100;           // The higher the number, the slower the timing.
-int ledPins[6] = { 
-  2, 7, 4, 6, 5, 3 };       // an array of pin numbers to which LEDs are attached
+int ledPins[6] = { 2, 7, 4, 6, 5, 3 };       // an array of pin numbers to which LEDs are attached
 int pinCount = 6;           // the number of pins (i.e. the length of the array)
+int thisPin;
 
 void setup() {
   int thisPin;
@@ -36,7 +36,7 @@ void setup() {
 }
 
 void loop() {
-  int thisPin;
+  
   // loop from the lowest pin to the highest:
   for (thisPin = 0; thisPin < pinCount; thisPin++) { 
     // turn the pin on:
@@ -46,12 +46,14 @@ void loop() {
     digitalWrite(ledPins[thisPin], LOW);    
 
   }
+
   // loop from the highest pin to the lowest:
-  for (thisPin = pinCount - 1; thisPin >= 0; thisPin--) { 
+  for (thisPin=pinCount-1;thisPin>=0;thisPin--)
+	{
     // turn the pin on:
     digitalWrite(ledPins[thisPin], HIGH);
     delay(timer);
     // turn the pin off:
     digitalWrite(ledPins[thisPin], LOW);
-  }
+    }
 }
