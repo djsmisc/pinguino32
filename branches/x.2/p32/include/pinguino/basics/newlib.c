@@ -149,7 +149,6 @@ int read(int file, char *ptr, int len)
 int write(char file, char *ptr, int len)
 {
 	int todo;
-	SerialUART1WriteChar(file+0x30);
 	switch (file)
 	{
 		case 1:

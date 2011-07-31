@@ -17,7 +17,10 @@ ZIG.init(channel,PAN_ID,Short_Address);
 void loop()
 {
 unsigned char length;
+unsigned int i;
 
+for (i=0;i<20;i++) Serial.printf("%02X ",mrf24j40_short_addr_read(i));
+Serial.printf("\n\r");
 length=ZIG.read(rxdata);
 if (length>0)
 		{

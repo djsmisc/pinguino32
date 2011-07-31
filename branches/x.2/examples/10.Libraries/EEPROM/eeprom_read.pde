@@ -8,7 +8,7 @@
  * NB : 32-bit PICs have no EEPROM
  */
 
-#include <EEPROM.h>
+#include <eeprom.c>
 
 // start reading from the first byte (address 0) of the EEPROM
 int address = 0;
@@ -27,7 +27,7 @@ void loop()
   Serial.print(address);
   Serial.print("\t");
   Serial.print(value, DEC);
-  Serial.println();
+  Serial.println("");
   
   // advance to the next address of the EEPROM
   address = address + 1;

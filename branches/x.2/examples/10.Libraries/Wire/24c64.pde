@@ -3,7 +3,6 @@
 
 #include <libI2C.c>
 
-typedef short byte;
 
 byte string[10]={0,0,'A','B','C','D','E','F','G','H'};	// string to write to i2c memory
 // fist byte of string[] is MSB of address to write to
