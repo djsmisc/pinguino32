@@ -16,8 +16,8 @@ extern void USBCheckCDCRequest();
 extern void CDCInitEP();
 extern void USBDeviceInit();
 extern void USBDeviceAttach();
-extern void putUSBUSART(char*, char);
-extern char getsUSBUSART(char*, char);
+extern void putUSBUSART(u8 *data, u8 Length);
+extern u8 getsUSBUSART(u8 *data, u8 Length);
 extern void CDCTxService();
 extern unsigned char cdc_trf_state;
 
@@ -166,11 +166,11 @@ void CDCputs(u8 *buffer, u8 length)
 }
 	
 // CDC.read
-u8 CDCgets(u8 *buffer, u8 length)
+u8 CDCgets(u8 *buffer)
 {
 	u8 receivedchar;		// the number of captured chars
 	
-	receivedchar=getsUSBUSART(buffer, length);
+	receivedchar=getsUSBUSART(buffer, 64);
 	return receivedchar;	// returns actual number of bytes copied to user buffer
 }
 
@@ -241,7 +241,7 @@ char CDCgetkey()
 {
 	char c[64];	// always get a full packet
 
-	while ( CDCgets(c, 64) == 0 );
+	while ( CDCgets(c) == 0 );
 	return (c[0]);
 }
 
