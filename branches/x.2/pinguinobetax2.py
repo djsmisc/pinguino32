@@ -476,7 +476,7 @@ class Pinguino(wx.Frame):
 # ------------------------------------------------------------------------------
 		
 		# create editor panel
-		editorsize = (outputsize[0], framesize[1] - outputsize[1])
+		editorsize = (outputsize[0], framesize[1] - outputsize[1]-200)
 		self.EditorPanel = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition, editorsize)
 		# background with pinguino.cc colour and pinguino logo
 		self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
@@ -1360,7 +1360,9 @@ class Pinguino(wx.Frame):
 				sortie.communicate()
 				if sortie.poll()!=0:
 					fichier.seek(0)
-					self.displaymsg(fichier.read(), 0)
+					for ligne in fichier:
+						if ligne.find('error')!=-1:
+							self.displaymsg(ligne, 0)
 				fichier.seek(0)
 				line=fichier.readline()
 				if line.find("error")!=-1:
@@ -1420,8 +1422,9 @@ class Pinguino(wx.Frame):
 			fichier.seek(0)
 			# Check if child process has terminated
 			if sortie.poll()!=0:
-				print fichier.read()
-				self.displaymsg(fichier.read(), 0)
+				for ligne in fichier:
+					if ligne.find('error')!=-1:
+						self.displaymsg(ligne, 0)
 			fichier.close()
 			if sys.platform=='win32':
 				if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
