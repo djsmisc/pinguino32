@@ -14,10 +14,10 @@
 #define LED2	2
 #define LED3	3
 
-void blink0() {	Toggle(LED0); }
-void blink1() {	Toggle(LED1); }
-void blink2() {	Toggle(LED2); }
-void blink3() {	Toggle(LED3); }
+void blink0() {	toggle(LED0); }
+void blink1() {	toggle(LED1); }
+void blink2() {	toggle(LED2); }
+void blink3() {	toggle(LED3); }
 
 void setup()
 {

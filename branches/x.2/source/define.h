@@ -1,6 +1,8 @@
 
 
 
-#include <__cdc.c>
+
+#define __USB__
+#include <18b20.c>
 #include <common_types.h>
-#include <serial.c>
+#include <delay.c>

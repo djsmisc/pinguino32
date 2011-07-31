@@ -59,7 +59,7 @@ Contact us at admin@embeddedadventures.com
         #define ZIGCSOUT	TRISFbits.TRISF0=0
         // define for macro compatibility
         #define set_bit BitSet
-        #define test_bit TestBit
+        #define test_bit BitTest
 #endif        
 
 // Global variables
@@ -819,8 +819,8 @@ uns8 mrf24j40_short_addr_read(uns8 addr) {
         #ifdef __PIC32MX__
 	        addr=(addr<<1)&0x7E;
 	        ZIGCS=0;
-	        WriteSPI(addr);
-	        u8 result=ReadSPI();
+	        SPI_write(addr);
+	        u8 result=SPI_read();
 	        ZIGCS=1;
         #endif	                	        
 	return result;
@@ -841,8 +841,8 @@ void mrf24j40_short_addr_write(uns8 addr, uns8 data) {
         #ifdef __PIC32MX__
         	addr=((addr<<1)&0x7F)|1;
 			ZIGCS=0;
-			WriteSPI(addr);
-			WriteSPI(data);
+			SPI_write(addr);
+			SPI_write(data);
 			ZIGCS=1;
 		#endif	
 }	
@@ -866,9 +866,9 @@ uns8 mrf24j40_long_addr_read(uns16 addr){
 			ZIGCS=0;
 			addr=((addr<<1)&0x7FE)|0x800;
 			addr<<=4;
-			WriteSPI(addr>>8);
-			WriteSPI(addr);
-			result=ReadSPI();
+			SPI_write(addr>>8);
+			SPI_write(addr);
+			result=SPI_read();
 			ZIGCS=1;        
         #endif
 	return result;
@@ -895,9 +895,9 @@ void mrf24j40_long_addr_write(uns16 addr, uns8 data){
 			ZIGCS=0;
 			addr=((addr<<1)&0x7FF)|0x801;
 			addr<<=4;
-			WriteSPI(addr>>8);
-			WriteSPI(addr);
-			WriteSPI(data);
+			SPI_write(addr>>8);
+			SPI_write(addr);
+			SPI_write(data);
 			ZIGCS=1;     
 		#endif   	        
 }
@@ -911,7 +911,7 @@ void mrf24j40_setup_io() {
 	        make_output(mrf24j40_cs_port, mrf24j40_cs_pin);
         #endif	
         #ifdef __PIC32MX__
-        	InitSPI0();			// init SPI default (2 on PIC32-PINGUINO)
+        	SPI_init();			// init SPI default (2 on PIC32-PINGUINO)
         						// only called here for test
         						// will be called later in main32.c
         	pinmode(13,OUTPUT); // CLK

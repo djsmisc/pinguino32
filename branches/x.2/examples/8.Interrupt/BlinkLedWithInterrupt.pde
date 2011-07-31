@@ -13,7 +13,7 @@
 
 void blink0()
 {
-	Toggle(LED0);
+	toggle(LED0);
 }
 
 void setup()
