@@ -53,8 +53,7 @@ if (Serial.available())
 		digitalWrite(caractere1,caractere2);
 		// say OK to the transmitter
 		Serial.print("bonjour\n\r");
-		end:
-		
+		end:;		
 		}
 	}
 }

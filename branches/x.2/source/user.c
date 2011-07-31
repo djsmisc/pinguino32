@@ -1,23 +1,44 @@
-/*	----------------------------------------------------------------------------
-	sprintf - Régis Blanchot
-	--------------------------------------------------------------------------*/
+//
+//
+//
 
 void setup()
 {
-	serial_begin(9600);
+serial_begin(9600);
+serial_printf("Hello");
 }
+
+
+unsigned char i=0;
+long j=0;
+unsigned char receivedbyte;
+unsigned char rxstr[64];
+unsigned char txstr[7]={'M','e','s','s','a','g','e'};
+unsigned char serstr[2]={0,0};
 
 void loop()
 {
-	char buf[80];
+//
+receivedbyte=CDCgets(rxstr);
+rxstr[receivedbyte]=0; 
+if (receivedbyte>0)
+	for (i=0;i<receivedbyte;i++)
+		serial_printf(rxstr);
 
-	psprintf(buf, "|justif: \"%-10s\"|\n", "left");	serial_printf("%s", buf);
-	psprintf(buf, "|justif: \"%10s\"|\n", "right");	serial_printf("%s", buf);
-	psprintf(buf, "| 3: %04d zero padded|\n", 3);		serial_printf("%s", buf);
-	psprintf(buf, "| 3: %-4d left justif.|\n", 3);	serial_printf("%s", buf);
-	psprintf(buf, "| 3: %4d right justif.|\n", 3);	serial_printf("%s", buf);
-	psprintf(buf, "|-3: %04d zero padded|\n", -3);	serial_printf("%s", buf);
-	psprintf(buf, "|-3: %-4d left justif.|\n", -3);	serial_printf("%s", buf);
-	psprintf(buf, "|-3: %4d right justif.|\n", -3);	serial_printf("%s", buf);
+/*
+//
+if (j==5000)
+	{
+	CDCprint(txstr,7);
+	j=0;
+	}
+j++;
+*/
+//
+if (serial_available())
+	{
+	serstr[0]=serial_read();
+	CDCprint(txstr,7);
+//
+	}	
 }
-
