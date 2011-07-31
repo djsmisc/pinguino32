@@ -1,8 +1,6 @@
 
 
 
-
-#include <delay.c>
-#include <digitalw.c>
-#include <pinguinoserial1.c>
-#include <typedef.h>
+#include <common_types.h>
+#include <serial.c>
+#include <stdio.c>
