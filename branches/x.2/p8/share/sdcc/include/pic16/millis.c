@@ -5,8 +5,6 @@
 #ifndef __MILLIS__
 #define __MILLIS__
 
-#define MILLIS 1
-
 #include "interrupt.c"
 
 long _millis;

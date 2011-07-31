@@ -22,7 +22,7 @@ This example code is in the public domain.
  */
 
 int timer = 100;           // The higher the number, the slower the timing.
-int ledPins[] = { 
+int ledPins[6] = { 
   2, 7, 4, 6, 5, 3 };       // an array of pin numbers to which LEDs are attached
 int pinCount = 6;           // the number of pins (i.e. the length of the array)
 

@@ -21,7 +21,7 @@
 			- OUTPUT		numpin
 			- HIGH		numpin		(turn pin numpin to High) 
 			- LOW			numpin		(turn pin numpin to Low)
-			- PAUSE		ms				(delay for ms milliseconds)
+			- PAUSE		ms				(Delayms for ms milliseconds)
 			- TOGGLE		numpin
 			- BUTTON		numpin		(read switch status)
 			- POT			numpin
@@ -94,13 +94,13 @@ typedef struct
 typedef struct
 {
 	char name[LAB_LEN];
-	char *p;		// points to place to go in source file
+	char *p;		
 } label;
 
 typedef struct
 {
-	int var;		// counter variable
-	int target;		// target value
+	int var;		
+	int target;		
 	char *loc;
 } for_stack;
 
@@ -136,21 +136,21 @@ commands table[] =
 	"del",		DEL,\
 	"rem",		REM,\
 	"end",		END,\
-	"",			END				// mark end of table
+	"",			END				
 };
 
-char *prog;							// holds program expression to be analyzed
-List *lines;						// holds program lines
-jmp_buf e_buf;						// hold environment for longjmp()
-char *token;						// holds token
+char *prog;							
+List *lines;						
+jmp_buf e_buf;						
+char *token;						
 char token_type;
 char tok;
 label label_table[NUM_LAB];
-for_stack fstack[FOR_NEST];	// stack for FOR/NEXT loop
-char *gstack[SUB_NEST];			// stack for gosub
+for_stack fstack[FOR_NEST];	
+char *gstack[SUB_NEST];			
 
-int ftos;							// index to top of FOR stack
-int gtos;							// index to top of GOSUB stack
+int ftos;							
+int gtos;							
 
 /*	----------------------------------------------------------------------------
 	Prototypes
@@ -318,7 +318,7 @@ void exec_list(void)
 	u16 l=0;
 	char *car;
 	
-	car = prog;								// program's first character 
+	car = prog;								
 	
 	while (car[0] != '\0')
 	{
@@ -326,7 +326,7 @@ void exec_list(void)
 		for (i = 0; car[i] != '\n'; i++)
 			serial1printf("%c", car[i]);
 		serial1printf("\n");
-		car = car + i + 1;					// next line's first character
+		car = car + i + 1;					
 		l++;
 	}
 	--------------------------------------------------------------------------*/
@@ -338,9 +338,9 @@ void exec_list(void)
 
 void exec_run(void)
 {
-	scan_labels(); 				// find the labels in the program
-	ftos = 0; 					// initialize the FOR stack index
-	gtos = 0; 					// initialize the GOSUB stack index
+	scan_labels(); 				
+	ftos = 0; 					
+	gtos = 0; 					
 
 	do
 	{
@@ -349,10 +349,10 @@ void exec_run(void)
 //
 		if(token_type == VARIABLE)
 		{
-			putback();			// return the var to the input stream
-			assignment(); 		// must be assignment statement
+			putback();			
+			assignment(); 		
 		}
-		else // is command
+		else 
 		{
 			switch(tok)
 			{
@@ -454,7 +454,7 @@ int exec_load(void)
 	while(!feof(fp) && i < PROG_SIZE);
 	fclose(fp);
 
-	*(buffer-2) = '\0'; // null terminate the program
+	*(buffer-2) = '\0'; 
 	prog = buffer;
 */
 }
@@ -467,7 +467,7 @@ void exec_add(char *exp)
 {
 	u16 l;
 	
-	l = strchr(exp, "add");			// traiter le cas des majuscules
+	l = strchr(exp, "add");			
 	serial1printf("%d\n", l);
 }
 
@@ -496,7 +496,7 @@ void prog2list(void)
 		exit(1);
 	}
 
-	car = prog;								// program's first character 
+	car = prog;								
 
 //
 	if (!lines)
@@ -513,7 +513,7 @@ void prog2list(void)
 		temp[l++] = '\0';
 //
 		lines = list_append(lines, temp);
-		car += l;					// next line's first character
+		car += l;					
 	}
 }
 
@@ -616,7 +616,7 @@ void exec_print(void)
 	}
 	else
 	{
-		serror(0); // error is not , or ;
+		serror(0); 
 	}
 }
 
@@ -627,12 +627,12 @@ void exec_print(void)
 void scan_labels(void)
 {
 	int addr;
-	char *temp;		// address temp points on char
+	char *temp;		
 
 //
 
-	label_init();	// zero all labels
-	temp = prog;	// save pointer to top of program
+	label_init();	
+	temp = prog;	
 
 //
 	get_token();
@@ -653,7 +653,7 @@ void scan_labels(void)
 					(addr==-1)?serror(5):serror(6);
 			}
 			strcpy(label_table[addr].name, token);
-			label_table[addr].p = prog;	// current point in program
+			label_table[addr].p = prog;	
 		}
 //
 		if(tok!=EOL)
@@ -694,7 +694,7 @@ int get_next_label(char *s)
 		if(label_table[t].name[0]==0)
 			return t;
 		if(!strcmp(label_table[t].name,s))
-			return -2; // dup
+			return -2; 
 	}
 	return -1;
 }
@@ -716,7 +716,7 @@ char *find_label(char *s)
 		if(!strcmp(label_table[t].name,s))
 			return label_table[t].p;
 	}
-	return '\0'; // error condition
+	return '\0'; 
 }
 
 /*	----------------------------------------------------------------------------
@@ -734,9 +734,9 @@ void exec_goto(void)
 //
 	loc = find_label(token);
 	if(loc=='\0')
-		serror(7);			// label not defined
+		serror(7);			
 	else
-		prog=loc;			// start program running at that loc
+		prog=loc;			
 }
 
 /*	----------------------------------------------------------------------------
@@ -807,7 +807,7 @@ void exec_if(void)
 //
 	else
 	{
-		find_eol();	// find start of next line
+		find_eol();	
 	}
 }
 
@@ -878,9 +878,9 @@ void exec_next(void)
 //
 	variables[i.var]++;
 	if(variables[i.var]>i.target)
-		return;	// all done
-	fpush(i);	// otherwise, restore the info
-	prog = i.loc;	// loop
+		return;	
+	fpush(i);	
+	prog = i.loc;	
 }
 
 /*	----------------------------------------------------------------------------
@@ -915,23 +915,23 @@ void exec_input(void)
 	char str[80], var;
 	int i;
 
-	get_token(); // see if prompt string is present
+	get_token(); 
 
 	if(token_type==QUOTE)
 	{
-		serial1printf(token); // if so, print it and check for comma
+		serial1printf(token); 
 		get_token();
 		if(*token!=',') serror(1);
 		get_token();
 	}
 	else
-		serial1printf("? ");	// otherwise, prompt with /
+		serial1printf("? ");	
 
-	var = toupper(*token)-'A'; // get the input var
+	var = toupper(*token)-'A'; 
 
-	scanf("%d", &i); // read input and place it at address from i
+	scanf("%d", &i); 
 
-	variables[var] = i; // store it
+	variables[var] = i; 
 }
 
 /*	----------------------------------------------------------------------------
@@ -946,11 +946,11 @@ void exec_gosub(void)
 //
 	loc = find_label(token);
 	if(loc=='\0')
-		serror(7); // label not defined
+		serror(7); 
 	else
 	{
-		gpush(prog);	// save place to return to
-		prog = loc;		// start program running at that loc
+		gpush(prog);	
+		prog = loc;		
 	}
 }
 
@@ -1009,7 +1009,7 @@ void get_exp(int *result)
 		return;
 	}
 	level2(result);
-	putback(); // return last token read to input stream
+	putback(); 
 }
 
 /*	----------------------------------------------------------------------------
@@ -1050,7 +1050,7 @@ char get_token(void)
 //
 	token_type = 0;
 	tok = 0;
-	temp = token;		// address temp = address token
+	temp = token;		
 
 //
 	if (*prog == '\0')
@@ -1062,7 +1062,7 @@ char get_token(void)
 	}
 
 	while (iswhite(*prog))
-		++prog;	// skip over white space
+		++prog;	
 
 //
 	if (*prog == '\r')
@@ -1082,7 +1082,7 @@ char get_token(void)
 	{
 //
 		*temp=*prog;
-		prog++; // advance to next position
+		prog++; 
 		temp++;
 		*temp=0; 
 		return (token_type=DELIMITER);
@@ -1121,7 +1121,7 @@ char get_token(void)
 		while (!isdelim(*prog))
 		{
 //
-			*temp++ = *prog++; 					// variable à l'adresse  temp = variable à l'adresse prog 
+			*temp++ = *prog++; 					
 		}
 //
 		token_type = STRING;
@@ -1134,11 +1134,11 @@ char get_token(void)
 	if (token_type == STRING)
 	{
 //
-		tok = look_up(token); // convert to internal rep
+		tok = look_up(token); 
 		if(!tok)
 			token_type = VARIABLE;
 		else
-			token_type = COMMAND; // is a command
+			token_type = COMMAND; 
 	}
 
 //
@@ -1180,7 +1180,7 @@ int look_up(char *s)
 		if(!strcmp(table[i].command, s))
 			return table[i].tok;
 
-	return 0; // unknown command
+	return 0; 
 }
 
 /*	----------------------------------------------------------------------------
@@ -1379,5 +1379,4 @@ int find_var(char *s)
 	}
 	return variables[toupper(*token)-'A'];
 }
-
 

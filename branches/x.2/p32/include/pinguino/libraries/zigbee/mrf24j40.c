@@ -59,7 +59,7 @@ Contact us at admin@embeddedadventures.com
         #define ZIGCSOUT	TRISFbits.TRISF0=0
         // define for macro compatibility
         #define set_bit BitSet
-        #define test_bit BitTest
+        #define test_bit TestBit
 #endif        
 
 // Global variables

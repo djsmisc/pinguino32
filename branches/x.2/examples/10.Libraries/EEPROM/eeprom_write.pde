@@ -8,7 +8,7 @@
  * NB : 32-bit PICs have no EEPROM
  */
 
-#include <EEPROM.h>
+#include <eeprom.c>
 
 // the current address in the EEPROM (i.e. which byte
 // we're going to write to next)

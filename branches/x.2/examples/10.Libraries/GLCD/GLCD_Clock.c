@@ -24,22 +24,22 @@ u8 min  = 0;
 u8 hour = 0;
 
 void setup(){
-	/* Debug */
-	pinmode(DEBUG_LED, OUTPUT);		// LED on pin 13
+	/* debug */
+	pinmode(DEBUG_LED, OUTPUT);		
 	
 //
 	pinmode(HOUR, INPUT);
 	pinmode(MIN, INPUT);
 	
 //
-	Init(NON_INVERTED);   // initialise the library
+	Init(NON_INVERTED);   
 	ClearScreenX();  
-	DrawBitmap(Pinguino, 32,0, BLACK); //draw the bitmap at the given x,y position
+	DrawBitmap(Pinguino, 32,0, BLACK); 
 	Delayms(5000);
 	ClearScreenX();	
 }
 
-void loop(){ // run over and over again	
+void loop(){ 
 	int x, y;
 	
 	if (counter>9){
@@ -110,13 +110,13 @@ void loop(){ // run over and over again
 	Puts("Pinguino 32X!");
 	
 //
-	Delayms(40); //just a fine tune to get 100ms with this!
+	Delayms(40); 
 	digitalwrite(DEBUG_LED, LOW);
 	Delayms(40);
 	digitalwrite(DEBUG_LED, HIGH);
 	
 	if(!counter)
-		ClearScreen(WHITE);         // clear the screen
+		ClearScreen(WHITE);         
 	
 	counter++;
  }

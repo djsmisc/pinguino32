@@ -1,6 +1,6 @@
 delay Delayms#include <delay.c>
 delayMicroseconds Delayus#include <delay.c>
-Millis Millis#include <millis.c>
+millis Millis#include <millis.c>
 digitalWrite digitalwrite#include <digitalw.c>
 pinMode pinmode#include <digitalw.c>
 digitalRead digitalread#include <digitalw.c>
