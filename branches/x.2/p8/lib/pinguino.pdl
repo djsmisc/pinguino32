@@ -31,6 +31,6 @@ highByte high8#include <macro.h>
 GetSystemClock GetSystemClock#include <system.c>
 GetInstructionClock GetInstructionClock#include <system.c>
 GetPeripheralClock GetPeripheralClock#include <system.c>
-sprintf psprintf#include <stdio.c>
+Sprintf psprintf#include <stdio.c>
 KB.get Keyboard_get#include <misc.c>
 

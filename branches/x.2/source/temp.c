@@ -1,60 +1,23 @@
-//
-//
-//
-//
-
-int i;
-int caractere,caractere1,caractere2;
+/*	----------------------------------------------------------------------------
+	sprintf - Régis Blanchot
+	--------------------------------------------------------------------------*/
 
 void setup()
 {
-//
-for (i=0;i<8;i++) 	{
-				pinmode(i,OUTPUT);
-				digitalwrite(i,LOW);
-				}
-//
-serial1init(9600);
+	serial_begin(9600);
 }
 
 void loop()
 {
-//
-if (serial1available())
-	{
-//
-	caractere=serial1read();
-	if (caractere=='W')
-		{
-//
-		Delayms(3);
-//
-		if (serial1available()) caractere1=serial1read();
-		else 	{
-//
-				serial1flush();
-//
-				goto end;
-				}
-		Delayms(3);
-		if (serial1available()) caractere2=serial1read();
-		else  	{
-				serial1flush();
-				goto end;
-				}
-//
-		if ((caractere1>=0x30)&&(caractere2>=0x30))
-			{
-			caractere1-=0x30; 
-			caractere2-=0x30;		
-			}
-		else goto end;
-//
-		digitalwrite(caractere1,caractere2);
-//
-		serial1print("bonjour\n\r");
-		end:
-		
-		}
-	}
+	char buf[80];
+
+	psprintf(buf, "|justif: \"%-10s\"|\n", "left");	serial_printf("%s", buf);
+	psprintf(buf, "|justif: \"%10s\"|\n", "right");	serial_printf("%s", buf);
+	psprintf(buf, "| 3: %04d zero padded|\n", 3);		serial_printf("%s", buf);
+	psprintf(buf, "| 3: %-4d left justif.|\n", 3);	serial_printf("%s", buf);
+	psprintf(buf, "| 3: %4d right justif.|\n", 3);	serial_printf("%s", buf);
+	psprintf(buf, "|-3: %04d zero padded|\n", -3);	serial_printf("%s", buf);
+	psprintf(buf, "|-3: %-4d left justif.|\n", -3);	serial_printf("%s", buf);
+	psprintf(buf, "|-3: %4d right justif.|\n", -3);	serial_printf("%s", buf);
 }
+

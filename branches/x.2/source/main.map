@@ -1,37 +1,66 @@
-gplink-0.13.6 alpha
-Map File - Created 7-8-2011  18:13:25
+gplink-0.13.7 beta
+Map File - Created 7-31-2011  18:48:32
  
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
 S_boot_iface__boot_goto_table       code   0x00001c    program   0x00005e
 S_application_iface__application_data       code   0x002000    program   0x00001a
-S_crt0ipinguino__application_main       code   0x00201a    program   0x000004
-S_usb_descriptors__null_function       code   0x00201e    program   0x000002
-S_main__high_priority_isr       code   0x002020    program   0x00004a
-                    .code       code   0x00206a    program   0x000340
-          S_main__pinmode       code   0x0023aa    program   0x0001f6
-     S_main__digitalwrite       code   0x0025a0    program   0x0001f6
-      S_main__digitalread       code   0x002796    program   0x000168
-          S_main__Delayms       code   0x0028fe    program   0x00009c
-S_crt0ipinguino___do_cinit       code   0x00299a    program   0x000098
-           S_main__toggle       code   0x002a32    program   0x000058
-          S_main__Delayus       code   0x002a8a    program   0x000052
-             S_main__loop       code   0x002adc    program   0x00004c
-S_crt0ipinguino___startup       code   0x002b28    program   0x000018
-    S_main__pinguino_main       code   0x002b40    program   0x000014
-            S_main__setup       code   0x002b54    program   0x000014
-                   .cinit       code   0x002b68    program   0x00000e
-                 .idata_i       code   0x002b76    program   0x000002
-     S_main__epapout_init       code   0x002b78    program   0x000002
-      S_main__epapin_init       code   0x002b7a    program   0x000002
-         S_main__epap_out       code   0x002b7c    program   0x000002
-          S_main__epap_in       code   0x002b7e    program   0x000002
+S_usb_descriptors__null_function       code   0x00201a    program   0x000002
+                 .idata_i       code   0x00201c    program   0x000002
+     S_main__epapout_init       code   0x00201e    program   0x000002
+S_main__high_priority_isr       code   0x002020    program   0x000050
+           S_main__pprint       code   0x002070    program   0x00072c
+                    .code       code   0x00279c    program   0x00031c
+          S_main__pprinti       code   0x002ab8    program   0x000312
+     S_main__serial_print       code   0x002dca    program   0x0002c8
+             S_main__loop       code   0x003092    program   0x00024a
+          S_main__pprints       code   0x0032dc    program   0x000240
+       S_main__pprintchar       code   0x00351c    program   0x0001e0
+            S_ltoa__ultoa       code   0x0036fc    program   0x0001b8
+    S_modulong___modulong       code   0x0038b4    program   0x000124
+    S_divulong___divulong       code   0x0039d8    program   0x00011a
+     S_main__serial_begin       code   0x003af2    program   0x0000dc
+             S_ltoa__ltoa       code   0x003bce    program   0x0000c8
+      S_moduint___moduint       code   0x003c96    program   0x0000b8
+         S_main__psprintf       code   0x003d4e    program   0x0000ac
+      S_divuint___divuint       code   0x003dfa    program   0x0000aa
+          S_main__pprintf       code   0x003ea4    program   0x0000a8
+S_crt0ipinguino___do_cinit       code   0x003f4c    program   0x000098
+S_crt0ipinguino___startup       code   0x003fe4    program   0x000018
+S_crt0ipinguino__application_main       code   0x003ffc    program   0x000004
  S_main__low_priority_isr       code   0x004000    program   0x00004a
-                   .idata      idata   0x000200       data   0x000001
-               .registers      udata   00000000       data   0x000009
+             S_itoa__itoa       code   0x00404a    program   0x000092
+ S_main__serial_getstring       code   0x0040dc    program   0x00008e
+   S_main__serial_println       code   0x00416a    program   0x00008a
+            S_itoa__uitoa       code   0x0041f4    program   0x000074
+ S_main__serial_interrupt       code   0x004268    program   0x000068
+    S_main__serial_printf       code   0x0042d0    program   0x000064
+      S_main__serial_read       code   0x004334    program   0x000052
+ S_main__serial_available       code   0x004386    program   0x000026
+   S_main__serial_putchar       code   0x0043ac    program   0x000024
+    S_main__serial_getkey       code   0x0043d0    program   0x000020
+    S_main__pinguino_main       code   0x0043f0    program   0x000018
+            S_main__setup       code   0x004408    program   0x000016
+                   .cinit       code   0x00441e    program   0x00000e
+     S_main__serial_flush       code   0x00442c    program   0x00000c
+      S_main__epapin_init       code   0x004438    program   0x000002
+         S_main__epap_out       code   0x00443a    program   0x000002
+          S_main__epap_in       code   0x00443c    program   0x000002
+                   .idata      idata   0x000355       data   0x000001
+               .registers      udata   00000000       data   0x00001b
       ustat_boot_iface_00      udata   0x00005d       data   0x000003
             stack_section      udata   0x000100       data   0x000100
+             udata_main_6      udata   0x000200       data   0x000080
+             udata_main_7      udata   0x000280       data   0x000050
+             udata_ltoa_0      udata   0x0002d0       data   0x000020
+             udata_main_1      udata   0x0002f0       data   0x00000c
+             udata_main_0      udata   0x0002fc       data   0x000003
+             udata_main_8      udata   0x000300       data   0x000050
+             udata_main_3      udata   0x000350       data   0x000003
+             udata_main_2      udata   0x000353       data   0x000002
+             udata_main_4      udata   0x000356       data   0x000001
+             udata_main_5      udata   0x000357       data   0x000001
       ustat_pic18f2550_00      udata   0x000f62       data   0x000023
       ustat_pic18f2550_01      udata   0x000f89       data   0x000005
       ustat_pic18f2550_02      udata   0x000f92       data   0x000005
@@ -46,133 +75,252 @@ S_crt0ipinguino___startup       code   0x002b28    program   0x000018
                                Start         End
                            ---------   ---------
                             0x002000    0x002019
-                            0x00201e    0x00201f
-                            0x00206a    0x0023a9
-                            0x002b76    0x002b77
-                            0x00299a    0x002a31
-                            0x002b28    0x002b3f
-                            0x00201a    0x00201d
-                            0x002020    0x002069
+                            0x00201a    0x00201b
+                            0x00279c    0x002ab7
+                            0x00201c    0x00201d
+                            0x003f4c    0x003fe3
+                            0x003fe4    0x003ffb
+                            0x003ffc    0x003fff
+                            0x002020    0x00206f
                             0x004000    0x004049
-                            0x002b40    0x002b53
-                            0x002adc    0x002b27
-                            0x002b54    0x002b67
-                            0x002b78    0x002b79
-                            0x002b7a    0x002b7b
-                            0x002b7c    0x002b7d
-                            0x002b7e    0x002b7f
-                            0x002a32    0x002a89
-                            0x0023aa    0x00259f
-                            0x002796    0x0028fd
-                            0x0025a0    0x002795
-                            0x002a8a    0x002adb
-                            0x0028fe    0x002999
+                            0x0043f0    0x004407
+                            0x003092    0x0032db
+                            0x004408    0x00441d
+                            0x00201e    0x00201f
+                            0x004438    0x004439
+                            0x00443a    0x00443b
+                            0x00443c    0x00443d
+                            0x00416a    0x0041f3
+                            0x002dca    0x003091
+                            0x0040dc    0x004169
+                            0x0043d0    0x0043ef
+                            0x0042d0    0x004333
+                            0x00442c    0x004437
+                            0x004334    0x004385
+                            0x004268    0x0042cf
+                            0x0043ac    0x0043cf
+                            0x004386    0x0043ab
+                            0x003af2    0x003bcd
+                            0x003d4e    0x003df9
+                            0x003ea4    0x003f4b
+                            0x002070    0x00279b
+                            0x002ab8    0x002dc9
+                            0x0032dc    0x00351b
+                            0x00351c    0x0036fb
                             0x00001c    0x000079
-                            0x002b68    0x002b75
+                            0x00404a    0x0040db
+                            0x0041f4    0x004267
+                            0x003bce    0x003c95
+                            0x0036fc    0x0038b3
+                            0x0038b4    0x0039d7
+                            0x003dfa    0x003ea3
+                            0x003c96    0x003d4d
+                            0x0039d8    0x003af1
+                            0x00441e    0x00442b
  
-                            1556 program addresses used
+                            4686 program addresses used
  
                               Symbols
                      Name    Address   Location    Storage File
                 ---------  ---------  ---------  --------- ---------
         _application_data   0x002000    program     extern application_iface.asm
-           _null_function   0x00201e    program     extern usb_descriptors.asm
-       _device_descriptor   0x00206a    program     extern usb_descriptors.asm
-             _default_cfg   0x00207c    program     extern usb_descriptors.asm
-               _flash_cfg   0x00208e    program     extern usb_descriptors.asm
-         _application_cfg   0x0020ae    program     extern usb_descriptors.asm
-_configuration_descriptor   0x0020ce    program     extern usb_descriptors.asm
-                    _str0   0x0020d8    program     extern usb_descriptors.asm
-                    _str1   0x0020dc    program     extern usb_descriptors.asm
-                    _str2   0x002102    program     extern usb_descriptors.asm
-                    _str3   0x002124    program     extern usb_descriptors.asm
-                    _str4   0x002128    program     extern usb_descriptors.asm
-                    _str5   0x002138    program     extern usb_descriptors.asm
-                    _str6   0x002144    program     extern usb_descriptors.asm
-       _string_descriptor   0x002160    program     extern usb_descriptors.asm
-            _ep_init_cfg0   0x002176    program     static usb_descriptors.asm
-            _ep_init_cfg1   0x0021a6    program     static usb_descriptors.asm
-            _ep_init_cfg2   0x0021d6    program     static usb_descriptors.asm
-                 _ep_init   0x002206    program     extern usb_descriptors.asm
-              _ep_in_cfg0   0x002212    program     static usb_descriptors.asm
-              _ep_in_cfg1   0x002242    program     static usb_descriptors.asm
-              _ep_in_cfg2   0x002272    program     static usb_descriptors.asm
-                   _ep_in   0x0022a2    program     extern usb_descriptors.asm
-             _ep_out_cfg0   0x0022ae    program     static usb_descriptors.asm
-             _ep_out_cfg1   0x0022de    program     static usb_descriptors.asm
-             _ep_out_cfg2   0x00230e    program     static usb_descriptors.asm
-                  _ep_out   0x00233e    program     extern usb_descriptors.asm
-           _ep_setup_cfg0   0x00234a    program     static usb_descriptors.asm
-                _ep_setup   0x00237a    program     extern usb_descriptors.asm
-                ___uflags   0x000200       data     extern obj/Debug/crt0ipinguino.asm
-               __do_cinit   0x00299a    program     extern obj/Debug/crt0ipinguino.asm
-                     test   0x0029b4    program     static obj/Debug/crt0ipinguino.asm
-                    cont1   0x0029ba    program     static obj/Debug/crt0ipinguino.asm
-                copy_loop   0x002a08    program     static obj/Debug/crt0ipinguino.asm
-            copy_one_byte   0x002a0e    program     static obj/Debug/crt0ipinguino.asm
-             done_copying   0x002a1c    program     static obj/Debug/crt0ipinguino.asm
-                     done   0x002a30    program     static obj/Debug/crt0ipinguino.asm
-                __startup   0x002b28    program     extern obj/Debug/crt0ipinguino.asm
-                   lockup   0x002b3e    program     static obj/Debug/crt0ipinguino.asm
-        _application_main   0x00201a    program     extern obj/Debug/crt0ipinguino.asm
-                    r0x00   00000000       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x01   0x000001       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x02   0x000002       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x03   0x000003       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x04   0x000004       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x05   0x000005       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x06   0x000006       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x07   0x000007       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    r0x08   0x000008       data     static C:\Users\jpm\Desktop\x.2\source\main.asm
-       _high_priority_isr   0x002020    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-        _low_priority_isr   0x004000    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-           _pinguino_main   0x002b40    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00244_DS_   0x002b4c    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    _loop   0x002adc    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-                   _setup   0x002b54    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-            _epapout_init   0x002b78    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-             _epapin_init   0x002b7a    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-                _epap_out   0x002b7c    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-                 _epap_in   0x002b7e    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-                  _toggle   0x002a32    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-                 _pinmode   0x0023aa    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00203_DS_   0x00244c    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00183_DS_   0x002458    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00185_DS_   0x00248c    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00187_DS_   0x0024bc    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00189_DS_   0x0024f0    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00191_DS_   0x002520    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00193_DS_   0x002554    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00196_DS_   0x00257e    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-             _digitalread   0x002796    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00178_DS_   0x002824    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00158_DS_   0x002830    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00160_DS_   0x002866    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00162_DS_   0x00286c    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00164_DS_   0x0028a2    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00166_DS_   0x0028a8    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00168_DS_   0x0028da    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00170_DS_   0x0028e0    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00171_DS_   0x0028e4    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-            _digitalwrite   0x0025a0    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00153_DS_   0x002642    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00133_DS_   0x00264e    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00135_DS_   0x002682    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00137_DS_   0x0026b2    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00139_DS_   0x0026e6    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00141_DS_   0x002716    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00143_DS_   0x00274a    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00146_DS_   0x002774    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                 _Delayus   0x002a8a    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00119_DS_   0x002ab2    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00128_DS_   0x002abc    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00123_DS_   0x002ac6    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                 _Delayms   0x0028fe    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00105_DS_   0x002946    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00114_DS_   0x00295c    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-               _00109_DS_   0x002974    program     static C:\Users\jpm\Desktop\x.2\source\main.asm
-                    _mask   0x002386    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
-                    _port   0x002398    program     extern C:\Users\jpm\Desktop\x.2\source\main.asm
+           _null_function   0x00201a    program     extern usb_descriptors.asm
+       _device_descriptor   0x00279c    program     extern usb_descriptors.asm
+             _default_cfg   0x0027ae    program     extern usb_descriptors.asm
+               _flash_cfg   0x0027c0    program     extern usb_descriptors.asm
+         _application_cfg   0x0027e0    program     extern usb_descriptors.asm
+_configuration_descriptor   0x002800    program     extern usb_descriptors.asm
+                    _str0   0x00280a    program     extern usb_descriptors.asm
+                    _str1   0x00280e    program     extern usb_descriptors.asm
+                    _str2   0x002834    program     extern usb_descriptors.asm
+                    _str3   0x002856    program     extern usb_descriptors.asm
+                    _str4   0x00285a    program     extern usb_descriptors.asm
+                    _str5   0x00286a    program     extern usb_descriptors.asm
+                    _str6   0x002876    program     extern usb_descriptors.asm
+       _string_descriptor   0x002892    program     extern usb_descriptors.asm
+            _ep_init_cfg0   0x0028a8    program     static usb_descriptors.asm
+            _ep_init_cfg1   0x0028d8    program     static usb_descriptors.asm
+            _ep_init_cfg2   0x002908    program     static usb_descriptors.asm
+                 _ep_init   0x002938    program     extern usb_descriptors.asm
+              _ep_in_cfg0   0x002944    program     static usb_descriptors.asm
+              _ep_in_cfg1   0x002974    program     static usb_descriptors.asm
+              _ep_in_cfg2   0x0029a4    program     static usb_descriptors.asm
+                   _ep_in   0x0029d4    program     extern usb_descriptors.asm
+             _ep_out_cfg0   0x0029e0    program     static usb_descriptors.asm
+             _ep_out_cfg1   0x002a10    program     static usb_descriptors.asm
+             _ep_out_cfg2   0x002a40    program     static usb_descriptors.asm
+                  _ep_out   0x002a70    program     extern usb_descriptors.asm
+           _ep_setup_cfg0   0x002a7c    program     static usb_descriptors.asm
+                _ep_setup   0x002aac    program     extern usb_descriptors.asm
+                ___uflags   0x000355       data     extern obj/Debug/crt0ipinguino.asm
+               __do_cinit   0x003f4c    program     extern obj/Debug/crt0ipinguino.asm
+                     test   0x003f66    program     static obj/Debug/crt0ipinguino.asm
+                    cont1   0x003f6c    program     static obj/Debug/crt0ipinguino.asm
+                copy_loop   0x003fba    program     static obj/Debug/crt0ipinguino.asm
+            copy_one_byte   0x003fc0    program     static obj/Debug/crt0ipinguino.asm
+             done_copying   0x003fce    program     static obj/Debug/crt0ipinguino.asm
+                     done   0x003fe2    program     static obj/Debug/crt0ipinguino.asm
+                __startup   0x003fe4    program     extern obj/Debug/crt0ipinguino.asm
+                   lockup   0x003ffa    program     static obj/Debug/crt0ipinguino.asm
+        _application_main   0x003ffc    program     extern obj/Debug/crt0ipinguino.asm
+                    r0x00   00000000       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x01   0x000001       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x02   0x000002       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x03   0x000003       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x04   0x000004       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x05   0x000005       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x06   0x000006       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x07   0x000007       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x08   0x000008       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x09   0x000009       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x0a   0x00000a       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x0b   0x00000b       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x0c   0x00000c       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x0d   0x00000d       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x0e   0x00000e       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x0f   0x00000f       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x10   0x000010       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x11   0x000011       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x12   0x000012       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x13   0x000013       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x14   0x000014       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x15   0x000015       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x16   0x000016       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x17   0x000017       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x18   0x000018       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x19   0x000019       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    r0x1a   0x00001a       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                _pputchar   0x0002fc       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+   _pprinti_print_buf_1_1   0x0002f0       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+          _pprint_scr_1_1   0x000353       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+        _psprintf_out_1_1   0x000350       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                _wpointer   0x000356       data     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                _rpointer   0x000357       data     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                      _rx   0x000200       data     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+_serial_getstring_buffer_1_1   0x000280       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+            _loop_buf_1_1   0x000300       data     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+       _high_priority_isr   0x002020    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+        _low_priority_isr   0x004000    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+           _pinguino_main   0x0043f0    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00473_DS_   0x004400    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                    _loop   0x003092    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                   _setup   0x004408    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+            _epapout_init   0x00201e    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+             _epapin_init   0x004438    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                _epap_out   0x00443a    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 _epap_in   0x00443c    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+          _serial_println   0x00416a    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+            _serial_print   0x002dca    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00424_DS_   0x002e14    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00426_DS_   0x002e1c    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00428_DS_   0x002e24    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00409_DS_   0x002e32    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00410_DS_   0x002e7e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00411_DS_   0x002eca    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00412_DS_   0x002f0e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00413_DS_   0x002f8a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00414_DS_   0x003006    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00416_DS_   0x00306e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+        _serial_getstring   0x0040dc    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00395_DS_   0x0040ee    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+           _serial_getkey   0x0043d0    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00387_DS_   0x0043d4    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+           _serial_printf   0x0042d0    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+            _serial_flush   0x00442c    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+             _serial_read   0x004334    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00366_DS_   0x004376    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+        _serial_interrupt   0x004268    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00354_DS_   0x004282    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00342_DS_   0x00428a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00343_DS_   0x00428e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00345_DS_   0x0042b4    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00348_DS_   0x0042c2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+          _serial_putchar   0x0043ac    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00333_DS_   0x0043be    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+        _serial_available   0x004386    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00328_DS_   0x004398    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+            _serial_begin   0x003af2    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                _psprintf   0x003d4e    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 _pprintf   0x003ea4    program     extern /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  _pprint   0x002070    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00238_DS_   0x002102    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00278_DS_   0x002124    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00280_DS_   0x002158    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00259_DS_   0x00216e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00213_DS_   0x00217a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00245_DS_   0x00219a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00276_DS_   0x0021f6    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00289_DS_   0x002218    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00252_DS_   0x00226a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00217_DS_   0x0022ac    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00291_DS_   0x0022b4    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00219_DS_   0x00233e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00293_DS_   0x002346    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00221_DS_   0x0023ce    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00295_DS_   0x0023d6    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00223_DS_   0x00245e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00297_DS_   0x002466    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00225_DS_   0x0024ee    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00299_DS_   0x0024f6    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00227_DS_   0x00257e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00301_DS_   0x002586    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00229_DS_   0x00260e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00303_DS_   0x002616    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00231_DS_   0x002692    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00234_DS_   0x0026d8    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00240_DS_   0x002702    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00241_DS_   0x002710    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00243_DS_   0x002740    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 _pprinti   0x002ab8    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00169_DS_   0x002be2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00198_DS_   0x002bf2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00199_DS_   0x002bf4    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00171_DS_   0x002c0e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00176_DS_   0x002c42    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00201_DS_   0x002c72    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00175_DS_   0x002c78    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00197_DS_   0x002cb6    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00180_DS_   0x002cfa    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00184_DS_   0x002d14    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00185_DS_   0x002d58    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 _pprints   0x0032dc    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00158_DS_   0x003380    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00125_DS_   0x003392    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00128_DS_   0x0033b8    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00159_DS_   0x0033ca    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00117_DS_   0x0033d2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00118_DS_   0x0033da    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00122_DS_   0x0033e2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00129_DS_   0x0033f2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00162_DS_   0x0033fe    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00155_DS_   0x003428    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00151_DS_   0x003438    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00133_DS_   0x003440    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00153_DS_   0x00347e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00137_DS_   0x00348e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00163_DS_   0x00349a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00140_DS_   0x0034c4    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+              _pprintchar   0x00351c    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00106_DS_   0x0035b0    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00111_DS_   0x0035da    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+               _00108_DS_   0x0035de    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_0   0x003600    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_1   0x003608    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_2   0x00361e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_3   0x003622    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_4   0x003626    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_5   0x00362a    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_6   0x00362e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_7   0x003642    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_8   0x003648    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                  __str_9   0x00364c    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_10   0x00365e    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_11   0x003664    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_12   0x00367c    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_13   0x003696    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_14   0x0036b0    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_15   0x0036c8    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
+                 __str_16   0x0036e2    program     static /home/mandon/pinguino32X2/trunk/x.2/source/main.asm
   _usb_active_alt_setting   0x00005d       data     extern boot_iface.asm
           _usb_active_cfg   0x00005e       data     extern boot_iface.asm
         _usb_device_state   0x00005f       data     extern boot_iface.asm
@@ -201,8 +349,103 @@ _configuration_descriptor   0x0020ce    program     extern usb_descriptors.asm
              _delay10ktcy   0x00006e    program     extern boot_iface.asm
               _delay1ktcy   0x000072    program     extern boot_iface.asm
               _delay10tcy   0x000076    program     extern boot_iface.asm
+                    r0x00   00000000       data     static itoa.asm
+                    r0x01   0x000001       data     static itoa.asm
+                    r0x02   0x000002       data     static itoa.asm
+                    r0x03   0x000003       data     static itoa.asm
+                    r0x04   0x000004       data     static itoa.asm
+                    r0x05   0x000005       data     static itoa.asm
+                    r0x06   0x000006       data     static itoa.asm
+                    _itoa   0x00404a    program     extern itoa.asm
+                   _uitoa   0x0041f4    program     extern itoa.asm
+                    r0x00   00000000       data     static ltoa.asm
+                    r0x01   0x000001       data     static ltoa.asm
+                    r0x02   0x000002       data     static ltoa.asm
+                    r0x03   0x000003       data     static ltoa.asm
+                    r0x04   0x000004       data     static ltoa.asm
+                    r0x05   0x000005       data     static ltoa.asm
+                    r0x06   0x000006       data     static ltoa.asm
+                    r0x07   0x000007       data     static ltoa.asm
+                    r0x08   0x000008       data     static ltoa.asm
+                    r0x09   0x000009       data     static ltoa.asm
+                    r0x0a   0x00000a       data     static ltoa.asm
+                    r0x0b   0x00000b       data     static ltoa.asm
+                    r0x0c   0x00000c       data     static ltoa.asm
+                    r0x0d   0x00000d       data     static ltoa.asm
+                    r0x0e   0x00000e       data     static ltoa.asm
+                    r0x0f   0x00000f       data     static ltoa.asm
+        _ultoa_buffer_1_1   0x0002d0       data     static ltoa.asm
+                    _ltoa   0x003bce    program     extern ltoa.asm
+               _00128_DS_   0x003c50    program     static ltoa.asm
+                   _ultoa   0x0036fc    program     extern ltoa.asm
+               _00107_DS_   0x003774    program     static ltoa.asm
+               _00106_DS_   0x0037b0    program     static ltoa.asm
+               _00110_DS_   0x003822    program     static ltoa.asm
+               _00122_DS_   0x003860    program     static ltoa.asm
                    _stack   0x000100       data     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libsdcc/stack/stack.S
                _stack_end   0x0001ff       data     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libsdcc/stack/stack.S
+                    r0x00   00000000       data     static modulong.asm
+                    r0x01   0x000001       data     static modulong.asm
+                    r0x02   0x000002       data     static modulong.asm
+                    r0x03   0x000003       data     static modulong.asm
+                    r0x04   0x000004       data     static modulong.asm
+                    r0x05   0x000005       data     static modulong.asm
+                    r0x06   0x000006       data     static modulong.asm
+                    r0x07   0x000007       data     static modulong.asm
+                    r0x08   0x000008       data     static modulong.asm
+                    r0x09   0x000009       data     static modulong.asm
+                    r0x0a   0x00000a       data     static modulong.asm
+               __modulong   0x0038b4    program     extern modulong.asm
+               _00107_DS_   0x00391c    program     static modulong.asm
+               _00125_DS_   0x003946    program     static modulong.asm
+               _00106_DS_   0x003954    program     static modulong.asm
+               _00112_DS_   0x00395c    program     static modulong.asm
+               _00126_DS_   0x003972    program     static modulong.asm
+               _00111_DS_   0x003984    program     static modulong.asm
+                    r0x00   00000000       data     static divuint.asm
+                    r0x01   0x000001       data     static divuint.asm
+                    r0x02   0x000002       data     static divuint.asm
+                    r0x03   0x000003       data     static divuint.asm
+                    r0x04   0x000004       data     static divuint.asm
+                    r0x05   0x000005       data     static divuint.asm
+                    r0x06   0x000006       data     static divuint.asm
+                    r0x07   0x000007       data     static divuint.asm
+                __divuint   0x003dfa    program     extern divuint.asm
+               _00109_DS_   0x003e42    program     static divuint.asm
+               _00121_DS_   0x003e68    program     static divuint.asm
+               _00110_DS_   0x003e74    program     static divuint.asm
+                    r0x00   00000000       data     static moduint.asm
+                    r0x01   0x000001       data     static moduint.asm
+                    r0x02   0x000002       data     static moduint.asm
+                    r0x03   0x000003       data     static moduint.asm
+                    r0x04   0x000004       data     static moduint.asm
+                    r0x05   0x000005       data     static moduint.asm
+                    r0x06   0x000006       data     static moduint.asm
+                __moduint   0x003c96    program     extern moduint.asm
+               _00107_DS_   0x003cd6    program     static moduint.asm
+               _00125_DS_   0x003cf0    program     static moduint.asm
+               _00106_DS_   0x003cfa    program     static moduint.asm
+               _00112_DS_   0x003d02    program     static moduint.asm
+               _00126_DS_   0x003d0c    program     static moduint.asm
+               _00111_DS_   0x003d16    program     static moduint.asm
+                    r0x00   00000000       data     static divulong.asm
+                    r0x01   0x000001       data     static divulong.asm
+                    r0x02   0x000002       data     static divulong.asm
+                    r0x03   0x000003       data     static divulong.asm
+                    r0x04   0x000004       data     static divulong.asm
+                    r0x05   0x000005       data     static divulong.asm
+                    r0x06   0x000006       data     static divulong.asm
+                    r0x07   0x000007       data     static divulong.asm
+                    r0x08   0x000008       data     static divulong.asm
+                    r0x09   0x000009       data     static divulong.asm
+                    r0x0a   0x00000a       data     static divulong.asm
+                    r0x0b   0x00000b       data     static divulong.asm
+                    r0x0c   0x00000c       data     static divulong.asm
+                    r0x0d   0x00000d       data     static divulong.asm
+               __divulong   0x0039d8    program     extern divulong.asm
+               _00109_DS_   0x003a54    program     static divulong.asm
+               _00121_DS_   0x003a8e    program     static divulong.asm
+               _00110_DS_   0x003aa2    program     static divulong.asm
                  _SPPDATA   0x000f62       data     extern libdev18f2550_a-pic18f2550.asm
              _SPPDATAbits   0x000f62       data     extern libdev18f2550_a-pic18f2550.asm
                   _SPPCFG   0x000f63       data     extern libdev18f2550_a-pic18f2550.asm
@@ -431,5 +674,5 @@ _configuration_descriptor   0x0020ce    program     extern usb_descriptors.asm
                     _TOSH   0x000ffe       data     extern libdev18f2550_a-pic18f2550.asm
                     _TOSU   0x000fff       data     extern libdev18f2550_a-pic18f2550.asm
                 _TOSUbits   0x000fff       data     extern libdev18f2550_a-pic18f2550.asm
-                   _cinit   0x002b68    program     extern  
+                   _cinit   0x00441e    program     extern  
  
