@@ -19,13 +19,14 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -------------------------------------------------------------------------*/
 
-#include <p32xxxx.h>					// always in first place to avoid conflict with const.h ON
+#include <p32xxxx.h>			// always in first place to avoid conflict with const.h ON
 #include <typedef.h>
 #include <const.h>
 #include <macro.h>
 #include <system.c>
 #include "define.h"
 #include <newlib.c>
+#include <cdc.h> 
 
 #include "user.c"
 

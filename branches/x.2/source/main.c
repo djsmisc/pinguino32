@@ -78,7 +78,7 @@ void pinguino_main(void)
 	analog_init();
 	#endif
 
-	#ifdef MILLIS
+	#ifdef __MILLIS__
 	millis_init();
 	#endif
 
