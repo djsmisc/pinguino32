@@ -8,8 +8,6 @@
  * NB : 32-bit PICs have no EEPROM
  */
 
-#include <eeprom.c>
-
 // start reading from the first byte (address 0) of the EEPROM
 int address = 0;
 byte value;
@@ -21,21 +19,26 @@ void setup()
 
 void loop()
 {
-  // read a byte from the current address of the EEPROM
-  value = EEPROM.read(address);
-  
-  Serial.print(address);
-  Serial.print("\t");
-  Serial.print(value, DEC);
-  Serial.println("");
-  
-  // advance to the next address of the EEPROM
-  address = address + 1;
-  
-  // there are only 512 bytes of EEPROM, from 0 to 511, so if we're
-  // on address 512, wrap around to address 0
-  if (address == 512)
-    address = 0;
-    
-  delay(500);
+	// read a byte from the current address of the EEPROM
+	value = EEPROM.read(address);
+
+/*	Arduino Syntax
+	Serial.print(address);
+	Serial.print("\t");
+	Serial.print(value, DEC);
+	Serial.println();
+*/
+
+	// Pinguino Syntax
+	Serial.printf("%d\t%d \n", address, value);
+
+	// advance to the next address of the EEPROM
+	address = address + 1;
+
+	// there are only 256 bytes of EEPROM, from 0 to 255, so if we're
+	// on address 256, wrap around to address 0
+	if (address == 256)
+	address = 0;
+
+	delay(500);
 }

@@ -813,15 +813,14 @@ uns8 mrf24j40_short_addr_read(uns8 addr) {
 	        addr = addr << 1;	// LSB = 0, means read
 	        spi_hw_transmit(addr);
 	        uns8 result = spi_hw_receive();
-	
 	        set_pin(mrf24j40_cs_port, mrf24j40_cs_pin);
         #endif
         #ifdef __PIC32MX__
-	        addr=(addr<<1)&0x7E;
-	        ZIGCS=0;
+	        addr = (addr << 1) & 0x7E;
+	        ZIGCS=0; // CS must be held low while communicationg with MRF24J40
 	        SPI_write(addr);
-	        u8 result=SPI_read();
-	        ZIGCS=1;
+	        u8 result = SPI_read();
+	        ZIGCS=1; // end of communication
         #endif	                	        
 	return result;
 }	

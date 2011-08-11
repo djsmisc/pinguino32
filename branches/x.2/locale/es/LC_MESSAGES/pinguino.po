@@ -6,12 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PINGUINO Beta7\n"
-"POT-Creation-Date: 2010-03-21 20:24+VET\n"
-"PO-Revision-Date: 2010-03-21 21:17-0400\n"
-"Last-Translator: Joan Espinoza <joanespinoza@tecnoguayana.net>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-14 15:37-0430\n"
+"PO-Revision-Date: 2011-07-14 15:51-0400\n"
+"Last-Translator: Alexis Sanchez <aasanchez@gmail.com>\n"
 "Language-Team: Comunidad PingüinoVE <pinguino-internationalization@lists.coactivate.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,121 +21,196 @@ msgstr ""
 "X-Poedit-Country: VENEZUELA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: pinguinobeta7.py:96
-#: pinguinobeta7.py:144
+#: pinguinobetax2.py:309
 msgid "New"
 msgstr "Nuevo"
 
-#: pinguinobeta7.py:98
-#: pinguinobeta7.py:146
+#: pinguinobetax2.py:311
 msgid "Open"
 msgstr "Abrir"
 
-#: pinguinobeta7.py:100
-#: pinguinobeta7.py:145
+#: pinguinobetax2.py:313
 msgid "Save"
 msgstr "Guardar"
 
-#: pinguinobeta7.py:103
-#: pinguinobeta7.py:140
+#: pinguinobetax2.py:315
+msgid "Save as"
+msgstr "Guardar Como"
+
+#: pinguinobetax2.py:317
 msgid "Close"
 msgstr "Cerrar"
 
-#: pinguinobeta7.py:105
+#: pinguinobetax2.py:319
 msgid "Exit"
 msgstr "Salir"
 
-#: pinguinobeta7.py:107
+#: pinguinobetax2.py:324
 msgid "File"
 msgstr "Archivo"
 
-#: pinguinobeta7.py:110
-msgid "English"
-msgstr "Inglés"
+#: pinguinobetax2.py:328
+msgid "Undo"
+msgstr "Deshacer"
 
-#: pinguinobeta7.py:112
-msgid "French"
-msgstr "Francés"
+#: pinguinobetax2.py:330
+msgid "Redo"
+msgstr "Rehacer"
 
-#: pinguinobeta7.py:114
-msgid "Spanish"
-msgstr "Español"
+#: pinguinobetax2.py:333
+msgid "Find"
+msgstr "Buscar"
 
-#: pinguinobeta7.py:116
-msgid "Portuguese"
-msgstr "Portugués"
+#: pinguinobetax2.py:335
+msgid "Replace"
+msgstr "Reemplazar"
 
-#: pinguinobeta7.py:118
-msgid "Danish"
-msgstr "Danés"
+#: pinguinobetax2.py:339
+msgid "Cut"
+msgstr "Cortar"
 
-#: pinguinobeta7.py:120
-msgid "Croatian"
-msgstr "Croata"
+#: pinguinobetax2.py:341
+msgid "Copy"
+msgstr "Copiar"
 
-#: pinguinobeta7.py:122
-msgid "Italian"
-msgstr "Italiano"
+#: pinguinobetax2.py:343
+msgid "Paste"
+msgstr "Pegar"
 
-#: pinguinobeta7.py:124
-msgid "Germany"
-msgstr "Alemán"
+#: pinguinobetax2.py:345
+msgid "Clear"
+msgstr "Limpiar"
 
-#: pinguinobeta7.py:127
-msgid "Language"
-msgstr "Idioma"
+#: pinguinobetax2.py:347
+msgid "Select all"
+msgstr "Seleccionar Todo"
 
-#: pinguinobeta7.py:129
-msgid "About"
+#: pinguinobetax2.py:349
+msgid "Edit"
+msgstr "Editar"
+
+#: pinguinobetax2.py:355
+msgid "Debug"
+msgstr "Depurar"
+
+#: pinguinobetax2.py:373
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: pinguinobetax2.py:377
+#: pinguinobetax2.py:378
+#: pinguinobetax2.py:379
+#: pinguinobetax2.py:380
+#: pinguinobetax2.py:381
+#: pinguinobetax2.py:382
+#: pinguinobetax2.py:383
+msgid "your board"
+msgstr "tu pinguino"
+
+#: pinguinobetax2.py:384
+msgid "Board"
+msgstr "Pinguino"
+
+#: pinguinobetax2.py:412
+msgid "Themes"
+msgstr "Temas"
+
+#: pinguinobetax2.py:425
+msgid "Keywords"
+msgstr "Funciones"
+
+#: pinguinobetax2.py:429
+msgid "Website"
+msgstr "Sito web"
+
+#: pinguinobetax2.py:431
+msgid "Wiki"
+msgstr "Wiki"
+
+#: pinguinobetax2.py:433
+msgid "Forum"
+msgstr "Foro"
+
+#: pinguinobetax2.py:435
+msgid "Blog"
+msgstr "Blog"
+
+#: pinguinobetax2.py:437
+msgid "Group"
+msgstr "Grupo"
+
+#: pinguinobetax2.py:439
+msgid "Shop"
+msgstr "Tienda"
+
+#: pinguinobetax2.py:441
+msgid "About..."
 msgstr "Acerca de..."
 
-#: pinguinobeta7.py:131
+#: pinguinobetax2.py:443
 msgid "Help"
 msgstr "Ayuda"
 
-#: pinguinobeta7.py:139
-msgid "Verify"
-msgstr "Verificar"
+#: pinguinobetax2.py:493
+msgid "Editor"
+msgstr "Editor"
 
-#: pinguinobeta7.py:147
-msgid "Upload"
-msgstr "Cargar"
+#~ msgid "English"
+#~ msgstr "Inglés"
 
-#: pinguinobeta7.py:210
-msgid "Open file first !!"
-msgstr "Debe abrir el archivo primero"
+#~ msgid "French"
+#~ msgstr "Francés"
 
-#: pinguinobeta7.py:210
-msgid "Warning"
-msgstr "Advertencia"
+#~ msgid "Spanish"
+#~ msgstr "Español"
 
-#: pinguinobeta7.py:229
-msgid "error while compiling file "
-msgstr "Error mientras compila archivo"
+#~ msgid "Portuguese"
+#~ msgstr "Portugués"
 
-#: pinguinobeta7.py:233
-msgid "error while linking "
-msgstr "Error mientras enlaza"
+#~ msgid "Danish"
+#~ msgstr "Danés"
 
-#: pinguinobeta7.py:236
-msgid "compilation done"
-msgstr "Compilación hecha"
+#~ msgid "Croatian"
+#~ msgstr "Croata"
 
-#: pinguinobeta7.py:245
-#: pinguinobeta7.py:248
-msgid "Pde Files"
-msgstr "Archivos PDE"
+#~ msgid "Italian"
+#~ msgstr "Italiano"
 
-#: pinguinobeta7.py:264
-msgid "File must be verified before upload"
-msgstr "El archivo debe ser verificado antes de intentar cargarlo"
+#~ msgid "Germany"
+#~ msgstr "Alemán"
 
-#: pinguinobeta7.py:264
-#: pinguinobeta7.py:268
-msgid "Warning!"
-msgstr "Advertencia"
+#~ msgid "Language"
+#~ msgstr "Idioma"
 
-#: pinguinobeta7.py:268
-msgid "File must be saved before upload"
-msgstr "El Archivo debe ser guardado antes de intentar cargarlo"
+#~ msgid "Verify"
+#~ msgstr "Verificar"
 
+#~ msgid "Upload"
+#~ msgstr "Cargar"
+
+#~ msgid "Open file first !!"
+#~ msgstr "Debe abrir el archivo primero"
+
+#~ msgid "Warning"
+#~ msgstr "Advertencia"
+
+#~ msgid "error while compiling file "
+#~ msgstr "Error mientras compila archivo"
+
+#~ msgid "error while linking "
+#~ msgstr "Error mientras enlaza"
+
+#~ msgid "compilation done"
+#~ msgstr "Compilación hecha"
+
+#~ msgid "Pde Files"
+#~ msgstr "Archivos PDE"
+
+#~ msgid "File must be verified before upload"
+#~ msgstr "El archivo debe ser verificado antes de intentar cargarlo"
+
+#~ msgid "Warning!"
+#~ msgstr "Advertencia"
+
+#~ msgid "File must be saved before upload"
+#~ msgstr "El Archivo debe ser guardado antes de intentar cargarlo"

@@ -130,10 +130,14 @@ vector_\_XX\()_ISR_wrapper:
 
 	ISR_wrapper	8,Tmr2Interrupt		# TIMER 2
 #if defined(UBW32_460) || defined(EMPEROR460)
-	ISR_wrapper	23,SPI1Interrupt		# SPI 1
+	#if (SPIx == 1)
+	ISR_wrapper	23,SPIxInterrupt		# SPI 1
+	#endif
 #endif
+	#if (SPIx == 2)
+	ISR_wrapper	31,SPIxInterrupt		# SPI 2
+	#endif
 	ISR_wrapper	24,Serial1Interrupt	# UART 1
-	ISR_wrapper	31,SPI2Interrupt		# SPI 2
 	ISR_wrapper	32,Serial2Interrupt	# UART 2
 	ISR_wrapper	35,RTCCInterrupt		# RTCC
 

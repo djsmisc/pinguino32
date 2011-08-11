@@ -15,7 +15,6 @@
 */
 
 #define ONEWIREBUS	0		// 1-wire bus is on pin 0 (RB0), just change it to suit you 
-#define LEDRUN PORTAbits.RA4	// for visual debug purposes
 
 void setup()
 {
@@ -29,19 +28,10 @@ void setup()
 void loop()
 {
 	TEMPERATURE t;
-	u8 temp[4];
-	// if you want to read temperature from sensor #1 with max. resolution :
-	// if (DS18B20.read(ONEWIREBUS, 1, RES12BIT, &t))
+	// if you want to read temperature from sensor #1 with min. resolution :
+	// if (DS18B20.read(ONEWIREBUS, 1, RES9BIT, &t))
 	// if you have only one sensor on the bus, just skip rom detection
 	if (DS18B20.read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
-	{
-		// send temperature on usb bus
-		temp[0] = t.sign;			// t.sign is unsigned  char (1 byte)
-		temp[1] = t.integer;		// t.integer  is unsigned  char (1 byte)
-		temp[2] = high8(t.fraction);	// t.fraction is unsigned int (2 bytes)
-		temp[3] = low8(t.fraction);
-		USB.send(temp, 4);			// send 4-bit temp on usb bus
-		LEDRUN=LEDRUN^1;
-		delay(1000);			// wait for 1 sec. before next reading
-	}
+		CDC.printf("%d.%d°C \r", t.integer, t.fraction);
+	delay(5000);
 }

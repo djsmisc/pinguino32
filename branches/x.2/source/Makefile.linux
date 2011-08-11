@@ -98,6 +98,7 @@ link:
 		$(OBJDIR)/crt0.S\
 		$(OBJDIR)/processor.o\
 		$(OBJDIR)/usb/libcdc.a\
+		$(OBJDIR)/android/libandroid.a\
 		$(LKRDIR)/ISRwrapper.S\
 		$(INCDIR)/non-free/p32xxxx.h
 

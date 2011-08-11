@@ -383,14 +383,15 @@ Contact us at admin@embeddedadventures.com
 	// Reserved			1
 	// Reserved			0
 
+// INTERRUPT STATUS REGISTER (ADDRESS: 0x31)
 #define INTSTAT			0x31
 
 	// INTSTAT bits
 	#define INTSTAT_SLPIF			7
 	#define INTSTAT_WAKEIF			6
-	#define INTSTAT_HSYMTMRIF			5
+	#define INTSTAT_HSYMTMRIF		5
 	#define INTSTAT_SECIF			4
-	#define INTSTAT_RXIF			3
+	#define INTSTAT_RXIF				3
 	#define INTSTAT_TXG2IF			2
 	#define INTSTAT_TXG1IF			1
 	#define INTSTAT_TXNIF			0
@@ -723,6 +724,7 @@ Contact us at admin@embeddedadventures.com
 	// Reserved			2
 	#define SLPCON0_INTEDGE			1
 	#define SLPCON0_SLPCLKEN			0
+
 
 // 0x212 - Reserved
 // 0x213 - Reserved

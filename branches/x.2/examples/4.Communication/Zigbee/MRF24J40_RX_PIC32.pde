@@ -10,25 +10,26 @@ unsigned char rxdata[128];			// 128 is the max length
 
 void setup()
 {
-Serial.begin(9600);
-ZIG.init(channel,PAN_ID,Short_Address);
+	Serial.begin(9600);
+	ZIG.init(channel,PAN_ID,Short_Address);
 }
 
 void loop()
 {
-unsigned char length;
-unsigned int i;
+	unsigned char length;
+	unsigned int i;
 
-for (i=0;i<20;i++) Serial.printf("%02X ",mrf24j40_short_addr_read(i));
-Serial.printf("\n\r");
-length=ZIG.read(rxdata);
-if (length>0)
-		{
+	for (i=0;i<20;i++)
+		Serial.printf("%02X ",mrf24j40_short_addr_read(i));
+	Serial.printf("\n\r");
+	length=ZIG.read(rxdata);
+	if (length>0)
+	{
 		Serial.printf("Source PAN ID:%04X\n\r",ZIGsrcpan);
 		Serial.printf("Destination PAN ID:%04X\n\r",ZIGdestpan);
 		Serial.printf("Source address:%04X\n\r",ZIGsrcadd);
 		Serial.printf("Destination address:%04X\n\r",ZIGdestadd);
 		Serial.printf(rxdata);
 		Serial.printf("\n\r");
-		}
+	}
 }

@@ -8,8 +8,6 @@
  * NB : 32-bit PICs have no EEPROM
  */
 
-#include <eeprom.c>
-
 // the current address in the EEPROM (i.e. which byte
 // we're going to write to next)
 int addr = 0;
@@ -30,10 +28,10 @@ void loop()
   // turned off.
   EEPROM.write(addr, val);
   
-  // advance to the next address.  there are 512 bytes in 
-  // the EEPROM, so go back to 0 when we hit 512.
+  // advance to the next address.  there are 256 bytes in 
+  // the EEPROM, so go back to 0 when we hit 256.
   addr = addr + 1;
-  if (addr == 512)
+  if (addr == 256)
     addr = 0;
   
   delay(100);

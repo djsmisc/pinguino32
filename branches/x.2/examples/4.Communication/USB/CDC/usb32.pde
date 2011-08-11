@@ -1,11 +1,8 @@
 /*
 	cdc example
-	pc side : gtkterm --port /dev/ttyACM0
+	pc side : gtkterm --port /dev/ttyACM0 or cat /dev/ttyACM0
 */
 
-//#include <usb_function_cdc.h>
-
-// char USB_Out_Buffer[64];
 char chaine[64];		// unsigned char
 u8 length;
 

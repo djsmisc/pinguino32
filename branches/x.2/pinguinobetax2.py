@@ -130,29 +130,36 @@ APP_CONFIG	= os.path.join(HOME_DIR, '.config')
 # ------------------------------------------------------------------------------
 
 # id board menu
-ID_GENERIC2550 = wx.NewId()	# MUST ALWAYS BE IN FIRST POSITION
+ID_GENERIC2550 = wx.NewId()			### MUST ALWAYS BE IN FIRST POSITION ###
 ID_GENERIC4550 = wx.NewId()
+ID_PICUNO = wx.NewId()
+ID_FREEJALDUINO = wx.NewId()
 ID_OLIMEX440 = wx.NewId()
 ID_EMPEROR460 = wx.NewId()
 ID_EMPEROR795 = wx.NewId()
 ID_UBW460 = wx.NewId()
 ID_UBW795 = wx.NewId()
 
-board1 =	{ 'arch':8,		'proc':'18f2550',			'board':'PIC18F2550',		'totalspace':0x7fff - 0x2000,	'shortarg':'-g', 'longarg':'--generic2550' }
-board2 =	{ 'arch':8,		'proc':'18f4550',			'board':'PIC18F4550',		'totalspace':0x7fff - 0x2000,	'shortarg':'-G', 'longarg':'--generic4550' }
-board3 =	{ 'arch':32,	'proc':'32MX440F256H',	'board':'PIC32_PINGUINO',	'totalspace':0x40000,			'shortarg':'-o', 'longarg':'--olimex440' }
-board4 =	{ 'arch':32,	'proc':'32MX460F512L',	'board':'EMPEROR460',		'totalspace':0x80000,			'shortarg':'-e', 'longarg':'--emperor460' }
-board5 =	{ 'arch':32,	'proc':'32MX795F512L',	'board':'EMPEROR795',		'totalspace':0x80000,			'shortarg':'-E', 'longarg':'--emperor795' }
-board6 =	{ 'arch':32,	'proc':'32MX460F512L',	'board':'UBW32_460',			'totalspace':0x80000,			'shortarg':'-u', 'longarg':'--ubw460' }
-board7 =	{ 'arch':32,	'proc':'32MX795F512L',	'board':'UBW32_795',			'totalspace':0x80000,			'shortarg':'-U', 'longarg':'--ubw795' }
+# in the same order than IDs (TODO: put this in a file ?)
+board1 =	{ 'name':"Generic 18F2550",	'arch':8,		'proc':'18f2550',			'board':'PIC18F2550',		'totalspace':0x7fff - 0x2000,	'shortarg':'-g', 'longarg':'--generic2550' }
+board2 =	{ 'name':"Generic 18F4550",	'arch':8,		'proc':'18f4550',			'board':'PIC18F4550',		'totalspace':0x7fff - 0x2000,	'shortarg':'-G', 'longarg':'--generic4550' }
+board3 =	{ 'name':"PICuno",				'arch':8,		'proc':'18f2550',			'board':'PICUNO',				'totalspace':0x7fff - 0x2000,	'shortarg':'-p', 'longarg':'--picuno' }
+board4 =	{ 'name':"FreeJALduino",		'arch':8,		'proc':'18f2550',			'board':'FREEJALDUINO',		'totalspace':0x7fff - 0x2000,	'shortarg':'-j', 'longarg':'--freejalduino' }
+board5 =	{ 'name':"PIC32 Pinguino",		'arch':32,		'proc':'32MX440F256H',	'board':'PIC32_PINGUINO',	'totalspace':0x40000,			'shortarg':'-o', 'longarg':'--olimex440' }
+board6 =	{ 'name':"Emperor 460",			'arch':32,		'proc':'32MX460F512L',	'board':'EMPEROR460',		'totalspace':0x80000,			'shortarg':'-e', 'longarg':'--emperor460' }
+board7 =	{ 'name':"Emperor 795",			'arch':32,		'proc':'32MX795F512L',	'board':'EMPEROR795',		'totalspace':0x80000,			'shortarg':'-E', 'longarg':'--emperor795' }
+board8 =	{ 'name':"UBW32 460",			'arch':32,		'proc':'32MX460F512L',	'board':'UBW32_460',			'totalspace':0x80000,			'shortarg':'-u', 'longarg':'--ubw460' }
+board9 =	{ 'name':"UBW32 795",			'arch':32,		'proc':'32MX795F512L',	'board':'UBW32_795',			'totalspace':0x80000,			'shortarg':'-U', 'longarg':'--ubw795' }
 
 boardlist = {	ID_GENERIC2550:board1,
 					ID_GENERIC4550:board2,
-					ID_OLIMEX440:board3,
-					ID_EMPEROR460:board4,
-					ID_EMPEROR795:board5,
-					ID_UBW460:board6,
-					ID_UBW795:board7		}
+					ID_PICUNO:board3,
+					ID_FREEJALDUINO:board4,
+					ID_OLIMEX440:board5,
+					ID_EMPEROR460:board6,
+					ID_EMPEROR795:board7,
+					ID_UBW460:board8,
+					ID_UBW795:board9		}
 
 # ------------------------------------------------------------------------------
 # default
@@ -278,6 +285,7 @@ class Pinguino(wx.Frame):
 		self.board =   self.config.ReadInt('Board', -1)
 		if self.board == '':
 			self.board = BOARD_DEFAULT
+		
 		# ----------------------------------------------------------------------
 		# window
 		# ----------------------------------------------------------------------
@@ -373,33 +381,15 @@ class Pinguino(wx.Frame):
 
 		# --- board submenu
 		self.board_menu=wx.Menu()
-		self.board_menu.AppendRadioItem(ID_GENERIC2550,"Generic 18F2550",_("your board"))
-		self.board_menu.AppendRadioItem(ID_GENERIC4550,"Generic 18F4550",_("your board"))
-		self.board_menu.AppendRadioItem(ID_OLIMEX440,"OLIMEX 440",_("your board"))
-		self.board_menu.AppendRadioItem(ID_EMPEROR460,"EMPEROR 460",_("your board"))
-		self.board_menu.AppendRadioItem(ID_EMPEROR795,"EMPEROR 795",_("your board"))
-		self.board_menu.AppendRadioItem(ID_UBW460,"UBW32 460",_("your board"))
-		self.board_menu.AppendRadioItem(ID_UBW795,"UBW32 795",_("your board"))
-		self.pref_menu.AppendMenu(self.ID_BOARD,_("Board"),self.board_menu)
+		for b in range(len(boardlist)):
+			clef = ID_GENERIC2550 + b
+			self.board_menu.AppendRadioItem(clef, boardlist[clef]['name'], _("your board"))
+		self.pref_menu.AppendMenu(self.ID_BOARD, _("Board"), self.board_menu)
 		# mark current board
 		bid = self.config.ReadInt('board',-1)
 		if bid==-1:
-			bid=ID_GENERIC2550
+			bid=BOARD_DEFAULT
 		self.board_menu.Check(bid, True)
-		#if self.config.ReadInt('board',-1)==ID_GENERIC2550:
-		#	self.board_menu.Check(ID_GENERIC2550,True)
-		#if self.config.ReadInt('board',-1)==ID_GENERIC4550:
-		#	self.board_menu.Check(ID_GENERIC4550,True)
-		#if self.config.ReadInt('board',-1)==ID_OLIMEX440:
-		#	self.board_menu.Check(ID_OLIMEX440,True)
-		#if self.config.ReadInt('board',-1)==ID_EMPEROR460:
-		#	self.board_menu.Check(ID_EMPEROR460,True)
-		#if self.config.ReadInt('board',-1)==ID_EMPEROR795:
-		#	self.board_menu.Check(ID_EMPEROR795,True)
-		#if self.config.ReadInt('board',-1)==ID_UBW460:
-		#	self.board_menu.Check(ID_UBW460,True)
-		#if self.config.ReadInt('board',-1)==ID_UBW795:
-		#	self.board_menu.Check(ID_UBW795,True)
 		self.OnBoard(wx.Event)
 										   
 		# ---theme submenu
@@ -542,6 +532,7 @@ class Pinguino(wx.Frame):
 		self.Bind(wx.EVT_MENU, self.OnDebug, id=self.ID_DEBUG)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_GENERIC2550)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_GENERIC4550)
+		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_FREEJALDUINO)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_OLIMEX440)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_EMPEROR460)
 		self.Bind(wx.EVT_MENU, self.OnBoard, id=ID_EMPEROR795)
@@ -722,20 +713,10 @@ class Pinguino(wx.Frame):
 
 		self.config.Write('Theme/name', self.theme)
 
-		if self.board_menu.IsChecked(ID_GENERIC2550):
-			self.config.WriteInt('board', ID_GENERIC2550)
-		if self.board_menu.IsChecked(ID_GENERIC4550):
-			self.config.WriteInt('board', ID_GENERIC4550)
-		if self.board_menu.IsChecked(ID_OLIMEX440):
-			self.config.WriteInt('board', ID_OLIMEX440)
-		if self.board_menu.IsChecked(ID_EMPEROR460):
-			self.config.WriteInt('board', ID_EMPEROR460)
-		if self.board_menu.IsChecked(ID_UBW460):
-			self.config.WriteInt('board', ID_UBW460)
-		if self.board_menu.IsChecked(ID_UBW795):
-			self.config.WriteInt('board', ID_UBW795)
-		if self.board_menu.IsChecked(ID_EMPEROR795):
-			self.config.WriteInt('board', ID_EMPEROR795)
+		for b in range(len(boardlist)):
+			clef = ID_GENERIC2550 + b
+			if self.board_menu.IsChecked(clef):
+				self.config.WriteInt('board', clef)
 
 		if self.pref_menu.IsChecked(self.ID_DEBUG):
 			self.config.WriteInt('debug', True)
@@ -767,13 +748,13 @@ class Pinguino(wx.Frame):
 	def OnTheme(self, event):
 		# uncheck all
 		for f in self.themeList:
-			id = self.theme_menu.FindItem(f)
-			self.menu.Check(id, False)
+			tid = self.theme_menu.FindItem(f)
+			self.menu.Check(tid, False)
 		# check selected only
 		curid = event.GetId()
-		themeNum = curid - self.ID_THEME1
+		tid = curid - self.ID_THEME1
 		self.menu.Check(curid, True)
-		self.theme = self.themeList[themeNum]
+		self.theme = self.themeList[tid]
 		self.DrawToolbar()
 
 # ------------------------------------------------------------------------------
@@ -784,6 +765,7 @@ class Pinguino(wx.Frame):
 		for b in range(len(boardlist)):
 			clef = ID_GENERIC2550 + b
 			if self.board_menu.IsChecked(clef):
+				self.name			= boardlist[clef]['name']
 				self.arch			= boardlist[clef]['arch']
 				self.proc			= boardlist[clef]['proc']
 				self.board			= boardlist[clef]['board']
@@ -862,6 +844,7 @@ class Pinguino(wx.Frame):
 
 		info.AddArtist('France Cadet')
 		info.AddArtist('Laurent Costes')
+		info.AddArtist('Daniel Rodríguez')
 
 		info.AddTranslator('Joan Espinoza Spanish, Portuguese')
 		info.AddTranslator('Marin Purgar Croatian')
@@ -885,7 +868,7 @@ class Pinguino(wx.Frame):
 			result=dlg.ShowModal()
 			dlg.Destroy()		   
 			return
-		self.displaymsg("Board:\t" + self.board + "\n", 1)
+		self.displaymsg("Board:\t" + self.name + "\n", 1)
 		self.displaymsg("Proc: \t" + self.proc  + "\n", 0)
 		self.editor.SaveDirect()
 		filename=self.editor.GetPath()
@@ -894,7 +877,7 @@ class Pinguino(wx.Frame):
 			os.remove(filename+".hex")
 		if os.path.exists(os.path.join(SOURCE_DIR, "user.c")):
 			os.remove(os.path.join(SOURCE_DIR, "user.c"))
-		retour=self.preprocess(filename, self.proc)
+		retour=self.preprocess(filename, self.proc, self.board)
 		if retour=="error":
 			return
 		# compilation
@@ -1194,7 +1177,7 @@ class Pinguino(wx.Frame):
 # preprocess
 # ------------------------------------------------------------------------------
 
-	def preprocess(self, filename, proc):
+	def preprocess(self, filename, proc, board):
 		defineword={}
 		index=0
 		fileline={}
@@ -1212,9 +1195,11 @@ class Pinguino(wx.Frame):
 		#fichier.writelines("\n")
 		fichier.close()
 		
-		# check some processors
+		# check some processors and boards
 		if proc=="18f4550":
 			self.adddefine("#define PIC18F4550")
+		if board=="FREEJALDUINO":
+			self.adddefine("#define FREEJALDUINO")
 
 		# check include
 		fichier = open(os.path.join(TEMP_DIR, 'temp.c'), 'r')
@@ -1502,6 +1487,7 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	if options.board != False:
+		name =  boardlist[options.board]['name']
 		board = boardlist[options.board]['board']
 		proc =  boardlist[options.board]['proc']
 		arch =  boardlist[options.board]['arch']
@@ -1511,17 +1497,17 @@ if __name__ == "__main__":
 			print "missing filename"
 			sys.exit(1)
 		filename=options.filename[0]
-		name,extension=os.path.splitext(filename)
+		fname,extension=os.path.splitext(filename)
 		if extension != ".pde":
 			print "bad file extension, it should be .pde"
 			sys.exit(1)
 
 		pobject=Pinguino(None, -1, "")
-		print "your board is " + board
+		print "your board is " + name
 		print "the mcu is " + proc
 
 		print "preprocessing ..."
-		retour=pobject.preprocess(name, proc)
+		retour=pobject.preprocess(fname, proc, board)
 		if retour == "error":
 			print "error while preprocessing " + filename
 			sys.exit(1)
@@ -1544,11 +1530,11 @@ if __name__ == "__main__":
 			print "error while linking "
 			sys.exit(1)
 
-		shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), name + ".hex")
+		shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
 		print "compilation done"
-		print pobject.getCodeSize(name, arch, memo)
+		print pobject.getCodeSize(fname, arch, memo)
 		os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
-		os.remove(name + ".c")	   
+		os.remove(fname + ".c")	   
 		sys.exit(0)
 
 # ------------------------------------------------------------------------------
@@ -1561,3 +1547,4 @@ if __name__ == "__main__":
 	app.SetTopWindow(frame_1)
 	frame_1.Show()
 	app.MainLoop()
+

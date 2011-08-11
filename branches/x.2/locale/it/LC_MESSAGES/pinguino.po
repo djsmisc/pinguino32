@@ -6,12 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PINGUINO Beta7\n"
-"POT-Creation-Date: 2010-03-21 20:24+VET\n"
-"PO-Revision-Date: 2010-04-12 21:37+0100\n"
-"Last-Translator: mandon <jp.mandon@wanadoo.fr>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-14 15:37-0430\n"
+"PO-Revision-Date: 2011-07-14 15:51-0400\n"
+"Last-Translator: Alexis Sanchez <aasanchez@gmail.com>\n"
 "Language-Team: Comunidad PingüinoVE <pinguino-internationalization@lists.coactivate.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,121 +21,219 @@ msgstr ""
 "X-Poedit-Country: ITALY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: pinguinobeta7.py:96
-#: pinguinobeta7.py:144
+#: pinguinobetax2.py:309
 msgid "New"
 msgstr "Nuovo"
 
-#: pinguinobeta7.py:98
-#: pinguinobeta7.py:146
+#: pinguinobetax2.py:311
 msgid "Open"
 msgstr "Apri"
 
-#: pinguinobeta7.py:100
-#: pinguinobeta7.py:145
+#: pinguinobetax2.py:313
 msgid "Save"
 msgstr "Salva"
 
-#: pinguinobeta7.py:103
-#: pinguinobeta7.py:140
+#: pinguinobetax2.py:315
+#, fuzzy
+msgid "Save as"
+msgstr "Salva come"
+
+#: pinguinobetax2.py:317
 msgid "Close"
 msgstr "Chiudi"
 
-#: pinguinobeta7.py:105
+#: pinguinobetax2.py:319
 msgid "Exit"
 msgstr "Uscita"
 
-#: pinguinobeta7.py:107
+#: pinguinobetax2.py:324
 msgid "File"
 msgstr "File"
 
-#: pinguinobeta7.py:110
-msgid "English"
-msgstr "Inglese"
+#: pinguinobetax2.py:328
+#, fuzzy
+msgid "Undo"
+msgstr "Annulla"
 
-#: pinguinobeta7.py:112
-msgid "French"
-msgstr "Francese"
+#: pinguinobetax2.py:330
+#, fuzzy
+msgid "Redo"
+msgstr "Ripeti"
 
-#: pinguinobeta7.py:114
-msgid "Spanish"
-msgstr "Spagnolo"
+#: pinguinobetax2.py:333
+#, fuzzy
+msgid "Find"
+msgstr "Trova"
 
-#: pinguinobeta7.py:116
-msgid "Portuguese"
-msgstr "Portoghese"
+#: pinguinobetax2.py:335
+#, fuzzy
+msgid "Replace"
+msgstr "Sostituisci"
 
-#: pinguinobeta7.py:118
-msgid "Danish"
-msgstr "Danese"
+#: pinguinobetax2.py:339
+#, fuzzy
+msgid "Cut"
+msgstr "Taglia"
 
-#: pinguinobeta7.py:120
-msgid "Croatian"
-msgstr "Croato"
+#: pinguinobetax2.py:341
+#, fuzzy
+msgid "Copy"
+msgstr "Copia"
 
-#: pinguinobeta7.py:122
-msgid "Italian"
-msgstr "Italiano"
+#: pinguinobetax2.py:343
+#, fuzzy
+msgid "Paste"
+msgstr "Incolla"
 
-#: pinguinobeta7.py:124
-msgid "Germany"
-msgstr "La Germania"
+#: pinguinobetax2.py:345
+#, fuzzy
+msgid "Clear"
+msgstr "Ripulire"
 
-#: pinguinobeta7.py:127
-msgid "Language"
-msgstr "Linguaggio"
+#: pinguinobetax2.py:347
+#, fuzzy
+msgid "Select all"
+msgstr "Seleziona tutto"
 
-#: pinguinobeta7.py:129
-msgid "About"
-msgstr "Circa ..."
+#: pinguinobetax2.py:349
+#, fuzzy
+msgid "Edit"
+msgstr "Modifica"
 
-#: pinguinobeta7.py:131
+#: pinguinobetax2.py:355
+#, fuzzy
+msgid "Debug"
+msgstr "Debug"
+
+#: pinguinobetax2.py:373
+#, fuzzy
+msgid "Preferences"
+msgstr "Preferenze"
+
+#: pinguinobetax2.py:377
+#: pinguinobetax2.py:378
+#: pinguinobetax2.py:379
+#: pinguinobetax2.py:380
+#: pinguinobetax2.py:381
+#: pinguinobetax2.py:382
+#: pinguinobetax2.py:383
+#, fuzzy
+msgid "your board"
+msgstr "Pannello &mixer..."
+
+#: pinguinobetax2.py:384
+#, fuzzy
+msgid "Board"
+msgstr "Pannello &mixer..."
+
+#: pinguinobetax2.py:412
+#, fuzzy
+msgid "Themes"
+msgstr "Temi"
+
+#: pinguinobetax2.py:425
+#, fuzzy
+msgid "Keywords"
+msgstr "Parole chiave"
+
+#: pinguinobetax2.py:429
+#, fuzzy
+msgid "Website"
+msgstr "Sito web"
+
+#: pinguinobetax2.py:431
+#, fuzzy
+msgid "Wiki"
+msgstr "Un wiki per il desktop"
+
+#: pinguinobetax2.py:433
+#, fuzzy
+msgid "Forum"
+msgstr "Forum in linea..."
+
+#: pinguinobetax2.py:435
+msgid "Blog"
+msgstr ""
+
+#: pinguinobetax2.py:437
+#, fuzzy
+msgid "Group"
+msgstr "Gruppo"
+
+#: pinguinobetax2.py:439
+msgid "Shop"
+msgstr ""
+
+#: pinguinobetax2.py:441
+#, fuzzy
+msgid "About..."
+msgstr "Informazioni..."
+
+#: pinguinobetax2.py:443
 msgid "Help"
 msgstr "Aiuto"
 
-#: pinguinobeta7.py:139
-msgid "Verify"
-msgstr "Verifica"
+#: pinguinobetax2.py:493
+#, fuzzy
+msgid "Editor"
+msgstr "Editor"
 
-#: pinguinobeta7.py:147
-msgid "Upload"
-msgstr "Upload"
+#~ msgid "English"
+#~ msgstr "Inglese"
 
-#: pinguinobeta7.py:210
-msgid "Open file first !!"
-msgstr "Aprire il documento prima!!"
+#~ msgid "French"
+#~ msgstr "Francese"
 
-#: pinguinobeta7.py:210
-msgid "Warning"
-msgstr "Attenzione"
+#~ msgid "Spanish"
+#~ msgstr "Spagnolo"
 
-#: pinguinobeta7.py:229
-msgid "error while compiling file "
-msgstr "errore durante la compilazione del file"
+#~ msgid "Portuguese"
+#~ msgstr "Portoghese"
 
-#: pinguinobeta7.py:233
-msgid "error while linking "
-msgstr "errore durante il collegamento"
+#~ msgid "Danish"
+#~ msgstr "Danese"
 
-#: pinguinobeta7.py:236
-msgid "compilation done"
-msgstr "compilazione ultimata"
+#~ msgid "Croatian"
+#~ msgstr "Croato"
 
-#: pinguinobeta7.py:245
-#: pinguinobeta7.py:248
-msgid "Pde Files"
-msgstr "Documento PDE"
+#~ msgid "Italian"
+#~ msgstr "Italiano"
 
-#: pinguinobeta7.py:264
-msgid "File must be verified before upload"
-msgstr "Il documento deve essere verificato prima del upload"
+#~ msgid "Germany"
+#~ msgstr "La Germania"
 
-#: pinguinobeta7.py:264
-#: pinguinobeta7.py:268
-msgid "Warning!"
-msgstr "Attenzione!"
+#~ msgid "Language"
+#~ msgstr "Linguaggio"
 
-#: pinguinobeta7.py:268
-msgid "File must be saved before upload"
-msgstr "Il file deve essere salvato prima del upload"
+#~ msgid "Verify"
+#~ msgstr "Verifica"
 
+#~ msgid "Upload"
+#~ msgstr "Upload"
+
+#~ msgid "Open file first !!"
+#~ msgstr "Aprire il documento prima!!"
+
+#~ msgid "Warning"
+#~ msgstr "Attenzione"
+
+#~ msgid "error while compiling file "
+#~ msgstr "errore durante la compilazione del file"
+
+#~ msgid "error while linking "
+#~ msgstr "errore durante il collegamento"
+
+#~ msgid "compilation done"
+#~ msgstr "compilazione ultimata"
+
+#~ msgid "Pde Files"
+#~ msgstr "Documento PDE"
+
+#~ msgid "File must be verified before upload"
+#~ msgstr "Il documento deve essere verificato prima del upload"
+
+#~ msgid "Warning!"
+#~ msgstr "Attenzione!"
+
+#~ msgid "File must be saved before upload"
+#~ msgstr "Il file deve essere salvato prima del upload"

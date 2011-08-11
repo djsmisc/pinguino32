@@ -66,15 +66,15 @@
 
 	// Read bit #n from octet
 	#define BitRead(octet, n) \
-		(octet >> n & 1)
+		(octet = octet >> n & 1)
 
 	// Set bit #n from octet
 	#define BitSet(octet, n) \
-		(octet | (1 << n))
+		(octet |= (1 << n))
 
 	// Clear (0) bit #n from octet
 	#define BitClear(octet, n) \
-		(octet & !(1 << n))
+		(octet &= !(1 << n))
 
 	#define BitWrite(value, bit, bitvalue) \
 		(bitvalue ? bitSet(value, bit) : bitClear(value, bit))

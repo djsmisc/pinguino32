@@ -6,12 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PINGUINO Beta7\n"
-"POT-Creation-Date: 2010-03-21 20:24+VET\n"
-"PO-Revision-Date: 2010-04-12 13:22+0100\n"
-"Last-Translator: Marin Purgar <marin.purgar@gmail.com>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-14 15:37-0430\n"
+"PO-Revision-Date: 2011-07-14 15:51-0400\n"
+"Last-Translator: Alexis Sanchez <aasanchez@gmail.com>\n"
 "Language-Team: none\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -19,127 +21,223 @@ msgstr ""
 "X-Poedit-Country: CROATIA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: pinguinobeta7.py:96
-#: pinguinobeta7.py:144
+#: pinguinobetax2.py:309
 msgid "New"
 msgstr "Novi"
 
-#: pinguinobeta7.py:98
-#: pinguinobeta7.py:146
+#: pinguinobetax2.py:311
 msgid "Open"
 msgstr "Otvori"
 
-#: pinguinobeta7.py:100
-#: pinguinobeta7.py:145
+#: pinguinobetax2.py:313
 msgid "Save"
 msgstr "Snimi"
 
-#: pinguinobeta7.py:103
-#: pinguinobeta7.py:140
+#: pinguinobetax2.py:315
+#, fuzzy
+msgid "Save as"
+msgstr "&Pohraniti kao..."
+
+#: pinguinobetax2.py:317
 msgid "Close"
 msgstr "Zatvori"
 
-#: pinguinobeta7.py:105
+#: pinguinobetax2.py:319
 msgid "Exit"
 msgstr "Izlaz"
 
-#: pinguinobeta7.py:107
+#: pinguinobetax2.py:324
 msgid "File"
 msgstr "Datoteka"
 
-#: pinguinobeta7.py:110
-msgid "English"
-msgstr "Engleski"
+#: pinguinobetax2.py:328
+#, fuzzy
+msgid "Undo"
+msgstr "Poništi"
 
-#: pinguinobeta7.py:112
-msgid "French"
-msgstr "Francuski"
+#: pinguinobetax2.py:330
+#, fuzzy
+msgid "Redo"
+msgstr "_Ponovi"
 
-#: pinguinobeta7.py:114
-msgid "Spanish"
-msgstr "Španjolski"
+#: pinguinobetax2.py:333
+#, fuzzy
+msgid "Find"
+msgstr "Pronađi"
 
-#: pinguinobeta7.py:116
-msgid "Portuguese"
-msgstr "Portugalski"
+#: pinguinobetax2.py:335
+#, fuzzy
+msgid "Replace"
+msgstr "_Replace"
 
-#: pinguinobeta7.py:118
-msgid "Danish"
-msgstr "Danish"
+#: pinguinobetax2.py:339
+#, fuzzy
+msgid "Cut"
+msgstr "Izrezati"
 
-#: pinguinobeta7.py:120
-msgid "Croatian"
-msgstr "Hrvatski"
+#: pinguinobetax2.py:341
+#, fuzzy
+msgid "Copy"
+msgstr "Preslikati"
 
-#: pinguinobeta7.py:122
-msgid "Italian"
-msgstr "Taljanski"
+#: pinguinobetax2.py:343
+#, fuzzy
+msgid "Paste"
+msgstr "Umetnuti"
 
-#: pinguinobeta7.py:124
-msgid "Germany"
-msgstr "Njemački"
+#: pinguinobetax2.py:345
+#, fuzzy
+msgid "Clear"
+msgstr "Očistiti"
 
-#: pinguinobeta7.py:127
-msgid "Language"
-msgstr "Jezik"
+#: pinguinobetax2.py:347
+#, fuzzy
+msgid "Select all"
+msgstr "Označi sve"
 
-#: pinguinobeta7.py:129
-msgid "About"
+#: pinguinobetax2.py:349
+#, fuzzy
+msgid "Edit"
+msgstr "Promijeni"
+
+#: pinguinobetax2.py:355
+#, fuzzy
+msgid "Debug"
+msgstr "Debug"
+
+#: pinguinobetax2.py:373
+#, fuzzy
+msgid "Preferences"
+msgstr "Postavke"
+
+#: pinguinobetax2.py:377
+#: pinguinobetax2.py:378
+#: pinguinobetax2.py:379
+#: pinguinobetax2.py:380
+#: pinguinobetax2.py:381
+#: pinguinobetax2.py:382
+#: pinguinobetax2.py:383
+#, fuzzy
+msgid "your board"
+msgstr "Vaše ime:"
+
+#: pinguinobetax2.py:384
+msgid "Board"
+msgstr ""
+
+#: pinguinobetax2.py:412
+#, fuzzy
+msgid "Themes"
+msgstr "Teme"
+
+#: pinguinobetax2.py:425
+#, fuzzy
+msgid "Keywords"
+msgstr "Ključne riječi"
+
+#: pinguinobetax2.py:429
+#, fuzzy
+msgid "Website"
+msgstr "Mrežno mjesto VideoLAN-a..."
+
+#: pinguinobetax2.py:431
+msgid "Wiki"
+msgstr ""
+
+#: pinguinobetax2.py:433
+#, fuzzy
+msgid "Forum"
+msgstr "Forum putem mreže..."
+
+#: pinguinobetax2.py:435
+msgid "Blog"
+msgstr ""
+
+#: pinguinobetax2.py:437
+#, fuzzy
+msgid "Group"
+msgstr "Grupa"
+
+#: pinguinobetax2.py:439
+msgid "Shop"
+msgstr ""
+
+#: pinguinobetax2.py:441
+#, fuzzy
+msgid "About..."
 msgstr "O programu"
 
-#: pinguinobeta7.py:131
+#: pinguinobetax2.py:443
 msgid "Help"
 msgstr "Pomoć"
 
-#: pinguinobeta7.py:139
-msgid "Verify"
-msgstr "Provjeri"
+#: pinguinobetax2.py:493
+#, fuzzy
+msgid "Editor"
+msgstr "Uređivač"
 
-#: pinguinobeta7.py:147
-msgid "Upload"
-msgstr "Učitaj"
+#~ msgid "English"
+#~ msgstr "Engleski"
 
-#: pinguinobeta7.py:210
-msgid "Open file first !!"
-msgstr "Prvo otvori datoteku !!"
+#~ msgid "French"
+#~ msgstr "Francuski"
 
-#: pinguinobeta7.py:210
-msgid "Warning"
-msgstr "Upozorenje"
+#~ msgid "Spanish"
+#~ msgstr "Španjolski"
 
-#: pinguinobeta7.py:229
-msgid "error while compiling file "
-msgstr "greška kod kompilacije datoteke "
+#~ msgid "Portuguese"
+#~ msgstr "Portugalski"
 
-#: pinguinobeta7.py:233
-msgid "error while linking "
-msgstr "kreška kod linkanja "
+#~ msgid "Danish"
+#~ msgstr "Danish"
 
-#: pinguinobeta7.py:236
-msgid "compilation done"
-msgstr "kompilacija završena"
+#~ msgid "Croatian"
+#~ msgstr "Hrvatski"
 
-#: pinguinobeta7.py:245
-#: pinguinobeta7.py:248
-msgid "Pde Files"
-msgstr "Pde datoteke"
+#~ msgid "Italian"
+#~ msgstr "Taljanski"
 
-#: pinguinobeta7.py:264
-msgid "File must be verified before upload"
-msgstr "Datoteka se mora provjeriti prije učitavanja"
+#~ msgid "Germany"
+#~ msgstr "Njemački"
 
-#: pinguinobeta7.py:264
-#: pinguinobeta7.py:268
-msgid "Warning!"
-msgstr "Pozor!"
+#~ msgid "Language"
+#~ msgstr "Jezik"
 
-#: pinguinobeta7.py:268
-msgid "File must be saved before upload"
-msgstr "Datoteka se mora snimiti prije učitavanja"
+#~ msgid "Verify"
+#~ msgstr "Provjeri"
 
-msgid "missing filename"
-msgstr "nedostaje ime datoteke"
+#~ msgid "Upload"
+#~ msgstr "Učitaj"
 
-msgid "error while preprocessing "
-msgstr "greška kod preprocesiranja "
+#~ msgid "Open file first !!"
+#~ msgstr "Prvo otvori datoteku !!"
 
+#~ msgid "Warning"
+#~ msgstr "Upozorenje"
+
+#~ msgid "error while compiling file "
+#~ msgstr "greška kod kompilacije datoteke "
+
+#~ msgid "error while linking "
+#~ msgstr "kreška kod linkanja "
+
+#~ msgid "compilation done"
+#~ msgstr "kompilacija završena"
+
+#~ msgid "Pde Files"
+#~ msgstr "Pde datoteke"
+
+#~ msgid "File must be verified before upload"
+#~ msgstr "Datoteka se mora provjeriti prije učitavanja"
+
+#~ msgid "Warning!"
+#~ msgstr "Pozor!"
+
+#~ msgid "File must be saved before upload"
+#~ msgstr "Datoteka se mora snimiti prije učitavanja"
+
+#~ msgid "missing filename"
+#~ msgstr "nedostaje ime datoteke"
+
+#~ msgid "error while preprocessing "
+#~ msgstr "greška kod preprocesiranja "
