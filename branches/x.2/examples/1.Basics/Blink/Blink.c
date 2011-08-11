@@ -6,15 +6,9 @@
  */
 
 void setup() {                
-//
-//
   pinmode(13, OUTPUT);     
 }
 
 void loop() {
-  digitalwrite(13, HIGH);   
-  Delayms(100);              
-  digitalwrite(13, LOW);    
-  Delayms(100);              
-}
-
+  digitalwrite(13, HIGH);     Delayms(100);                digitalwrite(13, LOW);      Delayms(100);              }
+

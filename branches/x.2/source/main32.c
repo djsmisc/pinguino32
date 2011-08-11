@@ -38,6 +38,7 @@ int main()
 	#endif	
 
 	SystemConfig(80000000);			// default clock frequency is 80Mhz
+											// default peripheral freq. is 10MHz (cf. system.c)
 	AD1PCFG = 0xFFFF;					// All pins of PORTB as digital IOs
 
 	#ifdef __ANALOG__
@@ -56,7 +57,7 @@ int main()
 	CDC_init();
 	#endif    
 
-	#ifdef __RTCC_C
+	#ifdef __RTCC__
 	RTCC_init();
 	#endif    
 	
@@ -73,7 +74,7 @@ int main()
 	return(0);    
 }
 
-#ifndef __SERIAL_C
+#ifndef __SERIAL__
 void Serial1Interrupt(void)
 {
 	Nop();    
@@ -92,24 +93,21 @@ void Tmr2Interrupt(void)
 }
 #endif
 
-#ifndef __SPI_C
-void SPI1Interrupt(void)
+#ifndef __SPI__
+/*
+void SPIxInterrupt(void)
 {
 	Nop();    
 }
-
-void SPI2Interrupt(void)
-{
-	Nop();    
-}
-#endif /* __SPI_C */
+*/
+#endif /* __SPI__ */
 
 // vector 35
-#ifndef __RTCC_C
+#ifndef __RTCC__
 void RTCCInterrupt(void)
 {
 	Nop();    
 }
-#endif /* __RTCC_C */
+#endif /* __RTCC__ */
 
 

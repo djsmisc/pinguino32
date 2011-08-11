@@ -127,7 +127,9 @@
 	// run led pin
 	#define A4 18
 	#define RA4 18
-	#define RUNLED PORTAbits.RA4
+	#define RUNLED		PORTAbits.RA4
+	#define LED1		PORTAbits.RA4
+	#define USERLED	PORTAbits.RA4
 
 	#define A5 17
 	#define RA5 17

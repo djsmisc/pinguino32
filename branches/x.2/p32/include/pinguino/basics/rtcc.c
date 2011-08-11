@@ -23,8 +23,8 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
-#ifndef __RTCC_C
-#define __RTCC_C
+#ifndef __RTCC__
+#define __RTCC__
 
 #include <typedef.h>
 #include <const.h>
@@ -878,5 +878,5 @@ void RTCCInterrupt(void)
 	}
 }
 
-#endif	/* __RTCC_C */
+#endif	/* __RTCC__ */
 

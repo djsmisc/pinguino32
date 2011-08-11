@@ -239,16 +239,15 @@ abort:
 
 /*	----------------------------------------------------------------------------
 	SetPeripheralClock()
+	div : PBDIV1, PBDIV2, PBDIV4 or PBDIV8
 	--------------------------------------------------------------------------*/
 
 void SetPeripheralClock(u8 div)
 {
-	OSCCONbits.PBDIV = div; // Peripheral Clock = System Clock / div 
+	SystemUnlock();
+	OSCCONbits.PBDIV = div;
+	SystemLock();
 }
-
-// TODO:
-// PortClearBits(LED_PORT, (CORE_TIMER_LED | CORE_SW_0_LED | CORE_SW_1_LED));
-// PortSetPinsDigitalOut(LED_PORT, (CORE_TIMER_LED | CORE_SW_0_LED | CORE_SW_1_LED));
 
 /*	----------------------------------------------------------------------------
 	SystemConfig()
@@ -257,6 +256,7 @@ void SetPeripheralClock(u8 div)
 void SystemConfig(u32 cpuCoreFrequency)
 {
 	SetSystemClock(cpuCoreFrequency);
+	SetPeripheralClock(PBDIV8);	// PeripheralClock = cpuCoreFrequency / 8
 	SetFlashWaitStates();
 	DDPCONbits.JTAGEN=0;		// PORTA is used as digital instead of JTAG
 }

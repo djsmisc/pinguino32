@@ -6,12 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PINGUINO Beta7\n"
-"POT-Creation-Date: 2010-03-21 20:24+VET\n"
-"PO-Revision-Date: 2010-04-12 13:21+0100\n"
-"Last-Translator: Wim Heirman <wim@dwengo.org>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-14 15:37-0430\n"
+"PO-Revision-Date: 2011-07-14 15:51-0400\n"
+"Last-Translator: Alexis Sanchez <aasanchez@gmail.com>\n"
 "Language-Team: Comunidad PingüinoVE <pinguino-internationalization@lists.coactivate.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -19,130 +21,228 @@ msgstr ""
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: pinguinobeta7.py:96
-#: pinguinobeta7.py:144
+#: pinguinobetax2.py:309
 msgid "New"
 msgstr "Nieuw"
 
-#: pinguinobeta7.py:98
-#: pinguinobeta7.py:146
+#: pinguinobetax2.py:311
 msgid "Open"
 msgstr "Openen"
 
-#: pinguinobeta7.py:100
-#: pinguinobeta7.py:145
+#: pinguinobetax2.py:313
 msgid "Save"
 msgstr "Opslaan"
 
-#: pinguinobeta7.py:103
-#: pinguinobeta7.py:140
+#: pinguinobetax2.py:315
+#, fuzzy
+msgid "Save as"
+msgstr "&Opslaan als..."
+
+#: pinguinobetax2.py:317
 msgid "Close"
 msgstr "Sluiten"
 
-#: pinguinobeta7.py:105
+#: pinguinobetax2.py:319
 msgid "Exit"
 msgstr "Afsluiten"
 
-#: pinguinobeta7.py:107
+#: pinguinobetax2.py:324
 msgid "File"
 msgstr "Bestand"
 
-#: pinguinobeta7.py:110
-msgid "English"
-msgstr "Engels"
+#: pinguinobetax2.py:328
+#, fuzzy
+msgid "Undo"
+msgstr "Ongedaan maken"
 
-#: pinguinobeta7.py:112
-msgid "French"
-msgstr "Frans"
+#: pinguinobetax2.py:330
+#, fuzzy
+msgid "Redo"
+msgstr "Opnieuw uitvoeren"
 
-#: pinguinobeta7.py:114
-msgid "Spanish"
-msgstr "Spaans"
+#: pinguinobetax2.py:333
+#, fuzzy
+msgid "Find"
+msgstr "Zoeken"
 
-#: pinguinobeta7.py:116
-msgid "Portuguese"
-msgstr "Portugees"
+#: pinguinobetax2.py:335
+#, fuzzy
+msgid "Replace"
+msgstr "Vervang"
 
-#: pinguinobeta7.py:118
-msgid "Danish"
-msgstr "Deens"
+#: pinguinobetax2.py:339
+#, fuzzy
+msgid "Cut"
+msgstr "Knippen"
 
-#: pinguinobeta7.py:120
-msgid "Croatian"
-msgstr "Kroatisch"
+#: pinguinobetax2.py:341
+#, fuzzy
+msgid "Copy"
+msgstr "Kopiëren"
 
-#: pinguinobeta7.py:122
-msgid "Italian"
-msgstr "Italiaans"
+#: pinguinobetax2.py:343
+#, fuzzy
+msgid "Paste"
+msgstr "Plakken"
 
-#: pinguinobeta7.py:124
-msgid "Germany"
-msgstr "Duitsland"
+#: pinguinobetax2.py:345
+#, fuzzy
+msgid "Clear"
+msgstr "Wissen"
 
-#: pinguinobeta7.py:127
-msgid "Language"
-msgstr "Taal"
+#: pinguinobetax2.py:347
+#, fuzzy
+msgid "Select all"
+msgstr "Alles selecteren"
 
-#: pinguinobeta7.py:129
-msgid "About"
-msgstr "Over"
+#: pinguinobetax2.py:349
+#, fuzzy
+msgid "Edit"
+msgstr "Bewerk"
 
-#: pinguinobeta7.py:131
+#: pinguinobetax2.py:355
+#, fuzzy
+msgid "Debug"
+msgstr "Debug"
+
+#: pinguinobetax2.py:373
+#, fuzzy
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: pinguinobetax2.py:377
+#: pinguinobetax2.py:378
+#: pinguinobetax2.py:379
+#: pinguinobetax2.py:380
+#: pinguinobetax2.py:381
+#: pinguinobetax2.py:382
+#: pinguinobetax2.py:383
+#, fuzzy
+msgid "your board"
+msgstr "&Mengpaneel..."
+
+#: pinguinobetax2.py:384
+#, fuzzy
+msgid "Board"
+msgstr "&Mengpaneel..."
+
+#: pinguinobetax2.py:412
+#, fuzzy
+msgid "Themes"
+msgstr "Thema's"
+
+#: pinguinobetax2.py:425
+#, fuzzy
+msgid "Keywords"
+msgstr "Trefwoorden"
+
+#: pinguinobetax2.py:429
+#, fuzzy
+msgid "Website"
+msgstr "Website"
+
+#: pinguinobetax2.py:431
+#, fuzzy
+msgid "Wiki"
+msgstr "Een desktop wiki"
+
+#: pinguinobetax2.py:433
+#, fuzzy
+msgid "Forum"
+msgstr "Online forum..."
+
+#: pinguinobetax2.py:435
+msgid "Blog"
+msgstr ""
+
+#: pinguinobetax2.py:437
+#, fuzzy
+msgid "Group"
+msgstr "Groep"
+
+#: pinguinobetax2.py:439
+msgid "Shop"
+msgstr ""
+
+#: pinguinobetax2.py:441
+#, fuzzy
+msgid "About..."
+msgstr "Info..."
+
+#: pinguinobetax2.py:443
 msgid "Help"
 msgstr "Help"
 
-#: pinguinobeta7.py:139
-msgid "Verify"
-msgstr "Verifiëren"
+#: pinguinobetax2.py:493
+#, fuzzy
+msgid "Editor"
+msgstr "Editor"
 
-#: pinguinobeta7.py:147
-msgid "Upload"
-msgstr "Opladen"
+#~ msgid "English"
+#~ msgstr "Engels"
 
-#: pinguinobeta7.py:210
-msgid "Open file first !!"
-msgstr "Open eerst een bestand !!"
+#~ msgid "French"
+#~ msgstr "Frans"
 
-#: pinguinobeta7.py:210
-msgid "Warning"
-msgstr "Waarschuwing"
+#~ msgid "Spanish"
+#~ msgstr "Spaans"
 
-#: pinguinobeta7.py:229
-msgid "error while compiling file "
-msgstr "fout tijdens het compileren "
+#~ msgid "Portuguese"
+#~ msgstr "Portugees"
 
-#: pinguinobeta7.py:233
-msgid "error while linking "
-msgstr "fout tijdens het linken "
+#~ msgid "Danish"
+#~ msgstr "Deens"
 
-#: pinguinobeta7.py:236
-msgid "compilation done"
-msgstr "compilatie voltooid"
+#~ msgid "Croatian"
+#~ msgstr "Kroatisch"
 
-#: pinguinobeta7.py:245
-#: pinguinobeta7.py:248
-msgid "Pde Files"
-msgstr "Pde Bestanden"
+#~ msgid "Italian"
+#~ msgstr "Italiaans"
 
-#: pinguinobeta7.py:264
-msgid "File must be verified before upload"
-msgstr "Bestand moet geverifiëerd worden voor het opladen"
+#~ msgid "Germany"
+#~ msgstr "Duitsland"
 
-#: pinguinobeta7.py:264
-#: pinguinobeta7.py:268
-msgid "Warning!"
-msgstr "Waarschuwing!"
+#~ msgid "Language"
+#~ msgstr "Taal"
 
-#: pinguinobeta7.py:268
-msgid "File must be saved before upload"
-msgstr "Bestand moet opgeslagen worden voor het opladen"
+#~ msgid "Verify"
+#~ msgstr "Verifiëren"
 
-msgid "missing filename"
-msgstr "ontbrekende bestandsnaam"
+#~ msgid "Upload"
+#~ msgstr "Opladen"
 
-msgid "bad file extension, it should be .pde"
-msgstr "foute bestandsextensie, dit moet .pde zijn"
+#~ msgid "Open file first !!"
+#~ msgstr "Open eerst een bestand !!"
 
-msgid "error while preprocessing "
-msgstr "fout tijdens de preprocessing "
+#~ msgid "Warning"
+#~ msgstr "Waarschuwing"
 
+#~ msgid "error while compiling file "
+#~ msgstr "fout tijdens het compileren "
+
+#~ msgid "error while linking "
+#~ msgstr "fout tijdens het linken "
+
+#~ msgid "compilation done"
+#~ msgstr "compilatie voltooid"
+
+#~ msgid "Pde Files"
+#~ msgstr "Pde Bestanden"
+
+#~ msgid "File must be verified before upload"
+#~ msgstr "Bestand moet geverifiëerd worden voor het opladen"
+
+#~ msgid "Warning!"
+#~ msgstr "Waarschuwing!"
+
+#~ msgid "File must be saved before upload"
+#~ msgstr "Bestand moet opgeslagen worden voor het opladen"
+
+#~ msgid "missing filename"
+#~ msgstr "ontbrekende bestandsnaam"
+
+#~ msgid "bad file extension, it should be .pde"
+#~ msgstr "foute bestandsextensie, dit moet .pde zijn"
+
+#~ msgid "error while preprocessing "
+#~ msgstr "fout tijdens de preprocessing "

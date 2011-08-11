@@ -16,6 +16,8 @@ extern void USBCheckCDCRequest();
 extern void CDCInitEP();
 extern void USBDeviceInit();
 extern void USBDeviceAttach();
+//extern void putUSBUSART(char*, char);
+//extern char getsUSBUSART(char*, char);
 extern void putUSBUSART(u8 *data, u8 Length);
 extern u8 getsUSBUSART(u8 *data, u8 Length);
 extern void CDCTxService();

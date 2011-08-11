@@ -92,7 +92,7 @@ void mrf24j40_receive_callback()
 
 // Send a string to short address
  
-void ZIGputs(u16 short_address,u8 *zigstr,u8 length)
+void ZIGputs(u16 short_address, u8 *zigstr, u8 length)
 {
 	mrf24j40_transmit_to_short_address(FTDATA, pan_id, short_address, zigstr, length, 1);
 }
@@ -115,9 +115,11 @@ u8 ZIGgets(u8 *zigstr)
 	unsigned char intstat;
 	
 	#ifndef INTZIG				// Zigbee not interrupt managed
+	// read INSTAT Register
 	intstat = mrf24j40_short_addr_read(INTSTAT);
+	// test if we received something 
 	if (test_bit(intstat, INTSTAT_RXIF))
-		{
+	{
 		length=mrf24j40_receive(zigstr,128);
 		ZIGdestpan=(zigstr[4]<<8)+zigstr[3];
 		ZIGsrcpan=(zigstr[8]<<8)+zigstr[7];
@@ -127,7 +129,7 @@ u8 ZIGgets(u8 *zigstr)
 			zigstr[i]=zigstr[i+11];
 		zigstr[i]=0;
 		return(length-15);
-		}
+	}
 	else return(0);
 	#else
 	Nop();						// todo interrupt managed

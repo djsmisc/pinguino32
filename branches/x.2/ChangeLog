@@ -20,6 +20,11 @@ IDE: (Régis Blanchot & Jean-Pierre Mandon)
 - Process benchmarking
 - New Help Menu with link between Keywords and wiki.pinguino.cc
 
+Boards (Régis Blanchot)
+- PIC32 Pinguino (Olimex)
+- PICuno (Cytron)
+- FreeJALduino (Country Laboratory)
+
 Libraries:
 - newlib.c (Jean-Pierre Mandon)
 - delay.c (Jesús Carmona Esteban)
