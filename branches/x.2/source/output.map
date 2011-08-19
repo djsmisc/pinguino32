@@ -1,24 +1,76 @@
+Membre de l'archive est inclu en raison du fichier (symbole)
+
+C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+                              C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o (ADBOpen)
+C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o) (ADBPacketSend)
+C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o) (gc_DevData)
+C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o) (pDeviceDescriptor)
+C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o) (usbClientDrvTable)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o) (free)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                              c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o) (_malloc_r)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o) (memset)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+                              c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o) (__malloc_lock)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+                              c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o) (_sbrk_r)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o) (strlen)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+                              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o) (strncpy)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+                              c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o) (_free_r)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+                              c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o) (_impure_ptr)
+c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+                              c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o) (errno)
 
 Allocation des symboles communs
 Symbole commun      taille            fichier
 
-UART2rpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-heap_ptr            0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-UART2wpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-UART2SerialBuffer   0x80              C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-UART1rpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-UART1SerialBuffer   0x80              C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-UART1wpointer       0x4               C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+errno               0x4               c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+UART2rpointer       0x4               C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+heap_ptr            0x4               C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+UART2wpointer       0x4               C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+UART2SerialBuffer   0x80              C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+gc_DevData          0x14              C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+usbOverrideHostState
+                    0x2               C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+h                   0x4               C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+UART1rpointer       0x4               C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+UART1SerialBuffer   0x80              C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+UART1wpointer       0x4               C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
 
 Sections d'entrée éliminées
 
- .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
- .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
- .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
- .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
- .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+ .reginfo       0x0000000000000000       0x18 C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 Configuration mémoire
 
@@ -39,21 +91,25 @@ sfrs             0x00000000bf800000 0x0000000000100000
 
 Script de l'éditeurs de liens and table de projection mémoire
 
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
                 0x0000000000002000                _min_heap_size = 0x2000
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libm.a
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a
-LOAD C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-LOAD C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
-LOAD C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
-LOAD C:\Users\jpm\Desktop\x.2\p32\obj\non-free\usb\libcdc.a
-LOAD C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
-LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libm.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a
+LOAD C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+LOAD C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
+LOAD C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
+LOAD C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\usb\libcdc.a
+LOAD C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a
+LOAD C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libm.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el\libgcc.a
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+LOAD c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
                 0x00000000bf882030                BMXDUPBA = 0xbf882030
                 0x00000000bf882010                BMXDKPBA = 0xbf882010
                 0x00000000bf882020                BMXDUDBA = 0xbf882020
@@ -84,12 +140,12 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 .reset          0x000000009d006000       0x10
  *(.reset)
- .reset         0x000000009d006000       0x10 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .reset         0x000000009d006000       0x10 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
                 0x000000009d006000                _reset
 
 .bev_excpt      0x000000009d006380        0x4
  *(.bev_handler)
- .bev_handler   0x000000009d006380        0x4 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .bev_handler   0x000000009d006380        0x4 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
 
 .dbg_excpt      0x000000009d006480        0x0
                 0x000000009d006480                . = (. + DEFINED (_DEBUGGER)?0x8:0x0)
@@ -99,7 +155,7 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 .app_excpt      0x000000009d005180        0x4
  *(.gen_handler)
- .gen_handler   0x000000009d005180        0x4 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .gen_handler   0x000000009d005180        0x4 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
 
 .vector_0       0x000000009d005200        0x0
  *(.vector_0)
@@ -135,7 +191,7 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 .vector_8       0x000000009d005300        0xc
  *(.vector_8)
- .vector_8      0x000000009d005300        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .vector_8      0x000000009d005300        0xc C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_8) <= (_vector_spacing << 0x5))), function at exception vector 8 too large)
 
 .vector_9       0x000000009d005320        0x0
@@ -200,7 +256,7 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 .vector_24      0x000000009d005500        0xc
  *(.vector_24)
- .vector_24     0x000000009d005500        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .vector_24     0x000000009d005500        0xc C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_24) <= (_vector_spacing << 0x5))), function at exception vector 24 too large)
 
 .vector_25      0x000000009d005520        0x0
@@ -227,14 +283,13 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
  *(.vector_30)
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_30) <= (_vector_spacing << 0x5))), function at exception vector 30 too large)
 
-.vector_31      0x000000009d0055e0        0xc
+.vector_31      0x000000009d0055e0        0x0
  *(.vector_31)
- .vector_31     0x000000009d0055e0        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_31) <= (_vector_spacing << 0x5))), function at exception vector 31 too large)
 
 .vector_32      0x000000009d005600        0xc
  *(.vector_32)
- .vector_32     0x000000009d005600        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .vector_32     0x000000009d005600        0xc C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_32) <= (_vector_spacing << 0x5))), function at exception vector 32 too large)
 
 .vector_33      0x000000009d005620        0x0
@@ -247,7 +302,7 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 .vector_35      0x000000009d005660        0xc
  *(.vector_35)
- .vector_35     0x000000009d005660        0xc C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
+ .vector_35     0x000000009d005660        0xc C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_35) <= (_vector_spacing << 0x5))), function at exception vector 35 too large)
 
 .vector_36      0x000000009d005680        0x0
@@ -286,8 +341,9 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
  *(.vector_44)
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_44) <= (_vector_spacing << 0x5))), function at exception vector 44 too large)
 
-.vector_45      0x000000009d0057a0        0x0
+.vector_45      0x000000009d0057a0        0x8
  *(.vector_45)
+ .vector_45     0x000000009d0057a0        0x8 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
                 0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_45) <= (_vector_spacing << 0x5))), function at exception vector 45 too large)
 
 .vector_46      0x000000009d0057c0        0x0
@@ -364,14 +420,14 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 .startup        0x000000009d006490      0x1bc
  *(.startup)
- .startup       0x000000009d006490      0x1bc C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
+ .startup       0x000000009d006490      0x1bc C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
 
-.text           0x000000009d006a00     0x2884
+.text           0x000000009d006a00     0xc6f0
                 0x000000009d006a00                _text_begin = .
  *(.text .stub .text.* .gnu.linkonce.t.*)
- .text          0x000000009d006a00        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .text          0x000000009d006a00      0x12c c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .text          0x000000009d006b2c     0x21b4 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .text          0x000000009d006a00        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .text          0x000000009d006a00      0x12c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .text          0x000000009d006b2c     0x1f28 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
                 0x000000009d007138                SerialUART1WriteChar
                 0x000000009d00715c                SerialUART2WriteChar
                 0x000000009d007180                SystemUnlock
@@ -382,249 +438,420 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
                 0x000000009d0072bc                SetFlashWaitStates
                 0x000000009d00732c                SetSystemClock
                 0x000000009d00756c                SetPeripheralClock
-                0x000000009d007584                SystemConfig
-                0x000000009d0075bc                GetCP0Count
-                0x000000009d0075c4                SetCP0Count
-                0x000000009d0075d4                Delayus
-                0x000000009d007668                Delayms
-                0x000000009d0076a0                pinmode
-                0x000000009d007860                digitalwrite
-                0x000000009d007a20                digitalread
-                0x000000009d007b3c                toggle
-                0x000000009d007b70                pprintf
-                0x000000009d007b7c                psprintf
-                0x000000009d007b9c                IntSetVectorPriority
-                0x000000009d007cf4                IntGetVectorPriority
-                0x000000009d007d48                IntGetVectorSubPriority
-                0x000000009d007d9c                IntClearFlag
-                0x000000009d007df0                IntGetFlag
-                0x000000009d007e3c                IntEnable
-                0x000000009d007e88                IntDisable
-                0x000000009d007edc                IntGetInterruptVectorNumber
-                0x000000009d007eec                IntGetInterruptVectorPriority
-                0x000000009d007efc                IntDisableInterrupts
-                0x000000009d007f08                IntEnableInterrupts
-                0x000000009d007f14                IntRestoreInterrupts
-                0x000000009d007f24                IntSetEBASE
-                0x000000009d007f34                IntConfigureSystem
-                0x000000009d007fd0                SerialSetDataRate
-                0x000000009d008094                SerialGetDataRate
-                0x000000009d008174                SerialEnable
-                0x000000009d0081b0                SerialSetLineControl
-                0x000000009d0081ec                SerialFlush
-                0x000000009d008220                SerialPinConfigure
-                0x000000009d008284                SerialIntConfigure
-                0x000000009d00830c                SerialConfigure
-                0x000000009d00849c                SerialPrintf
-                0x000000009d0084fc                SerialAvailable
-                0x000000009d008540                SerialRead
-                0x000000009d0085dc                SerialGetKey
-                0x000000009d008650                SerialGetString
-                0x000000009d0086e8                SerialGetDataBuffer
-                0x000000009d0087b4                Serial1Interrupt
-                0x000000009d008808                Serial2Interrupt
-                0x000000009d00885c                strcmp
-                0x000000009d008898                strcat
-                0x000000009d0088dc                strchr
-                0x000000009d008918                strcpy
-                0x000000009d00893c                memcmp
-                0x000000009d008984                sbrk
-                0x000000009d0089a0                open
-                0x000000009d008a94                close
-                0x000000009d008a9c                fstat
-                0x000000009d008aa4                isatty
-                0x000000009d008aac                lseek
-                0x000000009d008ab4                read
-                0x000000009d008b3c                write
-                0x000000009d008c08                setup
-                0x000000009d008c14                loop
-                0x000000009d008c4c                main
-                0x000000009d008cb0                Tmr2Interrupt
-                0x000000009d008cbc                SPI1Interrupt
-                0x000000009d008cc8                SPI2Interrupt
-                0x000000009d008cd4                RTCCInterrupt
- .text          0x000000009d008ce0       0x14 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
- .text          0x000000009d008cf4        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
- .text          0x000000009d008cf4      0x53c C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
-                0x000000009d008cf4                vector_8_ISR_wrapper
-                0x000000009d008e00                vector_24_ISR_wrapper
-                0x000000009d008f0c                vector_31_ISR_wrapper
-                0x000000009d009018                vector_32_ISR_wrapper
-                0x000000009d009124                vector_35_ISR_wrapper
- .text          0x000000009d009230       0x54 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .text          0x000000009d009284        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+                0x000000009d0075b0                SystemConfig
+                0x000000009d007628                GetCP0Count
+                0x000000009d007630                SetCP0Count
+                0x000000009d007640                pprintf
+                0x000000009d00764c                psprintf
+                0x000000009d00766c                IntSetVectorPriority
+                0x000000009d0077c4                IntGetVectorPriority
+                0x000000009d007818                IntGetVectorSubPriority
+                0x000000009d00786c                IntClearFlag
+                0x000000009d0078c0                IntGetFlag
+                0x000000009d00790c                IntEnable
+                0x000000009d007958                IntDisable
+                0x000000009d0079ac                IntGetInterruptVectorNumber
+                0x000000009d0079bc                IntGetInterruptVectorPriority
+                0x000000009d0079cc                IntDisableInterrupts
+                0x000000009d0079d8                IntEnableInterrupts
+                0x000000009d0079e4                IntRestoreInterrupts
+                0x000000009d0079f4                IntSetEBASE
+                0x000000009d007a04                IntConfigureSystem
+                0x000000009d007aa0                SerialSetDataRate
+                0x000000009d007b64                SerialGetDataRate
+                0x000000009d007c44                SerialEnable
+                0x000000009d007c80                SerialSetLineControl
+                0x000000009d007cbc                SerialFlush
+                0x000000009d007cf0                SerialPinConfigure
+                0x000000009d007d54                SerialIntConfigure
+                0x000000009d007ddc                SerialConfigure
+                0x000000009d007f6c                SerialPrintf
+                0x000000009d007fcc                SerialAvailable
+                0x000000009d008010                SerialRead
+                0x000000009d0080ac                SerialGetKey
+                0x000000009d008120                SerialGetString
+                0x000000009d0081b8                SerialGetDataBuffer
+                0x000000009d008284                Serial1Interrupt
+                0x000000009d0082d8                Serial2Interrupt
+                0x000000009d00832c                serial1init
+                0x000000009d008340                serial1printf
+                0x000000009d008378                ChannelRecv
+                0x000000009d008408                serial1print
+                0x000000009d0084cc                serial1println
+                0x000000009d0084fc                serial1write
+                0x000000009d008520                serial1getkey
+                0x000000009d008528                serial1getstring
+                0x000000009d008530                serial1available
+                0x000000009d008538                serial1read
+                0x000000009d008540                serial1flush
+                0x000000009d008550                strcmp
+                0x000000009d00858c                strcat
+                0x000000009d0085d0                strchr
+                0x000000009d00860c                strcpy
+                0x000000009d008630                memcmp
+                0x000000009d008678                sbrk
+                0x000000009d008694                open
+                0x000000009d008788                close
+                0x000000009d008790                fstat
+                0x000000009d008798                isatty
+                0x000000009d0087a0                lseek
+                0x000000009d0087a8                read
+                0x000000009d008830                write
+                0x000000009d0088e4                setup
+                0x000000009d008914                loop
+                0x000000009d0089d8                main
+                0x000000009d008a3c                Tmr2Interrupt
+                0x000000009d008a48                RTCCInterrupt
+ .text          0x000000009d008a54       0x14 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
+ .text          0x000000009d008a68        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
+ .text          0x000000009d008a68      0xf2c C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+                0x000000009d0093c8                ADBOpen
+                0x000000009d009534                ADBClose
+                0x000000009d0095ac                ADBChannelReady
+                0x000000009d0095fc                ADBWrite
+                0x000000009d009678                ADBInit
+                0x000000009d0096d0                ADBTasks
+                0x000000009d00989c                USB_ApplicationEventHandler
+ .text          0x000000009d009994      0x6a0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+                0x000000009d009dc8                ADBPacketSend
+                0x000000009d009e80                ADBPacketSendStatus
+                0x000000009d009ed4                ADBPacketRecv
+                0x000000009d009ef8                ADBPacketRecvStatus
+                0x000000009d009fcc                ADBPacketReset
+                0x000000009d009ffc                ADBPacketTasks
+ .text          0x000000009d00a034      0x604 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+                0x000000009d00a034                USBHostAndroidInit
+                0x000000009d00a11c                USBHostAndroidEventHandler
+                0x000000009d00a308                USBHostAndroidGetDeviceId
+                0x000000009d00a34c                USBHostAndroidReset
+                0x000000009d00a3a4                USBHostAndroidRead
+                0x000000009d00a480                USBHostAndroidRxIsComplete
+                0x000000009d00a500                USBHostAndroidTxIsComplete
+                0x000000009d00a568                USBHostAndroidWrite
+ .text          0x000000009d00a638     0x73f0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+                0x000000009d00a638                USBHostClearEndpointErrors
+                0x000000009d00a6f8                USBHostDeviceSpecificClientDriver
+                0x000000009d00a734                USBHostDeviceStatus
+                0x000000009d00a80c                USBHostInit
+                0x000000009d00a918                USBHostIssueDeviceRequest
+                0x000000009d00ac78                USBHostRead
+                0x000000009d00ae1c                USBHostResetDevice
+                0x000000009d00ae9c                USBHostResumeDevice
+                0x000000009d00af24                USBHostSetDeviceConfiguration
+                0x000000009d00b000                USBHostSetNAKTimeout
+                0x000000009d00b0cc                USBHostShutdown
+                0x000000009d00b16c                USBHostSuspendDevice
+                0x000000009d00b204                USBHostTasks
+                0x000000009d00d07c                USBHostTerminateTransfer
+                0x000000009d00d118                USBHostTransferIsComplete
+                0x000000009d00d28c                USBHostVbusEvent
+                0x000000009d00d34c                USBHostWrite
+                0x000000009d00d4f0                _USB_CheckCommandAndEnumerationAttempts
+                0x000000009d00d5a8                _USB_FindClassDriver
+                0x000000009d00d6d8                _USB_FindDeviceLevelClientDriver
+                0x000000009d00d970                _USB_FindEndpoint
+                0x000000009d00da58                _USB_FindNextToken
+                0x000000009d00f2e8                _USB_FindServiceEndpoint
+                0x000000009d00f5a4                _USB_FreeConfigMemory
+                0x000000009d00f738                _USB_FreeMemory
+                0x000000009d00f828                _USB_InitControlRead
+                0x000000009d00f934                _USB_InitControlWrite
+                0x000000009d00fa60                _USB_InitRead
+                0x000000009d00fb8c                _USB_InitWrite
+                0x000000009d00fcb8                _USB_NotifyClients
+                0x000000009d00fde4                _USB_ParseConfigurationDescriptor
+                0x000000009d010708                _USB_ResetDATA0
+                0x000000009d010814                _USB_SendToken
+                0x000000009d010914                _USB_SetBDT
+                0x000000009d010c80                _USB_TransferInProgress
+                0x000000009d010d88                _USB1Interrupt
+ .text          0x000000009d011a28        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+ .text          0x000000009d011a28      0x430 C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
+                0x000000009d011a28                vector_8_ISR_wrapper
+                0x000000009d011b34                vector_24_ISR_wrapper
+                0x000000009d011c40                vector_32_ISR_wrapper
+                0x000000009d011d4c                vector_35_ISR_wrapper
+ .text          0x000000009d011e58       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+                0x000000009d011e58                free
+                0x000000009d011e68                malloc
+ .text          0x000000009d011e78      0x854 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                0x000000009d011e78                _malloc_r
+ .text          0x000000009d0126cc       0xf0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+                0x000000009d0126cc                memset
+ .text          0x000000009d0127bc       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+                0x000000009d0127bc                __malloc_lock
+                0x000000009d0127c4                __malloc_unlock
+ .text          0x000000009d0127cc       0x58 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+                0x000000009d0127cc                _sbrk_r
+ .text          0x000000009d012824       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+                0x000000009d012824                strlen
+ .text          0x000000009d01283c      0x1f0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+                0x000000009d01283c                strncpy
+ .text          0x000000009d012a2c      0x418 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+                0x000000009d012a2c                _malloc_trim_r
+                0x000000009d012b50                _free_r
+ .text          0x000000009d012e44        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .text          0x000000009d012e44      0x258 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+                0x000000009d012e44                _wrapup_reent
+                0x000000009d012f0c                cleanup_glue
+                0x000000009d012f50                _reclaim_reent
+ .text          0x000000009d01309c       0x54 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .text          0x000000009d0130f0        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
  *(.text.*personality*)
  *(.gnu.warning)
  *(.mips16.fn.*)
  *(.mips16.call.*)
-                0x000000009d009284                _text_end = .
+                0x000000009d0130f0                _text_end = .
 
-.init           0x000000009d009284       0x38
- .init          0x000000009d009284        0x8 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
-                0x000000009d009284                _init
- .init          0x000000009d00928c       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .init          0x000000009d00929c       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .init          0x000000009d0092ac       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+.init           0x000000009d0130f0       0x38
+ .init          0x000000009d0130f0        0x8 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+                0x000000009d0130f0                _init
+ .init          0x000000009d0130f8       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .init          0x000000009d013108       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .init          0x000000009d013118       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.fini           0x000000009d0092bc       0x28
- .fini          0x000000009d0092bc        0x8 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
-                0x000000009d0092bc                _fini
- .fini          0x000000009d0092c4       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .fini          0x000000009d0092d4       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+.fini           0x000000009d013128       0x28
+ .fini          0x000000009d013128        0x8 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+                0x000000009d013128                _fini
+ .fini          0x000000009d013130       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .fini          0x000000009d013140       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.rodata         0x000000009d0092e4      0x188
+.rodata         0x000000009d013150      0x24c
  *(.rodata .rodata.* .gnu.linkonce.r.*)
  .rodata.str1.4
-                0x000000009d0092e4       0x1c C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
- .rodata        0x000000009d009300      0x16c C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-                0x000000009d00936c                portmask
-                0x000000009d0093ec                pinmask
+                0x000000009d013150       0x6d C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+                                         0x70 (taille avant relaxe)
+ *fill*         0x000000009d0131bd        0x3 00
+ .rodata        0x000000009d0131c0       0x5c C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .rodata        0x000000009d01321c       0x30 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .rodata        0x000000009d01324c      0x14c C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .rodata.str1.4
+                0x000000009d013398        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
  *(.rodata1)
-                0x000000009d00946c                . = ALIGN (0x4)
+                0x000000009d01339c                . = ALIGN (0x4)
 
-.sdata2         0x000000009d00946c        0x0
+.sdata2         0x000000009d01339c        0x0
  *(.sdata2 .sdata2.* .gnu.linkonce.s2.*)
-                0x000000009d00946c                . = ALIGN (0x4)
+                0x000000009d01339c                . = ALIGN (0x4)
 
-.sbss2          0x000000009d00946c        0x0
+.sbss2          0x000000009d01339c        0x0
  *(.sbss2 .sbss2.* .gnu.linkonce.sb2.*)
-                0x000000009d00946c                . = ALIGN (0x4)
+                0x000000009d01339c                . = ALIGN (0x4)
 
 .eh_frame_hdr
  *(.eh_frame_hdr)
 
-.eh_frame       0x000000009d00946c        0x4
+.eh_frame       0x000000009d01339c        0x4
  *(.eh_frame)
- .eh_frame      0x000000009d00946c        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .eh_frame      0x000000009d00946c        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .eh_frame      0x000000009d01339c        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .eh_frame      0x000000009d01339c        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+
+.rel.dyn        0x000000009d0133a0        0x0
+ .rel.dyn       0x0000000000000000        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
 
 .dbg_data       0x00000000a0000004        0x0
                 0x00000000a0000004                . = (. + DEFINED (_DEBUGGER)?0x200:0x0)
 
-.data           0x00000000a0000004        0x0 address de chargement 0x000000009d009470
-                0x00000000a0000004                _data_begin = .
+.data           0x00000000a0000008      0x818 address de chargement 0x000000009d0133a0
+                0x00000000a0000008                _data_begin = .
  *(.data .data.* .gnu.linkonce.d.*)
- .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .data          0x00000000a0000004        0x0 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
- .data          0x00000000a0000004        0x0 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
- .data          0x00000000a0000004        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
- .data          0x00000000a0000004        0x0 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
- .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .data          0x00000000a0000004        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .data          0x00000000a0000008        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .data          0x00000000a0000008        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+ .data          0x00000000a0000008        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .data          0x00000000a0000008       0x10 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+                0x00000000a0000008                usbClientDrvTable
+ .data          0x00000000a0000018        0x0 C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
+ .data          0x00000000a0000018        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .data          0x00000000a0000018      0x408 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                0x00000000a0000018                __malloc_av_
+ .data          0x00000000a0000420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .data          0x00000000a0000420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .data          0x00000000a0000420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .data          0x00000000a0000420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .data          0x00000000a0000420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .data          0x00000000a0000420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .data          0x00000000a0000420      0x400 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .data          0x00000000a0000820        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .data          0x00000000a0000820        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .data          0x00000000a0000820        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
  *(.gnu.linkonce.d.*personality*)
  *(.data1)
-                0x000000009d009470                _data_image_begin = LOADADDR (.data)
+                0x000000009d0133a0                _data_image_begin = LOADADDR (.data)
 
-.ctors          0x00000000a0000004        0x8 address de chargement 0x000000009d009470
- .ctors         0x00000000a0000004        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .ctors         0x00000000a0000008        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+.ctors          0x00000000a0000820        0x8 address de chargement 0x000000009d013bb8
+ .ctors         0x00000000a0000820        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .ctors         0x00000000a0000824        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
-.dtors          0x00000000a000000c        0x8 address de chargement 0x000000009d009478
- .dtors         0x00000000a000000c        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .dtors         0x00000000a0000010        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
-                0x00000000a0000010                __DTOR_END__
+.dtors          0x00000000a0000828        0x8 address de chargement 0x000000009d013bc0
+ .dtors         0x00000000a0000828        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .dtors         0x00000000a000082c        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+                0x00000000a000082c                __DTOR_END__
 
-.jcr            0x00000000a0000014        0x4 address de chargement 0x000000009d009480
- .jcr           0x00000000a0000014        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .jcr           0x00000000a0000014        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+.jcr            0x00000000a0000830        0x4 address de chargement 0x000000009d013bc8
+ .jcr           0x00000000a0000830        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .jcr           0x00000000a0000830        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .eh_frame
  *(.eh_frame)
-                0x00000000a0008010                _gp = (ALIGN (0x10) + 0x7ff0)
+                0x00000000a0008830                _gp = (ALIGN (0x10) + 0x7ff0)
 
 .got
  *(.got.plt)
  *(.got)
 
-.sdata          0x00000000a0000018        0x4 address de chargement 0x000000009d009484
-                0x00000000a0000018                _sdata_begin = .
+.sdata          0x00000000a0000834       0x28 address de chargement 0x000000009d013bcc
+                0x00000000a0000834                _sdata_begin = .
  *(.sdata .sdata.* .gnu.linkonce.s.*)
- .sdata         0x00000000a0000018        0x4 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
-                0x00000000a0000018                __dso_handle
-                0x00000000a000001c                _sdata_end = .
+ .sdata         0x00000000a0000834        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+                0x00000000a0000834                __dso_handle
+ .sdata         0x00000000a0000838        0x4 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .sdata         0x00000000a000083c        0x8 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .sdata         0x00000000a0000844        0x8 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+                0x00000000a0000844                usbTPL
+ .sdata         0x00000000a000084c        0x8 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                0x00000000a000084c                __malloc_trim_threshold
+                0x00000000a0000850                __malloc_sbrk_base
+ .sdata         0x00000000a0000854        0x8 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+                0x00000000a0000854                _impure_ptr
+                0x00000000a0000858                _global_impure_ptr
+                0x00000000a000085c                _sdata_end = .
 
 .lit8
  *(.lit8)
 
 .lit4
  *(.lit4)
-                0x00000000a000001c                . = ALIGN (0x4)
-                0x00000000a000001c                _data_end = .
-                0x00000000a000001c                _bss_begin = .
+                0x00000000a000085c                . = ALIGN (0x4)
+                0x00000000a000085c                _data_end = .
+                0x00000000a000085c                _bss_begin = .
 
-.sbss           0x00000000a000001c       0x18 address de chargement 0x000000009d009488
-                0x00000000a000001c                _sbss_begin = .
+.sbss           0x00000000a000085c       0x70 address de chargement 0x000000009d013bf4
+                0x00000000a000085c                _sbss_begin = .
  *(.dynsbss)
  *(.sbss .sbss.* .gnu.linkonce.sb.*)
- .sbss          0x00000000a000001c        0x4 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .sbss          0x00000000a000085c        0x8 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .sbss          0x00000000a0000864        0x8 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .sbss          0x00000000a000086c        0xc C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .sbss          0x00000000a0000878       0x28 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+                0x00000000a0000878                pCurrentConfigurationDescriptor
+                0x00000000a000087c                pDeviceDescriptor
+ .sbss          0x00000000a00008a0        0xc c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                0x00000000a00008a0                __malloc_top_pad
+                0x00000000a00008a4                __malloc_max_sbrked_mem
+                0x00000000a00008a8                __malloc_max_total_mem
  *(.scommon)
- .scommon       0x00000000a0000020       0x14 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-                0x00000000a0000020                UART2rpointer
-                0x00000000a0000024                heap_ptr
-                0x00000000a0000028                UART2wpointer
-                0x00000000a000002c                UART1rpointer
-                0x00000000a0000030                UART1wpointer
-                0x00000000a0000034                _sbss_end = .
+ .scommon       0x00000000a00008ac       0x18 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+                0x00000000a00008ac                UART2rpointer
+                0x00000000a00008b0                heap_ptr
+                0x00000000a00008b4                UART2wpointer
+                0x00000000a00008b8                h
+                0x00000000a00008bc                UART1rpointer
+                0x00000000a00008c0                UART1wpointer
+ .scommon       0x00000000a00008c4        0x2 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+                0x00000000a00008c4                usbOverrideHostState
+ *fill*         0x00000000a00008c6        0x2 00
+ .scommon       0x00000000a00008c8        0x4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+                0x00000000a00008c8                errno
+                0x00000000a00008cc                _sbss_end = .
 
-.bss            0x00000000a0000034      0x170 address de chargement 0x000000009d009488
+.bss            0x00000000a0000a00     0x153c address de chargement 0x000000009d013bf4
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
- .bss           0x00000000a0000034        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .bss           0x00000000a0000034       0x20 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .bss           0x00000000a0000054       0x50 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
- .bss           0x00000000a00000a4        0x0 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
- .bss           0x00000000a00000a4        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
- .bss           0x00000000a00000a4        0x0 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
- .bss           0x00000000a00000a4        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .bss           0x00000000a00000a4        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .bss           0x00000000a0000a00        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .bss           0x00000000a0000a00       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .bss           0x00000000a0000a20       0x50 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .bss           0x00000000a0000a70        0x0 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
+ .bss           0x00000000a0000a70        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
+ .bss           0x00000000a0000a70      0x140 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .bss           0x00000000a0000bb0     0x1030 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .bss           0x00000000a0001be0        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+ *fill*         0x00000000a0001be0       0x20 00
+ .bss           0x00000000a0001c00      0x200 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .bss           0x00000000a0001e00        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+ .bss           0x00000000a0001e00        0x0 C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
+ .bss           0x00000000a0001e00        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .bss           0x00000000a0001e00       0x28 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                0x00000000a0001e00                __malloc_current_mallinfo
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .bss           0x00000000a0001e28        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
  *(COMMON)
- COMMON         0x00000000a00000a4      0x100 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
-                0x00000000a00000a4                UART2SerialBuffer
-                0x00000000a0000124                UART1SerialBuffer
-                0x00000000a00001a4                . = ALIGN (0x4)
-                0x00000000a00001a4                . = ALIGN (0x4)
-                0x00000000a00001a4                _end = .
-                0x00000000a00001a4                _bss_end = .
+ COMMON         0x00000000a0001e28      0x100 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+                0x00000000a0001e28                UART2SerialBuffer
+                0x00000000a0001ea8                UART1SerialBuffer
+ COMMON         0x00000000a0001f28       0x14 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+                0x00000000a0001f28                gc_DevData
+                0x00000000a0001f3c                . = ALIGN (0x4)
+                0x00000000a0001f3c                . = ALIGN (0x4)
+                0x00000000a0001f3c                _end = .
+                0x00000000a0001f3c                _bss_end = .
 
-.heap           0x00000000a00001a4     0x2000 address de chargement 0x000000009d009488
-                0x00000000a00001a4                _heap = .
-                0x00000000a00021a4                . = (. + _min_heap_size)
- *fill*         0x00000000a00001a4     0x2000 00
+.heap           0x00000000a0001f3c     0x2000 address de chargement 0x000000009d013bf4
+                0x00000000a0001f3c                _heap = .
+                0x00000000a0003f3c                . = (. + _min_heap_size)
+ *fill*         0x00000000a0001f3c     0x2000 00
 
-.stack          0x00000000a00021a4      0x400 address de chargement 0x000000009d009488
-                0x00000000a00021a4                _splim = .
-                0x00000000a00021a4                _SPLIM = .
-                0x00000000a00025a4                . = (. + _min_stack_size)
- *fill*         0x00000000a00021a4      0x400 00
+.stack          0x00000000a0003f3c      0x400 address de chargement 0x000000009d013bf4
+                0x00000000a0003f3c                _splim = .
+                0x00000000a0003f3c                _SPLIM = .
+                0x00000000a000433c                . = (. + _min_stack_size)
+ *fill*         0x00000000a0003f3c      0x400 00
 
-.ramfunc        0x00000000a0002800        0x0 address de chargement 0x000000009d009488
-                0x00000000a0002800                _ramfunc_begin = .
+.ramfunc        0x00000000a0004800        0x0 address de chargement 0x000000009d013bf4
+                0x00000000a0004800                _ramfunc_begin = .
  *(.ramfunc .ramfunc.*)
-                0x00000000a0002800                . = ALIGN (0x4)
-                0x00000000a0002800                _ramfunc_end = .
-                0x000000009d009488                _ramfunc_image_begin = LOADADDR (.ramfunc)
+                0x00000000a0004800                . = ALIGN (0x4)
+                0x00000000a0004800                _ramfunc_end = .
+                0x000000009d013bf4                _ramfunc_image_begin = LOADADDR (.ramfunc)
                 0x0000000000000000                _ramfunc_length = SIZEOF (.ramfunc)
-                0x00000000000027fc                _bmxdkpba_address = (_ramfunc_begin - ORIGIN (kseg1_data_mem))
+                0x00000000000047fc                _bmxdkpba_address = (_ramfunc_begin - ORIGIN (kseg1_data_mem))
                 0x0000000000007ffc                _bmxdudba_address = 0x7ffc
                 0x0000000000007ffc                _bmxdupba_address = 0x7ffc
                 0x00000000a0008000                _stack = (_ramfunc_length > 0x0)?(_ramfunc_begin - 0x4):(ORIGIN (kseg1_data_mem) + 0x7ffc)
                 0x0000000000000001                ASSERT (((_min_stack_size + _min_heap_size) <= (_stack - _heap)), Not enough space to allocate both stack and heap.  Reduce heap and/or stack size.)
 
-.pdr            0x0000000000000000      0xa80
+.pdr            0x0000000000000000     0x1480
  *(.pdr)
- .pdr           0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .pdr           0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .pdr           0x0000000000000000      0x940 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
- .pdr           0x0000000000000940       0xa0 C:\Users\jpm\AppData\Local\Temp\cctZtxNt.o
- .pdr           0x00000000000009e0        0x0 C:\Users\jpm\Desktop\x.2\p32\obj\non-free\processor.o
- .pdr           0x00000000000009e0       0xa0 C:\Users\jpm\AppData\Local\Temp\ccNEbPDB.o
- .pdr           0x0000000000000a80        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
- .pdr           0x0000000000000a80        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .pdr           0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .pdr           0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .pdr           0x0000000000000000      0x9a0 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .pdr           0x00000000000009a0       0xa0 C:\Users\jpm\AppData\Local\Temp\ccsli0xa.o
+ .pdr           0x0000000000000a40        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
+ .pdr           0x0000000000000a40      0x140 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .pdr           0x0000000000000b80      0x120 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .pdr           0x0000000000000ca0      0x100 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+ .pdr           0x0000000000000da0      0x4a0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .pdr           0x0000000000001240        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+ .pdr           0x0000000000001240       0x80 C:\Users\jpm\AppData\Local\Temp\ccz3Wo48.o
+ .pdr           0x00000000000012c0       0x40 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .pdr           0x0000000000001300       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .pdr           0x0000000000001320       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .pdr           0x0000000000001340       0x40 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .pdr           0x0000000000001380       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .pdr           0x00000000000013a0       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .pdr           0x00000000000013c0       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .pdr           0x00000000000013e0       0x40 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .pdr           0x0000000000001420        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .pdr           0x0000000000001420       0x60 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .pdr           0x0000000000001480        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .pdr           0x0000000000001480        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 .reginfo        0x0000000000000000       0x18
  *(.reginfo)
- .reginfo       0x0000000000000000       0x18 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .reginfo       0x0000000000000000       0x18 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
 
 .stab
  *(.stab)
@@ -645,25 +872,75 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
  *(.stab.indexstr)
 
 .mdebug.abi32   0x0000000000000000        0x0
- .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
- .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .mdebug.abi32  0x0000000000000000        0x0 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .mdebug.abi32  0x0000000000000000        0x0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .gnu.attributes
                 0x0000000000000000       0x10
  .gnu.attributes
-                0x0000000000000000       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+                0x0000000000000000       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
  .gnu.attributes
-                0x0000000000000010       0x10 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+                0x0000000000000010       0x10 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
  .gnu.attributes
-                0x0000000000000020       0x10 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+                0x0000000000000020       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .gnu.attributes
+                0x0000000000000030       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .gnu.attributes
+                0x0000000000000040       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .gnu.attributes
+                0x0000000000000050       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .gnu.attributes
+                0x0000000000000060       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .gnu.attributes
+                0x0000000000000070       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .gnu.attributes
+                0x0000000000000080       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .gnu.attributes
+                0x0000000000000090       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .gnu.attributes
+                0x00000000000000a0       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .gnu.attributes
+                0x00000000000000b0       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .gnu.attributes
+                0x00000000000000c0       0x10 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
-.comment        0x0000000000000000       0x54
+.comment        0x0000000000000000      0x298
  *(.comment)
- .comment       0x0000000000000000       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
- .comment       0x0000000000000012       0x30 C:\Users\jpm\AppData\Local\Temp\ccJYb9jB.o
+ .comment       0x0000000000000000       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtbegin.o
+ .comment       0x0000000000000012       0x30 C:\Users\jpm\AppData\Local\Temp\cc1CmcOo.o
                                          0x31 (taille avant relaxe)
- .comment       0x0000000000000042       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
+ .comment       0x0000000000000042       0x50 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb.o)
+ .comment       0x0000000000000092       0x50 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(adb_packet.o)
+ .comment       0x00000000000000e2       0x50 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host_android.o)
+ .comment       0x0000000000000132       0x50 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_host.o)
+ .comment       0x0000000000000182       0x50 C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a(usb_config.o)
+ .comment       0x00000000000001d2       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .comment       0x00000000000001e4       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .comment       0x00000000000001f6       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .comment       0x0000000000000208       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .comment       0x000000000000021a       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .comment       0x000000000000022c       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .comment       0x000000000000023e       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .comment       0x0000000000000250       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .comment       0x0000000000000262       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .comment       0x0000000000000274       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .comment       0x0000000000000286       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtend.o
 
 .debug
  *(.debug)
@@ -677,39 +954,139 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x0000000000000000       0x50
+.debug_aranges  0x0000000000000000      0x150
  *(.debug_aranges)
  .debug_aranges
-                0x0000000000000000       0x28 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+                0x0000000000000000       0x28 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
  .debug_aranges
-                0x0000000000000028       0x28 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+                0x0000000000000028       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_aranges
+                0x0000000000000048       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_aranges
+                0x0000000000000068       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_aranges
+                0x0000000000000088       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .debug_aranges
+                0x00000000000000a8       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_aranges
+                0x00000000000000c8       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_aranges
+                0x00000000000000e8       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_aranges
+                0x0000000000000108       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .debug_aranges
+                0x0000000000000128       0x28 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
 .debug_pubnames
+                0x0000000000000000      0x241
  *(.debug_pubnames)
+ .debug_pubnames
+                0x0000000000000000       0x26 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_pubnames
+                0x0000000000000026       0xce c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_pubnames
+                0x00000000000000f4       0x1d c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_pubnames
+                0x0000000000000111       0x38 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .debug_pubnames
+                0x0000000000000149       0x1e c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_pubnames
+                0x0000000000000167       0x1e c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_pubnames
+                0x0000000000000185       0x31 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_pubnames
+                0x00000000000001b6       0x39 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .debug_pubnames
+                0x00000000000001ef       0x52 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
 
-.debug_info     0x0000000000000000      0x104
+.debug_info     0x0000000000000000     0x4cff
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x0000000000000000       0x82 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_info    0x0000000000000082       0x82 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_info    0x0000000000000000       0x82 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_info    0x0000000000000082      0x983 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_info    0x0000000000000a05      0xce1 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_info    0x00000000000016e6      0x13f c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_info    0x0000000000001825      0x96c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .debug_info    0x0000000000002191      0x975 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_info    0x0000000000002b06       0x76 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .debug_info    0x0000000000002b7c      0x19e c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_info    0x0000000000002d1a      0xbde c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_info    0x00000000000038f8      0x94a c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .debug_info    0x0000000000004242      0xa3b c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .debug_info    0x0000000000004c7d       0x82 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.debug_abbrev   0x0000000000000000       0x24
+.debug_abbrev   0x0000000000000000      0xdd8
  *(.debug_abbrev)
- .debug_abbrev  0x0000000000000000       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_abbrev  0x0000000000000012       0x12 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_abbrev  0x0000000000000000       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_abbrev  0x0000000000000012      0x196 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_abbrev  0x00000000000001a8      0x222 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_abbrev  0x00000000000003ca       0xcb c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_abbrev  0x0000000000000495      0x176 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .debug_abbrev  0x000000000000060b      0x19a c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_abbrev  0x00000000000007a5       0x33 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .debug_abbrev  0x00000000000007d8       0xc0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_abbrev  0x0000000000000898      0x1e8 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_abbrev  0x0000000000000a80      0x160 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .debug_abbrev  0x0000000000000be0      0x1e6 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .debug_abbrev  0x0000000000000dc6       0x12 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.debug_line     0x0000000000000000       0xd6
+.debug_line     0x0000000000000000      0xb60
  *(.debug_line)
- .debug_line    0x0000000000000000       0x6a c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_line    0x000000000000006a       0x6c c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+ .debug_line    0x0000000000000000       0x6a c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_line    0x000000000000006a       0xf0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_line    0x000000000000015a      0x246 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_line    0x00000000000003a0       0xd0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_line    0x0000000000000470       0xec c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .debug_line    0x000000000000055c       0xf0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_line    0x000000000000064c       0x1d c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+ .debug_line    0x0000000000000669      0x10b c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_line    0x0000000000000774      0x175 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_line    0x00000000000008e9       0xda c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+ .debug_line    0x00000000000009c3      0x131 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+ .debug_line    0x0000000000000af4       0x6c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
 
-.debug_frame
+.debug_frame    0x0000000000000000      0x1bc
  *(.debug_frame)
+ .debug_frame   0x0000000000000000       0x30 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_frame   0x0000000000000030       0x38 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_frame   0x0000000000000068       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_frame   0x0000000000000088       0x30 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+ .debug_frame   0x00000000000000b8       0x2c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_frame   0x00000000000000e4       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_frame   0x0000000000000104       0x4c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_frame   0x0000000000000150       0x6c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
 
-.debug_str
+.debug_str      0x0000000000000000      0xa1a
  *(.debug_str)
+ .debug_str     0x0000000000000000      0x45f c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+                                        0x4dd (taille avant relaxe)
+ .debug_str     0x000000000000045f      0x209 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+                                        0x6b2 (taille avant relaxe)
+ .debug_str     0x0000000000000668       0xc0 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+                                        0x15f (taille avant relaxe)
+ .debug_str     0x0000000000000728       0x6e c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mlock.o)
+                                        0x4e4 (taille avant relaxe)
+ .debug_str     0x0000000000000796       0x90 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+                                        0x4cc (taille avant relaxe)
+ .debug_str     0x0000000000000826       0x45 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strlen.o)
+                                        0x123 (taille avant relaxe)
+ .debug_str     0x000000000000086b       0xa5 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+                                        0x190 (taille avant relaxe)
+ .debug_str     0x0000000000000910       0x3c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+                                        0x604 (taille avant relaxe)
+ .debug_str     0x000000000000094c       0x5a c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-impure.o)
+                                        0x4db (taille avant relaxe)
+ .debug_str     0x00000000000009a6       0x74 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
+                                        0x500 (taille avant relaxe)
 
-.debug_loc
+.debug_loc      0x0000000000000000     0x10f2
  *(.debug_loc)
+ .debug_loc     0x0000000000000000       0x3c c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-malloc.o)
+ .debug_loc     0x000000000000003c      0x7f4 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_loc     0x0000000000000830      0x101 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-memset.o)
+ .debug_loc     0x0000000000000931       0x5b c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-sbrkr.o)
+ .debug_loc     0x000000000000098c      0x167 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-strncpy.o)
+ .debug_loc     0x0000000000000af3      0x418 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-freer.o)
+ .debug_loc     0x0000000000000f0b      0x1e7 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-reent.o)
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -728,8 +1105,9 @@ LOAD c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float
 
 /DISCARD/
  *(.note.GNU-stack)
-OUTPUT(C:\Users\jpm\Desktop\x.2\source\main32.elf elf32-littlemips)
+OUTPUT(C:\Users\jpm\Documents\Pinguino\x.2\source\main32.elf elf32-littlemips)
 
-.debug_ranges   0x0000000000000000       0x40
- .debug_ranges  0x0000000000000000       0x20 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
- .debug_ranges  0x0000000000000020       0x20 c:/users/jpm/desktop/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
+.debug_ranges   0x0000000000000000       0xc0
+ .debug_ranges  0x0000000000000000       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crti.o
+ .debug_ranges  0x0000000000000020       0x80 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/../../../../mips-elf/lib/soft-float/el\libc.a(lib_a-mallocr.o)
+ .debug_ranges  0x00000000000000a0       0x20 c:/users/jpm/documents/pinguino/x.2/win32/p32/bin/../lib/gcc/mips-elf/4.5.2/soft-float/el/crtn.o
