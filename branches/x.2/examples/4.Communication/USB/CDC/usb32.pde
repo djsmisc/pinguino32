@@ -14,7 +14,7 @@ void setup()
 void loop()
 {
 	delay(100);
-	length=CDC.read(chaine,64);
+	length=CDC.read(chaine);
 	if (length !=0) Serial.printf("longueur=%d\n\r",length);
 	if (length > 0) CDC.print(chaine,length);
 }

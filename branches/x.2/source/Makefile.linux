@@ -100,7 +100,8 @@ link:
 		$(OBJDIR)/usb/libcdc.a\
 		$(OBJDIR)/android/libandroid.a\
 		$(LKRDIR)/ISRwrapper.S\
-		$(INCDIR)/non-free/p32xxxx.h
+		$(INCDIR)/non-free/p32xxxx.h\
+		-lc -lm -lgcc
 
 exec:
 	#----------------------------------------------------------------------------
