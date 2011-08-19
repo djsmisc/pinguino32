@@ -1,48 +1,78 @@
-/*
-	Pinguino example to read ds18b20 1wire temperature sensor
-	Result is sent on usb bus and can be read with temp18b20.py
-	author		Régis Blanchot
-	first release	14/09/2010
-	last update	06/10/2010
-	IDE			Pinguino b9.2
+//
+//
+//
 
-	DS18B20 Connection
-	------------------
-	pin 1: GND
-	pin 2: DQ (Data in/out) must be connected to the PIC
-	pin 3: VDD (+5V)
-	NB : 1-wire bus (DQ line) must have 4K7 pull-up resistor (connected to +5V)
-*/
 
-#define ONEWIREBUS	0		
-#define LEDRUN PORTAbits.RA4	
+
+
+static char data[] = "ls\n";				
+//
+
+typedef enum {
+  MAIN_STATE_WAIT_CONNECT,
+  MAIN_STATE_WAIT_OPEN,
+  MAIN_STATE_WAIT_PROMPT,
+  MAIN_STATE_GOT_PROMPT,
+  MAIN_STATE_RECV
+} MAIN_STATE;
+
+static MAIN_STATE state = MAIN_STATE_WAIT_CONNECT;
+
+//
+
+void ChannelRecv(ADB_CHANNEL_HANDLE h, const void* data, unsigned int data_len) {
+  unsigned int i;
+  for (i = 0; i < data_len; ++i) {
+    serial1printf("%d ",((const unsigned char*) data)[i]);
+  }
+  serial1printf("\r\n");
+  if (state == MAIN_STATE_WAIT_PROMPT) {
+    state = MAIN_STATE_GOT_PROMPT;
+  }
+}
+
+ADB_CHANNEL_HANDLE h;
+
 
 void setup()
 {
-//
-//
-//
-	
-//
+IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
+serial1init(9600);
+serial1printf("bonjour\n\r");
+ADBInit();    							
 }
 
 void loop()
 {
-	DS18B20_Temperature t;
-	u8 temp[4];
-//
-//
-//
-	if (DS18B20Read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
-	{
-//
-		temp[0] = t.sign;			
-		temp[1] = t.integer;		
-		temp[2] = high8(t.fraction);	
-		temp[3] = low8(t.fraction);
-		usbsend(temp, 4);			
-		LEDRUN=LEDRUN^1;
-		Delayms(1000);			
-	}
-}
+unsigned char connected = ADBTasks();
 
+if (!connected) state = MAIN_STATE_WAIT_CONNECT;
+    
+switch(state) 
+	{
+     case MAIN_STATE_WAIT_CONNECT:
+      if (connected) 
+		{
+        serial1printf("ADB connected!");
+        h = ADBOpen("tcp:4567", &ChannelRecv);			
+        state = MAIN_STATE_WAIT_OPEN;
+		}
+      break;
+
+     case MAIN_STATE_WAIT_OPEN:							
+      if (ADBChannelReady(h)) state = MAIN_STATE_RECV;
+      break;
+
+     case MAIN_STATE_WAIT_PROMPT:						
+      break;
+
+     case MAIN_STATE_GOT_PROMPT:						
+        serial1printf("Sending data");
+        ADBWrite(h, data, sizeof data - 1);
+        state = MAIN_STATE_RECV;
+      break;
+
+     case MAIN_STATE_RECV:
+      break;
+    }
+}
