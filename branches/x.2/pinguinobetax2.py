@@ -1498,7 +1498,7 @@ class Pinguino(wx.Frame):
 				sortie=Popen([self.make,\
 						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile.'+self.osdir),\
 						"HOME=" + HOME_DIR,\
-						"PDEDIR=" + os.path.dirname(filename),\
+						"PDEDIR=" + os.path.dirname(filename).replace(" ","\\ "),\
 						"PROC=" + proc,\
 						"BOARD=" + board],\
 						stdout=fichier, stderr=STDOUT)
