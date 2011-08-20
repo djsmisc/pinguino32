@@ -93,6 +93,7 @@ link:
 		$(LKRDIR)\ISRwrapper.S \
 		$(INCDIR)\non-free\p32xxxx.h\
 		-lc -lm -lgcc
+		-lc -lm -lgcc
 
 exec:
 	$(OBJC) -O ihex $(SRCDIR)\main32.elf $(SRCDIR)\main32.hex

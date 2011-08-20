@@ -42,6 +42,21 @@ serial1printf("bonjour\n\r");
 ADBInit();    							
 }
 
+ADB_CHANNEL_HANDLE h;
+
+
+void setup()
+{
+unsigned char i;
+
+IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
+pinmode(1,OUTPUT);
+pinmode(2,OUTPUT);
+pinmode(3,OUTPUT);
+for (i=1;i<4;i++) digitalwrite(i,0);
+ADBInit();    							
+}
+
 void loop()
 {
 unsigned char connected = ADBTasks();

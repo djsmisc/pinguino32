@@ -1,19 +1,36 @@
-if exist C:\Users\jpm\Documents\Pinguino\x.2\source\main32.o @del C:\Users\jpm\Documents\Pinguino\x.2\source\main32.o
-if exist C:\Users\jpm\Documents\Pinguino\x.2\source\main32.elf @del C:\Users\jpm\Documents\Pinguino\x.2\source\main32.elf
-if exist C:\Users\jpm\Documents\Pinguino\x.2\source\main32.hex @del C:\Users\jpm\Documents\Pinguino\x.2\source\main32.hex
-if exist C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o @del C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o
-        1 fichier(s) copi�(s).
-C:\Users\jpm\Documents\Pinguino\x.2\win32\p32\bin\mips-gcc.exe -O2 -EL -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=8192 -Wl,-Map=C:\Users\jpm\Documents\Pinguino\x.2\source\output.map -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO -TC:\Users\jpm\Documents\Pinguino\x.2\p32\lkr\procdefs.ld -TC:\Users\jpm\Documents\Pinguino\x.2\p32\lkr\elf32pic32mx.x -LC:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\usb\libcdc.a -lm -lgcc -lc -fdollars-in-identifiers -IC:\Users\jpm\Documents\Pinguino\x.2\p32\include\non-free -IC:\Users\jpm\Documents\Pinguino\x.2\p32\include\pinguino\basics -IC:\Users\jpm\Documents\Pinguino\x.2\p32\include\pinguino\libc -IC:\Users\jpm\Documents\Pinguino\x.2\p32\include\pinguino\libm -IC:\Users\jpm\Documents\Pinguino\x.2\p32\include\pinguino\libraries -IC:\Users\jpm\Documents\Pinguino\x.2\p32\lkr -IC:\Users\jpm\Documents\Pinguino -IC:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free -o C:\Users\jpm\Documents\Pinguino\x.2\source\main32.elf C:\Users\jpm\Documents\Pinguino\x.2\source\main32.c \
-		C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\crt0.S \
-		C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\processor.o \
-		C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\usb\libcdc.a \
-		C:\Users\jpm\Documents\Pinguino\x.2\p32\obj\non-free\android\libandroid.a \
-		C:\Users\jpm\Documents\Pinguino\x.2\p32\lkr\ISRwrapper.S \
-		C:\Users\jpm\Documents\Pinguino\x.2\p32\include\non-free\p32xxxx.h\
+#----------------------------------------------------------------------------
+#	clean
+#----------------------------------------------------------------------------
+rm -f -v /home/mandon/pinguino32X2/trunk/x.2/source/main32.o
+rm -f -v /home/mandon/pinguino32X2/trunk/x.2/source/main32.elf
+«/home/mandon/pinguino32X2/trunk/x.2/source/main32.elf» supprimé
+rm -f -v /home/mandon/pinguino32X2/trunk/x.2/source/main32.hex
+rm -f -v /home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/processor.o
+«/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/processor.o» supprimé
+#----------------------------------------------------------------------------
+#	copy
+#----------------------------------------------------------------------------
+cp /home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/32MX440F256H.o /home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/processor.o
+#----------------------------------------------------------------------------
+#	link
+#----------------------------------------------------------------------------
+/home/mandon/pinguino32X2/trunk/x.2/linux/p32/bin/mips-elf-gcc -O2 -EL -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=8192 -Wl,-Map=/home/mandon/pinguino32X2/trunk/x.2/source\output.map -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO -T/home/mandon/pinguino32X2/trunk/x.2/p32/lkr/procdefs.ld -T/home/mandon/pinguino32X2/trunk/x.2/p32/lkr/elf32pic32mx.x -L/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/usb/libcdc.a -lm -lgcc -lc -fdollars-in-identifiers -I/home/mandon/pinguino32X2/trunk/x.2/p32/include/non-free -I/home/mandon/pinguino32X2/trunk/x.2/p32/include/pinguino/basics -I/home/mandon/pinguino32X2/trunk/x.2/p32/include/pinguino/libc -I/home/mandon/pinguino32X2/trunk/x.2/p32/include/pinguino/libm -I/home/mandon/pinguino32X2/trunk/x.2/p32/include/pinguino/libraries -I/home/mandon/pinguino32X2/trunk/x.2/p32/lkr -I/home/mandon/programmation/pinguinopde/USB-IOIO -I/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free -o /home/mandon/pinguino32X2/trunk/x.2/source/main32.elf /home/mandon/pinguino32X2/trunk/x.2/source/main32.c\
+		/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/crt0.S\
+		/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/processor.o\
+		/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/usb/libcdc.a\
+		/home/mandon/pinguino32X2/trunk/x.2/p32/obj/non-free/android/libandroid.a\
+		/home/mandon/pinguino32X2/trunk/x.2/p32/lkr/ISRwrapper.S\
+		/home/mandon/pinguino32X2/trunk/x.2/p32/include/non-free/p32xxxx.h\
 		-lc -lm -lgcc
-In file included from C:\Users\jpm\Documents\Pinguino\x.2\source\main32.c:28:0:
-C:\Users\jpm\Documents\Pinguino\x.2\p32\include\pinguino\basics/newlib.c:89:28: warning: 'struct stat' declared inside parameter list
-C:\Users\jpm\Documents\Pinguino\x.2\p32\include\pinguino\basics/newlib.c:89:28: warning: its scope is only this definition or declaration, which is probably not what you want
-C:\Users\jpm\Documents\Pinguino\x.2\win32\p32\bin\mips-objcopy.exe -O ihex C:\Users\jpm\Documents\Pinguino\x.2\source\main32.elf C:\Users\jpm\Documents\Pinguino\x.2\source\main32.hex
-copy C:\Users\jpm\Documents\Pinguino\x.2\source\main32.hex C:\Users\jpm\Documents\Pinguino\x.2\source\main32tmp.hex   
-        1 fichier(s) copi�(s).
+In file included from /home/mandon/pinguino32X2/trunk/x.2/source/main32.c:28:0:
+/home/mandon/pinguino32X2/trunk/x.2/p32/include/pinguino/basics/newlib.c:89:28: warning: 'struct stat' declared inside parameter list
+/home/mandon/pinguino32X2/trunk/x.2/p32/include/pinguino/basics/newlib.c:89:28: warning: its scope is only this definition or declaration, which is probably not what you want
+#----------------------------------------------------------------------------
+#	exec
+#----------------------------------------------------------------------------
+/home/mandon/pinguino32X2/trunk/x.2/linux/p32/bin/mips-elf-objcopy -O ihex /home/mandon/pinguino32X2/trunk/x.2/source/main32.elf /home/mandon/pinguino32X2/trunk/x.2/source/main32.hex
+#----------------------------------------------------------------------------
+#	correct
+#----------------------------------------------------------------------------
+grep --binary --invert-match '^:040000059D006000FA' /home/mandon/pinguino32X2/trunk/x.2/source/main32.hex > /home/mandon/pinguino32X2/trunk/x.2/source/temp
+mv /home/mandon/pinguino32X2/trunk/x.2/source/temp /home/mandon/pinguino32X2/trunk/x.2/source/main32.hex      
