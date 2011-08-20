@@ -1,6 +1,8 @@
 
 
 
+
 #include <adb.h>
-#include <pinguinoserial1.c>
+#include <digitalw.c>
+#include <math.h>
 #include <typedef.h>

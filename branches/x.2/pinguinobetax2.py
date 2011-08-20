@@ -90,21 +90,120 @@
 # import
 # ------------------------------------------------------------------------------
 
-import wx
-import wx.aui
-import editeur
-import os
-import re
-import shutil				# to use cp function
-from subprocess import Popen,PIPE,STDOUT
-import threading			# thread functions
 import sys
-import time					# to benchmark algorithms
-import gettext				# to activate multi-language support
-import locale				# to access system localization functionalities
-import webbrowser			# to launch website from the IDE
-import argparse			# to write user-friendly command-line interfaces
-import serial				# adds the PySerial library (http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download)
+import os
+import time
+
+print
+fichier = open(os.path.join(sys.path[0].replace(" ","\\ ")+'/Pinguino.log'), 'w+')
+fichier.writelines('Pinguino started at '+str(time.asctime( time.localtime(time.time()))+'\n' )
+)
+
+try:
+	import wx
+	fichier.writelines('WX python successfully loaded\n')
+except:
+	fichier.writelines('WX python failed\n')
+	fichier.writelines('Try to re-install WXPython 2.8\n')
+	fichier.close()
+	sys.exit()
+
+try:
+	import wx.aui
+	fichier.writelines('WX.AUI successfully loaded\n')
+except:
+	fichier.writelines('WX.AUI failed\n')
+	fichier.writelines('Try to re-install WXPython 2.8\n')
+	fichier.close()
+	sys.exit()
+
+try:	
+	import editeur
+	fichier.writelines('Editeur successfully loaded\n')
+except:
+	fichier.writelines('Editeur failed\n')
+	fichier.writelines('Try to re-install Pinguino\n')
+	fichier.close()
+	sys.exit()
+
+try:	
+	import re
+	fichier.writelines('Regex successfully loaded\n')
+except:
+	fichier.writelines('Regex failed\n')
+	fichier.writelines('Try to re-install PyReg\n')
+	fichier.close()
+	sys.exit()
+	
+try:	
+	import shutil				# to use cp function
+	fichier.writelines('Shutil successfully loaded\n')
+except:
+	fichier.writelines('Shutil failed\n')
+	fichier.writelines('Try to re-install PyShutil\n')
+	fichier.close()
+	sys.exit()
+	
+try:	
+	from subprocess import Popen,PIPE,STDOUT
+	fichier.writelines('Subprocess successfully loaded\n')
+except:
+	fichier.writelines('Subprocess failed\n')
+	fichier.writelines('Try to re-install Python\n')
+	fichier.close()
+	sys.exit()
+
+try:	
+	import threading			# thread functions
+	fichier.writelines('Threading successfully loaded\n')
+except:
+	fichier.writelines('Threading failed\n')
+	fichier.close()
+	sys.exit()
+
+try:
+	import gettext				# to activate multi-language support
+	fichier.writelines('GetText successfully loaded\n')
+except:
+	fichier.writelines('GetText failed\n')
+	fichier.close()
+	sys.exit()
+	
+try:	
+	import locale				# to access system localization functionalities
+	fichier.writelines('Locale successfully loaded\n')
+except:
+	fichier.writelines('locale failed\n')
+	fichier.close()
+	sys.exit()
+	
+try:
+	import webbrowser			# to launch website from the IDE
+	fichier.writelines('WebBrowser successfully loaded\n')
+except:
+	fichier.writelines('Webbrowser failed\n')
+	fichier.close()
+	sys.exit()
+	
+try:
+	import argparse			# to write user-friendly command-line interfaces
+	fichier.writelines('AgParse successfully loaded\n')
+except:
+	fichier.writelines('Agparse python failed to be loaded\n')
+	fichier.writelines('Try to re-install python agparse\n')
+	fichier.close()
+	sys.exit()
+
+try:	
+	import serial			# adds the PySerial library (http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download)
+	fichier.writelines('Serial successfully loaded\n')
+except:
+	fichier.writelines('Serial python failed to be loaded\n')
+	fichier.writelines('Try to re-install PySerial\n')
+	fichier.close()
+	sys.exit()
+
+fichier.close()		
 
 # ------------------------------------------------------------------------------
 # current version
