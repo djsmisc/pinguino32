@@ -1,8 +1,4 @@
 
 
-
-
-#include <adb.h>
+#include <__adb.c>
 #include <digitalw.c>
-#include <math.h>
-#include <typedef.h>
