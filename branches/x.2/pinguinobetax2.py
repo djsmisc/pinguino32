@@ -394,6 +394,20 @@ class Pinguino(wx.Frame):
 			self.Centre()
 
 		loc = locale.getdefaultlocale()[0][0:2]
+		# ----------------------------------------------------------------------
+		# By Wagner de Queiroz (pt_BR Language Check)  
+		# 2010-Mar,01
+		# Begin
+		# ----------------------------------------------------------------------       
+		if loc == "pt":
+			loc = locale.getdefaultlocale()[0][0:5]
+		if loc != "pt_BR":
+			loc = locale.getdefaultlocale()[0][0:2]              
+		# ----------------------------------------------------------------------
+		# By Wagner de Queiroz (pt_BR Language Check)  
+		# 2010-Mar,01
+		# END
+		# ----------------------------------------------------------------------
 		self.lang = gettext.translation('pinguino', LOCALE_DIR, languages=[loc], fallback=True)
 		_=self.lang.ugettext
 		
@@ -945,10 +959,11 @@ class Pinguino(wx.Frame):
 		info.AddArtist('Laurent Costes')
 		info.AddArtist('Daniel Rodríguez')
 
-		info.AddTranslator('Joan Espinoza Spanish, Portuguese')
-		info.AddTranslator('Marin Purgar Croatian')
-		info.AddTranslator('Wim Heirman Dutch')
-		info.AddTranslator('Vasile Guta Ciucur Romanian')
+		info.AddTranslator('Joan Espinoza: Spanish, Portuguese')
+		info.AddTranslator('Marin Purgar: Croatian')
+		info.AddTranslator('Wim Heirman: Dutch')
+		info.AddTranslator('Vasile Guta Ciucur: Romanian')
+		info.AddTranslator('Wagner de Queiroz: Brazilian portuguese')
 
 		wx.AboutBox(info)  
 			
