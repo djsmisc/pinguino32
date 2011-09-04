@@ -1,4 +1,4 @@
-Adb.init ADBInit#include <__adb.c>
+Adb.init _ADBInit#include <__adb.c>
 Adb.open _ADBOpen#include <__adb.c>
 Adb.refresh ADBTasks#include <__adb.c>
 Adb.send ADBSend#include <__adb.c>
