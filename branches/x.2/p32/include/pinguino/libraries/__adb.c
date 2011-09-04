@@ -30,6 +30,8 @@
 #define __ADB__
 
 #include <adb.h>
+#include <interrupt.c>
+#include <delay.c>
 
 #ifndef ADBBUFFERLENGTH
 #define ADBBUFFERLENGTH 1024          		// rx buffer length
@@ -89,13 +91,24 @@ void ADBreceive(ADB_CHANNEL_HANDLE h, const void* data, unsigned int data_len)
 			
 }
 
+unsigned char _ADBInit()
+{
+	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
+	ADBInit();
+}
+
 unsigned char _ADBOpen()
 {
 	u32 wait=0;
 	
 	h = ADBOpen("tcp:2000", &ADBreceive);
-	while ((wait<100000)||(ADBChannelReady(h)));
-	if (wait<100000) return TRUE;
+	while ((wait<1000)&&(!ADBChannelReady(h))) 
+		{
+			ADBTasks();
+			Delayms(1);
+			wait++;
+		}
+	if (wait<1000) return TRUE;
 	else return FALSE;
 }
 
@@ -115,6 +128,7 @@ u16 ADBRead(u8 *buffer)
 			data_len+=(adbrx[adbrpointer++]>>8);
 			for (i=0;i<data_len;i++)
 				buffer[i]=adbrx[adbrpointer++];
+			return(data_len);
 		}
 }
 
