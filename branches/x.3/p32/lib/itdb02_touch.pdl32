@@ -1,0 +1,7 @@
+TFT24.setTouch touch_setTouch#include <itdb02/itdb02_touch.c>
+TFT24.InitTouch touch_initTouch#include <itdb02/itdb02_touch.c>
+TFT24.read touch_read#include <itdb02/itdb02_touch.c>
+TFT24.dataAvailable touch_dataAvailable#include <itdb02/itdb02_touch.c>
+TFT24.getX touch_getX#include <itdb02/itdb02_touch.c>
+TFT24.getY touch_getY#include <itdb02/itdb02_touch.c>
+TFT24.setPrecision touch_setPrecision#include <itdb02/itdb02_touch.c>

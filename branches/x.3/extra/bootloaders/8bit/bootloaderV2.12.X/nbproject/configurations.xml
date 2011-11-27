@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="62">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="LoadableFiles"
+                   displayName="Loadable Files"
+                   projectFiles="true">
+      <itemPath>/home/regis/Hobbies/Electronique/Projets/Pinguino/local/trunk/extra/bootloaders/8bit/bootloaderV2.12.hex</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Important Files"
+                   displayName="Important Files"
+                   projectFiles="false">
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="default" type="4">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <targetDevice>PIC18F4550</targetDevice>
+        <targetHeader></targetHeader>
+        <platformTool>PICkit3PlatformTool</platformTool>
+        <languageToolchain></languageToolchain>
+        <languageToolchainVersion></languageToolchainVersion>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+      </compileType>
+      <PICkit3PlatformTool>
+      </PICkit3PlatformTool>
+    </conf>
+  </confs>
+</configurationDescriptor>
