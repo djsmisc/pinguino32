@@ -2,17 +2,19 @@
 	Blink a LED
 */
 
-#define LED	PORTDbits.RD1
+#define myLED PORTA
 
 void setup()
 {                
 	// EEPROM MARK used by the bootloader
 	EEPROM.write(0x00, 0x5A);
-	TRISDbits.TRISD1	= OUTPUT;     
+	TRISA = OUTPUT;     
 }
 
 void loop()
 {
-	LED = LED ^ 1;
+	PORTA = 0x00;
+	delay(1000);
+	PORTA = 0xFF;
 	delay(1000);
 }

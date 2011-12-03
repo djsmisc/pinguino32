@@ -46,7 +46,7 @@ from check import *
 # current version
 # ------------------------------------------------------------------------------
 
-pinguino_version="x.2"
+pinguino_version="x.3"
 
 # ------------------------------------------------------------------------------
 # paths
@@ -919,27 +919,22 @@ class Pinguino(wx.Frame):
 							execfile(os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'vascoboot1.3.py'))
 						else:# linux or mac os
 							if self.curBoard.bldr == 'vasco':
-								print str(self.curBoard.vendor), str(self.curBoard.product),
 								sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'docker'),
-											'-v', str(self.curBoard.vendor),
-											'-p', str(self.curBoard.product),
+											'-v', hex(self.curBoard.vendor),
+											'-p', hex(self.curBoard.product),
 											'write', filename + '.hex'],
 											stdout=fichier, stderr=STDOUT)
-								sortie.communicate()
-								fichier.seek(0)
-								self.displaymsg(fichier.read(),0)
-								fichier.close()
 							else:# diolan bootloader
 								sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'fw_update'),
 											'-e', '-v', '-w',
-											'-vid',	str(self.curBoard.vendor),
-											'-pid',	str(self.curBoard.product),
+											'-vid',	hex(self.curBoard.vendor),
+											'-pid',	hex(self.curBoard.product),
 											'-ix',	filename + '.hex'],
 											stdout=fichier, stderr=STDOUT)
 					else:# 32-bit
 						sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.u32),
-									'-v', str(self.curBoard.vendor),
-									'-p', str(self.curBoard.product),
+									'-v', hex(self.curBoard.vendor),
+									'-p', hex(self.curBoard.product),
 									'-w', filename + '.hex',
 									'-r',
 									'-n'],
@@ -1235,8 +1230,8 @@ class Pinguino(wx.Frame):
 		self.adddefine("#define DEBUG_MODE " + DEBUG_STR)
 
 		# board
-		if board.arch == 8:
-			self.adddefine("#define " + board.board)
+		#if board.arch == 8:
+		#	self.adddefine("#define " + board.board)
 
 		# add #include and #define from user.c to define.h
 		fichier = open(os.path.join(SOURCE_DIR, 'user.c'), 'r')

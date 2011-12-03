@@ -184,7 +184,8 @@ void I2C_printf(u8 address, char *fmt, ...)
 u8 I2C_send(u8 address, u8 byte)
 {
 	I2C_sendID(address, I2C_WRITE);
-	if (I2C_writechar(byte) == 0) return (0);
+	if (I2C_writechar(byte) == 0)
+		return (0);
 	I2C_stop();
 	return (1);
 }

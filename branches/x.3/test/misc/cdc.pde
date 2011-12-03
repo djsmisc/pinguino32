@@ -1,17 +1,17 @@
 // CDC.printf with long type
 // Régis Blanchot 2010
+// sudo minicom -o -D /dev/ttyACM0
 
-u32 i = 0x7000;
-//float f = 3.14;
+u32 i = 0;
+float pi = 3.14159265;
 
 void setup()
 {
 	// wait for a key to start
-	while (CDC.getKey() != '\r');
+	//while (CDC.getKey() != '\r');
 }
 
 void loop()
 {
-	CDC.printf("%lx\r\n", i++);
-	//CDC.printf("%f\r\n", f);
+	CDC.printf("%ld\t%f\r\n", i++, i*pi);
 }
