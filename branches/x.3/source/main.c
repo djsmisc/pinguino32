@@ -124,10 +124,9 @@ void pinguino_main(void)
 /* Interrupt vectors */
 
 #ifdef diolan
-#pragma code high_priority_isr 0x808
-#else//vasco
+//#pragma code high_priority_isr 0x808
+#else //vasco
 #pragma code high_priority_isr 0x2020
-#endif
 void high_priority_isr(void) interrupt
 {
 #ifdef __USBCDC
@@ -190,20 +189,17 @@ void high_priority_isr(void) interrupt
 	userhighinterrupt();
 #endif
 }
+#endif
 
 #ifdef diolan
-#pragma code low_priority_isr 0x818
-#else//vasco
+//#pragma code low_priority_isr 0x818
+#else //vasco
 #pragma code low_priority_isr 0x4000
-#endif
+
 void low_priority_isr(void) interrupt
 {
 #ifdef USERINT
 	userinterrupt();
 #endif
 }
-
-void pinguino_interrupt()
-{
-}
-
+#endif

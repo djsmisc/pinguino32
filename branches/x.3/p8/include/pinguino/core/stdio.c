@@ -4,7 +4,7 @@
 	PURPOSE:		alternative printf and sprintf functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 nov. 2010
-	LAST RELEASE:	25 nov. 2011
+	LAST RELEASE:	26 nov. 2011
 	----------------------------------------------------------------------------
 	TODO : floating point support + vsprintf
 	----------------------------------------------------------------------------
@@ -276,7 +276,7 @@ static int pprintfl(char **out, float value, int width, int pad)
 	while (int_part)
 	{
 		t = int_part % 10;
-		*--string = t + '0';
+		*--string = '0' + t;
 		int_part /= 10;
 	}
 
