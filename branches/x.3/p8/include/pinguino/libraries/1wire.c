@@ -1,7 +1,7 @@
 /*	----------------------------------------------------------------------------
 	FILE:			1wire.c
 	PROJECT:		pinguino
-	PURPOSE:		Serial Peripheral Interface functions
+	PURPOSE:		One wire Interface Functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	28 sept. 2010
 	LAST RELEASE:	14 jan. 2011

@@ -135,6 +135,7 @@ class PIC32_Pinguino:
 	name='PIC32 Pinguino'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX440F256H'
 	board='PIC32_PINGUINO'
 	vendor=MICROCHIP_ID
@@ -148,11 +149,12 @@ class PIC32_Pinguino_OTG:
 	name='PIC32 Pinguino OTG'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX440F256H'
 	board='PIC32_PINGUINO_OTG'
 	vendor=MICROCHIP_ID
 	product=PIC32_ID
-	memstart=0x00000
+	memstart=0x00000 #0x9D000000
 	memend=0x40000
 	shortarg='-O'
 	longarg='--olimex440OTG'
@@ -161,6 +163,7 @@ class PIC32_Pinguino_Micro:
 	name='PIC32 Pinguino Micro'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX440F256H'
 	board='PIC32_PINGUINO_Micro'
 	vendor=MICROCHIP_ID
@@ -174,6 +177,7 @@ class Emperor_460:
 	name='Emperor 460'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX460F512L'
 	board='EMPEROR460'
 	vendor=MICROCHIP_ID
@@ -187,6 +191,7 @@ class Emperor_795:
 	name='Emperor 795'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX795F512L'
 	board='EMPEROR795'
 	vendor=MICROCHIP_ID
@@ -200,6 +205,7 @@ class UBW32_460:
 	name='UBW32 460'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX460F512L'
 	board='UBW32_460'
 	vendor=MICROCHIP_ID
@@ -213,6 +219,7 @@ class UBW32_795:
 	name='UBW32 795'
 	id=wx.NewId()
 	arch=32
+	bldr='microchip'
 	proc='32MX795F512L'
 	board='UBW32_795'
 	vendor=MICROCHIP_ID

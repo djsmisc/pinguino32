@@ -33,7 +33,8 @@ import time
 # !!! use True at your own risc as it could erase your bootloader !!!
 # ------------------------------------------------------------------------------
 
-DEV = True
+#DEV = True
+DEV = False
 
 HOME_DIR	= os.getcwd()
 fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
@@ -230,17 +231,19 @@ except:
 	fichier.close()
 	perror()
 
-if DEV:
-	try:
-		from uploader import uploader	# pinguino uploader class
-		#import puu					# pinguino uploader class
-		fichier.writelines('Pinguino Uploader successfully loaded\n')
-	except:
-		fichier.writelines('Pinguino Uploader failed\n')
-		fichier.writelines('You should have uploader.py at the root\n')
-		fichier.close()
-		perror()
+try:
+	from uploader import uploader	# pinguino uploader class
+	#from uploaderVSC import uploaderVSC	# pinguino uploader class
+	#from uploaderDLN import uploaderDLN	# pinguino uploader class
+	#from uploaderMCC import uploaderMCC	# pinguino uploader class
+	fichier.writelines('Pinguino Uploader successfully loaded\n')
+except:
+	fichier.writelines('Pinguino Uploader failed\n')
+	fichier.writelines('You should have uploaderXXX.py at the root\n')
+	fichier.close()
+	perror()
 
+if DEV:
 	try:
 		import pysvn
 		fichier.writelines('pySVN successfully loaded\n')

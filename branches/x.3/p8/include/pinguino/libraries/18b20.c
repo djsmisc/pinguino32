@@ -1,7 +1,7 @@
 /*	----------------------------------------------------------------------------
-	FILE:				18b20.c
-	PROJECT:			Pinguino
-	PURPOSE:			One wire driver to use with DS18B20 digital temperature sensor.
+	FILE:			18b20.c
+	PROJECT:		Pinguino
+	PURPOSE:		One wire driver to use with DS18B20 digital temperature sensor.
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	28 sept. 2010
 	LAST RELEASE:	14 jan. 2011
