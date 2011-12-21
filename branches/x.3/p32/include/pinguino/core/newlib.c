@@ -57,25 +57,13 @@ int open(const char *name, int flags, int mode)
 {	
 	if (!strcmp(name,"SERIAL1")) 
 	{
-		//SerialConfigure(UART1, UART_ENABLE,	UART_RX_TX_ENABLED,	9600);
-		SerialPinConfigure(UART1, UART_ENABLE_PINS_TX_RX_ONLY);
-		SerialSetDataRate(UART1, 9600);
-		SerialSetLineControl(UART1, UART_8_BITS_NO_PARITY | UART_STOP_BITS_1);
-		SerialIntConfigure(UART1, INT_PRIORITY_3, INT_SUBPRIORITY_3);
-		SerialEnable(UART1, UART_ENABLE, UART_RX_TX_ENABLED);		
-		SerialFlush(UART1);
+		SerialConfigure(UART1, UART_ENABLE,	UART_RX_TX_ENABLED,	9600);
 		return(1);
 	}
 
 	if (!strcmp(name,"SERIAL2")) 
 	{
-		//SerialConfigure(UART2, UART_ENABLE,	UART_RX_TX_ENABLED,	9600);
-		SerialPinConfigure(UART2, UART_ENABLE_PINS_TX_RX_ONLY);
-		SerialSetDataRate(UART2, 9600);
-		SerialSetLineControl(UART2, UART_8_BITS_NO_PARITY | UART_STOP_BITS_1);
-		SerialIntConfigure(UART2, INT_PRIORITY_3, INT_SUBPRIORITY_3);
-		SerialEnable(UART2, UART_ENABLE, UART_RX_TX_ENABLED);		
-		SerialFlush(UART2);
+		SerialConfigure(UART2, UART_ENABLE,	UART_RX_TX_ENABLED,	9600);
 		return(2);
 	}
 	

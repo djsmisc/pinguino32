@@ -24,6 +24,10 @@
 # ------------------------------------------------------------------------------
 # changelog (see also file ChangeLog)
 # ------------------------------------------------------------------------------
+# x.3 regis blanchot
+# TODO: pinguino universal uploader class
+# TODO: pinguino debug stream class
+#
 # x.2 regis blanchot
 # multi-architecture support (8 and 32-bit)
 # multi-board support
@@ -33,8 +37,6 @@
 # pinguino check list class (jp.mandon)
 # pinguino boards list class
 # pinguino version control class
-# TODO: pinguino universal uploader class
-# TODO: pinguino debug stream class
 
 # ------------------------------------------------------------------------------
 # check dependencies
@@ -907,43 +909,13 @@ class Pinguino(wx.Frame):
 			filename = self.editor.GetPath()
 			filename, extension = os.path.splitext(filename)
 			if os.path.exists(filename + '.hex'):
-				if DEV:
-					u = uploader()
-					u.writeHex(self.logwindow, filename + '.hex', self.curBoard)
-				else:
-					self.displaymsg("",1)
-					fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
-					if self.curBoard.arch == 8:
-						if sys.platform == 'win32':
-							sys.argv = ["vascoboot1.3.py", filename + '.hex']
-							execfile(os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'vascoboot1.3.py'))
-						else:# linux or mac os
-							if self.curBoard.bldr == 'vasco':
-								sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'docker'),
-											'-v', hex(self.curBoard.vendor),
-											'-p', hex(self.curBoard.product),
-											'write', filename + '.hex'],
-											stdout=fichier, stderr=STDOUT)
-							else:# diolan bootloader
-								sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', 'fw_update'),
-											'-e', '-v', '-w',
-											'-vid',	hex(self.curBoard.vendor),
-											'-pid',	hex(self.curBoard.product),
-											'-ix',	filename + '.hex'],
-											stdout=fichier, stderr=STDOUT)
-					else:# 32-bit
-						sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.u32),
-									'-v', hex(self.curBoard.vendor),
-									'-p', hex(self.curBoard.product),
-									'-w', filename + '.hex',
-									'-r',
-									'-n'],
-									stdout=fichier, stderr=STDOUT)
-					# display uploader messages
-					sortie.communicate()
-					fichier.seek(0)
-					self.displaymsg(fichier.read(),0)
-					fichier.close()
+				if self.curBoard.bldr == 'vasco':
+					u = uploaderVSC()
+				elif self.curBoard.bldr == 'diolan':
+					u = uploaderDLN()
+				elif self.curBoard.bldr == 'microchip':
+					u = uploaderMCC()
+				u.writeHex(self.logwindow, filename + '.hex', self.curBoard)
 			else:# no file
 				dlg = wx.MessageDialog(self,
 						self.translate('File must be verified/compiled before upload'),
@@ -1363,6 +1335,7 @@ class Pinguino(wx.Frame):
 						"--optimize-cmp",\
 						"--optimize-df",\
 						"-p" + board.proc,\
+						"-D" + board.board,\
 						"-D" + board.bldr,\
 						"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 						"-I" + os.path.join(P8_DIR, 'include'),\

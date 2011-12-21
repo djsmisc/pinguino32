@@ -31,13 +31,7 @@
 
 void serial2init(u32 speed)
 {
-	//SerialConfigure(UART2, UART_ENABLE,	UART_RX_TX_ENABLED,	speed);
-	SerialPinConfigure(UART2, UART_ENABLE_PINS_TX_RX_ONLY);
-	SerialSetDataRate(UART2, speed);
-	SerialSetLineControl(UART2, UART_8_BITS_NO_PARITY | UART_STOP_BITS_1);
-	SerialIntConfigure(UART2, INT_PRIORITY_3, INT_SUBPRIORITY_3);
-	SerialEnable(UART2, UART_ENABLE, UART_RX_TX_ENABLED);		
-	SerialFlush(UART2);
+	SerialConfigure(UART2, UART_ENABLE,	UART_RX_TX_ENABLED,	speed);
 }
 
 void serial2printf(char *fmt, ...)		

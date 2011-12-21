@@ -41,14 +41,14 @@ class uploader:
 	# --------------------------------------------------------------------------
 
 	INTERFACE_ID					=	0x00
-	TIMEOUT							=	200
+	TIMEOUT							=	1000
 	IN_EP							=	0x81
 	OUT_EP							=	0x01
 	ACTIVE_CONFIG					=	0
-	ERASE_CMD						=	0
 	RESET_CMD						=	0
 	BOOT_CMD_SIZE					=	0
 	BLOCKSIZE						=	0
+	BASE_ADDRESS					=	0
 	
 	# Device family
 	DEVICE_FAMILY_PIC18				=	0x01
@@ -116,7 +116,6 @@ class uploader:
 	VSC_ACTIVE_CONFIG				=	2
 
 	# Microchip Hid bootloader commands
-	# sources : http://mphidflash.googlecode.com/svn-history/r2/trunk/
 	# --------------------------------------------------------------------------
 
 	MCC_QUERY_DEVICE_CMD			=	0x02	# what regions can be programmed, and what type of memory is the region
@@ -135,7 +134,7 @@ class uploader:
 	MCC_UNLOCKCONFIG_CMD			=	0x00	# sub-command for the MCC_ERASE_DEVICE_CMD
 	MCC_LOCKCONFIG_CMD				=	0x01	# sub-command for the MCC_ERASE_DEVICE_CMD
 
-	# Query Device Response
+	# Query Device Response "Types"
 	TypeProgramMemory				=	0x01	# when the host sends a QUERY_DEVICE command, need to respond by populating a list of valid memory regions that exist in the device (and should be programmed)
 	TypeEEPROM						=	0x02
 	TypeConfigWords					=	0x03
@@ -170,6 +169,9 @@ class uploader:
 	ERR_EOL							=	16
 
 # ------------------------------------------------------------------------------
+	def bytes(*b):
+		return "".join([chr(x) for x in b])
+# ------------------------------------------------------------------------------
 	def txtWrite(self, output, message):
 		""" display message in the log window """
 		#if gui==True:
@@ -178,16 +180,16 @@ class uploader:
 		#	print message
 		return
 # ------------------------------------------------------------------------------
-	def getDevice(self, vendor, product):
+	def getDevice(self, board):
 		""" get list of USB devices and search for pinguino """
 		busses = usb.busses()
 		for bus in busses:
 			for device in bus.devices:
-				if device.idVendor == vendor and device.idProduct == product:
+				if device.idVendor == board.vendor and device.idProduct == board.product:
 					return device
 		return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
-	def initDevice(self, device):
+	def initDevice(self, device, board):
 		""" init pinguino device """
 		#conf = device.configurations[0]
 		#print "confs", device.configurations
@@ -209,19 +211,20 @@ class uploader:
 			handle.claimInterface(self.INTERFACE_ID)
 			#handle.setAltInterface(self.INTERFACE_ID)
 			#handle.reset()
-			handle.resetEndpoint(self.OUT_EP)
-			handle.clearHalt(self.OUT_EP)
 			return handle
 		return self.ERR_USB_INIT1
 # ------------------------------------------------------------------------------
 	def closeDevice(self, handle):
 		handle.releaseInterface()
 # ------------------------------------------------------------------------------
-	def usbWrite(self, handle, bootloader, usbBuf):
+	def getDeviceName(self, handle):  
+		return handle.getString(2, 40)
+# ------------------------------------------------------------------------------
+	def usbWrite(self, board, handle, usbBuf):
 		"""	Write a data packet to currently-open USB device """
 
 		#return self.ERR_NONE
-		if bootloader == 'vasco':
+		if board.bldr == 'vasco':
 			sent_bytes = handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
 		else:
 			sent_bytes = handle.interruptWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
@@ -231,40 +234,33 @@ class uploader:
 		else:
 			return self.ERR_USB_WRITE
 # ------------------------------------------------------------------------------
+	def complete(self, board, handle):
+		self.txtWrite(output, "completing ...\n")
+		# command
+		cmd = self.MCC_PROGRAM_COMPLETE_CMD
+		handle.interruptWrite(self.MCC_OUT_EP, chr(cmd), self.TIMEOUT)
+# ------------------------------------------------------------------------------
 	def queryDevice(self, handle):
-		usbBuf = [0] * 64
-		usbBuf[0] = self.MCC_QUERY_DEVICE_CMD
-		handle.interruptWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
-		return 0
-		"""
-		usbBuf = handle.interruptRead(self.MCC_IN_EP, 1, self.TIMEOUT) 
+		# command
+		cmd = self.MCC_QUERY_DEVICE_CMD
+		handle.interruptWrite(self.MCC_OUT_EP, chr(cmd), self.TIMEOUT)
+		usbBuf = handle.interruptRead(self.MCC_IN_EP, 1, self.TIMEOUT)
 		j=3
 		while usbBuf[j] != self.TypeEndOfTypeList:
-			print j
 			if usbBuf[j] == self.TypeProgramMemory:
 				print usbBuf[j + 5]
 				bf=1
 				self.txtWrite(output, ": %d bytes free" % bf)
 			j = j + 9
-		"""
-# ------------------------------------------------------------------------------
-	def complete(self, handle):
-		return handle.interruptWrite(self.OUT_EP, self.MCC_PROGRAM_COMPLETE_CMD, self.TIMEOUT)
 # ------------------------------------------------------------------------------
 	def resetDevice(self, handle):
-		usbBuf = [0] * 64
-		usbBuf[0] = self.RESET_CMD
-		return handle.interruptWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
+		self.txtWrite(output, "resetting device ...\n")
+		handle.interruptWrite(self.OUT_EP, chr(self.RESET_CMD), self.TIMEOUT)
 # ------------------------------------------------------------------------------
-	def eraseDevice(self, handle):
-		usbBuf = [0xFF] * 64
-		usbBuf[0] = chr(self.MCC_ERASE_DEVICE_CMD)
-		return handle.interruptWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
-# ------------------------------------------------------------------------------
-	def eraseBlock(self, bootloader, handle, address):
+	def eraseBlock(self, board, handle, address):
 		""" erase 64 bytes of flash memory """
 
-		if bootloader == 'vasco':
+		if board.bldr == 'vasco':
 			# command
 			cmd = self.VSC_ERASE_FLASH_CMD
 			# block address
@@ -275,7 +271,7 @@ class uploader:
 			#
 			usbBuf = chr(cmd) + chr(addr_lo) + chr(addr_hi) + chr(addr_up)
 
-		elif bootloader == 'diolan':
+		elif board.bldr == 'diolan':
 			# command code
 			cmd = self.DLN_ERASE_FLASH_CMD
 			# echo is used to link between command and response
@@ -292,7 +288,7 @@ class uploader:
 			#
 			usbBuf = chr(cmd) + chr(echo) + chr(addr_lo) + chr(addr_hi) + chr(reserved) + chr(size)
 
-		elif bootloader == 'microchip':
+		elif board.bldr == 'microchip':
 			# command
 			cmd = self.MCC_ERASE_DEVICE_CMD
 			# block address
@@ -305,12 +301,12 @@ class uploader:
 			usbBuf = chr(cmd) + chr(readbyte1) + chr(readbyte2) + chr(readbyte3) + chr(readbyte4)
 
 		# write data packet
-		self.usbWrite(bootloader, handle, usbBuf)
+		self.usbWrite(board, handle, usbBuf)
 # ------------------------------------------------------------------------------
-	def issueBlock(self, bootloader, handle, address, block):
+	def issueBlock(self, output, board, handle, address, block):
 		""" write a block of code """
 
-		if bootloader == 'vasco':					
+		if board.bldr == 'vasco':					
 			# command
 			cmd = self.VSC_WRITE_FLASH_CMD 
 			# block's address
@@ -321,7 +317,7 @@ class uploader:
 			#
 			usbBuf = chr(cmd) + chr(readbyte1) + chr(readbyte2) + chr(readbyte3)
 
-		elif bootloader == 'diolan':					
+		elif board.bldr == 'diolan':					
 			# command code
 			cmd = self.DLN_WRITE_FLASH_CMD 
 			# echo is used to link between command and response
@@ -338,7 +334,7 @@ class uploader:
 			#
 			usbBuf = chr(cmd) + chr(echo) + chr(addr_lo) + chr(addr_hi) + chr(reserved) + chr(size)
 
-		elif bootloader == 'microchip':
+		elif board.bldr == 'microchip':
 			# command code
 			cmd = self.MCC_PROGRAM_DEVICE_CMD 
 			# block's address
@@ -348,18 +344,18 @@ class uploader:
 			addr2 = int(address[4:6], 16)	# (address >>  8) & 0xFF
 			addr3 = int(address[6:8], 16)	#  address        & 0xFF
 			# data's length
-			bufLen = len(block)
+			buflen = len(block)
 			# 
-			usbBuf = chr(cmd) + chr(addr0) + chr(addr1) + chr(addr2) + chr(addr3) + chr(bufLen)
+			usbBuf = chr(cmd) + chr(addr0) + chr(addr1) + chr(addr2) + chr(addr3) + chr(buflen)
 
 		# add data to the packet
 		for i in range(len(block)):
 			usbBuf = usbBuf + chr(block[i])
 
 		# write data packet on usb device
-		self.usbWrite(bootloader, handle, usbBuf)
+		self.usbWrite(board, handle, usbBuf)
 # ------------------------------------------------------------------------------
-	def hexWrite(self, bootloader, handle, filename):
+	def hexWrite(self, output, handle, filename, board):
 		""" Parse the Hex File Format and send data to usb device """
 
 		"""
@@ -373,31 +369,34 @@ class uploader:
 				03 + 00 + 30 + 00 + 02 + 33 + 7A = E2, 2's complement is 1E
 		"""
 
-		addrHi		= 0
-		addrSave	= 0
-		addr32		= 0
-		bufLen		= 0
+		data = []
+		old_address = 0
+		max_address = 0
+		address_Hi	= 0
 		codesize	= 0
-		hexBuf		= []
 
-		for i in range(self.BLOCKSIZE):
-			hexBuf.append(0xFF)
-			
-		# load hex file
+		# read hex file
 		# ----------------------------------------------------------------------
 
-		fichier = open(filename, 'r')
+		fichier = open(filename,'r')
 		lines = fichier.readlines()
 		fichier.close()
 
-		# read each line in file
+		# 1st pass : calculate checksum and max address
 		# ----------------------------------------------------------------------
 
+		i = 0
 		for line in lines:
 			byte_count = int(line[1:3], 16)
-			addrLo = int(line[3:7], 16) # lower 16 bits (bits 0-15) of the data address
+			address_Lo = int(line[3:7], 16) # lower 16 bits (bits 0-15) of the data address
+			if i == 1:
+				BASE_ADDRESS = address_Lo
+				print "BASE_ADDRESS = " + hex(BASE_ADDRESS)
 			record_type= int(line[7:9], 16)
+			i+=1
 			
+			#address = (address_Hi << 16) + address_Lo
+
 			# checksum calculation
 			end = 9 + byte_count * 2 # position of checksum at end of line
 			checksum = int(line[end:end+2], 16)
@@ -410,83 +409,93 @@ class uploader:
 				return self.ERR_HEX_CHECKSUM
 
 			# extended linear address record
-			if record_type == self.Extended_Linear_Address_Record:
-				# upper 16 bits (bits 16-31) of the data address
-				addrHi = int(line[9:13], 16) << 16
-				addr32 = addrHi + addrLo
-				#print "addr32 = " + hex(addr32)
-				# Assume this means a noncontiguous address jump; issue block
-				# and start anew.  The prior noncontiguous address code should
-				# already have this covered, but in the freak case of an
-				# extended address record with no subsequent data, make sure
-				# the last of the data is issued.
-				if (bufLen):
-					self.issueBlock(output, board, handle, addrSave, hexBuf)
-					bufLen = 0;
-					addrSave = addr32;
+			#if record_type == self.Extended_Linear_Address_Record:
+			#	address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
+
+			# code size
+			#if address >= board.memstart:
+			codesize = codesize + byte_count
+
+			# max address
+			if (address_Lo > old_address): #and (address < board.memend):
+				max_address = address_Lo + byte_count
+				old_address = address_Lo
+
+		max_address = max_address + 64 - (max_address % 64)
+		self.txtWrite(output, "%d bytes to write\n" % codesize)
+
+		# fill data sequence with 0xFF
+		# ----------------------------------------------------------------------
+		# 32-bit : mem start at 0x9D0000000000 ?
+
+		for i in range(BASE_ADDRESS, max_address):
+			print i
+			data.append(0xFF)
+
+		# 2nd pass : parse bytes from line into data
+		# ----------------------------------------------------------------------
+
+		#address_Hi	= 0
+
+		for line in lines:
+			byte_count = int(line[1:3], 16)
+			address_Lo = int(line[3:7], 16) # four hex digits
+			#print "address_Lo = " + hex(address_Lo)
+			record_type= int(line[7:9], 16)
+
+			#address = (address_Hi << 16) + address_Lo
 
 			# data record
-			elif record_type == self.Data_Record:
-				# If new record address is not contiguous with prior record,
-				# issue accumulated hex data (if any) and start anew
-				if ((addrHi + addrLo) != addr32):
-					addr32 = addrHi + addrLo
-					if (bufLen):
-						self.issueBlock(output, board, handle, addrSave, hexBuf)
-						bufLen = 0
-					addrSave = addr32
-				# Parse bytes from line into hexBuf
-				for i in range(byte_count):
-					hexBuf[bufLen] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-					bufLen += 1
-					# erase 64 bytes if vasco or diolan bootloader
-					if bootloader != 'microchip':
-						if codesize % 64 == 0:
-							self.eraseBlock(board, handle, addrSave)
-					# If buffer is full, issue block and start anew
-					if bufLen == self.BLOCKSIZE:
-						self.issueBlock(output, board, handle, addrSave, hexBuf)
-						bufLen = 0
-					# Increment address, wraparound as per hexfile spec
-					if addr32 == 0xffffffff:
-						# Wraparound.  If any hex data, issue and start anew
-						if (bufLen):
-							self.issueBlock(bootloader, handle, addrSave, hexBuf)
-							bufLen = 0
-						addr32 = 0
-					else:
-						addr32 += 1
-					# If issueBlock() used, save new address for next block
-					if not bufLen:
-						addrSave = addr32;
-					# count bytes
-					codesize += 1
+			if record_type == self.Data_Record:
+				if (address_Lo >= board.memstart): #and (address < board.memend):
+					for i in range(0, byte_count):
+						data[address_Lo - BASE_ADDRESS + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 
 			# end of file record
 			elif record_type == self.End_Of_File_Record:
 				break
 
+			# extended linear address record
+			elif record_type == self.Extended_Linear_Address_Record:
+				address_Hi = int(line[9:13], 16) # upper 16 bits (bits 16-31) of the data address
+				#print "address_Hi = " + hex(address_Hi)
+
 			# unsupported record type
 			else:
 				return self.ERR_HEX_RECORD
 
-		# At end of file, issue any residual data (counters reset at top)
-		if (bufLen):
-			self.issueBlock(bootloader, handle, addrSave, hexBuf)
-		# Make sure last data is flushed (issueBlock() does this
-		# automatically if less than 56 bytes...but if the last packet
-		# is exactly this size, an explicit flush is done here)
-		if bufLen == self.BLOCKSIZE:
-			#self.txtWrite(output, "completing ...\n")
-			self.complete(handle)
-			
-		return codesize #self.ERR_NONE
+		# erase and write blocks 
+		# ----------------------------------------------------------------------
+
+		#index = 0
+		usbBuf = []
+		percent = (max_address - BASE_ADDRESS) / 100 #board.memstart
+		self.txtWrite(output, "writing ")
+		#for i in range(board.memstart, max_address):
+		for i in range(BASE_ADDRESS, max_address):
+			if i % percent == 0:
+				# progress bar
+				self.txtWrite(output, ".")
+			if i % 64 == 0:
+				self.eraseBlock(board, handle, (address_Hi << 16) + i)
+			if i % self.BLOCKSIZE == 0:
+				#index = 0
+				if usbBuf != []:
+					self.issueBlock(output, board, handle, (address_Hi << 16) + i - self.BLOCKSIZE, usbBuf)
+				usbBuf = []
+			if data[i] != []:
+				usbBuf.append(data[i])
+			#index += 1 
+		self.txtWrite(output, "\n")
+
+		return self.ERR_NONE
 # ------------------------------------------------------------------------------
 	def release(self, handle):
 		""" release USB interface """
 		handle.releaseInterface()
 # ------------------------------------------------------------------------------
 	def writeHex(self, output, filename, board):
+
 		if board.bldr == 'vasco':
 			self.IN_EP			=	self.VSC_IN_EP
 			self.OUT_EP			=	self.VSC_OUT_EP
@@ -510,68 +519,38 @@ class uploader:
 			self.RESET_CMD		=	self.MCC_RESET_DEVICE_CMD
 			self.BLOCKSIZE		=	self.MCC_BLOCKSIZE
 
-		device = self.getDevice(board.vendor, board.product)
-		if device == self.ERR_DEVICE_NOT_FOUND:
+		device = self.getDevice(board)
+		if device is self.ERR_DEVICE_NOT_FOUND:
 			self.txtWrite(output, "Pinguino not found\n")
 			self.txtWrite(output, "Is your device connected and/or in bootloader mode ?\n")
 			return
 		else:
 			self.txtWrite(output, "Pinguino found\n")
 
-		handle = self.initDevice(device)
-		if handle == self.ERR_USB_INIT1:
+		handle = self.initDevice(device, board)
+		if handle is self.ERR_USB_INIT1:
 			self.txtWrite(output, "Upload not possible\n")
 			self.txtWrite(output, "Try to restart the bootloader mode\n")
 			return
-		self.txtWrite(output, "Vendor: %s - %s\n" % (hex(device.idVendor), handle.getString(device.iManufacturer, 30)))
-		self.txtWrite(output, "Product: %s - %s\n" % (hex(device.idProduct), handle.getString(device.iProduct, 30)))
-		#self.txtWrite(output, "Serial: %s\n" % handle.getString(device.iSerialNumber, 30))
-		#self.txtWrite(output, "Class: %s\n" % handle.getString(device.interfaceClass, 30))
+		#print "Vendor: %s - %s" % (hex(device.idVendor), handle.getString(device.iManufacturer, 30))
+		#print "Product: %s - %s" % (hex(device.idProduct), handle.getString(device.iProduct, 30))
+		#print "Serial: %s" % handle.getString(device.iSerialNumber, 30)
+		self.txtWrite(output, self.getDeviceName(handle) + "\n")
+		#self.getDeviceFamily(self, handle):
+		#self.getProgramMemory(self, handle):
+		#self.queryDevice(handle)
 
-		"""
-		self.txtWrite(output, "Querying ... ")
-		status = self.queryDevice(handle)
-		if status != self.ERR_NONE:
-			print status
-			self.txtWrite(output, "Error!\n")
-			self.closeDevice(handle)
-			return
-		else:
-			self.txtWrite(output, "OK\n")
-		"""
-		
 		if filename != '':
-			self.txtWrite(output, "Erasing ... ")
-			status = self.eraseDevice(handle)
-			if status != self.ERR_NONE:
-				self.txtWrite(output, "Error!\n")
-				return
-			else:
-				self.txtWrite(output, "OK\n")
-
-			self.txtWrite(output, "Writing ... ")
-			status = self.hexWrite(board.bldr, handle, filename)
+			status = self.hexWrite(output, handle, filename, board)
+			if status == self.ERR_NONE:
+				self.txtWrite(output, os.path.basename(filename) + " successfully uploaded\n")
 			if status == self.ERR_HEX_RECORD:
-				self.txtWrite(output, "Record Error!\n")
-				self.closeDevice(handle)
-				return
-			elif status == self.ERR_HEX_CHECKSUM:
-				self.txtWrite(output, "Checksum Error!\n")
-				self.closeDevice(handle)
-				return
-			else:
-				self.txtWrite(output, "\n" + os.path.basename(filename) + " successfully uploaded\n")
-				self.txtWrite(output, "%d bytes written\n" % status)
+				self.txtWrite(output, "Record error\n")
+			if status == self.ERR_HEX_CHECKSUM:
+				self.txtWrite(output, "Checksum error\n")
 		else:
 			self.txtWrite(output, "No .hex file to write\n")
 
-		self.txtWrite(output, "Resetting ... ")
-		status = self.resetDevice(handle)
-		if status != self.ERR_NONE:
-			self.txtWrite(output, "Error!\n")
-		else:
-			self.txtWrite(output, "OK\n")
-			
-		self.closeDevice(handle)
-		self.txtWrite(output, "Done\n")
+		self.resetDevice(self, handle)
+		self.closeDevice(self, handle)
 # ------------------------------------------------------------------------------

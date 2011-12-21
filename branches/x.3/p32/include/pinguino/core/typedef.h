@@ -25,17 +25,18 @@
 	--------------------------------------------------------------------------*/
 
 	typedef unsigned char			byte;
+	typedef unsigned char			BYTE;
 
 	typedef unsigned char			BOOL;//bool;					// not compatible with c++
 	typedef unsigned char			boolean;	
 
 	typedef signed char 			int8_t;
-	typedef int 					int16_t;
+	typedef short					int16_t;
 	typedef long 					int32_t;
 	typedef long long 				int64_t;
 
 	typedef unsigned char 			uint8_t;
-	typedef unsigned int 			uint16_t;
+	typedef unsigned short			uint16_t;
 	typedef unsigned long 			uint32_t;
 	typedef unsigned long long 		uint64_t;
 
@@ -46,15 +47,15 @@
 	typedef signed char				CHAR;
 
 	/* 16 bits */
-	typedef int						INT;
-	typedef unsigned int			UINT;
-	typedef unsigned int			uint;
-	typedef signed int				sint;
-	typedef unsigned int			word;
-	typedef int						SHORT;
-	typedef unsigned int			USHORT;
-	typedef unsigned int			WORD;
-	typedef unsigned int			WCHAR;
+	typedef short					INT;
+	typedef unsigned short			UINT;
+	typedef unsigned short			uint;
+	typedef signed short			sint;
+	typedef unsigned short			word;
+	typedef short					SHORT;
+	typedef unsigned short			USHORT;
+	typedef unsigned short			WORD;
+	typedef unsigned short			WCHAR;
 
 	/* 32 bits */
 	typedef unsigned long			ulong;

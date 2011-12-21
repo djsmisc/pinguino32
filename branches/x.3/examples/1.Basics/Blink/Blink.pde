@@ -2,22 +2,15 @@
 	Blink a LED
 */
 
-#define LED	PORTDbits.RD1
+#define myLED 13
 
 void setup()
 {                
-  //pinMode(RUNLED, OUTPUT);
-  TRISDbits.TRISD1	= OUTPUT;     
+	pinMode(myLED, OUTPUT);
 }
 
 void loop()
 {
-	LED = LED ^ 1;
+	toggle(myLED);
 	delay(1000);					// wait for a second
-/*
-	digitalWrite(RUNLED, HIGH);	// set the LED on
-	delay(1000);					// wait for a second
-	digitalWrite(RUNLED, LOW);	// set the LED off
-	delay(1000);					// wait for a second
-*/
 }
