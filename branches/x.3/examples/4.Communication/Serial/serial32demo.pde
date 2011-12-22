@@ -56,31 +56,31 @@ u32 baudrate;
 void setup()
 {
 	baudrate = UARTSPEED;	// 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, until Sys. Clock / 4
-	Serial.Configure(UARTPORT, UART_ENABLE, UART_RX_TX_ENABLED,	baudrate);
+	SerialP32MX.configure(UARTPORT, UART_ENABLE, UART_RX_TX_ENABLED,	baudrate);
 
 /*	---Use one of these forms------------------------------------------------------------
-	Serial.Configure(	UARTPORT, 0x8000, 0x1400, 9600);
-	Serial.Configure(	UARTPORT, UART_ENABLE,	UART_RX_TX_ENABLED,	baudrate);
-	Serial.Configure(	UARTPORT,
+	SerialP32MX.configure(	UARTPORT, 0x8000, 0x1400, 9600);
+	SerialP32MX.configure(	UARTPORT, UART_ENABLE,	UART_RX_TX_ENABLED,	baudrate);
+	SerialP32MX.configure(	UARTPORT,
 							UART_ENABLE | UART_ENABLE_PINS_TX_RX_ONLY | UART_8_BITS_NO_PARITY | UART_STOP_BITS_1,
 							UART_RX_TX_ENABLED | UART_INTERRUPT_ON_RX_FULL,
 							baudrate);
 /*	---or-----------------------------------------------------------------------
-	Serial.PinConfigure(UARTPORT);
-	Serial.SetDataRate(UARTPORT, baudrate);
-	Serial.SetLineControl(UARTPORT, UART_ENABLE | UART_ENABLE_PINS_TX_RX_ONLY | UART_8_BITS_NO_PARITY | UART_STOP_BITS_1);
-	Serial.Enable(UARTPORT, UART_RX_TX_ENABLED | UART_INTERRUPT_ON_RX_FULL);
-	Serial.IntConfigure(UARTPORT, INT_PRIORITY_3, INT_SUBPRIORITY_3);
+	SerialP32MX.pinConfigure(UARTPORT);
+	SerialP32MX.setDataRate(UARTPORT, baudrate);
+	SerialP32MX.setLineControl(UARTPORT, UART_ENABLE | UART_ENABLE_PINS_TX_RX_ONLY | UART_8_BITS_NO_PARITY | UART_STOP_BITS_1);
+	SerialP32MX.enable(UARTPORT, UART_RX_TX_ENABLED | UART_INTERRUPT_ON_RX_FULL);
+	SerialP32MX.intConfigure(UARTPORT, INT_PRIORITY_3, INT_SUBPRIORITY_3);
 	--------------------------------------------------------------------------*/
 
-	//Serial.Printf(UARTPORT, "* System Clock is %2uMHz *\n\r", GetSystemClock()/1000000);
+	//SerialP32MX.printf(UARTPORT, "* System Clock is %2uMHz *\n\r", GetSystemClock()/1000000);
 
 /*	---Test---------------------------------------------------------------------
 	s16 i=-1000;
 	char *string = "Fine !";
 	loop
 	{
-		Serial.Printf(UARTPORT, "Decimal[%5d] = Hexa[0x%4X] %s\n\r", i, i, string);
+		SerialP32MX.printf(UARTPORT, "Decimal[%5d] = Hexa[0x%4X] %s\n\r", i, i, string);
 		i++;
 	}
 	--------------------------------------------------------------------------*/
@@ -99,92 +99,92 @@ void loop()
 	long l = 115200;
 	//float f = 3.14159265; // floating point support is not yet implemented in printf
 
-	Serial.Printf(UARTPORT, "%s\r\n", mainMenu);
-	mainItem = Serial.GetKey(UARTPORT);
+	SerialP32MX.printf(UARTPORT, "%s\r\n", mainMenu);
+	mainItem = SerialP32MX.getKey(UARTPORT);
 	mainItem -= '0';
 
 	switch (mainItem)
 	{
 		case 0:
-			Serial.Printf(UARTPORT, "\r\n");
-			Serial.Printf(UARTPORT, "**************************\r\n");
-			Serial.Printf(UARTPORT, "*      Serial32 Demo     *\r\n");
-			Serial.Printf(UARTPORT, "**************************\r\n");
-			Serial.Printf(UARTPORT, "\r\n");
-			Serial.Printf(UARTPORT, "string = %s\r\n", string);
-			Serial.Printf(UARTPORT, "character = \"%c\"\r\n", c);
-			Serial.Printf(UARTPORT, "signed char = %d / unsigned char = %u\r\n", -c, -c);
-			Serial.Printf(UARTPORT, "signed int = %d / unsigned int = %u\r\n", -i, -i);
-			Serial.Printf(UARTPORT, "signed long = %d / unsigned long = %u\r\n", -l, -l);
-			Serial.Printf(UARTPORT, "decimal[%d] = hexa[0x%X] = binary[0b%016b] = octal[%o]\r\n", i, i, i, i);
-			//SerialPrintf(UARTPORT, "float = %f\r\n", f);
-			Serial.Printf(UARTPORT, "justif: \"%-10s\"\r\n", "left");
-			Serial.Printf(UARTPORT, "justif: \"%10s\"\r\n", "right");
-			Serial.Printf(UARTPORT, " 3: %04d zero padded\r\n", 3);
-			Serial.Printf(UARTPORT, " 3: %-4d left justif.\r\n", 3);
-			Serial.Printf(UARTPORT, " 3: %4d right justif.\r\n", 3);
-			Serial.Printf(UARTPORT, "-3: %04d zero padded\r\n", -3);
-			Serial.Printf(UARTPORT, "-3: %-4d left justif.\r\n", -3);
-			Serial.Printf(UARTPORT, "-3: %4d right justif.\r\n", -3);
-			Serial.Printf(UARTPORT, "\r\n");
-			Serial.Printf(UARTPORT, "Press Any Key to continue ...\r\n");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "\r\n");
+			SerialP32MX.printf(UARTPORT, "**************************\r\n");
+			SerialP32MX.printf(UARTPORT, "*      Serial32 Demo     *\r\n");
+			SerialP32MX.printf(UARTPORT, "**************************\r\n");
+			SerialP32MX.printf(UARTPORT, "\r\n");
+			SerialP32MX.printf(UARTPORT, "string = %s\r\n", string);
+			SerialP32MX.printf(UARTPORT, "character = \"%c\"\r\n", c);
+			SerialP32MX.printf(UARTPORT, "signed char = %d / unsigned char = %u\r\n", -c, -c);
+			SerialP32MX.printf(UARTPORT, "signed int = %d / unsigned int = %u\r\n", -i, -i);
+			SerialP32MX.printf(UARTPORT, "signed long = %d / unsigned long = %u\r\n", -l, -l);
+			SerialP32MX.printf(UARTPORT, "decimal[%d] = hexa[0x%X] = binary[0b%016b] = octal[%o]\r\n", i, i, i, i);
+			//Serial.printf(UARTPORT, "float = %f\r\n", f);
+			SerialP32MX.printf(UARTPORT, "justif: \"%-10s\"\r\n", "left");
+			SerialP32MX.printf(UARTPORT, "justif: \"%10s\"\r\n", "right");
+			SerialP32MX.printf(UARTPORT, " 3: %04d zero padded\r\n", 3);
+			SerialP32MX.printf(UARTPORT, " 3: %-4d left justif.\r\n", 3);
+			SerialP32MX.printf(UARTPORT, " 3: %4d right justif.\r\n", 3);
+			SerialP32MX.printf(UARTPORT, "-3: %04d zero padded\r\n", -3);
+			SerialP32MX.printf(UARTPORT, "-3: %-4d left justif.\r\n", -3);
+			SerialP32MX.printf(UARTPORT, "-3: %4d right justif.\r\n", -3);
+			SerialP32MX.printf(UARTPORT, "\r\n");
+			SerialP32MX.printf(UARTPORT, "Press Any Key to continue ...\r\n");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 		case 1:
-			Serial.Printf(UARTPORT, "**************************\r\n");
-			Serial.Printf(UARTPORT, "* System Clock is %2uMHz *\r\n", GetSystemClock()/1000000);
-			Serial.Printf(UARTPORT, "**************************\r\n");
-			Serial.Printf(UARTPORT, "Press Any Key to continue ...\r\n");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "**************************\r\n");
+			SerialP32MX.printf(UARTPORT, "* System Clock is %2uMHz *\r\n", GetSystemClock()/1000000);
+			SerialP32MX.printf(UARTPORT, "**************************\r\n");
+			SerialP32MX.printf(UARTPORT, "Press Any Key to continue ...\r\n");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 		case 2:
-			Serial.Printf(UARTPORT, "******************************\r\n");
-			Serial.Printf(UARTPORT, "* Peripheral Clock is %2uMHz *\r\n", GetPeripheralClock()/1000000);
-			Serial.Printf(UARTPORT, "******************************\r\n");
-			Serial.Printf(UARTPORT, "Press Any Key to continue ...\r\n");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "******************************\r\n");
+			SerialP32MX.printf(UARTPORT, "* Peripheral Clock is %2uMHz *\r\n", GetPeripheralClock()/1000000);
+			SerialP32MX.printf(UARTPORT, "******************************\r\n");
+			SerialP32MX.printf(UARTPORT, "Press Any Key to continue ...\r\n");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 		case 3:
-			Serial.Printf(UARTPORT, "**************************************\r\n");
-			Serial.Printf(UARTPORT, "* Actual BAUD rate is %8u bauds *\r\n", SerialGetDataRate(UARTPORT));
-			Serial.Printf(UARTPORT, "**************************************\r\n");
-			Serial.Printf(UARTPORT, "Press Any Key to continue ...\r\n");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "**************************************\r\n");
+			SerialP32MX.printf(UARTPORT, "* Actual BAUD rate is %8u bauds *\r\n", SerialGetDataRate(UARTPORT));
+			SerialP32MX.printf(UARTPORT, "**************************************\r\n");
+			SerialP32MX.printf(UARTPORT, "Press Any Key to continue ...\r\n");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 		case 4:
 			baudrate = baudrate << 1;
-			Serial.Printf(UARTPORT, "BAUD rate was %u and will be %u bauds\r\n", SerialGetDataRate(UARTPORT), baudrate);
-			Serial.Printf(UARTPORT, "Press Any Character after re-configuring you terminal\r\n");
-			Serial.GetKey(UARTPORT);
-			Serial.SetDataRate(UARTPORT, baudrate);
-			Serial.Printf(UARTPORT, "New BAUD rate is %u bauds\r\n", SerialGetDataRate(UARTPORT));
-			Serial.Printf(UARTPORT, "Press Any Key to continue ...\r\n");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "BAUD rate was %u and will be %u bauds\r\n", SerialGetDataRate(UARTPORT), baudrate);
+			SerialP32MX.printf(UARTPORT, "Press Any Character after re-configuring you terminal\r\n");
+			SerialP32MX.getKey(UARTPORT);
+			SerialP32MX.setDataRate(UARTPORT, baudrate);
+			SerialP32MX.printf(UARTPORT, "New BAUD rate is %u bauds\r\n", SerialGetDataRate(UARTPORT));
+			SerialP32MX.printf(UARTPORT, "Press Any Key to continue ...\r\n");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 		case 5:
 			baudrate = baudrate >> 1;
-			Serial.Printf(UARTPORT, "BAUD rate was %u and will be %u bauds\r\n", SerialGetDataRate(UARTPORT), baudrate);
-			Serial.Printf(UARTPORT, "Press Any Character after re-configuring you terminal\r\n");
-			Serial.GetKey(UARTPORT);
-			Serial.SetDataRate(UARTPORT, baudrate);
-			Serial.Printf(UARTPORT, "New BAUD rate is %u bauds\r\n", SerialGetDataRate(UARTPORT));
-			Serial.Printf(UARTPORT, "Press Any Key to continue ...\r\n");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "BAUD rate was %u and will be %u bauds\r\n", SerialGetDataRate(UARTPORT), baudrate);
+			SerialP32MX.printf(UARTPORT, "Press Any Character after re-configuring you terminal\r\n");
+			SerialP32MX.getKey(UARTPORT);
+			SerialP32MX.setDataRate(UARTPORT, baudrate);
+			SerialP32MX.printf(UARTPORT, "New BAUD rate is %u bauds\r\n", SerialGetDataRate(UARTPORT));
+			SerialP32MX.printf(UARTPORT, "Press Any Key to continue ...\r\n");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 		case 6:
-			Serial.Printf(UARTPORT, "%s", lineMenu);
-			lineItem = Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "%s", lineMenu);
+			lineItem = SerialP32MX.getKey(UARTPORT);
 			lineItem = lineItem - '0';
-			Serial.Printf(UARTPORT, "Press Any Character after re-configuring you terminal\r\n");
-			Serial.GetKey(UARTPORT);
-			Serial.SetLineControl(UARTPORT, lineControl[lineItem]);
+			SerialP32MX.printf(UARTPORT, "Press Any Character after re-configuring you terminal\r\n");
+			SerialP32MX.getKey(UARTPORT);
+			SerialP32MX.setLineControl(UARTPORT, lineControl[lineItem]);
 			break;
 		case 7:
-			Serial.Printf(UARTPORT, "Type a message (less than 100 characters) and press return\r\n");
-			string = Serial.GetString(UARTPORT);
-			Serial.Printf(UARTPORT, "You Typed:\r\n\r\n%s\r\n\r\n", string);
-			Serial.Printf(UARTPORT, "\r\n\r\nPress any key to continue");
-			Serial.GetKey(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "Type a message (less than 100 characters) and press return\r\n");
+			string = SerialP32MX.getString(UARTPORT);
+			SerialP32MX.printf(UARTPORT, "You Typed:\r\n\r\n%s\r\n\r\n", string);
+			SerialP32MX.printf(UARTPORT, "\r\n\r\nPress any key to continue");
+			SerialP32MX.getKey(UARTPORT);
 			break;
 	}
 }

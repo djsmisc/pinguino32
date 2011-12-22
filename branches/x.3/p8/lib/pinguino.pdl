@@ -32,4 +32,5 @@ GetSystemClock GetSystemClock#include <system.c>
 GetInstructionClock GetInstructionClock#include <system.c>
 GetPeripheralClock GetPeripheralClock#include <system.c>
 Sprintf psprintf#include <stdio.c>
+Printf pprintf#include <stdio.c>
 KB.get Keyboard_get#include <misc.c>
