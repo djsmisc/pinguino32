@@ -265,12 +265,12 @@ int pprintf(funcout func, const char *format, va_list args)
 	return pprint(0, format, args);
 }
 
-//int psprintf(char *out, const char *format, ...)
-int psprintf(char *out, const char *format, va_list args)
+//int psprintf(char *out, const char *format, va_list args)
+int psprintf(char *out, const char *format, ...)
 {
-	//va_list args;
+	va_list args;
 
-	//va_start(args, format);
+	va_start(args, format);
 	return pprint(&out, format, args);
 }
 
