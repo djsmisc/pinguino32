@@ -5,6 +5,7 @@
 	first release:	19/12/2010
 	last update:	24/12/2010
 	pinguino ide:	9.5
+ 	boards:			8-bit ONLY
 	wiring:			leds on pin 0 to 3 (RB0 to RB3)
 					ex.: RB0 --- 470 Ohms ---<|--- GND
 	--------------------------------------------------------------------------*/

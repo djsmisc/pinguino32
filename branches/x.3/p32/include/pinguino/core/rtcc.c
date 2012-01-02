@@ -32,6 +32,7 @@
 #include <system.c>
 #include <bcd.c>
 
+
 // RTCC definitions
 
 typedef void (*callback) (void);	// type of: void callback()
@@ -70,8 +71,8 @@ typedef union
 // results returned by initialization functions
 typedef enum
 {
-	RTCC_CLK_ON,					// success, clock is running
-	RTCC_SOSC_NRDY,					// SOSC not running
+	RTCC_SOSC_ON,					// success, SOSC is running
+	RTCC_SOSC_NRDY,				// SOSC not running
 	RTCC_CLK_NRDY,					// RTCC clock not running
 	RTCC_WR_DSBL,					// WR is disabled
 }rtccRes;
@@ -137,7 +138,7 @@ int RTCC_SetWriteEnable(void)
 	// assume the DMA controller is suspended
 	// assume the device is locked
 	SystemUnlock();
-	RTCCONSET = 0x8; // set RTCWREN (bit 3) in RTCCONSET
+	RTCCONSET = 0x8; // set RTCWREN (bit 3) in RTCCON
 	SystemLock();
 	// re-enable interrupts
 	// re-enable the DMA controller
@@ -149,7 +150,7 @@ int RTCC_SetWriteDisable(void)
 	// assume the DMA controller is suspended
 	// assume the device is locked
 	SystemUnlock();
-	RTCCONCLR = 0x8; // set RTCWREN (bit 3) in RTCCONSET
+	RTCCONCLR = 0x8; // clear RTCWREN (bit 3) in RTCCON
 	SystemLock();
 	// re-enable interrupts
 	// re-enable the DMA controller
@@ -211,41 +212,53 @@ int RTCC_GetEnable(void)
 
 /*	-----------------------------------------------------------------------------
 	Check that the Secondary Oscillator (SOSC) is running.
-	TODO: find the bug ! It never sends RTCC_CLK_ON.
 	---------------------------------------------------------------------------*/
 
-rtccRes RTCC_GetClockStatus(void)
+rtccRes RTCC_GetSOSCstatus(void)
 {
+	// 01-01-2012 bug fixed by Mark Harper
 	if ( (!(OSCCONbits.SOSCEN)) || (!(OSCCONbits.SOSCRDY)) )
 		return RTCC_SOSC_NRDY;
-	else if (!(RTCCONbits.RTCCLKON))	// if RTCC Clock is not running
-		return RTCC_CLK_NRDY;
-	return RTCC_CLK_ON;
+	/*
+	else if (!(RTCCONbits.RTCCLKON))	// At start up RTCC Clock is not enabled so this
+										// test will ALWAYS fail.
+										// It is NOT related to SOSC running or not running
+	return RTCC_CLK_NRDY;
+	*/
+	return RTCC_SOSC_ON;
 }
 
 /*	-----------------------------------------------------------------------------
-	Enable the oscillator for the RTCC
+	Enable the secondary oscillator (SOSC) for the RTCC
 	To allow the RTCC to be clocked by an external 32.768 kHz crystal, the SOSCEN bit
 	(OSCCON<1>) must be set (refer to Register 6-1 in Section 6. “Oscillators” (DS61112)) in the
 	"PIC32 Family Reference Manual”. This is the only bit outside of the RTCC module with which
 	the user must be concerned for enabling the RTCC. 
+	----------------------------------------------------------------------------
+	01-01-2012	Mark Harper		function renamed from RTCC_StartSOSC to RTCC_SOSCenable
 	---------------------------------------------------------------------------*/
 
-void RTCC_StartClock(void)
+void RTCC_SOSCenable(void)
 {
 	SystemUnlock();
 	OSCCONbits.SOSCEN = 1;
 	SystemLock();
 	// Wait for stable SOCSC oscillator output before enabling the RTCC.
 	// This typically requires a 32 ms delay between enabling the SOSC and enabling the RTCC.
-// 1st option
-	Delayms(50);
-// 2nd option
+	// 1st option
+	//	Delayms(50);
+	// 2nd option
 	// Wait for the SOSC to run
-	//while (RTCC_GetClockStatus() != RTCC_CLK_ON);
+	while (RTCC_GetSOSCstatus() != RTCC_SOSC_ON);
 }
 
-void RTCC_StopClock(void)
+/*	-----------------------------------------------------------------------------
+	Disable the secondary oscillator (SOSC) for the RTCC
+	----------------------------------------------------------------------------
+	01-01-2012	Mark Harper		function renamed from RTCC_StopClock to RTCC_SOSCdisable
+	---------------------------------------------------------------------------*/
+
+void RTCC_SOSCdisable(void)
 {
 	SystemUnlock();
 	OSCCONbits.SOSCEN = 0;
@@ -254,7 +267,7 @@ void RTCC_StopClock(void)
 
 /*	-----------------------------------------------------------------------------
 	The function initializes the RTCC device.
-		*starts the RTCC clock,
+		*enables the secondary oscillator (SOSC),
 		*enables the RTCC,
 		*disables RTCC write,
 		*disables the Alarm and the OE,
@@ -263,7 +276,7 @@ void RTCC_StopClock(void)
 
 void RTCC_init(void)
 {
-	RTCC_StartClock();
+	RTCC_SOSCenable();
 	RTCC_Enable();
 	RTCC_SetWriteDisable();
 	RTCC_AlarmDisable();
@@ -273,8 +286,8 @@ void RTCC_init(void)
 
 /*	-----------------------------------------------------------------------------
 	The function shutdowns the RTCC device.
-	*It stops the RTCC clock,
-	*sets the RTCC Off
+	*It disables the secondary oscillator (SOSC),
+	*disables the RTCC
 	*disables RTCC write
 	*disables the Alarm and the OE.
 	*clears the alarm interrupt flag.
@@ -282,7 +295,7 @@ void RTCC_init(void)
 
 void RTCC_Shutdown(void)
 {
-	RTCC_StopClock();
+	RTCC_SOSCdisable();
 	RTCC_Disable();
 	RTCC_SetWriteDisable();
 	RTCC_AlarmDisable();
@@ -296,15 +309,17 @@ void RTCC_Shutdown(void)
 	The routine wait for the CLK to be running before returning.
 	The routine could disable the interrupts for a very short time to be able
 	to update the time and date registers.
- 	---------------------------------------------------------------------------*/
+	----------------------------------------------------------------------------
+	02-01-2012	Régis Blanchot		replaced Delayus(50); by while (RTCCON & 0x40);
+	---------------------------------------------------------------------------*/
 
 void RTCC_SetTime(unsigned long tm)
 {
 	RTCC_SetWriteEnable();
 	RTCCONCLR = 0x8000;			// turn off the RTCC
-	Delayus(50);
-	//while (RTCCON & 0x40);		// wait for clock to be turned off
-	RTCTIME = tm;					// Set time
+	//Delayus(50);
+	while (RTCCON & 0x40);		// wait for clock to be turned off
+	RTCTIME = tm;				// Set time
 	RTCCONSET = 0x8000;			// turn on the RTCC
 	//Delayus(50);
 	while (!(RTCCON & 0x40));	// wait for clock to be turned on
@@ -331,6 +346,8 @@ rtccTime RTCC_GetTime(void)
 	The routine wait for the CLK to be running before returning.
 	The routine could disable the interrupts for a very short time to be able
 	to update the time and date registers.
+	----------------------------------------------------------------------------
+	02-01-2012	Régis Blanchot		replaced Delayus(50); by while (RTCCON & 0x40);
 	---------------------------------------------------------------------------*/
 
 void RTCC_SetDate(unsigned long dt)
@@ -339,7 +356,7 @@ void RTCC_SetDate(unsigned long dt)
 	RTCCONCLR = 0x8000;			// turn off the RTCC
 	//Delayus(50);
 	while (RTCCON & 0x40);		// wait for clock to be turned off
-	RTCDATE = dt;					// Set date
+	RTCDATE = dt;				// Set date
 	RTCCONSET = 0x8000;			// turn on the RTCC
 	//Delayus(50);
 	while (!(RTCCON & 0x40));	// wait for clock to be turned on
@@ -366,6 +383,8 @@ rtccDate RTCC_GetDate(void)
 	The routine wait for the CLK to be running before returning.
 	The routine could disable the interrupts for a very short time to be able
 	to update the time and date registers.
+	----------------------------------------------------------------------------
+	02-01-2012	Régis Blanchot		replaced Delayus(50); by while (RTCCON & 0x40);
 	---------------------------------------------------------------------------*/
 
 void RTCC_SetTimeDate(unsigned long tm, unsigned long dt)
@@ -443,7 +462,7 @@ int RTCC_GetCalibration(void)
 
 rtccRes RTCC_Open(unsigned long tm, unsigned long dt, int drift)
 {
-	RTCC_StartClock();
+	RTCC_SOSCenable();
 	RTCC_SetTime(tm);
 	RTCC_SetDate(dt);
 	RTCC_SetCalibration(drift);
@@ -605,21 +624,26 @@ int RTCC_GetAlarmRepeat(void)
 
 /*	-----------------------------------------------------------------------------
 	Alarm will trigger rptCnt times
-	rptCnt has to be a value less then 256
+	rptCnt has to be a value less than 256
+	----------------------------------------------------------------------------
+	02-01-2012	Régis Blanchot		check if rptCnt is less than 256 by changing type int to type char
 	---------------------------------------------------------------------------*/
 
-void RTCC_SetAlarmRepeatCount(int rptCnt)
+void RTCC_SetAlarmRepeatCount(char rptCnt)
 {
 	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
 	RTCALRMbits.ARPT = rptCnt;
 }
 
-/*	-----------------------------------------------------------------------------
-	---------------------------------------------------------------------------*/
+/*	----------------------------------------------------------------------------
+	Return Alarm Repeat Counter Value
+	----------------------------------------------------------------------------
+	02-01-2012	Régis Blanchot		changed type int to type char (ARPT<7:0>)
+	--------------------------------------------------------------------------*/
 
-int RTCC_GetAlarmRepeatCount(void)
+char RTCC_GetAlarmRepeatCount(void)
 {
-	int rpt0, rpt1;
+	char rpt0, rpt1;
 	do
 	{
 		rpt0 = RTCALRMbits.ARPT;
@@ -638,7 +662,7 @@ int RTCC_GetAlarmRepeatCount(void)
 void RTCC_SetAlarmTime(unsigned long alTime)
 {
 	while (RTCALRM & 0x1000);	// wait ALRMSYNC to be off
-	RTCALRMCLR = 0xCFFF;			// clear the ALRMEN, CHIME, AMASK and ARPT;
+	RTCALRMCLR = 0xCFFF;		// clear the ALRMEN, CHIME, AMASK and ARPT;
 	ALRMTIME = alTime;
 }
 
