@@ -5,8 +5,9 @@
 	first release:	19/12/2010
 	last update:	24/12/2010
 	pinguino ide:	X
+ 	boards:			8-bit ONLY
 	wiring:			tsop1738.gif
-	link:				http://www.datelec.fr/detectir/p0.htm
+	link:			http://www.datelec.fr/detectir/p0.htm
 	----------------------------------------------------------------------------
 	* Carrier frequency should be center on 38 KHz (with a TSOP1738)
 		- Fc = 38 KHz
@@ -92,7 +93,7 @@ void setup()
 	Serial.printf("* IR Obstacle Detector *\n");
 	Serial.printf("************************\n");
 
-	PWM.setfrequency(38000);								// Use Timer2 to make a 38 KHz carrier frequency
+	PWM.setfrequency(38000);						// Use Timer2 to make a 38 KHz carrier frequency
 	OnTimer0(IR_transmission, INT_MICROSEC, 500);	// Use Timer0 to send burst every 500 us
 	OnChangePin0(IR_reception, INT_FALLING_EDGE);	// Goes to 0 if a carrier is received
 }
