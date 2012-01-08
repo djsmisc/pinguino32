@@ -18,7 +18,7 @@
 // standard C libraries used
 #include <ctype.h>      		// toupper...
 #include <string.h>     		// memcpy...
-#include <malloc.h>			// malloc, free?
+//#include <malloc.h>			// malloc, free?
 
 #include <sd/fileio.h>  	   // file I/O routines 
 #include <sd/sdmmc.c>   	   // sd/mmc card interface
@@ -195,7 +195,7 @@ unsigned listDir(const char *path) {
 } // listDir
 
 int isDirectory(FILINFO file) {
-	if (file.fattrib & AM_DIR) {
+	if (Finfo.fattrib & AM_DIR) {
 		return 1;
 	} else {
 		return 0;
@@ -203,7 +203,7 @@ int isDirectory(FILINFO file) {
 }
 
 int isReadOnly(FILINFO file) {
-	if (file.fattrib & AM_RDO) {
+	if (Finfo.fattrib & AM_RDO) {
 		return 1;
 	} else {
 		return 0;
@@ -211,7 +211,7 @@ int isReadOnly(FILINFO file) {
 }
 
 int isHidden(FILINFO file) {
-	if (file.fattrib & AM_HID) {
+	if (Finfo.fattrib & AM_HID) {
 		return 1;
 	} else {
 		return 0;
@@ -219,7 +219,7 @@ int isHidden(FILINFO file) {
 }
 
 int isSystem(FILINFO file) {
-	if (file.fattrib & AM_SYS) {
+	if (Finfo.fattrib & AM_SYS) {
 		return 1;
 	} else {
 		return 0;
@@ -227,7 +227,7 @@ int isSystem(FILINFO file) {
 }
 
 int isArchive(FILINFO file) {
-	if (file.fattrib & AM_ARC) {
+	if (Finfo.fattrib & AM_ARC) {
 		return 1;
 	} else {
 		return 0;
