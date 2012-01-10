@@ -86,13 +86,13 @@ FILINFO Finfo;
 #define ReadOddW( a, f) (*(a+f) + ( *(a+f+1) << 8))
 
 // prototypes
-FATFS * mount(unsigned char);
+char mount(unsigned char);
 void unmount(void);
 
-int isReadOnly(FILINFO file);
-int isHidden(FILINFO file);
-int isSystem(FILINFO file);
-int isArchive(FILINFO file);
+char isReadOnly(FILINFO file);
+char isHidden(FILINFO file);
+char isSystem(FILINFO file);
+char isArchive(FILINFO file);
 
 //unsigned listTYPE(char *listname, long *listsize, int max, const char *ext);
 unsigned listTYPE(DIRTABLE *list, int max, const char *ext);

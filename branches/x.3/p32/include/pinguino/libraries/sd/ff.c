@@ -90,7 +90,10 @@
  /
  / Sep 06,'11 R0.09  f_mkfs() supports multiple partition to finish the multiple partition feature.
  /                   Added f_fdisk(). (_MULTI_PARTITION = 2)
- /---------------------------------------------------------------------------*/
+ /---------------------------------------------------------------------------
+ / 2011-12 Alfred Broda <alfredbroda@gmail.com> adapted for Pinguno Project
+ / BYTE and WORD were changed to PF_BYTE and PF_WORD because of a conflict.
+ ---------------------------------------------------------------------------*/
 
 #include "ff.h"			/* FatFs configurations and declarations */
 #include "diskio.h"		/* Declarations of low level disk I/O functions */

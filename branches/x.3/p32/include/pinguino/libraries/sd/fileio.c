@@ -18,12 +18,12 @@
 // standard C libraries used
 #include <ctype.h>      		// toupper...
 #include <string.h>     		// memcpy...
-#include <malloc.h>			// malloc, free?
+#include <malloc.h>				// malloc, free?
 
-#include <sd/fileio.h>  	   // file I/O routines 
-#include <sd/sdmmc.c>   	   // sd/mmc card interface
-#include "ff.c"
-#include "diskio.c"
+#include <sd/fileio.h>  	   	// file I/O routines
+#include <sd/sdmmc.c>   	   	// sd/mmc card interface
+#include "ff.c"					// Fat Filesystem
+#include "diskio.c"				// card access functions
 
 /*	----------------------------------------------------------------------------
  mount
@@ -33,7 +33,7 @@
 
 //#define SD_DEBUG
 
-FATFS * mount(unsigned char pin) {
+char mount(unsigned char pin) {
 	int flag, i;
 	FRESULT r;
 
@@ -54,7 +54,7 @@ FATFS * mount(unsigned char pin) {
 #ifdef SD_DEBUG
 		CDCprintln("Failed!");
 #endif
-		return NULL;
+		return False;
 	}
 #ifdef SD_DEBUG
 	CDCprintln("OK");
@@ -77,7 +77,7 @@ FATFS * mount(unsigned char pin) {
 		CDCprintln("Failed!");
 #endif
 		FError = FE_MALLOC_FAILED;
-		return NULL;
+		return False;
 	}
 #ifdef SD_DEBUG
 	CDCprintln("OK");
@@ -87,7 +87,6 @@ FATFS * mount(unsigned char pin) {
 #ifdef SD_DEBUG
 	CDCprintf("Mounting FAT filesystem... ");
 #endif
-	//	enableSD();
 	r = f_mount(0, Fat);
 	if (r != FR_OK) {
 		FError = r;
@@ -95,13 +94,31 @@ FATFS * mount(unsigned char pin) {
 		CDCprintln("Failed!");
 #endif
 		free(Fat);
-		return NULL;
+		return False;
 	}
 #ifdef SD_DEBUG
 	CDCprintln("OK");
 #endif
 
-	return Fat;
+#ifdef SD_DEBUG
+	CDCprintf("Checking FAT filesystem... ");
+#endif
+	const TCHAR * pth = "/";
+	r = chk_mounted(&pth, &Fat, 0);
+	if (r != FR_OK) {
+		FError = r;
+#ifdef SD_DEBUG
+		CDCprintln("Failed!");
+		put_rc(r);
+#endif
+		unmount();
+		return False;
+	}
+#ifdef SD_DEBUG
+	CDCprintln("OK");
+#endif
+
+	return True;
 } // mount
 
 /*	----------------------------------------------------------------------------
@@ -194,43 +211,43 @@ unsigned listDir(const char *path) {
 	return s1;
 } // listDir
 
-int isDirectory(FILINFO file) {
+char isDirectory(FILINFO file) {
 	if (file.fattrib & AM_DIR) {
-		return 1;
+		return True;
 	} else {
-		return 0;
+		return False;
 	}
 }
 
-int isReadOnly(FILINFO file) {
+char isReadOnly(FILINFO file) {
 	if (file.fattrib & AM_RDO) {
-		return 1;
+		return True;
 	} else {
-		return 0;
+		return False;
 	}
 }
 
-int isHidden(FILINFO file) {
+char isHidden(FILINFO file) {
 	if (file.fattrib & AM_HID) {
-		return 1;
+		return True;
 	} else {
-		return 0;
+		return False;
 	}
 }
 
-int isSystem(FILINFO file) {
+char isSystem(FILINFO file) {
 	if (file.fattrib & AM_SYS) {
-		return 1;
+		return True;
 	} else {
-		return 0;
+		return False;
 	}
 }
 
-int isArchive(FILINFO file) {
+char isArchive(FILINFO file) {
 	if (file.fattrib & AM_ARC) {
-		return 1;
+		return True;
 	} else {
-		return 0;
+		return False;
 	}
 }
 #endif /* __FILEIO_C__ */
