@@ -550,22 +550,44 @@ void disk_timerproc(void) {
 /*---------------------------------------------------------*/
 /* User Provided RTC Function for FatFs module             */
 /*---------------------------------------------------------*/
+/* User Provided RTC Function for FatFs module             */
+/*---------------------------------------------------------*/
 /* This is a real time clock service to be called from     */
 /* FatFs module. Any valid time must be returned even if   */
 /* the system does not support an RTC.                     */
 /* This function is not required in read-only cfg.         */
 
-DWORD get_fattime(void) {
-	DWORD tmr;
-	rtccTime pTm;
-	rtccDate pDt;
+/*	The current time is returned packed into a DWORD
+	(32 bit) value. The bit fields are as follows:
+		bits 31:25	Year from 1980 (0..127)
+		bits 24:21	Month (1..12)
+		bits 20:16	Day in month (1..31)
+		bits 15:11	Hour (0..23)
+		bits 10:05	Minute (0..59)
+		bits 04:00	Second / 2 (0..29)						*/
 
-	pTm = RTCC_GetTime();
-	pDt = RTCC_GetDate();
+DWORD get_fattime(void) {
+	DWORD tmr = 0;
+	rtccTime pTm, cTm;
+	rtccDate pDt, cDt;
+
+	RTCC_GetTimeDate(&pTm, &pDt);	// get time and date from RTC
+									// assumes RTC has been set and is running
+									// OK - could be expanded to check that RTC
+									// is running and that a valid value is
+									// being returned by the RTC
+	cTm = RTCC_ConvertTime(&pTm);	// convert time from bcd to decimal format
+	cDt = RTCC_ConvertDate(&pDt);	// convert date from bcd to decimal format
 
 	/* Pack date and time into a DWORD variable */
-	tmr = (((DWORD) pDt.year - 80)) | ((DWORD) pDt.mon) | ((DWORD) pDt.mday)
-			| (WORD) (pTm.hour) | (WORD) (pTm.min) | (WORD) (pTm.sec);
+//	tmr = (((DWORD) pDt.year - 80)) | ((DWORD) pDt.mon) | ((DWORD) pDt.mday)
+//			| (WORD) (pTm.hour) | (WORD) (pTm.min) | (WORD) (pTm.sec);
+	tmr = cDt.year + 20;
+	tmr = (tmr << 4) | cDt.mon;		// shifts left 4 bits and adds month
+	tmr = (tmr << 5) | cDt.mday;	// shifts left 5 bits and adds m.day
+	tmr = (tmr << 5) | cTm.hour;	// shifts left 5 bits and adds hour
+	tmr = (tmr << 6) | cTm.min;		// shift left 6 bits and adds minutes
+	tmr = (tmr << 5) | (cTm.sec/2);	// shifts left 5 bits and adds seconds/2
 
 	return tmr;
 }
