@@ -1224,10 +1224,13 @@ class Pinguino(wx.Frame):
 			fichier.write(fileline[cpt])
 		fichier.close()
 
-		# research and replace arduino keywords in file
+		# search and replace arduino keywords in file
 		fichier = open(os.path.join(SOURCE_DIR, 'user.c'), 'r')
+		content = fichier.read()
+		content = self.removecomments(content)
+		content = content.split('\n')
 		nblines = 0
-		for line in fichier:
+		for line in content:
 			resultline = self.replaceword(line)
 			if resultline.find("error")==1:
 				line = resultline
@@ -1286,23 +1289,8 @@ class Pinguino(wx.Frame):
 # replaceword
 # ------------------------------------------------------------------------------
 
-	def replaceword(self,ligne):
+	def replaceword(self,line):
 		""" convert pinguino language in C language """
-		#instruction = ""
-		line = ligne
-
-		# search comment line 'cause there's no need to process it
-		ligne = ligne.replace(" ","")			# delete space
-		ligne = ligne.replace(chr(9),"")		# delete tab
-		if ligne[0:2] == "//":
-			ligne = "//\r\n"
-			return ligne
-
-		# remove end line comment
-		if line.find("//")!=-1:
-			line = line[0:line.find("//")]
-			line = line + "\r\n"
-
 		# replace arduino/pinguino language and add #define or #include to define.h
 		for i in range(len(self.libinstructions)):
 			if re.search(self.regobject[i], line):
@@ -1311,8 +1299,25 @@ class Pinguino(wx.Frame):
 					self.adddefine("#"+str(self.libinstructions[i][2]))
 				if self.notindefine("#"+str(self.libinstructions[i][3])) == 1:
 					self.adddefine("#"+str(self.libinstructions[i][3]))
-		return line
-		
+		return line+"\n"
+
+# ------------------------------------------------------------------------------
+# removecomment
+# ------------------------------------------------------------------------------
+	
+	def removecomments(self, text):
+	    def replacer(match):
+	        s = match.group(0)
+	        if s.startswith('/'):
+	            return ""
+	        else:
+	            return s
+	    pattern = re.compile(
+	        r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"',
+	        re.DOTALL | re.MULTILINE
+	    )
+	    return re.sub(pattern, replacer, text)
+
 # ------------------------------------------------------------------------------
 # compile
 # ------------------------------------------------------------------------------
