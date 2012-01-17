@@ -24,9 +24,13 @@ SD.print f_write#include <sd/fileio.c>
 SD.println f_println#include <sd/fileio.c>
 SD.printf f_printf#include <sd/fileio.c>
 SD.remove f_unlink#include <sd/fileio.c>
+SD.unlink f_unlink#include <sd/fileio.c>
+SD.delete f_unlink#include <sd/fileio.c>
 SD.seek f_lseek#include <sd/fileio.c>
 SD.size f_size#include <sd/fileio.c>
 SD.position f_tell#include <sd/fileio.c>
+SD.flush f_sync#include <sd/fileio.c>
+SD.save f_sync#include <sd/fileio.c>
 SD.close f_close#include <sd/fileio.c>
 
 SD.isDir isDirectory#include <sd/fileio.c>
