@@ -31,10 +31,11 @@ void loop()
 	if (mount(8)) {
 		CDC.println("SD card contents");
 
-		char res, b;
+		char b;
 		unsigned int files, dirs;
-		SD.Dir dir; /* Directory object */
-		SD.FileInfo Finfo; /* File info */
+		SD_Dir dir; /* Directory object */
+		SD_FileInfo Finfo; /* File info */
+		SD_Error res;
 
 		// open directory
 		res = SD.openDir(&dir, "/");

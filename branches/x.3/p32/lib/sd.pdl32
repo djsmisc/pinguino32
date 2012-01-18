@@ -1,7 +1,8 @@
-SD.Fs FATFS#include <sd/fileio.c>
-SD.File FIL#include <sd/fileio.c>
-SD.Dir DIR#include <sd/fileio.c>
-SD.FileInfo FILINFO#include <sd/fileio.c>
+SD_Fs FATFS#include <sd/fileio.c>
+SD_File FIL#include <sd/fileio.c>
+SD_Dir DIR#include <sd/fileio.c>
+SD_FileInfo FILINFO#include <sd/fileio.c>
+SD_Error FRESULT#include <sd/fileio.c>
 
 SD.readSector readSECTOR#include <sd/sdmmc.c>
 SD.writeSector writeSECTOR#include <sd/sdmmc.c>

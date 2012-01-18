@@ -25,25 +25,27 @@ void setup()
 
 void loop()
 {
-	File *fs;
+	char filename[] = "lorem.txt";
+	SD_File file;
 	char data[B_SIZE];
-	unsigned r;
-	int i, j;
+	int i, j, br;
+	SD_Error error;
 	
 	// wait for RETURN key to start
 	CDC.println("Press RETURN to start.");
 	while (CDC.getKey() != '\r');
 	
-	// mount FAT16 system
+	// mount FAT filesystem
 	// Card Select output on pin 8
 	if (SD.mount(8)) // or SD.init(8) or SD.begin(8)
 	{
 		// open file
-		if (( fs = SD.open("lorem.txt", "r") ))
-		{
+		error = SD.open(&file, filename, FA_OPEN_EXISTING | FA_READ);
+		if (!error){
 			do {
-				r = SD.read(fs, data, B_SIZE);
-				for(i = 0; i < r; i++)
+				error = SD.read(&file, data, B_SIZE, &br);
+				
+				for(i = 0; i < br; i++)
 				{
 					CDC.printf("%02X  ", data[i]); 
 					if (i%8 == 0)
@@ -58,9 +60,9 @@ void loop()
 						CDC.printf("\r\n"); 
 					}
 				}
-			} while(r == B_SIZE);
+			} while(br == B_SIZE);
 			CDC.printf("\r\n"); 
-			SD.close(fs);
+			SD.close(&file);
 			SD.unmount();
 		}
 		else
