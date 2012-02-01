@@ -1,13 +1,14 @@
 /*	----------------------------------------------------------------------------
 	FILE:			system.c
-	PROJECT:		pinguinoX
+	PROJECT:		pinguino
 	PURPOSE:		
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	16 nov. 2010
-	LAST RELEASE:	23 feb. 2011
+	LAST RELEASE:	30 jan. 2011
 	----------------------------------------------------------------------------
 	CHANGELOG:
 	[23-02-11][Marcus Fazzi][Removed  asm("di")/asm("ei") from GetCP0Count/SetCP0Count]
+	[30-01-12][Régis Blanchot][Added P32MX220F032D support]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -150,14 +151,16 @@ u32 GetPeripheralClock()
 /*	----------------------------------------------------------------------------
 	SetFlashWaitStates()
 	--------------------------------------------------------------------------*/
-
 void SetFlashWaitStates()
 {
 	SystemUnlock();
+#if defined(PIC32_PINGUINO_220)
+	PMMODEbits.WAITB = 0b00;					// Data wait of 1 TPB
+#else
 	CHECON = (GetSystemClock() / 20) - 1;		// FlashWaitStates
+#endif
 	SystemLock();
 }
-
 /*	-------------------------------------1---------------------------------------
 	SetSystemClock() : change source and frequency clock
 	----------------------------------------------------------------------------	

@@ -8,6 +8,7 @@
 
 #include <stdarg.h>
 
+#include <typedef.h>
 #include <system.c>
 #include <interrupt.c>
 #include <delay.c>
@@ -154,9 +155,9 @@ void CDC_init()
 
 // CDC.puts
 // 18-05-2011 modified by régis blanchot
-void CDCputs(char *buffer, char length)
+void CDCputs(u8 *buffer, u8 length)
 {
-	int i;
+	u16 i;
 
 	for (i = 1000; i > 0; --i)
 	{
@@ -172,9 +173,9 @@ void CDCputs(char *buffer, char length)
 }
 	
 // CDC.read
-char CDCgets(char *buffer)
+u8 CDCgets(u8 *buffer)
 {
-	char numBytesRead;
+	u8 numBytesRead;
 
 	numBytesRead = getsUSBUSART(buffer, 64);
 	return numBytesRead;
@@ -192,23 +193,24 @@ char CDCgets(char *buffer)
 // added by regis blanchot 29/05/2011
 
 // CDC.write
-void CDCwrite(char c)
+void CDCwrite(u8 c)
 {
-	CDCputs(c, 1);
+//	CDCputs(c, 1);
+	CDCputs(&c, 1);
 }
 
 // CDC.printf
-void CDCprintf(const char *fmt, ...)
+void CDCprintf(const u8 *fmt, ...)
 {
-	char buffer[80];
-//char *buffer;
-	char length;
+	u8 buffer[80];
+	//char *buffer;
+	u8 length;
 	va_list	args;
 
 	va_start(args, fmt);
-//length = strlen(fmt);
-//buffer = (char *) malloc(1 + length * sizeof(char));	
-	length = psprintf(buffer, fmt, args);
+	//length = strlen(fmt);
+	//buffer = (char *) malloc(1 + length * sizeof(char));	
+	length = psprintf2(buffer, fmt, args);
 	CDCputs(buffer,length);
 	va_end(args);
 }
@@ -216,30 +218,34 @@ void CDCprintf(const char *fmt, ...)
 // CDC.print
 // last is a string (char *) or an integer
 
-void CDCprint(const char *fmt, ...)
+void CDCprint(const u8 *fmt, ...)
 {
-	unsigned char s;
-	va_list args;					// list of arguments
-	va_start(args, fmt);			// initialize the list
-	s = (unsigned char) va_arg(args, int);		// get the first variable arg.
+	u8 s;
+	va_list args;							// a list of arguments
+	va_start(args, fmt);					// initialize the list
+	s = (u8) va_arg(args, u32);				// get the first variable arg.
 	
 	//switch (*args)
 	switch (s)
 	{
+		case FLOAT:
+			CDCprintf("%f", (u32)fmt);
+			break;
 		case DEC:
-			CDCprintf("%d", (int)fmt);
+			CDCprintf("%d", (u32)fmt);
 			break;
 		case HEX:
-			CDCprintf("%x", (int)fmt);
+			CDCprintf("%x", (u32)fmt);
 			break;
 		case BYTE:
-			CDCprintf("%d", (unsigned char)fmt);
+			//CDCprintf("%d", (u8)fmt);
+			CDCprintf("%d", (u32)fmt);
 			break;
 		case OCT:
-			CDCprintf("%o", (int)fmt);
+			CDCprintf("%o", (u32)fmt);
 			break;
 		case BIN:
-			CDCprintf("%b", (int)fmt);
+			CDCprintf("%b", (u32)fmt);
 			break;           
 		default:
 			CDCprintf(fmt);
@@ -249,16 +255,19 @@ void CDCprint(const char *fmt, ...)
 }
 
 //CDC.println
-void CDCprintln(const char *fmt,...)
+void CDCprintln(const u8 *fmt, ...)
 {
-	CDCprintf(fmt);
+	va_list args;							// a list of arguments
+	va_start(args, fmt);					// initialize the list
+
+	CDCprintf(fmt, args);
 	CDCprintf("\n\r");
 }
 
 // CDC.getKey
 char CDCgetkey()
 {
-	char buffer[64];		// always get a full packet
+	u8 buffer[64];		// always get a full packet
 
 	while (!CDCgets(buffer));
 	return (buffer[0]);	// return only the first character
@@ -267,9 +276,8 @@ char CDCgetkey()
 // CDC.getString
 char * CDCgetstring(void)
 {
-	char i = 0;
-	char c;
-	static char buffer[80];
+	u8 c, i = 0;
+	static u8 buffer[80];
 	
 	do {
 		c = CDCgetkey();

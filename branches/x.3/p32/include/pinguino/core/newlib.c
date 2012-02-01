@@ -1,6 +1,6 @@
 /*	----------------------------------------------------------------------------
 	FILE:				newlib.c
-	PROJECT:			pinguinoX
+	PROJECT:			pinguino
 	PURPOSE:			This is a set of system calls beetween newlib and pinguino32
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 	FIRST RELEASE:	15 may. 2011
@@ -86,6 +86,7 @@ int close(int file)
 // return 0 if stream is available
 // failed return -1
 
+//int fstat(int file, stat *st) 
 int fstat(int file, struct stat *st) 
 {
 	return 0;

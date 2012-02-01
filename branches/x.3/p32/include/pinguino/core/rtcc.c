@@ -3,8 +3,8 @@
 	PROJECT: 		pinguino32
 	PURPOSE: 		Real Time Clock and Calendar functions
 	PROGRAMER: 		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	11 apr. 2011
-	LAST RELEASE:	10 dec. 2011
+	FIRST RELEASE:	11 Apr 2011
+	LAST RELEASE:	02 Jan 2012
 	----------------------------------------------------------------------------
 	TODO :
 	----------------------------------------------------------------------------
@@ -88,6 +88,79 @@ typedef enum
 #define RTCC_ALARM_EVERY_WEEK 			0b0111
 #define RTCC_ALARM_EVERY_MONTH 			0b1000
 #define RTCC_ALARM_EVERY_YEAR 			0b1001 // except when configured for February 29th, once every 4 years
+
+// Prototypes
+rtccTime RTCC_ConvertTime(rtccTime *);
+rtccDate RTCC_ConvertDate(rtccDate *);
+int RTCC_SetWriteEnable(void);
+int RTCC_SetWriteDisable(void);
+int RTCC_GetWriteEnable(void);
+void RTCC_Enable(void);
+void RTCC_Disable(void);
+int RTCC_GetEnable(void);
+rtccRes RTCC_GetSOSCstatus(void);
+void RTCC_SOSCenable(void);
+void RTCC_SOSCdisable(void);
+void RTCC_SetTime(unsigned long);
+rtccTime RTCC_GetTime(void);
+void RTCC_SetDate(unsigned long);
+rtccDate RTCC_GetDate(void);
+void RTCC_SetTimeDate(unsigned long , unsigned long);
+void RTCC_GetTimeDate(rtccTime*, rtccDate*);
+void RTCC_SetCalibration(int);
+int RTCC_GetCalibration(void);
+void RTCC_SetAlarmEnable(int);
+void RTCC_AlarmEnable(void);
+void RTCC_AlarmDisable(void);
+int RTCC_GetAlarmEnable(void);
+void RTCC_SetChimeEnable(int);
+void RTCC_ChimeEnable(void);
+void RTCC_ChimeDisable(void);
+int RTCC_GetChimeEnable(void);
+void RTCC_SetAlarmRepeat(int);
+void RTCC_AlarmRepeatEveryHalfSecond(void);
+void RTCC_AlarmRepeatEverySecond(void);
+void RTCC_AlarmRepeatEveryTenSeconds(void);
+void RTCC_AlarmRepeatEveryMinute(void);
+void RTCC_AlarmRepeatEveryTenMinutes(void);
+void RTCC_AlarmRepeatEveryHour(void);
+void RTCC_AlarmRepeatEveryDay(void);
+void RTCC_AlarmRepeatEveryWeek(void);
+void RTCC_AlarmRepeatEveryMonth(void);
+void RTCC_AlarmRepeatEveryYear(void);
+int RTCC_GetAlarmRepeat(void);
+void RTCC_SetAlarmRepeatCount(char);
+char RTCC_GetAlarmRepeatCount(void);
+void RTCC_SetAlarmTime(unsigned long);
+rtccTime RTCC_GetAlarmTime(void);
+void RTCC_SetAlarmDate(unsigned long);
+rtccDate RTCC_GetAlarmDate(void);
+void RTCC_SetAlarmTimeDate(unsigned long, unsigned long);
+void RTCC_GetAlarmTimeDate(rtccTime*, rtccDate*);
+void RTCC_SetSync(int);
+int RTCC_GetSync(void);
+void RTCC_SetAlarmSync(int);
+int RTCC_GetAlarmSync(void);
+int RTCC_GetHalfSecond(void);
+void RTCC_SecondsPulseOutput(void);
+void RTCC_AlarmPulseOutput(void);
+void RTCC_SetAlarmInitialPulse(int);
+void RTCC_AlarmInitialPulseHigh(void);
+void RTCC_AlarmInitialPulseLow(void);
+int RTCC_GetAlarmInitialPulse(void);
+void RTCC_AlarmInitialPulseToggle(void);
+void RTCC_SetOutputEnable(int);
+void RTCC_OutputEnable(void);
+void RTCC_OutputDisable(void);
+int RTCC_GetOutputEnable(void);
+void RTCC_SetAlarmIntEnable(int);
+void RTCC_AlarmIntEnable(void);
+void RTCC_AlarmIntDisable(void);
+void OnRTCC(callback);
+void RTCCInterrupt(void);
+void RTCC_init(void);
+void RTCC_Shutdown(void);
+rtccRes RTCC_Open(unsigned long, unsigned long, int);
 
 /*	----------------------------------------------------------------------------
 	RTCC REGISTERS
@@ -266,44 +339,6 @@ void RTCC_SOSCdisable(void)
 }
 
 /*	-----------------------------------------------------------------------------
-	The function initializes the RTCC device.
-		*enables the secondary oscillator (SOSC),
-		*enables the RTCC,
-		*disables RTCC write,
-		*disables the Alarm and the OE,
-		*clears the alarm interrupt flag.
-	---------------------------------------------------------------------------*/
-
-void RTCC_init(void)
-{
-	RTCC_SOSCenable();
-	RTCC_Enable();
-	RTCC_SetWriteDisable();
-	RTCC_AlarmDisable();
-	RTCC_OutputDisable();
-	IntClearFlag(INT_REAL_TIME_CLOCK);
-}
-
-/*	-----------------------------------------------------------------------------
-	The function shutdowns the RTCC device.
-	*It disables the secondary oscillator (SOSC),
-	*disables the RTCC
-	*disables RTCC write
-	*disables the Alarm and the OE.
-	*clears the alarm interrupt flag.
- 	---------------------------------------------------------------------------*/
-
-void RTCC_Shutdown(void)
-{
-	RTCC_SOSCdisable();
-	RTCC_Disable();
-	RTCC_SetWriteDisable();
-	RTCC_AlarmDisable();
-	RTCC_OutputDisable();
-	IntClearFlag(INT_REAL_TIME_CLOCK);
-}
-
-/*	-----------------------------------------------------------------------------
 	The write is successful only if Write Enable is set.
 	The function will enable the write itself.
 	The routine wait for the CLK to be running before returning.
@@ -449,28 +484,6 @@ void RTCC_SetCalibration(int cal)
 int RTCC_GetCalibration(void)
 {
 	 return RTCCONbits.CAL;
-}
-
-/*	-----------------------------------------------------------------------------
-	The function initializes the RTCC device.
-	*It starts the RTCC clock,
-	*sets the desired time and calibration
-	and enables the RTCC.
-	Disables the Alarm and the OE and further RTCC writes.
-	Clears the alarm interrupt flag.
-	---------------------------------------------------------------------------*/
-
-rtccRes RTCC_Open(unsigned long tm, unsigned long dt, int drift)
-{
-	RTCC_SOSCenable();
-	RTCC_SetTime(tm);
-	RTCC_SetDate(dt);
-	RTCC_SetCalibration(drift);
-	RTCC_Enable();
-	RTCC_AlarmDisable();
-	RTCC_OutputDisable();
-	RTCC_SetWriteDisable();
-	IntClearFlag(INT_REAL_TIME_CLOCK);
 }
 
 /*	-----------------------------------------------------------------------------
@@ -849,12 +862,12 @@ void RTCC_SetOutputEnable(int enable)
 		RTCCONbits.RTCOE = 0;
 }
 
-void RTCC_OutputEnable()
+void RTCC_OutputEnable(void)
 {
 	RTCC_SetOutputEnable(True);
 }
 
-void RTCC_OutputDisable()
+void RTCC_OutputDisable(void)
 {
 	RTCC_SetOutputEnable(False);
 }
@@ -910,6 +923,67 @@ void RTCCInterrupt(void)
 		IntClearFlag(INT_REAL_TIME_CLOCK);
 		intFunction();
 	}
+}
+
+/*	-----------------------------------------------------------------------------
+	The function initializes the RTCC device.
+		*enables the secondary oscillator (SOSC),
+		*enables the RTCC,
+		*disables RTCC write,
+		*disables the Alarm and the RTCC clock ouput (RTCOE=0),
+		*clears the alarm interrupt flag.
+	---------------------------------------------------------------------------*/
+
+void RTCC_init(void)
+{
+	RTCC_SOSCenable();
+	RTCC_Enable();
+	RTCC_SetWriteDisable();
+	RTCC_AlarmDisable();
+	RTCC_OutputDisable();
+	IntClearFlag(INT_REAL_TIME_CLOCK);
+}
+
+/*	-----------------------------------------------------------------------------
+	The function shutdowns the RTCC device.
+		*It disables the secondary oscillator (SOSC),
+		*disables the RTCC
+		*disables RTCC write
+		*disables the Alarm and the RTCC clock output (RTCOE=0).
+		*clears the alarm interrupt flag.
+ 	---------------------------------------------------------------------------*/
+
+void RTCC_Shutdown(void)
+{
+	RTCC_SOSCdisable();
+	RTCC_Disable();
+	RTCC_SetWriteDisable();
+	RTCC_AlarmDisable();
+	RTCC_OutputDisable();
+	IntClearFlag(INT_REAL_TIME_CLOCK);
+}
+
+/*	-----------------------------------------------------------------------------
+	The function initializes the RTCC device.
+		*It enables the secondary oscillator (SOSC),
+		*sets the desired time, date and calibration
+		*enables the RTCC,
+		*disables the Alarm and the RTCC clock output (RTCOE=0), 
+		*disables RTCC writes.
+		*clears the alarm interrupt flag.
+	---------------------------------------------------------------------------*/
+
+rtccRes RTCC_Open(unsigned long tm, unsigned long dt, int drift)
+{
+	RTCC_SOSCenable();
+	RTCC_SetTime(tm);
+	RTCC_SetDate(dt);
+	RTCC_SetCalibration(drift);
+	RTCC_Enable();
+	RTCC_AlarmDisable();
+	RTCC_OutputDisable();
+	RTCC_SetWriteDisable();
+	IntClearFlag(INT_REAL_TIME_CLOCK);
 }
 
 #endif	/* __RTCC__ */

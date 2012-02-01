@@ -1,7 +1,7 @@
 /*	----------------------------------------------------------------------------
-	FILE:				itoa.c
-	PROJECT:			pinguinoX
-	PURPOSE:			converts integer, long or unsigned long to ascii
+	FILE:			itoa.c
+	PROJECT:		pinguino
+	PURPOSE:		converts integer, long or unsigned long to ascii
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	05 nov. 2010
 	LAST RELEASE:	29 oct. 2011
@@ -109,7 +109,7 @@ char * ultoa(unsigned long value, char *string, int base)
 		i = v % base;
 		v = v / base;
 		if (i < 10)
-			*tp++ = i+'0';
+			*tp++ = i + '0';
 		else
 			*tp++ = i + 'a' - 10;
 	}

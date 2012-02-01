@@ -26,7 +26,7 @@
 
 #include <interrupt.c>
 
-u32 _millis;
+volatile u32 _millis;
 
 void millis_init(void)
 {
