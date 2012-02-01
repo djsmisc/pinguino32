@@ -115,7 +115,11 @@
 		#define HEX		16
 	#endif
 
-	#if defined(UBW32_460) || defined(UBW32_795)
+	#ifndef FLOAT
+		#define FLOAT	32
+	#endif
+
+#if defined(UBW32_460) || defined(UBW32_795)
 		// UBW32 build-in leds
 		#define LED1			63 //PORTEbits.RE2	// white led
 		#define LED2			59 //PORTEbits.RE1	// red led

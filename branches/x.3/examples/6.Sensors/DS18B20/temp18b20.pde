@@ -29,6 +29,9 @@ void loop()
 	TEMPERATURE t;
 	
 	if (DS18B20.read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
+	{
+		if (t.sign) CDC.printf("-");
 		CDC.printf("%d.%d°C \r", t.integer, t.fraction);
-	delay(5000);
+	}
+	delay(1000);
 }

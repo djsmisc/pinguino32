@@ -144,12 +144,14 @@ def issueBlock(handle, address, block):
 	length = len(block)
 	if length == 0:
 		# Short data packets need flushing
-		usbBuf = [PROGRAM_COMPLETE_CMD] * MAXPACKETSIZE
-		#usbBuf[0] = PROGRAM_COMPLETE_CMD
+		#usbBuf = [PROGRAM_COMPLETE_CMD] * MAXPACKETSIZE
+		usbBuf = [0] * MAXPACKETSIZE
+		usbBuf[0] = PROGRAM_COMPLETE_CMD
 		return usbWrite(handle, usbBuf)
 	# command code
-	usbBuf = [PROGRAM_DEVICE_CMD] * MAXPACKETSIZE
-	#usbBuf[0] = PROGRAM_DEVICE_CMD 
+	#usbBuf = [PROGRAM_DEVICE_CMD] * MAXPACKETSIZE
+	usbBuf = [0] * MAXPACKETSIZE
+	usbBuf[0] = PROGRAM_DEVICE_CMD 
 	# block's address (0x12345678 => "12345678")
 	address = "%08X" % (address / BYTESPERADDRESS)
 	usbBuf[1] = int(address[6:8], 16)	# 78 = (address      ) & 0xFF
@@ -291,8 +293,9 @@ def hexWrite(handle, filename):
 	# automatically if less than 56 bytes...but if the last packet
 	# is exactly this size, an explicit flush is done here)
 	if bufLen == BLOCKSIZE:
-		usbBuf = [PROGRAM_COMPLETE_CMD] * MAXPACKETSIZE
-		#usbBuf[0] = PROGRAM_COMPLETE_CMD
+		#usbBuf = [PROGRAM_COMPLETE_CMD] * MAXPACKETSIZE
+		usbBuf = [0] * MAXPACKETSIZE
+		usbBuf[0] = PROGRAM_COMPLETE_CMD
 		return usbWrite(handle, usbBuf)
 		
 	print "%d bytes written" % codesize
@@ -305,7 +308,7 @@ def hexWrite(handle, filename):
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-filename = "examples/1.Basics/Blink/Blink.hex"
+filename = "test/misc/float.hex"
 fichier = open(filename, 'r')
 if fichier == "":
 	print "Unable to open " + filename
@@ -330,8 +333,9 @@ if handle == ERR_USB_INIT1:
 print "%s" % handle.getString(device.iProduct, 30)
 
 #print "Querying ..."
-usbBuf = [QUERY_DEVICE_CMD] * MAXPACKETSIZE
-#usbBuf[0] = QUERY_DEVICE_CMD
+#usbBuf = [QUERY_DEVICE_CMD] * MAXPACKETSIZE
+usbBuf = [0] * MAXPACKETSIZE
+usbBuf[0] = QUERY_DEVICE_CMD
 status = usbWrite(handle, usbBuf)
 if status != ERR_NONE:
 	print "Query Error!"
@@ -349,7 +353,7 @@ elif usbBuf[2] == DEVICE_FAMILY_PIC32:
 	print "PIC32 Processor"
 else:
 	BYTESPERADDRESS = 1
-	print "Unknown"
+	print "Unknown Processor"
 j=3
 while usbBuf[j] != TypeEndOfTypeList:
 	if usbBuf[j] == TypeProgramMemory:
@@ -358,8 +362,9 @@ while usbBuf[j] != TypeEndOfTypeList:
 	j = j + 9
 
 #print "Erasing ..."
-usbBuf = [ERASE_DEVICE_CMD] * MAXPACKETSIZE
-#usbBuf[0] = ERASE_DEVICE_CMD
+#usbBuf = [ERASE_DEVICE_CMD] * MAXPACKETSIZE
+usbBuf = [0] * MAXPACKETSIZE
+usbBuf[0] = ERASE_DEVICE_CMD
 status = usbWrite(handle, usbBuf)
 if status != ERR_NONE:
 	print "Erase Error!"
@@ -374,8 +379,9 @@ if status != ERR_NONE:
 	sys.exit(0)
 
 #print "Resetting ..."
-usbBuf = [RESET_DEVICE_CMD] * MAXPACKETSIZE
-#usbBuf[0] = RESET_DEVICE_CMD
+#usbBuf = [RESET_DEVICE_CMD] * MAXPACKETSIZE
+usbBuf = [0] * MAXPACKETSIZE
+usbBuf[0] = RESET_DEVICE_CMD
 status = usbWrite(handle, usbBuf)
 if status != ERR_NONE:
 	print "Reset Error!"

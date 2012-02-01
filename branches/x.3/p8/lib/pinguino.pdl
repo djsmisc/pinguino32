@@ -28,9 +28,9 @@ bitClear BitClear#include <macro.h>
 bit Bit#include <macro.h>
 lowByte low8#include <macro.h>
 highByte high8#include <macro.h>
-GetSystemClock GetSystemClock#include <system.c>
-GetInstructionClock GetInstructionClock#include <system.c>
-GetPeripheralClock GetPeripheralClock#include <system.c>
+getSystemClock GetSystemClock#include <system.c>
+getInstructionClock GetInstructionClock#include <system.c>
+getPeripheralClock GetPeripheralClock#include <system.c>
 Sprintf psprintf#include <stdio.c>
 Printf pprintf#include <stdio.c>
 KB.get Keyboard_get#include <misc.c>

@@ -33,8 +33,8 @@ import time
 # !!! use True at your own risc as it could erase your bootloader !!!
 # ------------------------------------------------------------------------------
 
-#DEV = True
-DEV = False
+DEV = True
+#DEV = False
 
 HOME_DIR	= os.getcwd()
 fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
@@ -232,8 +232,8 @@ except:
 	perror()
 
 try:
-	from uploader import uploader	# pinguino uploader class
-	#from uploaderVSC import uploaderVSC	# pinguino uploader class
+	#from uploader import uploader	# pinguino uploader class
+	from uploaderVSC import uploaderVSC	# pinguino uploader class
 	#from uploaderDLN import uploaderDLN	# pinguino uploader class
 	#from uploaderMCC import uploaderMCC	# pinguino uploader class
 	fichier.writelines('Pinguino Uploader successfully loaded\n')

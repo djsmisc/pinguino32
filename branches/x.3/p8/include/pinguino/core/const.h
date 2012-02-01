@@ -33,6 +33,7 @@
 	#define OCT				8 
 	#define DEC				10
 	#define HEX				16
+	#define FLOAT			32
 
 #endif
 

@@ -34,8 +34,6 @@
 
 int main()
 {
-	AD1PCFG = 0xFFFF;			// All pins of PORTB as digital IOs
-
 	#if defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
 	TRISDbits.TRISD9=1;		// because PORTB is shared with SDA on Olimex board
 	TRISDbits.TRISD10=1;		// because PORTB is shared with SCL on Olimex board
@@ -44,6 +42,15 @@ int main()
 	SystemConfig(80000000);	// default clock frequency is 80Mhz
 									// default peripheral freq. is 40MHz (cf. system.c)
 
+	// All pins of PORTB as digital IOs
+#ifdef __32MX220F032D__
+	ANSELA = 0;
+	ANSELB = 0;
+	ANSELC = 0;
+#else
+	AD1PCFG = 0xFFFF;
+#endif
+	
 	#ifdef __ANALOG__
 	analog_init();
 	#endif

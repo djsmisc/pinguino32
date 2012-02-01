@@ -1,21 +1,39 @@
+/*-------------------------------------------------------------------------
+   pic18fregs.h - 18F Family Device Library Header
 
-/*
- * pic18fregs.h - 18F Family Device Library Header
- *
- * This file is part of the GNU PIC Library.
- *
- * January, 2004
- * The GNU PIC Library is maintained by,
- * 	Vangelis Rokas <vrokas@otenet.gr>
- *
- * $Id: pic18fregs.h 5391 2009-02-27 13:03:40Z tecodev $
- *
- */
+   Copyright (C) 2004, Vangelis Rokas <vrokas AT otenet.gr>
+
+   This library is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2.1, or (at your option) any
+   later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License 
+   along with this library; see the file COPYING. If not, write to the
+   Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+
+   As a special exception, if you link this library with other files,
+   some of which are compiled with SDCC, to produce an executable,
+   this library does not by itself cause the resulting executable to
+   be covered by the GNU General Public License. This exception does
+   not however invalidate any other reasons why the executable file
+   might be covered by the GNU General Public License.
+-------------------------------------------------------------------------*/
 
 #ifndef __PIC18FREGS_H__
 #define __PIC18FREGS_H__
 
-#if defined(pic18f242)
+// added by Régis Blanchot <rblanchot@gmail.com>
+#if defined(pic18f27j53)
+#  include <pic18f27j53.h>
+
+#elif defined(pic18f242)
 #  include <pic18f242.h>
 
 #elif defined(pic18f248)
@@ -44,6 +62,12 @@
 
 #elif defined(pic18f1320)
 #  include <pic18f1320.h>
+
+#elif defined(pic18f13k50)
+#  include <pic18f13k50.h>
+
+#elif defined(pic18f14k50)
+#  include <pic18f14k50.h>
 
 #elif defined(pic18f2220)
 #  include <pic18f2220.h>
@@ -87,6 +111,9 @@
 #elif defined(pic18f24j10)
 #  include <pic18f24j10.h>
 
+#elif defined(pic18f24j50)
+#  include <pic18f24j50.h>
+
 #elif defined(pic18f24k20)
 #  include <pic18f24k20.h>
 
@@ -117,6 +144,9 @@
 #elif defined(pic18f25j10)
 #  include <pic18f25j10.h>
 
+#elif defined(pic18f25j50)
+#  include <pic18f25j50.h>
+
 #elif defined(pic18f25k20)
 #  include <pic18f25k20.h>
 
@@ -134,6 +164,9 @@
 
 #elif defined(pic18f2685)
 #  include <pic18f2685.h>
+
+#elif defined(pic18f26j50)
+#  include <pic18f26j50.h>
 
 #elif defined(pic18f26k20)
 #  include <pic18f26k20.h>
@@ -180,6 +213,9 @@
 #elif defined(pic18f44j10)
 #  include <pic18f44j10.h>
 
+#elif defined(pic18f44j50)
+#  include <pic18f44j50.h>
+
 #elif defined(pic18f44k20)
 #  include <pic18f44k20.h>
 
@@ -210,6 +246,9 @@
 #elif defined(pic18f45j10)
 #  include <pic18f45j10.h>
 
+#elif defined(pic18f45j50)
+#  include <pic18f45j50.h>
+
 #elif defined(pic18f45k20)
 #  include <pic18f45k20.h>
 
@@ -228,11 +267,17 @@
 #elif defined(pic18f4685)
 #  include <pic18f4685.h>
 
+#elif defined(pic18f46j50)
+#  include <pic18f46j50.h>
+
 #elif defined(pic18f46k20)
 #  include <pic18f46k20.h>
 
 #elif defined(pic18f6520)
 #  include <pic18f6520.h>
+
+#elif defined(pic18f6527)
+#  include <pic18f6527.h>
 
 #elif defined(pic18f6585)
 #  include <pic18f6585.h>
@@ -242,6 +287,12 @@
 
 #elif defined(pic18f6620)
 #  include <pic18f6620.h>
+
+#elif defined(pic18f6622)
+#  include <pic18f6622.h>
+
+#elif defined(pic18f6627)
+#  include <pic18f6627.h>
 
 #elif defined(pic18f6680)
 #  include <pic18f6680.h>
@@ -261,6 +312,9 @@
 #elif defined(pic18f6720)
 #  include <pic18f6720.h>
 
+#elif defined(pic18f6722)
+#  include <pic18f6722.h>
+
 #elif defined(pic18f67j50)
 #  include <pic18f67j50.h>
 
@@ -270,6 +324,9 @@
 #elif defined(pic18f8520)
 #  include <pic18f8520.h>
 
+#elif defined(pic18f8527)
+#  include <pic18f8527.h>
+
 #elif defined(pic18f8585)
 #  include <pic18f8585.h>
 
@@ -278,6 +335,12 @@
 
 #elif defined(pic18f8620)
 #  include <pic18f8620.h>
+
+#elif defined(pic18f8622)
+#  include <pic18f8622.h>
+
+#elif defined(pic18f8627)
+#  include <pic18f8627.h>
 
 #elif defined(pic18f8680)
 #  include <pic18f8680.h>
@@ -296,6 +359,9 @@
 
 #elif defined(pic18f8720)
 #  include <pic18f8720.h>
+
+#elif defined(pic18f8722)
+#  include <pic18f8722.h>
 
 #elif defined(pic18f87j50)
 #  include <pic18f87j50.h>
@@ -318,12 +384,20 @@
 
 #endif
 
+#ifndef __CONCAT
+#define __CONCAT(a,b)   __CONCAT2(a,b)
+#endif  // !__CONCAT
+
+#ifndef __CONCAT2
+#define __CONCAT2(a,b)   a##b
+#endif  // !__CONCAT2
+
+#define __CONFIG(ADDR,VAL)  \
+    static const __code unsigned char __at(ADDR) __CONCAT(_conf,__LINE__) = (VAL)
 
 #define Nop()           do { __asm nop __endasm; } while(0)
 #define ClrWdt()        do { __asm clrwdt __endasm; } while(0)
 #define Sleep()         do { __asm sleep __endasm; } while(0)
 #define Reset()         do { __asm reset __endasm; } while(0)
 
-
 #endif /* __PIC18FREGS_H__ */
-

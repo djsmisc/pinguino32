@@ -18,7 +18,7 @@
 	Maybe you will have to add your user name to the dialup group
 	----------------------------------------------------------------------*/
 
-#define ONEWIREBUS	14						// DQ line						
+#define ONEWIREBUS	14	// DQ line on pin 14				
 
 void setup()
 {
@@ -29,6 +29,9 @@ void loop()
 	TEMPERATURE t;
 	
 	if (DS18B20.read(ONEWIREBUS, SKIPROM, RES12BIT, &t))
+	{
+		if (t.sign) CDC.printf("-");
 		CDC.printf("%d.%d°C \r", t.integer, t.fraction);
+	}
 	delay(5000);
 }

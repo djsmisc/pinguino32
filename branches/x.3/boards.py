@@ -80,7 +80,7 @@ class Diolan26J50:
 	id=wx.NewId()
 	arch=8
 	bldr='diolan'
-	proc='18f26J50'
+	proc='18f26j50'
 	board='PIC18F26J50'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
@@ -165,13 +165,27 @@ class PIC32_Pinguino_Micro:
 	arch=32
 	bldr='microchip'
 	proc='32MX440F256H'
-	board='PIC32_PINGUINO_Micro'
+	board='PIC32_PINGUINO_MICRO'
 	vendor=MICROCHIP_ID
 	product=PIC32_ID
 	memstart=0x00000
 	memend=0x40000
 	shortarg='-M'
-	longarg='--olimex440micro'
+	longarg='--olimex440Micro'
+
+class PIC32_Pinguino_220:
+	name='PIC32_Pinguino_220'
+	id=wx.NewId()
+	arch=32
+	bldr='microchip'
+	proc='32MX220F032D'
+	board='PIC32_PINGUINO_220'
+	vendor=MICROCHIP_ID
+	product=PIC32_ID
+	memstart=0x00000
+	memend=0x07FFF
+	shortarg='-m'
+	longarg='--olimex220'
 
 class Emperor_460:
 	name='Emperor 460'
@@ -233,7 +247,8 @@ boardlist = [
 				Vasco2550, Vasco4550,
 				Diolan2550, Diolan26J50, Diolan4550,
 				PICuno_Equo, FreeJALduino,
-				PIC32_Pinguino, PIC32_Pinguino_OTG, PIC32_Pinguino_Micro,
+				PIC32_Pinguino, PIC32_Pinguino_OTG,
+				PIC32_Pinguino_Micro, PIC32_Pinguino_220,
 				Emperor_460, Emperor_795,
 				UBW32_460, UBW32_795
 			]

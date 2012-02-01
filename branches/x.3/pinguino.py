@@ -1331,6 +1331,7 @@ class Pinguino(wx.Frame):
 					comp = self.c8 + '310'
 				else:
 					comp = self.c8
+					
 				fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
 				sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', comp),\
 						"-mpic16",\
@@ -1426,7 +1427,7 @@ class Pinguino(wx.Frame):
 							"-L" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include'),\
-							"-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
@@ -1438,6 +1439,7 @@ class Pinguino(wx.Frame):
 							os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
 							os.path.join(SOURCE_DIR, 'main.o')],\
 							stdout=fichier, stderr=STDOUT)
+							#"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libio' + board.proc + '.lib'),\
 			else:
 				# "PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
 				# can't be used with Command Line version since editor isn't used

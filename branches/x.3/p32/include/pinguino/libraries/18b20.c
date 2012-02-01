@@ -1,14 +1,17 @@
 /*	----------------------------------------------------------------------------
-	FILE:				18b20.c
-	PROJECT:			Pinguino
-	PURPOSE:			One wire driver to use with DS18B20 digital temperature sensor.
+	FILE:			18b20.c
+	PROJECT:		Pinguino
+	PURPOSE:		One wire driver to use with DS18B20 digital temperature sensor.
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	28 sept. 2010
-	LAST RELEASE:	14 jan. 2011
+	FIRST RELEASE:	28 Sep 2010
+	LAST RELEASE:	17 Jan 2012
 	----------------------------------------------------------------------------
-	this file is based on Maxim AN162 and Microchip AN1199
+	02 Jun 2011	Jean-Pierre Mandon	fixed a bug in decimal part of the measure
+	17 Jan 2012	Mark Harper			update to deal correctly with negative temperatures
 	----------------------------------------------------------------------------
 	TODO : 
+	----------------------------------------------------------------------------
+	this file is based on Maxim AN162 and Microchip AN1199
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -25,8 +28,6 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
-	// fixed a bug in decimal part of the measure jp.mandon 02 june. 2011
-	
 #ifndef __DS18B20_C
 	#define __DS18B20_C
 
@@ -47,7 +48,7 @@
 
 	u8 DS18B20Rom[6][8];	// table of found ROM codes
 	u8 ROM[8];				// ROM Bit
-	u8 lastDiscrep = 0;	// last discrepancy
+	u8 lastDiscrep = 0;		// last discrepancy
 	u8 doneFlag = 0;		// Done flag
 	u8 numROMs;
 	u8 dowcrc;
@@ -71,27 +72,27 @@
 
 	/// DS18B20 ROM COMMANDS
 
-	#define SEARCHROM				0xF0	//
+	#define SEARCHROM			0xF0	//
 	#define READROM				0x33	//
-	#define MATCHROM				0x55	//
+	#define MATCHROM			0x55	//
 	#define SKIPROM				0xCC	//
-	#define ALARM_SEARCH			0xEC	//
+	#define ALARM_SEARCH		0xEC	//
 
 	/// DS18B20 FUNCTION COMMANDS
 
-	#define CONVERT_T				0x44	// Initiates temperature conversion
+	#define CONVERT_T			0x44	// Initiates temperature conversion
 	#define WRITE_SCRATCHPAD	0x4E	// Writes data into scratchpad bytes 2, 3, and 4 (TH, TL and configuration registers)
 	#define READ_SCRATCHPAD		0xBE	// Reads the entire scratchpad including the CRC byte
 	#define COPY_SCRATCHPAD		0x48	// Copies TH, TL, and configuration register data from the scratchpad to EEPROM
-	#define RECALL_E2				0xB8	// Recalls TH, TL, and configuration register data from EEPROM to the scratchpad
+	#define RECALL_E2			0xB8	// Recalls TH, TL, and configuration register data from EEPROM to the scratchpad
 	#define READ_POWER_SUPPLY	0xB4	// Signals DS18B20 power supply mode to the master
 
 	/// MODES
 
-	#define RES12BIT	1				// 12-bit resolution (slowest mode)
-	#define RES11BIT	2				// 11-bit resolution
-	#define RES10BIT	3				// 10-bit resolution
-	#define  RES9BIT	4				//  9-bit resolution (quickest mode)
+	#define RES12BIT			1		// 12-bit resolution (slowest mode)
+	#define RES11BIT			2		// 11-bit resolution
+	#define RES10BIT			3		// 10-bit resolution
+	#define  RES9BIT			4		//  9-bit resolution (quickest mode)
 
 	/// PROTOTYPES
 
@@ -116,8 +117,9 @@
 
 	u8 DS18B20Read(u8 pin, u8 num, u8 resolution, DS18B20_Temperature * t)
 	{
-		u8 res, busy = LOW;
-		u8 temp_lsb, temp_msb;
+		u8 	res, busy = LOW;
+		u8 	temp_lsb, temp_msb;
+		u16	temp;
 
 		switch (resolution)
 		{
@@ -178,27 +180,29 @@
 		//	MS BYTE S		S		S		S		S		2^6		2^5 	2^4
 		//	S = SIGN
 
-		if (temp_msb >= 0b11111000)		// test if temperature is negative
+		temp = temp_msb;				
+		temp = (temp << 8) + temp_lsb;	// combine msb & lsb into 16 bit variable
+		
+		if (temp_msb & 0b11111000)		// test if sign is set, i.e. negative
 		{		
 			t->sign = 1;
-			temp_msb -= 0b11111000;
+			temp = (temp ^ 0xFFFF) + 1;	// 2's complement conversion
 		}
 		else
 		{
 			t->sign = 0;
 		}
 
-		t->integer = temp_lsb >> 4;			// fractional part is removed, it remains only integer part
-		t->integer |= (temp_msb << 4);		// integer part from temp_msb is added
+		t->integer = (temp >> 4) & 0x7F;	// fractional part is removed, leaving only integer part
 
 /*	
 		t->fraction = 0;					// fractional part
-		if (BitRead(temp_lsb, 0)) t->fraction +=  625;
-		if (BitRead(temp_lsb, 1)) t->fraction += 1250;
-		if (BitRead(temp_lsb, 2)) t->fraction += 2500;
-		if (BitRead(temp_lsb, 3)) t->fraction += 5000;
+		if (BitRead(temp, 0)) t->fraction +=  625;
+		if (BitRead(temp, 1)) t->fraction += 1250;
+		if (BitRead(temp, 2)) t->fraction += 2500;
+		if (BitRead(temp, 3)) t->fraction += 5000;
 */
-		t->fraction = (temp_lsb & 0x0F) * 625;
+		t->fraction = (temp & 0x0F) * 625;
 		t->fraction /= 100;					// two digits after decimal 
 
 		return TRUE;
@@ -256,7 +260,7 @@
 		u8 i;
 		if (OneWireReset(pin)) return FALSE;
 		OneWireWrite(pin, MATCHROM);	// Match Rom
-		for (i = 0; i < 8; i++)				// Send the Address ROM Code.
+		for (i = 0; i < 8; i++)			// Send the Address ROM Code.
 			OneWireWrite(pin, DS18B20Rom[num][i]);
 		return TRUE;
 	}
@@ -414,7 +418,7 @@
 	----------------------------------------------------------------------------
 	* Arguments:
 	* Description:	Update the CRC for transmitted and received data using
-					the CCITT 16bit algorithm (X^16 + X^12 + X^5 + 1).
+					the CCITT 16bit algorithm (X^8 + X^5 + X + 1).
 	--------------------------------------------------------------------------*/
 
 	u8 DS18B20_crc(u8 x)

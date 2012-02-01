@@ -1,12 +1,13 @@
 /*	----------------------------------------------------------------------------
-	FILE:			stdio.c
-	PROJECT:		pinguino32X
+	FILE:			printf.c
+	PROJECT:		pinguino - http://www.pinguino.cc/
 	PURPOSE:		alternative printf and sprintf functions
-	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	10 nov. 2010
-	LAST RELEASE:	21 aug. 2011
+	PROGRAMERS:		regis blanchot <rblanchot@gmail.com>
+					mark harper <markfh@f2s.com>
+	FIRST RELEASE:	10 Nov 2010
+	LAST RELEASE:	16 Jan 2012
 	----------------------------------------------------------------------------
-	TODO : floating point support
+	TODO : floating point support - work in progress
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -27,11 +28,18 @@
 #define __PRINTF_C
 
 #include <stdarg.h>
+#include <typedef.h>
 
-typedef void (* funcout)(char);	// type of :	void foo(char c)
-static funcout pputchar;				// then : 		void pputchar(char c)
+#define PRINT_BUF_LEN 12		// should be enough for 32 bits
 
-static void pprintchar(char **str, char c)
+typedef void (*funcout) (u8);	// type of void foo(u8)
+static funcout pputchar;		// then void pputchar(u8)
+
+/*	----------------------------------------------------------------------------
+	pprintc = pinguino print char
+	--------------------------------------------------------------------------*/
+
+static void pprintc(u8 **str, u8 c)
 {
 	if (str)
 	{
@@ -44,15 +52,19 @@ static void pprintchar(char **str, char c)
 	}
 }
 
-#define PAD_RIGHT 1
-#define PAD_ZERO 2
+#define PAD_RIGHT	1
+#define PAD_ZERO	2
 
-static int pprints(char **out, const char *string, int width, int pad)
+/*	----------------------------------------------------------------------------
+	pprints = pinguino print string
+	--------------------------------------------------------------------------*/
+
+static int pprints(u8 **out, const u8 *string, u8 width, u8 pad)
 {
-	register int pc = 0;
-	char padchar = ' ';
-	int len = 0;
-	const char *ptr;
+	register u8 pc = 0;
+	u8 padchar = ' ';
+	u8 len = 0;
+	const u8 *ptr;
 
 	if (width > 0)
 	{
@@ -68,102 +80,249 @@ static int pprints(char **out, const char *string, int width, int pad)
 	{
 		for ( ; width > 0; --width)
 		{
-			pprintchar(out, padchar);
+			pprintc(out, padchar);
 			++pc;
 		}
 	}
 	for ( ; *string ; ++string)
 	{
-		pprintchar(out, *string);
+		pprintc(out, *string);
 		++pc;
 	}
 	for ( ; width > 0; --width)
 	{
-		pprintchar(out, padchar);
+		pprintc(out, padchar);
 		++pc;
 	}
 
 	return pc;
 }
 
-/* the following should be enough for 32 bit int */
-#define PRINT_BUF_LEN 12
+/*	----------------------------------------------------------------------------
+	pprinti = pinguino print 32-bit signed or unsigned integer
+ 	i:			32-bit number to convert into string
+ 	base:		1 byte, 2 binary, 8 octal, 10 decimal, 16 hexadecimal
+ 	sign:		0 positive, 1 negative
+ 	width:		justify
+ 	pad:		PAD_RIGHT or PAD_ZERO
+ 	letterbase:	'a' or 'A' (lower or upper case)
+	return:		string's length
+	--------------------------------------------------------------------------*/
 
-static int pprinti(char **out, int i, int b, int sg, int width, int pad, int letbase)
+static u8 pprinti(u8 **out, u32 i, u8 base, u8 sign, u8 width, u8 pad, u8 separator, u8 letterbase)
 {
-	char print_buf[PRINT_BUF_LEN];
-	char *s;
-	int t, neg = 0, pc = 0;
-	unsigned int u = i;
+	u8 buffer[PRINT_BUF_LEN];
+	u8 *string;
+	u8 neg = 0, pc = 0;
+	u32 t, uns32 = i;
 
 	if (i == 0)
 	{
-		print_buf[0] = '0';
-		print_buf[1] = '\0';
-		return pprints(out, print_buf, width, pad);
+		buffer[0] = '0';
+		buffer[1] = '\0';
+		return pprints(out, buffer, width, pad);
 	}
 
-	if (sg && b == 10 && i < 0)
+	// Do we have a negative decimal number ?
+	if ( (sign) && (base == 10) && ( (s32)i < 0 ) )
 	{
 		neg = 1;
-		u = -i;
+		uns32 = - (s32)i;
 	}
 
-	s = print_buf + PRINT_BUF_LEN - 1;
-	*s = '\0';
+	// we start at the end
+	string = buffer + PRINT_BUF_LEN - 1;
+	*string = '\0';
 
-	while (u)
+	while (uns32)
 	{
-		t = u % b;
-		if( t >= 10 )
-			t += letbase - '0' - 10;
-		*--s = t + '0';
-		u /= b;
+		t = uns32 % base;
+		if ( t >= 10 )
+			t += letterbase - '0' - 10;
+		*--string = t + '0';
+		uns32 /= base;
 	}
 
 	if (neg)
 	{
 		if (width && (pad & PAD_ZERO))
 		{
-			pprintchar(out, '-');
+			pprintc(out, '-');
 			++pc;
 			--width;
 		}
 		else
 		{
-			*--s = '-';
+			*--string = '-';
 		}
 	}
 
-	return pc + pprints(out, s, width, pad);
+	return pc + pprints(out, string, width, pad);
 }
 
-static int pprint(char **out, const char *format, va_list args)
+/*	----------------------------------------------------------------------------
+	pprintfl = pinguino print float
+	--------------------------------------------------------------------------*/
+
+static u8 pprintfl(u8 **out, float value, u8 width, u8 pad, u8 separator, u8 precision)
 {
-	int width, pad;
-	register int pc = 0;
-	char scr[2];
+	union
+	{
+		float	f;
+		s32		l;
+	} helper;
+	
+	u32 mantissa;
+	u32 int_part  = 0;
+	u32 frac_part = 0;
+	s8 exponent;
+	u8 buffer[PRINT_BUF_LEN], *string = buffer;
+	u8 tmp[PRINT_BUF_LEN], *s = tmp;
+	u8 count = 0, m, t;
+	u8 length = PRINT_BUF_LEN - 1;
+
+	helper.f = value;
+
+	// add negative sign if applicable
+	if (helper.l < 0)
+	{
+		if (width && (pad & PAD_ZERO))
+		{
+			pprintc(out, '-');
+			++count;
+			--width;
+		}
+		else
+		{
+			*string++ = '-';
+			length--;
+		}
+	}
+
+	// shifts the 23 bits of mantissa out,
+	// takes the next 8 bits then subtracts 127 to get actual exponent
+	exponent = ((helper.l >> 23) & 0xFF) - 127;	
+
+	// takes last 23 bits and adds the implicit 1
+	mantissa = (helper.l & 0x7FFFFF) | 0x800000;
+
+	if ( (exponent >= 31) || (exponent < -23) )
+	{
+		buffer[0] = 'i';
+		buffer[1] = 'n';
+		buffer[2] = 'f';
+		buffer[3] = '\0';
+		return pprints(out, buffer, width, pad);
+	}
+	else if (exponent >= 23)
+	{
+		int_part = mantissa << (exponent - 23);
+	}
+	else if (exponent >= 0) 
+	{
+		int_part = mantissa >> (23 - exponent);
+		frac_part = (mantissa << (exponent + 1)) & 0xFFFFFF; // mfh
+	}
+	else // if (exponent < 0)
+		frac_part = (mantissa & 0xFFFFFF) >> -(exponent + 1);
+
+	// add integer part to string
+	if (int_part == 0)
+	{
+		*string++ = '0';
+		length--;
+	}
+	else
+	{
+		m = 0;
+		// the string is more easily written backwards
+		while (int_part)
+		{
+			t = int_part % 10;		// decimal base
+			*s++ = t + '0';
+			int_part /= 10;
+			m++;					// string's length counter
+			length--;
+		}
+		// now the string is written in the right direction
+		while (m--)
+		{
+			*string++ = *--s;
+/* TODO
+			if ( separator && (m % 3 == 0) )
+			{
+				pprintc(out, ',');
+				++count;
+				--width;
+			}
+*/
+		}
+	}
+	
+	// add fractional part to string
+	if (precision > 6)
+		precision = 6;
+
+	// check if we have enough space
+	if (precision > length)
+		precision = length;
+ 
+	// otherwise, number has no fractional part
+	if (precision >= 1)
+	{
+		// add the decimal point to string
+		*string++ = '.';
+
+		// print binary-coded decimal (BCD)
+		for (m = 0; m < precision; m++)
+		{
+			// multiplies frac_part by 10 by adding 8 times and 2 times; 
+			frac_part = (frac_part << 3) + (frac_part << 1); 
+			// converts leading digits to number character
+			*string++ = (frac_part >> 24) + '0';
+			// strips off leading digits
+			frac_part &= 0xFFFFFF;
+		}
+	}
+
+	// end of string
+	*string++ = '\0';
+
+	return count + pprints(out, buffer, width, pad);
+}
+
+/*	----------------------------------------------------------------------------
+	pprint = pinguino print
+	--------------------------------------------------------------------------*/
+
+static u8 pprint(u8 **out, const u8 *format, va_list args)
+{
+	u8 width, pad;
+	register u8 pc = 0;
+	u8 precision = 2; // default value is 2 digits fractional part
+	u8 separator = 0; // no thousands separator
+	u8 scr[2];
 
 	for (; *format != 0; ++format)
 	{
 		if (*format == '%')
 		{
-			++format;
+			++format;				// get the next format identifier
 			width = pad = 0;
 
-			if (*format == '\0')
+			if (*format == '\0')	// end of line
 				break;
 
-			if (*format == '%')
+			if (*format == '%')		// error
 				goto abort;
 
-			if (*format == '-')
+			if (*format == '-')		// right justify
 			{
 				++format;
 				pad = PAD_RIGHT;
 			}
 
-			while (*format == '0')
+			while (*format == '0')	// field is padded with 0's instead of blanks
 			{
 				++format;
 				pad |= PAD_ZERO;
@@ -174,89 +333,100 @@ static int pprint(char **out, const char *format, va_list args)
 				width *= 10;
 				width += *format - '0';
 			}
-
-			if (*format == 's')
+/* TODO
+			if (*format == '\'')	// thousands separator
 			{
-				//char *s = (char *)va_arg(args, int);
-				char *s = va_arg(args, char*);
-				//s = va_arg(args, char*);
+				separator = 1;
+				++format;
+			}
+*/
+			if (*format == '.')		// float precision
+			{
+				++format;
+				precision = 0;
+			}
+
+			for ( ; *format >= '0' && *format <= '9'; ++format)
+			{
+				precision *= 10;
+				precision += *format - '0';
+			}
+
+			if (*format == 'f') 	// float
+			{
+				pc += pprintfl(out, va_arg(args, double), width, pad, separator, precision);
+				continue;
+			}
+
+			if (*format == 's')		// string
+			{
+				u8 *s = va_arg(args, u8*);
 				pc += pprints(out, s?s:"(null)", width, pad);
 				continue;
 			}
 
-			if (*format == 'd')
+			if (*format == 'u')		// unsigned integer
 			{
-				pc += pprinti(out, va_arg(args, int), 10, 1, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, u32), 10, 0, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'x' || *format == 'p')
+			if (*format == 'd' || *format == 'i')		// decimal signed integer
 			{
-				pc += pprinti(out, va_arg(args, int), 16, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, u32), 10, 1, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'X' || *format == 'P')
+			if (*format == 'x' || *format == 'p')	// lower hexa or pointer
 			{
-				pc += pprinti(out, va_arg(args, int), 16, 0, width, pad, 'A');
+				pc += pprinti(out, va_arg(args, u32), 16, 0, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'b')
+			if (*format == 'X' || *format == 'P')	// upper hexa or pointer
 			{
-				pc += pprinti(out, va_arg(args, int), 2, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, u32), 16, 0, width, pad, separator, 'A');
 				continue;
 			}
 
-			if (*format == 'o')
+			if (*format == 'b')		// binary
 			{
-				pc += pprinti(out, va_arg(args, int), 8, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, u32), 2, 0, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'u')
+			if (*format == 'o')		// octal
 			{
-				pc += pprinti(out, va_arg(args, int), 10, 0, width, pad, 'a');
+				pc += pprinti(out, va_arg(args, u32), 8, 0, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'c')
+			if (*format == 'c') 	// ascii
 			{
-				/* char are converted to int then pushed on the stack */
-				scr[0] = (char)va_arg(args, int);
+				scr[0] = (u8)va_arg(args, u32);
 				scr[1] = '\0';
 				pc += pprints(out, scr, width, pad);
-				continue;
-			}
-
-/*	-----------------------------------------------------------------------------
-	TODO: use ftoa() from stdlib.h ?
-	---------------------------------------------------------------------------*/
-			if (*format == 'f')
-			{
-				pc += pprints(out, "not yet implemented\0", width, pad);
 				continue;
 			}
 
 		}
 		else
 		{
-		abort:
-			pprintchar(out, *format);
+			abort:
+			pprintc(out, *format);
 			++pc;
 		}
 	}
 	if (out) **out = '\0';
-	//va_end( args );
 	return pc;
 }
 
-/*	-----------------------------------------------------------------------------
-	PUBLIC
-	---------------------------------------------------------------------------*/
+/*	----------------------------------------------------------------------------
+	pprintf = pinguino print formatted
+	--------------------------------------------------------------------------*/
 
 //int pprintf(funcout func, const char *format, ...)
-int pprintf(funcout func, const char *format, va_list args)
+u8 pprintf(funcout func, const u8 *format, va_list args)
 {
 	//va_list args;
     
@@ -265,8 +435,18 @@ int pprintf(funcout func, const char *format, va_list args)
 	return pprint(0, format, args);
 }
 
-//int psprintf(char *out, const char *format, va_list args)
-int psprintf(char *out, const char *format, ...)
+/*	----------------------------------------------------------------------------
+	psprintf = pinguino print formatted data to string
+	--------------------------------------------------------------------------*/
+
+// to work with CDC.printf
+u8 psprintf2(u8 *out, const u8 *format, va_list args)
+{
+	return pprint(&out, format, args);
+}
+
+// to work with Sprintf
+u8 psprintf(u8 *out, const u8 *format, ...)
 {
 	va_list args;
 

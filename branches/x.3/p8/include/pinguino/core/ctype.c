@@ -1,6 +1,6 @@
 /*	----------------------------------------------------------------------------
 	FILE:			ctype.c
-	PROJECT:		pinguino32X
+	PROJECT:		pinguino
 	PURPOSE:		alternative port of libc
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	7 feb. 2011
@@ -23,34 +23,36 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
-int isalnum (int);
-int isalpha (int);
-int iscntrl (int);
-int isdigit (int);
-int isgraph (int);
-int islower (int);
-int isprint (int);
-int ispunct (int);
-int isspace (int);
-int isupper (int);
-int isxdigit(int);
-int tolower (int);
-int toupper (int);
-int isblank (int);
-int isascii (int);
-int toascii (int);
-
 #ifndef __CTYPE_C
 	#define __CTYPE_C
 
-int isalnum(int c)
+#include <typedef.h>
+
+u8 isalnum (u8);
+u8 isalpha (u8);
+u8 iscntrl (u8);
+u8 isdigit (u8);
+u8 isgraph (u8);
+u8 islower (u8);
+u8 isprint (u8);
+u8 ispunct (u8);
+u8 isspace (u8);
+u8 isupper (u8);
+u8 isxdigit(u8);
+u8 tolower (u8);
+u8 toupper (u8);
+u8 isblank (u8);
+u8 isascii (u8);
+u8 toascii (u8);
+
+u8 isalnum(u8 c)
 {
 	if ((isalpha(c)) || (isdigit(c)))
 		return 1;
 	return 0;
 }
 
-int isalpha(int c)
+u8 isalpha(u8 c)
 {
 	if ((isupper(c)) || (islower(c)))
 	  return 1;
@@ -58,14 +60,14 @@ int isalpha(int c)
 }
 
 /* Not sure which characters are actually control characters in Cybikoland */
-int iscntrl(int c)
+u8 iscntrl(u8 c)
 {
 	if ((c >= 0) && (c <= 31))
 		return 1;
 	return 0;
 }
 
-int isdigit(int c)
+u8 isdigit(u8 c)
 {
 	if ((c >= 48) && (c <= 57))
 		return 1;
@@ -73,7 +75,7 @@ int isdigit(int c)
 }
 
 /*  Not quite sure this one is correct either */
-int isgraph(int c)
+u8 isgraph(u8 c)
 {
 	if ((c >= 33) && (c <= 255))
 	  return 1;
@@ -81,7 +83,7 @@ int isgraph(int c)
 }
 
 
-int islower(int c)
+u8 islower(u8 c)
 {
 	if ((c >= 97) && (c <= 122))
 		return 1;
@@ -89,7 +91,7 @@ int islower(int c)
 }
 
 /*  Not quite sure this one is correct either */
-int isprint(int c)
+u8 isprint(u8 c)
 {
 	if ((c >= 32) && (c < 126))
 	  return 1;
@@ -97,21 +99,21 @@ int isprint(int c)
 }
 
 
-int ispunct(int c)
+u8 ispunct(u8 c)
 {
 	if ((!isalnum(c)) && (!isspace(c)) && (isprint(c)))
 		return 1;
 	return 0;
 }
 
-int isspace(int c)
+u8 isspace(u8 c)
 {
 	if (c == 32)
 		return 1;
 	return 0;
 }
 
-int isupper(int c)
+u8 isupper(u8 c)
 {
 	if ((c >= 65) && (c <= 90))
 		return 1;
@@ -119,14 +121,14 @@ int isupper(int c)
 }
 
 /* Returns a nonzero value if c is a hex digit (0-9,a-f,A-F), zero otherwise */
-int isxdigit(int c)
+u8 isxdigit(u8 c)
 {
 	if (((c >= 48) && (c<=57)) || ((c >= 65) && (c <= 70)) || ((c >= 97) && (c <= 102)))
 		return 1;
 	return 0;
 }
 
-int tolower(int c)
+u8 tolower(u8 c)
 {
 	if (!islower(c))
 		return c + ('a' - 'A');
@@ -134,7 +136,7 @@ int tolower(int c)
 		return c;
 }
 
-int toupper(int c)
+u8 toupper(u8 c)
 {
 	if (islower(c))
 		return c - ('a' - 'A');
@@ -143,18 +145,18 @@ int toupper(int c)
 }
 
 /*  Not quite sure this one is correct either */
-int isblank(int c)
+u8 isblank(u8 c)
 {
 	//return ((__ctype_ptr__[c+1] & _B) || (c == '\t')); ???
 	return (c == '\t');
 }
 
-int isascii(int c)
+u8 isascii(u8 c)
 {
 	return c >= 0 && c< 128;
 }
 
-int toascii(int c)
+u8 toascii(u8 c)
 {
 	return (c)&0177;
 }

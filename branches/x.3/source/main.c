@@ -20,7 +20,6 @@
 
 // this main function was modified by Jean-pierre Mandon 2008/09/19
 // this function is part of Pinguino project
-//#pragma stack 0x80 0x32
 
 #include <pic18fregs.h>
 #include <const.h>
