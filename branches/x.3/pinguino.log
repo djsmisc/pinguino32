@@ -1,4 +1,4 @@
-Pinguino started at Fri Dec  2 18:58:45 2011
+Pinguino started at Fri Feb  3 07:57:22 2012
 
 Python version is good (>=2.5)
 System host is GNU/Linux
@@ -18,6 +18,8 @@ Threading successfully loaded
 Editeur successfully loaded
 ArgParse successfully loaded
 Pinguino Boards List successfully loaded
+Pinguino Frame successfully loaded
+Tools successfully loaded
 Pinguino Uploader successfully loaded
 pySVN successfully loaded
 Pinguino Version Control successfully loaded
