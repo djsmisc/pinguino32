@@ -121,11 +121,11 @@ class editeur(wx.Notebook):
 			if position!=-1:
 				self.line=self.editeur.LineFromPosition(position)
 				#self.editeur.SetLineState(self.line,1)
-				return(self.line)
+				return(self.line), position
 			else:	
-				return(-1)
+				return(-1), None
 		else:
-			return(-1)
+			return(-1), None
 		
 	def New(self,name,reservedword,rw):
 		""" open a new tab """
@@ -145,7 +145,7 @@ class editeur(wx.Notebook):
 		self.editeur=self.stcpage[self.GetSelection()]
 		#----- added by Yeison Cardona 8/01/2012
 		self.editeur.Bind(wx.EVT_CONTEXT_MENU, self.toConect.contexMenuTools)
-		self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.toConect.keyEvent)
+		self.editeur.Bind(wx.EVT_KEY_UP, self.toConect.keyEvent)
 		self.editeur.Bind(wx.stc.EVT_STC_AUTOCOMP_SELECTION, self.toConect.inserted)
 		#-----		
 		

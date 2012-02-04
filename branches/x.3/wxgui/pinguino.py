@@ -147,9 +147,9 @@ class Pinguino(framePinguinoX, Tools):
 	#def __init__(self, parent, id=-1, title='Pinguino IDE',
 				 #pos=wx.DefaultPosition ,size=(400, 400),
 				 #style=wx.DEFAULT_FRAME_STYLE):
-	def __init__(self, parent):
-		self._init_ctrls(parent)				 
-				 
+	def __init__(self, parent):	
+		self._init_ctrls(parent)
+
 		# ----------------------------------------------------------------------
 		# get OS name and define some OS dependant variable
 		# ----------------------------------------------------------------------
@@ -260,7 +260,6 @@ class Pinguino(framePinguinoX, Tools):
 		self.edit_menu.AppendItem(self.FIND)		
 		self.REPLACE = wx.MenuItem(self.edit_menu, wx.ID_REPLACE, _("Replace"), "", wx.ITEM_NORMAL)
 		self.edit_menu.AppendItem(self.REPLACE)
-		self.REPLACE.Enable(False)
 		self.edit_menu.AppendSeparator()		
 		self.CUT = wx.MenuItem(self.edit_menu, wx.ID_CUT, _("Cut"), "", wx.ITEM_NORMAL)
 		self.edit_menu.AppendItem(self.CUT)
@@ -477,7 +476,8 @@ class Pinguino(framePinguinoX, Tools):
 		self.Bind(wx.EVT_MENU, self.editor.clear, self.CLEAR)	   
 		self.Bind(wx.EVT_MENU, self.editor.undo, self.UNDO)	   
 		self.Bind(wx.EVT_MENU, self.editor.redo, self.REDO)
-		self.Bind(wx.EVT_MENU, self.OnFind, self.FIND)			   
+		self.Bind(wx.EVT_MENU, self.OnFind, self.FIND)
+		self.Bind(wx.EVT_MENU, self.OnReplace, self.REPLACE)		
 		self.Bind(wx.EVT_MENU, self.editor.selectall, self.SELECTALL)	 
 
 		# pref menu
@@ -537,8 +537,17 @@ class Pinguino(framePinguinoX, Tools):
 		# self.readlib() allready called by OnBoard
 		
 		self.initTools()
+		
 
+# ------------------------------------------------------------------------------
+# Update
+# ------------------------------------------------------------------------------
 
+	def updateIDE(self):
+		self.panel1.Fit()
+		self.panel2.Fit()
+		self._mgr.Update()			
+				
 # ------------------------------------------------------------------------------
 # Thread
 # ------------------------------------------------------------------------------
@@ -841,6 +850,7 @@ class Pinguino(framePinguinoX, Tools):
 		info.AddDeveloper('Jesús Carmona Esteban')		
 		info.AddDeveloper('Ivan Ricondo')
 		info.AddDeveloper('Joan Espinoza')
+		info.AddDeveloper('Yeison Cardona')									
 
 		info.AddDocWriter('Benoit Espinola')
 		info.AddDocWriter('Sebastien Koechlin')
@@ -945,49 +955,91 @@ class Pinguino(framePinguinoX, Tools):
 # ------------------------------------------------------------------------------
 
 	def OnFind(self,event):
-		self.PaneFindInfo=wx.aui.AuiPaneInfo()
-		self.PaneFindInfo.CloseButton(False)
-		self.PaneFindInfo.MaximizeButton(False)
-		self.PaneFindInfo.Caption(self.translate("Find"))
-		self.PaneFindInfo.CaptionVisible(False)
-		self.PaneFindInfo.Dockable(False)
-		self.PaneFindInfo.Resizable(False)
-		self.PaneFindInfo.Movable(False)
-		self.PaneFindInfo.RightDockable(False)
-		self.PaneFindInfo.LeftDockable(False)
-		self.PaneFindInfo.Top()	   
-		findpanelsize=(self.GetSize()[0],35)
-		self.FindPanel = wx.Panel(self,size=findpanelsize)
-		self._mgr.AddPane(self.FindPanel,self.PaneFindInfo)
-		self._mgr.Update()
-		self.FindText=wx.TextCtrl(self.FindPanel,size=(160,25),pos=(20,4))
-		self.FindPrevious=wx.Button(self.FindPanel,size=(90,25),label="Previous",pos=(210,5))
-		self.FindNext=wx.Button(self.FindPanel,size=(90,25),label="Next",pos=(320,5))
+		self.panel_replace.Hide()		
+		if self.panel_find.IsShown():
+			self.panel_find.Hide()
+			self.updateIDE()
+			return
 		self.Bind(wx.EVT_BUTTON, self.findnext, self.FindNext)  
 		self.Bind(wx.EVT_BUTTON, self.findprev, self.FindPrevious)			   
-		self.FindText.SetFocus()	   
-		self._mgr.Update()		
-		event.Skip()
+		self.FindText.SetFocus()
+		self.panel_find.Show()
+		self.updateIDE()		
 
 	def findprev(self,event):
 		chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
-		trouve=self.editor.find(chaine,0)
+		trouve, position=self.editor.find(chaine,0)
+		textEdit = self.editor.stcpage[self.editor.GetSelection()]		
 		if trouve!=-1:
 			self.editor.highlightline(trouve,'yellow')
 			self.editor.focus()
-		event.Skip()	
+			textEdit.SetSelectionStart(position)
+			textEdit.SetSelectionEnd(position+len(chaine))
+			self.Replace.Enable()
+			self.ReplaceAll.Enable()			
 		
 	def findnext(self,event):
 		chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
-		trouve=self.editor.find(chaine,1)
+		trouve, position=self.editor.find(chaine,1)
+		textEdit = self.editor.stcpage[self.editor.GetSelection()]
 		if trouve!=-1:
 			self.editor.highlightline(trouve,'yellow')
 			self.editor.focus()
-		event.Skip() 
+			textEdit.SetSelectionStart(position)
+			textEdit.SetSelectionEnd(position+len(chaine))
+			self.Replace.Enable()
+			self.ReplaceAll.Enable()	
+		return trouve
 
 # ------------------------------------------------------------------------------
-# TODO : OnReplace:
+# OnReplace:
 # ------------------------------------------------------------------------------
+
+	def OnReplace(self,event):
+		if self.panel_find.IsShown():
+			self.panel_find.Hide()
+			self.panel_replace.Hide()
+			self.ReplaceText.Clear()
+			self.updateIDE()
+			return
+		self.Bind(wx.EVT_BUTTON, self.findnext, self.FindNext)  
+		self.Bind(wx.EVT_BUTTON, self.findprev, self.FindPrevious)
+		self.Bind(wx.EVT_BUTTON, self.replacetext, self.Replace)  
+		self.Bind(wx.EVT_BUTTON, self.replacealltext, self.ReplaceAll)
+		self.FindText.SetFocus()
+		self.panel_find.Show()
+		self.panel_replace.Show()
+		self.Replace.Disable()
+		self.ReplaceAll.Disable()
+		self.updateIDE()
+		
+	#----------------------------------------------------------------------
+	def replacetext(self, event=None):
+		word = self.FindText.GetString(0, self.FindText.GetLastPosition())
+		wordReplace = self.ReplaceText.GetString(0, self.ReplaceText.GetLastPosition())
+		print word, wordReplace
+		if word == "": return False
+		textEdit = self.editor.stcpage[self.editor.GetSelection()]
+		textEdit.Clear()
+		textEdit.InsertText(textEdit.CurrentPos, wordReplace)
+		if self.findnext(event) == -1:
+			self.editor.gotostart()
+			self.Replace.Disable()
+			self.ReplaceAll.Disable()
+			return False
+		return True
+
+	#----------------------------------------------------------------------
+	def replacealltext(self, event):
+		textEdit = self.editor.stcpage[self.editor.GetSelection()]
+		self.editor.gotostart()
+		self.findnext(event)
+		while self.replacetext(): pass
+		# if ther word search is in the firs position:
+		self.findnext(event)
+		self.findprev(event)
+		self.replacetext()
+
 
 # ------------------------------------------------------------------------------
 # OnWeb: Open Web page
@@ -1525,85 +1577,3 @@ def getOptions():
 def setGui(bool):
 	global gui
 	gui=bool
-	
-
-## ------------------------------------------------------------------------------
-## MAIN
-## ------------------------------------------------------------------------------
-
-#if __name__ == "__main__":
-	#app = wx.PySimpleApp(0)
-
-## ------------------------------------------------------------------------------
-## ---Command Line---------------------------------------------------------------
-## ------------------------------------------------------------------------------
-
-	#options = getOptions()
-
-	#if options.version == True:
-		#print "current version is " + pinguino_version
-		#sys.exit(1)
-
-	#if options.author == True:
-		#print "jean-pierre mandon"
-		#print "regis blanchot"
-		#sys.exit(1)
-
-	#if options.board != False:
-		#curBoard = boardlist[options.board]
-
-		#if options.filename == False:
-			#print "missing filename"
-			#sys.exit(1)
-		#filename = options.filename[0]
-		#fname, extension = os.path.splitext(filename)
-		#if extension != ".pde":
-			#print "bad file extension, it should be .pde"
-			#sys.exit(1)
-
-		#pobject=Pinguino(None, -1, "")
-		#print "board " + curBoard.name
-		#print "mcu   " + curBoard.proc
-
-		#print "preprocessing ..."
-		#retour=pobject.preprocess(fname, curBoard)
-		#if retour == "error":
-			#print "error while preprocessing " + filename
-			#sys.exit(1)
-
-		#print "compiling ..."
-		#retour = pobject.compile(filename, curBoard)
-		#if retour != 0:
-			#print "error while compiling file " + filename
-			#sys.exit(1)
-
-		#print "linking ..."
-		#retour=pobject.link(filename, curBoard)
-
-		#if curBoard.arch == 8:
-			#MAIN_FILE="main.hex"
-		#else:
-			#MAIN_FILE="main32.hex"
-
-		#if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
-			#print "error while linking "
-			#sys.exit(1)
-
-		#shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
-		#print "compilation done"
-		#print pobject.getCodeSize(fname, curBoard)
-		#os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
-		#os.remove(fname + ".c")	   
-		#sys.exit(0)
-
-## ------------------------------------------------------------------------------
-## ---Graphic User Interface-----------------------------------------------------
-## ------------------------------------------------------------------------------
-
-	#wx.InitAllImageHandlers()
-	#gui=True
-	#frame_1 = Pinguino(None, -1, "")
-	#app.SetTopWindow(frame_1)
-	#frame_1.Show()
-	#app.MainLoop()
-
