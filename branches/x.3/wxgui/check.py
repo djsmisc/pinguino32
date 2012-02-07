@@ -252,7 +252,7 @@ except:
 try:
 	#from uploader import uploader	# pinguino uploader class
 	from uploaderVSC import uploaderVSC	# pinguino uploader class
-	#from uploaderDLN import uploaderDLN	# pinguino uploader class
+	from uploaderDLN import uploaderDLN	# pinguino uploader class
 	#from uploaderMCC import uploaderMCC	# pinguino uploader class
 	fichier.writelines('Pinguino Uploader successfully loaded\n')
 except:

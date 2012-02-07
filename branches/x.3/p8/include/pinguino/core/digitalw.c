@@ -6,6 +6,8 @@
 #ifndef __DIGITALW__
 #define __DIGITALW__
 
+#include <typedef.h>
+
 #ifdef PIC18F4550
 const uchar mask[29]={0X01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,		// PORTB
 					  0x40,0X80,0x01,0x02,0x04,						// PORTC
