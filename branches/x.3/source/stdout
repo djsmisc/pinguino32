@@ -1,0 +1,52 @@
+<<<<<<< .mine
+#----------------------------------------------------------------------------
+#	clean
+#----------------------------------------------------------------------------
+rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.o
+rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf
+« /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf » supprimé
+rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex
+rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o
+« /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o » supprimé
+#----------------------------------------------------------------------------
+#	copy
+#----------------------------------------------------------------------------
+cp /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/32MX440F256H.o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o
+#----------------------------------------------------------------------------
+#	compile and link
+#----------------------------------------------------------------------------
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-gcc -O2 -EL -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=8192 -Wl,-Map=/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/output.map -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO_MICRO -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/procdefs.ld -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/elf32pic32mx.x -L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/examples/1.Basics/Blink -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free -o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/crt0.S\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libcdc.a\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libadb.a\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/ISRwrapper.S\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free/p32xxxx.h\
+		-lm -lgcc -lc
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:35:0,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:27,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:30:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c: In function 'pprint':
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c:364:27: warning: pointer type mismatch in conditional expression
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:27:0,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:30:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c: In function 'SerialPrintf':
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:674:3: warning: passing argument 1 of 'pprintf' from incompatible pointer type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c:429:4: note: expected 'funcout' but argument is of type 'void (*)(char)'
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:675:3: warning: passing argument 1 of 'pprintf' from incompatible pointer type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c:429:4: note: expected 'funcout' but argument is of type 'void (*)(char)'
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:30:0:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c: At top level:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:90:28: warning: 'struct stat' declared inside parameter list
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:90:28: warning: its scope is only this definition or declaration, which is probably not what you want
+#----------------------------------------------------------------------------
+#	exec
+#----------------------------------------------------------------------------
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-objcopy -O ihex /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex
+#----------------------------------------------------------------------------
+#	correct
+#----------------------------------------------------------------------------
+grep --binary --invert-match '^:040000059D006000FA' /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex > /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/temp.hex
+mv /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/temp.hex /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex      
+=======
+>>>>>>> .r262

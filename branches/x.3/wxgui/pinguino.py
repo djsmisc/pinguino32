@@ -522,8 +522,8 @@ class Pinguino(framePinguinoX, Tools):
 		# TODO: how to exclude compilers dir. from other OS ?
 		# ------------------------------------------------------------------------------
 
-		#sw = SubversionWorkingCopy(HOME_DIR)
-		#self.localRev = sw.current_version()
+		sw = SubversionWorkingCopy(HOME_DIR)
+		self.localRev = sw.current_version()
 		self.localRev = "unknown"
 		
 		# ------------------------------------------------------------------------------

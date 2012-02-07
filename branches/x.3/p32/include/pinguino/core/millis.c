@@ -21,11 +21,17 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
+// 06 feb 2012 Z Added volatile for _millis variable
+
 #ifndef __MILLIS__
 #define __MILLIS__
 
 #include <interrupt.c>
 
+/**
+ * This variable is accessed both by the ISR and "normal" code. It
+ * must be declared as "volatile" to prevent caching.
+ */
 volatile u32 _millis;
 
 void millis_init(void)

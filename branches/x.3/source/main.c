@@ -24,8 +24,8 @@
 #include <pic18fregs.h>
 #include <const.h>
 #include <macro.h>
-#include "common_types.h"
 #ifndef diolan
+#include "common_types.h"
 #include "boot_iface.h"
 #endif
 #include "define.h"
@@ -46,12 +46,14 @@ void epapout_init() { return; }
 #endif
 #endif
 
-/******************************************************************/
-
-// beware : this is not a C main function, but the application
-// entry point called from the boot.
-
 #include "user.c"
+
+void systeminterrupt(void);
+
+/*	-------------------------------------------------------------------------
+	beware : this is not a C main function,
+ 	but the application entry point called from the bootloader.
+	-------------------------------------------------------------------------*/
 
 void pinguino_main(void) 
 {	
@@ -123,10 +125,30 @@ void pinguino_main(void)
 /* Interrupt vectors */
 
 #ifdef diolan
-//#pragma code high_priority_isr 0x808
+#pragma code high_priority_isr 0x0808
 #else //vasco
 #pragma code high_priority_isr 0x2020
+#endif
+
 void high_priority_isr(void) interrupt
+{
+	systeminterrupt();
+}
+
+#ifdef diolan
+//#pragma code low_priority_isr 0x0818
+#else //vasco
+#pragma code low_priority_isr 0x4000
+#endif
+
+void low_priority_isr(void) interrupt
+{
+#ifdef USERINT
+	userinterrupt();
+#endif
+}
+
+void systeminterrupt(void)
 {
 #ifdef __USBCDC
     if(PIR2bits.USBIF)
@@ -188,17 +210,3 @@ void high_priority_isr(void) interrupt
 	userhighinterrupt();
 #endif
 }
-#endif
-
-#ifdef diolan
-//#pragma code low_priority_isr 0x818
-#else //vasco
-#pragma code low_priority_isr 0x4000
-
-void low_priority_isr(void) interrupt
-{
-#ifdef USERINT
-	userinterrupt();
-#endif
-}
-#endif

@@ -6,7 +6,7 @@
 # ------------------------------------------------------------------------------
 # directories
 # ------------------------------------------------------------------------------
-# HOME, PDEDIR, PROC & BOARD are defined in pinguinobetax.py
+# HOME, PDEDIR, PROC & BOARD are defined in pinguino.py
 
 
 OSDIR			=	linux

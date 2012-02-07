@@ -214,8 +214,8 @@ class boot_rsp_write_eeprom:
 # --------------------------------------------------------------------------
 
 VENDOR_ID						=	0x04D8
-#PRODUCT_ID						=	0xFEAA
-PRODUCT_ID						=	0x003C
+PRODUCT_ID						=	0xFEAA
+#PRODUCT_ID						=	0x003C
 
 # Hex format record types
 # --------------------------------------------------------------------------
@@ -227,21 +227,21 @@ Start_Segment_Address_Record	=	 03
 Extended_Linear_Address_Record	=	 04
 Start_Linear_Address_Record		=	 05
 
-# Hid bootloader commands
+# Bootloader commands
 # --------------------------------------------------------------------------
 
-DLN_READ_FLASH_CMD				=	0x01
-DLN_WRITE_FLASH_CMD				=	0x02
-DLN_ERASE_FLASH_CMD				=	0x03
-DLN_GET_FW_VER_CMD				=	0x04
-DLN_RESET_CMD  					=	0x05
-DLN_READ_DEVID_CMD				=	0x06
-DLN_WRITE_ID_CMD				=	0x07
-DLN_READ_EEPROM_CMD				=	0x08
-DLN_WRITE_EEPROM_CMD			=	0x09
+#DLN_READ_FLASH_CMD				=	0x01
+DLN_WRITE_FLASH_CMD				=	0x01
+DLN_ERASE_FLASH_CMD				=	0x02
+DLN_GET_FW_VER_CMD				=	0x03
+DLN_RESET_CMD  					=	0x04
+DLN_READ_DEVID_CMD				=	0x05
+#DLN_WRITE_ID_CMD				=	0x07
+#DLN_READ_EEPROM_CMD			=	0x08
+#DLN_WRITE_EEPROM_CMD			=	0x09
 DLN_UNKNOWN_CMD					=	0xFF
 
-# boot command size in bytes
+# boot command offset in bytes
 BOOT_CMD						=	0
 BOOT_ECHO						=	1
 BOOT_ADDR_LO					=	2
@@ -379,59 +379,8 @@ def getDevice(vendor, product):
 # ------------------------------------------------------------------------------
 def initDevice(device):
 	""" init pinguino device """
-
-	"""
-	handle = device.open()
-	if handle:
-		if sys.platform == 'linux2':
-			handle.setConfiguration(DLN_ACTIVE_CONFIG)
-			try:
-				handle.claimInterface(DLN_INTERFACE_ID)
-				return handle
-			except usb.USBError:
-				try:
-					# claim interface failed, try detaching kernel driver first
-					handle.detachKernelDriver(DLN_INTERFACE_ID)
-					handle.claimInterface(DLN_INTERFACE_ID)
-					return handle
-				except usb.USBError:
-					return ERR_USB_INIT1
-		else:# win32, darwin
-			handle.setConfiguration(DLN_ACTIVE_CONFIG)
-			handle.claimInterface(DLN_INTERFACE_ID)
-			return handle
-	return ERR_USB_INIT1
-	"""
-
-	"""
-	handle = device.open()
-	if handle:
-		try:
-			# make sure the hiddev kernel driver is not active
-			handle.detachKernelDriver(DLN_INTERFACE_ID)
-		except usb.USBError:
-			print "Detaching Kernel Driver Failed"
-			pass
-		handle.setConfiguration(DLN_ACTIVE_CONFIG)
-		handle.claimInterface(DLN_INTERFACE_ID)
-		return handle
-	return ERR_USB_INIT1
-	"""
-
-	"""
-	if handle:
-		if sys.platform == 'linux2':
-			handle.detachKernelDriver(DLN_INTERFACE_ID)
-		handle.setConfiguration(DLN_ACTIVE_CONFIG)
-		handle.claimInterface(DLN_INTERFACE_ID)
-		return handle
-	return ERR_USB_INIT1
-	"""
-	
-	# Init
 	conf = device.configurations[0]
 	iface = conf.interfaces[0][0]
-	# On demande l'ouverture du peripherique
 	handle = device.open()
 	if handle:
 		if sys.platform == 'win32':
@@ -570,23 +519,6 @@ def eraseFlash(handle, address, size64):
 	# write data packet and get response
 	#print usbBuf
 	usbBuf = transaction(handle, usbBuf)
-	#print usbBuf
-# ------------------------------------------------------------------------------
-def readFlash(handle, address):
-	""" read a 64-byte block of flash memory """
-	usbBuf = [0] * 64
-	usbBuf[BOOT_CMD] = DLN_READ_FLASH_CMD 
-	# echo is used to link between command and response
-	usbBuf[BOOT_ECHO] = 123
-	# block's address (must be divisible by 2)
-	usbBuf[BOOT_ADDR_LO] = (address      ) & 0xFF
-	usbBuf[BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
-	usbBuf[BOOT_ADDR_UP] = (address >> 16) & 0xFF
-	# size must be divisible by 8
-	usbBuf[BOOT_SIZE] = 32 
-	# write data packet on usb device
-	#print usbBuf
-	return transaction(handle, usbBuf)
 	#print usbBuf
 # ------------------------------------------------------------------------------
 def writeFlash(handle, address, block):
@@ -761,12 +693,8 @@ def hexWrite(handle, filename):
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-#filename = "test/misc/Blink.hex"
-#filename = "test/misc/blink4550.hex"
-filename = "/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/diolan/blink/blink4550.hex"
-#filename = "/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/diolan/bin/blink4550asm.hex"
-#filename = "/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/diolan/bin/blink4550sdcc.hex"
-#filename = "/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/diolan/bin/Blink.hex"
+filename ="/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/diolan/blink/blink.X/dist/4550/production/blink.X.production.hex"
+#filename ="test/misc/Blink.hex"
 
 fichier = open(filename, 'r')
 if fichier == "":
@@ -822,13 +750,6 @@ if status == ERR_USB_ERASE:
 	print "Erase error"
 	closeDevice(handle)
 	sys.exit(0)
-
-print "Reading ..."
-"""
-for i in range(memstart, memend, 32):
-	print i
-	print readFlash(handle, i)
-"""
 
 print "Resetting ..."
 reset(handle)

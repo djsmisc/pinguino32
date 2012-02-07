@@ -110,8 +110,8 @@ class uploaderVSC:
 		""" init pinguino device """
 		handle = device.open()
 		if handle:
-			handle.setConfiguration(self.ACTIVE_CONFIG)
-			handle.claimInterface(self.INTERFACE_ID)
+			handle.setConfiguration(self.VSC_ACTIVE_CONFIG)
+			handle.claimInterface(self.VSC_INTERFACE_ID)
 			return handle
 		return self.ERR_USB_INIT1
 # ------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ class uploaderVSC:
 # ------------------------------------------------------------------------------
 	def usbWrite(self, handle, usbBuf):
 		"""	Write a data packet to currently-open USB device """
-		sent_bytes = handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
+		sent_bytes = handle.bulkWrite(self.VSC_OUT_EP, usbBuf, self.VSC_TIMEOUT)
 		if (sent_bytes): 
 			return self.ERR_NONE
 		else:
@@ -219,7 +219,7 @@ class uploaderVSC:
 				old_address = address
 
 		max_address = max_address + 64 - (max_address % 64)
-		self.txtWrite(output, "%d bytes to write\n" % codesize)
+		#self.txtWrite(output, "%d bytes to write\n" % codesize)
 
 		# fill data sequence with 0xFF
 		# ----------------------------------------------------------------------
@@ -245,7 +245,7 @@ class uploaderVSC:
 			if record_type == self.Data_Record:
 				if (address >= board.memstart) and (address < board.memend):
 					for i in range(byte_count):
-						data[address + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
+						data[address - board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 
 			# end of file record
 			elif record_type == self.End_Of_File_Record:
@@ -265,13 +265,13 @@ class uploaderVSC:
 		usbBuf = []
 		for i in range(board.memstart, max_address):
 			if i % 64 == 0:
-				self.eraseBlock(board, handle, i)
-			if i % self.BLOCKSIZE == 0:
+				self.eraseBlock(handle, i)
+			if i % self.VSC_BLOCKSIZE == 0:
 				if usbBuf != []:
-					self.issueBlock(handle, address + i - self.BLOCKSIZE, usbBuf)
+					self.issueBlock(handle, address + i - self.VSC_BLOCKSIZE, usbBuf)
 				usbBuf = []
-			if data[i] != []:
-				usbBuf.append(data[i])
+			if data[i - board.memstart] != []:
+				usbBuf.append(data[i - board.memstart])
 
 		return self.ERR_NONE
 # ------------------------------------------------------------------------------
@@ -302,7 +302,7 @@ class uploaderVSC:
 
 		if filename != '':
 			self.txtWrite(output, "writing ...\n")
-			status = self.hexWrite(output, handle, filename, board)
+			status = self.hexWrite(handle, filename, board)
 			if status == self.ERR_NONE:
 				self.txtWrite(output, os.path.basename(filename) + " successfully uploaded\n")
 			if status == self.ERR_HEX_RECORD:
@@ -312,5 +312,5 @@ class uploaderVSC:
 		else:
 			self.txtWrite(output, "No .hex file to write\n")
 
-		self.closeDevice(self, handle)
+		self.closeDevice(handle)
 # ------------------------------------------------------------------------------
