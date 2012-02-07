@@ -3,9 +3,11 @@
 	PROJECT:		     pinguino
 	PURPOSE:		     PIC32 clock settings
 	PROGRAMER:		     Roland "Zaemiemi" Haag <zaemiemi@ddsf.de>
-
-	FIRST RELEASE:	06 feb 2012
-	LAST RELEASE:	06 feb 2012
+	FIRST RELEASE:       06 feb 2012
+	LAST RELEASE:        07 feb 2012
+	----------------------------------------------------------------------------
+	CHANGELOG:
+	[07-02-12][Régis Blanchot][Added P32MX220F032D support]
 	------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -319,7 +321,12 @@ void SystemClocksWriteSettings(const SystemClocksSettings *s)
   OSCCONbits.PBDIV = s->PBDIV;
   
   // Set wait states
-  CHECON = (SystemClocksGetCpuFrequency(s) / 20) - 1;
+#if defined(PIC32_PINGUINO_220)
+	// TODO
+	PMMODEbits.WAITB = 0b00;								// Data wait of 1 TPB
+#else
+	CHECON = (SystemClocksGetCpuFrequency(s) / 20) - 1;		// FlashWaitStates
+#endif
   
   //
   

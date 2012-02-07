@@ -59,10 +59,18 @@ void pinguino_main(void)
 {	
 	PIE1 = 0;
 	PIE2 = 0;
-	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+
+	#if defined(PIC18F4550) || defined(PIC18F4450) || defined(PIC18F2550) || defined(PIC18F2450)
+	ADCON1 = 0b00001111;		// AN0 to AN12 Digital I/O
+	#endif
+
+	#if defined(PIC18F46J50) || defined(PIC18F26J50)
+	ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
+	ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
+	#endif
 
 	#ifdef USERINT
-	int_init();							// Disable all interrupts
+	int_init();					// Disable all interrupts
 	#endif
 
 	#ifdef __USB__
@@ -130,7 +138,7 @@ void pinguino_main(void)
 #pragma code high_priority_isr 0x2020
 #endif
 
-void high_priority_isr(void) interrupt
+void high_priority_isr(void) __interrupt
 {
 	systeminterrupt();
 }
@@ -141,7 +149,7 @@ void high_priority_isr(void) interrupt
 #pragma code low_priority_isr 0x4000
 #endif
 
-void low_priority_isr(void) interrupt
+void low_priority_isr(void) __interrupt
 {
 #ifdef USERINT
 	userinterrupt();
