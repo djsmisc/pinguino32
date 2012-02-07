@@ -53,7 +53,7 @@ if sys.version_info[0:2] < (2,5):
 	fichier.close()
 	perror()
 else:
-	fichier.writelines('Python version is good (>=2.5)\n')
+	fichier.writelines('Python version is OK (>=2.5)\n')
 
 # ------------------------------------------------------------------------------
 # check OS and compilers

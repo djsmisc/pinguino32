@@ -4,11 +4,12 @@
 	PURPOSE:		
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	16 nov. 2010
-	LAST RELEASE:	30 jan. 2011
+	LAST RELEASE:	06 feb. 2012
 	----------------------------------------------------------------------------
 	CHANGELOG:
 	[23-02-11][Marcus Fazzi][Removed  asm("di")/asm("ei") from GetCP0Count/SetCP0Count]
 	[30-01-12][Régis Blanchot][Added P32MX220F032D support]
+	[06-02-12][Roland Haag][Added new clock settings]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -83,6 +84,8 @@
 #define PLLMULT16		0b001 // Clock is multiplied by 16
 #define PLLMULT15		0b000 // Clock is multiplied by 15
 
+#include "system-clocks.c"
+
 /*	----------------------------------------------------------------------------
 	SystemUnlock() perform a system unlock sequence
 	--------------------------------------------------------------------------*/
@@ -130,6 +133,8 @@ void Reset()
 
 u32 GetSystemClock(void)
 {
+#ifdef OLD_VERSION
+#error Old version
 	u16 frcdiv = 1 << OSCCONbits.FRCDIV;
 	u16 pllmult = 15 + OSCCONbits.PLLMULT;	// Clock has been multiplied by ...
 	u16 pllodiv = 1 << OSCCONbits.PLLODIV;	// PLL output divided by ...
@@ -137,6 +142,11 @@ u32 GetSystemClock(void)
 	if (pllmult == 22)  pllmult = 24;
 	if (pllodiv == 128) pllodiv = 256;
 	return ( 8000000L / pllodiv / frcdiv * pllmult );
+#else
+	SystemClocksSettings s;
+	SystemClocksReadSettings(&s);
+	return SystemClocksGetCpuFrequency(&s);
+#endif
 }
 
 /*	----------------------------------------------------------------------------
@@ -145,13 +155,21 @@ u32 GetSystemClock(void)
 
 u32 GetPeripheralClock()
 {
-	return (GetSystemClock() / (1 << OSCCONbits.PBDIV));
+#ifdef OLD_VERSION
+#error Old version
+  return (GetSystemClock() / (1 << OSCCONbits.PBDIV));
+#else
+  SystemClocksSettings s;
+  SystemClocksReadSettings(&s);
+  return SystemClocksGetPeripheralFrequency(&s);
+#endif
 }
 
 /*	----------------------------------------------------------------------------
 	SetFlashWaitStates()
 	--------------------------------------------------------------------------*/
-void SetFlashWaitStates()
+
+void SetFlashWaitStates_old()
 {
 	SystemUnlock();
 #if defined(PIC32_PINGUINO_220)
@@ -161,6 +179,7 @@ void SetFlashWaitStates()
 #endif
 	SystemLock();
 }
+
 /*	-------------------------------------1---------------------------------------
 	SetSystemClock() : change source and frequency clock
 	----------------------------------------------------------------------------	
@@ -175,7 +194,7 @@ void SetFlashWaitStates()
 	256		1,5		1,3125	1,25	1,1875	1,125	1,0625	1		0,9375
 	--------------------------------------------------------------------------*/
 
-void SetSystemClock(u32 cpuCoreFrequency)
+void SetSystemClock_old(u32 cpuCoreFrequency)
 {
 	u8 i=0, j=0, p=0;
 	u16 d, m;
@@ -245,7 +264,7 @@ abort:
 	div : PBDIV1, PBDIV2, PBDIV4 or PBDIV8
 	--------------------------------------------------------------------------*/
 
-void SetPeripheralClock(u8 div)
+void SetPeripheralClock_old(u8 div)
 {
 	SystemUnlock();
 	OSCCONbits.PBDIV = div;
@@ -258,9 +277,19 @@ void SetPeripheralClock(u8 div)
 
 void SystemConfig(u32 cpuCoreFrequency)
 {
+#ifdef OLD_VERSION
+#error Old version
 	SetSystemClock(cpuCoreFrequency);
 	SetPeripheralClock(PBDIV2);	// PeripheralClock = cpuCoreFrequency / 2
 	SetFlashWaitStates();
+#else
+	SystemClocksSettings s;
+	SystemClocksReadSettings(&s);
+	SystemClocksCalcCpuClockSettings(&s, cpuCoreFrequency);
+	SystemClocksCalcPeripheralClockSettings(&s, cpuCoreFrequency / 2);
+	SystemClocksWriteSettings(&s);
+#endif
+
 	DDPCONbits.JTAGEN=0;		// PORTA is used as digital instead of JTAG
 }
 
