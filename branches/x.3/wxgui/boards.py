@@ -106,8 +106,8 @@ class Diolan4550:
 class PICuno_Equo:
 	name='PICuno Equo'
 	id=wx.NewId()
-  	arch=8
- 	bldr='vasco'
+	arch=8
+	bldr='vasco'
 	proc='18f4550'
 	board='PICUNO_EQUO'
 	vendor=MICROCHIP_ID
@@ -120,8 +120,8 @@ class PICuno_Equo:
 class FreeJALduino:
 	name='FreeJALduino'
 	id=wx.NewId()
- 	arch=8
- 	bldr='vasco'
+	arch=8
+	bldr='vasco'
 	proc='18f2550'
 	board='FREEJALDUINO'
 	vendor=MICROCHIP_ID
