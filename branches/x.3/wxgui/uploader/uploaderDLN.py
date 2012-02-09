@@ -32,184 +32,6 @@ import sys
 import os
 import usb			# checked in check.py
 
-# Globales
-# --------------------------------------------------------------------------
-
-memstart				= 0x800		# bootloader offset
-memend					= 0
-ID_location				= 0x200000
-ID_location_size		= 8
-config_location			= 0x300000
-config_location_size	= 14
-
-# DIOLAN COMMANDS STRUCTURES
-# --------------------------------------------------------------------------
-
-"""
-class boot_cmd:
-	unsigned char data[BOOT_CMD_SIZE]
-	boot_cmd_header header
-	boot_cmd_read_flash read_flash
-	boot_cmd_write_flash write_flash
-	boot_cmd_erase_flash erase_flash
-	boot_cmd_get_fw_ver get_fw_ver
-	boot_cmd_reset reset
-	boot_cmd_read_id read_id
-	boot_cmd_write_id write_id
-	boot_cmd_read_eeprom read_eeprom
-	boot_cmd_write_eeprom write_eeprom
-
-# common for all commands fields
-class boot_cmd_header:
-	unsigned char cmd		# command code, see BOOT_xxx constants 
-	unsigned char echo		# echo is used to link between command and response
-
-# READ_FLASH - read flash memory
-class boot_cmd_read_flash:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr_lo		# address must be divisible by 2
-	unsigned char addr_hi
-	unsigned char reserved[1]
-	unsigned char size8		# size must be divisible by 8
-
-# WRITE_FLASH - write flash memory
-class boot_cmd_write_flash:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr_lo		# address must be divisible by 2
-	unsigned char addr_hi
-	unsigned char reserved[1]
-	unsigned char size8		# size must be divisible by 8
-	unsigned char data[BOOT_CMD_SIZE - 6]
-
-# ERASE_FLASH - erase flash memory
-class boot_cmd_erase_flash:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr_lo		# address must be divisible by 64
-	unsigned char addr_hi
-	unsigned char reserved[1]
-	unsigned char size_x64		# size in 64 byte blocks
-
-# GET_FW_VERSION - get bootloader firmware version
-class boot_cmd_get_fw_ver:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-
-# RESET - reset microcontroller
-class boot_cmd_reset:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-
-# READ_ID - read ID location
-class boot_cmd_read_id:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char reserved[3]
-	unsigned char size
-
-# WRITE_ID - write ID location
-class boot_cmd_write_id:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char reserved[3]
-	unsigned char size
-	unsigned char data[BOOT_ID_LEN]
-
-# READ_EEPROM - read EEPROM memory
-class boot_cmd_read_eeprom:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr		# EEPROM address to start read from LSB
-	unsigned char reserved[2]
-	unsigned char size		# size of EEPROM data to read
-
-# WRITE_EEPROM - write EEPROM memory
-class boot_cmd_write_eeprom:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr		# EEPROM address to start write to
-	unsigned char reserved[2]
-	unsigned char size		# size of EEPROM data to write
-	unsigned char data[BOOT_CMD_SIZE - 6]
-
-"""
-# DIOLAN RESPONSES STRUCTURES
-# --------------------------------------------------------------------------
-"""
-class boot_rsp:
-	unsigned char data[BOOT_RSP_SIZE]
-	boot_rsp_header header
-	boot_rsp_read_flash read_flash
-	boot_rsp_write_flash write_flash
-	boot_rsp_erase_flash erase_flash
-	boot_rsp_get_fw_ver get_fw_ver
-	boot_rsp_read_id read_id
-	boot_rsp_write_id write_id
-	boot_rsp_read_eeprom read_eeprom
-	boot_rsp_write_eeprom write_eeprom
-
-# common for all responses fields
-class boot_rsp_header:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-
-# READ_FLASH - read flash memory
-class boot_rsp_read_flash:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr_lo		# address must be divisible by 2
-	unsigned char addr_hi
-	unsigned char reserved[1]
-	unsigned char size8		# size must be divisible by 8
-	unsigned char data[BOOT_RSP_SIZE - 6]
-
-# WRITE_FLASH - write flash memory
-class boot_rsp_write_flash:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-
-# ERASE_FLASH - erase flash memory
-class boot_rsp_erase_flash:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-
-# GET_FW_VER
-class boot_rsp_get_fw_ver:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char major
-	unsigned char minor
-	unsigned char sub_minor
-
-# READ_ID - read ID locations
-class boot_rsp_read_id:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char reserved[4]
-	unsigned char data[BOOT_ID_LEN]
-
-# WRITE_ID - write ID locations
-class boot_rsp_write_id:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-
-# READ_EEPROM - read EEPROM memory
-class boot_rsp_read_eeprom:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-	unsigned char addr		# EEPROM address the data was read from
-	unsigned char reserved[2]
-	unsigned char size		# size of EEPROM data
-	unsigned char data[BOOT_RSP_SIZE - 6]
-
-# WRITE_EEPROM - write EEPROM memory
-class boot_rsp_write_eeprom:
-	unsigned char cmd		# command code, see BOOT_xxx constants
-	unsigned char echo		# echo is used to link between command and response
-
-"""
-
 class uploaderDLN:
 	""" upload .hex into pinguino device """
 
@@ -218,7 +40,6 @@ class uploaderDLN:
 
 	VENDOR_ID						=	0x04D8
 	PRODUCT_ID						=	0xFEAA
-	#PRODUCT_ID						=	0x003C
 
 	# Hex format record types
 	# --------------------------------------------------------------------------
@@ -255,7 +76,7 @@ class uploaderDLN:
 	BOOT_VER_MAJOR					=	2
 	BOOT_VER_MINOR					=	3
 	BOOT_VER_SUBMINOR				=	4
-	#BOOT_EEDATA						=	6
+	#BOOT_EEDATA					=	6
 
 	DLN_BLOCKSIZE					=	32 #64 - DLN_BOOT_CMD_SIZE
 
@@ -263,36 +84,18 @@ class uploaderDLN:
 	BOOT_DATA_SIZE					=	BOOT_CMD_SIZE - BOOT_CODE
 
 	#BOOT_RSP_SIZE					=	64
-	#BOOT_ID_LEN						=	8
+	#BOOT_ID_LEN					=	8
 
-	# bulk endpoints
-	DLN_IN_EP						=	0x81	# endpoint for Bulk reads
-	DLN_OUT_EP						=	0x01	# endpoint for Bulk writes
+	# HID endpoints
+	DLN_IN_EP						=	0x81	# endpoint for HID reads
+	DLN_OUT_EP						=	0x01	# endpoint for HID writes
 
 	# configuration
 	DLN_ACTIVE_CONFIG				=	0x01
 	DLN_INTERFACE_ID				=	0x00
 	DLN_TIMEOUT						=	500
-	CTRL_TIMEOUT					=	500
-	INT_TIMEOUT						=	500
 
 	MAX_HID_RETRY					=	4
-
-	BOOT_DEFAULT_ADDR				=	0x800	# First 2K occupied by BootLoader
-	BOOT_FLASH_ADDR					=	0x00
-	BOOT_ID_ADDR					=	0x00200000
-	BOOT_CONFIG_ADDR				=	0x00300000
-	BOOT_EEPROM_ADDR				=	0x00F00000
-	BOOT_FLASH_SIZE					=	0x6000	# Program Memory Size
-	BOOT_EEPROM_SIZE				=	0x100	# EEPROM Memory Size
-	BOOT_ID_SIZE					=	0x08	# ID Locations Size
-	BOOT_CONFIG_SIZE				=	0x0E	# CONFIG Space Size
-	BOOT_MEM_COUNT					=	3
-
-	MEM_FLASH						=	0x01
-	MEM_ID							=	0x02
-	MEM_EEPROM						=	0x04
-	MEM_ALL							=	MEM_FLASH | MEM_ID | MEM_EEPROM
 
 	# Error codes returned by various functions
 	# --------------------------------------------------------------------------
@@ -316,7 +119,7 @@ class uploaderDLN:
 	ERR_EOL							=	16
 	ERR_USB_ERASE					=	17
 
-	# Table with supported USB devices
+	# Table with supported USB devices (from JAL USB HID Bootloader)
 	# device_id:[PIC name, flash size(in bytes), eeprom size (in bytes)] 
 	# --------------------------------------------------------------------------
 
@@ -511,11 +314,11 @@ class uploaderDLN:
 			# mask revision number
 			return device_id  & 0xFFE0
 # ------------------------------------------------------------------------------
-	def getDeviceFlash(self, device_id):
+	def getDeviceFlash(self, device_id, board):
 # ------------------------------------------------------------------------------
 		for n in self.devices_table:
 			if n == device_id:
-				return self.devices_table[n][1] - memstart			
+				return self.devices_table[n][1] - board.memstart			
 		return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
 	def getDeviceName(self, device_id):
@@ -552,6 +355,7 @@ class uploaderDLN:
 		# echo is used to link between command and response
 		usbBuf[self.BOOT_ECHO] = 123
 		# block's address (must be divisible by 2)
+		#print address
 		usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
 		usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
 		usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
@@ -568,7 +372,7 @@ class uploaderDLN:
 		usbBuf = self.transaction(handle, usbBuf)
 		#print usbBuf
 # ------------------------------------------------------------------------------
-	def hexWrite(self, handle, filename):
+	def hexWrite(self, handle, filename, board):
 # ------------------------------------------------------------------------------
 		""" Parse the Hex File Format and send data to usb device """
 
@@ -623,11 +427,11 @@ class uploaderDLN:
 				address = (address_Hi << 16) + address_Lo
 
 			# code size
-			if address >= memstart:
+			if address >= board.memstart:
 				codesize = codesize + byte_count
 
 			# max address
-			if (address > old_address) and (address < memend):
+			if (address > old_address) and (address < board.memend):
 				max_address = address + byte_count
 				old_address = address
 
@@ -637,7 +441,7 @@ class uploaderDLN:
 		# fill data sequence with 0xFF
 		# ----------------------------------------------------------------------
 
-		for i in range(max_address - memstart):
+		for i in range(max_address - board.memstart):
 			data.append(0xFF)
 
 		# 2nd pass : parse bytes from line into data
@@ -656,12 +460,12 @@ class uploaderDLN:
 
 			# data record
 			if record_type == self.Data_Record:
-				if (address >= memstart) and (address < memend):
+				if (address >= board.memstart) and (address < board.memend):
 					#print hex(address)
 					for i in range(byte_count):
 						#print address - memstart + i
 						#print int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-						data[address - memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
+						data[address - board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 					#print "-----------"
 					
 			# end of file record
@@ -680,23 +484,23 @@ class uploaderDLN:
 		# erase memory from memstart to max_address 
 		# ----------------------------------------------------------------------
 
-		size64 = (max_address - memstart) / 64
+		size64 = (max_address - board.memstart) / 64
 		if size64 > 511:
 			return ERR_USB_ERASE
 		if size64 < 256:
-			self.eraseFlash(handle, memstart, size64)
+			self.eraseFlash(handle, board.memstart, size64)
 		else:
 			# erase flash memory from memstart to memstart + 0x4000
-			self.eraseFlash(handle, memstart, 255)
+			self.eraseFlash(handle, board.memstart, 255)
 			# erase flash memory from memstart + 0x4000 to max_address
 			size64 = size64 - 255
-			self.eraseFlash(handle, memstart + 0x4000, size64)
+			self.eraseFlash(handle, board.memstart + 0x4000, size64)
 
 		# write 32-bit blocks
 		# ----------------------------------------------------------------------
 
 		usbBuf = []
-		for addr in range(memstart, max_address):
+		for addr in range(board.memstart, max_address):
 			#print addr
 			#if addr % self.DLN_BLOCKSIZE == 0:
 			if addr % 32 == 0:
@@ -705,9 +509,9 @@ class uploaderDLN:
 					#writeFlash(handle, addr - self.DLN_BLOCKSIZE, usbBuf)
 					self.writeFlash(handle, addr - 32, usbBuf)
 				usbBuf = []
-			if data[addr - memstart] != []:
+			if data[addr - board.memstart] != []:
 				#print data[addr - memstart]
-				usbBuf.append(data[addr - memstart])
+				usbBuf.append(data[addr - board.memstart])
 		#print "%d bytes written.\n" % codesize
 
 		return self.ERR_NONE
@@ -739,9 +543,9 @@ class uploaderDLN:
 		if proc != board.proc:
 			self.txtWrite(output, "Compiled for %s but device has %s\n" % (board.proc, proc))
 			return
-		memend = self.getDeviceFlash(device_id)
+		#memend = self.getDeviceFlash(device_id)
 		self.txtWrite(output, "%s (id=%s)\n" % (proc, hex(device_id)))
-		self.txtWrite(output, "%d bytes free\n" % memend)
+		self.txtWrite(output, "%d bytes free\n" % (board.memend - board.memstart))
 
 		#product = handle.getString(device.iProduct, 30)
 		#manufacturer = handle.getString(device.iManufacturer, 30)
@@ -753,7 +557,7 @@ class uploaderDLN:
 			return
 
 		self.txtWrite(output, "Writing ...\n")
-		status = self.hexWrite(handle, filename)
+		status = self.hexWrite(handle, filename, board)
 		if status == self.ERR_NONE:
 			self.txtWrite(output, os.path.basename(filename) + " successfully uploaded\n")
 		if status == self.ERR_HEX_RECORD:
