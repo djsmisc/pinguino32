@@ -248,16 +248,19 @@ except:
 	fichier.writelines('You should have tools.py at the root\n')
 	fichier.close()
 	perror()	
-	
+
 try:
 	#from uploader import uploader	# pinguino uploader class
-	from uploaderVSC import uploaderVSC	# pinguino uploader class
-	from uploaderDLN import uploaderDLN	# pinguino uploader class
-	#from uploaderMCC import uploaderMCC	# pinguino uploader class
+	sys.path.append(os.path.join(os.getcwd(), "wxgui", "uploader"))
+	from uploaderVSC import uploaderVSC
+	from uploaderDLN import uploaderDLN
+	"""
+	from uploaderMCC import uploaderMCC
+	"""
 	fichier.writelines('Pinguino Uploader successfully loaded\n')
 except:
 	fichier.writelines('Pinguino Uploader failed\n')
-	fichier.writelines('You should have uploaderXXX.py at the root\n')
+	fichier.writelines('You should have uploader.py at the root\n')
 	fichier.close()
 	perror()
 

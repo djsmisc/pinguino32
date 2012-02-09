@@ -1405,8 +1405,7 @@ class Pinguino(framePinguinoX, Tools):
 						"-D" + board.bldr,\
 						"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 						"-I" + os.path.join(P8_DIR, 'include'),\
-						"-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
-						"-I" + os.path.join(P8_DIR, 'include', 'pinguino'),\
+						"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
 						"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
 						"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
 						"-I" + os.path.dirname(filename),\
@@ -1454,11 +1453,11 @@ class Pinguino(framePinguinoX, Tools):
 							"-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
 							"-mpic16",\
 							"-p" + board.proc,\
+							"-D" + board.bldr,\
 							"-L" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include'),\
-							"-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
-							"-I" + os.path.join(P8_DIR, 'include', 'pinguino'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
 							'-llibio' + board.proc + '.lib',\
@@ -1472,6 +1471,7 @@ class Pinguino(framePinguinoX, Tools):
 							os.path.join(SOURCE_DIR, 'main.o')],\
 							stdout=fichier, stderr=STDOUT)
 				else:# if board.bldr == 'diolan'
+#							"--ivt-loc=0x0800",\
 					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8+'310'),\
 							"-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
 							"--denable-peeps",\
@@ -1486,20 +1486,16 @@ class Pinguino(framePinguinoX, Tools):
 							"-D" + board.bldr,\
 							"-L" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
-							"-I" + os.path.join(P8_DIR, 'include'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
-							"-I" + os.path.join(P8_DIR, 'include', 'pinguino'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
 							'-llibio' + board.proc + '.lib',\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libpuf.lib'),\
 							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libc18f.lib'),\
 							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libm18f.lib'),\
 							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libsdcc.lib'),\
 							os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
 							os.path.join(SOURCE_DIR, 'main.o')],\
 							stdout=fichier, stderr=STDOUT)
-							#"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libio' + board.proc + '.lib'),\
 			else:
 				# "PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
 				# can't be used with Command Line version since editor isn't used
