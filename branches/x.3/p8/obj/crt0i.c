@@ -29,7 +29,8 @@
 /*
  * based on Microchip MPLAB-C18 startup files
  * 2011-11-20 - regis blanchot - modified for pinguino project
- * compilation : sdcc -c -mpic16 -p18fxxxx crt0i.c
+ * compilation : sdcc -c -o crt0i18fxxxx.o -mpic16 -p18fxxxx crt0i.c
+ * --ivt-loc=0x0800
  */
 
 extern stack_end;
