@@ -1,6 +1,6 @@
 gplink-0.13.7 beta
 Copyright (c) 1998-2005 gputils project
-Listing File Generated: 2-4-2012  16:17:32
+Listing File Generated: 2-18-2012  16:31:07
  
  
 Address  Value    Disassembly              Source
@@ -8,7 +8,7 @@ Address  Value    Disassembly              Source
                                            ;--------------------------------------------------------
                                            ; File Created by SDCC : free open source ANSI-C Compiler
                                            ; Version 2.9.0 #5416 (Aug  9 2009) (UNIX)
-                                           ; This file was generated Sat Feb  4 16:17:32 2012
+                                           ; This file was generated Sat Feb 18 16:31:07 2012
                                            ;--------------------------------------------------------
                                            ; PIC16 port for the Microchip 16-bit core micros
                                            ;--------------------------------------------------------
@@ -286,7 +286,7 @@ Address  Value    Disassembly              Source
                                            ; ; Starting pCode block
                                            S_main__high_priority_isr	code	0X002020
                                            _high_priority_isr:
-                                           ;	.line	129; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void high_priority_isr(void) interrupt
+                                           ;	.line	148; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void high_priority_isr(void) __interrupt
 002020   cfe8     movff	0xfe8, 0xfe5       	MOVFF	WREG, POSTDEC1
 002022   ffe5
 002024   cfd8     movff	0xfd8, 0xfe5       	MOVFF	STATUS, POSTDEC1
@@ -305,7 +305,7 @@ Address  Value    Disassembly              Source
 00203e   ffe5
 002040   cffb     movff	0xffb, 0xfe5       	MOVFF	PCLATU, POSTDEC1
 002042   ffe5
-                                           ;	.line	190; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
+                                           ;	.line	209; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
 002044   cfe4     movff	0xfe4, 0xffb       	MOVFF	PREINC1, PCLATU
 002046   fffb
 002048   cfe4     movff	0xfe4, 0xffa       	MOVFF	PREINC1, PCLATH
@@ -329,7 +329,7 @@ Address  Value    Disassembly              Source
                                            ; ; Starting pCode block
                                            S_main__low_priority_isr	code	0X004000
                                            _low_priority_isr:
-                                           ;	.line	198; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void low_priority_isr(void) interrupt
+                                           ;	.line	221; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void low_priority_isr(void) __interrupt
 004000   cfe8     movff	0xfe8, 0xfe5       	MOVFF	WREG, POSTDEC1
 004002   ffe5
 004004   cfd8     movff	0xfd8, 0xfe5       	MOVFF	STATUS, POSTDEC1
@@ -348,7 +348,7 @@ Address  Value    Disassembly              Source
 00401e   ffe5
 004020   cffb     movff	0xffb, 0xfe5       	MOVFF	PCLATU, POSTDEC1
 004022   ffe5
-                                           ;	.line	203; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
+                                           ;	.line	226; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
 004024   cfe4     movff	0xfe4, 0xffb       	MOVFF	PREINC1, PCLATU
 004026   fffb
 004028   cfe4     movff	0xfe4, 0xffa       	MOVFF	PREINC1, PCLATH
@@ -373,18 +373,18 @@ Address  Value    Disassembly              Source
                                            ; ; Starting pCode block
                                            S_main__pinguino_main	code
                                            _pinguino_main:
-                                           ;	.line	58; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE1 = 0;
+                                           ;	.line	62; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE1 = 0;
 002436   6a9d     clrf	0x9d, 0             	CLRF	_PIE1
-                                           ;	.line	59; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE2 = 0;
+                                           ;	.line	63; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE2 = 0;
 002438   6aa0     clrf	0xa0, 0             	CLRF	_PIE2
-                                           ;	.line	60; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+                                           ;	.line	66; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 00243a   0e0f     movlw	0xf                	MOVLW	0x0f
 00243c   6ec1     movwf	0xc1, 0            	MOVWF	_ADCON1
-                                           ;	.line	72; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	setup();
+                                           ;	.line	84; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	setup();
 00243e   ec2e     call	0x245c, 0           	CALL	_setup
 002440   f012
                                            _00136_DS_:
-                                           ;	.line	120; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	loop();
+                                           ;	.line	132; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	loop();
 002442   ec2d     call	0x245a, 0           	CALL	_loop
 002444   f012
 002446   d7fd     bra	0x2442               	BRA	_00136_DS_
@@ -405,25 +405,25 @@ Address  Value    Disassembly              Source
                                            ; ; Starting pCode block
                                            S_main__epapout_init	code
                                            _epapout_init:
-                                           ;	.line	45; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapout_init() { return; }
+                                           ;	.line	49; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapout_init() { return; }
 00245e   0012     return	0                 	RETURN	
                                            
                                            ; ; Starting pCode block
                                            S_main__epapin_init	code
                                            _epapin_init:
-                                           ;	.line	44; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapin_init() { return; }
+                                           ;	.line	48; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapin_init() { return; }
 002460   0012     return	0                 	RETURN	
                                            
                                            ; ; Starting pCode block
                                            S_main__epap_out	code
                                            _epap_out:
-                                           ;	.line	43; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_out() { return; }
+                                           ;	.line	47; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_out() { return; }
 002462   0012     return	0                 	RETURN	
                                            
                                            ; ; Starting pCode block
                                            S_main__epap_in	code
                                            _epap_in:
-                                           ;	.line	42; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_in() { return; }
+                                           ;	.line	46; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_in() { return; }
 002464   0012     return	0                 	RETURN	
                                            
                                            

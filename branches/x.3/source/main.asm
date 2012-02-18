@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.9.0 #5416 (Aug  9 2009) (UNIX)
-; This file was generated Sat Feb  4 16:17:32 2012
+; This file was generated Sat Feb 18 16:31:07 2012
 ;--------------------------------------------------------
 ; PIC16 port for the Microchip 16-bit core micros
 ;--------------------------------------------------------
@@ -279,7 +279,7 @@ PRODH	equ	0xff4
 ; ; Starting pCode block
 S_main__high_priority_isr	code	0X002020
 _high_priority_isr:
-;	.line	129; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void high_priority_isr(void) interrupt
+;	.line	148; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void high_priority_isr(void) __interrupt
 	MOVFF	WREG, POSTDEC1
 	MOVFF	STATUS, POSTDEC1
 	MOVFF	BSR, POSTDEC1
@@ -289,7 +289,7 @@ _high_priority_isr:
 	MOVFF	FSR0H, POSTDEC1
 	MOVFF	PCLATH, POSTDEC1
 	MOVFF	PCLATU, POSTDEC1
-;	.line	190; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
+;	.line	209; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
 	MOVFF	PREINC1, PCLATU
 	MOVFF	PREINC1, PCLATH
 	MOVFF	PREINC1, FSR0H
@@ -304,7 +304,7 @@ _high_priority_isr:
 ; ; Starting pCode block
 S_main__low_priority_isr	code	0X004000
 _low_priority_isr:
-;	.line	198; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void low_priority_isr(void) interrupt
+;	.line	221; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void low_priority_isr(void) __interrupt
 	MOVFF	WREG, POSTDEC1
 	MOVFF	STATUS, POSTDEC1
 	MOVFF	BSR, POSTDEC1
@@ -314,7 +314,7 @@ _low_priority_isr:
 	MOVFF	FSR0H, POSTDEC1
 	MOVFF	PCLATH, POSTDEC1
 	MOVFF	PCLATU, POSTDEC1
-;	.line	203; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
+;	.line	226; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
 	MOVFF	PREINC1, PCLATU
 	MOVFF	PREINC1, PCLATH
 	MOVFF	PREINC1, FSR0H
@@ -330,17 +330,17 @@ _low_priority_isr:
 ; ; Starting pCode block
 S_main__pinguino_main	code
 _pinguino_main:
-;	.line	58; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE1 = 0;
+;	.line	62; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE1 = 0;
 	CLRF	_PIE1
-;	.line	59; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE2 = 0;
+;	.line	63; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE2 = 0;
 	CLRF	_PIE2
-;	.line	60; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	ADCON1 = 0b00001111;				// AN0 to AN12 Digital I/O
+;	.line	66; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 	MOVLW	0x0f
 	MOVWF	_ADCON1
-;	.line	72; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	setup();
+;	.line	84; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	setup();
 	CALL	_setup
 _00136_DS_:
-;	.line	120; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	loop();
+;	.line	132; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	loop();
 	CALL	_loop
 	BRA	_00136_DS_
 	RETURN	
@@ -360,25 +360,25 @@ _setup:
 ; ; Starting pCode block
 S_main__epapout_init	code
 _epapout_init:
-;	.line	45; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapout_init() { return; }
+;	.line	49; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapout_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epapin_init	code
 _epapin_init:
-;	.line	44; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapin_init() { return; }
+;	.line	48; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapin_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_out	code
 _epap_out:
-;	.line	43; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_out() { return; }
+;	.line	47; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_out() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_in	code
 _epap_in:
-;	.line	42; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_in() { return; }
+;	.line	46; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_in() { return; }
 	RETURN	
 
 

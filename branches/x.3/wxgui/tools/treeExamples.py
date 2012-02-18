@@ -116,7 +116,7 @@ class treeExamples():
             if os.path.isfile(example):
                 try: self.background.Hide()
                 except: pass  #self.background not exist
-                self.editor.Open(example,
+                self.Open(example,
                                  self.reservedword,
                                  self.rw,
                                  self.filehistory,

@@ -31,18 +31,20 @@ import sys
 import os
 import usb			# checked in check.py
 
-class uploaderVSC:
+from uploader import baseUploader
+
+class uploaderVSC(baseUploader):
 	""" upload .hex into pinguino device """
 
-	# Hex format record types
-	# --------------------------------------------------------------------------
+	## Hex format record types
+	## --------------------------------------------------------------------------
 
-	Data_Record						=	 00
-	End_Of_File_Record				=	 01
-	Extended_Segment_Address_Record	=	 02
-	Start_Segment_Address_Record	=	 03
-	Extended_Linear_Address_Record	=	 04
-	Start_Linear_Address_Record		=	 05
+	#Data_Record						=	 00
+	#End_Of_File_Record				=	 01
+	#Extended_Segment_Address_Record	=	 02
+	#Start_Segment_Address_Record	=	 03
+	#Extended_Linear_Address_Record	=	 04
+	#Start_Linear_Address_Record		=	 05
 	
 	# Vasco Bulk bootloader commands
 	# --------------------------------------------------------------------------
@@ -70,63 +72,70 @@ class uploaderVSC:
 	# Error codes returned by various functions
 	# --------------------------------------------------------------------------
 
-	ERR_NONE						=	0
-	ERR_CMD_ARG						=	1
-	ERR_CMD_UNKNOWN					=	2
-	ERR_DEVICE_NOT_FOUND			=	3
-	ERR_USB_INIT1					=	4
-	ERR_USB_INIT2					=	5
-	ERR_USB_OPEN					=	6
-	ERR_USB_WRITE					=	7
-	ERR_USB_READ					=	8
-	ERR_HEX_OPEN					=	9
-	ERR_HEX_STAT					=	10
-	ERR_HEX_MMAP					=	11
-	ERR_HEX_SYNTAX					=	12
-	ERR_HEX_CHECKSUM				=	13
-	ERR_HEX_RECORD					=	14
-	ERR_VERIFY						=	15
-	ERR_EOL							=	16
+	#ERR_NONE						=	0
+	#ERR_CMD_ARG						=	1
+	#ERR_CMD_UNKNOWN					=	2
+	#ERR_DEVICE_NOT_FOUND			=	3
+	#ERR_USB_INIT1					=	4
+	#ERR_USB_INIT2					=	5
+	#ERR_USB_OPEN					=	6
+	#ERR_USB_WRITE					=	7
+	#ERR_USB_READ					=	8
+	#ERR_HEX_OPEN					=	9
+	#ERR_HEX_STAT					=	10
+	#ERR_HEX_MMAP					=	11
+	#ERR_HEX_SYNTAX					=	12
+	#ERR_HEX_CHECKSUM				=	13
+	#ERR_HEX_RECORD					=	14
+	#ERR_VERIFY						=	15
+	#ERR_EOL							=	16
+	
+	
+## ------------------------------------------------------------------------------
+	#def __init__(self, output, filename, board):
+		#self.output = output
+		#self.filename = filename
+		#self.board = board
 
+## ------------------------------------------------------------------------------
+	#def txtWrite(self, message):
+		#""" display message in the log window """
+		##if gui==True:
+		#self.output.WriteText(message)
+		##else:
+		##	print message
+		#return
+## ------------------------------------------------------------------------------
+	#def getDevice(self):
+		#""" get list of USB devices and search for pinguino """
+		#busses = usb.busses()
+		#for bus in busses:
+			#for device in bus.devices:
+				#if device.idVendor == self.board.vendor and device.idProduct == self.board.product:
+					#return device
+		#return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
-	def txtWrite(self, output, message):
-		""" display message in the log window """
-		#if gui==True:
-		output.WriteText(message)
-		#else:
-		#	print message
-		return
-# ------------------------------------------------------------------------------
-	def getDevice(self, board):
-		""" get list of USB devices and search for pinguino """
-		busses = usb.busses()
-		for bus in busses:
-			for device in bus.devices:
-				if device.idVendor == board.vendor and device.idProduct == board.product:
-					return device
-		return self.ERR_DEVICE_NOT_FOUND
-# ------------------------------------------------------------------------------
-	def initDevice(self, device, board):
+	def initDevice(self):
 		""" init pinguino device """
-		handle = device.open()
+		handle = self.device.open()
 		if handle:
 			handle.setConfiguration(self.VSC_ACTIVE_CONFIG)
 			handle.claimInterface(self.VSC_INTERFACE_ID)
 			return handle
 		return self.ERR_USB_INIT1
 # ------------------------------------------------------------------------------
-	def closeDevice(self, handle):
-		handle.releaseInterface()
+	#def closeDevice(self):
+		#self.handle.releaseInterface()
 # ------------------------------------------------------------------------------
-	def usbWrite(self, handle, usbBuf):
+	def usbWrite(self, usbBuf):
 		"""	Write a data packet to currently-open USB device """
-		sent_bytes = handle.bulkWrite(self.VSC_OUT_EP, usbBuf, self.VSC_TIMEOUT)
+		sent_bytes = self.handle.bulkWrite(self.VSC_OUT_EP, usbBuf, self.VSC_TIMEOUT)
 		if (sent_bytes): 
 			return self.ERR_NONE
 		else:
 			return self.ERR_USB_WRITE
 # ------------------------------------------------------------------------------
-	def eraseBlock(self, handle, address):
+	def eraseBlock(self, address):
 		""" erase 64 bytes of flash memory """
 		# command
 		cmd = self.VSC_ERASE_FLASH_CMD
@@ -137,9 +146,9 @@ class uploaderVSC:
 		addr_up = int(address[0:2],16)
 		# write data packet
 		usbBuf = chr(cmd) + chr(addr_lo) + chr(addr_hi) + chr(addr_up)
-		self.usbWrite(handle, usbBuf)
+		self.usbWrite(usbBuf)
 # ------------------------------------------------------------------------------
-	def issueBlock(self, handle, address, block):
+	def issueBlock(self, address, block):
 		""" write a block of code """
 		# command
 		cmd = self.VSC_WRITE_FLASH_CMD 
@@ -153,9 +162,9 @@ class uploaderVSC:
 		for i in range(len(block)):
 			usbBuf = usbBuf + chr(block[i])
 		# write data packet on usb device
-		self.usbWrite(handle, usbBuf)
+		self.usbWrite(usbBuf)
 # ------------------------------------------------------------------------------
-	def hexWrite(self, handle, filename, board):
+	def hexWrite(self):
 		""" Parse the Hex File Format and send data to usb device """
 
 		"""
@@ -178,7 +187,7 @@ class uploaderVSC:
 		# read hex file
 		# ----------------------------------------------------------------------
 
-		fichier = open(filename,'r')
+		fichier = open(self.filename,'r')
 		lines = fichier.readlines()
 		fichier.close()
 
@@ -210,11 +219,11 @@ class uploaderVSC:
 				address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
 
 			# code size
-			if address >= board.memstart:
+			if address >= self.board.memstart:
 				codesize = codesize + byte_count
 
 			# max address
-			if (address > old_address) and (address < board.memend):
+			if (address > old_address) and (address < self.board.memend):
 				max_address = address + byte_count
 				old_address = address
 
@@ -225,7 +234,7 @@ class uploaderVSC:
 		# ----------------------------------------------------------------------
 		# 32-bit : mem start at 0x9D0000000000 ?
 
-		for i in range(board.memstart, max_address):
+		for i in range(self.board.memstart, max_address):
 			print i
 			data.append(0xFF)
 
@@ -243,9 +252,9 @@ class uploaderVSC:
 
 			# data record
 			if record_type == self.Data_Record:
-				if (address >= board.memstart) and (address < board.memend):
+				if (address >= self.board.memstart) and (address < self.board.memend):
 					for i in range(byte_count):
-						data[address - board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
+						data[address - self.board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 
 			# end of file record
 			elif record_type == self.End_Of_File_Record:
@@ -263,36 +272,36 @@ class uploaderVSC:
 		# ----------------------------------------------------------------------
 
 		usbBuf = []
-		for i in range(board.memstart, max_address):
+		for i in range(self.board.memstart, max_address):
 			if i % 64 == 0:
-				self.eraseBlock(handle, i)
+				self.eraseBlock(i)
 			if i % self.VSC_BLOCKSIZE == 0:
 				if usbBuf != []:
-					self.issueBlock(handle, address + i - self.VSC_BLOCKSIZE, usbBuf)
+					self.issueBlock(address + i - self.VSC_BLOCKSIZE, usbBuf)
 				usbBuf = []
-			if data[i - board.memstart] != []:
-				usbBuf.append(data[i - board.memstart])
+			if data[i - self.board.memstart] != []:
+				usbBuf.append(data[i - self.board.memstart])
 
 		return self.ERR_NONE
 # ------------------------------------------------------------------------------
-	def release(self, handle):
+	def release(self, handle):  #is called?
 		""" release USB interface """
 		handle.releaseInterface()
 # ------------------------------------------------------------------------------
-	def writeHex(self, output, filename, board):
+	def writeHex(self):
 
-		device = self.getDevice(board)
-		if device is self.ERR_DEVICE_NOT_FOUND:
-			self.txtWrite(output, "Pinguino not found\n")
-			self.txtWrite(output, "Is your device connected and/or in bootloader mode ?\n")
+		self.device = self.getDevice()
+		if self.device is self.ERR_DEVICE_NOT_FOUND:
+			self.txtWrite("Pinguino not found\n")
+			self.txtWrite("Is your device connected and/or in bootloader mode ?\n")
 			return
 		else:
-			self.txtWrite(output, "Pinguino found\n")
+			self.txtWrite("Pinguino found\n")
 
-		handle = self.initDevice(device, board)
-		if handle is self.ERR_USB_INIT1:
-			self.txtWrite(output, "Upload not possible\n")
-			self.txtWrite(output, "Try to restart the bootloader mode\n")
+		self.handle = self.initDevice()
+		if self.handle is self.ERR_USB_INIT1:
+			self.txtWrite("Upload not possible\n")
+			self.txtWrite("Try to restart the bootloader mode\n")
 			return
 		#print "Vendor: %s - %s" % (hex(device.idVendor), handle.getString(device.iManufacturer, 30))
 		#print "Product: %s - %s" % (hex(device.idProduct), handle.getString(device.iProduct, 30))
@@ -300,17 +309,17 @@ class uploaderVSC:
 		#self.getDeviceFamily(self, handle):
 		#self.getProgramMemory(self, handle):
 
-		if filename != '':
-			self.txtWrite(output, "writing ...\n")
-			status = self.hexWrite(handle, filename, board)
+		if self.filename != '':
+			self.txtWrite("writing ...\n")
+			status = self.hexWrite()
 			if status == self.ERR_NONE:
-				self.txtWrite(output, os.path.basename(filename) + " successfully uploaded\n")
+				self.txtWrite(os.path.basename(self.filename) + " successfully uploaded\n")
 			if status == self.ERR_HEX_RECORD:
-				self.txtWrite(output, "Record error\n")
+				self.txtWrite("Record error\n")
 			if status == self.ERR_HEX_CHECKSUM:
-				self.txtWrite(output, "Checksum error\n")
+				self.txtWrite("Checksum error\n")
 		else:
-			self.txtWrite(output, "No .hex file to write\n")
+			self.txtWrite("No .hex file to write\n")
 
-		self.closeDevice(handle)
+		self.closeDevice()
 # ------------------------------------------------------------------------------
