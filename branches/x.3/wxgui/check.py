@@ -205,13 +205,22 @@ if DEV:
 # ------------------------------------------------------------------------------
 
 try:	
-	import editeur				# pinguino editor class
+	from editeur import editor			# pinguino editor class
 	fichier.writelines('Editeur successfully loaded\n')
 except:
 	fichier.writelines('Editeur failed\n')
 	fichier.writelines('You should have editeur.py at the root\n')
 	fichier.close()
 	perror()
+	
+#try:	
+	#from editor import editor		
+	#fichier.writelines('Editor successfully loaded\n')
+#except:
+	#fichier.writelines('Editor failed\n')
+	#fichier.writelines('You should have editeur.py at the root\n')
+	#fichier.close()
+	#perror()	
 
 try:
 	import argparse			# to write user-friendly command-line interfaces
@@ -251,9 +260,10 @@ except:
 
 try:
 	#from uploader import uploader	# pinguino uploader class
-	sys.path.append(os.path.join(os.getcwd(), "wxgui", "uploader"))
-	from uploaderVSC import uploaderVSC
-	from uploaderDLN import uploaderDLN
+	#sys.path.append(os.path.join(os.getcwd(), "wxgui", "uploader"))
+	#from uploader import uploaderVSC
+	#from uploader import uploaderDLN
+	from uploader import Uploader
 	"""
 	from uploaderMCC import uploaderMCC
 	"""

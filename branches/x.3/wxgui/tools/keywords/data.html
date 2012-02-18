@@ -1,0 +1,36 @@
+<a name="Name" id="Name"></a><h2> <span class="mw-headline"> Name </span></h2>
+<p>Serial.begin - Set speed for the integrated UART ( serial port ).
+</p>
+<a name="Description" id="Description"></a><h2> <span class="mw-headline"> Description </span></h2>
+<p>Pin 8 and 9 can be used as TX line and RX line for serial communications. Serial.begin configure pins for serial and set speed. 
+</p>
+<dl><dt> Since</dt><dd> Beta
+</dd></dl>
+<a name="Syntax" id="Syntax"></a><h2> <span class="mw-headline"> Syntax </span></h2>
+<pre>Serial.begin(speed);
+</pre>
+<dl><dt> speed</dt><dd> speed can be set between 100 and 115200 bauds
+</dd><dt> Output</dt><dd> none
+</dd></dl>
+<a name="Example" id="Example"></a><h2> <span class="mw-headline"> Example </span></h2>
+<div dir="ltr" style="text-align: left;"><div class="c source-c" style="font-family:monospace;"><pre class="de1"><span class="kw4">void</span> setup<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+Serial.<span class="me1">begin</span><span class="br0">&#40;</span>9600<span class="br0">&#41;</span><span class="sy0">;</span>  <span class="co1">// set speed to 9600 bauds</span>
+<span class="br0">&#125;</span>
+&nbsp;
+<span class="kw4">void</span> loop<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+Serial.<span class="me1">send</span><span class="br0">&#40;</span><span class="st0">&quot;PINGUINO 18F2550&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>  <span class="co1">// send string to the TX line</span>
+<span class="kw1">while</span> <span class="br0">&#40;</span>1<span class="br0">&#41;</span><span class="sy0">;</span>  <span class="co1">// stop program</span>
+<span class="br0">&#125;</span></pre></div></div>
+<a name="Bugs" id="Bugs"></a><h2> <span class="mw-headline"> Bugs </span></h2>
+<p>Before 9.2, this function probably does not work for any speed except 9600
+</p>
+<a name="See_also" id="See_also"></a><h2> <span class="mw-headline"> See also </span></h2>
+<p><a href="/index.php?title=Serial.send&amp;action=edit&amp;redlink=1" class="new" title="Serial.send (page does not exist)">Serial.send</a>
+</p><p><a href="/index.php/Serial.available" title="Serial.available">Serial.available</a>
+</p><p><a href="/index.php/Serial.read" title="Serial.read">Serial.read</a>
+</p><p><a href="/index.php/Serial.flush" title="Serial.flush">Serial.flush</a>
+</p>
+<a name="Comments" id="Comments"></a><h2> <span class="mw-headline"> Comments </span></h2>
+

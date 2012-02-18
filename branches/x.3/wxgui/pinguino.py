@@ -75,7 +75,7 @@ gui=False
 # Pinguino Class
 # ------------------------------------------------------------------------------
 
-class Pinguino(framePinguinoX, Tools):
+class Pinguino(framePinguinoX, Tools, editor):
 	
 	global lang
 	global gui
@@ -220,7 +220,7 @@ class Pinguino(framePinguinoX, Tools):
 		
 		_icon = wx.EmptyIcon()
 		_icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logoX.png'), wx.BITMAP_TYPE_ANY))
-		self.SetIcon(_icon)		   
+		self.SetIcon(_icon)
 
 		self._mgr = wx.aui.AuiManager(self)	  
 		
@@ -270,8 +270,19 @@ class Pinguino(framePinguinoX, Tools):
 		self.CLEAR = wx.MenuItem(self.edit_menu, wx.ID_CLEAR, _("Clear"), "", wx.ITEM_NORMAL)
 		self.edit_menu.AppendItem(self.CLEAR)
 		self.SELECTALL = wx.MenuItem(self.edit_menu, wx.ID_SELECTALL, _("Select all"), "", wx.ITEM_NORMAL)
-		self.edit_menu.AppendItem(self.SELECTALL)						
+		self.edit_menu.AppendItem(self.SELECTALL)
+		self.edit_menu.AppendSeparator()
+		self.COMMENT_ID = wx.NewId()
+		self.COMMENT = wx.MenuItem(self.edit_menu, self.COMMENT_ID, _("Comment/Uncomment\tCtrl+l"), "", wx.ITEM_NORMAL)
+		self.edit_menu.AppendItem(self.COMMENT)
+		#self.edit_menu.AppendSeparator()
+		self.PREFERENCES_ID = wx.NewId()
+		self.PREFERENCES = wx.MenuItem(self.edit_menu, self.PREFERENCES_ID, _("Preferences\tCtrl+p"), "", wx.ITEM_NORMAL)
+		#self.edit_menu.AppendItem(self.PREFERENCES)		
+		
 		self.menu.Append(self.edit_menu, _("Edit"))
+		
+		
 		
 		# preferences menu
 		self.pref_menu = wx.Menu()
@@ -356,16 +367,17 @@ class Pinguino(framePinguinoX, Tools):
 
 		# ---keywords submenu
 		# TODO: all keywords on more rows
-		self.keyword_menu = wx.Menu()
-		i = 0
-		for k in self.keywordList:
-			self.KEYWORD.append(wx.MenuItem(self.keyword_menu, self.ID_KEYWORD1 + i, k, "", wx.ITEM_NORMAL))
-			self.keyword_menu.AppendItem(self.KEYWORD[i])
-			i = i + 1
-		self.help_menu.AppendMenu(self.ID_KEYWORD, _("Keywords"), self.keyword_menu)
-		#self.KEYWORD = wx.MenuItem(self.help_menu, self.ID_KEYWORD, _("Keywords"), "", wx.ITEM_NORMAL)
-		#self.help_menu.AppendItem(self.KEYWORD)
-
+		##self.keyword_menu = wx.Menu()
+		##i = 0
+		##for k in self.keywordList:
+			##self.KEYWORD.append(wx.MenuItem(self.keyword_menu, self.ID_KEYWORD1 + i, k, "", wx.ITEM_NORMAL))
+			##self.keyword_menu.AppendItem(self.KEYWORD[i])
+			##i = i + 1
+		##self.help_menu.AppendMenu(self.ID_KEYWORD, _("Keywords"), self.keyword_menu)
+		
+		self.KEYWORD = wx.MenuItem(self.help_menu, self.ID_KEYWORD, _("Keywords"), "", wx.ITEM_NORMAL)
+		self.help_menu.AppendItem(self.KEYWORD)		
+		
 		self.WEBSITE = wx.MenuItem(self.help_menu, self.ID_WEBSITE, _("Website"), "", wx.ITEM_NORMAL)
 		self.help_menu.AppendItem(self.WEBSITE)
 		self.WIKI = wx.MenuItem(self.help_menu, self.ID_WIKI, _("Wiki"), "", wx.ITEM_NORMAL)
@@ -446,8 +458,7 @@ class Pinguino(framePinguinoX, Tools):
 						  #LeftDockable(False).RightDockable(False))		
 		self._mgr.AddPane(self.logwindow, self.PaneOutputInfo, '')
 		self._mgr.AddPane(self.panel1, wx.CENTER , '')
-		
-		self.editor = editeur.editeur(self.EditorPanel, wx.ID_ANY, self.EditorPanel.GetSize(), self)
+
 		
 		# tell the manager to 'commit' all the changes just made
 		self._mgr.Update()		
@@ -470,15 +481,17 @@ class Pinguino(framePinguinoX, Tools):
 		self.Bind(wx.EVT_MENU, self.OnExit, self.EXIT)
 		
 		# edit menu
-		self.Bind(wx.EVT_MENU, self.editor.copy, self.COPY)
-		self.Bind(wx.EVT_MENU, self.editor.paste, self.PASTE)
-		self.Bind(wx.EVT_MENU, self.editor.cut, self.CUT)
-		self.Bind(wx.EVT_MENU, self.editor.clear, self.CLEAR)	   
-		self.Bind(wx.EVT_MENU, self.editor.undo, self.UNDO)	   
-		self.Bind(wx.EVT_MENU, self.editor.redo, self.REDO)
+		self.Bind(wx.EVT_MENU, self.copy, self.COPY)
+		self.Bind(wx.EVT_MENU, self.paste, self.PASTE)
+		self.Bind(wx.EVT_MENU, self.cut, self.CUT)
+		self.Bind(wx.EVT_MENU, self.clear, self.CLEAR)	   
+		self.Bind(wx.EVT_MENU, self.undo, self.UNDO)	   
+		self.Bind(wx.EVT_MENU, self.redo, self.REDO)
 		self.Bind(wx.EVT_MENU, self.OnFind, self.FIND)
 		self.Bind(wx.EVT_MENU, self.OnReplace, self.REPLACE)		
-		self.Bind(wx.EVT_MENU, self.editor.selectall, self.SELECTALL)	 
+		self.Bind(wx.EVT_MENU, self.selectall, self.SELECTALL)
+		self.Bind(wx.EVT_MENU, self.comentar, self.COMMENT)
+		self.Bind(wx.EVT_MENU, self.OnPreferences, self.PREFERENCES)
 
 		# pref menu
 		if DEV:
@@ -491,7 +504,8 @@ class Pinguino(framePinguinoX, Tools):
 		self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
 		 
 		# help menu
-		self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD1, id2=self.ID_KEYWORD1 + self.keywordNum)# keywords
+		#self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD1, id2=self.ID_KEYWORD1 + self.keywordNum)# keywords
+		self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD)# keywords
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WEBSITE)	# website
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_BLOG)		# blog   
 		self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_FORUM)	   # forum
@@ -509,22 +523,25 @@ class Pinguino(framePinguinoX, Tools):
 		self.Bind(wx.EVT_TOOL, self.OnUpload, id=self.ID_UPLOAD)
 		self.Bind(wx.EVT_TOOL, self.OnFind, id=wx.ID_FIND)
 		self.Bind(wx.EVT_TOOL, self.OnExit, id=wx.ID_EXIT)
-		self.Bind(wx.EVT_TOOL, self.editor.undo, id=wx.ID_UNDO)
-		self.Bind(wx.EVT_TOOL, self.editor.redo, id=wx.ID_REDO)
-		self.Bind(wx.EVT_TOOL, self.editor.cut, id=wx.ID_CUT)
-		self.Bind(wx.EVT_TOOL, self.editor.copy, id=wx.ID_COPY)
-		self.Bind(wx.EVT_TOOL, self.editor.paste, id=wx.ID_PASTE)
-		self.Bind(wx.EVT_TOOL, self.editor.clear, id=wx.ID_CLEAR)
-		self.Bind(wx.EVT_TOOL, self.editor.selectall, id=wx.ID_SELECTALL)
+		self.Bind(wx.EVT_TOOL, self.undo, id=wx.ID_UNDO)
+		self.Bind(wx.EVT_TOOL, self.redo, id=wx.ID_REDO)
+		self.Bind(wx.EVT_TOOL, self.cut, id=wx.ID_CUT)
+		self.Bind(wx.EVT_TOOL, self.copy, id=wx.ID_COPY)
+		self.Bind(wx.EVT_TOOL, self.paste, id=wx.ID_PASTE)
+		self.Bind(wx.EVT_TOOL, self.clear, id=wx.ID_CLEAR)
+		self.Bind(wx.EVT_TOOL, self.selectall, id=wx.ID_SELECTALL)
 
 		# ------------------------------------------------------------------------------
 		# check new release of Pinguino
 		# TODO: how to exclude compilers dir. from other OS ?
 		# ------------------------------------------------------------------------------
-
-		sw = SubversionWorkingCopy(HOME_DIR)
-		self.localRev = sw.current_version()
-		self.localRev = "unknown"
+		
+		try:
+			sw = SubversionWorkingCopy(HOME_DIR)
+			self.localRev = sw.current_version()
+			self.statusBar1.SetStatusText(number=2, text="Rev. %s" %self.localRev)
+		except:  #No connection
+			self.localRev = "unknown"
 		
 		# ------------------------------------------------------------------------------
 		# Title and invite message
@@ -536,8 +553,9 @@ class Pinguino(framePinguinoX, Tools):
 		# initialize all the lib pdl in /lib folder
 		# self.readlib() allready called by OnBoard
 		
-		self.initTools()
+		self.__initEditor__()
 		
+		self.initTools()
 
 # ------------------------------------------------------------------------------
 # Update
@@ -631,10 +649,10 @@ class Pinguino(framePinguinoX, Tools):
 # OnKeyword
 # ------------------------------------------------------------------------------
 
-	def OnKeyword(self, event):
-		# get selected only
-		kid = event.GetId() - self.ID_KEYWORD1
-		webbrowser.open("http://wiki.pinguino.cc/index.php/"+str(self.keywordList[kid]))
+	##def OnKeyword(self, event):
+		### get selected only
+		##kid = event.GetId() - self.ID_KEYWORD1
+		##webbrowser.open("http://wiki.pinguino.cc/index.php/"+str(self.keywordList[kid]))
 
 # ------------------------------------------------------------------------------
 # OnNew
@@ -645,7 +663,7 @@ class Pinguino(framePinguinoX, Tools):
 			self.background.Destroy()
 		except:
 			pass 
-		self.editor.New("NoName" + str(self.noname), self.reservedword, self.rw)
+		self.New("NoName" + str(self.noname), self.reservedword, self.rw)
 		self.noname+=1
 
 # ------------------------------------------------------------------------------
@@ -657,7 +675,7 @@ class Pinguino(framePinguinoX, Tools):
 			self.background.Destroy()
 		except:
 			pass 
-		self.editor.OpenDialog("Pde Files",\
+		self.OpenDialog("Pde Files",\
 								"pde",\
 								self.reservedword,\
 								self.rw,\
@@ -676,7 +694,7 @@ class Pinguino(framePinguinoX, Tools):
 		fileNum = event.GetId() - wx.ID_FILE1
 		path = self.filehistory.GetHistoryFile(fileNum)
 		self.filehistory.AddFileToHistory(path)				  # move up the list
-		self.editor.Open(path,self.reservedword,self.rw, self.filehistory, self.config)
+		self.Open(path,self.reservedword,self.rw, self.filehistory, self.config)
 		# refresh file menu (doesn't seem to work)
 		self.file_menu.UpdateUI()
 
@@ -685,21 +703,21 @@ class Pinguino(framePinguinoX, Tools):
 # ------------------------------------------------------------------------------
 
 	def OnSave(self, event): 
-		self.editor.SaveDirect()
+		self.SaveDirect()
 
 # ------------------------------------------------------------------------------
 # OnSaveAs : Save current File as ...
 # ------------------------------------------------------------------------------
 
 	def OnSaveAs(self, event): 
-		self.editor.Save("Pde Files","pde")
+		self.Save("Pde Files","pde")
 
 # ------------------------------------------------------------------------------
 # OnClose : Close Editor Window
 # ------------------------------------------------------------------------------
 
 	def OnClose(self, event): 
-		self.editor.Close()
+		self.Close()
 		
 # ------------------------------------------------------------------------------
 # OnExit : Save Settings and Exit Program
@@ -792,6 +810,8 @@ class Pinguino(framePinguinoX, Tools):
 		del self.reservedword[:]
 		del self.libinstructions[:]
 		self.readlib(self.curBoard)
+		
+		self.statusBar1.SetStatusText(number=3, text=self.curBoard.name)
 
 # ------------------------------------------------------------------------------
 # OnRender:
@@ -810,7 +830,7 @@ class Pinguino(framePinguinoX, Tools):
 			self.background.CentreOnParent(wx.BOTH)
 		except:
 			pass		
-		self.editor.Resize()
+		self.Resize()
 		self._mgr.Update	   
 		event.Skip()
 
@@ -878,7 +898,7 @@ class Pinguino(framePinguinoX, Tools):
 	def OnVerify(self, event):
 		global lang
 		t0 = time.time()
-		if self.editor.GetPath()==-1:
+		if self.GetPath()==-1:
 			dlg = wx.MessageDialog(self,
 				self.translate('Open file first !!'),
 				self.translate('Warning'),
@@ -888,8 +908,8 @@ class Pinguino(framePinguinoX, Tools):
 			return
 		self.displaymsg("Board:\t" + self.curBoard.name + "\n", 1)
 		self.displaymsg("Proc: \t" + self.curBoard.proc + "\n", 0)
-		self.editor.SaveDirect()
-		filename=self.editor.GetPath()
+		self.SaveDirect()
+		filename=self.GetPath()
 		filename,extension=os.path.splitext(filename)
 		if os.path.exists(filename+".hex"):
 			os.remove(filename+".hex")
@@ -923,17 +943,28 @@ class Pinguino(framePinguinoX, Tools):
 # ------------------------------------------------------------------------------
 
 	def OnUpload(self, event):
-		if self.editor.GetPath() != -1:
-			filename = self.editor.GetPath()
+		if self.GetPath() != -1:
+			filename = self.GetPath()
 			filename, extension = os.path.splitext(filename)
 			if os.path.exists(filename + '.hex'):
-				if self.curBoard.bldr == 'vasco':
-					u = uploaderVSC()
-				elif self.curBoard.bldr == 'diolan':
-					u = uploaderDLN()
-				elif self.curBoard.bldr == 'microchip':
-					u = uploaderMCC()
-				u.writeHex(self.logwindow, filename + '.hex', self.curBoard)
+				""""""
+				
+				u = Uploader(self.logwindow, filename, self.curBoard)
+				
+				#u = Uploader(self.logwindow, filename, boardlist)
+				
+				
+				#if self.curBoard.bldr == 'vasco':
+					#u = uploaderVSC()
+				#elif self.curBoard.bldr == 'diolan':
+					#u = uploaderDLN()
+				#elif self.curBoard.bldr == 'microchip':
+					#u = uploaderMCC()
+				#u.writeHex(self.logwindow, filename + '.hex', self.curBoard)
+				
+				
+				
+				
 			else:# no file
 				dlg = wx.MessageDialog(self,
 						self.translate('File must be verified/compiled before upload'),
@@ -968,11 +999,11 @@ class Pinguino(framePinguinoX, Tools):
 
 	def findprev(self,event):
 		chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
-		trouve, position=self.editor.find(chaine,0)
-		textEdit = self.editor.stcpage[self.editor.GetSelection()]		
+		trouve, position=self.find(chaine,0)
+		textEdit = self.stcpage[self.GetSelection()]		
 		if trouve!=-1:
-			self.editor.highlightline(trouve,'yellow')
-			self.editor.focus()
+			self.highlightline(trouve,'yellow')
+			self.focus()
 			textEdit.SetSelectionStart(position)
 			textEdit.SetSelectionEnd(position+len(chaine))
 			self.Replace.Enable()
@@ -980,11 +1011,11 @@ class Pinguino(framePinguinoX, Tools):
 		
 	def findnext(self,event):
 		chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
-		trouve, position=self.editor.find(chaine,1)
-		textEdit = self.editor.stcpage[self.editor.GetSelection()]
+		trouve, position=self.find(chaine,1)
+		textEdit = self.stcpage[self.GetSelection()]
 		if trouve!=-1:
-			self.editor.highlightline(trouve,'yellow')
-			self.editor.focus()
+			self.highlightline(trouve,'yellow')
+			self.focus()
 			textEdit.SetSelectionStart(position)
 			textEdit.SetSelectionEnd(position+len(chaine))
 			self.Replace.Enable()
@@ -1019,11 +1050,11 @@ class Pinguino(framePinguinoX, Tools):
 		wordReplace = self.ReplaceText.GetString(0, self.ReplaceText.GetLastPosition())
 		print word, wordReplace
 		if word == "": return False
-		textEdit = self.editor.stcpage[self.editor.GetSelection()]
+		textEdit = self.stcpage[self.GetSelection()]
 		textEdit.Clear()
 		textEdit.InsertText(textEdit.CurrentPos, wordReplace)
 		if self.findnext(event) == -1:
-			self.editor.gotostart()
+			self.gotostart()
 			self.Replace.Disable()
 			self.ReplaceAll.Disable()
 			return False
@@ -1031,8 +1062,8 @@ class Pinguino(framePinguinoX, Tools):
 
 	#----------------------------------------------------------------------
 	def replacealltext(self, event):
-		textEdit = self.editor.stcpage[self.editor.GetSelection()]
-		self.editor.gotostart()
+		textEdit = self.stcpage[self.GetSelection()]
+		self.gotostart()
 		self.findnext(event)
 		while self.replacetext(): pass
 		# if ther word search is in the firs position:
@@ -1423,7 +1454,7 @@ class Pinguino(framePinguinoX, Tools):
 				line=fichier.readline()
 				if line.find("error")!=-1:
 					number=line[line.find(":")+1:line.find("error")-2]
-					#self.editor.highlightline(int(number)-1,'pink')
+					#self.highlightline(int(number)-1,'pink')
 					self.displaymsg("error line " + number + "\n", 1)
 					self.displaymsg(line[line.find("error")+7:len(line)],0)
 				fichier.close()
@@ -1497,7 +1528,7 @@ class Pinguino(framePinguinoX, Tools):
 							os.path.join(SOURCE_DIR, 'main.o')],\
 							stdout=fichier, stderr=STDOUT)
 			else:
-				# "PDEDIR=" + os.path.dirname(self.editor.GetPath()),\
+				# "PDEDIR=" + os.path.dirname(self.GetPath()),\
 				# can't be used with Command Line version since editor isn't used
 				sortie=Popen([self.make,\
 						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile.'+self.osdir),\

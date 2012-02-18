@@ -31,7 +31,7 @@ from dic import Dictionary, Snippet
 class autoCompleter:
     #----------------------------------------------------------------------
     def __initCompleter__(self):
-        """"""
+        self.recent = False  #To control the hide/show when a word is inserted
         
     #----------------------------------------------------------------------
     def inserted(self, event): 
@@ -39,25 +39,23 @@ class autoCompleter:
             self.insertSnippet(event.GetText())
             return 
         index = self.wordUnderCursor()
-        textEdit = self.editor.stcpage[self.editor.GetSelection()]
-        for i in index: textEdit.DeleteBack()  #eliminar indice
-        textEdit.InsertText(textEdit.CurrentPos, event.GetText()+" ")  #insertar completado + espacio
-        textEdit.WordRightEnd()  #avanza hasta la palabra
-        textEdit.CharRight()  #avanza un espacio
-        textEdit.AutoCompCancel()  #se oculta ventana de autocompletado
+        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        for i in index: textEdit.DeleteBack()
+        textEdit.InsertText(textEdit.CurrentPos, event.GetText()) 
+        textEdit.WordRightEnd()
+        self.recent = True
         
     #----------------------------------------------------------------------
     def insertSnippet(self, key):
-        textEdit = self.editor.stcpage[self.editor.GetSelection()]
+        textEdit = self.stcpage[self.notebook1.GetSelection()]
         index = self.wordUnderCursor()
         for i in index: textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
         for i in range(Snippet[key][0]): textEdit.CharRight()        
-        textEdit.AutoCompCancel()
+        self.recent = True
         
     #----------------------------------------------------------------------
     def keyEvent(self, event):
-        
         #List of key to ignore
         if event.GetKeyCode() in [wx.WXK_UP,
                                   wx.WXK_DOWN,
@@ -65,10 +63,25 @@ class autoCompleter:
                                   wx.WXK_ALT,
                                   wx.WXK_RIGHT,
                                   wx.WXK_LEFT,
-                                  wx.WXK_ESCAPE]:
+                                  wx.WXK_ESCAPE, 
+                                  wx.WXK_INSERT,
+                                  wx.WXK_NUMPAD_INSERT,
+                                  wx.WXK_SPACE, 
+                                  wx.WXK_BACK]:
+            return
+        
+        if event.GetModifiers() in [wx.MOD_CONTROL,
+                                    wx.MOD_ALT,
+                                    wx.MOD_ALTGR,
+                                    wx.MOD_CMD,
+                                    wx.MOD_META,
+                                    wx.MOD_SHIFT,
+                                    wx.MOD_WIN]:
             return 
         
-        textEdit = self.editor.stcpage[self.editor.GetSelection()]  
+        
+        
+        textEdit = self.stcpage[self.notebook1.GetSelection()]  
         if textEdit.GetCurrentPos() == 0:
             textEdit.AutoCompCancel()
             return   
@@ -82,5 +95,5 @@ class autoCompleter:
         textEdit.AutoCompSetSeparator(ord("|"))
         for word in completersFilter:
             if word.lower().startswith(index.lower()): items.append(word)
-        if len(items) > 0: textEdit.AutoCompShow(0, "|".join(items))
-        
+        if len(items) > 0 and not self.recent: textEdit.AutoCompShow(0, "|".join(items))
+        self.recent = False

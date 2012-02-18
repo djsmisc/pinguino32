@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 """-------------------------------------------------------------------------
-    Dictionary of commands ans snippets.
+    Dictionary of commands and snippets.
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 

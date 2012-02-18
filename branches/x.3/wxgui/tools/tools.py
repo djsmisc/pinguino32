@@ -8,7 +8,7 @@
     contact:		yeison.eng@gmail.com 
     first release:	2012-02-02
     last release:	2012-02-04
-    
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
@@ -27,20 +27,31 @@
 import wx, re, webbrowser
 from treeExamples import treeExamples
 from autoCompleter import autoCompleter
+from preferences import Preferences
+from keywords import functionsHelp
+#import locale
 
 ########################################################################
 class Tools(treeExamples, autoCompleter):
     #----------------------------------------------------------------------
     def initTools(self):
         self.panel_find.Hide()
-	self.panel_replace.Hide()
-	self.updateIDE()
+        self.panel_replace.Hide()
+        self.updateIDE()
         self.__initTree__()
         self.__initCompleter__()
-	self.makeFindText()
-	self.makeReplaceText()
-	self._init_sizers()
-        self.centrarFrame()     
+        self.makeFindText()
+        self.makeReplaceText()
+        self._init_sizers()
+        self.centrarFrame()
+        
+        #TODO: Spanish Doc (PinguinoVE)
+        #if locale.getdefaultlocale()[0][:2] == "es":
+            #self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
+        #else: self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
+        
+        self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
+        
 
     #----------------------------------------------------------------------
     def centrarFrame(self):
@@ -50,36 +61,48 @@ class Tools(treeExamples, autoCompleter):
 
     #----------------------------------------------------------------------
     def contexMenuTools(self, event):
+        textEdit = self.stcpage[self.notebook1.GetSelection()]
         menu = wx.Menu()
-        self._initIDs_(self.editor.stcpage[self.editor.GetSelection()])
+        self._initIDs_(self.stcpage[self.notebook1.GetSelection()])
 
         word=self.wordUnderCursor(funtion=True)
-	
+
         if word in self.keywordList:
             self.Bind(wx.EVT_MENU,
-                      lambda x:webbrowser.open("http://wiki.pinguino.cc/index.php/"+word),
-                      id=self.popupIDhelp)
-            menu.Append(self.popupIDhelp, "Search info about %s" %word)
+                      lambda x:webbrowser.open(self.wikiDoc+word),
+                      id=self.popupIDhelp1)
+            self.Bind(wx.EVT_MENU,
+                      lambda x:self.OnKeyword(keyword=word),
+                      id=self.popupIDhelp2)            
+            
+            help = wx.Menu()
+            help.Append(self.popupIDhelp1, self.translate("Open wiki page in the web browser"))
+            help.Append(self.popupIDhelp2, self.translate("Read description"))
+            
+            menu.AppendMenu(self.popupIDhelp0, word, help)          
             menu.AppendSeparator()
+            
+        menu.Append(self.popupID8, self.translate("Comment/Uncomment"))
+        menu.AppendSeparator()
 
-        menu.Append(self.popupID1, "Undo")
-        menu.Append(self.popupID2, "Redo")
+        menu.Append(self.popupID1, self.translate("Undo"))
+        menu.Append(self.popupID2, self.translate("Redo"))
         menu.AppendSeparator()
-        menu.Append(self.popupID3, "Cut")
-        menu.Append(self.popupID4, "Copy")
-        menu.Append(self.popupID5, "Paste")
-        menu.Append(self.popupID6, "Delete")
+        menu.Append(self.popupID3, self.translate("Cut"))
+        menu.Append(self.popupID4, self.translate("Copy"))
+        menu.Append(self.popupID5, self.translate("Paste"))
+        menu.Append(self.popupID6, self.translate("Clear"))
         menu.AppendSeparator()
-        menu.Append(self.popupID7, "Delete All")
+        menu.Append(self.popupID7, self.translate("Clear All"))
 
         self.PopupMenu(menu)
         menu.Destroy()
 
     #----------------------------------------------------------------------
     def wordUnderCursor(self,funtion=False):
-        
-        line,pos=self.editor.stcpage[self.editor.GetSelection()].CurLine
-            
+
+        line,pos=self.stcpage[self.notebook1.GetSelection()].CurLine
+
         so=line.split(" ")
         l=0
         for word in so:
@@ -103,36 +126,36 @@ class Tools(treeExamples, autoCompleter):
                     l+=len(word)
                     if pos<l: return word     
             else: return word
-	    
-	    
-	    
-	    
+
+
+
+
     #----------------------------------------------------------------------
     def makeFindText(self):
-	self.FindText.Hide()
-	self.FindText = wx.SearchCtrl(id=wx.NewId(),
-	      name=u'FindText', parent=self.panel_find, pos=wx.Point(16, 5),
-	      size=wx.Size(160, 25), style=0, value=u'')
-	self.FindText.ShowSearchButton(False)
+        self.FindText.Hide()
+        self.FindText = wx.SearchCtrl(id=wx.NewId(),
+                                      name=u'FindText', parent=self.panel_find, pos=wx.Point(16, 5),
+                                      size=wx.Size(160, 25), style=0, value=u'')
+        self.FindText.ShowSearchButton(False)
         self.FindText.ShowCancelButton(True)
         self.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.hideSearchComplete, self.FindText)
-	
+
     #----------------------------------------------------------------------
     def makeReplaceText(self):
-	self.ReplaceText.Hide()
-	self.ReplaceText = wx.SearchCtrl(id=wx.NewId(),
-              name=u'ReplaceText', parent=self.panel_replace, pos=wx.Point(16,
-              5), size=wx.Size(161, 25), style=0, value=u'') 
-	self.ReplaceText.SetDescriptiveText("Replace")
-	self.ReplaceText.ShowSearchButton(False)
+        self.ReplaceText.Hide()
+        self.ReplaceText = wx.SearchCtrl(id=wx.NewId(),
+                                         name=u'ReplaceText', parent=self.panel_replace, pos=wx.Point(16,
+                                                                                                      5), size=wx.Size(161, 25), style=0, value=u'') 
+        self.ReplaceText.SetDescriptiveText("Replace")
+        self.ReplaceText.ShowSearchButton(False)
         self.ReplaceText.ShowCancelButton(False)
-	
+
     #----------------------------------------------------------------------
     def hideSearchComplete(self, event=None):
-	self.panel_find.Hide()
-	self.panel_replace.Hide()
-	self.updateIDE()
-	    
+        self.panel_find.Hide()
+        self.panel_replace.Hide()
+        self.updateIDE()
+
 
 
     #----------------------------------------------------------------------
@@ -144,7 +167,11 @@ class Tools(treeExamples, autoCompleter):
         self.popupID5 = wx.NewId()
         self.popupID6 = wx.NewId()
         self.popupID7 = wx.NewId()
-        self.popupIDhelp = wx.NewId()
+        self.popupID8 = wx.NewId()
+        self.popupIDhelp0 = wx.NewId()
+        self.popupIDhelp1 = wx.NewId()
+        self.popupIDhelp2 = wx.NewId()
+                
 
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Undo(), id=self.popupID1)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Redo(), id=self.popupID2)
@@ -153,3 +180,46 @@ class Tools(treeExamples, autoCompleter):
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Paste(), id=self.popupID5)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Clear(), id=self.popupID6)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.ClearAll(), id=self.popupID7)
+        self.Bind(wx.EVT_MENU, lambda x:self.comentar(), id=self.popupID8)
+
+
+    #----------------------------------------------------------------------
+    def OnKeyword(self, event=None, keyword=None):
+        app = wx.PySimpleApp(0)
+        wx.InitAllImageHandlers()
+        frame_1 = functionsHelp(None, self.keywordList, keyword)
+        app.SetTopWindow(frame_1)
+        frame_1.Show()
+        app.MainLoop()
+        
+    #----------------------------------------------------------------------
+    def OnPreferences(self, event=None):
+        app = wx.PySimpleApp(0)
+            
+        wx.InitAllImageHandlers()
+        frame_1 = Preferences(None)
+        app.SetTopWindow(frame_1)
+        frame_1.Show()
+        app.MainLoop()
+        
+    #----------------------------------------------------------------------
+    def comentar(self, event=None):
+        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        lineStart, lineEnd = map(textEdit.LineFromPosition,textEdit.GetSelection())
+        countLines = lineEnd - lineStart
+        posLineStart, posLineEnd = map(textEdit.PositionFromLine, [lineStart, lineEnd+1])
+        textEdit.SetSelection(posLineStart, posLineEnd)
+        selected = textEdit.GetSelectedText()
+        if selected.startswith("//"): comented = selected.replace("//","")
+        else: comented = "//" + selected.replace("\n","\n//", countLines)
+        textEdit.Clear()
+        textEdit.InsertText(textEdit.CurrentPos, comented)
+        textEdit.SetSelection(*map(textEdit.PositionFromLine, [lineStart, lineEnd]))
+    
+    #----------------------------------------------------------------------
+    def updateStatusBar(self, event=None):
+        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        fila = str(textEdit.CurrentLine).rjust(3, "0")
+        columna = str(textEdit.GetColumn(textEdit.CurrentPos)).rjust(3, "0")
+        self.statusBar1.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
+        event.Skip()
