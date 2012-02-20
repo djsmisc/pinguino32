@@ -663,7 +663,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 			self.background.Destroy()
 		except:
 			pass 
-		self.New("NoName" + str(self.noname), self.reservedword, self.rw)
+		self.New("Newfile" + str(self.noname), self.reservedword, self.rw)
 		self.noname+=1
 
 # ------------------------------------------------------------------------------
@@ -947,24 +947,20 @@ class Pinguino(framePinguinoX, Tools, editor):
 			filename = self.GetPath()
 			filename, extension = os.path.splitext(filename)
 			if os.path.exists(filename + '.hex'):
-				""""""
-				
-				u = Uploader(self.logwindow, filename, self.curBoard)
-				
-				#u = Uploader(self.logwindow, filename, boardlist)
-				
-				
-				#if self.curBoard.bldr == 'vasco':
-					#u = uploaderVSC()
-				#elif self.curBoard.bldr == 'diolan':
-					#u = uploaderDLN()
-				#elif self.curBoard.bldr == 'microchip':
-					#u = uploaderMCC()
-				#u.writeHex(self.logwindow, filename + '.hex', self.curBoard)
-				
-				
-				
-				
+				if self.curBoard.arch == 8:
+					u = Uploader(self.logwindow, filename, self.curBoard)
+				else:
+					fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.u32),
+								"-w",
+								filename+".hex",
+								"-r",
+								"-n"],
+								stdout=fichier, stderr=STDOUT)
+					sortie.communicate()
+					fichier.seek(0)
+					self.displaymsg(fichier.read(),0)
+					fichier.close()
 			else:# no file
 				dlg = wx.MessageDialog(self,
 						self.translate('File must be verified/compiled before upload'),
@@ -1418,32 +1414,48 @@ class Pinguino(framePinguinoX, Tools, editor):
 			print("compile " + board.proc)
 		else:
 			if board.arch == 8:
-				if board.bldr == 'diolan':
-					comp = self.c8 + '310'
-				else:
-					comp = self.c8
-					
 				fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
-				sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', comp),\
-						"-mpic16",\
-						"--denable-peeps",\
-						"--obanksel=9",\
-						"--opt-code-size",\
-						"--optimize-cmp",\
-						"--optimize-df",\
-						"-p" + board.proc,\
-						"-D" + board.board,\
-						"-D" + board.bldr,\
-						"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
-						"-I" + os.path.join(P8_DIR, 'include'),\
-						"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
-						"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
-						"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-						"-I" + os.path.dirname(filename),\
-						"--compile-only",\
-						"-o" + os.path.join(SOURCE_DIR, 'main.o'),\
-						os.path.join(SOURCE_DIR, 'main.c')],\
-						stdout=fichier, stderr=STDOUT)
+				if board.bldr == 'vasco':
+					sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+							"-mpic16",\
+							"--denable-peeps",\
+							"--obanksel=9",\
+							"--opt-code-size",\
+							"--optimize-cmp",\
+							"--optimize-df",\
+							"-p" + board.proc,\
+							"-D" + board.board,\
+							"-D" + board.bldr,\
+							"-I" + os.path.join(P8_DIR, 'include'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+							"-I" + os.path.dirname(filename),\
+							"--compile-only",\
+							"-o" + os.path.join(SOURCE_DIR, 'main.o'),\
+							os.path.join(SOURCE_DIR, 'main.c')],\
+							stdout=fichier, stderr=STDOUT)
+				else:# if board.bldr == 'diolan'
+#							"--extended",\
+					sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+							"-mpic16",\
+							"--denable-peeps",\
+							"--obanksel=9",\
+							"--opt-code-size",\
+							"--optimize-cmp",\
+							"--optimize-df",\
+							"-p" + board.proc,\
+							"-D" + board.board,\
+							"-D" + board.bldr,\
+							"-I" + os.path.join(P8_DIR, 'include'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+							"-I" + os.path.dirname(filename),\
+							"--compile-only",\
+							"-o" + os.path.join(SOURCE_DIR, 'main.o'),\
+							os.path.join(SOURCE_DIR, 'main.c')],\
+							stdout=fichier, stderr=STDOUT)
 				sortie.communicate()
 				if sortie.poll()!=0:
 					fichier.seek(0)
@@ -1485,26 +1497,26 @@ class Pinguino(framePinguinoX, Tools, editor):
 							"-mpic16",\
 							"-p" + board.proc,\
 							"-D" + board.bldr,\
-							"-L" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16'),\
-							"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+							"-L" + os.path.join(P8_DIR, 'lib', 'pic16'),\
 							'-llibio' + board.proc + '.lib',\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libpuf.lib'),\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libc18f.lib'),\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libm18f.lib'),\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libsdcc.lib'),\
+							'-llibc18f.lib',\
+							'-llibm18f.lib',\
+							'-llibsdcc.lib',\
+							'-llibpuf.lib',\
 							os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
 							os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
 							os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
 							os.path.join(SOURCE_DIR, 'main.o')],\
 							stdout=fichier, stderr=STDOUT)
 				else:# if board.bldr == 'diolan'
-#							"--ivt-loc=0x0800",\
-					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8+'310'),\
+#							"--extended",\
+					sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
 							"-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+							"-mpic16",\
 							"--denable-peeps",\
 							"--obanksel=9",\
 							"--opt-code-size",\
@@ -1512,18 +1524,17 @@ class Pinguino(framePinguinoX, Tools, editor):
 							"--optimize-df",\
 							"--no-crt",\
 							"-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
-							"-mpic16",\
 							"-p" + board.proc,\
 							"-D" + board.bldr,\
-							"-L" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16'),\
-							"-I" + os.path.join(P8_DIR, 'share', 'sdcc', 'include', 'pic16'),\
+							"-I" + os.path.join(P8_DIR, 'include'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
 							"-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+							"-L" + os.path.join(P8_DIR, 'lib', 'pic16'),\
 							'-llibio' + board.proc + '.lib',\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libc18f.lib'),\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libm18f.lib'),\
-							"-l" + os.path.join(P8_DIR, 'share', 'sdcc', 'lib', 'pic16', 'libsdcc.lib'),\
+							'-llibc18f.lib',\
+							'-llibm18f.lib',\
+							'-llibsdcc.lib',\
 							os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
 							os.path.join(SOURCE_DIR, 'main.o')],\
 							stdout=fichier, stderr=STDOUT)
@@ -1531,7 +1542,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 				# "PDEDIR=" + os.path.dirname(self.GetPath()),\
 				# can't be used with Command Line version since editor isn't used
 				sortie=Popen([self.make,\
-						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile.'+self.osdir),\
+						"--makefile=" + os.path.join(SOURCE_DIR, 'Makefile32.'+self.osdir),\
 						"HOME=" + HOME_DIR,\
 						"PDEDIR=" + os.path.dirname(filename),\
 						"PROC=" + board.proc,\

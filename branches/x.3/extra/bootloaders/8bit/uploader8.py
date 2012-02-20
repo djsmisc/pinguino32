@@ -5,7 +5,7 @@
 	Pinguino Universal Uploader
 
 	Author:			Regis Blanchot <rblanchot@gmail.com> 
-	Last release:	2012-01-24
+	Last release:	2012-02-13
 	
 	This library is free software you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -655,7 +655,8 @@ def hexWrite(handle, filename):
 	# erase memory from memstart to max_address 
 	# ----------------------------------------------------------------------
 
-	size64 = (max_address - memstart) / 64
+	#size64 = (max_address - memstart) / 64
+	size64 = 480
 	if size64 > 511:
 		return ERR_USB_ERASE
 	if size64 < 256:
@@ -693,65 +694,73 @@ def hexWrite(handle, filename):
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-filename ="/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/diolan/blink/blink.X/dist/4550/production/blink.X.production.hex"
-#filename ="test/misc/Blink.hex"
+def main(filename):
 
-fichier = open(filename, 'r')
-if fichier == "":
-	print "Unable to open " + filename
-	sys.exit(0)
-fichier.close()
+	if filename == '':
+		print "No program to write"
+		closeDevice(handle)
+		sys.exit(0)
 
-device = getDevice(VENDOR_ID, PRODUCT_ID)
-if device == ERR_DEVICE_NOT_FOUND:
-	print "Pinguino not found"
-	print "Is your device connected and/or in bootloader mode ?"
-	sys.exit(0)
-else:
-	print "Pinguino found"
+	fichier = open(filename, 'r')
+	if fichier == "":
+		print "Unable to open " + filename
+		sys.exit(0)
+	fichier.close()
 
-handle = initDevice(device)
-if handle == ERR_USB_INIT1:
-	print "Upload not possible"
-	print "Try to restart the bootloader mode"
-	sys.exit(0)
+	device = getDevice(VENDOR_ID, PRODUCT_ID)
+	if device == ERR_DEVICE_NOT_FOUND:
+		print "Pinguino not found"
+		print "Is your device connected and/or in bootloader mode ?"
+		sys.exit(0)
+	else:
+		print "Pinguino found"
 
-device_id = getDeviceID(handle) #0x1200
-proc = getDeviceName(device_id)
-if proc != "18f4550":
-	print "Compiled for 18f4550 but device has", proc
-	sys.exit(0)
-memend = getDeviceFlash(device_id)
-print "%s (id=%s)" % (proc, hex(device_id))
-print "%d bytes free" % memend
+	handle = initDevice(device)
+	if handle == ERR_USB_INIT1:
+		print "Upload not possible"
+		print "Try to restart the bootloader mode"
+		sys.exit(0)
 
-#product = handle.getString(device.iProduct, 30)
-#manufacturer = handle.getString(device.iManufacturer, 30)
-print "HID bootloader %s" % getVersion(handle)
+	device_id = getDeviceID(handle) #0x1200
+	proc = getDeviceName(device_id)
+	if proc != "18f4550":
+		print "Compiled for 18f4550 but device has", proc
+		sys.exit(0)
+	memend = getDeviceFlash(device_id)
+	print "%s (id=%s)" % (proc, hex(device_id))
+	print "%d bytes free" % memend
 
-if filename == '':
-	print "No program to write"
+	#product = handle.getString(device.iProduct, 30)
+	#manufacturer = handle.getString(device.iManufacturer, 30)
+	print "HID bootloader %s" % getVersion(handle)
+
+	print "Writing ..."
+	status = hexWrite(handle, filename)
+	if status == ERR_NONE:
+		print os.path.basename(filename) + " successfully uploaded"
+	if status == ERR_HEX_RECORD:
+		print "Record error"
+		closeDevice(handle)
+		sys.exit(0)
+	if status == ERR_HEX_CHECKSUM:
+		print "Checksum error"
+		closeDevice(handle)
+		sys.exit(0)
+	if status == ERR_USB_ERASE:
+		print "Erase error"
+		closeDevice(handle)
+		sys.exit(0)
+
+	print "Resetting ..."
+	reset(handle)
 	closeDevice(handle)
-	sys.exit(0)
-
-print "Writing ..."
-status = hexWrite(handle, filename)
-if status == ERR_NONE:
-	print os.path.basename(filename) + " successfully uploaded"
-if status == ERR_HEX_RECORD:
-	print "Record error"
-	closeDevice(handle)
-	sys.exit(0)
-if status == ERR_HEX_CHECKSUM:
-	print "Checksum error"
-	closeDevice(handle)
-	sys.exit(0)
-if status == ERR_USB_ERASE:
-	print "Erase error"
-	closeDevice(handle)
-	sys.exit(0)
-
-print "Resetting ..."
-reset(handle)
-closeDevice(handle)
 # ------------------------------------------------------------------------------
+if __name__ == "__main__":
+	i = -1
+	for arg in sys.argv:
+		i = i + 1
+	if i == 1:
+		main(sys.argv[1])
+	else:
+		print "Usage: uploader8.py path/filename"
+	

@@ -402,6 +402,19 @@ void IntSetVectorPriority(u8 vector, u8 pri, u8 sub)
 #endif
 			break; 
 		case INT_I2C1_VECTOR:
+#if defined(PIC32_PINGUINO_220)
+			IFS1bits.I2C1MIF = 0;
+			IFS1bits.I2C1SIF = 0;
+			IFS1bits.I2C1BIF  = 0;
+			IPC8bits.I2C1IP = pri;
+			IPC8bits.I2C1IS = sub;
+#else
+			IFS0bits.I2C1MIF = 0;
+			IFS0bits.I2C1SIF = 0;
+			IFS0bits.I2C1BIF = 0;
+			IPC6bits.I2C1IP = pri;
+			IPC6bits.I2C1IS = sub;
+#endif					
 			break;
 		case INT_INPUT_CHANGE_VECTOR:
 			break;
@@ -743,6 +756,7 @@ unsigned int IntGetVectorSubPriority(u8 vector)
 			break;
 #ifdef ENABLE_UART3
 		case INT_UART3_VECTOR:
+			sub = IPC7bits.U2AIS;
 			break;
 #else
 		case INT_SPI2_VECTOR:
@@ -1039,8 +1053,12 @@ void IntConfigureSystem(u8 mode)
 	asm("di"); // Disable all interrupts
 	temp = _CP0_GET_STATUS(); // Get Status
 	temp |= 0x00400000; // Set BEV bit
-	_CP0_SET_STATUS(temp); // Update Status	
+	_CP0_SET_STATUS(temp); // Update Status
+	#ifdef PIC32_PINGUINO_220
+	_CP0_SET_EBASE(0xBD003000); // Set an EBase value of 0xBD003000	
+	#else
 	_CP0_SET_EBASE(0xBD005000); // Set an EBase value of 0xBD005000	
+	#endif
 	_CP0_SET_INTCTL(0x00000020); // Set the Vector Spacing to non-zero value
 	temp = _CP0_GET_CAUSE(); // Get Cause
 	temp |= 0x00800000; // Set IV

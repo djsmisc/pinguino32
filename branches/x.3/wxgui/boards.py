@@ -44,6 +44,7 @@ class Vasco2550:
 	product=PIC8_ID
 	memstart=0x2000
 	memend=0x7fff
+	config=0x300000
 	shortarg='-g'
 	longarg='--vasco2550'
 
@@ -58,6 +59,7 @@ class Vasco4550:
 	product=PIC8_ID
 	memstart=0x2000
 	memend=0x7fff
+	config=0x300000
 	shortarg='-G'
 	longarg='--vasco4550'
 
@@ -72,6 +74,7 @@ class Diolan2550:
 	product=PIC8_ID
 	memstart=0x800
 	memend=0x7fff
+	config=0x300000
 	shortarg='-d'
 	longarg='--diolan2550'
 
@@ -85,7 +88,8 @@ class Diolan26J50:
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x800
-	memend=0xffff
+	memend=0xfff0
+	config=0xfff8
 	shortarg='-d2'
 	longarg='--diolan26j50'
 
@@ -100,6 +104,7 @@ class Diolan4550:
 	product=PIC8_ID
 	memstart=0x800
 	memend=0x7fff
+	config=0x300000
 	shortarg='-D'
 	longarg='--diolan4550'
 
@@ -114,6 +119,7 @@ class PICuno_Equo:
 	product=PIC8_ID
 	memstart=0x2000
 	memend=0x7fff
+	config=0x300000
 	shortarg='-p'
 	longarg='--picunoequo'
 
@@ -128,6 +134,7 @@ class FreeJALduino:
 	product=PIC8_ID
 	memstart=0x2000
 	memend=0x7fff
+	config=0x300000
 	shortarg='-j'
 	longarg='--freejalduino'
 

@@ -18,8 +18,13 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	-------------------------------------------------------------------------*/
 
-// this main function was modified by Jean-pierre Mandon 2008/09/19
+// modified by Jean-pierre Mandon 2008/09/19
+// added bootloader V3.0 support - Régis Blanchot - 2012/02/11
 // this function is part of Pinguino project
+
+#ifdef diolan
+#pragma stack 0x200 255
+#endif
 
 #include <pic18fregs.h>
 #include <const.h>
@@ -128,24 +133,24 @@ void pinguino_main(void)
 	INTCONbits.GIE  = 1;
 	#endif
 
+	#ifdef __PS2KEYB__
+	keyboard_init()
+	#endif
+		
 	while (1)
 		loop();
 }
 
 /*	----------------------------------------------------------------------------
-	Interrupt vectors
+	High Interrupt Vector
 	--------------------------------------------------------------------------*/
 
 #ifdef vasco
 #pragma code high_priority_isr 0x2020
+void high_priority_isr(void) __naked __interrupt 1
+#else
+void high_priority_isr(void)
 #endif
-/*
-#ifdef diolan
-#pragma code high_priority_isr 0x0808
-#endif
-*/
-
-void high_priority_isr(void) __interrupt
 {
 #ifdef __USBCDC
     if(PIR2bits.USBIF)
@@ -206,19 +211,22 @@ void high_priority_isr(void) __interrupt
 #ifdef INT0INT
 	userhighinterrupt();
 #endif
+
+#ifdef __PS2KEYB__
+	keyboard_irr();
+#endif
 }
+
+/*	----------------------------------------------------------------------------
+	Low Interrupt Vector
+	--------------------------------------------------------------------------*/
 
 #ifdef vasco
 #pragma code low_priority_isr 0x4000
+void low_priority_isr(void) __naked __interrupt 2
+#else
+void low_priority_isr(void)
 #endif
-
-/*
-#ifdef diolan
-#pragma code low_priority_isr 0x0818
-#endif
-*/
-
-void low_priority_isr(void) __interrupt
 {
 #ifdef USERINT
 	userinterrupt();

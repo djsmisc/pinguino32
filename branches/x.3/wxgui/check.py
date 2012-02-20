@@ -212,15 +212,6 @@ except:
 	fichier.writelines('You should have editeur.py at the root\n')
 	fichier.close()
 	perror()
-	
-#try:	
-	#from editor import editor		
-	#fichier.writelines('Editor successfully loaded\n')
-#except:
-	#fichier.writelines('Editor failed\n')
-	#fichier.writelines('You should have editeur.py at the root\n')
-	#fichier.close()
-	#perror()	
 
 try:
 	import argparse			# to write user-friendly command-line interfaces

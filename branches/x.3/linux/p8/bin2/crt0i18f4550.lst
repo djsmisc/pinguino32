@@ -1,0 +1,268 @@
+gpasm-0.14.1 (Feb 13 2012)   crt0i18f4550.asm   2-14-2012  21:48:56          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 3.1.2 #7290 (Feb 13 2012) (Linux)
+                      00004 ; This file was generated Tue Feb 14 21:48:56 2012
+                      00005 ;--------------------------------------------------------
+                      00006 ; PIC16 port for the Microchip 16-bit core micros
+                      00007 ;--------------------------------------------------------
+                      00008         list    p=18f4550
+                      00009 
+                      00010         radix dec
+                      00011 
+                      00012 ;--------------------------------------------------------
+                      00013 ; public variables in this module
+                      00014 ;--------------------------------------------------------
+                      00015         global ___uflags
+                      00016         global __entry
+                      00017         global __hpisr
+                      00018         global __lpisr
+                      00019         global __startup
+                      00020         global __do_cinit
+                      00021 
+                      00022 ;--------------------------------------------------------
+                      00023 ; extern variables in this module
+                      00024 ;--------------------------------------------------------
+                      00025         extern _stack_end
+                      00026         extern _TBLPTRU
+                      00027         extern _TBLPTRH
+                      00028         extern _TBLPTRL
+                      00029         extern _TABLAT
+                      00030         extern _TABLWT
+                      00031         extern _EECON1
+                      00032         extern _EECON2
+                      00033         extern _FSR0L
+                      00034         extern _FSR0H
+                      00035         extern _POSTINC0
+                      00036         extern _pinguino_main
+                      00037         extern _high_priority_isr
+                      00038         extern _low_priority_isr
+                      00039         extern _cinit
+                      00040 
+                      00041 
+                      00042         idata
+000000                00043 ___uflags       db      0x00
+                      00044 
+                      00045 ;--------------------------------------------------------
+                      00046 ; global & static initialisations
+                      00047 ;--------------------------------------------------------
+                      00048 ; ; Starting pCode block
+                      00049 S_crt0iDLN___entry      code    0X000800
+000800                00050 __entry:
+                      00051 ;       .line   75; crt0iDLN.c  pinguino_main ();
+000800 EC00 F000      00052         CALL    _pinguino_main
+                      00053 ; ; Starting pCode block
+gpasm-0.14.1 (Feb 13 2012)   crt0i18f4550.asm   2-14-2012  21:48:56          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054 S_crt0iDLN___hpisr      code    0X000808
+000808                00055 __hpisr:
+                      00056 ;       .line   86; crt0iDLN.c  high_priority_isr ();
+000808 EC00 F000      00057         CALL    _high_priority_isr
+                      00058 ; ; Starting pCode block
+                      00059 S_crt0iDLN___lpisr      code    0X000818
+000818                00060 __lpisr:
+                      00061 ;       .line   92; crt0iDLN.c  low_priority_isr ();
+000818 EC00 F000      00062         CALL    _low_priority_isr
+                      00063 ; I code from now on!
+                      00064 ; ; Starting pCode block
+                      00065 S_crt0iDLN___do_cinit   code
+000000                00066 __do_cinit:
+                      00067         ; TBLPTR = &cinit
+000000 0E00           00068         movlw low(_cinit)
+000002 6E00           00069         movwf _TBLPTRL, 0
+000004 0E00           00070         movlw high(_cinit)
+000006 6E00           00071         movwf _TBLPTRH, 0
+000008 0E00           00072         movlw upper(_cinit)
+00000A 6E00           00073         movwf _TBLPTRU, 0
+                      00074         ; 0x05 = cinit.num_init
+00000C 0009           00075         tblrd*+
+00000E 5000           00076         movf _TABLAT, w, 0
+000010 6E05           00077         movwf 0x05, 0
+000012 0009           00078         tblrd*+
+000014 5000           00079         movf _TABLAT, w, 0
+000016 6E06           00080         movwf 0x05 + 1, 0
+                      00081         ; while (0x05)
+000018 5005           00082         movf 0x05, w, 0
+00001A                00083 test:
+00001A E100           00084         bnz cont1
+00001C 5006           00085         movf 0x05 + 1, w, 0
+00001E E000           00086         bz done
+000020                00087 cont1:
+                      00088         ; Count down so we only have to look up the data in _cinit once.
+                      00089         ; At this point we know that TBLPTR points to the top of the current
+                      00090         ; entry in _cinit, so we can just start reading the from, to, and
+                      00091         ; size values.
+                      00092         ; read the source address low
+000020 0009           00093         tblrd*+
+000022 5000           00094         movf _TABLAT, w, 0
+000024 6E00           00095         movwf 0x00, 0
+                      00096         ; source address high
+000026 0009           00097         tblrd*+
+000028 5000           00098         movf _TABLAT, w, 0
+00002A 6E01           00099         movwf 0x00 + 1, 0
+                      00100         ; source address upper
+00002C 0009           00101         tblrd*+
+00002E 5000           00102         movf _TABLAT, w, 0
+000030 6E02           00103         movwf 0x00 + 2, 0
+                      00104         ; skip 0 byte since it is stored as 0 32bit int
+000032 0009           00105         tblrd*+
+                      00106         ; read the destination address directly into FSR0
+gpasm-0.14.1 (Feb 13 2012)   crt0i18f4550.asm   2-14-2012  21:48:56          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00107         ; destination address low
+000034 0009           00108         tblrd*+
+000036 5000           00109         movf _TABLAT, w, 0
+000038 6E00           00110         movwf _FSR0L, 0
+                      00111         ; destination address high
+00003A 0009           00112         tblrd*+
+00003C 5000           00113         movf _TABLAT, w, 0
+00003E 6E00           00114         movwf _FSR0H, 0
+                      00115         ; skip two bytes since it is stored as 0 32bit int
+000040 0009           00116         tblrd*+
+000042 0009           00117         tblrd*+
+                      00118         ; read the size of data to transfer to destination address
+000044 0009           00119         tblrd*+
+000046 5000           00120         movf _TABLAT, w, 0
+000048 6E03           00121         movwf 0x03, 0
+00004A 0009           00122         tblrd*+
+00004C 5000           00123         movf _TABLAT, w, 0
+00004E 6E04           00124         movwf 0x03 + 1, 0
+                      00125         ; skip two bytes since it is stored as 0 32bit int
+000050 0009           00126         tblrd*+
+000052 0009           00127         tblrd*+
+                      00128         ; 0x00 = 0x07 ->from;
+                      00129         ; FSR0 = 0x07 ->to;
+                      00130         ; 0x03 = (unsigned short) 0x07 ->size;
+                      00131         ; the table pointer now points to the next entry. Save it
+                      00132         ; off since we will be using the table pointer to do the copying
+                      00133         ; for the entry
+                      00134         ; 0x07 = TBLPTR
+000054 C000 F007      00135         movff _TBLPTRL, 0x07
+000058 C000 F008      00136         movff _TBLPTRH, 0x07 + 1
+00005C C000 F009      00137         movff _TBLPTRU, 0x07 + 2
+                      00138         ; now assign the source address to the table pointer
+                      00139         ; TBLPTR = 0x00
+000060 C000 F000      00140         movff 0x00, _TBLPTRL
+000064 C001 F000      00141         movff 0x00 + 1, _TBLPTRH
+000068 C002 F000      00142         movff 0x00 + 2, _TBLPTRU
+                      00143         ; while (0x03)
+00006C 5003           00144         movf 0x03, w, 0
+00006E                00145 copy_loop:
+00006E E100           00146         bnz copy_one_byte
+000070 5004           00147         movf 0x03 + 1, w, 0
+000072 E000           00148         bz done_copying
+000074                00149 copy_one_byte:
+000074 0009           00150         tblrd*+
+000076 5000           00151         movf _TABLAT, w, 0
+000078 6E00           00152         movwf _POSTINC0, 0
+                      00153         ; decrement byte counter
+00007A 0603           00154         decf 0x03, f, 0
+00007C E200           00155         bc copy_loop
+00007E 0604           00156         decf 0x03 + 1, f, 0
+000080 D000           00157         bra copy_one_byte
+000082                00158 done_copying:
+                      00159         ; restore the table pointer for the next entry
+gpasm-0.14.1 (Feb 13 2012)   crt0i18f4550.asm   2-14-2012  21:48:56          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00160         ; TBLPTR = 0x07
+000082 C007 F000      00161         movff 0x07, _TBLPTRL
+000086 C008 F000      00162         movff 0x07 + 1, _TBLPTRH
+00008A C009 F000      00163         movff 0x07 + 2, _TBLPTRU
+                      00164         ; decrement entry counter
+00008E 0605           00165         decf 0x05, f, 0
+000090 E200           00166         bc test
+000092 0606           00167         decf 0x05 + 1, f, 0
+000094 D000           00168         bra cont1
+                      00169         ; emit done label
+000096                00170 done:
+000096 0012           00171         return
+                      00172         
+                      00173 ; ; Starting pCode block
+                      00174 S_crt0iDLN___startup    code
+000000                00175 __startup:
+                      00176         ; Initialize the stack pointer
+000000 EE10 F000      00177         lfsr 1, _stack_end
+000004 EE20 F000      00178         lfsr 2, _stack_end
+                      00179         ; 1st silicon does not do this on POR
+000008 6A00           00180         clrf _TBLPTRU, 0
+                      00181         ; Initialize the flash memory access configuration.
+                      00182         ; This is harmless for non-flash devices, so we do it on all parts.
+00000A 8EA6           00183         bsf 0xa6, 7, 0 ; EECON1.EEPGD = 1, TBLPTR accesses flash program memory
+00000C 9CA6           00184         bcf 0xa6, 6, 0 ; EECON1.CFGS = 0, TBLPTR accesses flash program memory
+                      00185         
+                      00186 ;       .line   120; crt0iDLN.c _do_cinit ();
+00000E EC00 F000      00187         CALL    __do_cinit
+                      00188 ;       .line   123; crt0iDLN.c pinguino_main ();
+000012 EC00 F000      00189         CALL    _pinguino_main
+000016                00190 lockup:
+                      00191         ; Returning from main will lock up.
+000016 D000           00192         bra lockup
+                      00193         
+                      00194 
+                      00195 
+                      00196 ; Statistics:
+                      00197 ; code size:      260 (0x0104) bytes ( 0.20%)
+                      00198 ;                 130 (0x0082) words
+                      00199 ; udata size:       0 (0x0000) bytes ( 0.00%)
+                      00200 ; access size:      0 (0x0000) bytes
+                      00201 
+                      00202 
+                      00203         end
+gpasm-0.14.1 (Feb 13 2012)   crt0i18f4550.asm   2-14-2012  21:48:56          PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE
+
+_EECON1                           00000000
+_EECON2                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_POSTINC0                         00000000
+_TABLAT                           00000000
+_TABLWT                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+__18F4550                         00000001
+___uflags                         00000000
+__do_cinit                        00000000
+__entry                           00000800
+__hpisr                           00000808
+__lpisr                           00000818
+__startup                         00000000
+_cinit                            00000000
+_high_priority_isr                00000000
+_low_priority_isr                 00000000
+_pinguino_main                    00000000
+_stack_end                        00000000
+cont1                             00000020
+copy_loop                         0000006E
+copy_one_byte                     00000074
+done                              00000096
+done_copying                      00000082
+lockup                            00000016
+test                              0000001A
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
