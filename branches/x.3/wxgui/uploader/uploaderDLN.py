@@ -35,34 +35,14 @@ import usb			# checked in check.py
 class uploaderDLN:
 	""" upload .hex into pinguino device """
 
-	# 8-bit Pinguino's ID
-	# --------------------------------------------------------------------------
-
-	VENDOR_ID						=	0x04D8
-	PRODUCT_ID						=	0xFEAA
-
-	## Hex format record types
-	## --------------------------------------------------------------------------
-
-	#Data_Record						=	 00
-	#End_Of_File_Record				=	 01
-	#Extended_Segment_Address_Record	=	 02
-	#Start_Segment_Address_Record	=	 03
-	#Extended_Linear_Address_Record	=	 04
-	#Start_Linear_Address_Record		=	 05
-
 	# Bootloader commands
 	# --------------------------------------------------------------------------
 
-	#DLN_READ_FLASH_CMD				=	0x01
 	DLN_WRITE_FLASH_CMD				=	0x01
 	DLN_ERASE_FLASH_CMD				=	0x02
 	DLN_GET_FW_VER_CMD				=	0x03
 	DLN_RESET_CMD  					=	0x04
 	DLN_READ_DEVID_CMD				=	0x05
-	#DLN_WRITE_ID_CMD				=	0x07
-	#DLN_READ_EEPROM_CMD			=	0x08
-	#DLN_WRITE_EEPROM_CMD			=	0x09
 	DLN_UNKNOWN_CMD					=	0xFF
 
 	# boot command offset in bytes
@@ -76,15 +56,11 @@ class uploaderDLN:
 	BOOT_VER_MAJOR					=	2
 	BOOT_VER_MINOR					=	3
 	BOOT_VER_SUBMINOR				=	4
-	#BOOT_EEDATA					=	6
 
 	DLN_BLOCKSIZE					=	32 #64 - DLN_BOOT_CMD_SIZE
 
 	BOOT_CMD_SIZE					=	64
 	BOOT_DATA_SIZE					=	BOOT_CMD_SIZE - BOOT_CODE
-
-	#BOOT_RSP_SIZE					=	64
-	#BOOT_ID_LEN					=	8
 
 	# HID endpoints
 	DLN_IN_EP						=	0x81	# endpoint for HID reads
@@ -96,28 +72,6 @@ class uploaderDLN:
 	DLN_TIMEOUT						=	500
 
 	MAX_HID_RETRY					=	4
-
-	# Error codes returned by various functions
-	# --------------------------------------------------------------------------
-
-	#ERR_NONE						=	0
-	#ERR_CMD_ARG						=	1
-	#ERR_CMD_UNKNOWN					=	2
-	#ERR_DEVICE_NOT_FOUND			=	3
-	#ERR_USB_INIT1					=	4
-	#ERR_USB_INIT2					=	5
-	#ERR_USB_OPEN					=	6
-	#ERR_USB_WRITE					=	7
-	#ERR_USB_READ					=	8
-	#ERR_HEX_OPEN					=	9
-	#ERR_HEX_STAT					=	10
-	#ERR_HEX_MMAP					=	11
-	#ERR_HEX_SYNTAX					=	12
-	#ERR_HEX_CHECKSUM				=	13
-	#ERR_HEX_RECORD					=	14
-	#ERR_VERIFY						=	15
-	#ERR_EOL							=	16
-	#ERR_USB_ERASE					=	17
 
 	# Table with supported USB devices (from JAL USB HID Bootloader)
 	# device_id:[PIC name, flash size(in bytes), eeprom size (in bytes)] 
@@ -172,39 +126,14 @@ class uploaderDLN:
 			0x1F40: ['18f86J55'	, 0x18000, 0x00 ],
 			0x4220: ['18f87J50'	, 0x20000, 0x00 ]
 		}
-	
-## ------------------------------------------------------------------------------
-	#def __init__(self, output, filename, board):
-		#self.output = output
-		#self.filename = filename
-		#self.board = board	
 
-## ------------------------------------------------------------------------------
-	#def txtWrite(self, message):
-## ------------------------------------------------------------------------------
-		#""" display message in the log window """
-		##if gui==True:
-		#self.output.WriteText(message)
-		##else:
-		##	print message
-		#return
-## ------------------------------------------------------------------------------
-	#def getDevice(self):
-## ------------------------------------------------------------------------------
-		#""" search USB device and returns a DeviceHandle object """
-		#busses = usb.busses()
-		#for bus in busses:
-			#for device in bus.devices:
-				#if device.idVendor == self.board.vendor and device.idProduct == self.board.product:
-					#return device
-		#return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
-	def initDevice(self):
+	def initDevice(self, device):
 # ------------------------------------------------------------------------------
 		""" init pinguino device """
-		conf = self.device.configurations[0]
+		conf = device.configurations[0]
 		iface = conf.interfaces[0][0]
-		handle = self.device.open()
+		handle = device.open()
 		if handle:
 			if sys.platform == 'win32':
 				handle.setConfiguration(conf)
@@ -217,11 +146,6 @@ class uploaderDLN:
 				handle.setAltInterface(iface)
 			return handle
 		return self.ERR_USB_INIT1
-## ------------------------------------------------------------------------------
-	#def closeDevice(self):
-## ------------------------------------------------------------------------------
-		#""" Close currently-open USB device """
-		#self.handle.releaseInterface()
 # ------------------------------------------------------------------------------
 	def usbWrite(self, usbBuf):  
 # ------------------------------------------------------------------------------
@@ -247,13 +171,13 @@ class uploaderDLN:
 			timeout: operation timeout in miliseconds. (default: 100)
 		Returns the number of bytes written.
 		"""
-		sent_bytes = self.handle.controlMsg(0x21, 0x09, usbBuf, 0x00, 0x00, self.DLN_TIMEOUT)
+		sent_bytes = handle.controlMsg(0x21, 0x09, usbBuf, 0x00, 0x00, self.DLN_TIMEOUT)
 		if sent_bytes == len(usbBuf):
 			return self.ERR_NONE
 		else:		
 			return self.ERR_USB_WRITE
 # ------------------------------------------------------------------------------
-	def transaction(self, usbBuf):
+	def transaction(self, handle, usbBuf):
 # ------------------------------------------------------------------------------
 		"""
 		Write a data packet to currently-open USB device 
@@ -269,31 +193,31 @@ class uploaderDLN:
 		"""
 		retry = 0
 		while retry < self.MAX_HID_RETRY:
-			status = self.usbWrite(usbBuf)
+			status = self.usbWrite(handle, usbBuf)
 			if status == self.ERR_NONE:
-				return self.handle.interruptRead(1, 64, self.DLN_TIMEOUT)
-				#return self.handle.interruptRead(1, len(usbBuf), self.DLN_TIMEOUT)
+				return handle.interruptRead(1, 64, self.DLN_TIMEOUT)
+				#return handle.interruptRead(1, len(usbBuf), self.DLN_TIMEOUT)
 			else:
 				retry = retry + 1
 		return self.ERR_USB_WRITE
 # ------------------------------------------------------------------------------
-	def reset(self):
+	def reset(self, handle):
 # ------------------------------------------------------------------------------
 		""" reset device """
 		usbBuf = [0] * 64
 		# command code
 		usbBuf[self.BOOT_CMD] = self.DLN_RESET_CMD
 		# write data packet
-		return self.usbWrite(usbBuf)
+		return self.usbWrite(handle, usbBuf)
 # ------------------------------------------------------------------------------
-	def getVersion(self):
+	def getVersion(self, handle):
 # ------------------------------------------------------------------------------
 		""" get bootloader version """
 		usbBuf = [0] * 64
 		# command code
 		usbBuf[self.BOOT_CMD] = self.DLN_GET_FW_VER_CMD
 		# write data packet and get response
-		usbBuf = self.transaction(usbBuf)
+		usbBuf = self.transaction(handle, usbBuf)
 		if usbBuf == self.ERR_USB_WRITE:
 			return self.ERR_USB_WRITE
 		else:		
@@ -302,14 +226,14 @@ class uploaderDLN:
 					str(usbBuf[self.BOOT_VER_MINOR]) + "." + \
 					str(usbBuf[self.BOOT_VER_SUBMINOR])
 # ------------------------------------------------------------------------------
-	def getDeviceID(self):
+	def getDeviceID(self, handle):
 # ------------------------------------------------------------------------------
 		""" read Device ID """
 		usbBuf = [0] * 64
 		# command code
 		usbBuf[self.BOOT_CMD] = self.DLN_READ_DEVID_CMD
 		# write data packet and get response
-		usbBuf = self.transaction(usbBuf)
+		usbBuf = self.transaction(handle, usbBuf)
 		if usbBuf == self.ERR_USB_WRITE:
 			return self.ERR_USB_WRITE
 		else:		
@@ -320,11 +244,11 @@ class uploaderDLN:
 			# mask revision number
 			return device_id  & 0xFFE0
 # ------------------------------------------------------------------------------
-	def getDeviceFlash(self, device_id):
+	def getDeviceFlash(self, device_id, board):
 # ------------------------------------------------------------------------------
 		for n in self.devices_table:
 			if n == device_id:
-				return self.devices_table[n][1] - self.board.memstart			
+				return self.devices_table[n][1] - board.memstart			
 		return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
 	def getDeviceName(self, device_id):
@@ -334,7 +258,7 @@ class uploaderDLN:
 				return self.devices_table[n][0]
 		return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
-	def eraseFlash(self, address, size64):
+	def eraseFlash(self, handle, address, size64):
 # ------------------------------------------------------------------------------
 		""" erase n * 64-byte blocks of flash memory """
 		usbBuf = [0] * 64
@@ -350,10 +274,10 @@ class uploaderDLN:
 		usbBuf[self.BOOT_SIZE] = size64
 		# write data packet and get response
 		#print usbBuf
-		usbBuf = self.transaction(usbBuf)
+		usbBuf = self.transaction(handle, usbBuf)
 		#print usbBuf
 # ------------------------------------------------------------------------------
-	def writeFlash(self, address, block):
+	def writeFlash(self, handle, address, block):
 # ------------------------------------------------------------------------------
 		""" write a block of code """
 		usbBuf = [0xFF] * 64
@@ -361,7 +285,7 @@ class uploaderDLN:
 		# echo is used to link between command and response
 		usbBuf[self.BOOT_ECHO] = 123
 		# block's address (must be divisible by 2)
-		#print address
+		#print hex(address)
 		usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
 		usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
 		usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
@@ -375,10 +299,10 @@ class uploaderDLN:
 			usbBuf[self.BOOT_CODE + i] = block[i]
 		# write data packet on usb device
 		#print usbBuf
-		usbBuf = self.transaction(usbBuf)
+		usbBuf = self.transaction(handle, usbBuf)
 		#print usbBuf
 # ------------------------------------------------------------------------------
-	def hexWrite(self):
+	def hexWrite(self, handle, filename, board):
 # ------------------------------------------------------------------------------
 		""" Parse the Hex File Format and send data to usb device """
 
@@ -402,7 +326,7 @@ class uploaderDLN:
 		# read hex file
 		# ----------------------------------------------------------------------
 
-		fichier = open(self.filename,'r')
+		fichier = open(filename,'r')
 		lines = fichier.readlines()
 		fichier.close()
 
@@ -433,11 +357,11 @@ class uploaderDLN:
 				address = (address_Hi << 16) + address_Lo
 
 			# code size
-			if address >= self.board.memstart:
+			if address >= board.memstart:
 				codesize = codesize + byte_count
 
 			# max address
-			if (address > old_address) and (address < self.board.memend):
+			if (address > old_address) and (address < board.memend):
 				max_address = address + byte_count
 				old_address = address
 
@@ -447,7 +371,7 @@ class uploaderDLN:
 		# fill data sequence with 0xFF
 		# ----------------------------------------------------------------------
 
-		for i in range(max_address - self.board.memstart):
+		for i in range(max_address - board.memstart):
 			data.append(0xFF)
 
 		# 2nd pass : parse bytes from line into data
@@ -462,17 +386,16 @@ class uploaderDLN:
 
 			# 32-bit address
 			address = (address_Hi << 16) + address_Lo
-			#print address
+			#print hex(address)
 
 			# data record
 			if record_type == self.Data_Record:
-				if (address >= self.board.memstart) and (address < self.board.memend):
+				if (address >= board.memstart) and (address < board.memend):
 					#print hex(address)
 					for i in range(byte_count):
 						#print address - memstart + i
 						#print int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-						data[address - self.board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-					#print "-----------"
+						data[address - board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 					
 			# end of file record
 			elif record_type == self.End_Of_File_Record:
@@ -490,97 +413,97 @@ class uploaderDLN:
 		# erase memory from memstart to max_address 
 		# ----------------------------------------------------------------------
 
-		size64 = (max_address - self.board.memstart) / 64
+		size64 = (max_address - board.memstart) / 64
 		if size64 > 511:
 			return ERR_USB_ERASE
 		if size64 < 256:
-			self.eraseFlash(self.board.memstart, size64)
+			self.eraseFlash(handle, board.memstart, size64)
 		else:
 			# erase flash memory from memstart to memstart + 0x4000
-			self.eraseFlash(self.board.memstart, 255)
+			self.eraseFlash(handle, board.memstart, 255)
 			# erase flash memory from memstart + 0x4000 to max_address
 			size64 = size64 - 255
-			self.eraseFlash(self.board.memstart + 0x4000, size64)
+			self.eraseFlash(handle, board.memstart + 0x4000, size64)
 
 		# write 32-bit blocks
 		# ----------------------------------------------------------------------
 
 		usbBuf = []
-		for addr in range(self.board.memstart, max_address):
-			#print addr
-			#if addr % self.DLN_BLOCKSIZE == 0:
-			if addr % 32 == 0:
+		for addr in range(board.memstart, max_address):
+			index = addr - board.memstart
+			#print hex(addr)
+			if addr % self.DLN_BLOCKSIZE == 0:
 				if usbBuf != []:
 					#print usbBuf
-					#writeFlash(addr - self.DLN_BLOCKSIZE, usbBuf)
-					self.writeFlash(addr - 32, usbBuf)
+					self.writeFlash(handle, addr - self.DLN_BLOCKSIZE, usbBuf)
 				usbBuf = []
-			if data[addr - self.board.memstart] != []:
+			if data[index] != []:
 				#print data[addr - memstart]
-				usbBuf.append(data[addr - self.board.memstart])
+				usbBuf.append(data[index])
 		#print "%d bytes written.\n" % codesize
 
 		return self.ERR_NONE
 # ------------------------------------------------------------------------------
-	def writeHex(self):
+	def writeHex(self, output, filename, board):
 # ------------------------------------------------------------------------------
-		fichier = open(self.filename, 'r')
+		fichier = open(filename, 'r')
 		if fichier == "":
-			self.txtWrite("Unable to open %s\n" % self.filename)
+			self.txtWrite(output, "Unable to open %s\n" % filename)
 			return
 		fichier.close()
 
-		self.device = self.getDevice()
-		if self.device == self.ERR_DEVICE_NOT_FOUND:
-			self.txtWrite("Pinguino not found\n")
-			self.txtWrite("Is your device connected and/or in bootloader mode ?\n")
+		device = self.getDevice(board)
+		if device == self.ERR_DEVICE_NOT_FOUND:
+			self.txtWrite(output, "Pinguino not found\n")
+			self.txtWrite(output, "Is your device connected and/or in bootloader mode ?\n")
 			return
 		else:
-			self.txtWrite("Pinguino found\n")
+			self.txtWrite(output, "Pinguino found\n")
 
-		self.handle = self.initDevice()
-		if self.handle == self.ERR_USB_INIT1:
-			self.txtWrite("Upload not possible\n")
-			self.txtWrite("Try to restart the bootloader mode\n")
+		handle = self.initDevice(device)
+		if handle == self.ERR_USB_INIT1:
+			self.txtWrite(output, "Upload not possible\n")
+			self.txtWrite(output, "Try to restart the bootloader mode\n")
 			return
 
-		device_id = self.getDeviceID()
+		device_id = self.getDeviceID(handle)
 		proc = self.getDeviceName(device_id)
-		if proc != self.board.proc:
-			self.txtWrite("Compiled for %s but device has %s\n" % (self.board.proc, proc))
+		if proc != board.proc:
+			self.txtWrite(output, "Compiled for %s but device has %s\n" % (board.proc, proc))
 			return
 		#memend = self.getDeviceFlash(device_id)
-		self.txtWrite("%s (id=%s)\n" % (proc, hex(device_id)))
-		self.txtWrite("%d bytes free\n" % (self.board.memend - self.board.memstart))
+		self.txtWrite(output, "%s (id=%s)\n" % (proc, hex(device_id)))
+		self.txtWrite(output, "%d bytes free\n" % (board.memend - board.memstart))
 
 		#product = handle.getString(device.iProduct, 30)
 		#manufacturer = handle.getString(device.iManufacturer, 30)
-		self.txtWrite("HID bootloader %s\n" % self.getVersion())
+		self.txtWrite(output, "Pinguino HID bootloader %s\n" % self.getVersion(handle))
 
-		if self.filename == '':
-			self.txtWrite("No program to write\n")
-			self.closeDevice()
+		if filename == '':
+			self.txtWrite(output, "No program to write\n")
+			self.closeDevice(handle)
 			return
 
-		self.txtWrite("Writing ...\n")
-		status = self.hexWrite()
+		self.txtWrite(output, "Writing ...\n")
+		status = self.hexWrite(handle, filename, board)
 		if status == self.ERR_NONE:
-			self.txtWrite(os.path.basename(self.filename) + " successfully uploaded\n")
+			self.txtWrite(output, os.path.basename(filename) + " successfully uploaded\n")
 		if status == self.ERR_HEX_RECORD:
-			self.txtWrite("Record error\n")
-			self.closeDevice()
+			self.txtWrite(output, "Record error\n")
+			self.closeDevice(handle)
 			return
 		if status == self.ERR_HEX_CHECKSUM:
-			self.txtWrite("Checksum error\n")
-			self.closeDevice()
+			self.txtWrite(output, "Checksum error\n")
+			self.closeDevice(handle)
 			return
 		if status == self.ERR_USB_ERASE:
-			self.txtWrite("Erase error\n")
-			self.closeDevice()
+			self.txtWrite(output, "Erase error\n")
+			self.closeDevice(handle)
 			return
 
-		self.txtWrite("Resetting ...\n")
-		self.reset()
-		self.closeDevice()
+		# Disable EIS and Start User App.
+		self.txtWrite(output, "Resetting ...\n")
+		self.reset(handle)
+		self.closeDevice(handle)
 		return
 # ------------------------------------------------------------------------------

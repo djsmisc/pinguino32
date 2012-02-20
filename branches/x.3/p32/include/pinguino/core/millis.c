@@ -39,10 +39,17 @@ void millis_init(void)
 	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 	T2CON=0;
 	TMR2=0x00;
-	PR2=0x9C40;		// 1 mS
+	#ifdef PIC32_PINGUINO_220
+	IPC2bits.T2IP=1;
+	IPC2bits.T2IS=1;
+	IFS0bits.T2IF=0;
+	IEC0bits.T2IE=1;
+	#else
+	PR2=0x4E00;
 	IPC2SET = 0x0000000D;
 	IFS0CLR = 0x00000100;
 	IEC0SET = 0x00000100;
+	#endif
 	T2CONSET = 0x8010;		// prescale=1/2
 	_millis = 0;
 }
@@ -60,10 +67,18 @@ u32 millis()
 void Tmr2Interrupt()
 {
 	// is this an TMR2 interrupt ?
+	#ifdef PIC32_PINGUINO_220
+	TMR2=0xD910;	// because PR2 don't work on PIC32MX220F032D
+	if (IFS0bits.T2IF)
+	#else
 	if (IntGetFlag(INT_TIMER2))
+	#endif
 	{
-		TMR2=0;
+		#ifdef PIC32_PINGUINO_220
+		IFS0bits.T2IF=0;
+		#else
 		IFS0CLR=0x00000100;
+		#endif
 		_millis++;
 	}
 }
