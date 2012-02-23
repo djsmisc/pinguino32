@@ -1,4 +1,4 @@
-Pinguino started at Sat Feb 18 23:47:36 2012
+Pinguino started at Wed Feb 22 19:47:03 2012
 
 Python version is OK (>=2.5)
 System host is GNU/Linux
@@ -16,6 +16,7 @@ USB successfully loaded
 Serial successfully loaded
 Threading successfully loaded
 Editeur successfully loaded
+Preferences successfully loaded
 ArgParse successfully loaded
 Pinguino Boards List successfully loaded
 Pinguino Frame successfully loaded

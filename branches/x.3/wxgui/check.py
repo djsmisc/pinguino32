@@ -212,6 +212,15 @@ except:
 	fichier.writelines('You should have editeur.py at the root\n')
 	fichier.close()
 	perror()
+	
+try:	
+	from preferences import Preferences		
+	fichier.writelines('Preferences successfully loaded\n')
+except:
+	fichier.writelines('Preferences failed\n')
+	fichier.writelines('You should have Preferences.py at the root\n')
+	fichier.close()
+	perror()	
 
 try:
 	import argparse			# to write user-friendly command-line interfaces

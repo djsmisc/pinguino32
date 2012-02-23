@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.9.0 #5416 (Aug  9 2009) (UNIX)
-; This file was generated Sat Feb 18 23:37:58 2012
+; This file was generated Wed Feb 22 19:47:12 2012
 ;--------------------------------------------------------
 ; PIC16 port for the Microchip 16-bit core micros
 ;--------------------------------------------------------
@@ -12,12 +12,6 @@
 ;--------------------------------------------------------
 ; public variables in this module
 ;--------------------------------------------------------
-	global _Delayms
-	global _Delayus
-	global _digitalwrite
-	global _digitalread
-	global _pinmode
-	global _toggle
 	global _epap_in
 	global _epap_out
 	global _epapin_init
@@ -27,8 +21,6 @@
 	global _pinguino_main
 	global _high_priority_isr
 	global _low_priority_isr
-	global _mask
-	global _port
 
 ;--------------------------------------------------------
 ; extern variables in this module
@@ -264,940 +256,89 @@
 	extern _TOSL
 	extern _TOSH
 	extern _TOSU
-	extern _delay10ktcy
 ;--------------------------------------------------------
 ;	Equates to used internal registers
 ;--------------------------------------------------------
-STATUS	equ	0xfd8
-PCL	equ	0xff9
-PCLATH	equ	0xffa
-PCLATU	equ	0xffb
-WREG	equ	0xfe8
-BSR	equ	0xfe0
-TBLPTRL	equ	0xff6
-TBLPTRH	equ	0xff7
-TBLPTRU	equ	0xff8
-TABLAT	equ	0xff5
-FSR0L	equ	0xfe9
-FSR0H	equ	0xfea
 FSR1L	equ	0xfe1
 FSR2L	equ	0xfd9
 POSTDEC1	equ	0xfe5
 PREINC1	equ	0xfe4
-PLUSW2	equ	0xfdb
-PRODL	equ	0xff3
-PRODH	equ	0xff4
-
-
-; Internal registers
-.registers	udata_ovr	0x0000
-r0x00	res	1
-r0x01	res	1
-r0x02	res	1
-r0x03	res	1
-r0x04	res	1
-r0x05	res	1
-r0x06	res	1
-r0x07	res	1
-r0x08	res	1
 
 ;--------------------------------------------------------
 ; global & static initialisations
 ;--------------------------------------------------------
 ; ; Starting pCode block
+;	.line	150; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void high_priority_isr(void) __naked __interrupt 1
 S_main__high_priority_isr	code	0X002020
 _high_priority_isr:
-;	.line	148; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	void high_priority_isr(void) __interrupt
-	MOVFF	WREG, POSTDEC1
-	MOVFF	STATUS, POSTDEC1
-	MOVFF	BSR, POSTDEC1
-	MOVFF	PRODL, POSTDEC1
-	MOVFF	PRODH, POSTDEC1
-	MOVFF	FSR0L, POSTDEC1
-	MOVFF	FSR0H, POSTDEC1
-	MOVFF	PCLATH, POSTDEC1
-	MOVFF	PCLATU, POSTDEC1
-;	.line	209; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	}
-	MOVFF	PREINC1, PCLATU
-	MOVFF	PREINC1, PCLATH
-	MOVFF	PREINC1, FSR0H
-	MOVFF	PREINC1, FSR0L
-	MOVFF	PREINC1, PRODH
-	MOVFF	PREINC1, PRODL
-	MOVFF	PREINC1, BSR
-	MOVFF	PREINC1, STATUS
-	MOVFF	PREINC1, WREG
-	RETFIE	
-
+;	.line	218; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
 ; ; Starting pCode block
+;	.line	226; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void low_priority_isr(void) __naked __interrupt 2
 S_main__low_priority_isr	code	0X004000
 _low_priority_isr:
-;	.line	221; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	void low_priority_isr(void) __interrupt
-	MOVFF	WREG, POSTDEC1
-	MOVFF	STATUS, POSTDEC1
-	MOVFF	BSR, POSTDEC1
-	MOVFF	PRODL, POSTDEC1
-	MOVFF	PRODH, POSTDEC1
-	MOVFF	FSR0L, POSTDEC1
-	MOVFF	FSR0H, POSTDEC1
-	MOVFF	PCLATH, POSTDEC1
-	MOVFF	PCLATU, POSTDEC1
-;	.line	226; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	}
-	MOVFF	PREINC1, PCLATU
-	MOVFF	PREINC1, PCLATH
-	MOVFF	PREINC1, FSR0H
-	MOVFF	PREINC1, FSR0L
-	MOVFF	PREINC1, PRODH
-	MOVFF	PREINC1, PRODL
-	MOVFF	PREINC1, BSR
-	MOVFF	PREINC1, STATUS
-	MOVFF	PREINC1, WREG
-	RETFIE	
-
+;	.line	234; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	}
 ; I code from now on!
 ; ; Starting pCode block
 S_main__pinguino_main	code
 _pinguino_main:
-;	.line	62; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	PIE1 = 0;
+;	.line	67; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE1 = 0;
 	CLRF	_PIE1
-;	.line	63; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	PIE2 = 0;
+;	.line	68; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	PIE2 = 0;
 	CLRF	_PIE2
-;	.line	66; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
+;	.line	71; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 	MOVLW	0x0f
 	MOVWF	_ADCON1
-;	.line	84; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	setup();
+;	.line	89; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	setup();
 	CALL	_setup
-_00244_DS_:
-;	.line	132; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	loop();
+_00136_DS_:
+;	.line	141; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	loop();
 	CALL	_loop
-	BRA	_00244_DS_
+	BRA	_00136_DS_
 	RETURN	
 
 ; ; Starting pCode block
 S_main__loop	code
 _loop:
-;	.line	12; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/user.c	toggle(myLED);			
-	MOVLW	0x0d
-	MOVWF	POSTDEC1
-	CALL	_toggle
-	INCF	FSR1L, F
-;	.line	13; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/user.c	Delayms(1000);			
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	MOVLW	0x03
-	MOVWF	POSTDEC1
-	MOVLW	0xe8
-	MOVWF	POSTDEC1
-	CALL	_Delayms
-	MOVLW	0x04
-	ADDWF	FSR1L, F
+;	.line	9; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/user.c	}
 	RETURN	
 
 ; ; Starting pCode block
 S_main__setup	code
 _setup:
-;	.line	7; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/user.c	pinmode(13, OUTPUT);     
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	CLRF	POSTDEC1
-	MOVLW	0x0d
-	MOVWF	POSTDEC1
-	CALL	_pinmode
-	MOVLW	0x04
-	ADDWF	FSR1L, F
+;	.line	4; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/user.c	}
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epapout_init	code
 _epapout_init:
-;	.line	49; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	void epapout_init() { return; }
+;	.line	54; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapout_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epapin_init	code
 _epapin_init:
-;	.line	48; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	void epapin_init() { return; }
+;	.line	53; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epapin_init() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_out	code
 _epap_out:
-;	.line	47; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	void epap_out() { return; }
+;	.line	52; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_out() { return; }
 	RETURN	
 
 ; ; Starting pCode block
 S_main__epap_in	code
 _epap_in:
-;	.line	46; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c	void epap_in() { return; }
+;	.line	51; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.c	void epap_in() { return; }
 	RETURN	
 
-; ; Starting pCode block
-S_main__toggle	code
-_toggle:
-;	.line	113; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	void toggle(u8 pin)
-	MOVFF	FSR2L, POSTDEC1
-	MOVFF	FSR1L, FSR2L
-	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-	MOVLW	0x02
-	MOVFF	PLUSW2, r0x00
-;	.line	116; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	val = digitalread(pin);
-	CLRF	r0x01
-	CLRF	POSTDEC1
-	MOVF	r0x00, W
-	MOVWF	POSTDEC1
-	CALL	_digitalread
-	MOVWF	r0x02
-	MOVLW	0x02
-	ADDWF	FSR1L, F
-;	.line	117; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	digitalwrite(pin, val^1);
-	MOVLW	0x01
-	XORWF	r0x02, F
-	CLRF	POSTDEC1
-	MOVF	r0x02, W
-	MOVWF	POSTDEC1
-	MOVF	r0x01, W
-	MOVWF	POSTDEC1
-	MOVF	r0x00, W
-	MOVWF	POSTDEC1
-	CALL	_digitalwrite
-	MOVLW	0x04
-	ADDWF	FSR1L, F
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
-	MOVFF	PREINC1, r0x00
-	MOVFF	PREINC1, FSR2L
-	RETURN	
-
-; ; Starting pCode block
-S_main__pinmode	code
-_pinmode:
-;	.line	89; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	void pinmode(int input, int state)
-	MOVFF	FSR2L, POSTDEC1
-	MOVFF	FSR1L, FSR2L
-	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-	MOVFF	r0x03, POSTDEC1
-	MOVFF	r0x04, POSTDEC1
-	MOVFF	r0x05, POSTDEC1
-	MOVFF	r0x06, POSTDEC1
-	MOVLW	0x02
-	MOVFF	PLUSW2, r0x00
-	MOVLW	0x03
-	MOVFF	PLUSW2, r0x01
-	MOVLW	0x04
-	MOVFF	PLUSW2, r0x02
-	MOVLW	0x05
-	MOVFF	PLUSW2, r0x03
-;	.line	91; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	switch (port[input])
-	MOVLW	LOW(_port)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_port)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_port)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVLW	0x03
-	SUBWF	r0x04, W
-	BTFSC	STATUS, 0
-	BRA	_00196_DS_
-	MOVFF	r0x07, POSTDEC1
-	MOVFF	r0x08, POSTDEC1
-	CLRF	r0x08
-	RLCF	r0x04, W
-	RLCF	r0x08, F
-	RLCF	WREG, W
-	RLCF	r0x08, F
-	ANDLW	0xfc
-	MOVWF	r0x07
-	MOVLW	UPPER(_00203_DS_)
-	MOVWF	PCLATU
-	MOVLW	HIGH(_00203_DS_)
-	MOVWF	PCLATH
-	MOVLW	LOW(_00203_DS_)
-	ADDWF	r0x07, F
-	MOVF	r0x08, W
-	ADDWFC	PCLATH, F
-	BTFSC	STATUS, 0
-	INCF	PCLATU, F
-	MOVF	r0x07, W
-	MOVFF	PREINC1, r0x08
-	MOVFF	PREINC1, r0x07
-	MOVWF	PCL
-_00203_DS_:
-	GOTO	_00183_DS_
-	GOTO	_00187_DS_
-	GOTO	_00191_DS_
-_00183_DS_:
-;	.line	93; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 0: if (state) TRISB=TRISB | mask[input];
-	MOVF	r0x02, W
-	IORWF	r0x03, W
-	BZ	_00185_DS_
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	IORWF	_TRISB, F
-	BRA	_00196_DS_
-_00185_DS_:
-;	.line	94; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else TRISB=TRISB & (255-mask[input]);
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	SUBLW	0xff
-; #	MOVWF	r0x04
-; #	MOVF	r0x04, W
-	ANDWF	_TRISB, F
-;	.line	95; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	break;
-	BRA	_00196_DS_
-_00187_DS_:
-;	.line	96; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 1: if (state) TRISC=TRISC | mask[input];
-	MOVF	r0x02, W
-	IORWF	r0x03, W
-	BZ	_00189_DS_
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	IORWF	_TRISC, F
-	BRA	_00196_DS_
-_00189_DS_:
-;	.line	97; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else TRISC=TRISC & (255-mask[input]);
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	SUBLW	0xff
-; #	MOVWF	r0x04
-; #	MOVF	r0x04, W
-	ANDWF	_TRISC, F
-;	.line	98; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	break;
-	BRA	_00196_DS_
-_00191_DS_:
-;	.line	99; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 2: if (state) TRISA=TRISA | mask[input];
-	MOVF	r0x02, W
-	IORWF	r0x03, W
-	BZ	_00193_DS_
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x02
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x03
-	CLRF	r0x04
-	BTFSC	r0x01, 7
-	SETF	r0x04
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x04, F
-	MOVFF	r0x02, TBLPTRL
-	MOVFF	r0x03, TBLPTRH
-	MOVFF	r0x04, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x02
-	MOVF	r0x02, W
-	IORWF	_TRISA, F
-	BRA	_00196_DS_
-_00193_DS_:
-;	.line	100; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else TRISA=TRISA & (255-mask[input]);
-	CLRF	r0x02
-	BTFSC	r0x01, 7
-	SETF	r0x02
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, F
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, F
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x02, F
-	MOVFF	r0x00, TBLPTRL
-	MOVFF	r0x01, TBLPTRH
-	MOVFF	r0x02, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x00
-	MOVF	r0x00, W
-	SUBLW	0xff
-; #	MOVWF	r0x00
-; #	MOVF	r0x00, W
-	ANDWF	_TRISA, F
-_00196_DS_:
-;	.line	110; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	}
-	MOVFF	PREINC1, r0x06
-	MOVFF	PREINC1, r0x05
-	MOVFF	PREINC1, r0x04
-	MOVFF	PREINC1, r0x03
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
-	MOVFF	PREINC1, r0x00
-	MOVFF	PREINC1, FSR2L
-	RETURN	
-
-; ; Starting pCode block
-S_main__digitalread	code
-_digitalread:
-;	.line	64; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	int digitalread(int input)
-	MOVFF	FSR2L, POSTDEC1
-	MOVFF	FSR1L, FSR2L
-	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-	MOVFF	r0x03, POSTDEC1
-	MOVFF	r0x04, POSTDEC1
-	MOVLW	0x02
-	MOVFF	PLUSW2, r0x00
-	MOVLW	0x03
-	MOVFF	PLUSW2, r0x01
-;	.line	66; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	switch (port[input])
-	MOVLW	LOW(_port)
-	ADDWF	r0x00, W
-	MOVWF	r0x02
-	MOVLW	HIGH(_port)
-	ADDWFC	r0x01, W
-	MOVWF	r0x03
-	CLRF	r0x04
-	BTFSC	r0x01, 7
-	SETF	r0x04
-	MOVLW	UPPER(_port)
-	ADDWFC	r0x04, F
-	MOVFF	r0x02, TBLPTRL
-	MOVFF	r0x03, TBLPTRH
-	MOVFF	r0x04, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x02
-	MOVLW	0x03
-	SUBWF	r0x02, W
-	BTFSC	STATUS, 0
-	BRA	_00170_DS_
-	MOVFF	r0x05, POSTDEC1
-	MOVFF	r0x06, POSTDEC1
-	CLRF	r0x06
-	RLCF	r0x02, W
-	RLCF	r0x06, F
-	RLCF	WREG, W
-	RLCF	r0x06, F
-	ANDLW	0xfc
-	MOVWF	r0x05
-	MOVLW	UPPER(_00178_DS_)
-	MOVWF	PCLATU
-	MOVLW	HIGH(_00178_DS_)
-	MOVWF	PCLATH
-	MOVLW	LOW(_00178_DS_)
-	ADDWF	r0x05, F
-	MOVF	r0x06, W
-	ADDWFC	PCLATH, F
-	BTFSC	STATUS, 0
-	INCF	PCLATU, F
-	MOVF	r0x05, W
-	MOVFF	PREINC1, r0x06
-	MOVFF	PREINC1, r0x05
-	MOVWF	PCL
-_00178_DS_:
-	GOTO	_00158_DS_
-	GOTO	_00162_DS_
-	GOTO	_00166_DS_
-_00158_DS_:
-;	.line	68; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 0: if ((PORTB & mask[input])!=0) return (1);
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x02
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x03
-	CLRF	r0x04
-	BTFSC	r0x01, 7
-	SETF	r0x04
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x04, F
-	MOVFF	r0x02, TBLPTRL
-	MOVFF	r0x03, TBLPTRH
-	MOVFF	r0x04, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x02
-	MOVF	_PORTB, W
-	ANDWF	r0x02, F
-	MOVF	r0x02, W
-	BZ	_00160_DS_
-	CLRF	PRODL
-	MOVLW	0x01
-	BRA	_00171_DS_
-_00160_DS_:
-;	.line	69; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else return (0);
-	CLRF	PRODL
-	CLRF	WREG
-	BRA	_00171_DS_
-_00162_DS_:
-;	.line	71; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 1: if ((PORTC & mask[input])!=0) return (1);
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x02
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x03
-	CLRF	r0x04
-	BTFSC	r0x01, 7
-	SETF	r0x04
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x04, F
-	MOVFF	r0x02, TBLPTRL
-	MOVFF	r0x03, TBLPTRH
-	MOVFF	r0x04, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x02
-	MOVF	_PORTC, W
-	ANDWF	r0x02, F
-	MOVF	r0x02, W
-	BZ	_00164_DS_
-	CLRF	PRODL
-	MOVLW	0x01
-	BRA	_00171_DS_
-_00164_DS_:
-;	.line	72; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else return (0);
-	CLRF	PRODL
-	CLRF	WREG
-	BRA	_00171_DS_
-_00166_DS_:
-;	.line	74; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 2: if ((PORTA & mask[input])!=0) return (1);
-	CLRF	r0x02
-	BTFSC	r0x01, 7
-	SETF	r0x02
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, F
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, F
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x02, F
-	MOVFF	r0x00, TBLPTRL
-	MOVFF	r0x01, TBLPTRH
-	MOVFF	r0x02, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x00
-	MOVF	_PORTA, W
-	ANDWF	r0x00, F
-	MOVF	r0x00, W
-	BZ	_00168_DS_
-	CLRF	PRODL
-	MOVLW	0x01
-	BRA	_00171_DS_
-_00168_DS_:
-;	.line	75; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else return (0);
-	CLRF	PRODL
-	CLRF	WREG
-	BRA	_00171_DS_
-_00170_DS_:
-;	.line	86; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	return (0);
-	CLRF	PRODL
-	CLRF	WREG
-_00171_DS_:
-	MOVFF	PREINC1, r0x04
-	MOVFF	PREINC1, r0x03
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
-	MOVFF	PREINC1, r0x00
-	MOVFF	PREINC1, FSR2L
-	RETURN	
-
-; ; Starting pCode block
-S_main__digitalwrite	code
-_digitalwrite:
-;	.line	40; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	void digitalwrite(int output,int state)
-	MOVFF	FSR2L, POSTDEC1
-	MOVFF	FSR1L, FSR2L
-	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-	MOVFF	r0x03, POSTDEC1
-	MOVFF	r0x04, POSTDEC1
-	MOVFF	r0x05, POSTDEC1
-	MOVFF	r0x06, POSTDEC1
-	MOVLW	0x02
-	MOVFF	PLUSW2, r0x00
-	MOVLW	0x03
-	MOVFF	PLUSW2, r0x01
-	MOVLW	0x04
-	MOVFF	PLUSW2, r0x02
-	MOVLW	0x05
-	MOVFF	PLUSW2, r0x03
-;	.line	42; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	switch (port[output])
-	MOVLW	LOW(_port)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_port)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_port)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVLW	0x03
-	SUBWF	r0x04, W
-	BTFSC	STATUS, 0
-	BRA	_00146_DS_
-	MOVFF	r0x07, POSTDEC1
-	MOVFF	r0x08, POSTDEC1
-	CLRF	r0x08
-	RLCF	r0x04, W
-	RLCF	r0x08, F
-	RLCF	WREG, W
-	RLCF	r0x08, F
-	ANDLW	0xfc
-	MOVWF	r0x07
-	MOVLW	UPPER(_00153_DS_)
-	MOVWF	PCLATU
-	MOVLW	HIGH(_00153_DS_)
-	MOVWF	PCLATH
-	MOVLW	LOW(_00153_DS_)
-	ADDWF	r0x07, F
-	MOVF	r0x08, W
-	ADDWFC	PCLATH, F
-	BTFSC	STATUS, 0
-	INCF	PCLATU, F
-	MOVF	r0x07, W
-	MOVFF	PREINC1, r0x08
-	MOVFF	PREINC1, r0x07
-	MOVWF	PCL
-_00153_DS_:
-	GOTO	_00133_DS_
-	GOTO	_00137_DS_
-	GOTO	_00141_DS_
-_00133_DS_:
-;	.line	44; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 0: if (state) PORTB=PORTB | mask[output]; 
-	MOVF	r0x02, W
-	IORWF	r0x03, W
-	BZ	_00135_DS_
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	IORWF	_PORTB, F
-	BRA	_00146_DS_
-_00135_DS_:
-;	.line	45; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else PORTB=PORTB & (255-mask[output]);
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	SUBLW	0xff
-; #	MOVWF	r0x04
-; #	MOVF	r0x04, W
-	ANDWF	_PORTB, F
-;	.line	46; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	break;
-	BRA	_00146_DS_
-_00137_DS_:
-;	.line	47; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 1: if (state) PORTC=PORTC | mask[output];
-	MOVF	r0x02, W
-	IORWF	r0x03, W
-	BZ	_00139_DS_
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	IORWF	_PORTC, F
-	BRA	_00146_DS_
-_00139_DS_:
-;	.line	48; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else PORTC=PORTC & (255-mask[output]);
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x04
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x05
-	CLRF	r0x06
-	BTFSC	r0x01, 7
-	SETF	r0x06
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x06, F
-	MOVFF	r0x04, TBLPTRL
-	MOVFF	r0x05, TBLPTRH
-	MOVFF	r0x06, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x04
-	MOVF	r0x04, W
-	SUBLW	0xff
-; #	MOVWF	r0x04
-; #	MOVF	r0x04, W
-	ANDWF	_PORTC, F
-;	.line	49; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	break;
-	BRA	_00146_DS_
-_00141_DS_:
-;	.line	50; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	case 2: if (state) PORTA=PORTA | mask[output];
-	MOVF	r0x02, W
-	IORWF	r0x03, W
-	BZ	_00143_DS_
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, W
-	MOVWF	r0x02
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, W
-	MOVWF	r0x03
-	CLRF	r0x04
-	BTFSC	r0x01, 7
-	SETF	r0x04
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x04, F
-	MOVFF	r0x02, TBLPTRL
-	MOVFF	r0x03, TBLPTRH
-	MOVFF	r0x04, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x02
-	MOVF	r0x02, W
-	IORWF	_PORTA, F
-	BRA	_00146_DS_
-_00143_DS_:
-;	.line	51; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	else PORTA=PORTA & (255-mask[output]);
-	CLRF	r0x02
-	BTFSC	r0x01, 7
-	SETF	r0x02
-	MOVLW	LOW(_mask)
-	ADDWF	r0x00, F
-	MOVLW	HIGH(_mask)
-	ADDWFC	r0x01, F
-	MOVLW	UPPER(_mask)
-	ADDWFC	r0x02, F
-	MOVFF	r0x00, TBLPTRL
-	MOVFF	r0x01, TBLPTRH
-	MOVFF	r0x02, TBLPTRU
-	TBLRD*+	
-	MOVFF	TABLAT, r0x00
-	MOVF	r0x00, W
-	SUBLW	0xff
-; #	MOVWF	r0x00
-; #	MOVF	r0x00, W
-	ANDWF	_PORTA, F
-_00146_DS_:
-;	.line	61; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/digitalw.c	}
-	MOVFF	PREINC1, r0x06
-	MOVFF	PREINC1, r0x05
-	MOVFF	PREINC1, r0x04
-	MOVFF	PREINC1, r0x03
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
-	MOVFF	PREINC1, r0x00
-	MOVFF	PREINC1, FSR2L
-	RETURN	
-
-; ; Starting pCode block
-S_main__Delayus	code
-_Delayus:
-;	.line	16; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/delay.c	void Delayus(int microsecondes)
-	MOVFF	FSR2L, POSTDEC1
-	MOVFF	FSR1L, FSR2L
-	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-	MOVFF	r0x03, POSTDEC1
-	MOVLW	0x02
-	MOVFF	PLUSW2, r0x00
-	MOVLW	0x03
-	MOVFF	PLUSW2, r0x01
-;	.line	20; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/delay.c	for (i=0;i<microsecondes;i++);
-	CLRF	r0x02
-	CLRF	r0x03
-_00119_DS_:
-	MOVF	r0x01, W
-	SUBWF	r0x03, W
-	BNZ	_00128_DS_
-	MOVF	r0x00, W
-	SUBWF	r0x02, W
-_00128_DS_:
-	BC	_00123_DS_
-	INCF	r0x02, F
-	BTFSC	STATUS, 0
-	INCF	r0x03, F
-	BRA	_00119_DS_
-_00123_DS_:
-	MOVFF	PREINC1, r0x03
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
-	MOVFF	PREINC1, r0x00
-	MOVFF	PREINC1, FSR2L
-	RETURN	
-
-; ; Starting pCode block
-S_main__Delayms	code
-_Delayms:
-;	.line	9; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/delay.c	void Delayms(unsigned long milliseconde)
-	MOVFF	FSR2L, POSTDEC1
-	MOVFF	FSR1L, FSR2L
-	MOVFF	r0x00, POSTDEC1
-	MOVFF	r0x01, POSTDEC1
-	MOVFF	r0x02, POSTDEC1
-	MOVFF	r0x03, POSTDEC1
-	MOVFF	r0x04, POSTDEC1
-	MOVFF	r0x05, POSTDEC1
-	MOVFF	r0x06, POSTDEC1
-	MOVFF	r0x07, POSTDEC1
-	MOVLW	0x02
-	MOVFF	PLUSW2, r0x00
-	MOVLW	0x03
-	MOVFF	PLUSW2, r0x01
-	MOVLW	0x04
-	MOVFF	PLUSW2, r0x02
-	MOVLW	0x05
-	MOVFF	PLUSW2, r0x03
-;	.line	13; /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/delay.c	for (i=0;i<milliseconde;i++) delay10ktcy(1);
-	CLRF	r0x04
-	CLRF	r0x05
-	CLRF	r0x06
-	CLRF	r0x07
-_00105_DS_:
-	MOVF	r0x03, W
-	SUBWF	r0x07, W
-	BNZ	_00114_DS_
-	MOVF	r0x02, W
-	SUBWF	r0x06, W
-	BNZ	_00114_DS_
-	MOVF	r0x01, W
-	SUBWF	r0x05, W
-	BNZ	_00114_DS_
-	MOVF	r0x00, W
-	SUBWF	r0x04, W
-_00114_DS_:
-	BC	_00109_DS_
-	MOVLW	0x01
-	CALL	_delay10ktcy
-	INCF	r0x04, F
-	BTFSC	STATUS, 0
-	INCF	r0x05, F
-	BTFSC	STATUS, 0
-	INCF	r0x06, F
-	BTFSC	STATUS, 0
-	INCF	r0x07, F
-	BRA	_00105_DS_
-_00109_DS_:
-	MOVFF	PREINC1, r0x07
-	MOVFF	PREINC1, r0x06
-	MOVFF	PREINC1, r0x05
-	MOVFF	PREINC1, r0x04
-	MOVFF	PREINC1, r0x03
-	MOVFF	PREINC1, r0x02
-	MOVFF	PREINC1, r0x01
-	MOVFF	PREINC1, r0x00
-	MOVFF	PREINC1, FSR2L
-	RETURN	
-
-; ; Starting pCode block for Ival
-	code
-_mask:
-	DB	0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x40, 0x80, 0x01, 0x02
-	DB	0x04, 0x01, 0x02, 0x04, 0x08, 0x20
-; ; Starting pCode block for Ival
-_port:
-	DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01
-	DB	0x01, 0x02, 0x02, 0x02, 0x02, 0x02
 
 
 ; Statistics:
-; code size:	 1928 (0x0788) bytes ( 1.47%)
-;           	  964 (0x03c4) words
+; code size:	   32 (0x0020) bytes ( 0.02%)
+;           	   16 (0x0010) words
 ; udata size:	    0 (0x0000) bytes ( 0.00%)
-; access size:	    9 (0x0009) bytes
+; access size:	    0 (0x0000) bytes
 
 
 	end

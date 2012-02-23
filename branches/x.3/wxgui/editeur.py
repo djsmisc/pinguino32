@@ -51,7 +51,8 @@ class editor:
 	onglet=[]
 	stcpage=[]
 	filename=[]
-	gridSizer = []
+	sheetFunctions = []
+	choiceFunctions = []
 	line=-1	
 	
 
@@ -115,6 +116,7 @@ class editor:
 	
 	def find(self,text,direction):
 		if len(self.onglet)>0:
+			self.editeur=self.stcpage[self.notebook1.GetSelection()]
 			currentline=self.editeur.GetLine(self.editeur.LineFromPosition(self.editeur.GetCurrentPos()))
 			currentline=currentline.upper()
 			text=text.upper()		  
@@ -138,16 +140,58 @@ class editor:
 		else:
 			return(-1), None
 		
-	def New(self,name,reservedword,rw):
-		""" open a new tab """
+	#----------------------------------------------------------------------
+	def buildSheet(self, name):
+		ImageClose = os.path.join(sys.path[0], "wxgui", "resources", "close.png")
+		
 		self.onglet.append(wx.Panel(self.notebook1,-1))
 		self.notebook1.AddPage(self.onglet[len(self.onglet)-1],name)
-		self.stcpage.append( stc.StyledTextCtrl(id=wx.NewId(), name='stc',
-				parent=self.onglet[len(self.onglet)-1],size=(100,100),style=wx.SUNKEN_BORDER))
-		self.stcpage[-1].SetMinSize((-1, -1))
-		self.gridSizer.append(wx.GridSizer(cols=0, hgap=0, rows=1, vgap=0))
-		self.gridSizer[-1].AddWindow(self.stcpage[-1], 0, border=0, flag=wx.EXPAND)
-		self.onglet[-1].SetSizer(self.gridSizer[-1])
+		self.stcpage.append(wx.stc.StyledTextCtrl(id=wx.NewId(),
+		      name='styledTextCtrl1', parent=self.onglet[-1], pos=wx.Point(0, 35),
+		      size=wx.Size(716, 305), style=wx.SUNKEN_BORDER))
+		self.stcpage[-1].SetMinSize(wx.Size(-1, -1))
+	
+		panel = wx.Panel(id=wx.NewId(), name='panel4',
+		      parent=self.onglet[-1], pos=wx.Point(0, 0), size=wx.Size(716, 35),
+		      style=wx.TAB_TRAVERSAL)
+		panel.SetMinSize(wx.Size(-1, 35))
+		panel.SetMaxSize(wx.Size(-1, 35))
+	
+		choice1 = wx.Choice(choices=[], id=wx.NewId(),
+		      name='choice1', parent=panel, pos=wx.Point(0, 5),
+		      size=wx.Size(160, 28), style=0)
+		choice1.SetMaxSize(wx.Size(-1, 28))
+		choice1.SetMinSize(wx.Size(160, 28))
+		self.Bind(wx.EVT_CHOICE, self.moveToFuntion, choice1) 
+	
+		#bitmapButton1 = wx.BitmapButton(bitmap=wx.Bitmap(ImageClose,
+		      #wx.BITMAP_TYPE_PNG), id=wx.NewId(),
+		      #name='bitmapButton1', parent=panel, pos=wx.Point(688, 3),
+		      #size=wx.Size(28, 28), style=wx.NO_BORDER | wx.BU_AUTODRAW)
+		#bitmapButton1.SetMinSize(wx.Size(28, 28))
+		#self.Bind(wx.EVT_BUTTON, self.OnClose, bitmapButton1) 		
+		
+		boxSizer = wx.BoxSizer(orient=wx.VERTICAL)
+		boxSizer.AddWindow(panel, 0, border=0, flag=wx.EXPAND)
+		boxSizer.AddWindow(self.stcpage[-1], 1, border=0, flag=wx.EXPAND)
+		
+		self.onglet[-1].SetSizer(boxSizer)
+		
+		gridSizer = wx.GridSizer(cols=0, hgap=0, rows=1, vgap=0)
+		gridSizer.AddWindow(choice1, 0, border=0,
+		      flag=wx.ALIGN_CENTER_VERTICAL)
+		#gridSizer.AddWindow(bitmapButton1, 0, border=0,
+		      #flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)		
+		
+		panel.SetSizer(gridSizer)
+		
+		self.choiceFunctions.append(choice1)
+		self.sheetFunctions.append({})
+		
+	#----------------------------------------------------------------------
+	def New(self,name,reservedword,rw):
+		""" open a new tab """
+		self.buildSheet(name)
 		self.notebook1.SetSelection(len(self.onglet)-1)
 		self.stcpage[self.notebook1.GetSelection()].Bind(stc.EVT_STC_MODIFIED,self.OnChange)
 		self.stcpage[self.notebook1.GetSelection()].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
@@ -164,9 +208,17 @@ class editor:
 		self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
 		self.editeur.Bind(wx.stc.EVT_STC_AUTOCOMP_SELECTION, self.inserted)
 		self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.updateStatusBar)
+		self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.updateFuntionsChoice)
 		self.editeur.Bind(wx.EVT_LEFT_UP, self.updateStatusBar)
 		self.editeur.Bind(wx.EVT_KEY_UP, self.updateStatusBar)
-		#-----		
+		#-----
+		
+		#self.editeur.ClearAll
+		
+		self.insertSnippet("Bare Minimum {snippet}")
+		self.updateFuntionsChoice(True)
+		
+		
 		
 	
 # modified by r.blanchot 31/10/2010, 01/06/2011
@@ -214,11 +266,12 @@ class editor:
 				for line in fichier:
 					self.stcpage[i].AddText(line)
 				fichier.close()
-				self.SetSelection(alloaded)
+				self.notebook1.SetSelection(alloaded)
 				self.notebook1.SetPageText(self.notebook1.GetSelection(),file.replace(extension,""))						   
 				return
 
-		self.New(file.replace(extension,""),reservedword,rw)		
+		self.New(file.replace(extension,""),reservedword,rw)
+		self.stcpage[self.notebook1.GetSelection()].ClearAll()
 		self.filename[self.notebook1.GetSelection()]=path
 		fichier=codecs.open(path,'r','utf8')
 		for line in fichier:
@@ -290,7 +343,7 @@ class editor:
 		self.Refresh()
 		return
 		
-	def Close(self):
+	def CloseTab(self):
 		""" close the current tab """
 		if len(self.onglet)>0:
 			if self.notebook1.GetPageText(self.notebook1.GetSelection())[0]=="*":
@@ -305,7 +358,9 @@ class editor:
 			self.filename.remove(self.filename[self.notebook1.GetSelection()])
 			self.onglet.remove(self.onglet[self.notebook1.GetSelection()])
 			self.stcpage.remove(self.stcpage[self.notebook1.GetSelection()])
-			self.DeletePage(self.notebook1.GetSelection())
+			self.notebook1.DeletePage(self.notebook1.GetSelection())
+			self.sheetFunctions.remove(self.sheetFunctions[self.notebook1.GetSelection()])
+			self.choiceFunctions.remove(self.choiceFunctions[self.notebook1.GetSelection()])
 	
 	def GetPath(self):
 		""" return the complete path of file """
