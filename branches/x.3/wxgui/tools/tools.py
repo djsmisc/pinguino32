@@ -27,7 +27,7 @@
 import wx, re, webbrowser
 from treeExamples import treeExamples
 from autoCompleter import autoCompleter
-from preferences import Preferences
+#from preferences import Preferences
 from keywords import functionsHelp
 #import locale
 
@@ -128,8 +128,6 @@ class Tools(treeExamples, autoCompleter):
             else: return word
 
 
-
-
     #----------------------------------------------------------------------
     def makeFindText(self):
         self.FindText.Hide()
@@ -193,16 +191,6 @@ class Tools(treeExamples, autoCompleter):
         app.MainLoop()
         
     #----------------------------------------------------------------------
-    def OnPreferences(self, event=None):
-        app = wx.PySimpleApp(0)
-            
-        wx.InitAllImageHandlers()
-        frame_1 = Preferences(None)
-        app.SetTopWindow(frame_1)
-        frame_1.Show()
-        app.MainLoop()
-        
-    #----------------------------------------------------------------------
     def comentar(self, event=None):
         textEdit = self.stcpage[self.notebook1.GetSelection()]
         lineStart, lineEnd = map(textEdit.LineFromPosition,textEdit.GetSelection())
@@ -223,3 +211,55 @@ class Tools(treeExamples, autoCompleter):
         columna = str(textEdit.GetColumn(textEdit.CurrentPos)).rjust(3, "0")
         self.statusBar1.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
+        
+        
+        
+    #----------------------------------------------------------------------
+    def updateFuntionsChoice(self, new=False):
+	sel = self.notebook1.GetSelection()
+	if sel >= 0:
+	    choice = self.choiceFunctions[self.notebook1.GetSelection()]
+	    textEdit = self.stcpage[self.notebook1.GetSelection()]
+	    
+	    funciones = self.readUserFuntions(textEdit.GetText().split("\n"))
+	    self.sheetFunctions[self.notebook1.GetSelection()] = funciones
+	    
+	    choice.Clear()
+	    choice.Append("(top)")
+	    choice.AppendItems(funciones.keys())
+	    choice.Append("(end)")
+	    if new: choice.SetSelection(0)
+	
+	
+    #----------------------------------------------------------------------
+    def moveToFuntion(self, event):
+	print "OK"
+	function = event.GetString()
+	textEdit = self.stcpage[self.notebook1.GetSelection()]
+	
+	if function == "(top)":
+	    textEdit.GotoLine(0)  
+
+	elif function == "(end)":
+	    textEdit.GotoLine(textEdit.GetLineCount())
+	
+	else:
+	    linea = self.sheetFunctions[self.notebook1.GetSelection()][function]
+	    print linea
+	    textEdit.SetCurrentPos(0)
+	    textEdit.SetSelection(0, 0)	
+	    trouve, position=self.find(linea.replace("\n", ""),1)
+	    if trouve!=-1:
+		self.highlightline(trouve,'yellow')
+		self.focus()
+
+#----------------------------------------------------------------------        
+    def readUserFuntions(self, text):
+	funciones = {}   
+	tipos="int|float|char|BOOL|short|long|double|"\
+              "byte|word|struct|union|enum|void"           
+	for linea in text:
+	    if re.match("[ ]*//",linea)==None:
+		reg=re.match("[ ]*(unsigned)*[ ]*(%s)[*]*[ ]*([^ ]+)[ ]*\(.*\)" %tipos,linea)
+		if reg!=None: funciones[str(reg.group(3))] = linea  
+	return funciones   

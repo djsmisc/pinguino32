@@ -185,7 +185,8 @@ class Pinguino(framePinguinoX, Tools, editor):
 		framesize = (  self.config.ReadInt('Window/Width', -1),
 							self.config.ReadInt('Window/Height', -1))
 		if framesize == (0, 0): framesize = (400, 400)
-
+		self.SetSize(framesize)
+		
 		framepos = (   self.config.ReadInt('Window/Posx', -1),
 							self.config.ReadInt('Window/Posy', -1))
 
@@ -275,10 +276,10 @@ class Pinguino(framePinguinoX, Tools, editor):
 		self.COMMENT_ID = wx.NewId()
 		self.COMMENT = wx.MenuItem(self.edit_menu, self.COMMENT_ID, _("Comment/Uncomment\tCtrl+l"), "", wx.ITEM_NORMAL)
 		self.edit_menu.AppendItem(self.COMMENT)
-		#self.edit_menu.AppendSeparator()
+		self.edit_menu.AppendSeparator()
 		self.PREFERENCES_ID = wx.NewId()
 		self.PREFERENCES = wx.MenuItem(self.edit_menu, self.PREFERENCES_ID, _("Preferences\tCtrl+p"), "", wx.ITEM_NORMAL)
-		#self.edit_menu.AppendItem(self.PREFERENCES)		
+		self.edit_menu.AppendItem(self.PREFERENCES)		
 		
 		self.menu.Append(self.edit_menu, _("Edit"))
 		
@@ -717,7 +718,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------
 
 	def OnClose(self, event): 
-		self.Close()
+		self.CloseTab()
 		
 # ------------------------------------------------------------------------------
 # OnExit : Save Settings and Exit Program
@@ -996,7 +997,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 	def findprev(self,event):
 		chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
 		trouve, position=self.find(chaine,0)
-		textEdit = self.stcpage[self.GetSelection()]		
+		textEdit = self.stcpage[self.notebook1.GetSelection()]		
 		if trouve!=-1:
 			self.highlightline(trouve,'yellow')
 			self.focus()
@@ -1008,7 +1009,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 	def findnext(self,event):
 		chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
 		trouve, position=self.find(chaine,1)
-		textEdit = self.stcpage[self.GetSelection()]
+		textEdit = self.stcpage[self.notebook1.GetSelection()]
 		if trouve!=-1:
 			self.highlightline(trouve,'yellow')
 			self.focus()
@@ -1046,7 +1047,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 		wordReplace = self.ReplaceText.GetString(0, self.ReplaceText.GetLastPosition())
 		print word, wordReplace
 		if word == "": return False
-		textEdit = self.stcpage[self.GetSelection()]
+		textEdit = self.stcpage[self.notebook1.GetSelection()]
 		textEdit.Clear()
 		textEdit.InsertText(textEdit.CurrentPos, wordReplace)
 		if self.findnext(event) == -1:
@@ -1058,14 +1059,10 @@ class Pinguino(framePinguinoX, Tools, editor):
 
 	#----------------------------------------------------------------------
 	def replacealltext(self, event):
-		textEdit = self.stcpage[self.GetSelection()]
+		textEdit = self.stcpage[self.notebook1.GetSelection()]
 		self.gotostart()
 		self.findnext(event)
 		while self.replacetext(): pass
-		# if ther word search is in the firs position:
-		self.findnext(event)
-		self.findprev(event)
-		self.replacetext()
 
 
 # ------------------------------------------------------------------------------
@@ -1589,6 +1586,17 @@ class Pinguino(framePinguinoX, Tools, editor):
 					codesize = codesize + int(line[1:3:1], 16)
 		fichier.close()
 		return "code size: " + str(codesize) + " / " + str(totalsize) + " bytes" + " (" + str(100*codesize/totalsize) + "% used)"
+
+	#----------------------------------------------------------------------
+	def OnPreferences(self, event=None):
+		app = wx.PySimpleApp(0)
+		    
+		wx.InitAllImageHandlers()
+		frame_1 = Preferences(None)
+		app.SetTopWindow(frame_1)
+		frame_1.Show()
+		app.MainLoop()
+
 
 # ------------------------------------------------------------------------------
 # getOptions

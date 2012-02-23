@@ -57,6 +57,7 @@ class autoCompleter:
     #----------------------------------------------------------------------
     def keyEvent(self, event):
         #List of key to ignore
+
         if event.GetKeyCode() in [wx.WXK_UP,
                                   wx.WXK_DOWN,
                                   wx.WXK_SHIFT,
