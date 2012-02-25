@@ -1,0 +1,25 @@
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:9,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c:40:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:5:1: warning: "TRUE" redefined
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c:34:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/common_types.h:105:1: warning: this is the location of the previous definition
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:16: error 0: Duplicate symbol 'BOOL', symbol IGNORED
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/common_types.h:37: error 177: previously defined here
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:16: error 51: typedef/enum 'BOOL' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:16: error 0: Duplicate symbol 'BOOL', symbol IGNORED
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/common_types.h:37: error 177: previously defined here
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:16: error 51: typedef/enum 'BOOL' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:17: error 51: typedef/enum 'FLAG' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:20: error 51: typedef/enum 'COORD' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:21: error 51: typedef/enum 'LOC' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:22: error 51: typedef/enum 'PIECE' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:23: error 51: typedef/enum 'BOARD' duplicate. Previous definiton Ignored
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:24: warning 111: invalid type specifier for pointer type; specifier ignored
+
+/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/chess/chess.h:24: syntax error: token -> ')' ; column 23
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:12,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c:40:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/serial.c:36:1: warning: "FLOAT" redefined
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.c:30:
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p8/include/pinguino/core/const.h:36:1: warning: this is the location of the previous definition
+sdcpp: fatal error: when writing output to : Broken pipe
