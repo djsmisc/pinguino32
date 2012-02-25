@@ -48,6 +48,16 @@ else
 endif
 
 # ------------------------------------------------------------------------------
+# select the cdc library / Jean-pierre Mandon 2012
+# ------------------------------------------------------------------------------
+
+ifeq ($(BOARD),PIC32_PINGUINO_220)
+CDCLIBRARY = libcdc220.a
+else
+CDCLIBRARY = libcdc.a
+endif
+
+# ------------------------------------------------------------------------------
 # commands
 # ------------------------------------------------------------------------------
 
@@ -106,7 +116,7 @@ link:
 	$(CC) $(ELF_FLAGS) $(LDFLAGS) $(CFLAGS) -o $(SRCDIR)/main32.elf $(SRCDIR)/main32.c\
 		$(OBJDIR)/crt0.S\
 		$(OBJDIR)/processor.o\
-		$(OBJDIR)/usb/libcdc.a\
+		$(OBJDIR)/usb/$(CDCLIBRARY)\
 		$(OBJDIR)/usb/libadb.a\
 		$(LKRDIR)/ISRwrapper.S\
 		$(INCDIR)/non-free/p32xxxx.h\
