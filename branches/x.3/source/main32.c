@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------------
   main32.c - Application main function for Pinguino 32
 
-             (c) 2010, 2011 Jean-Pierre Mandon <jp.mandon@gmail.com>
-             (c) 2010, 2011 Régis Blanchot <rblanchot@gmail.com> 
+             (c) 2010, 2011, 2112 Jean-Pierre Mandon <jp.mandon@gmail.com>
+             (c) 2010, 2011, 2012 Régis Blanchot <rblanchot@gmail.com> 
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
