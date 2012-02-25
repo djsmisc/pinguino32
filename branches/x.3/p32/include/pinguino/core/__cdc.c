@@ -8,7 +8,6 @@
 
 #include <stdarg.h>
 
-#include <typedef.h>
 #include <system.c>
 #include <interrupt.c>
 #include <delay.c>
@@ -21,8 +20,6 @@ extern void USBDeviceInit();
 extern void USBDeviceAttach();
 extern void putUSBUSART(char*, char);
 extern char getsUSBUSART(char*, char);
-//extern void putUSBUSART(char *data, char Length);
-//extern char getsUSBUSART(char *data, char Length);
 extern void CDCTxService();
 extern unsigned char cdc_trf_state;
 
@@ -89,6 +86,8 @@ void INTEnableInterrupts()
 	IntEnable(INT_USB);
 }
 
+#ifndef __32MX220F032D__
+
 // this is the Set Line coding CallBack function
  
 void mySetLineCodingHandler()
@@ -144,41 +143,54 @@ void USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event_usb)
 	}
 }
 
+#endif
+
 // this function is called by the main32.c file
 // CDC.init
 void CDC_init()
 {
 	USBDeviceInit();		// Initializes USB module SFRs and firmware
-	USBDeviceAttach();
+	#ifndef __32MX220F032D__
+		USBDeviceAttach();
+	#endif
 	Delayms(1500);
 }
 
 // CDC.puts
 // 18-05-2011 modified by régis blanchot
-void CDCputs(u8 *buffer, u8 length)
+void CDCputs(char *buffer, char length)
 {
-	u16 i;
+	//#ifdef __32MX220F032D__
+	//	USB_Service_CDC_PutString( buffer, length );
+	//#else
+		int i;
 
-	for (i = 1000; i > 0; --i)
-	{
-		if (mUSBUSARTIsTxTrfReady())
-			break;
-		CDCTxService();
-	}
-	if (i > 0)
-	{
-		putUSBUSART(buffer,length);
-		CDCTxService();
-	}
+		for (i = 1000; i > 0; --i)
+		{
+			if (mUSBUSARTIsTxTrfReady())
+				break;
+			CDCTxService();
+		}
+		if (i > 0)
+		{
+			putUSBUSART(buffer,length);
+			CDCTxService();
+		}
+	//#endif
 }
 	
 // CDC.read
-u8 CDCgets(u8 *buffer)
+char CDCgets(char *buffer)
 {
-	u8 numBytesRead;
 
-	numBytesRead = getsUSBUSART(buffer, 64);
-	return numBytesRead;
+		char numBytesRead;
+		
+	#ifdef __32MX220F032D__
+		numBytesRead = USB_Service_CDC_GetString( buffer );
+	#else
+		numBytesRead = getsUSBUSART(buffer, 64);
+	#endif
+		return numBytesRead;
 /*
 	if (mUSBUSARTIsTxTrfReady())
 	{
@@ -193,24 +205,23 @@ u8 CDCgets(u8 *buffer)
 // added by regis blanchot 29/05/2011
 
 // CDC.write
-void CDCwrite(u8 c)
+void CDCwrite(char c)
 {
-//	CDCputs(c, 1);
-	CDCputs(&c, 1);
+	CDCputs(c, 1);
 }
 
 // CDC.printf
-void CDCprintf(const u8 *fmt, ...)
+void CDCprintf(const char *fmt, ...)
 {
-	u8 buffer[80];
-	//char *buffer;
-	u8 length;
+	char buffer[80];
+//char *buffer;
+	char length;
 	va_list	args;
 
 	va_start(args, fmt);
-	//length = strlen(fmt);
-	//buffer = (char *) malloc(1 + length * sizeof(char));	
-	length = psprintf2(buffer, fmt, args);
+//length = strlen(fmt);
+//buffer = (char *) malloc(1 + length * sizeof(char));	
+	length = psprintf(buffer, fmt, args);
 	CDCputs(buffer,length);
 	va_end(args);
 }
@@ -218,34 +229,30 @@ void CDCprintf(const u8 *fmt, ...)
 // CDC.print
 // last is a string (char *) or an integer
 
-void CDCprint(const u8 *fmt, ...)
+void CDCprint(const char *fmt, ...)
 {
-	u8 s;
-	va_list args;							// a list of arguments
-	va_start(args, fmt);					// initialize the list
-	s = (u8) va_arg(args, u32);				// get the first variable arg.
+	unsigned char s;
+	va_list args;					// list of arguments
+	va_start(args, fmt);			// initialize the list
+	s = (unsigned char) va_arg(args, int);		// get the first variable arg.
 	
 	//switch (*args)
 	switch (s)
 	{
-		case FLOAT:
-			CDCprintf("%f", (u32)fmt);
-			break;
 		case DEC:
-			CDCprintf("%d", (u32)fmt);
+			CDCprintf("%d", (int)fmt);
 			break;
 		case HEX:
-			CDCprintf("%x", (u32)fmt);
+			CDCprintf("%x", (int)fmt);
 			break;
 		case BYTE:
-			//CDCprintf("%d", (u8)fmt);
-			CDCprintf("%d", (u32)fmt);
+			CDCprintf("%d", (unsigned char)fmt);
 			break;
 		case OCT:
-			CDCprintf("%o", (u32)fmt);
+			CDCprintf("%o", (int)fmt);
 			break;
 		case BIN:
-			CDCprintf("%b", (u32)fmt);
+			CDCprintf("%b", (int)fmt);
 			break;           
 		default:
 			CDCprintf(fmt);
@@ -255,19 +262,16 @@ void CDCprint(const u8 *fmt, ...)
 }
 
 //CDC.println
-void CDCprintln(const u8 *fmt, ...)
+void CDCprintln(const char *fmt,...)
 {
-	va_list args;							// a list of arguments
-	va_start(args, fmt);					// initialize the list
-
-	CDCprintf(fmt, args);
+	CDCprintf(fmt);
 	CDCprintf("\n\r");
 }
 
 // CDC.getKey
 char CDCgetkey()
 {
-	u8 buffer[64];		// always get a full packet
+	char buffer[64];		// always get a full packet
 
 	while (!CDCgets(buffer));
 	return (buffer[0]);	// return only the first character
@@ -276,8 +280,9 @@ char CDCgetkey()
 // CDC.getString
 char * CDCgetstring(void)
 {
-	u8 c, i = 0;
-	static u8 buffer[80];
+	char i = 0;
+	char c;
+	static char buffer[80];
 	
 	do {
 		c = CDCgetkey();
