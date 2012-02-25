@@ -7,7 +7,9 @@
 	LAST RELEASE:	25 feb. 2012
 	----------------------------------------------------------------------------
 	CHANGELOG:
-	[31-03-11][rblanchot@gamil.com][fixed conditional compilation for board support] 	----------------------------------------------------------------------------
+	[31-03-11][rblanchot@gamil.com][fixed conditional compilation for board support]
+	// 08 nov. 2011 fixed a bug in analogRead ( stop and restart analog converter before sampling )
+	// 25 feb. 2012 added support for PIC32_PINGUINO_220
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -23,9 +25,6 @@
 	License along with this library; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
-
-// 08 nov. 2011 fixed a bug in analogRead ( stop and restart analog converter before sampling )
-// 25 feb. 2012 added support for PIC32_PINGUINO_220
 
 #ifndef __ANALOG__
 #define __ANALOG__
