@@ -1,17 +1,20 @@
 /*	----------------------------------------------------------------------------
 	Pinguino example to play musical sound with a buzzer or a little loud speaker
 	----------------------------------------------------------------------------
-	author:		Régis Blanchot
+	author:			Régis Blanchot
 	first release:	08/10/2010
-	last update:	12/10/2010
-	IDE:			Pinguino b9.2
+	last update:	25/02/2012
+	IDE:			Pinguino > b9.2
 	----------------------------------------------------------------------------
 	To connect your piezo buzzer or little loud speaker to your pinguino board
-	just take a look at buzzer.jpg
+	just have a look at buzzer.jpg
 	--------------------------------------------------------------------------*/
 
-#define LINE_OUT 12			// Buzzer or speaker must be connected
-									// to pin 11 (RC1/CCP2) or 12 (RC2/CCP1) 
+#define LINE_OUT 0			// Buzzer or speaker must be connected
+							// - if PIC18F : to pin 11 (RC1/CCP2) or 12 (RC2/CCP1)
+							// - if PIC32 PINGUINO : to pin 0, 1, or 2 
+							// - if PIC32 PINGUINO OTG : to pin 0, 1, or 2 
+							// - if PIC32 PINGUINO 220: to pin 2, 3, 11, 12 or 13 
 
 // partitions
 
