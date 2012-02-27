@@ -29,7 +29,7 @@ import wx, urllib2, re, threading, webbrowser
 from wx.html import HtmlWindow
 from frame import keywordFrame
 import sys, os
-#import locale
+import locale
 
 ########################################################################
 class functionsHelp(keywordFrame):
@@ -66,16 +66,27 @@ class functionsHelp(keywordFrame):
         
         self.centrarFrame()
         
-        #TODO: Spanish Doc (PinguinoVE)
-        #if locale.getdefaultlocale()[0][:2] == "es":
-            #self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
-            #self.wikiEdit = lambda keyword:"http://wiki.pinguino.cc/index.php?title="+keyword+"&action=edit"
-        #else:
-            #self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
-            #self.wikiEdit = lambda keyword:"http://www.pinguino.org.ve/wiki/index.php?title="+keyword+"&action=edit"
-      
-        self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
-        self.wikiEdit = lambda keyword:"http://www.pinguino.org.ve/wiki/index.php?title="+keyword+"&action=edit"            
+        self.lang = locale.getdefaultlocale()[0][:2]
+        
+        if self.lang == "es":
+            self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
+            self.wikiEdit = lambda keyword:"http://www.pinguino.org.ve/wiki/index.php?title="+keyword+"&action=edit"
+            self.inicio = '<h2> <span class="mw-headline" id="Descripcion"> Descripcion </span></h2>\n'
+            self.inicio2 = '<h2> <span class="mw-headline" id="Descripci.C3.B3n"> Descripción </span></h2>\n'
+            self.fin = '<!--'
+            self.re = '<h2> <span class="mw-headline" id="(.+)"> (.+) </span></h2>\n'
+            self.see = "Ver Tambien"
+            self.example = "Ejemplo"
+
+        else:
+            self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
+            self.wikiEdit = lambda keyword:"http://wiki.pinguino.cc/index.php?title="+keyword+"&action=edit"
+            self.inicio = '<a name="Name" id="Name"></a><h2> <span class="mw-headline"> Name </span></h2>\n'
+            self.inicio2 = "SinCoincidencia"
+            self.fin = '<!--'
+            self.re = '<a name="(.+)" id="(.+)"></a><h2> <span class="mw-headline"> (.+) </span></h2>'
+            self.see = "See also"
+            self.example = "Example"           
         
         if keyword != None:
             if "." in keyword:
@@ -169,11 +180,23 @@ class functionsHelp(keywordFrame):
             self.rtc.BeginBold()
             self.rtc.WriteText("Read directly from wiki.pinguino.cc ")
             self.rtc.BeginStyle(self.urlStyle)
-            self.rtc.BeginURL(self.wikiDoc+keyword)
+            self.rtc.BeginURL("http://wiki.pinguino.cc/index.php/"+keyword)
             self.rtc.WriteText(keyword)
-            self.rtc.EndURL()
+            self.rtc.EndURL()            
             self.rtc.EndStyle()
             self.rtc.EndBold()
+            
+            if self.lang == "es":
+                self.rtc.Newline()
+                self.rtc.BeginBold()
+                self.rtc.WriteText("Leer directamente desde pinguino.org.ve ")
+                self.rtc.BeginStyle(self.urlStyle)
+                self.rtc.BeginURL(self.wikiDoc+keyword)
+                self.rtc.WriteText(keyword)
+                self.rtc.EndURL()            
+                self.rtc.EndStyle()
+                self.rtc.EndBold()
+            
             self.rtc.Newline()
             self.rtc.Newline()
             self.writeHelp(*self.htmlPage())
@@ -184,14 +207,25 @@ class functionsHelp(keywordFrame):
     def lineWiki(self, url, keyword):
         try: wikiPage = urllib2.urlopen(url)
         except (urllib2.HTTPError):
-            self.rtc.Clear()            
-            self.rtc.WriteText("This function has not been documented.\n")
-            self.rtc.WriteText("You can help with the documentation on the following link.\n")
-            self.rtc.BeginStyle(self.urlStyle)
-            self.rtc.BeginURL(self.wikiEdit(keyword))
-            self.rtc.WriteText(keyword)
-            self.rtc.EndURL()
-            self.rtc.EndStyle()   
+            self.rtc.Clear()
+            self.rtc.WriteText("No documentation found.\n")
+            if self.lang == "es":
+                self.rtc.BeginBold()
+                self.rtc.WriteText("Search in wiki.pinguino.cc ")
+                self.rtc.BeginStyle(self.urlStyle)
+                self.rtc.BeginURL("http://wiki.pinguino.cc/index.php/"+keyword)
+                self.rtc.WriteText(keyword)
+                self.rtc.EndURL()            
+                self.rtc.EndStyle()
+                self.rtc.EndBold()
+                
+            #self.rtc.WriteText("This function has not been documented.\n")
+            #self.rtc.WriteText("You can help with the documentation on the following link.\n")
+            #self.rtc.BeginStyle(self.urlStyle)
+            #self.rtc.BeginURL(self.wikiEdit(keyword))
+            #self.rtc.WriteText(keyword)
+            #self.rtc.EndURL()
+            #self.rtc.EndStyle()   
             return False
             
         except:  #maybe without connection
@@ -204,13 +238,16 @@ class functionsHelp(keywordFrame):
         wikiPage.close()
         data = open(self.path, mode='w')
         
+        #cc = open(self.path+"2", mode='w')
+        #cc.writelines(linesWiki)
+        #cc.close()
+        
         recept = False
         for line in linesWiki:
             if not recept:
-                if line == '<a name="Name" id="Name"></a><h2> <span class="mw-headline"> Name </span></h2>\n':
-                    recept = True
+                if line in [self.inicio, self.inicio2]: recept = True
             if recept:
-                if line.startswith('<!--'):
+                if line.startswith(self.fin):
                     data.close()
                     return True
                 data.write(line)
@@ -232,13 +269,13 @@ class functionsHelp(keywordFrame):
             self.rtc.BeginStyle(self.titleStyle)
             self.rtc.WriteText(title)
             self.rtc.EndStyle();
-            if title == "Example":
+            if title == self.example:
                 self.rtc.Newline()
                 self.rtc.BeginStyle(self.exampleStyle)
                 self.rtc.WriteText(text[title])
                 self.rtc.EndStyle()
    
-            elif title == "See also":
+            elif title == self.see:
                 recomended = text[title].split("\n")
                 for function in recomended:
                     self.rtc.BeginStyle(self.urlStyle)
@@ -283,10 +320,9 @@ class functionsHelp(keywordFrame):
         cont = []
         allText = []
         for line in lines:
-            match = re.match('<a name="(.+)" id="(.+)"></a><h2> <span class="mw-headline"> (.+) </span></h2>',
-                          line)
+            match = re.match(self.re, line)
             try:
-                titles.append(match.group(3))
+                titles.append(match.group(2))
                 allText.append(cont)
                 cont = []
             except: cont.append(line)

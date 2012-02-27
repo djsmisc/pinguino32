@@ -1,88 +1,125 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import wx
+import wx, os
 from wxgui.pinguino import getOptions, Pinguino, setGui
+
+
+########################################################################
+class MySplashScreen(wx.SplashScreen):
+    #----------------------------------------------------------------------
+    def __init__(self):
+        """"""
+        bmp = wx.Image(os.path.join("theme", "logoX.png")).ConvertToBitmap()
+        wx.SplashScreen.__init__(self, bmp,
+                                 wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
+                                 5000, None, -1)
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.fc = wx.FutureCall(2000, self.ShowMain)
+
+    #----------------------------------------------------------------------
+    def OnClose(self, evt):
+        evt.Skip()
+        self.Hide()
+        if self.fc.IsRunning():
+            self.fc.Stop()
+            self.ShowMain()
+
+    #----------------------------------------------------------------------
+    def ShowMain(self):
+        setGui(True)
+        frame = Pinguino(None)
+        frame.Show()
+        if self.fc.IsRunning(): self.Raise()
+
+########################################################################
+class MyApp(wx.App):
+    def OnInit(self):
+        splash = MySplashScreen()
+        splash.Show()
+        return True
+
+
+#----------------------------------------------------------------------
+def main():
+    app = MyApp(False)
+    app.MainLoop()
+
+
 
 # ------------------------------------------------------------------------------
 # MAIN
 # ------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-	app = wx.PySimpleApp(0)
+    app = wx.PySimpleApp(0)
 
 # ------------------------------------------------------------------------------
 # ---Command Line---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-	options = getOptions()
 
-	if options.version == True:
-		print "current version is " + pinguino_version
-		sys.exit(1)
+    options = getOptions()
 
-	if options.author == True:
-		print "jean-pierre mandon"
-		print "regis blanchot"
-		sys.exit(1)
+    if options.version == True:
+        print "current version is " + pinguino_version
+        sys.exit(1)
 
-	if options.board != False:
-		curBoard = boardlist[options.board]
+    if options.author == True:
+        print "jean-pierre mandon"
+        print "regis blanchot"
+        sys.exit(1)
 
-		if options.filename == False:
-			print "missing filename"
-			sys.exit(1)
-		filename = options.filename[0]
-		fname, extension = os.path.splitext(filename)
-		if extension != ".pde":
-			print "bad file extension, it should be .pde"
-			sys.exit(1)
+    if options.board != False:
+        curBoard = boardlist[options.board]
 
-		pobject=Pinguino(None, -1, "")
-		print "board " + curBoard.name
-		print "mcu   " + curBoard.proc
+        if options.filename == False:
+            print "missing filename"
+            sys.exit(1)
+        filename = options.filename[0]
+        fname, extension = os.path.splitext(filename)
+        if extension != ".pde":
+            print "bad file extension, it should be .pde"
+            sys.exit(1)
 
-		print "preprocessing ..."
-		retour=pobject.preprocess(fname, curBoard)
-		if retour == "error":
-			print "error while preprocessing " + filename
-			sys.exit(1)
+        pobject=Pinguino(None, -1, "")
+        print "board " + curBoard.name
+        print "mcu   " + curBoard.proc
 
-		print "compiling ..."
-		retour = pobject.compile(filename, curBoard)
-		if retour != 0:
-			print "error while compiling file " + filename
-			sys.exit(1)
+        print "preprocessing ..."
+        retour=pobject.preprocess(fname, curBoard)
+        if retour == "error":
+            print "error while preprocessing " + filename
+            sys.exit(1)
 
-		print "linking ..."
-		retour=pobject.link(filename, curBoard)
+        print "compiling ..."
+        retour = pobject.compile(filename, curBoard)
+        if retour != 0:
+            print "error while compiling file " + filename
+            sys.exit(1)
 
-		if curBoard.arch == 8:
-			MAIN_FILE="main.hex"
-		else:
-			MAIN_FILE="main32.hex"
+        print "linking ..."
+        retour=pobject.link(filename, curBoard)
 
-		if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
-			print "error while linking "
-			sys.exit(1)
+        if curBoard.arch == 8:
+            MAIN_FILE="main.hex"
+        else:
+            MAIN_FILE="main32.hex"
 
-		shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
-		print "compilation done"
-		print pobject.getCodeSize(fname, curBoard)
-		os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
-		os.remove(fname + ".c")	   
-		sys.exit(0)
+        if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
+            print "error while linking "
+            sys.exit(1)
+
+        shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
+        print "compilation done"
+        print pobject.getCodeSize(fname, curBoard)
+        os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
+        os.remove(fname + ".c")	   
+        sys.exit(0)
+
 
 # ------------------------------------------------------------------------------
 # ---Graphic User Interface-----------------------------------------------------
 # ------------------------------------------------------------------------------
 
-	wx.InitAllImageHandlers()
-	#gui=True
-	setGui(True)
-	#frame_1 = Pinguino(None, -1, "")
-	frame_1 = Pinguino(None)
-	app.SetTopWindow(frame_1)
-	frame_1.Show()
-	app.MainLoop()
-
+    main()

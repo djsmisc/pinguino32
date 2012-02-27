@@ -1,12 +1,35 @@
-<a name="Name" id="Name"></a><h2> <span class="mw-headline"> Name </span></h2>
-<p>lcd.scrollDisplayLeft
+<h2> <span class="mw-headline" id="Descripcion"> Descripcion </span></h2>
+<p>Esta funcion se encarga de establecer la velocidad de comunicación, iniciar y habilitar la comunicacion atraves del Puerto UART (Pines 8 y 9) del Pinguino
 </p>
-<a name="Description" id="Description"></a><h2> <span class="mw-headline"> Description </span></h2>
-<dl><dt> Since Beta X
-</dt></dl>
-<a name="Syntax" id="Syntax"></a><h2> <span class="mw-headline"> Syntax </span></h2>
-<a name="Example" id="Example"></a><h2> <span class="mw-headline"> Example </span></h2>
-<a name="Bugs" id="Bugs"></a><h2> <span class="mw-headline"> Bugs </span></h2>
-<a name="See_also" id="See_also"></a><h2> <span class="mw-headline"> See also </span></h2>
-<a name="Comments" id="Comments"></a><h2> <span class="mw-headline"> Comments </span></h2>
+<h2> <span class="mw-headline" id="Sintaxis"> Sintaxis </span></h2>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="c source-c"><pre class="de1">Serial.<span class="me1">begin</span><span class="br0">&#40;</span>valorBaudios<span class="br0">&#41;</span><span class="sy0">;</span></pre></div></div>
+<p><b>ValorBaudios</b>: Este valor establecerá el Baud Rate de comunicación, este valor ha sido probado exitosamente con valores de:
+</p>
+<ul><li> 300
+</li><li> 600
+</li><li> 1200
+</li><li> 2400
+</li><li> 4800
+</li><li> 9600
+</li><li> 19200
+</li></ul>
+<h2> <span class="mw-headline" id="Ejemplo"> Ejemplo </span></h2>
+<div dir="ltr" class="mw-geshi" style="text-align: left;"><div class="c source-c"><pre class="de1"><span class="co2">#define PIC18F4550</span>
+<span class="kw4">void</span> setup<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span>
+	Serial.<span class="me1">begin</span><span class="br0">&#40;</span><span class="nu0">19200</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span>
+&#160;
+<span class="kw4">void</span> loop<span class="br0">&#40;</span><span class="br0">&#41;</span>
+<span class="br0">&#123;</span>
+	Serial.<span class="me1">print</span><span class="br0">&#40;</span><span class="st0">&quot;Comunicacion con exito<span class="es1">\n</span><span class="es1">\r</span>&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span>
+	delay<span class="br0">&#40;</span><span class="nu0">1000</span><span class="br0">&#41;</span><span class="sy0">;</span>
+<span class="br0">&#125;</span></pre></div></div>
+<h2> <span class="mw-headline" id="Bugs"> Bugs </span></h2>
+<p>Aun no esta correctamente implementada para velocidades de 38400 bps,57600 bps, 115200 bps
+</p>
+<h2> <span class="mw-headline" id="Ver_Tambien"> Ver Tambien </span></h2>
+<ul><li> <a href="/wiki/index.php?title=Puerto_Serial&amp;action=edit&amp;redlink=1" class="new" title="Puerto Serial (la página no existe)">Puerto Serial</a>
+</li><li> <a href="/wiki/index.php?title=Serial.print" title="Serial.print">Serial.print</a>
+</li></ul>
+<h2> <span class="mw-headline" id="Comentarios"> Comentarios </span></h2>
 

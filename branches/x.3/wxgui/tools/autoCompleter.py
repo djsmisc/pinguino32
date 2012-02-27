@@ -81,7 +81,6 @@ class autoCompleter:
             return 
         
         
-        
         textEdit = self.stcpage[self.notebook1.GetSelection()]  
         if textEdit.GetCurrentPos() == 0:
             textEdit.AutoCompCancel()

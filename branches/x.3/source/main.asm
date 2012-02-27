@@ -1,7 +1,7 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
 ; Version 2.9.0 #5416 (Aug  9 2009) (UNIX)
-; This file was generated Wed Feb 22 19:47:12 2012
+; This file was generated Sun Feb 26 21:10:10 2012
 ;--------------------------------------------------------
 ; PIC16 port for the Microchip 16-bit core micros
 ;--------------------------------------------------------
@@ -299,13 +299,13 @@ _00136_DS_:
 ; ; Starting pCode block
 S_main__loop	code
 _loop:
-;	.line	9; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/user.c	}
+;	.line	11; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/user.c	}
 	RETURN	
 
 ; ; Starting pCode block
 S_main__setup	code
 _setup:
-;	.line	4; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/user.c	}
+;	.line	6; /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/user.c	}
 	RETURN	
 
 ; ; Starting pCode block
