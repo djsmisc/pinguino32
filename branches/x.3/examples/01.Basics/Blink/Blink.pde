@@ -2,7 +2,8 @@
 	Blink a LED
 */
 
-void setup() {                
+void setup()
+{                
   // initialize the digital pin 13 as an output.
   pinMode(13, OUTPUT);     
 }
