@@ -218,7 +218,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         _=self.lang.ugettext
 
         _icon = wx.EmptyIcon()
-        _icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logoX.png'), wx.BITMAP_TYPE_ANY))
+        _icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
         self.SetIcon(_icon)
 
         self._mgr = wx.aui.AuiManager(self)	  
@@ -823,8 +823,14 @@ class Pinguino(framePinguinoX, Tools, editor):
 
 
         info = wx.AboutDialogInfo()
-
-        info.SetIcon(wx.Icon(os.path.join(THEME_DIR, 'logoX.png'), wx.BITMAP_TYPE_PNG))
+        #bmp = wx.Icon(os.path.join(THEME_DIR, 'logoX3.png'), wx.BITMAP_TYPE_PNG)
+        image = wx.Image(os.path.join(THEME_DIR, 'logoX3.png'), wx.BITMAP_TYPE_PNG)
+        image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
+        bmp = wx.BitmapFromImage(image)
+        #bmp = image.ConvertToBitmap()
+        icon = wx.EmptyIcon()
+        icon.CopyFromBitmap(bmp)
+        info.SetIcon(icon)
         info.SetName('Pinguino')
         info.SetVersion("rev. " + self.localRev)
         info.SetDescription(description)
