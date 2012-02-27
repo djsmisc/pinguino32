@@ -2,15 +2,12 @@
 #-*- coding: utf-8 -*-
 
 import wx
-from frame import preferences
+from frame import Frame1
 
-class Preferences(preferences):
+class Preferences(Frame1):
     #----------------------------------------------------------------------
     def __init__(self, parent):
         self._init_ctrls(parent)
-        
-        
-        #self.listbook1.lis
         
         
         

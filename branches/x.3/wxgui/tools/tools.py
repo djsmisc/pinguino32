@@ -27,7 +27,6 @@
 import wx, re, webbrowser
 from treeExamples import treeExamples
 from autoCompleter import autoCompleter
-#from preferences import Preferences
 from keywords import functionsHelp
 #import locale
 
@@ -43,21 +42,22 @@ class Tools(treeExamples, autoCompleter):
         self.makeFindText()
         self.makeReplaceText()
         self._init_sizers()
-        self.centrarFrame()
-        
+
+        self.splitterWindow1.SetSashPosition(self.config.ReadInt('frame/sashposition', -1))        
+
         #TODO: Spanish Doc (PinguinoVE)
         #if locale.getdefaultlocale()[0][:2] == "es":
             #self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
         #else: self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
-        
-        self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
-        
 
-    #----------------------------------------------------------------------
-    def centrarFrame(self):
-        screen=wx.ScreenDC().Size
-        size=self.Size
-        self.SetPosition(((screen[0]-size[0])/2,(screen[1]-size[1])/2))
+        self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
+
+
+    ##----------------------------------------------------------------------
+    #def centrarFrame(self):
+        #screen=wx.ScreenDC().Size
+        #size=self.Size
+        #self.SetPosition(((screen[0]-size[0])/2,(screen[1]-size[1])/2))
 
     #----------------------------------------------------------------------
     def contexMenuTools(self, event):
@@ -74,14 +74,14 @@ class Tools(treeExamples, autoCompleter):
             self.Bind(wx.EVT_MENU,
                       lambda x:self.OnKeyword(keyword=word),
                       id=self.popupIDhelp2)            
-            
+
             help = wx.Menu()
             help.Append(self.popupIDhelp1, self.translate("Open wiki page in the web browser"))
             help.Append(self.popupIDhelp2, self.translate("Read description"))
-            
+
             menu.AppendMenu(self.popupIDhelp0, word, help)          
             menu.AppendSeparator()
-            
+
         menu.Append(self.popupID8, self.translate("Comment/Uncomment"))
         menu.AppendSeparator()
 
@@ -169,7 +169,7 @@ class Tools(treeExamples, autoCompleter):
         self.popupIDhelp0 = wx.NewId()
         self.popupIDhelp1 = wx.NewId()
         self.popupIDhelp2 = wx.NewId()
-                
+
 
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Undo(), id=self.popupID1)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Redo(), id=self.popupID2)
@@ -189,7 +189,7 @@ class Tools(treeExamples, autoCompleter):
         app.SetTopWindow(frame_1)
         frame_1.Show()
         app.MainLoop()
-        
+
     #----------------------------------------------------------------------
     def comentar(self, event=None):
         textEdit = self.stcpage[self.notebook1.GetSelection()]
@@ -203,7 +203,7 @@ class Tools(treeExamples, autoCompleter):
         textEdit.Clear()
         textEdit.InsertText(textEdit.CurrentPos, comented)
         textEdit.SetSelection(*map(textEdit.PositionFromLine, [lineStart, lineEnd]))
-    
+
     #----------------------------------------------------------------------
     def updateStatusBar(self, event=None):
         textEdit = self.stcpage[self.notebook1.GetSelection()]
@@ -211,55 +211,54 @@ class Tools(treeExamples, autoCompleter):
         columna = str(textEdit.GetColumn(textEdit.CurrentPos)).rjust(3, "0")
         self.statusBar1.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
-        
-        
-        
+
+
+
     #----------------------------------------------------------------------
     def updateFuntionsChoice(self, new=False):
-	sel = self.notebook1.GetSelection()
-	if sel >= 0:
-	    choice = self.choiceFunctions[self.notebook1.GetSelection()]
-	    textEdit = self.stcpage[self.notebook1.GetSelection()]
-	    
-	    funciones = self.readUserFuntions(textEdit.GetText().split("\n"))
-	    self.sheetFunctions[self.notebook1.GetSelection()] = funciones
-	    
-	    choice.Clear()
-	    choice.Append("(top)")
-	    choice.AppendItems(funciones.keys())
-	    choice.Append("(end)")
-	    if new: choice.SetSelection(0)
-	
-	
+        sel = self.notebook1.GetSelection()
+        if sel >= 0:
+            choice = self.choiceFunctions[self.notebook1.GetSelection()]
+            textEdit = self.stcpage[self.notebook1.GetSelection()]
+
+            funciones = self.readUserFuntions(textEdit.GetText().split("\n"))
+            self.sheetFunctions[self.notebook1.GetSelection()] = funciones
+
+            choice.Clear()
+            choice.Append("(top)")
+            choice.AppendItems(funciones.keys())
+            choice.Append("(end)")
+            if new: choice.SetSelection(0)
+
+
     #----------------------------------------------------------------------
     def moveToFuntion(self, event):
-	print "OK"
-	function = event.GetString()
-	textEdit = self.stcpage[self.notebook1.GetSelection()]
-	
-	if function == "(top)":
-	    textEdit.GotoLine(0)  
+        function = event.GetString()
+        textEdit = self.stcpage[self.notebook1.GetSelection()]
 
-	elif function == "(end)":
-	    textEdit.GotoLine(textEdit.GetLineCount())
-	
-	else:
-	    linea = self.sheetFunctions[self.notebook1.GetSelection()][function]
-	    print linea
-	    textEdit.SetCurrentPos(0)
-	    textEdit.SetSelection(0, 0)	
-	    trouve, position=self.find(linea.replace("\n", ""),1)
-	    if trouve!=-1:
-		self.highlightline(trouve,'yellow')
-		self.focus()
+        if function == "(top)":
+            textEdit.GotoLine(0)  
+
+        elif function == "(end)":
+            textEdit.GotoLine(textEdit.GetLineCount())
+
+        else:
+            linea = self.sheetFunctions[self.notebook1.GetSelection()][function]
+            textEdit.SetCurrentPos(-1)
+            #textEdit.SetSelection(0, 0)	
+            trouve, position=self.find(linea.replace("\n", ""),1)
+            if trouve!=-1:
+                self.highlightline(trouve, "#A9D1FF")
+                self.focus()
 
 #----------------------------------------------------------------------        
     def readUserFuntions(self, text):
-	funciones = {}   
-	tipos="int|float|char|BOOL|short|long|double|"\
-              "byte|word|struct|union|enum|void"           
-	for linea in text:
-	    if re.match("[ ]*//",linea)==None:
-		reg=re.match("[ ]*(unsigned)*[ ]*(%s)[*]*[ ]*([^ ]+)[ ]*\(.*\)" %tipos,linea)
-		if reg!=None: funciones[str(reg.group(3))] = linea  
-	return funciones   
+        funciones = {}   
+        tipos="int|float|char|BOOL|short|long|double|"\
+            "byte|word|struct|union|enum|void"           
+        for linea in text:
+            if re.match("[ ]*//",linea)==None:
+                reg=re.match("[ ]*(unsigned)*[ ]*(%s)[*]*[ ]*([^ ]+)[ ]*\(.*\)" %tipos,linea)
+                if reg!=None: funciones[str(reg.group(3))] = linea  
+        return funciones
+

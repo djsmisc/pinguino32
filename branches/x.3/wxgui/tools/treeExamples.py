@@ -85,7 +85,7 @@ class treeExamples():
                         self.tree.SetPyData(filePde, None)
                         self.tree.SetItemImage(filePde, fileidx, wx.TreeItemIcon_Normal)                       
         path=os.path.join(sys.path[0],"examples")
-        extraer(path,None)   
+        extraer(path,None)
                     
     #--------------------------------------------------------------------------
     def OnBeginEdit(self, event):
