@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	2012-02-02
-    last release:	2012-02-04
+    last release:	2012-03-02
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -41,9 +41,20 @@ class autoCompleter:
         index = self.wordUnderCursor()
         textEdit = self.stcpage[self.notebook1.GetSelection()]
         for i in index: textEdit.DeleteBack()
-        textEdit.InsertText(textEdit.CurrentPos, event.GetText()) 
-        textEdit.WordRightEnd()
+        textEdit.InsertText(textEdit.CurrentPos, event.GetText())
+        
+        #Set cursor position at the last word (dot is a word)
+        words = 1
+        if "." in event.GetText(): words = 3
+        for i in range(words): textEdit.WordRightEnd()
+        
+        #Add "()" to funtions
+        if event.GetText() in self.keywordList:
+            textEdit.InsertText(textEdit.CurrentPos, "()")
+            textEdit.CharRight()
+            
         self.recent = True
+        
         
     #----------------------------------------------------------------------
     def insertSnippet(self, key):

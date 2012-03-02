@@ -39,6 +39,7 @@ class MySplashScreen(wx.SplashScreen):
     def ShowMain(self):
         setGui(True)
         frame = Pinguino(None)
+        app.SetTopWindow(frame)
         frame.Show()
         if self.fc.IsRunning(): self.Raise()
 
@@ -53,6 +54,7 @@ class MyApp(wx.App):
 #----------------------------------------------------------------------
 def main():
     app = MyApp(False)
+    #app.SetTopWindow(frame)
     app.MainLoop()
 
 
