@@ -44,6 +44,20 @@
 
 from check import *
 
+EVT_RESULT_REVISION_ID = wx.NewId()
+
+def EVT_RESULT_REVISION(win, func):
+    """Define Result Event."""
+    win.Connect(-1, -1, EVT_RESULT_REVISION_ID, func)
+
+class ResultEventRevision(wx.PyEvent):
+    """Simple event to carry arbitrary result data."""
+    def __init__(self, data):
+        """Init Result Event."""
+        wx.PyEvent.__init__(self)
+        self.SetEventType(EVT_RESULT_REVISION_ID)
+        self.data = data
+
 # ------------------------------------------------------------------------------
 # current version
 # ------------------------------------------------------------------------------
@@ -88,6 +102,7 @@ class Pinguino(framePinguinoX, Tools, editor):
     debug_handle=False
     debug_thread=False
     debug_flag=False
+
     noname=0
     keywordList=[]
     reservedword=[]
@@ -148,87 +163,178 @@ class Pinguino(framePinguinoX, Tools, editor):
         self._init_ctrls(parent)
         self.notebook1.Hide()
         if os.path.isdir(TEM_DIR) == False: os.mkdir(TEM_DIR)
-
-        # ----------------------------------------------------------------------
-        # get OS name and define some OS dependant variable
-        # ----------------------------------------------------------------------
-
-        if sys.platform == 'darwin':
-            self.osdir = 'macosx'
-            self.debug_port = '/dev/tty.usbmodem1912'
-            self.c8 = 'sdcc'
-            self.u32 = 'ubw32'
-            self.make = 'make'
-        elif sys.platform == 'win32':
-            self.osdir = 'win32'
-            self.debug_port = 15
-            self.c8 = 'sdcc.exe'
-            self.u32 = 'mphidflash.exe'
-            self.make = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'make.exe')
-        else:
-            self.osdir = 'linux'
-            self.debug_port = '/dev/ttyACM0'
-            self.c8 = 'sdcc'
-            self.u32 = 'ubw32'
-            self.make = 'make'
-
-        # ----------------------------------------------------------------------
-        # load settings from config file
-        # ----------------------------------------------------------------------
-
-        self.config = wx.FileConfig(	localFilename = APP_CONFIG,
-                                            style = wx.CONFIG_USE_LOCAL_FILE)
-        self.filehistory = wx.FileHistory()
-        self.filehistory.Load(self.config)
-
-        framesize = (  self.config.ReadInt('Window/Width', -1),
-                       self.config.ReadInt('Window/Height', -1))
-        if framesize == (0, 0): framesize = (400, 400)
-        self.SetSize(framesize)
-
-        framepos = (   self.config.ReadInt('Window/Posx', -1),
-                       self.config.ReadInt('Window/Posy', -1))
-
-        outputsize = ( self.config.ReadInt('Output/Width', -1),
-                       self.config.ReadInt('Output/Height', -1))
-        if outputsize == (0, 0): outputsize = (400, 250)
-
-        self.debug =   self.config.ReadInt('Debug', -1)
-        if self.debug == '': self.debug = ID_NODEBUG
-
-        self.theme =   self.config.Read('Theme/name')
-        if self.theme == '': self.theme = THEME_DEFAULT
-
-        self.splitterWindow1.SetSashPosition(500)
+        
+        self._mgr = wx.aui.AuiManager(self)
+        
+        self.loadSettings()
+        self.setOSvariables()
+        self.setLanguage()
+        self.buildMenu()
+        self.buildOutput()
+        self.buildEditor()
+        self.ConnectAll()        
 
 
-        # ----------------------------------------------------------------------
-        # window
-        # ----------------------------------------------------------------------
+        # ------------------------------------------------------------------------------
+        # check new release of Pinguino
+        # TODO: how to exclude compilers dir. from other OS ?
+        # ------------------------------------------------------------------------------
 
-        loc = locale.getdefaultlocale()[0][0:2]
+        EVT_RESULT_REVISION(self,self.setRevision)
+        self.threadRevision = threading.Thread(target=self.getRevision, args=( ))
+        self.threadRevision.start()
+        
+        self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. [loading...]')
+        self.displaymsg(self.translate("Welcome to Pinguino IDE (rev. [loading...])\n"), 0)     
 
-        # pt_BR Language Check, By Wagner de Queiroz, 2010-Mar,01
-        if loc == "pt":
-            loc = locale.getdefaultlocale()[0][0:5]
-        if loc != "pt_BR":
-            loc = locale.getdefaultlocale()[0][0:2]              
+        self.__initEditor__()
 
-        self.lang = gettext.translation('pinguino', LOCALE_DIR, languages=[loc], fallback=True)
-        _=self.lang.ugettext
+        self.initTools()
+        self.openLast()
+        
+        
+# ------------------------------------------------------------------------------
+# Decorator to debug time
+# ------------------------------------------------------------------------------       
+    def debugTime(function):
+        DEBUG_TIME = True
+        def process(*args):
+            inicio = time.time()
+            retorno = function(*args)
+            fin = time.time()
+            print function.__name__ + "\tTime: %.7fs" %(fin - inicio)
+            return retorno
+        if DEBUG_TIME : return process
+        else: return function
 
-        _icon = wx.EmptyIcon()
-        _icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
-        self.SetIcon(_icon)
 
-        self._mgr = wx.aui.AuiManager(self)	  
+# ------------------------------------------------------------------------------
+# Editor
+# ------------------------------------------------------------------------------
+    def buildEditor(self):
+        _ = self._
+        self.EditorPanel = self.panel2
+        #background with pinguino.cc colour and pinguino logo
+        self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
+        self.imageBackground = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
+        if sys.platform == 'win32':
+            self.imageBackground.SetSize((5000,5000)) # :)
+        self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
+        self.background.CentreOnParent(wx.BOTH) 
 
+        # create a PaneInfo structure for editor window 
+        # this Paneinfo will be switched when loading a file
+        self.PaneEditorInfo=wx.aui.AuiPaneInfo()
+        self.PaneEditorInfo.CloseButton(False)
+        self.PaneEditorInfo.MaximizeButton(True)
+        self.PaneEditorInfo.Caption(_("Editor"))
+        self.PaneEditorInfo.Top()
+
+        # ------------------------------------------------------------------------------
+        # add the panes to the manager
+        # ------------------------------------------------------------------------------
+
+        self._mgr.AddPane(self.logwindow, self.PaneOutputInfo, '')
+        self._mgr.AddPane(self.panel1, wx.CENTER , '')
+
+
+        # tell the manager to 'commit' all the changes just made
+        self._mgr.Update()		
+
+# ------------------------------------------------------------------------------
+# Event Management
+# ------------------------------------------------------------------------------
+    def ConnectAll(self):
+        self.Bind(wx.EVT_CLOSE, self.OnExit)
+        self.Bind(wx.EVT_SIZE, self.OnResize)	 
+
+        # file menu
+        self.Bind(wx.EVT_MENU, self.OnNew, self.NEW)
+        self.Bind(wx.EVT_MENU, self.OnOpen, self.OPEN)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9) 
+        self.Bind(wx.EVT_MENU, self.OnSave, self.SAVE)
+        self.Bind(wx.EVT_MENU, self.OnSaveAs, self.SAVEAS)
+        self.Bind(wx.EVT_MENU, self.OnClose, self.CLOSE)
+        self.Bind(wx.EVT_MENU, self.OnExit, self.EXIT)
+
+        # edit menu
+        self.Bind(wx.EVT_MENU, self.copy, self.COPY)
+        self.Bind(wx.EVT_MENU, self.paste, self.PASTE)
+        self.Bind(wx.EVT_MENU, self.cut, self.CUT)
+        self.Bind(wx.EVT_MENU, self.clear, self.CLEAR)	   
+        self.Bind(wx.EVT_MENU, self.undo, self.UNDO)	   
+        self.Bind(wx.EVT_MENU, self.redo, self.REDO)
+        self.Bind(wx.EVT_MENU, self.OnFind, self.FIND)
+        self.Bind(wx.EVT_MENU, self.OnReplace, self.REPLACE)		
+        self.Bind(wx.EVT_MENU, self.selectall, self.SELECTALL)
+        self.Bind(wx.EVT_MENU, self.comentar, self.COMMENT)
+        #self.Bind(wx.EVT_MENU, self.OnPreferences, self.PREFERENCES)
+
+        # pref menu
+        if DEV:
+            self.Bind(wx.EVT_MENU, self.OnDebug, id=self.ID_DEBUG)
+            self.Bind(wx.EVT_MENU, self.OnCheck, id=self.ID_CHECK)
+            self.Bind(wx.EVT_MENU, self.OnUpgrade, id=self.ID_UPGRADE)
+        for b in range(len(boardlist)):
+            self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
+        self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
+
+        # help menu
+        #self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD1, id2=self.ID_KEYWORD1 + self.keywordNum)# keywords
+        self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD)# keywords
+        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WEBSITE)	# website
+        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_BLOG)		# blog   
+        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_FORUM)	   # forum
+        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_GROUP)	   # group		
+        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WIKI)		# wiki
+        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_SHOP)		# shop
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=self.ID_ABOUT)	# about
+
+        # icons bar
+        self.Bind(wx.EVT_TOOL, self.OnVerify, id=self.ID_VERIFY)
+        self.Bind(wx.EVT_TOOL, self.OnClose, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_TOOL, self.OnNew, id=wx.ID_NEW)
+        self.Bind(wx.EVT_TOOL, self.OnSave, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_TOOL, self.OnOpen, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_TOOL, self.OnUpload, id=self.ID_UPLOAD)
+        self.Bind(wx.EVT_TOOL, self.OnFind, id=wx.ID_FIND)
+        self.Bind(wx.EVT_TOOL, self.OnExit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_TOOL, self.undo, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_TOOL, self.redo, id=wx.ID_REDO)
+        self.Bind(wx.EVT_TOOL, self.cut, id=wx.ID_CUT)
+        self.Bind(wx.EVT_TOOL, self.copy, id=wx.ID_COPY)
+        self.Bind(wx.EVT_TOOL, self.paste, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_TOOL, self.clear, id=wx.ID_CLEAR)
+        self.Bind(wx.EVT_TOOL, self.selectall, id=wx.ID_SELECTALL)
+
+        
+# ------------------------------------------------------------------------------
+# Output
+# ------------------------------------------------------------------------------
+    def buildOutput(self):
+        # create a text control
+        self.logwindow = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, self.outputsize,\
+                                     style = wx.NO_BORDER|wx.TE_MULTILINE|wx.TE_READONLY )
+        self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
+        self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255))
+
+        # create a PaneInfo structure for output window
+        self.PaneOutputInfo=wx.aui.AuiPaneInfo()
+        self.PaneOutputInfo.CloseButton(False)
+        self.PaneOutputInfo.MaximizeButton(True)
+        self.PaneOutputInfo.MinimizeButton(True)
+        self.PaneOutputInfo.Caption("Output")
+        self.PaneOutputInfo.Bottom()
+        
+
+# ----------------------------------------------------------------------
+# Menus
+# ----------------------------------------------------------------------
+    @debugTime
+    def buildMenu(self):
+        _ = self._
         self.menu = wx.MenuBar()
-
-        # ----------------------------------------------------------------------
-        # Menus
-        # ----------------------------------------------------------------------
-
+        
         # file menu
         self.file_menu = wx.Menu()
         self.NEW = wx.MenuItem(self.file_menu, wx.ID_NEW, _("New"), "", wx.ITEM_NORMAL)
@@ -389,149 +495,94 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.DrawToolbar()
         self.SetToolBar(self.toolbar)
 
-        # ------------------------------------------------------------------------------
-        # Output
-        # ------------------------------------------------------------------------------
+        
+        
+# ----------------------------------------------------------------------
+# load settings from config file
+# ----------------------------------------------------------------------
+    def loadSettings(self):
+        self.config = wx.FileConfig(localFilename = APP_CONFIG, style = wx.CONFIG_USE_LOCAL_FILE)
+        self.filehistory = wx.FileHistory()
+        self.filehistory.Load(self.config)
 
-        # create a text control
-        self.logwindow = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, outputsize,\
-                                     style = wx.NO_BORDER|wx.TE_MULTILINE|wx.TE_READONLY )
-        self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
-        self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255))
+        framesize = ( self.config.ReadInt('Window/Width', -1), self.config.ReadInt('Window/Height', -1))
+        if framesize == (0, 0): framesize = (400, 400)
+        self.SetSize(framesize)
 
-        # create a PaneInfo structure for output window
-        self.PaneOutputInfo=wx.aui.AuiPaneInfo()
-        self.PaneOutputInfo.CloseButton(False)
-        self.PaneOutputInfo.MaximizeButton(True)
-        self.PaneOutputInfo.MinimizeButton(True)
-        self.PaneOutputInfo.Caption("Output")
-        self.PaneOutputInfo.Bottom()
+        #framepos = (self.config.ReadInt('Window/Posx', -1), self.config.ReadInt('Window/Posy', -1))
 
-        # ------------------------------------------------------------------------------
-        # Editor
-        # ------------------------------------------------------------------------------
+        self.outputsize = (self.config.ReadInt('Output/Width', -1), self.config.ReadInt('Output/Height', -1))
+        if self.outputsize == (0, 0): self.outputsize = (400, 250)
 
-        self.EditorPanel = self.panel2
-        #background with pinguino.cc colour and pinguino logo
-        self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
-        self.imageBackground = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
-        if sys.platform == 'win32':
-            self.imageBackground.SetSize((5000,5000)) # :)
-        self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
-        self.background.CentreOnParent(wx.BOTH) 
+        self.debug =   self.config.ReadInt('Debug', -1)
+        if self.debug == '': self.debug = ID_NODEBUG
 
-        # create a PaneInfo structure for editor window 
-        # this Paneinfo will be switched when loading a file
-        self.PaneEditorInfo=wx.aui.AuiPaneInfo()
-        self.PaneEditorInfo.CloseButton(False)
-        self.PaneEditorInfo.MaximizeButton(True)
-        self.PaneEditorInfo.Caption(_("Editor"))
-        self.PaneEditorInfo.Top()
+        self.theme =   self.config.Read('Theme/name')
+        if self.theme == '': self.theme = THEME_DEFAULT
+        
+        
+# ----------------------------------------------------------------------
+# window
+# ----------------------------------------------------------------------
+    def setLanguage(self):
+        loc = locale.getdefaultlocale()[0][0:2]
 
-        # ------------------------------------------------------------------------------
-        # add the panes to the manager
-        # ------------------------------------------------------------------------------
+        # pt_BR Language Check, By Wagner de Queiroz, 2010-Mar,01
+        if loc == "pt":
+            loc = locale.getdefaultlocale()[0][0:5]
+        if loc != "pt_BR":
+            loc = locale.getdefaultlocale()[0][0:2]              
 
-        self._mgr.AddPane(self.logwindow, self.PaneOutputInfo, '')
-        self._mgr.AddPane(self.panel1, wx.CENTER , '')
+        self.lang = gettext.translation('pinguino', LOCALE_DIR, languages=[loc], fallback=True)
+        self._=self.lang.ugettext
+
+        _icon = wx.EmptyIcon()
+        _icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
+        self.SetIcon(_icon)
 
 
-        # tell the manager to 'commit' all the changes just made
-        self._mgr.Update()		
-
-        # ------------------------------------------------------------------------------
-        # Event Management
-        # ------------------------------------------------------------------------------
-
-        self.Bind(wx.EVT_CLOSE, self.OnExit)
-        self.Bind(wx.EVT_SIZE, self.OnResize)	 
-
-        # file menu
-        self.Bind(wx.EVT_MENU, self.OnNew, self.NEW)
-        self.Bind(wx.EVT_MENU, self.OnOpen, self.OPEN)
-        self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE9) 
-        self.Bind(wx.EVT_MENU, self.OnSave, self.SAVE)
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, self.SAVEAS)
-        self.Bind(wx.EVT_MENU, self.OnClose, self.CLOSE)
-        self.Bind(wx.EVT_MENU, self.OnExit, self.EXIT)
-
-        # edit menu
-        self.Bind(wx.EVT_MENU, self.copy, self.COPY)
-        self.Bind(wx.EVT_MENU, self.paste, self.PASTE)
-        self.Bind(wx.EVT_MENU, self.cut, self.CUT)
-        self.Bind(wx.EVT_MENU, self.clear, self.CLEAR)	   
-        self.Bind(wx.EVT_MENU, self.undo, self.UNDO)	   
-        self.Bind(wx.EVT_MENU, self.redo, self.REDO)
-        self.Bind(wx.EVT_MENU, self.OnFind, self.FIND)
-        self.Bind(wx.EVT_MENU, self.OnReplace, self.REPLACE)		
-        self.Bind(wx.EVT_MENU, self.selectall, self.SELECTALL)
-        self.Bind(wx.EVT_MENU, self.comentar, self.COMMENT)
-        #self.Bind(wx.EVT_MENU, self.OnPreferences, self.PREFERENCES)
-
-        # pref menu
-        if DEV:
-            self.Bind(wx.EVT_MENU, self.OnDebug, id=self.ID_DEBUG)
-            self.Bind(wx.EVT_MENU, self.OnCheck, id=self.ID_CHECK)
-            self.Bind(wx.EVT_MENU, self.OnUpgrade, id=self.ID_UPGRADE)
-        for b in range(len(boardlist)):
-            self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
-        self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
-
-        # help menu
-        #self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD1, id2=self.ID_KEYWORD1 + self.keywordNum)# keywords
-        self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD)# keywords
-        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WEBSITE)	# website
-        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_BLOG)		# blog   
-        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_FORUM)	   # forum
-        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_GROUP)	   # group		
-        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_WIKI)		# wiki
-        self.Bind(wx.EVT_TOOL, self.OnWeb, id=self.ID_SHOP)		# shop
-        self.Bind(wx.EVT_MENU, self.OnAbout, id=self.ID_ABOUT)	# about
-
-        # icons bar
-        self.Bind(wx.EVT_TOOL, self.OnVerify, id=self.ID_VERIFY)
-        self.Bind(wx.EVT_TOOL, self.OnClose, id=wx.ID_CLOSE)
-        self.Bind(wx.EVT_TOOL, self.OnNew, id=wx.ID_NEW)
-        self.Bind(wx.EVT_TOOL, self.OnSave, id=wx.ID_SAVE)
-        self.Bind(wx.EVT_TOOL, self.OnOpen, id=wx.ID_OPEN)
-        self.Bind(wx.EVT_TOOL, self.OnUpload, id=self.ID_UPLOAD)
-        self.Bind(wx.EVT_TOOL, self.OnFind, id=wx.ID_FIND)
-        self.Bind(wx.EVT_TOOL, self.OnExit, id=wx.ID_EXIT)
-        self.Bind(wx.EVT_TOOL, self.undo, id=wx.ID_UNDO)
-        self.Bind(wx.EVT_TOOL, self.redo, id=wx.ID_REDO)
-        self.Bind(wx.EVT_TOOL, self.cut, id=wx.ID_CUT)
-        self.Bind(wx.EVT_TOOL, self.copy, id=wx.ID_COPY)
-        self.Bind(wx.EVT_TOOL, self.paste, id=wx.ID_PASTE)
-        self.Bind(wx.EVT_TOOL, self.clear, id=wx.ID_CLEAR)
-        self.Bind(wx.EVT_TOOL, self.selectall, id=wx.ID_SELECTALL)
-
-        # ------------------------------------------------------------------------------
-        # check new release of Pinguino
-        # TODO: how to exclude compilers dir. from other OS ?
-        # ------------------------------------------------------------------------------
-
-        try:
-            sw = SubversionWorkingCopy(HOME_DIR)
-            self.localRev = sw.current_version()
-            self.statusBar1.SetStatusText(number=2, text="Rev. %s" %self.localRev)
-        except:  #No connection
-            self.localRev = "unknown"
-
-        # ------------------------------------------------------------------------------
-        # Title and invite message
-        # ------------------------------------------------------------------------------
-
+        
+        
+# ----------------------------------------------------------------------
+# get OS name and define some OS dependant variable
+# ----------------------------------------------------------------------
+    def setOSvariables(self):
+        if sys.platform == 'darwin':
+            self.osdir = 'macosx'
+            self.debug_port = '/dev/tty.usbmodem1912'
+            self.c8 = 'sdcc'
+            self.u32 = 'ubw32'
+            self.make = 'make'
+        elif sys.platform == 'win32':
+            self.osdir = 'win32'
+            self.debug_port = 15
+            self.c8 = 'sdcc.exe'
+            self.u32 = 'mphidflash.exe'
+            self.make = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'make.exe')
+        else:
+            self.osdir = 'linux'
+            self.debug_port = '/dev/ttyACM0'
+            self.c8 = 'sdcc'
+            self.u32 = 'ubw32'
+            self.make = 'make'       
+        
+        
+# ------------------------------------------------------------------------------
+# Get revision
+# ------------------------------------------------------------------------------ 
+    def getRevision(self):
+        sw = SubversionWorkingCopy(HOME_DIR)
+        wx.PostEvent(self, ResultEventRevision(sw.current_version()))
+        
+        
+# ------------------------------------------------------------------------------
+# Revision
+# ------------------------------------------------------------------------------
+    def setRevision(self, event):
+        self.localRev = event.data
         self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. ' + self.localRev)
-        self.displaymsg(self.translate("Welcome to Pinguino IDE (rev. ") + self.localRev + ")\n", 0)
-
-        # initialize all the lib pdl in /lib folder
-        # self.readlib() allready called by OnBoard
-
-        self.__initEditor__()
-
-        self.initTools()
-        self.openLast()
-
+        self.displaymsg(self.translate("Welcome to Pinguino IDE (rev. ") + self.localRev + ")\n", 1)
+        self.statusBar1.SetStatusText(number=2, text="Rev. %s" %self.localRev)
 
 # ------------------------------------------------------------------------------
 # Update
@@ -687,11 +738,12 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------
 
     def OnExit(self, event):
+        
         try:
             self.pinguino.close()
             fclose(self.debug_handle)
-        except:
-            pass		
+        except: pass
+        
         # ---save settings-----------------------------------------------
         #if not self.IsIconized() and not self.IsMaximized():
         w, h = self.GetSize()
@@ -1572,8 +1624,6 @@ class Pinguino(framePinguinoX, Tools, editor):
         app.SetTopWindow(frame_1)
         frame_1.Show()
         app.MainLoop()
-
-
 
 # ------------------------------------------------------------------------------
 # getOptions

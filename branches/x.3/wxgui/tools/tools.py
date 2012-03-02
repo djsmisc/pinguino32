@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	2012-02-02
-    last release:	2012-02-04
+    last release:	2012-03-02
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -73,7 +73,7 @@ class Tools(treeExamples, autoCompleter):
                       id=self.popupIDhelp1)
             self.Bind(wx.EVT_MENU,
                       lambda x:self.OnKeyword(keyword=word),
-                      id=self.popupIDhelp2)            
+                      id=self.popupIDhelp2)           
 
             help = wx.Menu()
             help.Append(self.popupIDhelp1, self.translate("Open wiki page in the web browser"))
@@ -183,12 +183,14 @@ class Tools(treeExamples, autoCompleter):
 
     #----------------------------------------------------------------------
     def OnKeyword(self, event=None, keyword=None):
+        
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
         frame_1 = functionsHelp(None, self.keywordList, keyword)
         app.SetTopWindow(frame_1)
         frame_1.Show()
         app.MainLoop()
+        self.setNormalCursor()
 
     #----------------------------------------------------------------------
     def comentar(self, event=None):
@@ -212,25 +214,26 @@ class Tools(treeExamples, autoCompleter):
         self.statusBar1.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
 
-
-
     #----------------------------------------------------------------------
     def updateFuntionsChoice(self, new=False):
         sel = self.notebook1.GetSelection()
         if sel >= 0:
-            choice = self.choiceFunctions[self.notebook1.GetSelection()]
-            textEdit = self.stcpage[self.notebook1.GetSelection()]
-
-            funciones = self.readUserFuntions(textEdit.GetText().split("\n"))
-            self.sheetFunctions[self.notebook1.GetSelection()] = funciones
-
-            choice.Clear()
-            choice.Append("(top)")
-            choice.AppendItems(funciones.keys())
-            choice.Append("(end)")
-            if new: choice.SetSelection(0)
-
-
+            try:
+                choice = self.choiceFunctions[self.notebook1.GetSelection()]
+                textEdit = self.stcpage[self.notebook1.GetSelection()]
+    
+                funciones = self.readUserFuntions(textEdit.GetText().split("\n"))
+                self.sheetFunctions[self.notebook1.GetSelection()] = funciones
+    
+                choice.Clear()
+                choice.Append("(top)")
+                choice.AppendItems(funciones.keys())
+                choice.Append("(end)")
+                if new: choice.SetSelection(0)
+                
+            except wx._core.PyDeadObjectError: #The page was deleted
+                pass
+                
     #----------------------------------------------------------------------
     def moveToFuntion(self, event):
         function = event.GetString()

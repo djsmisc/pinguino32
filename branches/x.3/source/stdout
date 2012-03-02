@@ -1,33 +1,28 @@
 #----------------------------------------------------------------------------
 #	clean
 #----------------------------------------------------------------------------
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.o
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf
-« /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf » supprimé
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o
-« /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o » supprimé
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.o
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.elf
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.hex
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o
+«/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o» borrado
 #----------------------------------------------------------------------------
 #	copy
 #----------------------------------------------------------------------------
-cp /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/32MX220F032D.o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o
+cp /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/32MX220F032D.o /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o
 #----------------------------------------------------------------------------
 #	compile and link
 #----------------------------------------------------------------------------
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-gcc -EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=512 -Wl,-Map=/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/output.map -Wl,-L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/ -D __PIC32MX__ -D __32MX220F032D__ -D PIC32_PINGUINO_220 -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_220/procdefs.ld -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_220/elf32pic32mx.x -L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_220 -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/examples/01.Basics/Blink -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free -o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/crt0.S\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libcdc220.a\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libadb.a\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_220/ISRwrapper.S\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free/p32xxxx.h\
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/linux/p32/bin/mips-elf-gcc -EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=512 -Wl,-Map=/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/output.map -Wl,-L/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/ -D __PIC32MX__ -D __32MX220F032D__ -D PIC32_PINGUINO_220 -T/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_220/procdefs.ld -T/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_220/elf32pic32mx.x -L/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/non-free -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/pinguino/core -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/pinguino/libraries -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_220 -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/.temp -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free -o /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.elf /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.c\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/crt0.S\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/usb/libcdc220.a\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/usb/libadb.a\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_220/ISRwrapper.S\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/non-free/p32xxxx.h\
 		-lm -lgcc -lc
-#----------------------------------------------------------------------------
-#	exec
-#----------------------------------------------------------------------------
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-objcopy -O ihex /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex
-#----------------------------------------------------------------------------
-#	correct
-#----------------------------------------------------------------------------
-grep --binary --invert-match '^:040000059D0040001A' /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex > /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/temp.hex
-mv /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/temp.hex /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex      
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/linux/p32/bin/../libexec/gcc/mips-elf/4.5.2/cc1: error while loading shared libraries: libmpc.so.2: wrong ELF class: ELFCLASS64
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/linux/p32/bin/../libexec/gcc/mips-elf/4.5.2/cc1: error while loading shared libraries: libmpc.so.2: wrong ELF class: ELFCLASS64
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/linux/p32/bin/../libexec/gcc/mips-elf/4.5.2/cc1: error while loading shared libraries: libmpc.so.2: wrong ELF class: ELFCLASS64
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/linux/p32/bin/../libexec/gcc/mips-elf/4.5.2/cc1: error while loading shared libraries: libmpc.so.2: wrong ELF class: ELFCLASS64
+make: *** [link] Error 1

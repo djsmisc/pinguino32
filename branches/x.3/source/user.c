@@ -1,14 +1,12 @@
 
 
-void setup() {                
-  
-  pinmode(13, OUTPUT);     
-}
+void setup() {
+	
+	
+	}
 
-void loop()
-{
-	toggle(13);			
-	Delayms(1000);			
-}
+void loop() {
+	
 
+	}
 
