@@ -1,8 +1,10 @@
 /*	---------------------------------------------------------------------------
-	Send commands to your bluetooth module and check what it returns.
-	2011 Regis Blanchot
-	<rblanchot@gmail.com>
+	Send AT commands to your bluetooth module and check what it returns.
+	2011 Regis Blanchot	<rblanchot@gmail.com>
 	http://www.pinguino.cc
+	---------------------------------------------------------------------------
+	tested with Olimex PIC32-PINGUINO & MOD-BT Bluetooth Transciever Module with BGB203
+	output : sudo minicom -o -D /dev/ttyACM0
 	---------------------------------------------------------------------------*/
 
 void Serial2_GetString(char *buffer)
