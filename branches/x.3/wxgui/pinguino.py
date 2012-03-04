@@ -47,17 +47,15 @@ from check import *
 EVT_RESULT_REVISION_ID = wx.NewId()
 
 def EVT_RESULT_REVISION(win, func):
-    """Define Result Event."""
     win.Connect(-1, -1, EVT_RESULT_REVISION_ID, func)
 
 class ResultEventRevision(wx.PyEvent):
-    """Simple event to carry arbitrary result data."""
     def __init__(self, data):
-        """Init Result Event."""
         wx.PyEvent.__init__(self)
         self.SetEventType(EVT_RESULT_REVISION_ID)
         self.data = data
-
+        
+        
 # ------------------------------------------------------------------------------
 # current version
 # ------------------------------------------------------------------------------
@@ -102,6 +100,7 @@ class Pinguino(framePinguinoX, Tools, editor):
     debug_handle=False
     debug_thread=False
     debug_flag=False
+    
 
     noname=0
     keywordList=[]
@@ -162,6 +161,12 @@ class Pinguino(framePinguinoX, Tools, editor):
     def __init__(self, parent):
         self._init_ctrls(parent)
         self.notebook1.Hide()
+        
+        self.debugOutMessage = None
+        self.closing = False
+        self.debugging = False
+        
+        
         if os.path.isdir(TEM_DIR) == False: os.mkdir(TEM_DIR)
         
         self._mgr = wx.aui.AuiManager(self)
@@ -172,7 +177,13 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.buildMenu()
         self.buildOutput()
         self.buildEditor()
-        self.ConnectAll()        
+        self.ConnectAll()
+    
+    
+        #Threads
+        EVT_RESULT_REVISION(self, self.setRevision)
+        
+        
 
 
         # ------------------------------------------------------------------------------
@@ -180,7 +191,6 @@ class Pinguino(framePinguinoX, Tools, editor):
         # TODO: how to exclude compilers dir. from other OS ?
         # ------------------------------------------------------------------------------
 
-        EVT_RESULT_REVISION(self,self.setRevision)
         self.threadRevision = threading.Thread(target=self.getRevision, args=( ))
         self.threadRevision.start()
         
@@ -234,7 +244,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         # add the panes to the manager
         # ------------------------------------------------------------------------------
 
-        self._mgr.AddPane(self.logwindow, self.PaneOutputInfo, '')
+        self._mgr.AddPane(self.panelOutput, self.PaneOutputInfo, '')
         self._mgr.AddPane(self.panel1, wx.CENTER , '')
 
 
@@ -256,7 +266,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.Bind(wx.EVT_MENU, self.OnSaveAs, self.SAVEAS)
         self.Bind(wx.EVT_MENU, self.OnClose, self.CLOSE)
         self.Bind(wx.EVT_MENU, self.OnExit, self.EXIT)
-
+        
         # edit menu
         self.Bind(wx.EVT_MENU, self.copy, self.COPY)
         self.Bind(wx.EVT_MENU, self.paste, self.PASTE)
@@ -278,6 +288,10 @@ class Pinguino(framePinguinoX, Tools, editor):
         for b in range(len(boardlist)):
             self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
         self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
+        self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.USBCDC)
+        self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.NODEBUG)
+
+        
 
         # help menu
         #self.Bind(wx.EVT_TOOL, self.OnKeyword, id=self.ID_KEYWORD1, id2=self.ID_KEYWORD1 + self.keywordNum)# keywords
@@ -312,11 +326,31 @@ class Pinguino(framePinguinoX, Tools, editor):
 # Output
 # ------------------------------------------------------------------------------
     def buildOutput(self):
-        # create a text control
-        self.logwindow = wx.TextCtrl(self, wx.ID_ANY, "", wx.DefaultPosition, self.outputsize,\
-                                     style = wx.NO_BORDER|wx.TE_MULTILINE|wx.TE_READONLY )
+        self.panelOutput = wx.Panel(id=wx.NewId(), name='panel1', parent=self,
+              pos=wx.Point(0, 0), size=wx.Size(449, 169),
+              style=wx.TAB_TRAVERSAL)
+
+        self.logwindow = wx.TextCtrl(id=wx.NewId(), name='textCtrl1',
+              parent=self.panelOutput, pos=wx.Point(0, 0), size=wx.Size(449, 148),
+              style=wx.TE_READONLY | wx.TE_MULTILINE, value=u'')
         self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
         self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255))
+        self.logwindow.SetMinSize((-1, -1))
+
+        self.debuggingLine = wx.TextCtrl(id=wx.NewId(), name='textCtrl2',
+              parent=self.panelOutput, pos=wx.Point(0, 148), size=wx.Size(449, 21),
+              style=0, value=u'>>>')
+        self.debuggingLine.SetBackgroundColour(wx.Colour(0, 0, 0))
+        self.debuggingLine.SetForegroundColour(wx.Colour(255, 255, 255))
+        self.debuggingLine.SetInsertionPoint(125)
+        self.debuggingLine.Hide()        
+        self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
+       
+        self.boxSizer1 = wx.BoxSizer(orient=wx.VERTICAL)
+        self.boxSizer1.AddWindow(self.logwindow, 1, border=0, flag=wx.EXPAND)
+        self.boxSizer1.AddWindow(self.debuggingLine, 0, border=0, flag=wx.EXPAND) 
+        self.panelOutput.SetSizer(self.boxSizer1)
+        
 
         # create a PaneInfo structure for output window
         self.PaneOutputInfo=wx.aui.AuiPaneInfo()
@@ -393,21 +427,24 @@ class Pinguino(framePinguinoX, Tools, editor):
         # ---debug submenu
         if DEV:
             self.debug_menu = wx.Menu()
-            self.NODEBUG = wx.MenuItem(self.debug_menu, self.ID_NODEBUG, _("None"), "", wx.ITEM_CHECK)
+            self.NODEBUG = wx.MenuItem(self.debug_menu, self.ID_NODEBUG, _("None"), "", wx.ITEM_RADIO)
             self.debug_menu.AppendItem(self.NODEBUG)
             #self.NODEBUG.Enable(False)
-            self.USBCDC = wx.MenuItem(self.debug_menu, self.ID_USBCDC, _("USB CDC (Serial Emulation)"), "", wx.ITEM_CHECK)
+            self.USBCDC = wx.MenuItem(self.debug_menu, self.ID_USBCDC, _("USB CDC (Serial Emulation)"), "", wx.ITEM_RADIO)
             self.debug_menu.AppendItem(self.USBCDC)
             #self.USBCDC.Enable(False)
-            self.USBBULK = wx.MenuItem(self.debug_menu, self.ID_USBBULK, _("USB Bulk"), "", wx.ITEM_CHECK)
+            self.USBBULK = wx.MenuItem(self.debug_menu, self.ID_USBBULK, _("USB Bulk"), "", wx.ITEM_RADIO)
             self.debug_menu.AppendItem(self.USBBULK)
             #self.USBBULK.Enable(False)
-            self.USBHID = wx.MenuItem(self.debug_menu, self.ID_USBHID, _("USB HID"), "", wx.ITEM_CHECK)
+            self.USBHID = wx.MenuItem(self.debug_menu, self.ID_USBHID, _("USB HID"), "", wx.ITEM_RADIO)
             self.debug_menu.AppendItem(self.USBHID)
             self.USBHID.Enable(False)
-            self.USBOTG = wx.MenuItem(self.debug_menu, self.ID_USBOTG, _("USB OTG"), "", wx.ITEM_CHECK)
+            self.USBOTG = wx.MenuItem(self.debug_menu, self.ID_USBOTG, _("USB OTG"), "", wx.ITEM_RADIO)
             self.debug_menu.AppendItem(self.USBOTG)
             self.USBOTG.Enable(False)
+
+            
+            
             #
             # TODO:
             # pic8  -> UART
@@ -571,7 +608,9 @@ class Pinguino(framePinguinoX, Tools, editor):
 # Get revision
 # ------------------------------------------------------------------------------ 
     def getRevision(self):
-        sw = SubversionWorkingCopy(HOME_DIR)
+        try:
+            sw = SubversionWorkingCopy(HOME_DIR)
+        except: sw = "unknown"
         wx.PostEvent(self, ResultEventRevision(sw.current_version()))
         
         
@@ -591,7 +630,7 @@ class Pinguino(framePinguinoX, Tools, editor):
     def updateIDE(self):
         self.panel1.Fit()
         self.panel2.Fit()
-        self._mgr.Update()			
+        self._mgr.Update()   
 
 # ------------------------------------------------------------------------------
 # Thread
@@ -738,6 +777,8 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------
 
     def OnExit(self, event):
+    
+        self.closing = True  #Signal for Threads
         
         try:
             self.pinguino.close()
@@ -1253,7 +1294,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 
     def displaymsg(self, message, clearpanel):
         """ display message in the log window """
-        if gui==True:
+        if gui==True and not self.debugging:
             if clearpanel==1:
                 self.logwindow.Clear()
             self.logwindow.WriteText(message)

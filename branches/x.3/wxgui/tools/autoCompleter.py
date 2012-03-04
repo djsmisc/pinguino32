@@ -38,7 +38,7 @@ class autoCompleter:
         if event.GetText() in Snippet:
             self.insertSnippet(event.GetText())
             return 
-        index = self.wordUnderCursor()
+        index = self.wordUnderCursor(True)
         textEdit = self.stcpage[self.notebook1.GetSelection()]
         for i in index: textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, event.GetText())
@@ -96,7 +96,7 @@ class autoCompleter:
         if textEdit.GetCurrentPos() == 0:
             textEdit.AutoCompCancel()
             return   
-        index = self.wordUnderCursor()
+        index = self.wordUnderCursor(True)
         completers = self.keywordList + self.reservedword + Dictionary + Snippet.keys()
         completersFilter = []
         for i in completers:
