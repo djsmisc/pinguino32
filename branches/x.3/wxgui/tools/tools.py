@@ -24,14 +24,15 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx, re, webbrowser
+import wx, re, webbrowser, threading, serial
 from treeExamples import treeExamples
 from autoCompleter import autoCompleter
 from keywords import functionsHelp
-#import locale
+from debugger import Debugger
+
 
 ########################################################################
-class Tools(treeExamples, autoCompleter):
+class Tools(treeExamples, autoCompleter, Debugger):
     #----------------------------------------------------------------------
     def initTools(self):
         self.panel_find.Hide()
@@ -39,9 +40,13 @@ class Tools(treeExamples, autoCompleter):
         self.updateIDE()
         self.__initTree__()
         self.__initCompleter__()
+        self.__initDebugger__()
         self.makeFindText()
         self.makeReplaceText()
         self._init_sizers()
+        
+        
+        
 
         self.splitterWindow1.SetSashPosition(self.config.ReadInt('frame/sashposition', -1))        
 
@@ -65,7 +70,7 @@ class Tools(treeExamples, autoCompleter):
         menu = wx.Menu()
         self._initIDs_(self.stcpage[self.notebook1.GetSelection()])
 
-        word=self.wordUnderCursor(funtion=True)
+        word=self.wordUnderCursor(True)
 
         if word in self.keywordList:
             self.Bind(wx.EVT_MENU,
@@ -99,7 +104,7 @@ class Tools(treeExamples, autoCompleter):
         menu.Destroy()
 
     #----------------------------------------------------------------------
-    def wordUnderCursor(self,funtion=False):
+    def wordUnderCursor(self,function=False):
 
         line,pos=self.stcpage[self.notebook1.GetSelection()].CurLine
 
@@ -110,7 +115,7 @@ class Tools(treeExamples, autoCompleter):
             if pos<l: break
 
         pos=len(word)-l+pos
-        if funtion:
+        if function:
             all=re.findall("(\w*\.*\w*)",word)            
             l=0
             for word in all:
@@ -253,8 +258,8 @@ class Tools(treeExamples, autoCompleter):
             if trouve!=-1:
                 self.highlightline(trouve, "#A9D1FF")
                 self.focus()
-
-#----------------------------------------------------------------------        
+    
+    #----------------------------------------------------------------------        
     def readUserFuntions(self, text):
         funciones = {}   
         tipos="int|float|char|BOOL|short|long|double|"\
