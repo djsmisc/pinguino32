@@ -817,7 +817,7 @@ on-change comparison. The pins are compared with
 the old value latched on the last read of PORTB.
 */
 
-void OnChangePin4to7(callback func, u8 pin)
+void OnChangePin4to7(callback func, u8 pin, u8 config)
 {
 	if (intUsed[INT_RB] == INT_NOT_USED)
 	{

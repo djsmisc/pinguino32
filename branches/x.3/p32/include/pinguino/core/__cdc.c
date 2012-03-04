@@ -3,11 +3,15 @@
 // Based on the Microchip USB stack
 // printf, println, print, write, getKey, getString - Régis Blanchot 2011
 
+// 25 Feb. 2012 added support for 32MX220F032 jp.mandon
+// 03 Mar. 2012 fixed a bug in WINDOWS CDC jp.mandon
+
 #ifndef __USBCDC
 #define __USBCDC
 
 #include <stdarg.h>
 
+#include <typedef.h>
 #include <system.c>
 #include <interrupt.c>
 #include <delay.c>
@@ -152,6 +156,8 @@ void CDC_init()
 	USBDeviceInit();		// Initializes USB module SFRs and firmware
 	#ifndef __32MX220F032D__
 		USBDeviceAttach();
+//	#else
+//		Delayms(1500);
 	#endif
 	Delayms(1500);
 }
@@ -160,21 +166,31 @@ void CDC_init()
 // 18-05-2011 modified by régis blanchot
 void CDCputs(char *buffer, char length)
 {
+	int i;
+
 	//#ifdef __32MX220F032D__
 	//	USB_Service_CDC_PutString( buffer, length );
 	//#else
-		int i;
 
 		for (i = 1000; i > 0; --i)
 		{
 			if (mUSBUSARTIsTxTrfReady())
 				break;
-			CDCTxService();
+			#ifdef __32MX220F032D__	
+				USB_Service();
+			#else
+				CDCTxService();
+			#endif
 		}
 		if (i > 0)
 		{
 			putUSBUSART(buffer,length);
-			CDCTxService();
+			#ifdef __32MX220F032D__	
+				USB_Service();
+			#else
+				CDCTxService();
+			#endif
+
 		}
 	//#endif
 }
@@ -183,7 +199,7 @@ void CDCputs(char *buffer, char length)
 char CDCgets(char *buffer)
 {
 
-		char numBytesRead;
+	char numBytesRead;
 		
 	#ifdef __32MX220F032D__
 		numBytesRead = USB_Service_CDC_GetString( buffer );
@@ -207,21 +223,22 @@ char CDCgets(char *buffer)
 // CDC.write
 void CDCwrite(char c)
 {
-	CDCputs(c, 1);
+//	CDCputs(c, 1);
+	CDCputs(&c, 1);
 }
 
 // CDC.printf
 void CDCprintf(const char *fmt, ...)
 {
 	char buffer[80];
-//char *buffer;
+	//char *buffer;
 	char length;
 	va_list	args;
 
 	va_start(args, fmt);
-//length = strlen(fmt);
-//buffer = (char *) malloc(1 + length * sizeof(char));	
-	length = psprintf(buffer, fmt, args);
+	//length = strlen(fmt);
+	//buffer = (char *) malloc(1 + length * sizeof(char));	
+	length = psprintf2(buffer, fmt, args);
 	CDCputs(buffer,length);
 	va_end(args);
 }
@@ -231,14 +248,17 @@ void CDCprintf(const char *fmt, ...)
 
 void CDCprint(const char *fmt, ...)
 {
-	unsigned char s;
-	va_list args;					// list of arguments
-	va_start(args, fmt);			// initialize the list
-	s = (unsigned char) va_arg(args, int);		// get the first variable arg.
+	char s;
+	va_list args;							// a list of arguments
+	va_start(args, fmt);					// initialize the list
+	s = (char) va_arg(args, int);				// get the first variable arg.
 	
 	//switch (*args)
 	switch (s)
 	{
+		case FLOAT:
+			CDCprintf("%f", (int)fmt);
+			break;
 		case DEC:
 			CDCprintf("%d", (int)fmt);
 			break;
@@ -246,7 +266,8 @@ void CDCprint(const char *fmt, ...)
 			CDCprintf("%x", (int)fmt);
 			break;
 		case BYTE:
-			CDCprintf("%d", (unsigned char)fmt);
+			//CDCprintf("%d", (char)fmt);
+			CDCprintf("%d", (int)fmt);
 			break;
 		case OCT:
 			CDCprintf("%o", (int)fmt);
@@ -262,10 +283,15 @@ void CDCprint(const char *fmt, ...)
 }
 
 //CDC.println
-void CDCprintln(const char *fmt,...)
+void CDCprintln(const char *fmt, ...)
 {
-	CDCprintf(fmt);
+	va_list args;							// a list of arguments
+	va_start(args, fmt);					// initialize the list
+
+	CDCprintf(fmt, args);
 	CDCprintf("\n\r");
+	//CDCprintf(fmt);
+	//CDCprintf("\n\r");
 }
 
 // CDC.getKey
@@ -280,8 +306,7 @@ char CDCgetkey()
 // CDC.getString
 char * CDCgetstring(void)
 {
-	char i = 0;
-	char c;
+	char c, i = 0;
 	static char buffer[80];
 	
 	do {

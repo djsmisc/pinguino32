@@ -42,9 +42,9 @@ void init_zigbee(u8 _channel, u16 pan_id, u16 short_address)
 {
 	mrf24j40_setup_io();
 	mrf24j40_init();
-	mrf24j40_set_pan_id(pan_id);
-	mrf24j40_set_short_address(short_address);
-	mrf24j40_set_channel(_channel);
+	//mrf24j40_set_pan_id(pan_id);
+	//mrf24j40_set_short_address(short_address);
+	//mrf24j40_set_channel(_channel);
 }
 
 // ISR routine for zigbee. todo

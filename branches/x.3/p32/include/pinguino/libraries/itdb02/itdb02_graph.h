@@ -49,11 +49,14 @@
 			 2.6  - Mar  08 2011  - Fixed a bug in printNumF when the number to be printed
 									was (-)0.something
 
+			 2.6.1 -Fev  29 2012  - Added support to OLIMEX Boards.
 */
 
 
 #ifndef ITDB02_Graph_h
 #define ITDB02_Graph_h
+
+#define ITDB02_Graph_VERSION 2.6.1
 
 // #define _NO_BIG_FONT_
 
@@ -65,6 +68,7 @@
 
 // Uncommenting the previous line will enable integration with my tinyFAT library.
 // By enabling this integration you will be able to use loadBitmap().
+
 
 #define LEFT 0
 #define RIGHT 9999
@@ -78,81 +82,106 @@
 
 //Pinguino32X, UBW32, EMPEROR and Minimum boards
 #if defined(UBW32_460) || defined(UBW32_795) || defined(EMPEROR460) || defined(EMPEROR795)
-	#define LCD_DATA_DIR 	TRISD		//Data Direction Register for Data Port
-	#define LCD_DATA_BUS 	PORTD		//Data Bus
 
-	#define LCD_CMD_SET		PORTESET
-	#define LCD_CMD_CLR		PORTECLR
-	#define LCD_SET_OUT		TRISECLR
+#define LCD_DATA_DIR 	TRISD		//Data Direction Register for Data Port
+#define LCD_DATA_BUS 	PORTD		//Data Bus
 
-	//Pins for Emperor Board are: 54 47 45 and 44 (emeperor) (RE0, 4,5 and RE6)
-	//look at digitalw.c for pinmasks and ports
-	//Using inline/defines is a bit more fast and use less RAM and Flash,
-	//then use digitalw.c pinMode/pinmask array
-	#define LCD_RS 			0x1
-	#define LCD_WR 			0x10
-	#define LCD_CS 			0x20
-	#define LCD_REST 		0x40
+#define LCD_CMD_SET		PORTESET
+#define LCD_CMD_CLR		PORTECLR
+#define LCD_SET_OUT		TRISECLR
+
+//Pins for Emperor Board are: 54 47 45 and 44 (emeperor) (RE0, 4,5 and RE6) look on digitalw.c for pinmasks and ports
+//Using inline/defines is a bit more fast and use less RAM and Flash, then use digitalw.c pinMode/pinmask array
+#define LCD_RS 			0x1
+#define LCD_WR 			0x10
+#define LCD_CS 			0x20
+#define LCD_REST 		0x40
+
 #endif
 
-#if defined(PIC32_PINGUINO_OTG) || defined(PIC32_PINGUINO)
-	#define LCD_DATA_DIR 	TRISD		//Data Direction Register for Data Port
-	#define LCD_DATA_BUS 	PORTD		//Data Bus (pin 0 to 7)
+//OLIMEX boards
+#if defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
 
-	#define LCD_CMD_SET		PORTGSET	// Pin 10 to 13 belongs to the G Port
-	#define LCD_CMD_CLR		PORTGCLR
-	#define LCD_SET_OUT		TRISGCLR
+#define LCD_DATA_DIR 	TRISD		//Data Direction Register for Data Port
+#define LCD_DATA_BUS 	PORTD		//Data Bus
+#define LCD_CMD_SET		PORTDSET
+#define LCD_CMD_CLR		PORTDCLR
 
-	#define LCD_RS 			0x200		// D10 - Register Selection, data when high, command when low
-	#define LCD_WR 			0x100		// D11 - Write
-	#define LCD_CS 			0x80		// D12 - Chip Selection
-	#define LCD_REST 			0x40		// D13 - Reset
+//Using inline/defines is a bit more fast and use less RAM and Flash, then use digitalw.c pinMode/pinmask array
+#define LCD_RS 			PORTDbits.RD10	//pin 19
+#define LCD_WR 			PORTDbits.RD9	//pin 18
+#define LCD_CS 			PORTBbits.RB4	//pin 17
+#define LCD_REST 		PORTBbits.RB3	//pin 16
+
+#define dLCD_RS 		TRISDbits.TRISD10	//pin 19
+#define dLCD_WR 		TRISDbits.TRISD9	//pin 18
+#define dLCD_CS 		TRISBbits.TRISB4	//pin 17
+#define dLCD_REST 		TRISBbits.TRISB3	//pin 16
+//#define dD2JUMP			TRISBbits.TRISB11	//pin 20 / A6
+
 #endif
+
+//OLIMEX BOARDS (Arduino Like Boards, using SHIELDs)
+#if defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
+
+//Many ports for use fastmode
+#define fastWriteHigh(_pin_) (_pin_ = HIGH)
+#define fastWriteLow(_pin_) (_pin_= LOW)
+#define fastSetOutputMode(_pin_) (_pin_ = OUTPUT)
+
+#else
 
 //Very fast digitalWrite/pinmode, similar to cbi/sbi functions, but more fast
-#define TFT24_fastWriteHigh(_pin_) (LCD_CMD_SET = _pin_)
-#define TFT24_fastWriteLow(_pin_) (LCD_CMD_CLR = _pin_)
-#define TFT24_setMode(_pin_) (LCD_SET_OUT = _pin_)
+#define fastWriteHigh(_pin_) (LCD_CMD_SET = _pin_)
+#define fastWriteLow(_pin_) (LCD_CMD_CLR = _pin_)
+#define fastSetOutputMode(_pin_) (LCD_SET_OUT = _pin_)
+
+#endif
+
+//Fast delay, new compiler is faster and we need it
+#define fastDelay(){ \
+     asm("nop"); \
+}
 
 #ifdef _ENABLE_tinyFAT_INTEGRATION_
 	#include "tinyFAT.h"
 #endif
 
-void TFT24_InitLCD(char orientation);
-void TFT24_clrScr();
-void TFT24_drawPixel(int x, int y);
-void TFT24_drawLine(int x1, int y1, int x2, int y2);
-void TFT24_fillScr(char r, char g, char b);
-void TFT24_drawRect(int x1, int y1, int x2, int y2);
-void TFT24_drawRoundRect(int x1, int y1, int x2, int y2);
-void TFT24_fillRect(int x1, int y1, int x2, int y2);
-void TFT24_fillRoundRect(int x1, int y1, int x2, int y2);
-void TFT24_drawCircle(int x, int y, int radius);
-void TFT24_fillCircle(int x, int y, int radius);
-void TFT24_setColor(unsigned char r, unsigned char g, unsigned char b);
-void TFT24_setBackColor(unsigned char r, unsigned char g, unsigned char b);
-void TFT24_print(char *st, int x, int y, int deg);
-void TFT24_printNumI(long num, int x, int y);
-void TFT24_printNumF(double num, char dec, int x, int y);
-void TFT24_fontSize(char size);
-void TFT24_drawBitmap(int x, int y, int sx, int sy, unsigned int* data, int scale);
-void TFT24_drawBitmapR(int x, int y, int sx, int sy, unsigned int* data, int deg, int rox, int roy);
+	void InitLCD(char orientation);
+	void clrScr();
+	void drawPixel(int x, int y);
+	void drawLine(int x1, int y1, int x2, int y2);
+	void fillScr(char r, char g, char b);
+	void drawRect(int x1, int y1, int x2, int y2);
+	void drawRoundRect(int x1, int y1, int x2, int y2);
+	void fillRect(int x1, int y1, int x2, int y2);
+	void fillRoundRect(int x1, int y1, int x2, int y2);
+	void drawCircle(int x, int y, int radius);
+	void fillCircle(int x, int y, int radius);
+	void setColor(unsigned char r, unsigned char g, unsigned char b);
+	void setBackColor(unsigned char r, unsigned char g, unsigned char b);
+	void myGLCD_print(char *st, int x, int y, int deg);
+	void printNumI(long num, int x, int y);
+	void printNumF(double num, char dec, int x, int y);
+	void fontSize(char size);
+    void drawBitmap(int x, int y, int sx, int sy, unsigned int* data, int scale);
+    void drawBitmapR(int x, int y, int sx, int sy, unsigned int* data, int deg, int rox, int roy);
 #ifdef _ENABLE_tinyFAT_INTEGRATION_
-unsigned int TFT24_loadBitmap(int x, int y, int sx, int sy, char *filename);
+	unsigned int loadBitmap(int x, int y, int sx, int sy, char *filename);
 #endif
 //private
-unsigned char fcolorr,fcolorg,fcolorb;
-unsigned char bcolorr,bcolorg,bcolorb;
-unsigned char orient;
-unsigned char fsize;
-void TFT24_Write_Bus(int VH,int VL);
-void TFT24_Write_COM(int VH,int VL);
-void TFT24_Write_DATA(int VH,int VL);
-void TFT24_setPixel(int r,int g,int b);
-void TFT24_drawHLine(int x, int y, int l);
-void TFT24_drawVLine(int x, int y, int l);
-void TFT24_printChar(char c, int x, int y);
-void TFT24_setXY(int x1, int y1, int x2, int y2);
-void TFT24_rotateChar(char c, int x, int y, int pos, int deg);
+	unsigned char fcolorr,fcolorg,fcolorb;
+	unsigned char bcolorr,bcolorg,bcolorb;
+	unsigned char orient;
+	unsigned char fsize;
+	void LCD_Writ_Bus(int VH,int VL);
+	void LCD_Write_COM(int VH,int VL);
+	void LCD_Write_DATA(int VH,int VL);
+	void setPixel(int r,int g,int b);
+	void drawHLine(int x, int y, int l);
+	void drawVLine(int x, int y, int l);
+	void printChar(char c, int x, int y);
+	void setXY(int x1, int y1, int x2, int y2);
+    void rotateChar(char c, int x, int y, int pos, int deg);
     
 #endif
