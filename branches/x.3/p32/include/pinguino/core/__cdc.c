@@ -147,7 +147,7 @@ void USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event_usb)
 	}
 }
 
-#endif
+#endif /* not __32MX220F032D__ */
 
 // this function is called by the main32.c file
 // CDC.init
@@ -164,42 +164,34 @@ void CDC_init()
 
 // CDC.puts
 // 18-05-2011 modified by régis blanchot
-void CDCputs(char *buffer, char length)
+void CDCputs(u8 *buffer, u8 length)
 {
-	int i;
-
-	//#ifdef __32MX220F032D__
-	//	USB_Service_CDC_PutString( buffer, length );
-	//#else
-
-		for (i = 1000; i > 0; --i)
-		{
-			if (mUSBUSARTIsTxTrfReady())
-				break;
-			#ifdef __32MX220F032D__	
-				USB_Service();
-			#else
-				CDCTxService();
-			#endif
-		}
-		if (i > 0)
-		{
-			putUSBUSART(buffer,length);
-			#ifdef __32MX220F032D__	
-				USB_Service();
-			#else
-				CDCTxService();
-			#endif
-
-		}
-	//#endif
+	u16 i;
+	for (i = 1000; i > 0; --i)
+	{
+		if (mUSBUSARTIsTxTrfReady())
+			break;
+		#ifdef __32MX220F032D__	
+			USB_Service();
+		#else
+			CDCTxService();
+		#endif
+	}
+	if (i > 0)
+	{
+		putUSBUSART(buffer,length);
+		#ifdef __32MX220F032D__	
+			USB_Service();
+		#else
+			CDCTxService();
+		#endif
+	}
 }
 	
 // CDC.read
-char CDCgets(char *buffer)
+u8 CDCgets(u8 *buffer)
 {
-
-	char numBytesRead;
+	u8 numBytesRead;
 		
 	#ifdef __32MX220F032D__
 		numBytesRead = USB_Service_CDC_GetString( buffer );
@@ -219,20 +211,21 @@ char CDCgets(char *buffer)
 }
 
 // added by regis blanchot 29/05/2011
+// ---------------------------------------------------------------------
 
 // CDC.write
-void CDCwrite(char c)
+void CDCwrite(u8 c)
 {
 //	CDCputs(c, 1);
 	CDCputs(&c, 1);
 }
 
 // CDC.printf
-void CDCprintf(const char *fmt, ...)
+void CDCprintf(const u8 *fmt, ...)
 {
-	char buffer[80];
+	u8 buffer[80];
 	//char *buffer;
-	char length;
+	u8 length;
 	va_list	args;
 
 	va_start(args, fmt);
@@ -246,34 +239,34 @@ void CDCprintf(const char *fmt, ...)
 // CDC.print
 // last is a string (char *) or an integer
 
-void CDCprint(const char *fmt, ...)
+void CDCprint(const u8 *fmt, ...)
 {
-	char s;
+	u8 s;
 	va_list args;							// a list of arguments
 	va_start(args, fmt);					// initialize the list
-	s = (char) va_arg(args, int);				// get the first variable arg.
+	s = (u8) va_arg(args, u32);				// get the first variable arg.
 	
 	//switch (*args)
 	switch (s)
 	{
 		case FLOAT:
-			CDCprintf("%f", (int)fmt);
+			CDCprintf("%f", (u32)fmt);
 			break;
 		case DEC:
-			CDCprintf("%d", (int)fmt);
+			CDCprintf("%d", (u32)fmt);
 			break;
 		case HEX:
-			CDCprintf("%x", (int)fmt);
+			CDCprintf("%x", (u32)fmt);
 			break;
 		case BYTE:
-			//CDCprintf("%d", (char)fmt);
-			CDCprintf("%d", (int)fmt);
+			//CDCprintf("%d", (u8)fmt);
+			CDCprintf("%d", (u32)fmt);
 			break;
 		case OCT:
-			CDCprintf("%o", (int)fmt);
+			CDCprintf("%o", (u32)fmt);
 			break;
 		case BIN:
-			CDCprintf("%b", (int)fmt);
+			CDCprintf("%b", (u32)fmt);
 			break;           
 		default:
 			CDCprintf(fmt);
@@ -282,8 +275,8 @@ void CDCprint(const char *fmt, ...)
 	va_end(args);
 }
 
-//CDC.println
-void CDCprintln(const char *fmt, ...)
+// CDC.println
+void CDCprintln(const u8 *fmt, ...)
 {
 	va_list args;							// a list of arguments
 	va_start(args, fmt);					// initialize the list
@@ -297,7 +290,7 @@ void CDCprintln(const char *fmt, ...)
 // CDC.getKey
 char CDCgetkey()
 {
-	char buffer[64];		// always get a full packet
+	u8 buffer[64];		// always get a full packet
 
 	while (!CDCgets(buffer));
 	return (buffer[0]);	// return only the first character
@@ -306,8 +299,8 @@ char CDCgetkey()
 // CDC.getString
 char * CDCgetstring(void)
 {
-	char c, i = 0;
-	static char buffer[80];
+	u8 c, i = 0;
+	static u8 buffer[80];
 	
 	do {
 		c = CDCgetkey();
