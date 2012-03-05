@@ -73,8 +73,13 @@ int main()
 	while (1)
 	{
 		#ifdef __USBCDC
-		CDCTxService();
-		#endif    
+			#ifdef __32MX220F032D__
+				USB_Service( );
+			#else
+				CDCTxService();
+			#endif
+		#endif
+ 
 		loop();
 	}
 

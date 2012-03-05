@@ -65,7 +65,7 @@ char * BT_getBuffer(u8 uart_port)
 	
 	do {
 		c = SerialRead(uart_port);
-		//CDCprintf("%c", c);
+		CDCprintf("%c", c);
 		//if ((c != '\r') && (c != '\n') && (c != 255))
 			buffer[i++] = c;
 		Delayms(10);

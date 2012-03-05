@@ -7,6 +7,8 @@
 	output : sudo minicom -o -D /dev/ttyACM0
 	---------------------------------------------------------------------------*/
 
+BLUETOOTH res;
+
 void Serial2_GetString(char *buffer)
 {
 	u8 i = 0;
@@ -40,8 +42,17 @@ void CDC_GetCmd(char *buffer)
 
 void setup()
 {
-	delay(2000);
-	Serial2.begin(115200);	// UART baud rate = 115200
+	// wait for a key to start
+	CDC.printf("Press <RETURN> to start\r\n");
+	while (CDC.getKey() != '\r');
+
+	// init BT module connected on UART port 2 at 115200 bauds
+	do {
+		res = BT.init(UART2, 115200);
+		CDC.printf("%s\r\n", res.status);
+	} while (res.code != BT_OK);
+
+	// title
 	CDC.printf("------------------\r\n");
 	CDC.printf("Bluetooth Terminal\r\n");
 	CDC.printf("------------------\r\n");
@@ -50,12 +61,10 @@ void setup()
 void loop()
 {
 	char cmd[20];
-	char res[20];
 
 	CDC_GetCmd(cmd);
 	CDC.printf("Command = [%s]\r\n", cmd);
-	Serial2.printf("%s", cmd);
-	//delay(500);
-	Serial2_GetString(res);
-	CDC.printf("received [%s]\r\n", res);
+	BT.sendCommand(UART2, "%s\r", cmd);
+	res = BT.getResponse(UART2);
+	CDC.printf("received [%s]\r\n", res.status);
 }
