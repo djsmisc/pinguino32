@@ -1,27 +1,30 @@
 gplink-0.13.7 beta
-Map File - Created 2-26-2012  21:10:10
+Map File - Created 3-10-2012  21:34:54
  
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
-S_boot_iface__boot_goto_table       code   0x00001c    program   0x00005e
-S_application_iface__application_data       code   0x002000    program   0x00001a
-                    .code       code   0x00201a    program   0x00031c
-S_crt0ipinguino___do_cinit       code   0x002336    program   0x000098
-S_crt0ipinguino___startup       code   0x0023ce    program   0x000018
-    S_main__pinguino_main       code   0x0023e6    program   0x000014
-                   .cinit       code   0x0023fa    program   0x00000e
-S_crt0ipinguino__application_main       code   0x002408    program   0x000004
-S_usb_descriptors__null_function       code   0x00240c    program   0x000002
-                 .idata_i       code   0x00240e    program   0x000002
-             S_main__loop       code   0x002410    program   0x000002
-            S_main__setup       code   0x002412    program   0x000002
-     S_main__epapout_init       code   0x002414    program   0x000002
-      S_main__epapin_init       code   0x002416    program   0x000002
-         S_main__epap_out       code   0x002418    program   0x000002
-          S_main__epap_in       code   0x00241a    program   0x000002
+          S_main__pinmode       code   0x002000    program   0x0001f6
+     S_main__digitalwrite       code   0x0021f6    program   0x0001f6
+      S_main__digitalread       code   0x0023ec    program   0x000168
+          S_main__Delayms       code   0x002554    program   0x00009c
+S_crt0ipinguino___do_cinit       code   0x0025f0    program   0x000098
+                    .code       code   0x002688    program   0x000094
+           S_main__toggle       code   0x00271c    program   0x000058
+          S_main__Delayus       code   0x002774    program   0x000052
+             S_main__loop       code   0x0027c6    program   0x000020
+S_crt0ipinguino___startup       code   0x0027e6    program   0x000018
+    S_main__pinguino_main       code   0x0027fe    program   0x000014
+            S_main__setup       code   0x002812    program   0x000014
+                   .cinit       code   0x002826    program   0x00000e
+S_crt0ipinguino__application_main       code   0x002834    program   0x000004
+                 .idata_i       code   0x002838    program   0x000002
+     S_main__epapout_init       code   0x00283a    program   0x000002
+      S_main__epapin_init       code   0x00283c    program   0x000002
+         S_main__epap_out       code   0x00283e    program   0x000002
+          S_main__epap_in       code   0x002840    program   0x000002
                    .idata      idata   0x000200       data   0x000001
-      ustat_boot_iface_00      udata   0x00005d       data   0x000003
+               .registers      udata   00000000       data   0x000009
             stack_section      udata   0x000100       data   0x000100
       ustat_pic18f2550_00      udata   0x000f62       data   0x000023
       ustat_pic18f2550_01      udata   0x000f89       data   0x000005
@@ -36,108 +39,121 @@ S_usb_descriptors__null_function       code   0x00240c    program   0x000002
                               Program Memory Usage
                                Start         End
                            ---------   ---------
-                            0x002000    0x002019
-                            0x00240c    0x00240d
-                            0x00201a    0x002335
-                            0x00240e    0x00240f
-                            0x002336    0x0023cd
-                            0x0023ce    0x0023e5
-                            0x002408    0x00240b
-                            0x0023e6    0x0023f9
-                            0x002410    0x002411
-                            0x002412    0x002413
-                            0x002414    0x002415
-                            0x002416    0x002417
-                            0x002418    0x002419
-                            0x00241a    0x00241b
-                            0x00001c    0x000079
-                            0x0023fa    0x002407
+                            0x002838    0x002839
+                            0x0025f0    0x002687
+                            0x0027e6    0x0027fd
+                            0x002834    0x002837
+                            0x0027fe    0x002811
+                            0x0027c6    0x0027e5
+                            0x002812    0x002825
+                            0x00283a    0x00283b
+                            0x00283c    0x00283d
+                            0x00283e    0x00283f
+                            0x002840    0x002841
+                            0x00271c    0x002773
+                            0x002000    0x0021f5
+                            0x0023ec    0x002553
+                            0x0021f6    0x0023eb
+                            0x002774    0x0027c5
+                            0x002554    0x0025ef
+                            0x002688    0x00271b
+                            0x002826    0x002833
  
-                            573 program addresses used
+                            1057 program addresses used
  
                               Symbols
                      Name    Address   Location    Storage File
                 ---------  ---------  ---------  --------- ---------
-        _application_data   0x002000    program     extern application_iface.asm
-           _null_function   0x00240c    program     extern usb_descriptors.asm
-       _device_descriptor   0x00201a    program     extern usb_descriptors.asm
-             _default_cfg   0x00202c    program     extern usb_descriptors.asm
-               _flash_cfg   0x00203e    program     extern usb_descriptors.asm
-         _application_cfg   0x00205e    program     extern usb_descriptors.asm
-_configuration_descriptor   0x00207e    program     extern usb_descriptors.asm
-                    _str0   0x002088    program     extern usb_descriptors.asm
-                    _str1   0x00208c    program     extern usb_descriptors.asm
-                    _str2   0x0020b2    program     extern usb_descriptors.asm
-                    _str3   0x0020d4    program     extern usb_descriptors.asm
-                    _str4   0x0020d8    program     extern usb_descriptors.asm
-                    _str5   0x0020e8    program     extern usb_descriptors.asm
-                    _str6   0x0020f4    program     extern usb_descriptors.asm
-       _string_descriptor   0x002110    program     extern usb_descriptors.asm
-            _ep_init_cfg0   0x002126    program     static usb_descriptors.asm
-            _ep_init_cfg1   0x002156    program     static usb_descriptors.asm
-            _ep_init_cfg2   0x002186    program     static usb_descriptors.asm
-                 _ep_init   0x0021b6    program     extern usb_descriptors.asm
-              _ep_in_cfg0   0x0021c2    program     static usb_descriptors.asm
-              _ep_in_cfg1   0x0021f2    program     static usb_descriptors.asm
-              _ep_in_cfg2   0x002222    program     static usb_descriptors.asm
-                   _ep_in   0x002252    program     extern usb_descriptors.asm
-             _ep_out_cfg0   0x00225e    program     static usb_descriptors.asm
-             _ep_out_cfg1   0x00228e    program     static usb_descriptors.asm
-             _ep_out_cfg2   0x0022be    program     static usb_descriptors.asm
-                  _ep_out   0x0022ee    program     extern usb_descriptors.asm
-           _ep_setup_cfg0   0x0022fa    program     static usb_descriptors.asm
-                _ep_setup   0x00232a    program     extern usb_descriptors.asm
                 ___uflags   0x000200       data     extern obj/Debug/crt0ipinguino.asm
-               __do_cinit   0x002336    program     extern obj/Debug/crt0ipinguino.asm
-                     test   0x002350    program     static obj/Debug/crt0ipinguino.asm
-                    cont1   0x002356    program     static obj/Debug/crt0ipinguino.asm
-                copy_loop   0x0023a4    program     static obj/Debug/crt0ipinguino.asm
-            copy_one_byte   0x0023aa    program     static obj/Debug/crt0ipinguino.asm
-             done_copying   0x0023b8    program     static obj/Debug/crt0ipinguino.asm
-                     done   0x0023cc    program     static obj/Debug/crt0ipinguino.asm
-                __startup   0x0023ce    program     extern obj/Debug/crt0ipinguino.asm
-                   lockup   0x0023e4    program     static obj/Debug/crt0ipinguino.asm
-        _application_main   0x002408    program     extern obj/Debug/crt0ipinguino.asm
-       _high_priority_isr   0x002020    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-        _low_priority_isr   0x004000    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-           _pinguino_main   0x0023e6    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-               _00136_DS_   0x0023f2    program     static /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-                    _loop   0x002410    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-                   _setup   0x002412    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-            _epapout_init   0x002414    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-             _epapin_init   0x002416    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-                _epap_out   0x002418    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
-                 _epap_in   0x00241a    program     extern /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main.asm
+               __do_cinit   0x0025f0    program     extern obj/Debug/crt0ipinguino.asm
+                     test   0x00260a    program     static obj/Debug/crt0ipinguino.asm
+                    cont1   0x002610    program     static obj/Debug/crt0ipinguino.asm
+                copy_loop   0x00265e    program     static obj/Debug/crt0ipinguino.asm
+            copy_one_byte   0x002664    program     static obj/Debug/crt0ipinguino.asm
+             done_copying   0x002672    program     static obj/Debug/crt0ipinguino.asm
+                     done   0x002686    program     static obj/Debug/crt0ipinguino.asm
+                __startup   0x0027e6    program     extern obj/Debug/crt0ipinguino.asm
+                   lockup   0x0027fc    program     static obj/Debug/crt0ipinguino.asm
+        _application_main   0x002834    program     extern obj/Debug/crt0ipinguino.asm
+                    r0x00   00000000       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x01   0x000001       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x02   0x000002       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x03   0x000003       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x04   0x000004       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x05   0x000005       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x06   0x000006       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x07   0x000007       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    r0x08   0x000008       data     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+       _high_priority_isr   0x002020    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+        _low_priority_isr   0x004000    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+           _pinguino_main   0x0027fe    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00244_DS_   0x00280a    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    _loop   0x0027c6    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                   _setup   0x002812    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+            _epapout_init   0x00283a    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+             _epapin_init   0x00283c    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                _epap_out   0x00283e    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                 _epap_in   0x002840    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                  _toggle   0x00271c    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                 _pinmode   0x002000    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00203_DS_   0x0020a2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00183_DS_   0x0020ae    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00185_DS_   0x0020e2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00187_DS_   0x002112    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00189_DS_   0x002146    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00191_DS_   0x002176    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00193_DS_   0x0021aa    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00196_DS_   0x0021d4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+             _digitalread   0x0023ec    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00178_DS_   0x00247a    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00158_DS_   0x002486    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00160_DS_   0x0024bc    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00162_DS_   0x0024c2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00164_DS_   0x0024f8    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00166_DS_   0x0024fe    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00168_DS_   0x002530    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00170_DS_   0x002536    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00171_DS_   0x00253a    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+            _digitalwrite   0x0021f6    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00153_DS_   0x002298    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00133_DS_   0x0022a4    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00135_DS_   0x0022d8    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00137_DS_   0x002308    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00139_DS_   0x00233c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00141_DS_   0x00236c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00143_DS_   0x0023a0    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00146_DS_   0x0023ca    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                 _Delayus   0x002774    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00119_DS_   0x00279c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00128_DS_   0x0027a6    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00123_DS_   0x0027b0    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                 _Delayms   0x002554    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00105_DS_   0x00259c    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00114_DS_   0x0025b2    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+               _00109_DS_   0x0025ca    program     static /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    _mask   0x002688    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+                    _port   0x00269a    program     extern /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main.asm
+             _delay10ktcy   0x0026ac    program     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10ktcy.S
+            _.code_000014   0x0026c0    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10ktcy.S
+           @delay10k_loop   0x0026c2    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10ktcy.S
+            _.code_000024   0x0026d0    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10ktcy.S
+            _.code_000026   0x0026d2    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10ktcy.S
+            @delay10k_end   0x0026dc    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10ktcy.S
+              _delay1ktcy   0x0026de    program     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay1ktcy.S
+            _.code_00000e   0x0026ec    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay1ktcy.S
+            @delay1k_loop   0x0026ee    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay1ktcy.S
+            _.code_000018   0x0026f6    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay1ktcy.S
+            _.code_00001a   0x0026f8    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay1ktcy.S
+             @delay1k_end   0x002702    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay1ktcy.S
+              _delay10tcy   0x002704    program     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
+            _.code_000008   0x00270c    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
+            @delay10_loop   0x00270e    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
+            _.code_00000a   0x00270e    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
+            _.code_00000c   0x002710    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
+            _.code_00000e   0x002712    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
+             @delay10_end   0x00271a    program     static /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libc/delay/delay10tcy.S
                    _stack   0x000100       data     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libsdcc/stack/stack.S
                _stack_end   0x0001ff       data     extern /home/sdcc-builder/build/sdcc-build/orig/sdcc/device/lib/pic16/libsdcc/stack/stack.S
-  _usb_active_alt_setting   0x00005d       data     extern boot_iface.asm
-          _usb_active_cfg   0x00005e       data     extern boot_iface.asm
-        _usb_device_state   0x00005f       data     extern boot_iface.asm
-         _boot_goto_table   0x00001c    program     extern boot_iface.asm
-            _boot_version   0x00001c    program     extern boot_iface.asm
-      _dispatch_usb_event   0x00001e    program     extern boot_iface.asm
-               _reset_usb   0x000022    program     extern boot_iface.asm
-               _usb_sleep   0x000026    program     extern boot_iface.asm
-          _fill_in_buffer   0x00002a    program     extern boot_iface.asm
-                _ep0_init   0x00002e    program     extern boot_iface.asm
-                  _ep0_in   0x000032    program     extern boot_iface.asm
-               _ep0_setup   0x000036    program     extern boot_iface.asm
-                _ep1_init   0x00003a    program     extern boot_iface.asm
-                 _ep1_out   0x00003e    program     extern boot_iface.asm
-                _ep2_init   0x000042    program     extern boot_iface.asm
-                  _ep2_in   0x000046    program     extern boot_iface.asm
-                __mullong   0x00004a    program     extern boot_iface.asm
-                 __mulint   0x00004e    program     extern boot_iface.asm
-               __gptrget1   0x000052    program     extern boot_iface.asm
-               __gptrget2   0x000056    program     extern boot_iface.asm
-               __gptrget3   0x00005a    program     extern boot_iface.asm
-               __gptrget4   0x00005e    program     extern boot_iface.asm
-               __gptrput1   0x000062    program     extern boot_iface.asm
-               __gptrput2   0x000066    program     extern boot_iface.asm
-               __gptrput3   0x00006a    program     extern boot_iface.asm
-             _delay10ktcy   0x00006e    program     extern boot_iface.asm
-              _delay1ktcy   0x000072    program     extern boot_iface.asm
-              _delay10tcy   0x000076    program     extern boot_iface.asm
                  _SPPDATA   0x000f62       data     extern libdev18f2550_a-pic18f2550.asm
              _SPPDATAbits   0x000f62       data     extern libdev18f2550_a-pic18f2550.asm
                   _SPPCFG   0x000f63       data     extern libdev18f2550_a-pic18f2550.asm
@@ -366,5 +382,5 @@ _configuration_descriptor   0x00207e    program     extern usb_descriptors.asm
                     _TOSH   0x000ffe       data     extern libdev18f2550_a-pic18f2550.asm
                     _TOSU   0x000fff       data     extern libdev18f2550_a-pic18f2550.asm
                 _TOSUbits   0x000fff       data     extern libdev18f2550_a-pic18f2550.asm
-                   _cinit   0x0023fa    program     extern  
+                   _cinit   0x002826    program     extern  
  

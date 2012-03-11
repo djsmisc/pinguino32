@@ -873,7 +873,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         del self.keywordList[:]
         del self.reservedword[:]
         del self.libinstructions[:]
-        self.readlib(self.curBoard)
+        self.getKeywordList(self.curBoard)
 
         self.statusBar1.SetStatusText(number=3, text=self.curBoard.name)
 
@@ -1211,30 +1211,30 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.toolbar.Realize()		 
 
 # ------------------------------------------------------------------------------
-# readlib:
+# getKeywordList:
 # ------------------------------------------------------------------------------
 
-    def readlib(self, board):
+    def getKeywordList(self, board):
         # trying to find PDL files to store reserved words
         self.keywordList = []
         if board.arch == 8:
-            libext='.pdl'
-            libdir=P8_DIR
+            keywordExt='.pdl'
+            keywordDir=P8_DIR
         else:
-            libext='.pdl32'		
-            libdir=P32_DIR
-        for fichier in os.listdir(os.path.join(libdir, 'lib')):
+            keywordExt='.pdl32'		
+            keywordDir=P32_DIR
+        for fichier in os.listdir(os.path.join(keywordDir, 'pdl')):
             filename,extension=os.path.splitext(fichier)
-            if extension==libext:
+            if extension==keywordExt:
                 # check content of the PDL file
-                libfile=open(os.path.join(libdir, 'lib', fichier),'r')
-                for line in libfile:
+                keywordFile=open(os.path.join(keywordDir, 'pdl', fichier),'r')
+                for line in keywordFile:
                     if line!="\n":
-                        # arduino's instruction
-                        instruction=line[0:line.find(" ")]
-                        self.keywordList.append(instruction)
-                        # library's instruction
-                        cnvinstruction=line[line.find(" ")+1:line.find("#")]
+                        # arduino's C++ instruction
+                        A_instruction=line[0:line.find(" ")]
+                        self.keywordList.append(A_instruction)
+                        # pinguino's C instruction
+                        P_instruction=line[line.find(" ")+1:line.find("#")]
                         # find #include & #define
                         #include=line[line.find("#")+1:len(line)]
                         include=""
@@ -1245,14 +1245,14 @@ class Pinguino(framePinguinoX, Tools, editor):
                         if len(explode)==3:
                             define=explode[2]
                         # append to the list	
-                        self.libinstructions.append([instruction,cnvinstruction,include,define])
+                        self.libinstructions.append([A_instruction,P_instruction,include,define])
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction))+"[ ]*\(")
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+r"([' ']|['=']|['}']|[',']|[';']|[\t]|[')'].*)")
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+".*")
                         #regex = re.compile(r'\W%s\W' % re.escape(str(instruction)))
-                        regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])%s\W" % re.escape(str(instruction)))
+                        regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])%s\W" % re.escape(str(A_instruction)))
                         self.regobject.append(regex)
-                libfile.close()
+                keywordFile.close()
         # clean up the keyword list
         self.keywordList.sort()
         self.keywordList = self.ClearRedundancy(self.keywordList)
@@ -1551,17 +1551,21 @@ class Pinguino(framePinguinoX, Tools, editor):
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
             if board.arch == 8:
                 if board.bldr == 'vasco':
+                    #              '-llibpuf.lib',\
+                    #              os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
+                    #              os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                                  "-mpic16",\
                                   "--denable-peeps",\
                                   "--obanksel=9",\
                                   "--opt-code-size",\
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
-                                  "-mpic16",\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ',-m',\
                                   "-p" + board.proc,\
+                                  "-D" + board.board,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
@@ -1572,9 +1576,6 @@ class Pinguino(framePinguinoX, Tools, editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
-                                  '-llibpuf.lib',\
-                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
                                   os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
@@ -1589,8 +1590,9 @@ class Pinguino(framePinguinoX, Tools, editor):
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ',-m',\
                                   "-p" + board.proc,\
+                                  "-D" + board.board,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\

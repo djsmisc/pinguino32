@@ -59,7 +59,7 @@ u8 isalpha(u8 c)
 	return 0;
 }
 
-/* Not sure which characters are actually control characters in Cybikoland */
+/* Not sure which characters are actually control characters */
 u8 iscntrl(u8 c)
 {
 	if ((c >= 0) && (c <= 31))

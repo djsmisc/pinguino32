@@ -24,16 +24,17 @@
 #ifndef __BLUETOOTH_C
 #define __BLUETOOTH_C
 
+#include <stdlib.h>				// malloc, ...
 #include <stdarg.h>				// variable args
-#include <string.h>				// strlen
+#include <string.h>				// strlen, ...
 #include <typedef.h>			// u8, u32, ... definitions
 #include <digitalw.c>			// toggle
 #include <serial.c>				// Serial functions
 #include <delay.c>				// DelayMs
 #include <itoa.c>				// ultoa()
-//#include <__cdc.c>
+#include <__cdc.c>
 
-#define BT_DELAY		50		// Delay (ms) before sending a new command to the BT module
+#define BT_DELAY		10		// Delay (ms) before sending a new command to the BT module
 #define CRLF			"/r/n"	// <CR><LF>
 
 // BT return codes
@@ -47,33 +48,34 @@ typedef enum
 // BT response
 typedef struct
 {
-	u8 *		command;
-	u8 *		data;
-	u8 *		status;
-	BT_STATUS	code;
+	u8 *command;
+	u8 *data;
+	u8 *status;			// OK or ERROR
+	BT_STATUS code;		// BT_OK or BT_ERROR
 } BT_RESPONSE;
 
 //	----------------------------------------------------------------------------
 //	Get a complete response from the module
 //	----------------------------------------------------------------------------
 
-char * BT_getBuffer(u8 uart_port)
+u8 *BT_getBuffer(u8 uart_port, u8 *buffer)
 {
-	u8 i = 0;
-	char c;
-	static char buffer[80];
+	u8 c, i = 0;
 	
-	do {
-		c = SerialRead(uart_port);
-		//CDCprintf("%c", c);
-		//if ((c != '\r') && (c != '\n') && (c != 255))
-			buffer[i++] = c;
-		Delayms(10);
-	} while (c != 255);
-	// C string must be null-terminated
-	buffer[i] = '\0';
+	// wait until something is received
+	while (!SerialAvailable(uart_port));
 
-	return (buffer);
+	do {
+		c = SerialRead(uart_port);			// return 255 (-1) if no reception
+		if (c != 255) buffer[i++] = c;
+	} while (c != 255);// && (i < 80) );
+	// C string must be null-terminated
+	//BT_BUFFER[i] = '\0';
+	buffer[i] = '\0';
+	//CDCprintf("buffer = [%s]\r\n", BT_BUFFER);
+
+	//return BT_BUFFER;
+	return buffer;
 }
 
 //	----------------------------------------------------------------------------
@@ -102,13 +104,14 @@ BT_STATUS BT_getStatusCode(u8 * status)
 //	with status = OK or ERROR
 //	----------------------------------------------------------------------------
 
-BT_RESPONSE BT_getResponse(u8 uart_port)
+BT_RESPONSE BT_getResponse(u8 uart_port, BT_RESPONSE response)
 {
-	u8 * buffer;
-	BT_RESPONSE response;
-	
+	//u8 *buffer;
+	u8 *buffer = (u8*) malloc(128);
+
 	// get a complete response from the module
-	buffer = BT_getBuffer(uart_port);
+	buffer = BT_getBuffer(uart_port, buffer);
+	//CDCprintf("buffer=[%s]", buffer);
 
 	response.command = NULL;
 	response.data    = strtok(buffer, CRLF); // to remove the first CRLF 
@@ -127,14 +130,15 @@ BT_RESPONSE BT_getResponse(u8 uart_port)
 BT_RESPONSE BT_getExtendedResponse(u8 uart_port)
 {
 	u8 length;
-	u8 * buffer;
+	u8 *buffer;
 	BT_RESPONSE response;
 	
 	// get a complete response from the module
-	buffer = BT_getBuffer(uart_port);
+	//buffer = BT_getBuffer(uart_port, buffer);
 
 	// response's format is :
 	//    <CR><LF><status><CR><LF> with status = OK or ERROR
+/*	
 	response.command = strtok(buffer, CRLF); // to remove the first CRLF 
 	response.command = strtok(buffer, CRLF);
 	response.data    = strtok(NULL, CRLF);
@@ -142,6 +146,7 @@ BT_RESPONSE BT_getExtendedResponse(u8 uart_port)
 	response.code    = BT_getStatusCode(response.status);
 
 	return response;
+*/
 }
 
 //	----------------------------------------------------------------------------
@@ -163,7 +168,9 @@ BT_RESPONSE BT_sendCommand(u8 uart_port, u8 *fmt, ...)
 BT_RESPONSE BT_setCommandMode(u8 uart_port)
 {
 	BT_sendCommand(uart_port,"+++\r");
-	return BT_getResponse(uart_port);
+	BT_sendCommand(uart_port,"+++\r");
+	BT_sendCommand(uart_port,"+++\r");
+	//return BT_getResponse(uart_port);
 }
 
 //	----------------------------------------------------------------------------
@@ -173,7 +180,7 @@ BT_RESPONSE BT_setCommandMode(u8 uart_port)
 BT_RESPONSE BT_echoOff(u8 uart_port)
 {
 	BT_sendCommand(uart_port,"ATE0\r");
-	return BT_getResponse(uart_port);
+	//return BT_getResponse(uart_port);
 }
 
 //	----------------------------------------------------------------------------
@@ -183,7 +190,7 @@ BT_RESPONSE BT_echoOff(u8 uart_port)
 BT_RESPONSE BT_echoOn(u8 uart_port)
 {
 	BT_sendCommand(uart_port,"ATE1\r");
-	return BT_getResponse(uart_port);
+	//return BT_getResponse(uart_port);
 }
 
 //	----------------------------------------------------------------------------
@@ -195,7 +202,7 @@ BT_RESPONSE BT_echoOn(u8 uart_port)
 BT_RESPONSE BT_restore(u8 uart_port)
 {
 	BT_sendCommand(uart_port,"AT&F\r");
-	return BT_getResponse(uart_port);
+	//return BT_getResponse(uart_port);
 }
 
 //	----------------------------------------------------------------------------
@@ -205,7 +212,7 @@ BT_RESPONSE BT_restore(u8 uart_port)
 BT_RESPONSE BT_reset(u8 uart_port)
 {
 	BT_sendCommand(uart_port,"ATZ\r");
-	return BT_getResponse(uart_port);
+	//return BT_getResponse(uart_port);
 }
 
 //	----------------------------------------------------------------------------
@@ -215,7 +222,7 @@ BT_RESPONSE BT_reset(u8 uart_port)
 BT_RESPONSE BT_getFirmware(u8 uart_port)
 {
 	BT_sendCommand(uart_port,"ATI\r");
-	return BT_getExtendedResponse(uart_port);
+	//return BT_getExtendedResponse(uart_port);
 }
 
 //	----------------------------------------------------------------------------
@@ -342,9 +349,9 @@ BT_RESPONSE BT_search(u8 uart_port, u8 s)
 BT_RESPONSE BT_init(u8 uart_port, u32 baud_rate)
 {
 	BT_RESPONSE response;
-	
+
 	// 115200 bauds is the default configuration value
-	SerialConfigure(uart_port, UART_ENABLE, UART_RX_TX_ENABLED,	115200);
+	//SerialConfigure(uart_port, UART_ENABLE, UART_RX_TX_ENABLED,	115200);
 
 	response = BT_setCommandMode(uart_port); 
 	//BT_getFirmware(uart_port);
@@ -354,14 +361,14 @@ BT_RESPONSE BT_init(u8 uart_port, u32 baud_rate)
 	// Pass through, DCE, enable escape sequence, disable entering in command mode with DTR/DSR, enable LED
 	//BT_sendCommand(uart_port,"AT+BTCFG=33");
 	//BT_setAutoConnection(uart_port);
-
+/*
 	if (baud_rate != 115200)
 	{
 		BT_setUARTSpeed(uart_port, baud_rate);
 		// new UART speed
 		SerialConfigure(uart_port, UART_ENABLE, UART_RX_TX_ENABLED,	baud_rate);
 	}
-
+*/
 	//BT_disableSecurity(uart_port);
 	//BT_writeFlash(uart_port);
 	//BT_start(uart_port);
