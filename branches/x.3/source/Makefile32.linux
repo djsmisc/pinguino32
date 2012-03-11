@@ -52,9 +52,9 @@ endif
 # ------------------------------------------------------------------------------
 
 ifeq ($(BOARD),PIC32_PINGUINO_220)
-CDCLIBRARY = libcdc220.a
+	CDCLIBRARY = libcdc220.a
 else
-CDCLIBRARY = libcdc.a
+	CDCLIBRARY = libcdc.a
 endif
 
 # ------------------------------------------------------------------------------

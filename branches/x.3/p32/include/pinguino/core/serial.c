@@ -151,66 +151,38 @@
 #define UART_OVERRUN_ERROR						0x00000002	// The UART has received more data than it can buffer.  Data has been lost.
 #define UART_DATA_READY							0x00000001	// UART data has been received and is avaiable in the FIFO.
 
-#ifndef SERIAL1_BUFFERLENGTH
-	#define SERIAL1_BUFFERLENGTH 				128				// rx buffer length
-#endif
+//#ifndef SERIAL_BUFFERLENGTH
+	#define SERIAL_BUFFERLENGTH 				128				// rx buffer length
+//#endif
 
-#ifndef SERIAL2_BUFFERLENGTH
-	#define SERIAL2_BUFFERLENGTH 				128				// rx buffer length
-#endif
-
+volatile char UART1SerialBuffer[SERIAL_BUFFERLENGTH];	// UART1 buffer
+volatile char UART2SerialBuffer[SERIAL_BUFFERLENGTH];	// UART2 buffer
 #ifdef ENABLE_UART3
-#ifndef SERIAL3_BUFFERLENGTH
-	#define SERIAL3_BUFFERLENGTH 				128				// rx buffer length
-#endif
-#endif
-
-#ifdef ENABLE_UART4
-#ifndef SERIAL4_BUFFERLENGTH
-	#define SERIAL4_BUFFERLENGTH 				128				// rx buffer length
-#endif
-#endif
-
-#ifdef ENABLE_UART5
-#ifndef SERIAL5_BUFFERLENGTH
-	#define SERIAL5_BUFFERLENGTH 				128				// rx buffer length
-#endif
-#endif
-
-#ifdef ENABLE_UART6
-#ifndef SERIAL6_BUFFERLENGTH
-	#define SERIAL6_BUFFERLENGTH 				128				// rx buffer length
-#endif
-#endif
-
-char UART1SerialBuffer[SERIAL1_BUFFERLENGTH];	// UART1 buffer
-char UART2SerialBuffer[SERIAL2_BUFFERLENGTH];	// UART2 buffer
-#ifdef ENABLE_UART3
-char UART3SerialBuffer[SERIAL3_BUFFERLENGTH];	// UART3 buffer
+volatile char UART3SerialBuffer[SERIAL_BUFFERLENGTH];	// UART3 buffer
 #endif
 #ifdef ENABLE_UART4
-char UART4SerialBuffer[SERIAL4_BUFFERLENGTH];	// UART4 buffer
+volatile char UART4SerialBuffer[SERIAL_BUFFERLENGTH];	// UART4 buffer
 #endif
 #ifdef ENABLE_UART5
-char UART5SerialBuffer[SERIAL5_BUFFERLENGTH];	// UART5 buffer
+volatile char UART5SerialBuffer[SERIAL_BUFFERLENGTH];	// UART5 buffer
 #endif
 #ifdef ENABLE_UART6
-char UART6SerialBuffer[SERIAL6_BUFFERLENGTH];	// UART6 buffer
+volatile char UART6SerialBuffer[SERIAL_BUFFERLENGTH];	// UART6 buffer
 #endif
 
-long UART1wpointer, UART1rpointer;				// write and read pointer
-long UART2wpointer, UART2rpointer;				// write and read pointer
+volatile long UART1wpointer, UART1rpointer;				// write and read pointer
+volatile long UART2wpointer, UART2rpointer;				// write and read pointer
 #ifdef ENABLE_UART3
-long UART3wpointer, UART3rpointer;				// write and read pointer
+volatile long UART3wpointer, UART3rpointer;				// write and read pointer
 #endif
 #ifdef ENABLE_UART4
-long UART4wpointer, UART4rpointer;				// write and read pointer
+volatile long UART4wpointer, UART4rpointer;				// write and read pointer
 #endif
 #ifdef ENABLE_UART5
-long UART5wpointer, UART5rpointer;				// write and read pointer
+volatile long UART5wpointer, UART5rpointer;				// write and read pointer
 #endif
 #ifdef ENABLE_UART6
-long UART6wpointer, UART6rpointer;				// write and read pointer
+volatile long UART6wpointer, UART6rpointer;				// write and read pointer
 #endif
 /*	----------------------------------------------------------------------------
 	SerialSetDataRate()
@@ -752,20 +724,20 @@ char SerialRead(u8 port)
 		{
 			case UART1:
 				c = UART1SerialBuffer[UART1rpointer++];
-				if (UART1rpointer == SERIAL1_BUFFERLENGTH)
+				if (UART1rpointer == SERIAL_BUFFERLENGTH)
 					UART1rpointer=1;
 				return(c);
 				break;
 			case UART2:
 				c = UART2SerialBuffer[UART2rpointer++];
-				if (UART2rpointer == SERIAL2_BUFFERLENGTH)
+				if (UART2rpointer == SERIAL_BUFFERLENGTH)
 					UART2rpointer=1;
 				return(c);
 				break;
 #ifdef ENABLE_UART3
 			case UART3:
 				c = UART3SerialBuffer[UART3rpointer++];
-				if (UART3rpointer == SERIAL3_BUFFERLENGTH)
+				if (UART3rpointer == SERIAL_BUFFERLENGTH)
 					UART3rpointer=1;
 				return(c);
 				break;
@@ -773,7 +745,7 @@ char SerialRead(u8 port)
 #ifdef ENABLE_UART4
 			case UART4:				
 				c = UART4SerialBuffer[UART4rpointer++];
-				if (UART4rpointer == SERIAL4_BUFFERLENGTH)
+				if (UART4rpointer == SERIAL_BUFFERLENGTH)
 					UART4rpointer=1;
 				return(c);
 				break;
@@ -781,7 +753,7 @@ char SerialRead(u8 port)
 #ifdef ENABLE_UART5
 			case UART5:
 				c = UART5SerialBuffer[UART5rpointer++];
-				if (UART5rpointer == SERIAL5_BUFFERLENGTH)
+				if (UART5rpointer == SERIAL_BUFFERLENGTH)
 					UART5rpointer=1;
 				return(c);
 				break;
@@ -789,7 +761,7 @@ char SerialRead(u8 port)
 #ifdef ENABLE_UART6
 			case UART6:
 				c = UART6SerialBuffer[UART6rpointer++];
-				if (UART6rpointer == SERIAL6_BUFFERLENGTH)
+				if (UART6rpointer == SERIAL_BUFFERLENGTH)
 					UART6rpointer=1;
 				return(c);
 				break;
@@ -847,7 +819,7 @@ void SerialGetDataBuffer(u8 port)
 	{
 		case UART1:
 			caractere = U1RXREG;							// read received char
-			if (UART1wpointer != SERIAL1_BUFFERLENGTH - 1)	// if not last place in buffer
+			if (UART1wpointer != SERIAL_BUFFERLENGTH - 1)	// if not last place in buffer
 				newwp = UART1wpointer + 1;					// place=place+1
 			else
 				newwp = 1;									// else place=1
@@ -855,7 +827,7 @@ void SerialGetDataBuffer(u8 port)
 			if (UART1rpointer != newwp)						// if read pointer!=write pointer
 				UART1SerialBuffer[UART1wpointer++] = caractere;	// store received char
 
-			if (UART1wpointer == SERIAL1_BUFFERLENGTH)		// if write pointer=length buffer
+			if (UART1wpointer == SERIAL_BUFFERLENGTH)		// if write pointer=length buffer
 				UART1wpointer = 1;							// write pointer = 1
 
 			//return UART1SerialBuffer;
@@ -863,7 +835,7 @@ void SerialGetDataBuffer(u8 port)
 
 		case UART2:
 			caractere = U2RXREG;							// read received char
-			if (UART2wpointer != SERIAL2_BUFFERLENGTH - 1)	// if not last place in buffer
+			if (UART2wpointer != SERIAL_BUFFERLENGTH - 1)	// if not last place in buffer
 				newwp = UART2wpointer + 1;					// place=place+1
 			else
 				newwp = 1;									// else place=1
@@ -871,7 +843,7 @@ void SerialGetDataBuffer(u8 port)
 			if (UART2rpointer != newwp)						// if read pointer!=write pointer
 				UART2SerialBuffer[UART2wpointer++] = caractere;	// store received char
 
-			if (UART2wpointer == SERIAL2_BUFFERLENGTH)		// if write pointer=length buffer
+			if (UART2wpointer == SERIAL_BUFFERLENGTH)		// if write pointer=length buffer
 				UART2wpointer = 1;								// write pointer = 1
 
 			//return UART2SerialBuffer;
@@ -879,7 +851,7 @@ void SerialGetDataBuffer(u8 port)
 #ifdef ENABLE_UART3
 		case UART3:
 			caractere = U2ARXREG;							// read received char
-			if (UART3wpointer != SERIAL3_BUFFERLENGTH - 1)	// if not last place in buffer
+			if (UART3wpointer != SERIAL_BUFFERLENGTH - 1)	// if not last place in buffer
 				newwp = UART3wpointer + 1;					// place=place+1
 			else
 				newwp = 1;									// else place=1
@@ -887,7 +859,7 @@ void SerialGetDataBuffer(u8 port)
 			if (UART3rpointer != newwp)						// if read pointer!=write pointer
 				UART3SerialBuffer[UART3wpointer++] = caractere;	// store received char
 
-			if (UART3wpointer == SERIAL3_BUFFERLENGTH)		// if write pointer=length buffer
+			if (UART3wpointer == SERIAL_BUFFERLENGTH)		// if write pointer=length buffer
 				UART3wpointer = 1;							// write pointer = 1
 
 			//return UART3SerialBuffer;
@@ -896,7 +868,7 @@ void SerialGetDataBuffer(u8 port)
 #ifdef ENABLE_UART4
 		case UART4:
 			caractere = U1BRXREG;							// read received char
-			if (UART4wpointer != SERIAL4_BUFFERLENGTH - 1)	// if not last place in buffer
+			if (UART4wpointer != SERIAL_BUFFERLENGTH - 1)	// if not last place in buffer
 				newwp = UART4wpointer + 1;					// place=place+1
 			else
 				newwp = 1;									// else place=1
@@ -904,7 +876,7 @@ void SerialGetDataBuffer(u8 port)
 			if (UART4rpointer != newwp)						// if read pointer!=write pointer
 				UART4SerialBuffer[UART4wpointer++] = caractere;	// store received char
 
-			if (UART4wpointer == SERIAL4_BUFFERLENGTH)		// if write pointer=length buffer
+			if (UART4wpointer == SERIAL_BUFFERLENGTH)		// if write pointer=length buffer
 				UART4wpointer = 1;							// write pointer = 1
 
 			//return UART4SerialBuffer;
@@ -913,7 +885,7 @@ void SerialGetDataBuffer(u8 port)
 #ifdef ENABLE_UART5
 		case UART5:
 			caractere = U3BRXREG;							// read received char
-			if (UART5wpointer != SERIAL5_BUFFERLENGTH - 1)	// if not last place in buffer
+			if (UART5wpointer != SERIAL_BUFFERLENGTH - 1)	// if not last place in buffer
 				newwp = UART5wpointer + 1;					// place=place+1
 			else
 				newwp = 1;									// else place=1
@@ -921,7 +893,7 @@ void SerialGetDataBuffer(u8 port)
 			if (UART5rpointer != newwp)						// if read pointer!=write pointer
 				UART5SerialBuffer[UART5wpointer++] = caractere;	// store received char
 
-			if (UART5wpointer == SERIAL5_BUFFERLENGTH)		// if write pointer=length buffer
+			if (UART5wpointer == SERIAL_BUFFERLENGTH)		// if write pointer=length buffer
 				UART5wpointer = 1;							// write pointer = 1
 
 			//return UART5SerialBuffer;
@@ -930,7 +902,7 @@ void SerialGetDataBuffer(u8 port)
 #ifdef ENABLE_UART6
 		case UART6:
 			caractere = U2BRXREG;							// read received char
-			if (UART6wpointer != SERIAL6_BUFFERLENGTH - 1)	// if not last place in buffer
+			if (UART6wpointer != SERIAL_BUFFERLENGTH - 1)	// if not last place in buffer
 				newwp = UART6wpointer + 1;					// place=place+1
 			else
 				newwp = 1;									// else place=1
@@ -938,7 +910,7 @@ void SerialGetDataBuffer(u8 port)
 			if (UART6rpointer != newwp)						// if read pointer!=write pointer
 				UART6SerialBuffer[UART6wpointer++] = caractere;	// store received char
 
-			if (UART6wpointer == SERIAL6_BUFFERLENGTH)		// if write pointer=length buffer
+			if (UART6wpointer == SERIAL_BUFFERLENGTH)		// if write pointer=length buffer
 				UART6wpointer = 1;							// write pointer = 1
 
 			//return UART3SerialBuffer;
