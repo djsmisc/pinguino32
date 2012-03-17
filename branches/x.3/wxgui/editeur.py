@@ -231,6 +231,8 @@ class editor:
         self.editeur.Bind(wx.EVT_LEFT_UP, self.updateStatusBar)
         self.editeur.Bind(wx.EVT_KEY_UP, self.updateStatusBar)
         self.editeur.Bind(wx.stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
+        self.editeur.Bind(wx.stc.EVT_STC_DO_DROP, self.OnDrop)  
+        #self.editeur.Bind(wx.stc.EVT_STC_dr, self.OnDrag)        
 
         self.insertSnippet("Insert Date {snippet}")
         self.editeur.GotoLine(self.editeur.LineCount)
@@ -251,10 +253,15 @@ class editor:
 # modified by r.blanchot 31/10/2010, 01/06/2011
 
     def OpenDialog(self,type,extension,reservedword,rw, filehistory, config):
-        """ Open Dialog and load file in a new editor """ 
+        """ Open Dialog and load file in a new editor """
+        
+        try: defaultDir=os.path.split(self.filename[self.notebook1.GetSelection()])[0]
+        except: defaultDir = sys.path[0]
+        
         opendlg = wx.FileDialog(self,
                                 message="Choose a file",
-                                defaultDir=sys.path[0], #os.getcwd(),
+                                #defaultDir=sys.path[0],
+                                defaultDir=defaultDir, 
                                 defaultFile="",
                                 wildcard=type+" (*"+extension+")|*"+extension,
                                 style=wx.OPEN  | wx.CHANGE_DIR)

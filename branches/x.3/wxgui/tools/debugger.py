@@ -52,7 +52,6 @@ class Debugger:
 
         elif sys.platform == 'win32':
             self.CDC_NAME_PORT = "COM%d"
-
         else:
             self.CDC_NAME_PORT = "/dev/ttyACM%d"
         
@@ -63,20 +62,17 @@ class Debugger:
             #self.logwindow.Clear()
             self.statusBar1.SetStatusText(number=3, text=self.curBoard.name)
             self.updateIDE()
-            self.debugging = False
             return 
         
         self.logwindow.Clear()
         self.debuggingLine.Show()
         self.debuggingLine.SetFocus()
         self.debuggingLine.SetSelection(3, 3)
-        self.statusBar1.SetStatusText(number=3, text="Debugging USB-"+mode)
         self.updateIDE()        
         
         debug = threading.Thread(target=self.debuggingThread, args=(mode, ))
         debug.start()
         
-        self.debugging = True
 
     #----------------------------------------------------------------------
     def debuggingThread(self, mode):
@@ -100,25 +96,26 @@ class Debugger:
             line = str(self.debuggingLine.Value)
             if line.startswith(">>>"): line = line.replace(">>>", "")
             self.debugOutMessage = line
-            self.history.append(line)
             self.logwindow.SetInsertionPoint(len(self.logwindow.Value))
-            print [self.logwindow.GetLineText(self.logwindow.NumberOfLines)]
             if self.logwindow.GetLineText(self.logwindow.NumberOfLines) != "": self.logwindow.WriteText("\n")
             self.logwindow.WriteText(">>>"+line)
             self.debuggingLine.Clear()
             self.debuggingLine.SetValue(">>>")
             self.debuggingLine.SetInsertionPoint(3)
+            self.history.append(line)
+            self.historyIndex = 0
+            
 
         elif event.GetKeyCode() == wx.WXK_UP:
             self.historyIndex += 1
-            if self.historyIndex == len(self.history): self.historyIndex = 0
+            if self.historyIndex > len(self.history): self.historyIndex = 0
             self.debuggingLine.Clear()
             self.debuggingLine.SetValue(">>>"+self.history[-self.historyIndex])
             self.debuggingLine.SetInsertionPoint(len(self.debuggingLine.Value))            
 
         elif event.GetKeyCode() == wx.WXK_DOWN:
             self.historyIndex -= 1
-            if self.historyIndex == 0: self.historyIndex = len(self.history)
+            if self.historyIndex < 0: self.historyIndex = len(self.history)
             self.debuggingLine.Clear()
             self.debuggingLine.SetValue(">>>"+self.history[-self.historyIndex])
             self.debuggingLine.SetInsertionPoint(len(self.debuggingLine.Value)) 
@@ -156,4 +153,3 @@ class Debugger:
                 pinguino.close()
                 break
             
-        self.debugging = False
