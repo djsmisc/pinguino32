@@ -36,8 +36,8 @@ class treeExamples():
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, self.tree)
         self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.OnBeginEdit, self.tree) # to calcel this event
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self.tree)
-        self.tree.Expand(self.root)
         
+        self.tree.Expand(self.root)
         
     #----------------------------------------------------------------------
     def buildTreeExamples(self):
@@ -84,8 +84,11 @@ class treeExamples():
                         filePde = self.tree.AppendItem(item, x)
                         self.tree.SetPyData(filePde, None)
                         self.tree.SetItemImage(filePde, fileidx, wx.TreeItemIcon_Normal)                       
+            return itemx
+        
+        
         path=os.path.join(sys.path[0],"examples")
-        extraer(path,None)
+        self.folderExamples = extraer(path,None)
                     
     #--------------------------------------------------------------------------
     def OnBeginEdit(self, event):
@@ -95,7 +98,7 @@ class treeExamples():
     #--------------------------------------------------------------------------
     def OnSelChanged(self, event):
         self.item = event.GetItem()
-        event.Skip()        
+        event.Skip()
         
     #--------------------------------------------------------------------------
     def OnActivate(self, event):
@@ -121,3 +124,4 @@ class treeExamples():
                                  self.rw,
                                  self.filehistory,
                                  self.config)
+        event.Skip() 

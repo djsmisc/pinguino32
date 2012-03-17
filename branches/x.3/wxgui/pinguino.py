@@ -164,8 +164,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         
         self.debugOutMessage = None
         self.closing = False
-        self.debugging = False
-        
+        self.GetTheme()
         
         if os.path.isdir(TEM_DIR) == False: os.mkdir(TEM_DIR)
         
@@ -278,7 +277,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.Bind(wx.EVT_MENU, self.OnReplace, self.REPLACE)		
         self.Bind(wx.EVT_MENU, self.selectall, self.SELECTALL)
         self.Bind(wx.EVT_MENU, self.comentar, self.COMMENT)
-        #self.Bind(wx.EVT_MENU, self.OnPreferences, self.PREFERENCES)
+        self.Bind(wx.EVT_MENU, self.OnPreferences, self.PREFERENCES)
 
         # pref menu
         if DEV:
@@ -287,7 +286,7 @@ class Pinguino(framePinguinoX, Tools, editor):
             self.Bind(wx.EVT_MENU, self.OnUpgrade, id=self.ID_UPGRADE)
         for b in range(len(boardlist)):
             self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
-        self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
+        #self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
         self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.USBCDC)
         self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.NODEBUG)
 
@@ -364,7 +363,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ----------------------------------------------------------------------
 # Menus
 # ----------------------------------------------------------------------
-    @debugTime
+    #@debugTime
     def buildMenu(self):
         _ = self._
         self.menu = wx.MenuBar()
@@ -395,6 +394,10 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.REDO = wx.MenuItem(self.edit_menu, wx.ID_REDO, _("Redo"), "", wx.ITEM_NORMAL)
         self.edit_menu.AppendItem(self.REDO)
         self.edit_menu.AppendSeparator()
+        self.COMMENT_ID = wx.NewId()
+        self.COMMENT = wx.MenuItem(self.edit_menu, self.COMMENT_ID, _("Comment/Uncomment\tCtrl+l"), "", wx.ITEM_NORMAL)
+        self.edit_menu.AppendItem(self.COMMENT)
+        self.edit_menu.AppendSeparator()        
         self.FIND = wx.MenuItem(self.edit_menu, wx.ID_FIND, _("Find"), "", wx.ITEM_NORMAL)
         self.edit_menu.AppendItem(self.FIND)		
         self.REPLACE = wx.MenuItem(self.edit_menu, wx.ID_REPLACE, _("Replace"), "", wx.ITEM_NORMAL)
@@ -411,13 +414,13 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.SELECTALL = wx.MenuItem(self.edit_menu, wx.ID_SELECTALL, _("Select all"), "", wx.ITEM_NORMAL)
         self.edit_menu.AppendItem(self.SELECTALL)
         self.edit_menu.AppendSeparator()
-        self.COMMENT_ID = wx.NewId()
-        self.COMMENT = wx.MenuItem(self.edit_menu, self.COMMENT_ID, _("Comment/Uncomment\tCtrl+l"), "", wx.ITEM_NORMAL)
-        self.edit_menu.AppendItem(self.COMMENT)
+        #self.COMMENT_ID = wx.NewId()
+        #self.COMMENT = wx.MenuItem(self.edit_menu, self.COMMENT_ID, _("Comment/Uncomment\tCtrl+l"), "", wx.ITEM_NORMAL)
+        #self.edit_menu.AppendItem(self.COMMENT)
         #self.edit_menu.AppendSeparator()
-        #self.PREFERENCES_ID = wx.NewId()
-        #self.PREFERENCES = wx.MenuItem(self.edit_menu, self.PREFERENCES_ID, _("Preferences\tCtrl+p"), "", wx.ITEM_NORMAL)
-        #self.edit_menu.AppendItem(self.PREFERENCES)		
+        self.PREFERENCES_ID = wx.NewId()
+        self.PREFERENCES = wx.MenuItem(self.edit_menu, self.PREFERENCES_ID, _("Preferences...")+"\tCtrl+p", "", wx.ITEM_NORMAL)
+        self.edit_menu.AppendItem(self.PREFERENCES)		
 
         self.menu.Append(self.edit_menu, _("Edit"))
 
@@ -465,8 +468,8 @@ class Pinguino(framePinguinoX, Tools, editor):
         # --- board submenu
         self.board_menu=wx.Menu()
         for b in range(len(boardlist)):
-            self.board_menu.AppendRadioItem(boardlist[b].id, boardlist[b].name, _("your board"))
-        self.pref_menu.AppendMenu(self.ID_BOARD, _("Board"), self.board_menu)
+            self.board_menu.AppendRadioItem(boardlist[b].id, boardlist[b].name, "your board")
+        self.pref_menu.AppendMenu(self.ID_BOARD, "Board", self.board_menu)
         # mark current board
         bid = self.config.ReadInt('Board', -1)
         minbid = boardlist[0].id
@@ -476,17 +479,16 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.board_menu.Check(bid, True)
         self.OnBoard(wx.Event)
 
-        # ---theme submenu
-        self.theme_menu = wx.Menu()
-        self.GetTheme()
-        i = 0
-        for th in self.themeList:
-            self.THEME.append(wx.MenuItem(self.theme_menu, self.ID_THEME1 + i, th, "", wx.ITEM_CHECK))
-            self.theme_menu.AppendItem(self.THEME[i])
-            i = i + 1
-        self.pref_menu.AppendMenu(self.ID_THEME, _("Themes"), self.theme_menu)
-        tid = self.theme_menu.FindItem(self.theme)
-        self.theme_menu.Check(tid, True)
+         #---theme submenu
+        #self.theme_menu = wx.Menu()
+        #i = 0
+        #for th in self.themeList:
+            #self.THEME.append(wx.MenuItem(self.theme_menu, self.ID_THEME1 + i, th, "", wx.ITEM_CHECK))
+            #self.theme_menu.AppendItem(self.THEME[i])
+            #i = i + 1
+        #self.pref_menu.AppendMenu(self.ID_THEME, _("Themes"), self.theme_menu)
+        #tid = self.theme_menu.FindItem(self.theme)
+        #self.theme_menu.Check(tid, True)
 
         # ---revision submenu
         if DEV:
@@ -500,7 +502,7 @@ class Pinguino(framePinguinoX, Tools, editor):
             self.UPGRADE.Enable(False)
             self.pref_menu.AppendMenu(self.ID_REVISION, _("Revision"), self.revision_menu)
 
-        self.menu.Append(self.pref_menu, _("Preferences"))
+        self.menu.Append(self.pref_menu, _("Pinguino"))
 
         # help menu
         self.help_menu = wx.Menu()
@@ -609,9 +611,9 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------ 
     def getRevision(self):
         try:
-            sw = SubversionWorkingCopy(HOME_DIR)
+            sw = SubversionWorkingCopy(HOME_DIR).current_version()
         except: sw = "unknown"
-        wx.PostEvent(self, ResultEventRevision(sw.current_version()))
+        wx.PostEvent(self, ResultEventRevision(sw))
         
         
 # ------------------------------------------------------------------------------
@@ -844,17 +846,17 @@ class Pinguino(framePinguinoX, Tools, editor):
 # OnTheme : delete current theme and load a new one
 # ------------------------------------------------------------------------------
 
-    def OnTheme(self, event):
-        # uncheck all
-        for f in self.themeList:
-            tid = self.theme_menu.FindItem(f)
-            self.menu.Check(tid, False)
-        # check selected only
-        curid = event.GetId()
-        tid = curid - self.ID_THEME1
-        self.menu.Check(curid, True)
-        self.theme = self.themeList[tid]
-        self.DrawToolbar()
+    #def OnTheme(self, event):
+        ## uncheck all
+        #for f in self.themeList:
+            #tid = self.theme_menu.FindItem(f)
+            #self.menu.Check(tid, False)
+        ## check selected only
+        #curid = event.GetId()
+        #tid = curid - self.ID_THEME1
+        #self.menu.Check(curid, True)
+        #self.theme = self.themeList[tid]
+        #self.DrawToolbar()
 
 # ------------------------------------------------------------------------------
 # OnBoard : load boards specificities
@@ -873,7 +875,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         del self.keywordList[:]
         del self.reservedword[:]
         del self.libinstructions[:]
-        self.getKeywordList(self.curBoard)
+        self.readlib(self.curBoard)
 
         self.statusBar1.SetStatusText(number=3, text=self.curBoard.name)
 
@@ -1154,7 +1156,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
 # ------------------------------------------------------------------------------
-
+    
     def DrawToolbar(self):
         try:
             # Deletes all the tools in the current toolbar
@@ -1204,6 +1206,8 @@ class Pinguino(framePinguinoX, Tools, editor):
             self.toolbar.AddLabelTool(self.ID_UPLOAD, "&Upload", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "dwn.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Upload to Pinguino", "")				   
         if (os.path.exists(os.path.join(THEME_DIR, self.theme, "debug.png"))!=False):
             self.toolbar.AddLabelTool(self.ID_DEBUG, "&Debug On/Off", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "debug.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "USB Connexion with Pinguino", "")				   
+        if (os.path.exists(os.path.join(THEME_DIR, self.theme, "preferences.png"))!=False):
+                    self.toolbar.AddLabelTool(self.PREFERENCES_ID, "&preferences", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "preferences.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "set preferences of Pinguino IDE", "")				   
         self.toolbar.AddSeparator()
         if (os.path.exists(os.path.join(THEME_DIR, self.theme, "exit.png"))!=False):		
             self.toolbar.AddLabelTool(wx.ID_EXIT, "&Exit", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "exit.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Exit Pinguino IDE", "")
@@ -1211,30 +1215,30 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.toolbar.Realize()		 
 
 # ------------------------------------------------------------------------------
-# getKeywordList:
+# readlib:
 # ------------------------------------------------------------------------------
 
-    def getKeywordList(self, board):
+    def readlib(self, board):
         # trying to find PDL files to store reserved words
         self.keywordList = []
         if board.arch == 8:
-            keywordExt='.pdl'
-            keywordDir=P8_DIR
+            libext='.pdl'
+            libdir=P8_DIR
         else:
-            keywordExt='.pdl32'		
-            keywordDir=P32_DIR
-        for fichier in os.listdir(os.path.join(keywordDir, 'pdl')):
+            libext='.pdl32'		
+            libdir=P32_DIR
+        for fichier in os.listdir(os.path.join(libdir, 'lib')):
             filename,extension=os.path.splitext(fichier)
-            if extension==keywordExt:
+            if extension==libext:
                 # check content of the PDL file
-                keywordFile=open(os.path.join(keywordDir, 'pdl', fichier),'r')
-                for line in keywordFile:
+                libfile=open(os.path.join(libdir, 'lib', fichier),'r')
+                for line in libfile:
                     if line!="\n":
-                        # arduino's C++ instruction
-                        A_instruction=line[0:line.find(" ")]
-                        self.keywordList.append(A_instruction)
-                        # pinguino's C instruction
-                        P_instruction=line[line.find(" ")+1:line.find("#")]
+                        # arduino's instruction
+                        instruction=line[0:line.find(" ")]
+                        self.keywordList.append(instruction)
+                        # library's instruction
+                        cnvinstruction=line[line.find(" ")+1:line.find("#")]
                         # find #include & #define
                         #include=line[line.find("#")+1:len(line)]
                         include=""
@@ -1245,14 +1249,14 @@ class Pinguino(framePinguinoX, Tools, editor):
                         if len(explode)==3:
                             define=explode[2]
                         # append to the list	
-                        self.libinstructions.append([A_instruction,P_instruction,include,define])
+                        self.libinstructions.append([instruction,cnvinstruction,include,define])
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction))+"[ ]*\(")
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+r"([' ']|['=']|['}']|[',']|[';']|[\t]|[')'].*)")
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+".*")
                         #regex = re.compile(r'\W%s\W' % re.escape(str(instruction)))
-                        regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])%s\W" % re.escape(str(A_instruction)))
+                        regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])%s\W" % re.escape(str(instruction)))
                         self.regobject.append(regex)
-                keywordFile.close()
+                libfile.close()
         # clean up the keyword list
         self.keywordList.sort()
         self.keywordList = self.ClearRedundancy(self.keywordList)
@@ -1294,7 +1298,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 
     def displaymsg(self, message, clearpanel):
         """ display message in the log window """
-        if gui==True and not self.debugging:
+        if gui==True:
             if clearpanel==1:
                 self.logwindow.Clear()
             self.logwindow.WriteText(message)
@@ -1551,21 +1555,17 @@ class Pinguino(framePinguinoX, Tools, editor):
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
             if board.arch == 8:
                 if board.bldr == 'vasco':
-                    #              '-llibpuf.lib',\
-                    #              os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
-                    #              os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                                  "-mpic16",\
                                   "--denable-peeps",\
                                   "--obanksel=9",\
                                   "--opt-code-size",\
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ',-m',\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
+                                  "-mpic16",\
                                   "-p" + board.proc,\
-                                  "-D" + board.board,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
@@ -1576,6 +1576,9 @@ class Pinguino(framePinguinoX, Tools, editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
+                                  '-llibpuf.lib',\
+                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
+                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
                                   os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
@@ -1590,9 +1593,8 @@ class Pinguino(framePinguinoX, Tools, editor):
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ',-m',\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
                                   "-p" + board.proc,\
-                                  "-D" + board.board,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
@@ -1661,12 +1663,32 @@ class Pinguino(framePinguinoX, Tools, editor):
     #----------------------------------------------------------------------
     def OnPreferences(self, event=None):
         app = wx.PySimpleApp(0)
-
         wx.InitAllImageHandlers()
-        frame_1 = Preferences(None)
+        frame_1 = Preferences(self)
         app.SetTopWindow(frame_1)
         frame_1.Show()
         app.MainLoop()
+        
+    #----------------------------------------------------------------------
+    def OnDrop(self, event):
+        file = event.GetDragText().replace("file://", "").replace("%20", " ")
+        paths = file.split("\n")
+        for path in paths:
+            print path
+            if os.path.isfile(path):
+                self.Open(path,
+                          self.reservedword,
+                          self.rw,
+                          self.filehistory,
+                          self.config)
+        event.SetDragText("")
+        
+        
+    #----------------------------------------------------------------------
+    def appyPreferences(self):
+        self.DrawToolbar()
+        
+
 
 # ------------------------------------------------------------------------------
 # getOptions

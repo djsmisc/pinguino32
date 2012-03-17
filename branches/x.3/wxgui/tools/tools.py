@@ -57,13 +57,6 @@ class Tools(treeExamples, autoCompleter, Debugger):
 
         self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
 
-
-    ##----------------------------------------------------------------------
-    #def centrarFrame(self):
-        #screen=wx.ScreenDC().Size
-        #size=self.Size
-        #self.SetPosition(((screen[0]-size[0])/2,(screen[1]-size[1])/2))
-
     #----------------------------------------------------------------------
     def contexMenuTools(self, event):
         textEdit = self.stcpage[self.notebook1.GetSelection()]
@@ -159,8 +152,6 @@ class Tools(treeExamples, autoCompleter, Debugger):
         self.panel_replace.Hide()
         self.updateIDE()
 
-
-
     #----------------------------------------------------------------------
     def _initIDs_(self,textEdit):
         self.popupID1 = wx.NewId()
@@ -175,7 +166,6 @@ class Tools(treeExamples, autoCompleter, Debugger):
         self.popupIDhelp1 = wx.NewId()
         self.popupIDhelp2 = wx.NewId()
 
-
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Undo(), id=self.popupID1)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Redo(), id=self.popupID2)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Cut(), id=self.popupID3)
@@ -185,10 +175,8 @@ class Tools(treeExamples, autoCompleter, Debugger):
         self.Bind(wx.EVT_MENU, lambda x:textEdit.ClearAll(), id=self.popupID7)
         self.Bind(wx.EVT_MENU, lambda x:self.comentar(), id=self.popupID8)
 
-
     #----------------------------------------------------------------------
     def OnKeyword(self, event=None, keyword=None):
-        
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
         frame_1 = functionsHelp(None, self.keywordList, keyword)
@@ -252,8 +240,7 @@ class Tools(treeExamples, autoCompleter, Debugger):
 
         else:
             linea = self.sheetFunctions[self.notebook1.GetSelection()][function]
-            textEdit.SetCurrentPos(-1)
-            #textEdit.SetSelection(0, 0)	
+            textEdit.SetCurrentPos(-1)	
             trouve, position=self.find(linea.replace("\n", ""),1)
             if trouve!=-1:
                 self.highlightline(trouve, "#A9D1FF")

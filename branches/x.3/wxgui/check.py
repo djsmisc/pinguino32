@@ -42,7 +42,7 @@ fichier.writelines('Pinguino started at ' + str(time.asctime(time.localtime(time
 
 def perror():
     print "fatal error, see pinguino.log for more details\n"
-    sys.exist()
+    sys.exit()
 
 # ------------------------------------------------------------------------------
 # check python's version 
