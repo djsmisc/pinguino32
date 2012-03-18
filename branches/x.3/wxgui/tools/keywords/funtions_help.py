@@ -64,8 +64,6 @@ class functionsHelp(keywordFrame):
         self.htmlWindow1 = HtmlWindow(self)
         self.htmlWindow1.Hide()
         
-        self.centrarFrame()
-        
         self.lang = locale.getdefaultlocale()[0][:2]
         
         if self.lang == "es":
@@ -112,13 +110,7 @@ class functionsHelp(keywordFrame):
     def OnURL(self, evt):
         if evt.GetString() in self.keywordList:
             self.getDoc(evt)
-        else: webbrowser.open_new_tab(evt.GetString())        
-      
-    #----------------------------------------------------------------------
-    def centrarFrame(self):
-        screen=wx.ScreenDC().Size
-        size=self.Size
-        self.SetPosition(((screen[0]-size[0])/2,(screen[1]-size[1])/2))       
+        else: webbrowser.open_new_tab(evt.GetString())         
           
     #----------------------------------------------------------------------
     def __initFunctionsHelp__(self):
