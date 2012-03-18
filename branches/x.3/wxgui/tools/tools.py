@@ -44,9 +44,6 @@ class Tools(treeExamples, autoCompleter, Debugger):
         self.makeFindText()
         self.makeReplaceText()
         self._init_sizers()
-        
-        
-        
 
         self.splitterWindow1.SetSashPosition(self.config.ReadInt('frame/sashposition', -1))        
 
@@ -181,6 +178,7 @@ class Tools(treeExamples, autoCompleter, Debugger):
         wx.InitAllImageHandlers()
         frame_1 = functionsHelp(None, self.keywordList, keyword)
         app.SetTopWindow(frame_1)
+        frame_1.CenterOnParent()
         frame_1.Show()
         app.MainLoop()
         self.setNormalCursor()

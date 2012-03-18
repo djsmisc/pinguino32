@@ -1207,7 +1207,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         if (os.path.exists(os.path.join(THEME_DIR, self.theme, "debug.png"))!=False):
             self.toolbar.AddLabelTool(self.ID_DEBUG, "&Debug On/Off", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "debug.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "USB Connexion with Pinguino", "")				   
         if (os.path.exists(os.path.join(THEME_DIR, self.theme, "preferences.png"))!=False):
-                    self.toolbar.AddLabelTool(self.PREFERENCES_ID, "&preferences", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "preferences.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_CHECK, "set preferences of Pinguino IDE", "")				   
+                    self.toolbar.AddLabelTool(self.PREFERENCES_ID, "&preferences", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "preferences.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "set preferences of Pinguino IDE", "")				   
         self.toolbar.AddSeparator()
         if (os.path.exists(os.path.join(THEME_DIR, self.theme, "exit.png"))!=False):		
             self.toolbar.AddLabelTool(wx.ID_EXIT, "&Exit", wx.Bitmap(os.path.join(THEME_DIR, self.theme, "exit.png"), wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Exit Pinguino IDE", "")
@@ -1227,11 +1227,13 @@ class Pinguino(framePinguinoX, Tools, editor):
         else:
             libext='.pdl32'		
             libdir=P32_DIR
-        for fichier in os.listdir(os.path.join(libdir, 'lib')):
+        #for fichier in os.listdir(os.path.join(libdir, 'lib')):
+        for fichier in os.listdir(os.path.join(libdir, 'pdl')):
             filename,extension=os.path.splitext(fichier)
             if extension==libext:
                 # check content of the PDL file
-                libfile=open(os.path.join(libdir, 'lib', fichier),'r')
+                #libfile=open(os.path.join(libdir, 'lib', fichier),'r')
+                libfile=open(os.path.join(libdir, 'pdl', fichier),'r')
                 for line in libfile:
                     if line!="\n":
                         # arduino's instruction
@@ -1666,6 +1668,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         wx.InitAllImageHandlers()
         frame_1 = Preferences(self)
         app.SetTopWindow(frame_1)
+        frame_1.CenterOnParent()
         frame_1.Show()
         app.MainLoop()
         
