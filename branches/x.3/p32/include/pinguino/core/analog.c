@@ -10,6 +10,7 @@
 	[31-03-11][rblanchot@gamil.com][fixed conditional compilation for board support]
 	// 08 nov. 2011 fixed a bug in analogRead ( stop and restart analog converter before sampling )
 	// 25 feb. 2012 added support for PIC32_PINGUINO_220
+	// 17 mar. 2012 [hgmvanbeek@gmail.com] added support for PIC32_PINGUINO_MICRO
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -29,6 +30,32 @@
 #ifndef __ANALOG__
 #define __ANALOG__
 
+#define pA	0
+#define pB	1
+#define pC	2
+#define pD	3
+#define pE	4
+#define pF	5
+#define pG	6
+
+#define _0	1<<0
+#define _1	1<<1
+#define _2	1<<2
+#define _3	1<<3
+#define _4	1<<4
+#define _5	1<<5
+#define _6	1<<6
+#define _7	1<<7
+#define _8	1<<8
+#define _9	1<<9
+#define _10	1<<10
+#define _11	1<<11
+#define _12	1<<12
+#define _13	1<<13
+#define _14	1<<14
+#define _15	1<<15
+#define nil 1<<16
+
 #if defined(PIC32_PINGUINO)
 
 u16 __analogmask[]={0x0002,0x0004,0x0008,0x0010,0x0100,0x0200,0x0800,0x0400,
@@ -47,6 +74,19 @@ u16 __analogmask[]={0x0002,0x0004,0x0008,0x0010,0x0100,0x0200,0x0800,0x0400,
 u16 __bufmask[]=   {0x0004,0x0008,0x000C,0x0010,0x0020,0x0024,0x002C,0x0028,
 		    		0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0004,0x0008,
 		    		0x000C,0x0010,0x0020,0x0024,0x002C,0x0028};
+#endif
+
+#if defined(PIC32_PINGUINO_MICRO)
+
+u16 __analogmask[] = { _1,  _2,  _3,  _4, nil, nil, nil,  _8,   //  0- 7
+					   _9, _10, _11, _12, nil, _14, nil, nil,   //  8-15  nil is a unavailable pin
+					   _0, nil, nil, nil, nil, nil, nil, nil,   // 16-23
+					  nil, nil, nil, nil, nil, nil, nil, nil }; // 24-31
+
+u16 __bufmask[]    = {  4,   8,  12,  16,  32,  36,  40,  44,   //  0- 7
+					   48,  56, nil, nil, nil, nil, nil, nil,   //  8-15
+					    0, nil, nil, nil, nil, nil, nil, nil,   // 16-23
+					  nil, nil, nil, nil, nil, nil, nil, nil }; // 24-31
 #endif
 
 #if defined(PIC32_PINGUINO_220)
