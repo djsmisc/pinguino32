@@ -28,6 +28,7 @@
 // jp.mandon
 
 // 25 feb. 2012 added PIC32_PINGUINO_220 support - regis blanchot
+// 17 mar. 2012 [hgmvanbeek@gmail.com] added support for PIC32_PINGUINO_MICRO
 
 #ifndef __PWM__
 #define __PWM__
@@ -112,6 +113,46 @@ u8 analogwrite(u8 pin, u16 setpoint)
 	}
 #endif
 	
+#if defined(PIC32_PINGUINO_MICRO)
+	switch (pin)
+	{
+		case 10:
+			pinmode(pin, OUTPUT);
+			OC2CON=0;		// PWM Off
+			OC2R=setpoint;	// Timer3 will be compared to this values
+			OC2RS=setpoint;
+			OC2CON=0x000E;
+			OC2CON|=0x8000;	// PWM On
+			return 1;
+		case 11:
+			pinmode(pin, OUTPUT);
+			OC3CON=0;		// PWM Off
+			OC3R=setpoint;	// Timer3 will be compared to this values
+			OC3RS=setpoint;
+			OC3CON=0x000E;
+			OC3CON|=0x8000;	// PWM On
+			return 1;
+		case 12:
+			pinmode(pin, OUTPUT);
+			OC4CON=0;		// PWM Off
+			OC4R=setpoint;	// Timer3 will be compared to this values
+			OC4RS=setpoint;
+			OC4CON=0x000E;
+			OC4CON|=0x8000;	// PWM On
+			return 1;
+		case 13:
+			pinmode(pin, OUTPUT);
+			OC5CON=0;		// PWM Off
+			OC5R=setpoint;	// Timer3 will be compared to this values
+			OC5RS=setpoint;
+			OC5CON=0x000E;
+			OC5CON|=0x8000;	// PWM On
+			return 1;
+		default:
+			return 0;
+	}
+#endif
+
 #if defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
 	switch (pin)
 	{

@@ -3,6 +3,7 @@
  *	Régis Blanchot
  *	UBW32 and Emperor board revised - Marcus Fazzi SET/2011
  *	--------------------------------------------------------------------------*/
+// 17 mar. 2012 [hgmvanbeek@gmail.com] added support for PIC32_PINGUINO_MICRO
 
 #ifndef __CONST_H
 	#define __CONST_H
@@ -145,6 +146,10 @@
 
 		// UBW32 build-in buttons
 		#define USERBUTTON	43 //PORTEbits.RE7 = user button
+
+	#elif defined (PIC32_PINGUINO_MICRO)
+		#define GREENLED		32	//PORTGbits.RG6	// led1
+		#define YELLOWLED		10	//PORTDbits.RD1	// led2
 
 	#elif defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
 		// Arduino's digital pins
