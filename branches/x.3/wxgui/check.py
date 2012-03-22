@@ -219,11 +219,11 @@ except:
     perror()
 
 try:	
-    from preferences import Preferences		
+    from preferences import framePreferences		
     fichier.writelines('Preferences successfully loaded\n')
 except:
     fichier.writelines('Preferences failed\n')
-    fichier.writelines('You should have Preferences.py at the wxgui/preferences\n')
+    fichier.writelines('You should have framePreferences.py at the wxgui/preferences\n')
     fichier.close()
     perror()	
 
