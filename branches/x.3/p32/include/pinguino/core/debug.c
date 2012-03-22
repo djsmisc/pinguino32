@@ -18,23 +18,23 @@ void debug(const char *format, ...)
 	#if defined(NODEBUG)
 	#endif
 
-	#if defined(USBCDCDEBUG)
+	#ifdef (USBCDCDEBUG)
 		#include <__cdc.c>
 		CDCprintf("debug: ");
 		CDCprintf(format, args);
 		CDCprintf("\r\n");
 	#endif
 
-	#if defined(USBBULKDEBUG)
+	#ifdef (USBBULKDEBUG)
 	#endif
 
-	#if defined(USBHIDDEBUG)
+	#ifdef (USBHIDDEBUG)
 	#endif
 
-	#if defined(USBOTGDEBUG)
+	#ifdef (USBOTGDEBUG)
 	#endif
 
-	#if defined(UART1DEBUG)
+	#ifdef (UART1DEBUG)
 		#include <serial.c>
 		serial1init(9600);
 		serial1printf("debug: ");
@@ -42,7 +42,7 @@ void debug(const char *format, ...)
 		serial1printf("\r\n");
 	#endif
 
-	#if defined(UART2DEBUG)
+	#ifdef (UART2DEBUG)
 		#include <serial.c>
 		serial2init(9600);
 		serial2printf("debug: ");

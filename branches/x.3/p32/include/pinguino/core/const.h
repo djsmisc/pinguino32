@@ -92,7 +92,7 @@
 		#define OR		||
 	#endif
 
-	//lower case (not compatoble with c++)
+	//lower case (not compatible with c++)
 	//#define and		&&
 	//#define or		||	
 

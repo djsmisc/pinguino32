@@ -194,8 +194,10 @@ u8 CDCgets(u8 *buffer)
 	u8 numBytesRead;
 		
 	#ifdef __32MX220F032D__
+		USB_Service();
 		numBytesRead = USB_Service_CDC_GetString( buffer );
 	#else
+		CDCTxService();
 		numBytesRead = getsUSBUSART(buffer, 64);
 	#endif
 		return numBytesRead;

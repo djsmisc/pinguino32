@@ -1,5 +1,6 @@
 # ------------------------------------------------------------------------------
-# Makefile.linux \ 32-bit Pinguino
+# Makefile32.linux
+# Linux Makefile for 32-bit Pinguino
 # Regis Blanchot <rblanchot@gmail.com> 
 # ------------------------------------------------------------------------------
 
