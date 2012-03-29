@@ -1,9 +1,10 @@
 /*
-** SDMMC.h SD card interface 
-** 
+** SDMMC.h SD card interface
+**
 ** 07/20/07 v1.4 LDJ
 ** 11/22/07 v1.5 LDJ
 **
+	[29-03-12][hgmvanbeek@gmail.com][defined PIC32-PINGUINO-MICRO pinning]
 */
 
 #ifndef __SDMMC_H__
@@ -29,9 +30,15 @@ or the code must be modified to ignore the CD and WD inputs.
 #if defined(PIC32_PINGUINO) || defined (PIC32_PINGUINO_OTG)
 	//#define READ_LED			13
 	//#define WRITE_LED			13
-	//#define SDWP				   // Write Protect input 
+	//#define SDWP				   // Write Protect input
 	//#define SDCD					// Card Detect input
 	//#define SDCS					8	// D8_MMC_#SS Card Select output
+#endif
+
+#ifdef PIC32_PINGUINO_MICRO
+	#define SDCS				41	// RB13/MMC_#SS Card Select output
+	#define READ_LED			32  // Green Led
+	#define WRITE_LED			10  // Yellow Led
 #endif
 
 // SD card commands
@@ -52,7 +59,7 @@ or the code must be modified to ignore the CD and WD inputs.
 #define DATA_ACCEPT     0x05
 
 // timeouts
-#define I_TIMEOUT       20000   
+#define I_TIMEOUT       20000
 #define R_TIMEOUT       25000
 #define W_TIMEOUT       250000
 
