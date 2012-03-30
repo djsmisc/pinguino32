@@ -10,7 +10,8 @@
 	----------------------------------------------------------------------------
 	based on original code by Regis Blanchot and FatFS example for PIC24
 	----------------------------------------------------------------------------
- */
+ 	[30-03-12][hgmvanbeek@gmail.com][Some cards have no card detect and no write protect]
+*/
 
 #ifndef __FILEIO_C__
 #define __FILEIO_C__
@@ -37,7 +38,9 @@ char mount(unsigned char pin) {
 	int flag, i;
 	FRESULT r;
 
+#if !defined (PIC32_PINGUINO) && !defined (PIC32_PINGUINO_OTG) && !defined (PIC32_PINGUINO_MICRO)
 	SDCS = pin;
+#endif
 
 	// 0. init the I/Os
 #ifdef SD_DEBUG
@@ -48,7 +51,7 @@ char mount(unsigned char pin) {
 #ifdef SD_DEBUG
 	CDCprintf("Looking for SD slot... ");
 #endif
-	// 1. check if the card is in the slot 
+	// 1. check if the card is in the slot
 	if (!getCD()) {
 		FError = FE_NOT_PRESENT;
 #ifdef SD_DEBUG
@@ -60,7 +63,7 @@ char mount(unsigned char pin) {
 	CDCprintln("OK");
 #endif
 
-	// 2. initialize the card    
+	// 2. initialize the card
 #ifdef SD_DEBUG
 	CDCprintf("Initializing SD card... ");
 #endif
