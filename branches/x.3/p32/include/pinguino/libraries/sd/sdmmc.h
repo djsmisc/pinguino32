@@ -5,6 +5,8 @@
 ** 11/22/07 v1.5 LDJ
 **
 	[29-03-12][hgmvanbeek@gmail.com][defined PIC32-PINGUINO-MICRO pinning]
+    [30-03-12][hgmvanbeek@gmail.com][Yellow Led indicates SD activity ]
+*/	
 */
 
 #ifndef __SDMMC_H__
@@ -37,7 +39,7 @@ or the code must be modified to ignore the CD and WD inputs.
 
 #ifdef PIC32_PINGUINO_MICRO
 	#define SDCS				41	// RB13/MMC_#SS Card Select output
-	#define READ_LED			32  // Green Led
+	#define READ_LED			10  // Yellow Led
 	#define WRITE_LED			10  // Yellow Led
 #endif
 

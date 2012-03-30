@@ -1,9 +1,10 @@
 /*
-** SDMMC.c SD card interface 
-** 
-** 7/20/06 v1.4 LDJ 
-** 7/14/07 v2.0 LDJ 
-** 
+** SDMMC.c SD card interface
+**
+** 7/20/06 v1.4 LDJ
+** 7/14/07 v2.0 LDJ
+**
+[30-03-12][hgmvanbeek@gmail.com][Some cards have no card detect and no write protect]
 */
 
 #ifndef __SDMMC_C__
@@ -58,25 +59,25 @@ int sendSDCmd(unsigned char c, unsigned a)
 	enableSD();
 
 	// send a comand packet (6 bytes)
-	writeSPI(c | 0x40);    // send command 
+	writeSPI(c | 0x40);    // send command
 	writeSPI(a>>24);       // msb of the address
-	writeSPI(a>>16);       
+	writeSPI(a>>16);
 	writeSPI(a>>8);
 	writeSPI(a);           // lsb
 
-	writeSPI(0x95);        // send CMD0 CRC 
+	writeSPI(0x95);        // send CMD0 CRC
 
 	// now wait for a response, allow for up to 8 bytes delay
-	for(i=0; i<8; i++) 
+	for(i=0; i<8; i++)
 	{
-		r = readSPI();      
-		if (r != 0xFF) 
+		r = readSPI();
+		if (r != 0xFF)
 			break;
 	}
-	return (r);         
+	return (r);
 
 	/* return response
-	FF - timeout 
+	FF - timeout
 	00 - command accepted
 	01 - command received, card in idle state after RESET
 
@@ -101,9 +102,9 @@ int initMedia(void)
 {
 	int i, r;
 
-	// 1. with the card NOT selected     
+	// 1. with the card NOT selected
 	// Set DI and CS high
-	disableSD(); 
+	disableSD();
 
 	// 2. send 74 or more clock cycles to start up
 	// apply 74 or more clock pulses to SCLK.
@@ -116,7 +117,7 @@ int initMedia(void)
 
 	//card detection is now in disk_initialize()
 
-	return 0;           
+	return 0;
 } // init media
 
 
@@ -127,27 +128,27 @@ int readSECTOR(LBA a, char *p)
 {
 	int r, i;
 
-	#ifdef READ_LED    
+	#ifdef READ_LED
 	digitalwrite(READ_LED, 0);
 	#endif
 
 	// 1. send READ command
 	r = sendSDCmd(READ_SINGLE, (a << 9));
 	if (r == 0)    // check if command was accepted
-	{  
+	{
 	// 2. wait for a response
 	for(i=0; i<R_TIMEOUT; i++)
 	{
-	r = readSPI();     
-	if (r == DATA_START) 
+	r = readSPI();
+	if (r == DATA_START)
 	break;
-	} 
+	}
 
 	// 3. if it did not timeout, read 512 byte of data
 	if (i != R_TIMEOUT)
 	{
 		i = 512;
-		do{ 
+		do{
 			*p++ = readSPI();
 		} while (--i>0);
 
@@ -184,7 +185,7 @@ int writeSECTOR(LBA a, char *p)
 	// 1. send WRITE command
 	r = sendSDCmd(WRITE_SINGLE, (a << 9));
 	if (r == 0)    // check if command was accepted
-	{  
+	{
 		// 2. send data
 		writeSPI(DATA_START);
 
@@ -197,20 +198,20 @@ int writeSECTOR(LBA a, char *p)
 		clockSPI();
 
 		// 4. check if data accepted
-		r = readSPI(); 
+		r = readSPI();
 		if ((r & 0xf) == DATA_ACCEPT)
-		{   
-			#ifdef WRITE_LED    
+		{
+			#ifdef WRITE_LED
 			digitalwrite(WRITE_LED, 0);
 			#endif
 
 			// 5. wait for write completion
 			for(i=0; i<W_TIMEOUT; i++)
-			{ 
+			{
 				r = readSPI();
 				if (r != 0 )
 					break;
-			} 
+			}
 			#ifdef WRITE_LED
 			digitalwrite(WRITE_LED, 1);
 			#endif
@@ -231,9 +232,9 @@ int writeSECTOR(LBA a, char *p)
 // SD card connector presence detection switch
 // returns  TRUE card present
 //          FALSE card not present
-int getCD(void) 
+int getCD(void)
 {
-#if defined (PIC32_PINGUINO_OTG)
+#if defined (PIC32_PINGUINO_OTG) || (PIC32_PINGUINO_MICRO)
 	return TRUE;
 #else
 	return (SDCD);
@@ -245,7 +246,7 @@ int getCD(void)
 //          FALSE write protection tab OPEN
 int getWP(void)
 {
-#if defined (PIC32_PINGUINO_OTG)
+#if defined (PIC32_PINGUINO_OTG) || (PIC32_PINGUINO_MICRO)
 	return FALSE;
 #else
 	return (SDWP);
