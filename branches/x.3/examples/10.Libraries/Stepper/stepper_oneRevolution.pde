@@ -21,7 +21,7 @@ const int stepsPerRevolution = 48;
 void setup()
 {
 	// initialize the stepper library on pins 0 through 3:
-	Stepper(stepsPerRevolution,0,1,2,3);            
+	Stepper.init(stepsPerRevolution,0,1,2,3);            
 	// set the speed at 60 rpm:
 	Stepper.setSpeed(60);
 	// initialize the serial port:
