@@ -185,7 +185,7 @@ void SystemLock()
 	--------------------------------------------------------------------------*/
 
 #ifndef __32MX220F032D__
-void Reset()
+void SystemReset()
 {
 	u16 dummy;
 

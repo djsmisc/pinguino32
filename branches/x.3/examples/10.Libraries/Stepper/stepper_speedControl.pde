@@ -25,7 +25,7 @@ void setup()
 	// initialize the serial port:
 	Serial.begin(9600);
 	// initialize the stepper library on pins 8 through 11:
-	Stepper(stepsPerRevolution, 0,1,2,3);            
+	Stepper.init(stepsPerRevolution, 0,1,2,3);            
 }
 
 void loop()

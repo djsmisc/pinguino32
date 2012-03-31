@@ -14,46 +14,72 @@ cp /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/no
 #----------------------------------------------------------------------------
 #	compile and link
 #----------------------------------------------------------------------------
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-gcc -EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=16384 -Wl,-Map=/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/output.map -Wl,-L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/ -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO_OTG -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG/procdefs.ld -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG/elf32pic32mx.x -L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG -I/home/regis/Hobbies/Electronique/Projets/Pinguino/projets/test/forum -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free -o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c\
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-gcc -EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=16384 -Wl,-Map=/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/output.map -Wl,-L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/ -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO_MICRO -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_MICRO/procdefs.ld -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_MICRO/elf32pic32mx.x -L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_MICRO -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/examples/10.Libraries/Stepper -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free -o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c\
 		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/crt0.S\
 		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o\
 		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libcdc.a\
 		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libadb.a\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG/ISRwrapper.S\
+		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_MICRO/ISRwrapper.S\
 		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free/p32xxxx.h\
 		-lm -lgcc -lc
-In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:10:0,
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:7:0,
                  from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:29:
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:85:0: warning: "A0" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:177:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:86:0: warning: "A1" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:178:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:0: warning: "A2" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:179:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:0: warning: "A3" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:180:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:0: warning: "A4" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:181:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:90:0: warning: "A5" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:182:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:91:0: warning: "A6" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:183:0: note: this is the location of the previous definition
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:92:0: warning: "A7" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/const.h:184:0: note: this is the location of the previous definition
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:81:1: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:81:1: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:81:1: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:82:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:82:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:82:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:83:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:84:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:87:9: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:88:10: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
+/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/analog.c:89:8: warning: large integer implicitly truncated to unsigned type
 In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/pinguinoserial1.c:30:0,
-                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:13,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:9,
                  from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:29:
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c: In function 'pprint':
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c:364:27: warning: pointer type mismatch in conditional expression
 In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/pinguinoserial1.c:31:0,
-                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:13,
+                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:9,
                  from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:29:
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c: In function 'SerialPrintf':
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:670:3: warning: passing argument 1 of 'pprintf' from incompatible pointer type
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c:429:4: note: expected 'funcout' but argument is of type 'void (*)(char)'
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:671:3: warning: passing argument 1 of 'pprintf' from incompatible pointer type
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/printf.c:429:4: note: expected 'funcout' but argument is of type 'void (*)(char)'
-In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:13:0,
+In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:9:0,
                  from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:29:
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/pinguinoserial1.c: In function 'serial1printf':
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/pinguinoserial1.c:51:3: warning: passing argument 1 of 'pprintf' from incompatible pointer type
@@ -62,12 +88,6 @@ In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/bran
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c: At top level:
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:90:28: warning: 'struct stat' declared inside parameter list
 /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:90:28: warning: its scope is only this definition or declaration, which is probably not what you want
-In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:36:0:
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/user.c: In function 'loop':
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/user.c:11:5: warning: passing argument 1 of 'SerialPrintf' makes integer from pointer without a cast
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:663:6: note: expected 'u8' but argument is of type 'char *'
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/user.c:11:5: warning: passing argument 2 of 'SerialPrintf' makes pointer from integer without a cast
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/serial.c:663:6: note: expected 'unsigned char *' but argument is of type 'int'
 #----------------------------------------------------------------------------
 #	exec
 #----------------------------------------------------------------------------
