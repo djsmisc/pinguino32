@@ -6,8 +6,8 @@
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
-    first release:	2012-02-02
-    last release:	2012-03-02
+    first release:	03/February/2012
+    last release:	31/March/2012
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -24,41 +24,38 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx, re, webbrowser, threading, serial
-from treeExamples import treeExamples
+import wx, re, webbrowser, threading, serial, locale
 from autoCompleter import autoCompleter
 from keywords import functionsHelp
 from debugger import Debugger
+from lateral_dock import File, Documents, Search
 
+
+from dic import Dictionary, Snippet
 
 ########################################################################
-class Tools(treeExamples, autoCompleter, Debugger):
+class Tools(Documents, Debugger, File, Search, autoCompleter):
     #----------------------------------------------------------------------
     def initTools(self):
-        self.panel_find.Hide()
-        self.panel_replace.Hide()
         self.updateIDE()
-        self.__initTree__()
+        self.__initDocuments__()
         self.__initCompleter__()
         self.__initDebugger__()
-        self.makeFindText()
-        self.makeReplaceText()
-        self._init_sizers()
+        self.__initDockFile__()
+        self.__initSearch__()
+        
+        self.lat.notebookLateral.SetSelection(0)   
 
-        self.splitterWindow1.SetSashPosition(self.config.ReadInt('frame/sashposition', -1))        
-
-        #TODO: Spanish Doc (PinguinoVE)
-        #if locale.getdefaultlocale()[0][:2] == "es":
-            #self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
-        #else: self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
-
-        self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
-
+        if locale.getdefaultlocale()[0][:2] == "es":
+            self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
+        else: self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
+        
+    
     #----------------------------------------------------------------------
     def contexMenuTools(self, event):
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         menu = wx.Menu()
-        self._initIDs_(self.stcpage[self.notebook1.GetSelection()])
+        self._initIDs_(self.stcpage[self.notebookEditor.GetSelection()])
 
         word=self.wordUnderCursor(True)
 
@@ -92,11 +89,13 @@ class Tools(treeExamples, autoCompleter, Debugger):
 
         self.PopupMenu(menu)
         menu.Destroy()
+        
+        
 
     #----------------------------------------------------------------------
     def wordUnderCursor(self,function=False):
 
-        line,pos=self.stcpage[self.notebook1.GetSelection()].CurLine
+        line,pos=self.stcpage[self.notebookEditor.GetSelection()].CurLine
 
         so=line.split(" ")
         l=0
@@ -122,32 +121,6 @@ class Tools(treeExamples, autoCompleter, Debugger):
                     if pos<l: return word     
             else: return word
 
-
-    #----------------------------------------------------------------------
-    def makeFindText(self):
-        self.FindText.Hide()
-        self.FindText = wx.SearchCtrl(id=wx.NewId(),
-                                      name=u'FindText', parent=self.panel_find, pos=wx.Point(16, 5),
-                                      size=wx.Size(160, 25), style=0, value=u'')
-        self.FindText.ShowSearchButton(False)
-        self.FindText.ShowCancelButton(True)
-        self.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.hideSearchComplete, self.FindText)
-
-    #----------------------------------------------------------------------
-    def makeReplaceText(self):
-        self.ReplaceText.Hide()
-        self.ReplaceText = wx.SearchCtrl(id=wx.NewId(),
-                                         name=u'ReplaceText', parent=self.panel_replace, pos=wx.Point(16,
-                                                                                                      5), size=wx.Size(161, 25), style=0, value=u'') 
-        self.ReplaceText.SetDescriptiveText("Replace")
-        self.ReplaceText.ShowSearchButton(False)
-        self.ReplaceText.ShowCancelButton(False)
-
-    #----------------------------------------------------------------------
-    def hideSearchComplete(self, event=None):
-        self.panel_find.Hide()
-        self.panel_replace.Hide()
-        self.updateIDE()
 
     #----------------------------------------------------------------------
     def _initIDs_(self,textEdit):
@@ -176,7 +149,8 @@ class Tools(treeExamples, autoCompleter, Debugger):
     def OnKeyword(self, event=None, keyword=None):
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
-        frame_1 = functionsHelp(None, self.keywordList, keyword)
+        frame_1 = functionsHelp(None)
+        frame_1.__initfunctionsHelp__(None, self.keywordList, keyword)
         app.SetTopWindow(frame_1)
         frame_1.CenterOnParent()
         frame_1.Show()
@@ -185,7 +159,7 @@ class Tools(treeExamples, autoCompleter, Debugger):
 
     #----------------------------------------------------------------------
     def comentar(self, event=None):
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         lineStart, lineEnd = map(textEdit.LineFromPosition,textEdit.GetSelection())
         countLines = lineEnd - lineStart
         posLineStart, posLineEnd = map(textEdit.PositionFromLine, [lineStart, lineEnd+1])
@@ -199,51 +173,33 @@ class Tools(treeExamples, autoCompleter, Debugger):
 
     #----------------------------------------------------------------------
     def updateStatusBar(self, event=None):
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         fila = str(textEdit.CurrentLine).rjust(3, "0")
         columna = str(textEdit.GetColumn(textEdit.CurrentPos)).rjust(3, "0")
-        self.statusBar1.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
+        self.statusBarEditor.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
 
     #----------------------------------------------------------------------
     def updateFuntionsChoice(self, new=False):
-        sel = self.notebook1.GetSelection()
+        sel = self.notebookEditor.GetSelection()
+        
         if sel >= 0:
             try:
-                choice = self.choiceFunctions[self.notebook1.GetSelection()]
-                textEdit = self.stcpage[self.notebook1.GetSelection()]
+                choice = []
+                textEdit = self.stcpage[self.notebookEditor.GetSelection()]
     
                 funciones = self.readUserFuntions(textEdit.GetText().split("\n"))
-                self.sheetFunctions[self.notebook1.GetSelection()] = funciones
+                self.sheetFunctions[self.notebookEditor.GetSelection()] = funciones
     
-                choice.Clear()
-                choice.Append("(top)")
-                choice.AppendItems(funciones.keys())
-                choice.Append("(end)")
-                if new: choice.SetSelection(0)
+                self.setTreeFunctions(funciones.keys())
                 
             except wx._core.PyDeadObjectError: #The page was deleted
                 pass
-                
-    #----------------------------------------------------------------------
-    def moveToFuntion(self, event):
-        function = event.GetString()
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
+            
+        else: self.setTreeFunctions([])
+        
+            
 
-        if function == "(top)":
-            textEdit.GotoLine(0)  
-
-        elif function == "(end)":
-            textEdit.GotoLine(textEdit.GetLineCount())
-
-        else:
-            linea = self.sheetFunctions[self.notebook1.GetSelection()][function]
-            textEdit.SetCurrentPos(-1)	
-            trouve, position=self.find(linea.replace("\n", ""),1)
-            if trouve!=-1:
-                self.highlightline(trouve, "#A9D1FF")
-                self.focus()
-    
     #----------------------------------------------------------------------        
     def readUserFuntions(self, text):
         funciones = {}   
@@ -255,3 +211,51 @@ class Tools(treeExamples, autoCompleter, Debugger):
                 if reg!=None: funciones[str(reg.group(3))] = linea  
         return funciones
 
+        
+    ##----------------------------------------------------------------------
+    #def OnAutoCompleter(self):
+        #print "hola"
+        #app = wx.PySimpleApp(0)
+        #wx.InitAllImageHandlers()
+        #app = wx.PySimpleApp(0)
+        #wx.InitAllImageHandlers()
+        #self.AutoCompleter = autoCompleter(self)
+        #app.SetTopWindow(frame_1)
+        #self.AutoCompleter.Hide()
+        #app.MainLoop()
+        #print "hola"
+        
+        
+    ##----------------------------------------------------------------------
+    #def OnAutoCompleter(self, event=None):
+        #textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+    
+        #pos = textEdit.PointFromPosition(textEdit.CurrentPos) + \
+              #self.Position + \
+              #self.m_panel1.Position + \
+              #wx.Point(0, self.toolbar.Size[1]) + \
+              #wx.Point(0, self.notebookEditor.Size[1]) - \
+              #wx.Point(0, textEdit.Size[1]) + \
+              #wx.Point(0, self.MenuBar.Size[1]) + \
+              #wx.Point(25, 0)
+        
+        
+        #app = wx.PySimpleApp(0)
+        #wx.InitAllImageHandlers()
+        #self.AutoCompleter = autoCompleter(self)
+        #app.SetTopWindow(self.AutoCompleter)
+        #self.AutoCompleter.SetPosition(pos)        
+        #self.AutoCompleter.Show()
+        #app.MainLoop()
+        
+        
+    #----------------------------------------------------------------------
+    def insertSnippet(self, key):
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        index = self.wordUnderCursor()
+        for i in index: textEdit.DeleteBack()
+        textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
+        for i in range(Snippet[key][0]): textEdit.CharRight()        
+        self.recent = True 
+        
+        

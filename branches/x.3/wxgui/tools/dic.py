@@ -6,8 +6,8 @@
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
-    first release:	2012-02-03
-    last release:	2012-03-02
+    first release:	03/February/2012
+    last release:	31/March/2012
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
