@@ -6,8 +6,8 @@
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
-    first release:	2011-02-15
-    last release:	2011-02-15
+    first release:	18/February/2012
+    last release:	31/March/2012
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -27,26 +27,28 @@
 import wx, urllib2, re, threading, webbrowser
 
 from wx.html import HtmlWindow
-from frame import keywordFrame
+#from frame import keywordFrame
+from frameKeyWords import frameKeyWords
 import sys, os
 import locale
 
 ########################################################################
-class functionsHelp(keywordFrame):
+class functionsHelp(frameKeyWords):
     #----------------------------------------------------------------------
-    def __init__(self, parent, keywordList=None, keyword=None):
-        
+    def __initfunctionsHelp__(self, parent, keywordList=None, keyword=None):
         self.path = os.path.join(sys.path[0],"wxgui","tools","keywords","data.html")
-        self._init_ctrls(parent)
-        self.richTextCtrl1.Clear()
+        #self._init_ctrls(parent)
+        self.richTextKeywords.Clear()
+        self.checkListKeywords.Clear()
         
-        self.Bind(wx.EVT_LISTBOX_DCLICK, self.getDoc, self.listBox1)
-        self.Bind(wx.EVT_CHECKLISTBOX, self.sortFunctions, self.checkListBox1)
-        self.richTextCtrl1.Bind(wx.EVT_TEXT_URL, self.OnURL)
+        
+        self.Bind(wx.EVT_LISTBOX_DCLICK, self.getDoc, self.listBoxKeywords)
+        self.Bind(wx.EVT_CHECKLISTBOX, self.sortFunctions, self.checkListKeywords)
+        self.richTextKeywords.Bind(wx.EVT_TEXT_URL, self.OnURL)
         
         self.keywordList = keywordList
         self.DictKeywordList = self.sortKeywordList()
-        self.__initFunctionsHelp__()
+        self.startFunctionsHelp()
             
         self.urlStyle = wx.richtext.TextAttrEx()
         self.urlStyle.SetTextColour(wx.BLUE)
@@ -56,7 +58,7 @@ class functionsHelp(keywordFrame):
         self.titleStyle.SetFontWeight(wx.FONTWEIGHT_BOLD)
       
         self.exampleStyle = wx.richtext.TextAttrEx()
-        font = self.richTextCtrl1.Font
+        font = self.richTextKeywords.Font
         font.SetFaceName("Monospace")
         self.exampleStyle.SetFont(font)
         
@@ -65,6 +67,7 @@ class functionsHelp(keywordFrame):
         self.htmlWindow1.Hide()
         
         self.lang = locale.getdefaultlocale()[0][:2]
+        #self.lang = "en"
         
         if self.lang == "es":
             self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
@@ -99,11 +102,11 @@ class functionsHelp(keywordFrame):
         
     #----------------------------------------------------------------------
     def default(self, pref, keyword):
-        index = self.checkListBox1.GetItems().index(pref)
-        self.checkListBox1.SetChecked([index])
+        index = self.checkListKeywords.GetItems().index(pref)
+        self.checkListKeywords.SetChecked([index])
         self.sortFunctions()
-        index = self.listBox1.GetItems().index(keyword)
-        self.listBox1.SetSelection(index)
+        index = self.listBoxKeywords.GetItems().index(keyword)
+        self.listBoxKeywords.SetSelection(index)
         self.getDoc(keyword=keyword)        
         
     #----------------------------------------------------------------------    
@@ -113,55 +116,55 @@ class functionsHelp(keywordFrame):
         else: webbrowser.open_new_tab(evt.GetString())         
           
     #----------------------------------------------------------------------
-    def __initFunctionsHelp__(self):
+    def startFunctionsHelp(self):
         self.gridSizer3 = wx.GridSizer(cols=1, hgap=0, rows=len(self.DictKeywordList.keys()), vgap=0)
         KeywordList = self.DictKeywordList.keys()
         KeywordList.sort()
         for word in KeywordList:
             if word != "Others":
-                self.checkListBox1.Append(word)
-        self.checkListBox1.Append("Others")
+                self.checkListKeywords.Append(word)
+        self.checkListKeywords.Append("Others")
         
-        self.checkListBox1.SetSize(self.sashWindow1.Size)
-        self.listBox1.SetSize(self.sashWindow2.Size)
-        self.richTextCtrl1.SetSize(self.sashWindow3.Size)
+        #self.checkListKeywords.SetSize(self.sashWindow1.Size)
+        #self.listBoxKeywords.SetSize(self.sashWindow2.Size)
+        #self.richTextKeywords.SetSize(self.sashWindow3.Size)
         
         self.setNormalCursor()
         
     #----------------------------------------------------------------------
     def setWaitCursor(self, event=None):
-        self.checkListBox1.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
-        self.listBox1.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
-        self.richTextCtrl1.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
+        self.checkListKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
+        self.listBoxKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
+        self.richTextKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
         self.Update()
         
     #----------------------------------------------------------------------
     def setNormalCursor(self):
-        self.checkListBox1.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-        self.listBox1.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
-        self.richTextCtrl1.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.checkListKeywords.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.listBoxKeywords.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        self.richTextKeywords.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
         self.Update()
         
     #----------------------------------------------------------------------
     def rebildSTC(self):
         #I dislike but need
-        self.richTextCtrl1.Destroy()
-        self.richTextCtrl1 = wx.richtext.RichTextCtrl(id=wx.NewId(),
+        self.richTextKeywords.Destroy()
+        self.richTextKeywords = wx.richtext.RichTextCtrl(id=wx.NewId(),
               parent=self.sashWindow3, pos=wx.Point(0, 0), size=self.sashWindow3.Size, style=wx.HSCROLL | wx.VSCROLL | wx.richtext.RE_MULTILINE,
               value=u' ')
-        self.richTextCtrl1.SetMinSize(wx.Size(-1, -1))
-        self.rtc = self.richTextCtrl1
-        self.richTextCtrl1.SetEditable(False)
+        self.richTextKeywords.SetMinSize(wx.Size(-1, -1))
+        self.rtc = self.richTextKeywords
+        self.richTextKeywords.SetEditable(False)
         self._init_sizers()
-        self.Bind(wx.EVT_CHECKLISTBOX, self.sortFunctions, self.checkListBox1)
-        self.richTextCtrl1.Bind(wx.EVT_TEXT_URL, self.OnURL)
+        self.Bind(wx.EVT_CHECKLISTBOX, self.sortFunctions, self.checkListKeywords)
+        self.richTextKeywords.Bind(wx.EVT_TEXT_URL, self.OnURL)
      
     #----------------------------------------------------------------------
     def getDoc(self, event=None, keyword=None):
         self.setWaitCursor()
         if event != None: keyword = event.GetString()
-        self.rtc = self.richTextCtrl1
-        self.rebildSTC()
+        self.rtc = self.richTextKeywords
+        #self.rebildSTC()
         self.rtc.Clear()
         self.rtc.Newline()
         self.rtc.BeginBold()
@@ -192,7 +195,7 @@ class functionsHelp(keywordFrame):
             self.rtc.Newline()
             self.rtc.Newline()
             self.writeHelp(*self.htmlPage())
-            self._init_sizers()
+            #self._init_sizers()
         self.setNormalCursor()
 
     #----------------------------------------------------------------------
@@ -256,7 +259,7 @@ class functionsHelp(keywordFrame):
 
     #----------------------------------------------------------------------
     def writeHelp(self, titles, text):
-        self.rtc = self.richTextCtrl1
+        self.rtc = self.richTextKeywords
         for title in titles:
             self.rtc.BeginStyle(self.titleStyle)
             self.rtc.WriteText(title)
@@ -298,9 +301,9 @@ class functionsHelp(keywordFrame):
     def sortFunctions(self, event=None):
         KeywordList = self.DictKeywordList.keys()
         KeywordList.sort()
-        self.listBox1.Clear()
-        for function in self.checkListBox1.CheckedStrings:
-            self.listBox1.AppendItems(self.DictKeywordList[function])
+        self.listBoxKeywords.Clear()
+        for function in self.checkListKeywords.CheckedStrings:
+            self.listBoxKeywords.AppendItems(self.DictKeywordList[function])
                 
     #----------------------------------------------------------------------
     def htmlPage(self):

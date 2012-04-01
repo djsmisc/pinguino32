@@ -219,11 +219,11 @@ except:
     perror()
 
 try:	
-    from preferences import framePreferences		
+    from preferences import Preferences		
     fichier.writelines('Preferences successfully loaded\n')
 except:
     fichier.writelines('Preferences failed\n')
-    fichier.writelines('You should have framePreferences.py at the wxgui/preferences\n')
+    fichier.writelines('You should have Preferences.py at the wxgui/preferences\n')
     fichier.close()
     perror()	
 
@@ -253,7 +253,16 @@ except:
     fichier.writelines('You should have frame.py at the wxgui/frame/\n')
     fichier.close()
     perror()
-
+      
+try:
+    from frame import Lateral
+    fichier.writelines('Pinguino Lateral Frame successfully loaded\n')
+except:
+    fichier.writelines('Pinguino Lateral Frame failed\n')
+    fichier.writelines('You should have lateral.py at the wxgui/frame/\n')
+    fichier.close()
+    perror()    
+    
 from tools import Tools	
 try:
     from tools import Tools

@@ -39,6 +39,7 @@ class MySplashScreen(wx.SplashScreen):
     def ShowMain(self):
         setGui(True)
         frame = Pinguino(None)
+        frame.__initPinguino__(None)
         app.SetTopWindow(frame)
         frame.Show()
         if self.fc.IsRunning(): self.Raise()

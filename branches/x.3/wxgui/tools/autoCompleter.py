@@ -6,8 +6,9 @@
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
-    first release:	2012-02-02
-    last release:	2012-03-02
+    first release:	02/February/2012
+    last release:	31/March/2012    
+    
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -39,7 +40,7 @@ class autoCompleter:
             self.insertSnippet(event.GetText())
             return 
         index = self.wordUnderCursor(True)
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         for i in index: textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, event.GetText())
         
@@ -58,7 +59,7 @@ class autoCompleter:
         
     #----------------------------------------------------------------------
     def insertSnippet(self, key):
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         index = self.wordUnderCursor()
         for i in index: textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
@@ -92,7 +93,7 @@ class autoCompleter:
             return 
         
         
-        textEdit = self.stcpage[self.notebook1.GetSelection()]  
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]  
         if textEdit.GetCurrentPos() == 0:
             textEdit.AutoCompCancel()
             return   

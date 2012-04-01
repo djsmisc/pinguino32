@@ -75,6 +75,7 @@ P8_DIR		= os.path.join(HOME_DIR, 'p8')
 SVN_DIR		= 'http://pinguino32.googlecode.com/svn/trunk/'
 APP_CONFIG	= os.path.join(HOME_DIR, '.config')
 TEM_DIR = os.path.join(HOME_DIR, '.temp')
+EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
 
 # ------------------------------------------------------------------------------
 # default
@@ -158,9 +159,9 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------
 # init
 # ------------------------------------------------------------------------------
-    def __init__(self, parent):
-        self._init_ctrls(parent)
-        self.notebook1.Hide()
+    def __initPinguino__(self, parent):
+        #self._init_ctrls(parent)
+        self.notebookEditor.Hide()
         
         self.debugOutMessage = None
         self.closing = False
@@ -175,9 +176,11 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.setLanguage()
         self.buildMenu()
         self.buildOutput()
+        self.buildLateralPanel()
         self.buildEditor()
         self.ConnectAll()
     
+        self.trees = []
     
         #Threads
         EVT_RESULT_REVISION(self, self.setRevision)
@@ -222,7 +225,7 @@ class Pinguino(framePinguinoX, Tools, editor):
 # ------------------------------------------------------------------------------
     def buildEditor(self):
         _ = self._
-        self.EditorPanel = self.panel2
+        self.EditorPanel = self.m_panel1
         #background with pinguino.cc colour and pinguino logo
         self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
         self.imageBackground = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
@@ -231,24 +234,29 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
         self.background.CentreOnParent(wx.BOTH) 
 
-        # create a PaneInfo structure for editor window 
-        # this Paneinfo will be switched when loading a file
-        self.PaneEditorInfo=wx.aui.AuiPaneInfo()
-        self.PaneEditorInfo.CloseButton(False)
-        self.PaneEditorInfo.MaximizeButton(True)
-        self.PaneEditorInfo.Caption(_("Editor"))
-        self.PaneEditorInfo.Top()
-
         # ------------------------------------------------------------------------------
         # add the panes to the manager
         # ------------------------------------------------------------------------------
 
         self._mgr.AddPane(self.panelOutput, self.PaneOutputInfo, '')
-        self._mgr.AddPane(self.panel1, wx.CENTER , '')
+        self.lat = Lateral(self)
+        self._mgr.AddPane(self.lat, self.PaneLateral, '')
+        self._mgr.AddPane(self.m_panel1, wx.CENTER , '')
+        self._mgr.Update()
+       
+        
+# ------------------------------------------------------------------------------
+# Lateral
+# ------------------------------------------------------------------------------
+    def buildLateralPanel(self):
+        _ = self._
+        self.PaneLateral=wx.aui.AuiPaneInfo()
+        self.PaneLateral.CloseButton(False)
+        self.PaneLateral.MaximizeButton(True)
+        self.PaneLateral.MinimizeButton(True)
+        self.PaneLateral.Caption("Tools")
+        self.PaneLateral.Right()
 
-
-        # tell the manager to 'commit' all the changes just made
-        self._mgr.Update()		
 
 # ------------------------------------------------------------------------------
 # Event Management
@@ -623,15 +631,16 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.localRev = event.data
         self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. ' + self.localRev)
         self.displaymsg(self.translate("Welcome to Pinguino IDE (rev. ") + self.localRev + ")\n", 1)
-        self.statusBar1.SetStatusText(number=2, text="Rev. %s" %self.localRev)
+        self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
 
 # ------------------------------------------------------------------------------
 # Update
 # ------------------------------------------------------------------------------
 
     def updateIDE(self):
-        self.panel1.Fit()
-        self.panel2.Fit()
+        self.lat.search.Fit()
+        #self.panel1.Fit()
+        #self.panel2.Fit()
         self._mgr.Update()   
 
 # ------------------------------------------------------------------------------
@@ -737,6 +746,7 @@ class Pinguino(framePinguinoX, Tools, editor):
                         self.filehistory,\
                         self.config)
         self.updatenotebook()
+        self.updateFuntionsChoice()
 
 # ------------------------------------------------------------------------------
 # OnFileHistory : open selected history file
@@ -773,6 +783,7 @@ class Pinguino(framePinguinoX, Tools, editor):
     def OnClose(self, event): 
         self.CloseTab()
         self.updatenotebook()
+        self.updateFuntionsChoice()
 
 # ------------------------------------------------------------------------------
 # OnExit : Save Settings and Exit Program
@@ -792,7 +803,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         w, h = self.GetSize()
         self.config.WriteInt('Window/Width', w)
         self.config.WriteInt('Window/Height', h)
-        self.config.WriteInt("frame/sashposition", self.splitterWindow1.GetSashPosition())
+        #self.config.WriteInt("frame/sashposition", self.splitterWindow1.GetSashPosition())
         #x, y = self.GetPosition()
         #self.config.WriteInt('Window/Posx', x)
         #self.config.WriteInt('Window/Posy', y)
@@ -843,22 +854,6 @@ class Pinguino(framePinguinoX, Tools, editor):
         self.themeNum = len(self.themeList)
 
 # ------------------------------------------------------------------------------
-# OnTheme : delete current theme and load a new one
-# ------------------------------------------------------------------------------
-
-    #def OnTheme(self, event):
-        ## uncheck all
-        #for f in self.themeList:
-            #tid = self.theme_menu.FindItem(f)
-            #self.menu.Check(tid, False)
-        ## check selected only
-        #curid = event.GetId()
-        #tid = curid - self.ID_THEME1
-        #self.menu.Check(curid, True)
-        #self.theme = self.themeList[tid]
-        #self.DrawToolbar()
-
-# ------------------------------------------------------------------------------
 # OnBoard : load boards specificities
 # ------------------------------------------------------------------------------
 
@@ -877,7 +872,7 @@ class Pinguino(framePinguinoX, Tools, editor):
         del self.libinstructions[:]
         self.readlib(self.curBoard)
 
-        self.statusBar1.SetStatusText(number=3, text=self.curBoard.name)
+        self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
 
 
 # ------------------------------------------------------------------------------
@@ -1047,91 +1042,7 @@ class Pinguino(framePinguinoX, Tools, editor):
             dlg.Destroy()		   
         event.Skip()
 
-# ------------------------------------------------------------------------------
-# OnFind:
-# ------------------------------------------------------------------------------
 
-    def OnFind(self,event):
-        self.panel_replace.Hide()		
-        if self.panel_find.IsShown():
-            self.panel_find.Hide()
-            self.updateIDE()
-            return
-        self.Bind(wx.EVT_BUTTON, self.findnext, self.FindNext)  
-        self.Bind(wx.EVT_BUTTON, self.findprev, self.FindPrevious)			   
-        self.FindText.SetFocus()
-        self.panel_find.Show()
-        self.updateIDE()		
-
-    def findprev(self,event):
-        chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
-        trouve, position=self.find(chaine,0)
-        textEdit = self.stcpage[self.notebook1.GetSelection()]		
-        if trouve!=-1:
-            self.highlightline(trouve,'yellow')
-            self.focus()
-            textEdit.SetSelectionStart(position)
-            textEdit.SetSelectionEnd(position+len(chaine))
-            self.Replace.Enable()
-            self.ReplaceAll.Enable()			
-
-    def findnext(self,event):
-        chaine=self.FindText.GetString(0,self.FindText.GetLastPosition())
-        trouve, position=self.find(chaine,1)
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
-        if trouve!=-1:
-            self.highlightline(trouve,'yellow')
-            self.focus()
-            textEdit.SetSelectionStart(position)
-            textEdit.SetSelectionEnd(position+len(chaine))
-            self.Replace.Enable()
-            self.ReplaceAll.Enable()	
-        return trouve
-
-# ------------------------------------------------------------------------------
-# OnReplace:
-# ------------------------------------------------------------------------------
-
-    def OnReplace(self,event):
-        if self.panel_find.IsShown():
-            self.panel_find.Hide()
-            self.panel_replace.Hide()
-            self.ReplaceText.Clear()
-            self.updateIDE()
-            return
-        self.Bind(wx.EVT_BUTTON, self.findnext, self.FindNext)  
-        self.Bind(wx.EVT_BUTTON, self.findprev, self.FindPrevious)
-        self.Bind(wx.EVT_BUTTON, self.replacetext, self.Replace)  
-        self.Bind(wx.EVT_BUTTON, self.replacealltext, self.ReplaceAll)
-        self.FindText.SetFocus()
-        self.panel_find.Show()
-        self.panel_replace.Show()
-        self.Replace.Disable()
-        self.ReplaceAll.Disable()
-        self.updateIDE()
-
-    #----------------------------------------------------------------------
-    def replacetext(self, event=None):
-        word = self.FindText.GetString(0, self.FindText.GetLastPosition())
-        wordReplace = self.ReplaceText.GetString(0, self.ReplaceText.GetLastPosition())
-        print word, wordReplace
-        if word == "": return False
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
-        textEdit.Clear()
-        textEdit.InsertText(textEdit.CurrentPos, wordReplace)
-        if self.findnext(event) == -1:
-            self.gotostart()
-            self.Replace.Disable()
-            self.ReplaceAll.Disable()
-            return False
-        return True
-
-    #----------------------------------------------------------------------
-    def replacealltext(self, event):
-        textEdit = self.stcpage[self.notebook1.GetSelection()]
-        self.gotostart()
-        self.findnext(event)
-        while self.replacetext(): pass
 
 
 # ------------------------------------------------------------------------------
@@ -1667,10 +1578,12 @@ class Pinguino(framePinguinoX, Tools, editor):
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
         frame_1 = Preferences(self)
+        frame_1.__initPreferences__(self)
         app.SetTopWindow(frame_1)
         frame_1.CenterOnParent()
         frame_1.Show()
         app.MainLoop()
+        
         
     #----------------------------------------------------------------------
     def OnDrop(self, event):

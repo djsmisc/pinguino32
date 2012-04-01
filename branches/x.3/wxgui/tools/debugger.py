@@ -6,8 +6,8 @@
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
-    first release:	2011-03-02
-    last release:	2011-11-03
+    first release:	03/March/2012
+    last release:	11/March/2012
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -60,7 +60,7 @@ class Debugger:
         if mode == None:
             self.debuggingLine.Hide()
             #self.logwindow.Clear()
-            self.statusBar1.SetStatusText(number=3, text=self.curBoard.name)
+            self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
             self.updateIDE()
             return 
         

@@ -60,35 +60,35 @@ class editor:
 
 
     def copy(self,Id):
-        self.stcpage[self.notebook1.GetSelection()].Copy()
+        self.stcpage[self.notebookEditor.GetSelection()].Copy()
         return
 
     def paste(self,id):
-        self.stcpage[self.notebook1.GetSelection()].Paste()
+        self.stcpage[self.notebookEditor.GetSelection()].Paste()
         return
 
     def cut(self,id):
-        self.stcpage[self.notebook1.GetSelection()].Cut()
+        self.stcpage[self.notebookEditor.GetSelection()].Cut()
         return		
 
     def clear(self,id):
-        self.stcpage[self.notebook1.GetSelection()].Clear()
+        self.stcpage[self.notebookEditor.GetSelection()].Clear()
         return
 
     def undo(self,id):
-        self.stcpage[self.notebook1.GetSelection()].Undo()
+        self.stcpage[self.notebookEditor.GetSelection()].Undo()
         return
 
     def redo(self,id):
-        self.stcpage[self.notebook1.GetSelection()].Redo()
+        self.stcpage[self.notebookEditor.GetSelection()].Redo()
         return  
 
     def selectall(self,id):
-        self.stcpage[self.notebook1.GetSelection()].SelectAll()
+        self.stcpage[self.notebookEditor.GetSelection()].SelectAll()
         return
 
     def focus(self):
-        self.stcpage[self.notebook1.GetSelection()].SetFocus()
+        self.stcpage[self.notebookEditor.GetSelection()].SetFocus()
         return
 
     def EOF(self):
@@ -106,7 +106,7 @@ class editor:
 
     def find(self,text,direction):
         if len(self.onglet)>0:
-            self.editeur=self.stcpage[self.notebook1.GetSelection()]
+            self.editeur=self.stcpage[self.notebookEditor.GetSelection()]
             currentline=self.editeur.GetLine(self.editeur.LineFromPosition(self.editeur.GetCurrentPos()))
             currentline=currentline.upper()
             text=text.upper()		  
@@ -122,28 +122,36 @@ class editor:
                 position=self.editeur.SearchPrev(stc.STC_FIND_WHOLEWORD,text)				
             if position!=-1:
                 self.line=self.editeur.LineFromPosition(position)
-                return(self.line), position
-            else: return(-1), None
-        else: return(-1), None
+                return self.line, position
+            else: return -1, None
+        else: return -1, None
 
 
-
+    #----------------------------------------------------------------------
+    def getLineOfText(self, toFind):
+        if len(self.onglet)>0:
+            self.editeur=self.stcpage[self.notebookEditor.GetSelection()]
+            text = self.editeur.GetText()
+            text = text.split("\n")
+            return text.index(toFind)
+        
     def OnMarginClick(self, evt):
         if evt.GetMargin() == 3:
             if evt.GetShift() and evt.GetControl():
-                self.stcpage[self.notebook1.GetSelection()].FoldAll()
+                self.stcpage[self.notebookEditor.GetSelection()].FoldAll()
             else:
-                lineClicked = self.stcpage[self.notebook1.GetSelection()].LineFromPosition(evt.GetPosition())
-                if self.stcpage[self.notebook1.GetSelection()].GetFoldLevel(lineClicked) & stc.STC_FOLDLEVELHEADERFLAG:
-                    self.stcpage[self.notebook1.GetSelection()].ToggleFold(lineClicked) 
+                lineClicked = self.stcpage[self.notebookEditor.GetSelection()].LineFromPosition(evt.GetPosition())
+                if self.stcpage[self.notebookEditor.GetSelection()].GetFoldLevel(lineClicked) & stc.STC_FOLDLEVELHEADERFLAG:
+                    self.stcpage[self.notebookEditor.GetSelection()].ToggleFold(lineClicked) 
 
 
     #----------------------------------------------------------------------
     def buildSheet(self, name):
-        ImageClose = os.path.join(sys.path[0], "wxgui", "resources", "close.png")
+        #ImageClose = os.path.join(sys.path[0], "wxgui", "resources", "close.png")
 
-        self.onglet.append(wx.Panel(self.notebook1,-1))
-        self.notebook1.AddPage(self.onglet[len(self.onglet)-1],name)
+        self.onglet.append(wx.Panel(self.notebookEditor,-1))
+        
+        self.notebookEditor.AddPage(self.onglet[len(self.onglet)-1],name)
         stc = wx.stc.StyledTextCtrl(id=wx.NewId(),
                                     name='styledTextCtrl1', parent=self.onglet[-1], pos=wx.Point(0, 35),
                                     size=wx.Size(716, 305), style=wx.SUNKEN_BORDER)
@@ -177,54 +185,32 @@ class editor:
         self.stcpage.append(stc)
         self.stcpage[-1].SetMinSize(wx.Size(-1, -1))
 
-
-
-        panel = wx.Panel(id=wx.NewId(), name='panel4',
-                         parent=self.onglet[-1], pos=wx.Point(0, 0), size=wx.Size(716, 35),
-                         style=wx.TAB_TRAVERSAL)
-        panel.SetMinSize(wx.Size(-1, 35))
-        panel.SetMaxSize(wx.Size(-1, 35))
-
-        choice1 = wx.Choice(choices=[], id=wx.NewId(),
-                            name='choice1', parent=panel, pos=wx.Point(0, 5),
-                            size=wx.Size(160, 28), style=0)
-        choice1.SetMaxSize(wx.Size(-1, 28))
-        choice1.SetMinSize(wx.Size(160, 28))
-        self.Bind(wx.EVT_CHOICE, self.moveToFuntion, choice1) 	
-
         boxSizer = wx.BoxSizer(orient=wx.VERTICAL)
-        boxSizer.AddWindow(panel, 0, border=0, flag=wx.EXPAND)
         boxSizer.AddWindow(self.stcpage[-1], 1, border=0, flag=wx.EXPAND)
 
         self.onglet[-1].SetSizer(boxSizer)
-
-        gridSizer = wx.GridSizer(cols=0, hgap=0, rows=1, vgap=0)
-        gridSizer.AddWindow(choice1, 0, border=0,
-                            flag=wx.ALIGN_CENTER_VERTICAL)	
-
-        panel.SetSizer(gridSizer)
-
-        self.choiceFunctions.append(choice1)
         self.sheetFunctions.append({})
 
     #----------------------------------------------------------------------
     def New(self,name,reservedword,rw):
         """ open a new tab """
-        self.notebook1.Show()
+        self.notebookEditor.Show()
         self.buildSheet(name)
-        self.notebook1.SetSelection(len(self.onglet)-1)
-        self.stcpage[self.notebook1.GetSelection()].Bind(stc.EVT_STC_MODIFIED,self.OnChange)
-        self.stcpage[self.notebook1.GetSelection()].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-        self.stcpage[self.notebook1.GetSelection()].Bind(wx.EVT_LEFT_UP, self.onclick)
-        self.stcpage[self.notebook1.GetSelection()].Bind(wx.EVT_RIGHT_UP, self.onclick)
+        self.updateIDE()
+        self.notebookEditor.SetSelection(len(self.onglet)-1)
+        self.stcpage[self.notebookEditor.GetSelection()].Bind(stc.EVT_STC_MODIFIED,self.OnChange)
+        self.stcpage[self.notebookEditor.GetSelection()].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.stcpage[self.notebookEditor.GetSelection()].Bind(wx.EVT_LEFT_UP, self.onclick)
+        self.stcpage[self.notebookEditor.GetSelection()].Bind(wx.EVT_RIGHT_UP, self.onclick)
         #self.filename.append(os.getcwd()+"/"+name+".pde")	
         self.filename.append(unicode(sys.path[0], 'utf8')+"/.temp/"+name+".pde")
         self.seteditorproperties(reservedword,rw)
         x,y=self.GetSize()
-        self.stcpage[self.notebook1.GetSelection()].SetSize((x,y-20))
-        self.editeur=self.stcpage[self.notebook1.GetSelection()]
+        self.stcpage[self.notebookEditor.GetSelection()].SetSize((x,y-20))
+        self.editeur=self.stcpage[self.notebookEditor.GetSelection()]
         self.editeur.Bind(wx.EVT_CONTEXT_MENU, self.contexMenuTools)
         self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
+        #self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.keyEvent)        
         self.editeur.Bind(wx.stc.EVT_STC_AUTOCOMP_SELECTION, self.inserted)
         self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.updateStatusBar)
         self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.updateFuntionsChoice)
@@ -240,12 +226,13 @@ class editor:
         self.editeur.GotoLine(self.editeur.LineCount)
         self.insertSnippet("Bare Minimum {snippet}")
         self.updateFuntionsChoice(True)
+        
 
 
     #----------------------------------------------------------------------
     def updatenotebook(self):
-        if self.notebook1.PageCount == 0:
-            self.notebook1.Hide()
+        if self.notebookEditor.PageCount == 0:
+            self.notebookEditor.Hide()
             self.background.Show()
 
 
@@ -255,7 +242,7 @@ class editor:
     def OpenDialog(self,type,extension,reservedword,rw, filehistory, config):
         """ Open Dialog and load file in a new editor """
         
-        try: defaultDir=os.path.split(self.filename[self.notebook1.GetSelection()])[0]
+        try: defaultDir=os.path.split(self.filename[self.notebookEditor.GetSelection()])[0]
         except: defaultDir = sys.path[0]
         
         opendlg = wx.FileDialog(self,
@@ -284,7 +271,7 @@ class editor:
         alloaded=-1
         directory,extension = os.path.splitext(path)
         for i in range(len(self.stcpage)):
-            if file.replace(extension,"")==self.notebook1.GetPageText(i):
+            if file.replace(extension,"")==self.notebookEditor.GetPageText(i):
                 alloaded=i
         if alloaded!=-1:
             dlg = wx.MessageDialog(self,
@@ -300,24 +287,28 @@ class editor:
                 for line in fichier:
                     self.stcpage[i].AddText(line)
                 fichier.close()
-                self.notebook1.SetSelection(alloaded)
-                self.notebook1.SetPageText(self.notebook1.GetSelection(),file.replace(extension,""))						   
+                self.notebookEditor.SetSelection(alloaded)
+                self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),file.replace(extension,""))						   
                 return
 
         self.New(file.replace(extension,""),reservedword,rw)
-        self.stcpage[self.notebook1.GetSelection()].ClearAll()
-        self.filename[self.notebook1.GetSelection()]=path
+        self.stcpage[self.notebookEditor.GetSelection()].ClearAll()
+        self.filename[self.notebookEditor.GetSelection()]=path
         fichier=codecs.open(path,'r','utf8')
         for line in fichier:
-            self.stcpage[self.notebook1.GetSelection()].AddText(line)
+            self.stcpage[self.notebookEditor.GetSelection()].AddText(line)
         fichier.close()
-        self.notebook1.SetPageText(self.notebook1.GetSelection(),file.replace(extension,""))
+        self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),file.replace(extension,""))
         self.gotostart()
+        #self.appendTreeExamples(path)
+        #if path not in self.currentTreeDir:
+            #self.currentTreeDir.append(path)
+        #self.updateTreeExamples()
 
     def Save(self,type,extension):
         """save the content of the editor to filename""" 
         if len(self.onglet)>0: 
-            path=self.filename[self.notebook1.GetSelection()]
+            path=self.filename[self.notebookEditor.GetSelection()]
             # directory,extension=os.path.splitext(path) bug #01 2008-09-06
             directory,extension=os.path.split(path)
             file=os.path.basename(path)  
@@ -343,43 +334,43 @@ class editor:
                     dlg.Destroy()			
                     if (result!=wx.ID_YES):
                         return 0	 
-            self.filename[self.notebook1.GetSelection()]=path
+            self.filename[self.notebookEditor.GetSelection()]=path
             directory,extension=os.path.splitext(path)
             file=os.path.basename(path)		
-            self.notebook1.SetPageText(self.notebook1.GetSelection(),file.replace(extension,""))
+            self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),file.replace(extension,""))
             fichier=codecs.open(path,'w','utf8')			
-            for i in range(0,self.stcpage[self.notebook1.GetSelection()].GetLineCount()):
-                fichier.writelines(unicode(self.stcpage[self.notebook1.GetSelection()].GetLine(i)))
+            for i in range(0,self.stcpage[self.notebookEditor.GetSelection()].GetLineCount()):
+                fichier.writelines(unicode(self.stcpage[self.notebookEditor.GetSelection()].GetLine(i)))
             fichier.close()
             return
 
     def SaveDirect(self):
         """ Save file without dialog box """
         if len(self.onglet)>0: 
-            path=self.filename[self.notebook1.GetSelection()]
+            path=self.filename[self.notebookEditor.GetSelection()]
             fichier=codecs.open(path,'w','utf8')
-            for i in range(0,self.stcpage[self.notebook1.GetSelection()].GetLineCount()):
-                fichier.writelines(self.stcpage[self.notebook1.GetSelection()].GetLine(i))
+            for i in range(0,self.stcpage[self.notebookEditor.GetSelection()].GetLineCount()):
+                fichier.writelines(self.stcpage[self.notebookEditor.GetSelection()].GetLine(i))
             fichier.close()
-            if self.notebook1.GetPageText(self.notebook1.GetSelection())[0]=="*":
-                chaine=self.notebook1.GetPageText(self.notebook1.GetSelection())
+            if self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())[0]=="*":
+                chaine=self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())
                 chaine=chaine[1:len(chaine)]
-                self.notebook1.SetPageText(self.notebook1.GetSelection(),chaine)
+                self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),chaine)
             return
         return
 
     def highlightline(self,line,color):
         """highlight a line """
-        self.stcpage[self.notebook1.GetSelection()].GotoLine(line)
-        self.stcpage[self.notebook1.GetSelection()].SetCaretLineBack(color)
-        self.stcpage[self.notebook1.GetSelection()].SetCaretLineVisible(1)
+        self.stcpage[self.notebookEditor.GetSelection()].GotoLine(line)
+        self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineBack(color)
+        self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(1)
         self.Refresh()
         return
 
     def CloseTab(self):
         """ close the current tab """
         if len(self.onglet)>0:
-            if self.notebook1.GetPageText(self.notebook1.GetSelection())[0]=="*":
+            if self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())[0]=="*":
                 dlg = wx.MessageDialog(self,
                                        'Save file ?','Warning!',
                                        wx.YES_NO | wx.ICON_WARNING
@@ -388,31 +379,31 @@ class editor:
                 dlg.Destroy()			
                 if (result==wx.ID_YES):
                     self.Save("Pde File","pde")  
-            self.filename.remove(self.filename[self.notebook1.GetSelection()])
-            self.onglet.remove(self.onglet[self.notebook1.GetSelection()])
-            self.stcpage.remove(self.stcpage[self.notebook1.GetSelection()])
-            self.notebook1.DeletePage(self.notebook1.GetSelection())
-            self.sheetFunctions.remove(self.sheetFunctions[self.notebook1.GetSelection()])
-            self.choiceFunctions.remove(self.choiceFunctions[self.notebook1.GetSelection()])
+            self.filename.remove(self.filename[self.notebookEditor.GetSelection()])
+            self.onglet.remove(self.onglet[self.notebookEditor.GetSelection()])
+            self.stcpage.remove(self.stcpage[self.notebookEditor.GetSelection()])
+            self.notebookEditor.DeletePage(self.notebookEditor.GetSelection())
+            self.sheetFunctions.remove(self.sheetFunctions[self.notebookEditor.GetSelection()])
+            #self.choiceFunctions.remove(self.choiceFunctions[self.notebookEditor.GetSelection()])
 
 
     def GetPath(self):
         """ return the complete path of file """
-        if self.notebook1.GetSelection()!=-1:
-            return self.filename[self.notebook1.GetSelection()]
+        if self.notebookEditor.GetSelection()!=-1:
+            return self.filename[self.notebookEditor.GetSelection()]
         else:
             return -1
 
     def OnChange(self,event):
         """ modified editor window event """
-        if self.notebook1.GetPageText(self.notebook1.GetSelection())[0]!="*":
-            self.notebook1.SetPageText(self.notebook1.GetSelection(),"*"+self.notebook1.GetPageText(self.notebook1.GetSelection()))
-        if self.stcpage[self.notebook1.GetSelection()].GetCaretLineVisible()==True:
-            self.stcpage[self.notebook1.GetSelection()].SetCaretLineVisible(0)
+        if self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())[0]!="*":
+            self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),"*"+self.notebookEditor.GetPageText(self.notebookEditor.GetSelection()))
+        if self.stcpage[self.notebookEditor.GetSelection()].GetCaretLineVisible()==True:
+            self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(0)
 
     def onclick(self,event):
-        if self.stcpage[self.notebook1.GetSelection()].GetCaretLineVisible()==True:
-            self.stcpage[self.notebook1.GetSelection()].SetCaretLineVisible(0)
+        if self.stcpage[self.notebookEditor.GetSelection()].GetCaretLineVisible()==True:
+            self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(0)
         event.Skip()
 
     def OnKeyDown(self,event):
@@ -423,27 +414,27 @@ class editor:
         k_code = event.GetKeyCode()
 
         # automatic indentation
-        if k_code == wx.WXK_RETURN and self.stcpage[self.notebook1.GetSelection()].AutoCompActive()!=1:
-            line=self.stcpage[self.notebook1.GetSelection()].GetCurrentLine()
-            text = self.stcpage[self.notebook1.GetSelection()].GetTextRange(self.stcpage[self.notebook1.GetSelection()].PositionFromLine(line), \
-                                                                            self.stcpage[self.notebook1.GetSelection()].GetCurrentPos())
+        if k_code == wx.WXK_RETURN and self.stcpage[self.notebookEditor.GetSelection()].AutoCompActive()!=1:
+            line=self.stcpage[self.notebookEditor.GetSelection()].GetCurrentLine()
+            text = self.stcpage[self.notebookEditor.GetSelection()].GetTextRange(self.stcpage[self.notebookEditor.GetSelection()].PositionFromLine(line), \
+                                                                            self.stcpage[self.notebookEditor.GetSelection()].GetCurrentPos())
             if text.strip() == u'':
-                self.stcpage[self.notebook1.GetSelection()].AddText('\r\n' + text)
-                self.stcpage[self.notebook1.GetSelection()].EnsureCaretVisible()
+                self.stcpage[self.notebookEditor.GetSelection()].AddText('\r\n' + text)
+                self.stcpage[self.notebookEditor.GetSelection()].EnsureCaretVisible()
                 return
-            indent = self.stcpage[self.notebook1.GetSelection()].GetLineIndentation(line)
-            i_space = indent / self.stcpage[self.notebook1.GetSelection()].GetTabWidth()
+            indent = self.stcpage[self.notebookEditor.GetSelection()].GetLineIndentation(line)
+            i_space = indent / self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth()
             ndent = u'\r\n' + u'\t' * i_space
-            self.stcpage[self.notebook1.GetSelection()].AddText(ndent + \
-                                                                ((indent - (self.stcpage[self.notebook1.GetSelection()].GetTabWidth() * i_space)) * u' '))
-            self.stcpage[self.notebook1.GetSelection()].EnsureCaretVisible()
+            self.stcpage[self.notebookEditor.GetSelection()].AddText(ndent + \
+                                                                ((indent - (self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth() * i_space)) * u' '))
+            self.stcpage[self.notebookEditor.GetSelection()].EnsureCaretVisible()
             return
 
         # self completion
         if k_code == 32 and event.ControlDown():
-            self.stcpage[self.notebook1.GetSelection()].AutoCompSetIgnoreCase(True)  # so this needs to match
-            self.stcpage[self.notebook1.GetSelection()].AutoCompSetAutoHide(True)	# auto hide list when nothing matches
-            self.stcpage[self.notebook1.GetSelection()].AutoCompShow(0, " ".join(keywordhelp))
+            self.stcpage[self.notebookEditor.GetSelection()].AutoCompSetIgnoreCase(True)  # so this needs to match
+            self.stcpage[self.notebookEditor.GetSelection()].AutoCompSetAutoHide(True)	# auto hide list when nothing matches
+            self.stcpage[self.notebookEditor.GetSelection()].AutoCompShow(0, " ".join(keywordhelp))
             event.Skip()
         event.Skip()	
 
@@ -451,32 +442,32 @@ class editor:
         """ set the layout,keywords and layout for syntax"""
         global keywordhelp
         keywordhelp=rw
-        #self.stcpage[self.notebook1.GetSelection()].SetLexer(stc.STC_LEX_CPP)
+        #self.stcpage[self.notebookEditor.GetSelection()].SetLexer(stc.STC_LEX_CPP)
         kw = keyword.kwlist		
         for i in range(0,len(reservedword)):
             kw.append(reservedword[i])
 
         font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)	
-        self.stcpage[self.notebook1.GetSelection()].SetKeyWords(0, " ".join(keyword.kwlist))		 
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_PREPROCESSOR, "face:%s,size:10,fore:#d36820" %  font.GetFaceName())		
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_DEFAULT, "face:%s,size:10,fore:#000000" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_COMMENT, "face:%s,size:10,fore:#c81818" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINE, "face:%s,size:10,fore:#007F00" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_NUMBER, "face:%s,size:10,fore:#ff0000" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_STRING, "italic,face:%s,size:10,fore:#7f0000" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_CHARACTER, "face:%s,size:10,fore:#cc0000" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_WORD, "face:%s,size:10,fore:#0C36F0" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_OPERATOR, "face:%s,size:10" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_IDENTIFIER, "face:%s,size:10" % font.GetFaceName())
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_STRINGEOL, "fore:#000000,back:#E0C0E0,eol,size:%(size)d" % faces)
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTDOC, "fore:#5e5ef1,size:%(size)d" % faces)
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINEDOC,  "fore:#007F00,size:%(size)d" % faces)
-        self.stcpage[self.notebook1.GetSelection()].StyleSetSpec(stc.STC_C_GLOBALCLASS, "fore:#7F7F7F,size:%(size)d" % faces)
-        self.stcpage[self.notebook1.GetSelection()].SetCaretForeground("BLACK")
-        self.stcpage[self.notebook1.GetSelection()].SetCaretWidth(1)
-        self.stcpage[self.notebook1.GetSelection()].SetBackSpaceUnIndents(True)
-        #self.stcpage[self.notebook1.GetSelection()].SetMarginWidth(0, 30)
-        #self.stcpage[self.notebook1.GetSelection()].SetMarginType(0,stc.STC_MARGIN_NUMBER)
-        self.stcpage[self.notebook1.GetSelection()].UsePopUp(1)
+        self.stcpage[self.notebookEditor.GetSelection()].SetKeyWords(0, " ".join(keyword.kwlist))		 
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_PREPROCESSOR, "face:%s,size:10,fore:#d36820" %  font.GetFaceName())		
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_DEFAULT, "face:%s,size:10,fore:#000000" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENT, "face:%s,size:10,fore:#c81818" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINE, "face:%s,size:10,fore:#007F00" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_NUMBER, "face:%s,size:10,fore:#ff0000" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRING, "italic,face:%s,size:10,fore:#7f0000" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_CHARACTER, "face:%s,size:10,fore:#cc0000" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_WORD, "face:%s,size:10,fore:#0C36F0" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_OPERATOR, "face:%s,size:10" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_IDENTIFIER, "face:%s,size:10" % font.GetFaceName())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRINGEOL, "fore:#000000,back:#E0C0E0,eol,size:%(size)d" % faces)
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTDOC, "fore:#5e5ef1,size:%(size)d" % faces)
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINEDOC,  "fore:#007F00,size:%(size)d" % faces)
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_GLOBALCLASS, "fore:#7F7F7F,size:%(size)d" % faces)
+        self.stcpage[self.notebookEditor.GetSelection()].SetCaretForeground("BLACK")
+        self.stcpage[self.notebookEditor.GetSelection()].SetCaretWidth(1)
+        self.stcpage[self.notebookEditor.GetSelection()].SetBackSpaceUnIndents(True)
+        #self.stcpage[self.notebookEditor.GetSelection()].SetMarginWidth(0, 30)
+        #self.stcpage[self.notebookEditor.GetSelection()].SetMarginType(0,stc.STC_MARGIN_NUMBER)
+        self.stcpage[self.notebookEditor.GetSelection()].UsePopUp(1)
 
         return
