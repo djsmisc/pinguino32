@@ -26,68 +26,20 @@
 
 /* ---------------------------------------------------------------------
    bin2bcd()
-
    --------------------------------------------------------------------- */
 
-u32 bin2bcd(u32 dec)
+u8 bin2bcd(u8 dec)
 {
-	return ((dec/10)<<4)+(dec%10);
+	return ((dec/10) << 4) + (dec % 10);
 }
-
-/*
-uint bin2bcd (uint const x)
-{
-	uint bcd = 0;	// valeur BCD initiale
-	uint bin = x;	// valeur binaire initiale
-	uint nibble;
-	int n = 0;		// decalage initial
-
-	// tant que le nombre n'est pas nul
-	while (bin)
-	{
-		// extraire le quartet BCD du binaire (0-9)
-		nibble = bin % 10;
-		// ranger le quartet en commencant par le poids faible
-		bcd |= nibble << n;
-		// augmenter le decalage de 4 bits pour preparer l'emplacement du quartet suivant
-		n += 4;
-		// se debarasser de la dizaine traitee
-		bin /= 10;
-	}
-	return bcd;
-}
-*/
 
 /* ---------------------------------------------------------------------
    bcd2bin()
    --------------------------------------------------------------------- */
 
-u32 bcd2bin(u32 bcd)
+u8 bcd2bin(u8 bcd)
 {
-	return ((bcd>>4)*10)+bcd%16;
+	return ((bcd >> 4) * 10) + bcd % 16;
 }
 
-/*
-uint bcd2bin (uint const x)
-{
-	uint bin = 0;	// valeur binaire initiale
-	uint bcd = x;	// valeur BCD initiale
-	uint n = 1;
-	uint nibble;
-
-	// tant que le nombre n'est pas nul,
-	while (bcd)
-	{
-		// on extrait le quartet de poids faible
-		nibble = bcd & 0x0F;
-		// on ajoute le produit du quartet par la dizaine courante * (1, 10, 100 etc.)
-		bin += (nibble * n);
-		// on change de dizaine
-		n *= 10;
-		// on se debarasse qu qurtet traite
-		bcd >>= 4;
-	}
-	return bin;
-}
-*/
 #endif	/* __BCD_C */
