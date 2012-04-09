@@ -196,14 +196,14 @@ if DEV:
         fichier.close()
         perror()
 
-    try:	
-        import threading			# thread functions
-        fichier.writelines('Threading successfully loaded\n')
-    except:
-        fichier.writelines('Threading failed\n')
-        fichier.writelines('Try to re-install Python\n')
-        fichier.close()
-        perror()
+try:	
+    import threading			# thread functions
+    fichier.writelines('Threading successfully loaded\n')
+except:
+    fichier.writelines('Threading failed\n')
+    fichier.writelines('Try to re-install Python\n')
+    fichier.close()
+    perror()
 
 # ------------------------------------------------------------------------------
 # check pinguino modules
