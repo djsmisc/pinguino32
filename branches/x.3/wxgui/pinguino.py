@@ -295,8 +295,9 @@ class Pinguino(framePinguinoX, Tools, editor):
         for b in range(len(boardlist)):
             self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
         #self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
-        self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.USBCDC)
-        self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.NODEBUG)
+	if DEV:
+            self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.USBCDC)
+            self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.NODEBUG)
 
         
 
