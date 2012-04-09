@@ -40,7 +40,7 @@ class Lateral ( wx.Panel ):
 		self.comboBoxDir = wx.ComboBox( self.m_panel5, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, comboBoxDirChoices, 0 )
 		bSizer5.Add( self.comboBoxDir, 0, wx.EXPAND, 5 )
 		
-		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_ICON|wx.LC_NO_HEADER|wx.LC_REPORT )
+		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT )
 		bSizer5.Add( self.listCtrlDir, 1, wx.EXPAND, 5 )
 		
 		self.m_panel5.SetSizer( bSizer5 )
@@ -55,7 +55,7 @@ class Lateral ( wx.Panel ):
 		
 		bSizer6.Add( self.m_staticText2, 0, wx.EXPAND, 5 )
 		
-		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_ICON|wx.LC_NO_HEADER|wx.LC_REPORT )
+		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT )
 		bSizer6.Add( self.listCtrlFiles, 1, wx.EXPAND, 5 )
 		
 		choiceFileChoices = [ u"*.*", u"*.pde" ]
@@ -91,7 +91,7 @@ class Lateral ( wx.Panel ):
 		self.m_panel9 = wx.Panel( self.m_splitter4, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer9 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listCtrlVars = wx.ListCtrl( self.m_panel9, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_ICON|wx.LC_REPORT )
+		self.listCtrlVars = wx.ListCtrl( self.m_panel9, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT )
 		bSizer9.Add( self.listCtrlVars, 1, wx.EXPAND, 5 )
 		
 		self.m_panel9.SetSizer( bSizer9 )
