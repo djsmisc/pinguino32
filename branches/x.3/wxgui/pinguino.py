@@ -165,6 +165,12 @@ class Pinguino(framePinguinoX, Editor):
         self.__initIDE__()
 
         self.openLast()
+        
+    #----------------------------------------------------------------------
+    def translate(self, str):
+        """"""
+        return str
+        
 
 
 # ------------------------------------------------------------------------------
@@ -924,12 +930,12 @@ class Pinguino(framePinguinoX, Editor):
 
     def translate(self, message):
         """ translate message using gettext according current OS """
-        # Checking if the host platform is a mac
-        #if sys.platform == 'darwin':
-            #return message
-        #else:
-            ## assume it's a posix or win32 platform
-            #return self.lang.ugettext(message)
+         #Checking if the host platform is a mac
+        if sys.platform == 'darwin':
+            return message
+        else:
+            # assume it's a posix or win32 platform
+            return message
 
 # ------------------------------------------------------------------------------
 # preprocess

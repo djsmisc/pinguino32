@@ -1,4 +1,28 @@
-UBW32 found: 241664 bytes free
-Erasing...
-Writing hex file '/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/examples/01.Basics/Blink/Blink.hex':...........................................................................
-Resetting device...
+#----------------------------------------------------------------------------
+#	clean
+#----------------------------------------------------------------------------
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.o
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.elf
+«/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.elf» borrado
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.hex
+rm -f -v /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o
+«/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o» borrado
+#----------------------------------------------------------------------------
+#	copy
+#----------------------------------------------------------------------------
+cp /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/32MX440F256H.o /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o
+#----------------------------------------------------------------------------
+#	compile and link
+#----------------------------------------------------------------------------
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/linux/p32/bin/mips-elf-gcc -EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=16384 -Wl,-Map=/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/output.map -Wl,-L/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/ -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO_OTG -T/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_OTG/procdefs.ld -T/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_OTG/elf32pic32mx.x -L/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/non-free -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/pinguino/core -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/pinguino/libraries -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_OTG -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/.temp -I/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free -o /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.elf /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.c\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/crt0.S\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/processor.o\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/usb/libcdc.a\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/obj/non-free/usb/libadb.a\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/lkr/PIC32_PINGUINO_OTG/ISRwrapper.S\
+		/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/p32/include/non-free/p32xxxx.h\
+		-lm -lgcc -lc
+In file included from /home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/main32.c:29:0:
+/home/yeison/Documentos/PythonPowered/pinguinoX3/x.3/source/define.h:6:20: fatal error: libI2C.c: No such file or directory
+compilation terminated.
+make: *** [link] Error 1
