@@ -1,5 +1,8 @@
 
 
-#define DEBUG_MODE NODEBUG
+
+
 #include <delay.c>
-#include <digitalw.c>
+#include <libI2C.c>
+#include <pinguinoserial1.c>
+#include <typedef.h>
