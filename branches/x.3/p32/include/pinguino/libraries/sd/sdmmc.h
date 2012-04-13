@@ -6,7 +6,6 @@
 **
 	[29-03-12][hgmvanbeek@gmail.com][defined PIC32-PINGUINO-MICRO pinning]
     [30-03-12][hgmvanbeek@gmail.com][Yellow Led indicates SD activity ]
-*/	
 */
 
 #ifndef __SDMMC_H__
