@@ -689,7 +689,7 @@ class panelLateral ( wx.Panel ):
 		self.comboBoxDir = wx.ComboBox( self.m_panel5, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, comboBoxDirChoices, 0 )
 		bSizer5.Add( self.comboBoxDir, 0, wx.EXPAND, 5 )
 		
-		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_ICON|wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
+		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT|wx.RAISED_BORDER )
 		bSizer5.Add( self.listCtrlDir, 1, wx.EXPAND, 5 )
 		
 		self.m_panel5.SetSizer( bSizer5 )
@@ -704,7 +704,7 @@ class panelLateral ( wx.Panel ):
 		
 		bSizer6.Add( self.m_staticText2, 0, wx.EXPAND, 5 )
 		
-		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_ICON|wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
+		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT|wx.RAISED_BORDER )
 		bSizer6.Add( self.listCtrlFiles, 1, wx.EXPAND, 5 )
 		
 		choiceFileChoices = [ _("*.*"), _("*.pde") ]
@@ -902,7 +902,7 @@ class frameAutoCompleter ( wx.Frame ):
 		
 		bSizer24 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listCtrlAutocompleter = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_ICON|wx.LC_LIST|wx.LC_NO_HEADER|wx.LC_REPORT )
+		self.listCtrlAutocompleter = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT )
 		bSizer24.Add( self.listCtrlAutocompleter, 1, wx.EXPAND, 5 )
 		
 		self.SetSizer( bSizer24 )
