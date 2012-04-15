@@ -57,7 +57,7 @@ class editor:
         self.sheetFunctions = []
         self.choiceFunctions = []
         self.line=-1
-        
+	self.inhibitChangeEvents = False
         self.notebookEditor.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.update_dockFiles)
 
 
@@ -173,17 +173,21 @@ class editor:
         self.notebookEditor.Show()
         self.buildSheet(name)
         self.updateIDE()
-        self.notebookEditor.SetSelection(len(self.onglet)-1)
-        self.stcpage[self.notebookEditor.GetSelection()].Bind(stc.EVT_STC_MODIFIED,self.OnChange)
-        self.stcpage[self.notebookEditor.GetSelection()].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-        self.stcpage[self.notebookEditor.GetSelection()].Bind(wx.EVT_LEFT_UP, self.onclick)
-        self.stcpage[self.notebookEditor.GetSelection()].Bind(wx.EVT_RIGHT_UP, self.onclick)
+        self.notebookEditor.ChangeSelection(len(self.onglet)-1) ### Set ~ ChangeSelection -- bjoernp
+#        self.notebookEditor.SetSelection(len(self.onglet)-1) ### Set ~ ChangeSelection -- bjoernp
+#        print len(self.onglet)-1
+#        print self.notebookEditor.GetSelection()
+	newIdx = self.notebookEditor.GetSelection()
+        self.stcpage[newIdx].Bind(stc.EVT_STC_MODIFIED,self.OnChange)
+        self.stcpage[newIdx].Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+        self.stcpage[newIdx].Bind(wx.EVT_LEFT_UP, self.onclick)
+        self.stcpage[newIdx].Bind(wx.EVT_RIGHT_UP, self.onclick)
         #self.filename.append(os.getcwd()+"/"+name+".pde")	
         self.filename.append(unicode(sys.path[0], 'utf8')+"/.temp/"+name+".pde")
         self.seteditorproperties(reservedword,rw)
-        x,y=self.GetSize()
-        self.stcpage[self.notebookEditor.GetSelection()].SetSize((x,y-20))
-        self.editeur=self.stcpage[self.notebookEditor.GetSelection()]
+        #x,y=self.GetSize()
+        #self.stcpage[self.notebookEditor.GetSelection()].SetSize((x,y-20))
+        self.editeur=self.stcpage[newIdx]
         self.editeur.Bind(wx.EVT_CONTEXT_MENU, self.contexMenuTools)
         self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
         #self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.keyEvent)        
@@ -196,6 +200,8 @@ class editor:
         self.editeur.Bind(wx.stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
         self.editeur.Bind(wx.stc.EVT_STC_DO_DROP, self.OnDrop)  
         #self.editeur.Bind(wx.stc.EVT_STC_dr, self.OnDrag)        
+        self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTLEFT, self.OnSavepointLeft)  
+        self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTREACHED, self.OnSavepointReached)  
 
         self.insertSnippet("Insert Date {snippet}")
         self.editeur.GotoLine(self.editeur.LineCount)
@@ -203,6 +209,7 @@ class editor:
         self.editeur.GotoLine(self.editeur.LineCount)
         self.insertSnippet("Bare Minimum {snippet}")
         self.update_dockFiles()
+        #self._mgr.Update()
         
 
 
@@ -248,36 +255,44 @@ class editor:
         alloaded=-1
         directory,extension = os.path.splitext(path)
         for i in range(len(self.stcpage)):
-            if file.replace(extension,"")==self.notebookEditor.GetPageText(i):
+	    if file.replace(extension,"")==self.notebookEditor.GetPageText(i):
                 alloaded=i
         if alloaded!=-1:
-            dlg = wx.MessageDialog(self,
-                                   'File is already opened, reload it ?','Warning!',
-                                   wx.YES_NO | wx.ICON_WARNING)
-            result=dlg.ShowModal()
-            dlg.Destroy()			
-            if (result==wx.ID_NO):
+            dlg = wx.messagedialog(self,
+                                   'file is already opened, reload it ?','warning!',
+                                   wx.yes_no | wx.icon_warning)
+            result=dlg.showmodal()
+            dlg.destroy()			
+            if (result==wx.id_no):
                 return
             else:
-                self.stcpage[alloaded].ClearAll()
+		self.inhibitchangeevents = true
+                self.stcpage[alloaded].clearall()
                 fichier=open(path,'r')
-                for line in fichier:
-                    self.stcpage[i].AddText(line)
+                #for line in fichier:
+                #    self.stcpage[i].addtext(line)
+                self.stcpage[i].SetText(fichier.read())
                 fichier.close()
                 self.notebookEditor.SetSelection(alloaded)
-                self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),file.replace(extension,""))						   
+		self.inhibitChangeEvents = False
                 return
-
+	self.inhibitChangeEvents = True
         self.New(file.replace(extension,""),reservedword,rw)
-        self.stcpage[self.notebookEditor.GetSelection()].ClearAll()
-        self.filename[self.notebookEditor.GetSelection()]=path
+	pageIdx = self.notebookEditor.GetSelection()
+        self.stcpage[pageIdx].ClearAll()
+        self.filename[pageIdx]=path
         fichier=codecs.open(path,'r','utf8')
-        for line in fichier:
-            self.stcpage[self.notebookEditor.GetSelection()].AddText(line)
+        #for line in fichier:
+        #    self.stcpage[pageIdx].AddText(line)
+        self.stcpage[pageIdx].SetText(fichier.read())
         fichier.close()
-        self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),file.replace(extension,""))
+        self.notebookEditor.SetPageText(pageIdx,file.replace(extension,""))
         self.gotostart()
         self.update_dockFiles()
+        #self.notebookEditor.Update()
+        self.stcpage[pageIdx].EmptyUndoBuffer()
+        #self.stcpage[pageIdx].SetSavePoint()
+	self.inhibitChangeEvents = False
         
     def Save(self,type,extension):
         """save the content of the editor to filename""" 
@@ -344,7 +359,8 @@ class editor:
     def CloseTab(self):
         """ close the current tab """
         if len(self.onglet)>0:
-            if self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())[0]=="*":
+            pageIdx = self.notebookEditor.GetSelection()
+            if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
                 dlg = wx.MessageDialog(self,
                                        'Save file ?','Warning!',
                                        wx.YES_NO | wx.ICON_WARNING
@@ -353,12 +369,15 @@ class editor:
                 dlg.Destroy()			
                 if (result==wx.ID_YES):
                     self.Save("Pde File","pde")  
-            self.filename.remove(self.filename[self.notebookEditor.GetSelection()])
-            self.onglet.remove(self.onglet[self.notebookEditor.GetSelection()])
-            self.stcpage.remove(self.stcpage[self.notebookEditor.GetSelection()])
-            self.notebookEditor.DeletePage(self.notebookEditor.GetSelection())
-            self.sheetFunctions.remove(self.sheetFunctions[self.notebookEditor.GetSelection()])
-            #self.choiceFunctions.remove(self.choiceFunctions[self.notebookEditor.GetSelection()])
+            self.filename.remove(self.filename[pageIdx])
+            self.onglet.remove(self.onglet[pageIdx])
+            self.stcpage.remove(self.stcpage[pageIdx])
+            self.notebookEditor.DeletePage(pageIdx)
+            self.sheetFunctions.remove(self.sheetFunctions[pageIdx])
+            #self.choiceFunctions.remove(self.choiceFunctions[page])
+            if pageIdx > 0:
+                self.notebookEditor.SetSelection(pageIdx-1)
+                self.notebookEditor.Update()
 
 
     def GetPath(self):
@@ -368,13 +387,35 @@ class editor:
         else:
             return -1
 
+    def SetModified(self,status):
+	pageIdx =  self.notebookEditor.GetSelection()
+	modSet = self.notebookEditor.GetPageText(pageIdx)[0] == "*"
+	if status == False:
+	    if modSet:
+		self.notebookEditor.SetPageText(pageIdx,self.notebookEditor.GetPageText(pageIdx)[1:])
+	else:
+	    if not modSet: 
+		self.notebookEditor.SetPageText(pageIdx,"*"+self.notebookEditor.GetPageText(pageIdx))
+
+    def OnSavepointReached(self,event):
+	self.SetModified(False)
+	
+    def OnSavepointLeft(self,event):
+	self.SetModified(True)
+	
     def OnChange(self,event):
         """ modified editor window event """
-        if self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())[0]!="*":
-            self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),"*"+self.notebookEditor.GetPageText(self.notebookEditor.GetSelection()))
+	#event.Skip()
+	#if self.inhibitChangeEvents:
+	#    return
+	#modType = event.GetModificationType()
+	#if (stc.STC_PERFORMED_USER & modType) == 0: 
+	#    return
+	#self.UpdateModified()
+
         if self.stcpage[self.notebookEditor.GetSelection()].GetCaretLineVisible()==True:
             self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(0)
-
+        
     def onclick(self,event):
         if self.stcpage[self.notebookEditor.GetSelection()].GetCaretLineVisible()==True:
             self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(0)

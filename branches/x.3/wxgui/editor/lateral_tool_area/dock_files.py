@@ -105,6 +105,7 @@ class File:
         if len(self.stcpage) < 1:
             self.lateralVars.DeleteAllItems()
             self.lateralFunc.DeleteAllItems()
+            if event: event.Skip()
             return 
             
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
@@ -187,4 +188,6 @@ class File:
         for var in self.allDefi:
             self.addDefiInListCtrl(count, var)
             count += 1 
+            
+        if event: event.Skip()       
     
