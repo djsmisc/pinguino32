@@ -257,6 +257,7 @@ class editor:
         for i in range(len(self.stcpage)):
 	    if file.replace(extension,"")==self.notebookEditor.GetPageText(i):
                 alloaded=i
+        if alloaded!=-1:
             dlg = wx.MessageDialog(self,
                                    'File is already opened, reload it ?','Warning!',
                                    wx.YES_NO | wx.ICON_WARNING)
@@ -266,18 +267,18 @@ class editor:
                 return
             else:
                 self.stcpage[alloaded].ClearAll()
-		self.inhibitChangeEvents = True
+                self.inhibitChangeEvents = True
                 fichier=open(path,'r')
                 #for line in fichier:
                 #    self.stcpage[i].addtext(line)
                 self.stcpage[i].SetText(fichier.read())
                 fichier.close()
                 self.notebookEditor.SetSelection(alloaded)
-		self.inhibitChangeEvents = False
+                self.inhibitChangeEvents = False
                 return
-	self.inhibitChangeEvents = True
+        self.inhibitChangeEvents = True
         self.New(file.replace(extension,""),reservedword,rw)
-	pageIdx = self.notebookEditor.GetSelection()
+        pageIdx = self.notebookEditor.GetSelection()
         self.stcpage[pageIdx].ClearAll()
         self.filename[pageIdx]=path
         fichier=codecs.open(path,'r','utf8')
@@ -291,12 +292,12 @@ class editor:
         #self.notebookEditor.Update()
         self.stcpage[pageIdx].EmptyUndoBuffer()
         #self.stcpage[pageIdx].SetSavePoint()
-	self.inhibitChangeEvents = False
+        self.inhibitChangeEvents = False
         
     def Save(self,type,extension):
         """save the content of the editor to filename""" 
         if len(self.onglet)>0: 
-	    pageIdx = self.notebookEditor.GetSelection()
+            pageIdx = self.notebookEditor.GetSelection()
             path=self.filename[pageIdx]
             # directory,extension=os.path.splitext(path) bug #01 2008-09-06
             directory,extension=os.path.split(path)
@@ -331,7 +332,7 @@ class editor:
             for i in range(0,self.stcpage[pageIdx].GetLineCount()):
                 fichier.writelines(unicode(self.stcpage[pageIdx].GetLine(i)))
             fichier.close()
-	    self.stcpage[pageIdx].SetSavePoint()
+            self.stcpage[pageIdx].SetSavePoint()
             return
 
     #def SaveDirect(self):
