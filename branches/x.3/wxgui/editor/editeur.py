@@ -271,7 +271,7 @@ class editor:
                 fichier=open(path,'r')
                 #for line in fichier:
                 #    self.stcpage[i].addtext(line)
-                self.stcpage[i].SetText(fichier.read())
+                self.stcpage[alloaded].SetText(fichier.read())
                 fichier.close()
                 self.notebookEditor.SetSelection(alloaded)
                 self.inhibitChangeEvents = False
