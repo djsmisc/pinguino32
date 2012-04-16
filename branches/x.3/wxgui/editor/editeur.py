@@ -297,7 +297,8 @@ class editor:
     def Save(self,type,extension):
         """save the content of the editor to filename""" 
         if len(self.onglet)>0: 
-            path=self.filename[self.notebookEditor.GetSelection()]
+	    pageIdx = self.notebookEditor.GetSelection()
+            path=self.filename[pageIdx]
             # directory,extension=os.path.splitext(path) bug #01 2008-09-06
             directory,extension=os.path.split(path)
             file=os.path.basename(path)  
@@ -323,14 +324,15 @@ class editor:
                     dlg.Destroy()			
                     if (result!=wx.ID_YES):
                         return 0	 
-            self.filename[self.notebookEditor.GetSelection()]=path
+            self.filename[pageIdx]=path
             directory,extension=os.path.splitext(path)
             file=os.path.basename(path)		
-            self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),file.replace(extension,""))
+            self.notebookEditor.SetPageText(pageIdx,file.replace(extension,""))
             fichier=codecs.open(path,'w','utf8')			
-            for i in range(0,self.stcpage[self.notebookEditor.GetSelection()].GetLineCount()):
-                fichier.writelines(unicode(self.stcpage[self.notebookEditor.GetSelection()].GetLine(i)))
+            for i in range(0,self.stcpage[pageIdx].GetLineCount()):
+                fichier.writelines(unicode(self.stcpage[pageIdx].GetLine(i)))
             fichier.close()
+	    self.stcpage[pageIdx].SetSavePoint()
             return
 
     #def SaveDirect(self):

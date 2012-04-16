@@ -63,6 +63,7 @@ class Menubar:
                 chaine=self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())
                 chaine=chaine[1:len(chaine)]
                 self.notebookEditor.SetPageText(self.notebookEditor.GetSelection(),chaine)
+            self.stcpage[self.notebookEditor.GetSelection()].SetSavePoint()
             return
         return
     
