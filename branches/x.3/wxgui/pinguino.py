@@ -790,7 +790,7 @@ class Pinguino(framePinguinoX, Editor):
         self.toolbar.SetToolBitmapSize(iconSize)
 
 
-        def add2Tollbar(icon, name, function, shdesc="", lngdesc=""):
+        def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
             if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
                 id = wx.NewId()
                 self.toolbar.AddLabelTool(id,
@@ -802,30 +802,30 @@ class Pinguino(framePinguinoX, Editor):
                 self.Bind(wx.EVT_TOOL, function, id=id)
 
 
-        add2Tollbar("new", "&New", self.OnNew, "New File")
-        add2Tollbar("open", "&Open", self.OnOpen, "Open File")
-        add2Tollbar("save", "&Save", self.OnSave, "Save File")
-        add2Tollbar("stop", "&Close", self.OnClose, "Close File")  
+        add2Toolbar("new", "&New", self.OnNew, "New File")
+        add2Toolbar("open", "&Open", self.OnOpen, "Open File")
+        add2Toolbar("save", "&Save", self.OnSave, "Save File")
+        add2Toolbar("stop", "&Close", self.OnClose, "Close File")  
         self.toolbar.AddSeparator()
-        add2Tollbar("undo", "&Undo", self.OnUndo, "Undo")
-        add2Tollbar("redo", "&Redo", self.OnRedo, "Redo")   
+        add2Toolbar("undo", "&Undo", self.OnUndo, "Undo")
+        add2Toolbar("redo", "&Redo", self.OnRedo, "Redo")   
         self.toolbar.AddSeparator()
-        add2Tollbar("cut", "&Cut", self.OnCut, "Cut")
-        add2Tollbar("copy", "&Copy", self.OnCopy, "Copy")
-        add2Tollbar("paste", "&Paste", self.OnPaste, "Paste")   
-        add2Tollbar("clear", "&Clear", self.OnClear, "Clear")   
-        add2Tollbar("select", "&Select", self.OnSelectall, "Select")   
+        add2Toolbar("cut", "&Cut", self.OnCut, "Cut")
+        add2Toolbar("copy", "&Copy", self.OnCopy, "Copy")
+        add2Toolbar("paste", "&Paste", self.OnPaste, "Paste")   
+        add2Toolbar("clear", "&Clear", self.OnClear, "Clear")   
+        add2Toolbar("select", "&Select", self.OnSelectall, "Select")   
         self.toolbar.AddSeparator()
-        add2Tollbar("find", "&Fin", self.OnFind, "Search in File")   
-        add2Tollbar("replace", "&Replace", self.OnReplace, "Replace in File")   
+        add2Toolbar("find", "&Fin", self.OnFind, "Search in File")   
+        add2Toolbar("replace", "&Replace", self.OnReplace, "Replace in File")   
         self.toolbar.AddSeparator()
-        add2Tollbar("runw", "&Verify", self.OnVerify, "Compile") 
-        add2Tollbar("dwn", "&Upload", self.OnUpload, "Upload to Pinguino Board") 
-        #add2Tollbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino") 
-        add2Tollbar("preferences", "&Preferences", self.OnPreferences, "set preferences of Pinguino IDE") 				   
+        add2Toolbar("runw", "&Verify", self.OnVerify, "Compile") 
+        add2Toolbar("dwn", "&Upload", self.OnUpload, "Upload to Pinguino Board") 
+        #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino") 
+        add2Toolbar("preferences", "&Preferences", self.OnPreferences, "set preferences of Pinguino IDE") 				   
         self.toolbar.AddSeparator()
-        add2Tollbar("exit", "&Exit", self.OnExit, "Exit Pinguino IDE") 
-
+        add2Toolbar("exit", "&Exit", self.OnExit, "Exit Pinguino IDE") 
+        self.toolbar.Realize()
         self.SetToolBar(self.toolbar)
 
 
