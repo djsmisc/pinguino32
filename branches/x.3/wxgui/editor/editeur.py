@@ -257,17 +257,16 @@ class editor:
         for i in range(len(self.stcpage)):
 	    if file.replace(extension,"")==self.notebookEditor.GetPageText(i):
                 alloaded=i
-        if alloaded!=-1:
-            dlg = wx.messagedialog(self,
-                                   'file is already opened, reload it ?','warning!',
-                                   wx.yes_no | wx.icon_warning)
-            result=dlg.showmodal()
-            dlg.destroy()			
-            if (result==wx.id_no):
+            dlg = wx.MessageDialog(self,
+                                   'File is already opened, reload it ?','Warning!',
+                                   wx.YES_NO | wx.ICON_WARNING)
+            result=dlg.ShowModal()
+            dlg.Destroy()			
+            if (result==wx.ID_NO):
                 return
             else:
-		self.inhibitchangeevents = true
-                self.stcpage[alloaded].clearall()
+                self.stcpage[alloaded].ClearAll()
+		self.inhibitChangeEvents = True
                 fichier=open(path,'r')
                 #for line in fichier:
                 #    self.stcpage[i].addtext(line)
