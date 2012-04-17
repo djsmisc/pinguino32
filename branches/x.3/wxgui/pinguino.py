@@ -165,6 +165,7 @@ class Pinguino(framePinguinoX, Editor):
         self.__initIDE__()
 
         self.openLast()
+#        self.SendSizeEvent()
         
     #----------------------------------------------------------------------
     def translate(self, str):
