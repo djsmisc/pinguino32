@@ -200,6 +200,7 @@ class editor:
         self.editeur=self.stcpage[newIdx]
         self.editeur.Bind(wx.EVT_CONTEXT_MENU, self.contexMenuTools)
         self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
+        #self.editeur.Bind(wx.stc.EVT_STC_CHARADDED, self.GetCharEvent)
         #self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.keyEvent)        
         #self.editeur.Bind(wx.stc.EVT_STC_AUTOCOMP_SELECTION, self.inserted)
         self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.updateStatusBar)

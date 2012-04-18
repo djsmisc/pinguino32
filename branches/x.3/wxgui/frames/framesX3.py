@@ -689,7 +689,7 @@ class panelLateral ( wx.Panel ):
 		self.comboBoxDir = wx.ComboBox( self.m_panel5, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, comboBoxDirChoices, 0 )
 		bSizer5.Add( self.comboBoxDir, 0, wx.EXPAND, 5 )
 		
-		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT|wx.RAISED_BORDER )
+		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
 		bSizer5.Add( self.listCtrlDir, 1, wx.EXPAND, 5 )
 		
 		self.m_panel5.SetSizer( bSizer5 )
@@ -704,7 +704,7 @@ class panelLateral ( wx.Panel ):
 		
 		bSizer6.Add( self.m_staticText2, 0, wx.EXPAND, 5 )
 		
-		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT|wx.RAISED_BORDER )
+		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
 		bSizer6.Add( self.listCtrlFiles, 1, wx.EXPAND, 5 )
 		
 		choiceFileChoices = [ _("*.*"), _("*.pde") ]
@@ -721,7 +721,7 @@ class panelLateral ( wx.Panel ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _("Documents"), False )
+		self.notebookLateral.AddPage( self.documents, _("Documents"), True )
 		self.file = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer7 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -791,7 +791,7 @@ class panelLateral ( wx.Panel ):
 		self.file.SetSizer( bSizer7 )
 		self.file.Layout()
 		bSizer7.Fit( self.file )
-		self.notebookLateral.AddPage( self.file, _("File"), True )
+		self.notebookLateral.AddPage( self.file, _("File"), False )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
@@ -896,16 +896,16 @@ class panelLateral ( wx.Panel ):
 class frameAutoCompleter ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Auto-completer"), pos = wx.DefaultPosition, size = wx.Size( 176,323 ), style = wx.FRAME_FLOAT_ON_PARENT|wx.FRAME_NO_TASKBAR|wx.STAY_ON_TOP|wx.RAISED_BORDER|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Auto-completer"), pos = wx.DefaultPosition, size = wx.Size( 208,335 ), style = wx.FRAME_FLOAT_ON_PARENT|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
-		bSizer24 = wx.BoxSizer( wx.VERTICAL )
+		bSizer28 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.listCtrlAutocompleter = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_REPORT )
-		bSizer24.Add( self.listCtrlAutocompleter, 1, wx.EXPAND, 5 )
+		self.listCtrlAutocompleter = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.NO_BORDER )
+		bSizer28.Add( self.listCtrlAutocompleter, 1, wx.ALL|wx.EXPAND, 0 )
 		
-		self.SetSizer( bSizer24 )
+		self.SetSizer( bSizer28 )
 		self.Layout()
 		
 		self.Centre( wx.BOTH )

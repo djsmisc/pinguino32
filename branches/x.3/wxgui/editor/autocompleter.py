@@ -46,17 +46,25 @@ class AutoCompleter():
         self.il = wx.ImageList(14, 14)
         self.listCtrlAutocompleter.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         self.listCtrlAutocompleter.SetFocus()
-        self.Hide()
+        
             
-        self.Bind(wx.EVT_LIST_KEY_DOWN, self.keyEvent, self.listCtrlAutocompleter)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.activated, self.listCtrlAutocompleter)
+        self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)      
         self.setItems()
-
+        
+        
     #----------------------------------------------------------------------
-    def keyEvent(self, event):
+    def onCharEvent(self, event):
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
-        if event.GetKeyCode() in [wx.WXK_SHIFT,
-                                  wx.WXK_ALT,
+        
+        if event.GetKeyCode() in [wx.WXK_DOWN,
+                                  wx.WXK_UP]:
+            event.Skip()
+            return
+            
+        
+        if event.GetKeyCode() in [wx.WXK_ALT,
+                                  #wx.WXK_SHIFT,
                                   #wx.WXK_RIGHT,
                                   #wx.WXK_LEFT,
                                   wx.WXK_ESCAPE, 
@@ -64,37 +72,41 @@ class AutoCompleter():
                                   wx.WXK_NUMPAD_INSERT,
                                   wx.WXK_SPACE, 
                                   #wx.WXK_BACK,
-                                  #wx.WXK_RETURN, 
+                                  wx.WXK_RETURN, 
                                   ]:
             self.Close()
+            event.Skip()
             return
       
         if event.KeyCode == wx.WXK_BACK:
             textEdit.DeleteBack()
             self.index = self.index[:-1]
-            print len(self.index), self.index
             if len(self.index) > self.CharsCount:
                 self.setItems()
             else: self.Close()
+            event.Skip()
             return
         
-        if event.KeyCode == wx.WXK_RETURN:
-                    return         
-            
+        if event.KeyCode == wx.WXK_RETURN: return        
+        
         try:
-            textEdit.AddText(chr(event.KeyCode))
-            self.index += chr(event.KeyCode)
-            print len(self.index), self.index
-            if len(self.index) > self.CharsCount:
-                self.setItems()
-            else: self.Close()
-            return 
+            if chr(event.GetKeyCode()).isalnum() or chr(event.GetKeyCode()) == ".":
+                textEdit.AddText(chr(event.GetKeyCode()))
         except: pass
-            
+        
+        self.index = self.IDE.wordUnderCursor(True)
+        
+        if len(self.index) > self.CharsCount:
+            self.setItems()
+        else: self.Close()
+        
+        event.Skip()
+        
+
     #----------------------------------------------------------------------
     def addItem(self, name, icon):
         self.listCtrlAutocompleter.InsertImageStringItem(0, name, self.GetIconCompleter(icon))
-        self.listCtrlAutocompleter.SetItemData(0, 0)   
+        self.listCtrlAutocompleter.SetItemData(0, 1)  
 
     #----------------------------------------------------------------------
     def GetIconCompleter(self, name):
@@ -142,6 +154,7 @@ class AutoCompleter():
             
         self.SetPosition(self.getPositionCompleter())
         self.listCtrlAutocompleter.DeleteAllItems()
+        #print items
         if len(items) > 0:
             for item in items:
                 try: icon = icons[item]
@@ -149,31 +162,37 @@ class AutoCompleter():
                 self.addItem(item, icon)
             self.listCtrlAutocompleter.Select(0)
             self.setMinimunSize()
+            self.Show()
         else: self.Close()
                     
     #----------------------------------------------------------------------
     def getPositionCompleter(self):
+        #if os.name == "posix":
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
-        pos = textEdit.PointFromPosition(textEdit.CurrentPos) + \
-              self.IDE.Position + \
-              self.IDE.panelEditor.Position + \
-              wx.Point(0, self.IDE.MenuBar.Size[1]) + \
-              wx.Point(0, self.IDE.notebookEditor.Size[1]) - \
-              wx.Point(0, textEdit.Size[1]) + \
-              wx.Point(25, 0)
+        points = [textEdit.PointFromPosition(textEdit.CurrentPos),
+                  self.IDE.Position,
+                  self.IDE.panelEditor.Position,
+                  #wx.Point(0, self.IDE.notebookEditor.Size[1]),
+                  #wx.Point(0, textEdit.Size[1]),
+                  wx.Point(25, 30)]
+        pos = wx.Point(0, 0)
+        for i in points: pos += i
         try: pos = pos + wx.Point(0, self.IDE.toolbar.Size[1])
-        except wx._core.PyDeadObjectError:
-            pass
-        
+        except wx._core.PyDeadObjectError: pass
+        if os.name == "posix": pos += wx.Point(0, self.IDE.MenuBar.Size[1])
         return pos
     
     #----------------------------------------------------------------------
     def setMinimunSize(self):
         count = self.listCtrlAutocompleter.ItemCount
+        if os.name == "posix":
+            scrollH = 0
+        elif os.name == "nt":
+            scrollH = 10
         w, h = self.listCtrlAutocompleter.GetItemSpacing()
         h = (h / 2) + 1   
         if count > self.MaxItemsCount: self.SetSizeWH(-1, self.MaxItemsCount*h)
-        else: self.SetSizeWH(-1, count*h)
+        else: self.SetSizeWH(-1, count*h + scrollH)
             
             
             
