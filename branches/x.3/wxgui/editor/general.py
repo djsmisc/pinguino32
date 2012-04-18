@@ -30,6 +30,12 @@ from dic import Snippet, Autocompleter
 
 ########################################################################
 class General:
+    
+    ##----------------------------------------------------------------------
+    #def GetCharEvent(self, event):
+        #""""""
+        #event.gets
+        
 
     #----------------------------------------------------------------------
     def insertSnippet(self, key):
@@ -183,10 +189,9 @@ class General:
     #----------------------------------------------------------------------
     def keyEvent(self, event):
         #List of key to ignore
-
         if event.GetKeyCode() in [wx.WXK_UP,
                                   wx.WXK_DOWN,
-                                  wx.WXK_SHIFT,
+                                  #wx.WXK_SHIFT,
                                   wx.WXK_ALT,
                                   wx.WXK_RIGHT,
                                   wx.WXK_LEFT,
@@ -203,10 +208,9 @@ class General:
                                     wx.MOD_ALTGR,
                                     wx.MOD_CMD,
                                     wx.MOD_META,
-                                    wx.MOD_SHIFT,
+                                    #wx.MOD_SHIFT,
                                     wx.MOD_WIN]:
             return 
-        
         
         self.OnAutoCompleter()
         self.recent = False

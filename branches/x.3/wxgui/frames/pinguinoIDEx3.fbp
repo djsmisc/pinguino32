@@ -5085,7 +5085,7 @@
                 <event name="OnUpdateUI"></event>
             </object>
         </object>
-        <object class="Panel" expanded="0">
+        <object class="Panel" expanded="1">
             <property name="bg"></property>
             <property name="context_help"></property>
             <property name="context_menu">1</property>
@@ -5497,7 +5497,7 @@
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
-                                                                <property name="style">wxLC_REPORT</property>
+                                                                <property name="style">wxLC_NO_HEADER|wxLC_REPORT</property>
                                                                 <property name="subclass"></property>
                                                                 <property name="tooltip"></property>
                                                                 <property name="validator_data_type"></property>
@@ -5683,7 +5683,7 @@
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
-                                                                <property name="style">wxLC_REPORT</property>
+                                                                <property name="style">wxLC_NO_HEADER|wxLC_REPORT</property>
                                                                 <property name="subclass"></property>
                                                                 <property name="tooltip"></property>
                                                                 <property name="validator_data_type"></property>
@@ -7369,8 +7369,8 @@
             <property name="minimum_size"></property>
             <property name="name">frameAutoCompleter</property>
             <property name="pos"></property>
-            <property name="size">176,323</property>
-            <property name="style">wxFRAME_FLOAT_ON_PARENT|wxFRAME_NO_TASKBAR|wxSTAY_ON_TOP</property>
+            <property name="size">208,335</property>
+            <property name="style">wxFRAME_FLOAT_ON_PARENT|wxSTAY_ON_TOP</property>
             <property name="subclass"></property>
             <property name="title">Auto-completer</property>
             <property name="tooltip"></property>
@@ -7380,7 +7380,7 @@
             <property name="validator_variable"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
-            <property name="window_style">wxRAISED_BORDER|wxTAB_TRAVERSAL</property>
+            <property name="window_style">wxTAB_TRAVERSAL</property>
             <property name="xrc_skip_sizer">1</property>
             <event name="OnActivate"></event>
             <event name="OnActivateApp"></event>
@@ -7413,12 +7413,12 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer24</property>
+                <property name="name">bSizer28</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
-                    <property name="border">5</property>
-                    <property name="flag"></property>
+                    <property name="border">0</property>
+                    <property name="flag">wxALL|wxEXPAND</property>
                     <property name="proportion">1</property>
                     <object class="wxListCtrl" expanded="0">
                         <property name="bg"></property>
@@ -7435,7 +7435,7 @@
                         <property name="permission">protected</property>
                         <property name="pos"></property>
                         <property name="size"></property>
-                        <property name="style">wxLC_ICON|wxLC_LIST|wxLC_NO_HEADER|wxLC_REPORT</property>
+                        <property name="style">wxLC_NO_HEADER|wxLC_REPORT</property>
                         <property name="subclass"></property>
                         <property name="tooltip"></property>
                         <property name="validator_data_type"></property>
@@ -7444,7 +7444,7 @@
                         <property name="validator_variable"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
-                        <property name="window_style"></property>
+                        <property name="window_style">wxNO_BORDER</property>
                         <event name="OnChar"></event>
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>
