@@ -36,6 +36,7 @@ import sys
 import codecs
 import wx.stc as stc
 import keyword
+from wxgui._ import _
 
 faces = { 'helv' : 'Arial',
           'times': 'Times New Roman',
@@ -79,28 +80,6 @@ class editor:
     def gotostart(self):
         self.editeur.GotoLine(self.editeur.LineFromPosition(0))
         return
-
-    #def find(self,text,direction):
-        #if len(self.onglet)>0:
-            #self.editeur=self.stcpage[self.notebookEditor.GetSelection()]
-            #currentline=self.editeur.GetLine(self.editeur.LineFromPosition(self.editeur.GetCurrentPos()))
-            #currentline=currentline.upper()
-            #text=text.upper()                  
-            #if currentline.find(text)!=-1:
-                #if direction==1:                # next
-                    #self.editeur.GotoLine(self.editeur.LineFromPosition(self.editeur.GetCurrentPos())+1)
-                #if direction==0:
-                    #self.editeur.GotoLine(self.editeur.LineFromPosition(self.editeur.GetCurrentPos())-1)
-            #self.editeur.SearchAnchor()
-            #if direction==1:
-                #position=self.editeur.SearchNext(stc.STC_FIND_WHOLEWORD,text)
-            #if direction==0:
-                #position=self.editeur.SearchPrev(stc.STC_FIND_WHOLEWORD,text)                                
-            #if position!=-1:
-                #self.line=self.editeur.LineFromPosition(position)
-                #return self.line, position
-            #else: return -1, None
-        #else: return -1, None
 
 
     #----------------------------------------------------------------------
@@ -243,7 +222,7 @@ class editor:
         except: defaultDir = sys.path[0]
         
         opendlg = wx.FileDialog(self,
-                                message="Choose a file",
+                                message=_("Choose a file"),
                                 #defaultDir=sys.path[0],
                                 defaultDir=defaultDir, 
                                 defaultFile="",
@@ -272,7 +251,7 @@ class editor:
                 alloaded=i
         if alloaded!=-1:
             dlg = wx.MessageDialog(self,
-                                   'File is already opened, reload it ?','Warning!',
+                                   _("File is already opened, reload it ?"), _("Warning!"),
                                    wx.YES_NO | wx.ICON_WARNING)
             result=dlg.ShowModal()
             dlg.Destroy()                        
@@ -319,7 +298,7 @@ class editor:
             file=os.path.basename(path)  
             filedlg = wx.FileDialog(
                 self, 
-                message="Save file as ...", 
+                message=_("Save file as")+" ...", 
                 defaultDir=directory, 
                 defaultFile=file, 
                 wildcard=type+" (*"+extension+")|*"+extension,
@@ -332,7 +311,7 @@ class editor:
             if (path!=""):
                 if os.path.exists(path):
                     dlg = wx.MessageDialog(self,
-                                           'File already exist, Overwrite it ?','Warning!',
+                                           _("File already exist, Overwrite it ?"), _("Warning!"),
                                            wx.YES_NO | wx.ICON_WARNING
                                            )
                     result=dlg.ShowModal()
@@ -379,7 +358,7 @@ class editor:
             pageIdx = self.notebookEditor.GetSelection()
             if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
                 dlg = wx.MessageDialog(self,
-                                       'Save file ?','Warning!',
+                                       _("Save file ?"), _("Warning!"),
                                        wx.YES_NO | wx.ICON_WARNING
                                        )
                 result=dlg.ShowModal()

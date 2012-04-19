@@ -126,7 +126,7 @@ class Debugger:
         for i in range(20):
             try:
                 pinguino = serial.Serial(self.CDC_NAME_PORT %i, timeout=1)
-                self.logwindow.WriteText("Connected: "+self.CDC_NAME_PORT %i+"\n")
+                self.logwindow.WriteText(_("Connected:")+" "+self.CDC_NAME_PORT %i+"\n")
                 break
             except: pass
             
@@ -140,12 +140,12 @@ class Debugger:
                     wx.PostEvent(self, ResultEventDebug(line)) 
                     
             except UnboundLocalError:
-                self.logwindow.WriteText("No device connected!")
+                self.logwindow.WriteText(_("No device connected!"))
                 self.menu.menuItemDebugNone.Check()
                 wx.PostEvent(self, ResultEventDebug(None)) 
                 
             except serial.serialutil.SerialException:
-                self.logwindow.WriteText("\ndevice disconnected!")
+                self.logwindow.WriteText("\n"+_("device disconnected!"))
                 self.menu.menuItemDebugNone.Check()
                 wx.PostEvent(self, ResultEventDebug(None))            
                 

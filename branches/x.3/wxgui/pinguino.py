@@ -44,6 +44,8 @@
 
 from check import *
 
+from wxgui._ import _
+
 EVT_RESULT_REVISION_ID = wx.NewId()
 
 def EVT_RESULT_REVISION(win, func):
@@ -136,7 +138,6 @@ class Pinguino(framePinguinoX, Editor):
 
         self.loadSettings()
         self.setOSvariables()
-        #self.setLanguage()
         self.buildMenu()
         self.buildOutput()
         self.buildLateralPanel()
@@ -158,9 +159,9 @@ class Pinguino(framePinguinoX, Editor):
         self.threadRevision = threading.Thread(target=self.getRevision, args=( ))
         self.threadRevision.start()
 
-        self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. [loading...]')
-        self.displaymsg("Welcome to Pinguino IDE (rev. [loading...])\n", 0)
-
+        self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
+        self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 0)
+        
 
         self.__initIDE__()
 
@@ -221,8 +222,10 @@ class Pinguino(framePinguinoX, Editor):
         self.PaneLateral.CloseButton(True)
         #self.PaneLateral.MaximizeButton(True)
         self.PaneLateral.MinimizeButton(True)
-        self.PaneLateral.Caption("Tools")
+        self.PaneLateral.Caption(_("Tools"))
         self.PaneLateral.Right()
+        
+        
 
 
 # ------------------------------------------------------------------------------
@@ -286,6 +289,7 @@ class Pinguino(framePinguinoX, Editor):
         self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)
         self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)
         self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)
+        self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)
 
         self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
 
@@ -324,7 +328,7 @@ class Pinguino(framePinguinoX, Editor):
         self.PaneOutputInfo.CloseButton(False)
         self.PaneOutputInfo.MaximizeButton(True)
         self.PaneOutputInfo.MinimizeButton(True)
-        self.PaneOutputInfo.Caption("Output")
+        self.PaneOutputInfo.Caption(_("Output"))
         self.PaneOutputInfo.Bottom()
 
 
@@ -435,7 +439,7 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
     def getRevision(self):
         try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
-        except: sw = "unknown"
+        except: sw = _("unknown")
         wx.PostEvent(self, ResultEventRevision(sw))
 
 
@@ -445,7 +449,7 @@ class Pinguino(framePinguinoX, Editor):
     def setRevision(self, event):
         self.localRev = event.data
         self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. ' + self.localRev)
-        self.displaymsg("Welcome to Pinguino IDE (rev. " + self.localRev + ")\n", 1)
+        self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")\n", 1)
         self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
 
 # ------------------------------------------------------------------------------
@@ -476,12 +480,12 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnUpgrade(self, event):
-        self.displaymsg(self.translate("Upgrading ...\n"), 0)
+        self.displaymsg(_("Upgrading ...")+"\n", 0)
         try:  self.sr.checkout(HOME_DIR)
         except:
-            self.displaymsg(self.translate("Local version is not under revision control.\n"), 0)
+            self.displaymsg(_("Local version is not under revision control.")+"\n", 0)
             return
-        self.displaymsg(self.translate("Done\n"), 0)
+        self.displaymsg(_("Done")+"\n", 0)
         Pinguino.__init__(self, parent)
 
 # ------------------------------------------------------------------------------
@@ -489,50 +493,18 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnCheck(self, event):
-        self.displaymsg(self.translate("Checking repository revision number ...\n"), 0)
+        self.displaymsg(_("Checking repository revision number")+" ...\n", 0)
         try:  self.sr = SubversionRepository(SVN_DIR)
         except:
-            self.displaymsg(self.translate("Server temporarily unavailable.\n"), 0)
+            self.displaymsg(_("Server temporarily unavailable.")+"\n", 0)
             return
         self.svnRev = self.sr.current_version()
         if self.svnRev == self.localRev:
             self.UPGRADE.Enable(False)
-            self.displaymsg(self.translate("You have the latest version.\n"), 0)
+            self.displaymsg(_("You have the latest version.")+"\n", 0)
         else:
             self.UPGRADE.Enable(True)
-            self.displaymsg(self.translate("Revision ") + self.svnRev + self.translate(" is available.\n"), 0)
-
-## ------------------------------------------------------------------------------
-## OnDebug
-## ------------------------------------------------------------------------------
-
-    #def OnDebug(self, event):
-        #for d in range(self.ID_ENDDEBUG - self.ID_DEBUG - 1):
-            #did = self.ID_DEBUG + d + 1
-            #if self.menu.menuDebugMode.IsChecked(did):
-                #self.debug = did
-
-        ## mode Debug ?
-        #"""
-                        ## try to open serial port
-                        #try:
-                                #self.debug_handle = serial.Serial(self.debug_port)
-                        #except:
-                                #pass
-                        ## is a device connected ?
-                        #if self.debug_handle:
-                                ## let's start our thread
-                                #self.debug_flag = True
-                                #self.debug_thread.start()
-                #else:
-                        ## stop the thread
-                        #self.debug_flag = False
-                        #if self.debug_thread:
-                                #self.debug_thread.join()
-                        #if self.debug_handle:
-                                #self.debug_handle.close()
-                #"""
-
+            self.displaymsg(_("Revision ") + self.svnRev + _(" is available.")+"\n", 0)
 
 
 # ------------------------------------------------------------------------------
@@ -549,28 +521,6 @@ class Pinguino(framePinguinoX, Editor):
         self.file_menu.UpdateUI()
         self.updatenotebook()
 
-# ------------------------------------------------------------------------------
-# OnSave : Save current file
-# ------------------------------------------------------------------------------
-
-    #def OnSave(self, event):
-        #self.SaveDirect()
-
-# ------------------------------------------------------------------------------
-# OnSaveAs : Save current File as ...
-# ------------------------------------------------------------------------------
-
-
-
-# ------------------------------------------------------------------------------
-# OnClose : Close Editor Window
-# ------------------------------------------------------------------------------
-
-
-
-# ------------------------------------------------------------------------------
-# OnExit : Save Settings and Exit Program
-# ------------------------------------------------------------------------------
 
 
 
@@ -612,7 +562,7 @@ class Pinguino(framePinguinoX, Editor):
 #        print "OnPaneClose", # dir(event)
 #        print event.GetPane() == self._mgr.GetPane(self.lat) # ???
         caption = event.GetPane().caption
-        if caption == "Tools":
+        if caption == _("Tools"):
             self.menu.menuItemTools.Check(False)
 
 
@@ -672,9 +622,9 @@ class Pinguino(framePinguinoX, Editor):
         info.SetLicence(licence)
 
         info.AddDeveloper('Jean-Pierre Mandon')
-        info.AddDeveloper('Régis Blanchot')
+        info.AddDeveloper('RÃ©gis Blanchot')
         info.AddDeveloper('Marcus Fazzi')
-        info.AddDeveloper('Jesús Carmona Esteban')
+        info.AddDeveloper('JesÃºs Carmona Esteban')
         info.AddDeveloper('Ivan Ricondo')
         info.AddDeveloper('Joan Espinoza')
         info.AddDeveloper('Yeison Cardona')
@@ -682,13 +632,13 @@ class Pinguino(framePinguinoX, Editor):
         info.AddDocWriter('Benoit Espinola')
         info.AddDocWriter('Sebastien Koechlin')
         info.AddDocWriter('Ivan Ricondo')
-        info.AddDocWriter('Jesús Carmona Esteban')
+        info.AddDocWriter('JesÃºs Carmona Esteban')
         info.AddDocWriter('Marcus Fazzi')
-        info.AddDocWriter('Régis Blanchot')
+        info.AddDocWriter('RÃ©gis Blanchot')
 
         info.AddArtist('France Cadet')
         info.AddArtist('Laurent Costes')
-        info.AddArtist('Daniel Rodríguez')
+        info.AddArtist('Daniel RodrÃ­guez')
 
         info.AddTranslator('Joan Espinoza: Spanish, Portuguese')
         info.AddTranslator('Marin Purgar: Croatian')
@@ -707,14 +657,14 @@ class Pinguino(framePinguinoX, Editor):
         t0 = time.time()
         if self.GetPath()==-1:
             dlg = wx.MessageDialog(self,
-                                   self.translate('Open file first !!'),
-                                   self.translate('Warning'),
+                                   _('Open file first !!'),
+                                   _('Warning'),
                                    wx.OK | wx.ICON_WARNING)
             result=dlg.ShowModal()
             dlg.Destroy()
             return
-        self.displaymsg("Board:\t" + self.curBoard.name + "\n", 1)
-        self.displaymsg("Proc: \t" + self.curBoard.proc + "\n", 0)
+        self.displaymsg(_("Board:")+"\t" + self.curBoard.name + "\n", 1)
+        self.displaymsg(_("Proc:")+"\t" + self.curBoard.proc + "\n", 0)
         self.OnSave()
         filename=self.GetPath()
         filename,extension=os.path.splitext(filename)
@@ -732,16 +682,16 @@ class Pinguino(framePinguinoX, Editor):
             MAIN_FILE="main32.hex"
         retour=self.compile(filename, self.curBoard)
         if retour!=0:
-            self.displaymsg(self.translate("error while compiling file ")+filename,0)
+            self.displaymsg(_("error while compiling file ")+filename,0)
         else:
             retour=self.link(filename, self.curBoard)
             if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
-                self.displaymsg(self.translate("error while linking")+" "+filename+".o",0)
+                self.displaymsg(_("error while linking")+" "+filename+".o",0)
             else:
                 shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")
-                self.displaymsg(self.translate("compilation done")+"\n",0)
+                self.displaymsg(_("compilation done")+"\n",0)
                 self.displaymsg(self.getCodeSize(filename, self.curBoard)+"\n",0)
-                self.displaymsg(str(time.time() - t0) + " seconds process time\n",0)
+                self.displaymsg(str(time.time() - t0) + " "+_("seconds process time")+"\n",0)
                 os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
                 #os.remove(filename+".c")
 
@@ -770,15 +720,15 @@ class Pinguino(framePinguinoX, Editor):
                     fichier.close()
             else:# no file
                 dlg = wx.MessageDialog(self,
-                                       self.translate('File must be verified/compiled before upload'),
-                                       self.translate('Warning!'),
+                                       _('File must be verified/compiled before upload'),
+                                       _('Warning!'),
                                        wx.OK | wx.ICON_WARNING)
                 result=dlg.ShowModal()
                 dlg.Destroy()
         else:# not saved
             dlg = wx.MessageDialog(self,
-                                   self.translate('File must be saved before upload'),
-                                   self.translate('Warning!'),
+                                   _('File must be saved before upload'),
+                                   _('Warning!'),
                                    wx.OK | wx.ICON_WARNING)
             result=dlg.ShowModal()
             dlg.Destroy()
@@ -1382,4 +1332,3 @@ def getOptions():
 def setGui(bool):
     global gui
     gui=bool
-

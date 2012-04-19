@@ -25,17 +25,11 @@
 -------------------------------------------------------------------------"""
 
 import wx, re
-
 from dic import Snippet, Autocompleter
+from wxgui._ import _
 
 ########################################################################
 class General:
-    
-    ##----------------------------------------------------------------------
-    #def GetCharEvent(self, event):
-        #""""""
-        #event.gets
-        
 
     #----------------------------------------------------------------------
     def insertSnippet(self, key):
@@ -107,24 +101,24 @@ class General:
                       id=self.popupIDhelp2)           
 
             help = wx.Menu()
-            help.Append(self.popupIDhelp1, "Open wiki page in the web browser")
-            help.Append(self.popupIDhelp2, "Read description")
+            help.Append(self.popupIDhelp1, _("Open wiki page in the web browser"))
+            help.Append(self.popupIDhelp2, _("Read description"))
 
             menu.AppendMenu(self.popupIDhelp0, word, help)          
             menu.AppendSeparator()
 
-        menu.Append(self.popupID8, "Comment/Uncomment")
+        menu.Append(self.popupID8, _("Comment/Uncomment"))
         menu.AppendSeparator()
 
-        menu.Append(self.popupID1, "Undo")
-        menu.Append(self.popupID2, "Redo")
+        menu.Append(self.popupID1, _("Undo"))
+        menu.Append(self.popupID2, _("Redo"))
         menu.AppendSeparator()
-        menu.Append(self.popupID3, "Cut")
-        menu.Append(self.popupID4, "Copy")
-        menu.Append(self.popupID5, "Paste")
-        menu.Append(self.popupID6, "Clear")
+        menu.Append(self.popupID3, _("Cut"))
+        menu.Append(self.popupID4, _("Copy"))
+        menu.Append(self.popupID5, _("Paste"))
+        menu.Append(self.popupID6, _("Clear"))
         menu.AppendSeparator()
-        menu.Append(self.popupID7, "Clear All")
+        menu.Append(self.popupID7, _("Clear All"))
 
         self.PopupMenu(menu)
         menu.Destroy()

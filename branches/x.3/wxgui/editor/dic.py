@@ -27,6 +27,8 @@
 from time import ctime
 t=ctime().split(" ")
 
+from wxgui._ import _
+
 #To extend...
 
 Dictionary = [
@@ -48,7 +50,7 @@ Dictionary = [
     
 ]
 
-
+#TODO: complete list...
 Autocompleter = {
     
 "directive": ["define", "include", "ifndef", "endif",],
@@ -70,12 +72,12 @@ Snippet["for (i=0;...{snippet}"] = [7, "for (i =  ;i< ;i++){\n\n\t}"]
 Snippet["if...else {snippet}"] = [4, "if (){\n\n\t}\nelse (){\n\n\t}"]
 Snippet["if...else if...else {snippet}"] = [4, "if (){\n\n\t}\nelse if (){\n\n\t}\nelse (){\n\n\t}"]
 Snippet["switch( ) {snippet}"] = [8, "switch (){\n\tcase:\n\n\t\tbreak;\n\tdefault:\n\n\t}"]
-Snippet["Bare Minimum {snippet}"] = [59, "void setup() {\n\t// put your setup code here, to run once:\n\t\n\t}\n\nvoid loop() {\n\t// put your main code here, to run repeatedly:\n\n\t}"]
-Snippet["Insert Date {snippet}"] = [65,
+Snippet[_("Bare Minimum")+" {snippet}"] = [59, "void setup() {\n\t// put your setup code here, to run once:\n\t\n\t}\n\nvoid loop() {\n\t// put your main code here, to run repeatedly:\n\n\t}"]
+Snippet[_("Insert Date")+" {snippet}"] = [58 + len(_("Author:")),
 """/*----------------------------------------------------- 
-Author:  --<>
-Date: %s
-Description:
+%s  --<>
+%s %s
+%s
 
 -----------------------------------------------------*/
-""" %"/".join([t[2], t[1], t[4]])]	
+""" %(_("Author:"), _("Date:"), "/".join([t[2], t[1], t[4]]), _("Description:"))]	
