@@ -15,26 +15,26 @@ void debug(const char *format, ...)
 	va_list args;
 	va_start(args, format);
 
-	#if defined(NODEBUG)
+	#if defined NODEBUG
 	#endif
 
-	#ifdef (USBCDCDEBUG)
+	#ifdef USBCDCDEBUG
 		#include <__cdc.c>
 		CDCprintf("debug: ");
 		CDCprintf(format, args);
 		CDCprintf("\r\n");
 	#endif
 
-	#ifdef (USBBULKDEBUG)
+	#ifdef USBBULKDEBUG
 	#endif
 
-	#ifdef (USBHIDDEBUG)
+	#ifdef USBHIDDEBUG
 	#endif
 
-	#ifdef (USBOTGDEBUG)
+	#ifdef USBOTGDEBUG
 	#endif
 
-	#ifdef (UART1DEBUG)
+	#ifdef UART1DEBUG
 		#include <serial.c>
 		serial1init(9600);
 		serial1printf("debug: ");
@@ -42,7 +42,7 @@ void debug(const char *format, ...)
 		serial1printf("\r\n");
 	#endif
 
-	#ifdef (UART2DEBUG)
+	#ifdef UART2DEBUG
 		#include <serial.c>
 		serial2init(9600);
 		serial2printf("debug: ");
