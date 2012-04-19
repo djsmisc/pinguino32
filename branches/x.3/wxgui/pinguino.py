@@ -2,24 +2,24 @@
 #  -*- coding: UTF-8 -*-
 
 """-------------------------------------------------------------------------
-	pinguino
+    pinguino
 
-	(c) 2008-2009-2010-2011 Jean-Pierre MANDON <jp.mandon@gmail.com> 
+    (c) 2008-2009-2010-2011 Jean-Pierre MANDON <jp.mandon@gmail.com>
 
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Lesser General Public
-	License as published by the Free Software Foundation; either
-	version 2.1 of the License, or (at your option) any later version.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Lesser General Public License for more details.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-	You should have received a copy of the GNU Lesser General Public
-	License along with this library; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-	-------------------------------------------------------------------------"""
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    -------------------------------------------------------------------------"""
 
 # ------------------------------------------------------------------------------
 # changelog (see also file ChangeLog)
@@ -66,14 +66,14 @@ pinguino_version="x.3"
 # paths
 # ------------------------------------------------------------------------------
 
-HOME_DIR	= sys.path[0]
-THEME_DIR	= os.path.join(HOME_DIR, 'theme')
-SOURCE_DIR	= os.path.join(HOME_DIR, 'source')
-LOCALE_DIR	= os.path.join(HOME_DIR, 'locale')
-P32_DIR		= os.path.join(HOME_DIR, 'p32')
-P8_DIR		= os.path.join(HOME_DIR, 'p8')
-SVN_DIR		= 'http://pinguino32.googlecode.com/svn/trunk/'
-APP_CONFIG	= os.path.join(HOME_DIR, '.config')
+HOME_DIR    = sys.path[0]
+THEME_DIR    = os.path.join(HOME_DIR, 'theme')
+SOURCE_DIR    = os.path.join(HOME_DIR, 'source')
+LOCALE_DIR    = os.path.join(HOME_DIR, 'locale')
+P32_DIR        = os.path.join(HOME_DIR, 'p32')
+P8_DIR        = os.path.join(HOME_DIR, 'p8')
+SVN_DIR        = 'http://pinguino32.googlecode.com/svn/trunk/'
+APP_CONFIG    = os.path.join(HOME_DIR, '.config')
 TEMP_DIR = os.path.join(HOME_DIR, '.temp')
 EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
 
@@ -159,24 +159,24 @@ class Pinguino(framePinguinoX, Editor):
         self.threadRevision.start()
 
         self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. [loading...]')
-        self.displaymsg("Welcome to Pinguino IDE (rev. [loading...])\n", 0)     
+        self.displaymsg("Welcome to Pinguino IDE (rev. [loading...])\n", 0)
 
 
         self.__initIDE__()
 
         self.openLast()
 #        self.SendSizeEvent()
-        
+
     #----------------------------------------------------------------------
     def translate(self, str):
         """"""
         return str
-        
+
 
 
 # ------------------------------------------------------------------------------
 # Decorator to debug time
-# ------------------------------------------------------------------------------       
+# ------------------------------------------------------------------------------
     def debugTime(function):
         DEBUG_TIME = True
         def process(*args):
@@ -200,7 +200,7 @@ class Pinguino(framePinguinoX, Editor):
         if sys.platform == 'win32':
             self.imageBackground.SetSize((5000,5000)) # :)
         self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
-        self.background.CentreOnParent(wx.BOTH) 
+        self.background.CentreOnParent(wx.BOTH)
 
         # ------------------------------------------------------------------------------
         # add the panes to the manager
@@ -231,12 +231,12 @@ class Pinguino(framePinguinoX, Editor):
     def ConnectAll(self):
         """"""
         self.Bind(wx.EVT_CLOSE, self.OnExit)
-        self.Bind(wx.EVT_SIZE, self.OnResize)	 
+        self.Bind(wx.EVT_SIZE, self.OnResize)
 
         #file menu
         self.Bind(wx.EVT_MENU, self.OnNew, self.menu.menuItemNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, self.menu.menuItemOpen)
-        #self.Bind(wx.EVT_MENU_RANGE, self.menu.menuRecents, id=wx.ID_FILE1, id2=wx.ID_FILE9) 
+        #self.Bind(wx.EVT_MENU_RANGE, self.menu.menuRecents, id=wx.ID_FILE1, id2=wx.ID_FILE9)
         self.Bind(wx.EVT_MENU, self.OnSave, self.menu.menuItemSave)
         self.Bind(wx.EVT_MENU, self.OnSaveAs, self.menu.menuItemSaveAs)
         self.Bind(wx.EVT_MENU, self.OnClose, self.menu.menuItemClose)
@@ -246,11 +246,11 @@ class Pinguino(framePinguinoX, Editor):
         self.Bind(wx.EVT_MENU, self.OnCopy, self.menu.menuItemCopy)
         self.Bind(wx.EVT_MENU, self.OnPaste, self.menu.menuItemPaste)
         self.Bind(wx.EVT_MENU, self.OnCut, self.menu.menuItemCut)
-        self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)	   
-        self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)	   
+        self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
+        self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
         self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
         self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
-        self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)		
+        self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
         self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
         self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
         self.Bind(wx.EVT_MENU, self.OnPreferences, self.menu.menuItemPreferences)
@@ -280,14 +280,14 @@ class Pinguino(framePinguinoX, Editor):
 
         # help menu
         self.Bind(wx.EVT_TOOL, self.OnKeyword, self.menu.menuItemKeywords)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://www.pinguino.cc"), self.menu.menuItemWebSite)	
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://blog.pinguino.cc"), self.menu.menuItemBlog)		 
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://forum.pinguino.cc"), self.menu.menuItemForum)	   
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)	  		
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)		
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)		
-        self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)	
+        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://www.pinguino.cc"), self.menu.menuItemWebSite)
+        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://blog.pinguino.cc"), self.menu.menuItemBlog)
+        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://forum.pinguino.cc"), self.menu.menuItemForum)
+        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)
+        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)
+        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)
 
+        self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
 
 # ------------------------------------------------------------------------------
 # Output
@@ -310,12 +310,12 @@ class Pinguino(framePinguinoX, Editor):
         self.debuggingLine.SetBackgroundColour(wx.Colour(0, 0, 0))
         self.debuggingLine.SetForegroundColour(wx.Colour(255, 255, 255))
         self.debuggingLine.SetInsertionPoint(125)
-        self.debuggingLine.Hide()        
+        self.debuggingLine.Hide()
         self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
 
         self.boxSizer1 = wx.BoxSizer(orient=wx.VERTICAL)
         self.boxSizer1.AddWindow(self.logwindow, 1, border=0, flag=wx.EXPAND)
-        self.boxSizer1.AddWindow(self.debuggingLine, 0, border=0, flag=wx.EXPAND) 
+        self.boxSizer1.AddWindow(self.debuggingLine, 0, border=0, flag=wx.EXPAND)
         self.panelOutput.SetSizer(self.boxSizer1)
 
 
@@ -394,7 +394,7 @@ class Pinguino(framePinguinoX, Editor):
         #if loc == "pt":
             #loc = locale.getdefaultlocale()[0][0:5]
         #if loc != "pt_BR":
-            #loc = locale.getdefaultlocale()[0][0:2]              
+            #loc = locale.getdefaultlocale()[0][0:2]
 
         #self.lang = gettext.translation('pinguino', LOCALE_DIR, languages=[loc], fallback=True)
         #_=self.lang.ugettext
@@ -427,12 +427,12 @@ class Pinguino(framePinguinoX, Editor):
             self.debug_port = '/dev/ttyACM0'
             self.c8 = 'sdcc'
             self.u32 = 'ubw32'
-            self.make = 'make'       
+            self.make = 'make'
 
 
 # ------------------------------------------------------------------------------
 # Get revision
-# ------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------
     def getRevision(self):
         try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
         except: sw = "unknown"
@@ -463,11 +463,11 @@ class Pinguino(framePinguinoX, Editor):
     #def dthread(self):
         #while self.debug_flag is True:
             #if self.debug_handle:
-                #print ">>>debug:"	
+                #print ">>>debug:"
                 #print self.debug_handle.readline()
             #time.sleep(0.01)
 
-    ## create the debug thread			
+    ## create the debug thread
     #if DEV:
         #debug_thread = threading.Thread(target=dthread)
 
@@ -540,10 +540,10 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnFileHistory(self, event):
-        self.background.Hide() 
+        self.background.Hide()
         fileNum = event.GetId() - wx.ID_FILE1
         path = self.filehistory.GetHistoryFile(fileNum)
-        self.filehistory.AddFileToHistory(path)				  # move up the list
+        self.filehistory.AddFileToHistory(path)                  # move up the list
         self.Open(path,self.reservedword,self.rw, self.filehistory, self.config)
         # refresh file menu (doesn't seem to work)
         self.file_menu.UpdateUI()
@@ -553,7 +553,7 @@ class Pinguino(framePinguinoX, Editor):
 # OnSave : Save current file
 # ------------------------------------------------------------------------------
 
-    #def OnSave(self, event): 
+    #def OnSave(self, event):
         #self.SaveDirect()
 
 # ------------------------------------------------------------------------------
@@ -604,6 +604,18 @@ class Pinguino(framePinguinoX, Editor):
 
         self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
 
+# ------------------------------------------------------------------------------
+# OnPaneClose: wx.aui managed window is about to be closed
+# ------------------------------------------------------------------------------
+
+    def OnPaneClose(self,event):
+#        print "OnPaneClose", # dir(event)
+#        print event.GetPane() == self._mgr.GetPane(self.lat) # ???
+        caption = event.GetPane().caption
+        if caption == "Tools":
+            self.menu.menuItemTools.Check(False)
+
+
 
 # ------------------------------------------------------------------------------
 # OnResize:
@@ -611,7 +623,7 @@ class Pinguino(framePinguinoX, Editor):
 
     def OnResize(self,event):
         try: self.background.CentreOnParent(wx.BOTH)
-        except: pass	
+        except: pass
         self._mgr.Update()
         event.Skip()
 
@@ -620,7 +632,7 @@ class Pinguino(framePinguinoX, Editor):
         for i in range(self.config.ReadInt('LastEdit/count')):
             file = self.config.Read('LastEdit/file%d' %i)
             if os.path.isfile(file):
-                self.Open(file, self.reservedword, self.rw, self.filehistory, self.config)		
+                self.Open(file, self.reservedword, self.rw, self.filehistory, self.config)
 
 
 # ------------------------------------------------------------------------------
@@ -629,17 +641,17 @@ class Pinguino(framePinguinoX, Editor):
 
     def OnAbout(self, event):
         description = """Pinguino is an Open Software and Open Hardware Arduino-like project. Boards are based on 8 or 32-bit USB built-in Microchip microcontrollers. The main goal is to build a real USB system without USB to serial converter.
-		"""
+        """
 
-        licence = """Pinguino is free software; you can redistribute it and/or modify it 
-		under the terms of the GNU General Public License as published by the Free Software Foundation; 
-		either version 2 of the License, or (at your option) any later version.
+        licence = """Pinguino is free software; you can redistribute it and/or modify it
+        under the terms of the GNU General Public License as published by the Free Software Foundation;
+        either version 2 of the License, or (at your option) any later version.
 
-		Pinguino is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-		See the GNU General Public License for more details. You should have received a copy of 
-		the GNU General Public License along with File Hunter; if not, write to 
-		the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"""
+        Pinguino is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+        without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        See the GNU General Public License for more details. You should have received a copy of
+        the GNU General Public License along with File Hunter; if not, write to
+        the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"""
 
 
         info = wx.AboutDialogInfo()
@@ -662,10 +674,10 @@ class Pinguino(framePinguinoX, Editor):
         info.AddDeveloper('Jean-Pierre Mandon')
         info.AddDeveloper('Régis Blanchot')
         info.AddDeveloper('Marcus Fazzi')
-        info.AddDeveloper('Jesús Carmona Esteban')		
+        info.AddDeveloper('Jesús Carmona Esteban')
         info.AddDeveloper('Ivan Ricondo')
         info.AddDeveloper('Joan Espinoza')
-        info.AddDeveloper('Yeison Cardona')									
+        info.AddDeveloper('Yeison Cardona')
 
         info.AddDocWriter('Benoit Espinola')
         info.AddDocWriter('Sebastien Koechlin')
@@ -684,7 +696,7 @@ class Pinguino(framePinguinoX, Editor):
         info.AddTranslator('Vasile Guta Ciucur: Romanian')
         info.AddTranslator('Wagner de Queiroz: Brazilian portuguese')
 
-        wx.AboutBox(info)  
+        wx.AboutBox(info)
 
 # ------------------------------------------------------------------------------
 # OnVerify:
@@ -699,7 +711,7 @@ class Pinguino(framePinguinoX, Editor):
                                    self.translate('Warning'),
                                    wx.OK | wx.ICON_WARNING)
             result=dlg.ShowModal()
-            dlg.Destroy()		   
+            dlg.Destroy()
             return
         self.displaymsg("Board:\t" + self.curBoard.name + "\n", 1)
         self.displaymsg("Proc: \t" + self.curBoard.proc + "\n", 0)
@@ -762,14 +774,14 @@ class Pinguino(framePinguinoX, Editor):
                                        self.translate('Warning!'),
                                        wx.OK | wx.ICON_WARNING)
                 result=dlg.ShowModal()
-                dlg.Destroy()					 
+                dlg.Destroy()
         else:# not saved
             dlg = wx.MessageDialog(self,
                                    self.translate('File must be saved before upload'),
                                    self.translate('Warning!'),
                                    wx.OK | wx.ICON_WARNING)
             result=dlg.ShowModal()
-            dlg.Destroy()		   
+            dlg.Destroy()
         event.Skip()
 
 
@@ -806,26 +818,26 @@ class Pinguino(framePinguinoX, Editor):
         add2Toolbar("new", "&New", self.OnNew, "New File")
         add2Toolbar("open", "&Open", self.OnOpen, "Open File")
         add2Toolbar("save", "&Save", self.OnSave, "Save File")
-        add2Toolbar("stop", "&Close", self.OnClose, "Close File")  
+        add2Toolbar("stop", "&Close", self.OnClose, "Close File")
         self.toolbar.AddSeparator()
         add2Toolbar("undo", "&Undo", self.OnUndo, "Undo")
-        add2Toolbar("redo", "&Redo", self.OnRedo, "Redo")   
+        add2Toolbar("redo", "&Redo", self.OnRedo, "Redo")
         self.toolbar.AddSeparator()
         add2Toolbar("cut", "&Cut", self.OnCut, "Cut")
         add2Toolbar("copy", "&Copy", self.OnCopy, "Copy")
-        add2Toolbar("paste", "&Paste", self.OnPaste, "Paste")   
-        add2Toolbar("clear", "&Clear", self.OnClear, "Clear")   
-        add2Toolbar("select", "&Select", self.OnSelectall, "Select")   
+        add2Toolbar("paste", "&Paste", self.OnPaste, "Paste")
+        add2Toolbar("clear", "&Clear", self.OnClear, "Clear")
+        add2Toolbar("select", "&Select", self.OnSelectall, "Select")
         self.toolbar.AddSeparator()
-        add2Toolbar("find", "&Fin", self.OnFind, "Search in File")   
-        add2Toolbar("replace", "&Replace", self.OnReplace, "Replace in File")   
+        add2Toolbar("find", "&Fin", self.OnFind, "Search in File")
+        add2Toolbar("replace", "&Replace", self.OnReplace, "Replace in File")
         self.toolbar.AddSeparator()
-        add2Toolbar("runw", "&Verify", self.OnVerify, "Compile") 
-        add2Toolbar("dwn", "&Upload", self.OnUpload, "Upload to Pinguino Board") 
-        #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino") 
-        add2Toolbar("preferences", "&Preferences", self.OnPreferences, "set preferences of Pinguino IDE") 				   
+        add2Toolbar("runw", "&Verify", self.OnVerify, "Compile")
+        add2Toolbar("dwn", "&Upload", self.OnUpload, "Upload to Pinguino Board")
+        #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
+        add2Toolbar("preferences", "&Preferences", self.OnPreferences, "set preferences of Pinguino IDE")
         self.toolbar.AddSeparator()
-        add2Toolbar("exit", "&Exit", self.OnExit, "Exit Pinguino IDE") 
+        add2Toolbar("exit", "&Exit", self.OnExit, "Exit Pinguino IDE")
         self.toolbar.Realize()
         self.SetToolBar(self.toolbar)
 
@@ -841,7 +853,7 @@ class Pinguino(framePinguinoX, Editor):
             libext='.pdl'
             libdir=P8_DIR
         else:
-            libext='.pdl32'		
+            libext='.pdl32'
             libdir=P32_DIR
         #for fichier in os.listdir(os.path.join(libdir, 'lib')):
         for fichier in os.listdir(os.path.join(libdir, 'pdl')):
@@ -866,7 +878,7 @@ class Pinguino(framePinguinoX, Editor):
                             include=explode[1]
                         if len(explode)==3:
                             define=explode[2]
-                        # append to the list	
+                        # append to the list
                         self.libinstructions.append([instruction,cnvinstruction,include,define])
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction))+"[ ]*\(")
                         #regex = re.compile(r"(^|[' ']|['=']|['{']|[',']|[\t]|['(']|['!'])"+str(instruction)+r"([' ']|['=']|['}']|[',']|[';']|[\t]|[')'].*)")
@@ -880,7 +892,7 @@ class Pinguino(framePinguinoX, Editor):
         self.keywordList = self.ClearRedundancy(self.keywordList)
         self.keywordNum = len(self.keywordList)
         # make reserved words list
-        if len(self.libinstructions)!=0:	
+        if len(self.libinstructions)!=0:
             for i in range(len(self.libinstructions)):
                 chaine=self.libinstructions[i][0]
                 self.rw.append(chaine)
@@ -923,7 +935,7 @@ class Pinguino(framePinguinoX, Editor):
         else:
             if message!="":
                 print message
-        return  
+        return
 
 # ------------------------------------------------------------------------------
 # translate
@@ -960,7 +972,7 @@ class Pinguino(framePinguinoX, Editor):
         #fichier.writelines("\n")
         fichier.close()
 
-        ### debug mode		
+        ### debug mode
         ##DEBUG_STR = "NODEBUG"
         ##if self.debug == self.ID_USBCDC:
             ##DEBUG_STR = "USBCDCDEBUG"
@@ -978,15 +990,15 @@ class Pinguino(framePinguinoX, Editor):
 
         # board
         #if board.arch == 8:
-        #	self.adddefine("#define " + board.board)
+        #    self.adddefine("#define " + board.board)
 
         # add #include and #define from user.c to define.h
         fichier = open(os.path.join(SOURCE_DIR, 'user.c'), 'r')
         i=0
         for line in fichier:
             if line.find("#include")!=-1 or line.find("#define")!=-1:
-                self.adddefine(line)	# add to define.h
-                fileline[i]="\r\n";	# delete from user.c
+                self.adddefine(line)    # add to define.h
+                fileline[i]="\r\n";    # delete from user.c
                 i=i+1
             else:
                 fileline[i]=line
@@ -1013,7 +1025,7 @@ class Pinguino(framePinguinoX, Editor):
                 self.displaymsg("error "+resultline,1)
                 return "error"
             fileline[nblines] = resultline
-            nblines += 1	  
+            nblines += 1
         fichier.close()
 
         # save new tmp file
@@ -1051,14 +1063,14 @@ class Pinguino(framePinguinoX, Editor):
 
     def notindefine(self,chaine):
         """ verify if #define exists in define.h file """
-        fichier = open(os.path.join(SOURCE_DIR, 'define.h'), 'r') 
+        fichier = open(os.path.join(SOURCE_DIR, 'define.h'), 'r')
         for line in fichier:
             # chaine has been found ?
             if line.find(chaine)!=-1:
                 fichier.close()
                 return(0)
         fichier.close()
-        return(1)		 
+        return(1)
 
 # ------------------------------------------------------------------------------
 # replaceword
@@ -1124,7 +1136,7 @@ class Pinguino(framePinguinoX, Editor):
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'diolan'
-#							"--extended",\
+#                            "--extended",\
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                     "-mpic16",\
                                     "--denable-peeps",\
@@ -1201,7 +1213,7 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'diolan'
-#							"--extended",\
+#                            "--extended",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "-mpic16",\
@@ -1270,7 +1282,7 @@ class Pinguino(framePinguinoX, Editor):
             if line[7:9:1] == "00":
                 if board.arch == 8:
                     # filter records below 0x2000 (by RASM)
-                    #if int(line[3:7:1],16) >= int("2000", 16): 
+                    #if int(line[3:7:1],16) >= int("2000", 16):
                     if int(line[3:7:1],16) >= board.memstart:
                         codesize = codesize + int(line[1:3:1], 16)
                 else:
@@ -1309,7 +1321,7 @@ class Pinguino(framePinguinoX, Editor):
         wx.InitAllImageHandlers()
         self.AutoCompleter = AutocompleterIDE(self)
         self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True))
-        app.SetTopWindow(self.AutoCompleter)       
+        app.SetTopWindow(self.AutoCompleter)
         self.AutoCompleter.Show()
         app.MainLoop()
 
@@ -1357,7 +1369,7 @@ def getOptions():
     parser.add_argument('-a', '--author', dest='author', action='store_true', default=False, help='show authors of this Pinguino IDE version and exit')
     parser.add_argument('-f', '--filename', dest='filename', nargs=1, default=False, help='filename to process')
     for b in range(len(boardlist)):
-        parser.add_argument(	boardlist[b].shortarg,
+        parser.add_argument(    boardlist[b].shortarg,
                                     boardlist[b].longarg,
                                     dest='board',
                                     const=b,

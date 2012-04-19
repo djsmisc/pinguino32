@@ -5,10 +5,10 @@
     General methos to Pinguino IDE.
 
     author:		Yeison Cardona
-    contact:		yeison.eng@gmail.com 
+    contact:		yeison.eng@gmail.com
     first release:	02/April/2012
     last release:	03/April/2012
-    
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
@@ -36,7 +36,7 @@ class Menubar:
         self.New("Newfile" + str(self.noname), self.reservedword, self.rw)
         self.noname+=1
         self.updatenotebook()
-        
+
     #----------------------------------------------------------------------
     def OnOpen(self, event):
         self.background.Hide()
@@ -48,12 +48,12 @@ class Menubar:
                         self.config)
         self.updatenotebook()
         self.update_dockFiles()
-        
-            
+
+
     #----------------------------------------------------------------------
     def OnSave(self, event=None):
         """ Save file without dialog box """
-        if len(self.onglet)>0: 
+        if len(self.onglet)>0:
             path=self.filename[self.notebookEditor.GetSelection()]
             fichier=codecs.open(path,'w','utf8')
             for i in range(0,self.stcpage[self.notebookEditor.GetSelection()].GetLineCount()):
@@ -66,21 +66,21 @@ class Menubar:
             self.stcpage[self.notebookEditor.GetSelection()].SetSavePoint()
             return
         return
-    
-    
-    
-    
+
+
+
+
     #----------------------------------------------------------------------
-    def OnSaveAs(self, event): 
+    def OnSaveAs(self, event):
         self.Save("Pde Files","pde")
-       
-        
+
+
     #----------------------------------------------------------------------
-    def OnClose(self, event): 
+    def OnClose(self, event):
         self.CloseTab()
         self.updatenotebook()
         self.update_dockFiles()
-        
+
     #----------------------------------------------------------------------
     def OnCopy(self, event):
         self.stcpage[self.notebookEditor.GetSelection()].Copy()
@@ -108,7 +108,7 @@ class Menubar:
     #----------------------------------------------------------------------
     def OnSelectall(self, event):
         self.stcpage[self.notebookEditor.GetSelection()].SelectAll()
-        
+
     #----------------------------------------------------------------------
     def OnComment(self, event=None):
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
@@ -125,14 +125,14 @@ class Menubar:
 
     #----------------------------------------------------------------------
     def OnExit(self, event):
-    
+
         self.closing = True  #Signal for Threads
-        
+
         try:
             self.pinguino.close()
             fclose(self.debug_handle)
         except: pass
-        
+
         # ---save settings-----------------------------------------------
         #if not self.IsIconized() and not self.IsMaximized():
         w, h = self.GetSize()
@@ -178,26 +178,25 @@ class Menubar:
         # delete the frame
         self.Destroy()
         sys.exit(0)
-        
-        
+
     #----------------------------------------------------------------------
     def OnViewTools(self, event):
+        pane = self._mgr.GetPane(self.lat)  # wxAuiPaneInfo
         if self.menu.menuItemTools.IsChecked():
-            self._mgr.AddPane(self.lat, self.PaneLateral, '')
+            pane.Show()
         else:
-            self._mgr.DetachPane(self.lat)            
-            self.lat.Hide()
+            pane.Hide()
         self.updateIDE()
-        
+
     #----------------------------------------------------------------------
     def OnViewOutput(self, event):
+        pane = self._mgr.GetPane(self.panelOutput)  # wxAuiPaneInfo
         if self.menu.menuItemOutput.IsChecked():
-            self._mgr.AddPane(self.panelOutput, self.PaneOutputInfo, '')
+            pane.Show()
         else:
-            self._mgr.DetachPane(self.panelOutput)            
-            self.panelOutput.Hide()
+            pane.Hide()
         self.updateIDE()
-        
+
     #----------------------------------------------------------------------
     def OnViewToolbar(self, event):
         if self.menu.menuItemToolbar.IsChecked():
