@@ -32,7 +32,7 @@
 
 #define PRINT_BUF_LEN 12		// should be enough for 32 bits
 
-typedef void (*funcout) (u8);	// type of void foo(u8)
+typedef void (*funcout) (char);	// type of void foo(u8)
 static funcout pputchar;		// then void pputchar(u8)
 
 /*	----------------------------------------------------------------------------
@@ -360,7 +360,7 @@ static u8 pprint(u8 **out, const u8 *format, va_list args)
 
 			if (*format == 's')		// string
 			{
-				u8 *s = va_arg(args, u8*);
+				char *s = va_arg(args, char*);
 				pc += pprints(out, s?s:"(null)", width, pad);
 				continue;
 			}

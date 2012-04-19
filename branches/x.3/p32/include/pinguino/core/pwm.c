@@ -357,9 +357,9 @@ void PWM_set_frequency(u32 freq)
 			_pr3_plus1 = _pr3_plus1 >> 8;	// divided by 256
 			_t3con = 0b111;					// prescaler is 256
 		}
-		return(_pr3_plus1);
+//		return(_pr3_plus1);
 	}
-	else return 0;
+//	else return 0;
 }
 
 /*	----------------------------------------------------------------------------
