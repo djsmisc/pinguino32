@@ -56,11 +56,7 @@ class Preferences():
         self.choiceTheme.SetStringSelection(self.IDE.theme)
         self.Bind(wx.EVT_CHOICE,  self.SetTheme, self.choiceTheme)
         
-                
-        
-            
 
-        
     #----------------------------------------------------------------------
     def setPage(self, event):
         if type(event) == type(""): string = event

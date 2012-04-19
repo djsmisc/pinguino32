@@ -24,6 +24,8 @@
 import pysvn		# checked in check.py
 import os
 
+from wxgui._ import _
+
 #	-----------------------------------------------------------------------------
 
 class VersionControlError(Exception):
@@ -82,7 +84,7 @@ class SubversionWorkingCopy(WorkingCopy):
 		try :
 			return str(self.repository._client.info(self.path).revision.number)
 		except:
-			return "unknown"
+			return _("unknown")
 
 	def use_version(self, version):
 		self.repository._client.update(

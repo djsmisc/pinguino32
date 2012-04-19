@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------"""
 
 import codecs, sys
-
+from wxgui._ import _
 
 ########################################################################
 class Menubar:
@@ -33,7 +33,7 @@ class Menubar:
     #----------------------------------------------------------------------
     def OnNew(self, event):
         self.background.Hide()
-        self.New("Newfile" + str(self.noname), self.reservedword, self.rw)
+        self.New(_("Newfile") + str(self.noname), self.reservedword, self.rw)
         self.noname+=1
         self.updatenotebook()
 

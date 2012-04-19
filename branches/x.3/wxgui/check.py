@@ -209,6 +209,7 @@ except:
 # check pinguino modules
 # ------------------------------------------------------------------------------
 
+from frames import * 
 try:	
     from frames import * 		
     fichier.writelines('Frames successfully loaded\n')

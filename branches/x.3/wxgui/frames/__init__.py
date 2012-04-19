@@ -2,4 +2,3 @@
 #-*- coding: utf-8 -*-
 
 from framesX3 import framePinguinoX, frameKeyWords, framePreferences, panelLateral, menubarPinguino, frameAutoCompleter
-#from framesX3 import _
