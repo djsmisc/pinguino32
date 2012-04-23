@@ -1,38 +1,45 @@
-#define blinkPin 10
+
+/*
+typedef struct 										// defined in dcf77.h
+{
+	u8	seconds;
+	u8	minutes;
+	u8	hours;
+	u8	dayofweek;
+	u8	dayofmonth;
+	u8	month;
+	u8	year;
+	u8	nosync;
+} Time_Date_Format;
+*/
+
 #define DCF77Pin 0
 
-char DaysOfWeek[7][4]		= {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-
-u8 PrevSec = 0;
+char	DayW[8][4] = {"   ","Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
+u8	PrevSec = 0;
 
 void setup(void)
 {
-   Serial.begin(9600);
-	pinMode(GREENLED, OUTPUT);
-	pinMode(YELLOWLED, OUTPUT);
-	DCF77.init(DCF77Pin);
-	delay(500);
+	Serial.begin(9600);
 	Serial.println("\r\n*  Pinguino DCF77 demo  *");
+	pinMode(GREENLED, OUTPUT);
+	DCF77.start(DCF77Pin);
 }
 
 void loop(void)
 {
-	toggle(YELLOWLED);
-	if (DCF77.scanSignal())
+	if (digitalRead(DCF77Pin) == 1)
 		digitalWrite(GREENLED, HIGH);
 	else
 		digitalWrite(GREENLED, LOW);
 
-//	if ((DCF77.ss != PrevSec) && (DCF77.ss % 10 == 0))
-	if (DCF77.ss != PrevSec)
+	if (RTClock.seconds != PrevSec)
 	{
-		Serial.printf("Time: %02d:%02d:%02d    ", DCF77.hh, DCF77.mm, DCF77.ss);
-		Serial.printf("Date: %s  %02d-%02d-%02d  %1d  ", DaysOfWeek[DCF77.dw], DCF77.da, DCF77.mo, DCF77.yr, DCF77.dw);
-		if (DCF77.sync > 0)
-			Serial.printf("Synced  ");
-		Serial.println("");
+		PrevSec = RTClock.seconds;
+		Serial.printf("Time: %02d:%02d:%02d    ", RTClock.hours, RTClock.minutes, RTClock.seconds);
+		Serial.printf("Date: %s  %02d-%02d-%02d  ", DayW[RTClock.dayofweek], RTClock.dayofmonth, RTClock.month, RTClock.year);
+		if (RTClock.nosync > 0)
+			Serial.printf("No Sync for %2d min", RTClock.nosync);
+		Serial.println(" ");
 	}
-	
-	delay(20);
-	PrevSec = DCF77.ss;
 }

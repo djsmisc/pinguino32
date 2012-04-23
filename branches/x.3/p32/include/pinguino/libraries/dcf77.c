@@ -1,17 +1,14 @@
 /*	----------------------------------------------------------------------------
 	FILE:			dcf77.c
 	PROJECT:		pinguino
-	PURPOSE:		get Time and Date from DCF77 module
-	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
+	PURPOSE:		Free running Clock synchronized by a DCF77 module
+	PROGRAMMER:		Henk van Beek hgmvanbeek@gmail.com
 	FIRST RELEASE:	20 mar. 2012
-	LAST RELEASE:	21 mar. 2012
-	----------------------------------------------------------------------------
-	Adapted from Mathias Dalheimer's work (md@gonium.net)
+	LAST RELEASE:	20 apr. 2012
 	----------------------------------------------------------------------------
 	TODO :
 	* load RTCC with DCF77 Time and Date
-	* use interrupt to scan DCF77 every 15-20 ms
-	----------------------------------------------------------------------------	----------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
 	License as published by the Free Software Foundation; either
@@ -25,6 +22,13 @@
 	You should have received a copy of the GNU Lesser General Public
 	License along with this library; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	----------------------------------------------------------------------------
+	Based on a Timer1 ISR which interrupts every 20 ms a clock/date record
+	"RTClock" is keeping time, day of the week and date.
+	When for a full minute a signal is received from the dcf77 module,
+	without errors, kept in a identical record "DCF77", the record "RTClock"
+	is updated.
+	The pulsetrain of 59 bits is buffered into Buff1 and Buff2.
 	--------------------------------------------------------------------------*/
 
 #ifndef _DCF77_C_
@@ -32,43 +36,225 @@
 
 #include <typedef.h>			// u8, u16, ...
 #include <digitalw.c>			// pinMode, ...
-#include <millis.c>				// millis
 #ifdef DEBUG					// NB: Turn debugging on or off from the IDE
  #define UART1DEBUG
  #include <debug.c>
 #endif
+#include <interrupt.c>			// interrupts routines
 #include <DCF77.h>
 #include <bcd.c>
-//#define bin2bcd(x)	(x - ((x/16) * 6))
-//#define bcd2bin(bcd) (bcd >> 4) * 10 + bcd % 16;
 
 /*******************************************************************************
- * Number of milliseconds to elapse before we assume a "1",
- * if we receive a falling flank before - its a 0.
+* if a puls is longer than 150 ms it is a "1", otherwise it is a "0".
 *******************************************************************************/
 
-#define DCF_Discr_millis 140
+#define DCF_Discr_150ms (150 / 20)
 
 /*******************************************************************************
- * There is no signal in second 59 - detect the beginning of a new minute.
+ * if during 1500 ms no puls has arrived means a start of a new pulstrain.
 *******************************************************************************/
 
-#define DCF_Sync_millis 1200
+#define DCF_Sync_1500ms (1500 / 20)
 
 /*******************************************************************************
 * Global variables
 *******************************************************************************/
 
-u8  SignalPin, PrevSignal, BuffPntr;
-u16 PrevFlank, SyncTimout;
+u8  SignalPin, PrevSignal, BuffPntr, Cntr_sec, Nosync;
+u16 PrevFlank;
 u32 Buff1, Buff2;
+u32 Cntr_20ms;
+
+/*******************************************************************************
+ * Appends a received bit at the DCF code chain
+ ******************************************************************************/
+void DCF77_appendSignal(u8 signal)
+{
+//	serial1printf("BuffPntr: %02d  ", BuffPntr);
+	if ((signal > 0) && (BuffPntr < 32))
+		Buff1 = Buff1 | (1 << BuffPntr);
+	if ((signal > 0) && (BuffPntr > 31))
+		Buff2 = Buff2 | (1 << (BuffPntr - 32));
+//	serial1printf("Append Buff: %08x %08x  \r\n", DCF77.Buff1, DCF77.Buff2);
+	BuffPntr++;
+	if (BuffPntr > 59)
+	{
+		BuffPntr = 0;
+		Buff1 	 = 0;
+		Buff2 	 = 0;
+	}
+}
+
+/*******************************************************************************
+* Calculate even parity
+*******************************************************************************/
+u8 Parity_Even (u32 Bits)
+{
+  u8 i;
+  u8 p = 0;
+	for (i = 0; i < 32; i++)
+		if ((Bits & (1 << i)) > 0)
+			p = !p;
+	return p;
+}
+
+/*******************************************************************************
+ * Decodes DCF code after the 59 minute gap
+ ******************************************************************************/
+void Decode_Buffer(void)
+{
+  u32 Code;
+  u8  Par, Par1, Par2, Par3;
+//	Disp_Input_Binary(Buff1, Buff2);
+
+	if (BuffPntr == 59)
+	{
+		// Minutes
+		Code = (Buff1 >> 21) & 0x7F;
+		Par  = Parity_Even(Code);
+		Par1 = (Buff1 >> 28) & 1;
+//		serial1printf("Par= %d Par1= %d\r\n", Par, Par1);
+		if (Par == Par1)
+		{
+			Par1 = 11;
+			DCF77.minutes = bcd2bin(Code);
+//			serial1printf("mm= %02d \r\n", DCF77.mm);
+		}
+
+		// Hours
+		Code = ((Buff1 >> 29) & 0x7) | ((Buff2 & 0x7) << 3);
+		Par = Parity_Even(Code);
+		Par2 = (Buff2 >> 3) & 1;
+//		serial1printf("Par= %d Par2= %d\r\n", Par, Par2);
+		if (Par == Par2)
+		{
+			Par2 = 12;
+			DCF77.hours = bcd2bin(Code);
+//			serial1printf("hh= %02d \r\n", DCF77.hh);
+		}
+
+		Code = (Buff2 >> 4) & 0x3FFFFF;
+		Par = Parity_Even(Code);
+		Par3 = (Buff2 >> 26) & 1;
+//		serial1printf("Par= %d Par3= %d\r\n", Par, Par3);
+		if (Par == Par3)
+		{
+			Par3 = 13;
+			Code = (Buff2 >> 10) & 0x7;
+			DCF77.dayofweek = bcd2bin(Code);
+//			serial1printf("dw= %02d \r\n", DCF77.dw);
+
+			Code = (Buff2 >> 4) & 0x3F;
+			DCF77.dayofmonth = bcd2bin(Code);
+//			serial1printf("da= %02d \r\n", DCF77.da);
+
+			Code = (Buff2 >> 13) & 0x1F;
+			DCF77.month = bcd2bin(Code);
+//			serial1printf("mo= %02d \r\n", DCF77.mo);
+
+			Code = (Buff2 >> 18) & 0xFF;
+			DCF77.year = bcd2bin(Code);
+//			serial1printf("yr= %02d \r\n", DCF77.yr);
+		}
+//		Part = Par1 + Par2 + Par3;
+//		serial1printf("Part= %d\r\n", Part);
+		if (Par1 + Par2 + Par3 == 36)
+		{
+			DCF77.seconds = 0;
+			Nosync   = 0;
+//			serial1printf("Tim=  %d:%02d \r\n", DCF77.hh, DCF77.mm);
+//			serial1printf("Dat=: %02d-%02d-%02d  %1d\r\n", DCF77.da, DCF77.mo, DCF77.yr, DCF77.dw);
+			RTClock = DCF77;
+		}
+	}
+	// Reset Inputbuffer
+	BuffPntr    = 0;
+	Buff1 		= 0;
+	Buff2 		= 0;
+}
+
+/*******************************************************************************
+ * Called every 20 ms by ISR
+ * Builds DCF code by calling DCF77_appendsignal
+ ******************************************************************************/
+void DCF77_scanSignal(void)
+{
+  u16 LengthPulse;
+  u16 CurrFlank;
+  u8  CurrSignal ;
+    CurrSignal = digitalread(SignalPin);
+	if (CurrSignal != PrevSignal)
+	{
+		if (CurrSignal == 1)
+		{
+//			digitalwrite(GREENLED, HIGH);
+			/* At a raising flank */
+			CurrFlank = Cntr_20ms;
+			if ((CurrFlank - PrevFlank) > DCF_Sync_1500ms)
+				Decode_Buffer();
+			PrevFlank = CurrFlank;
+		}
+		else
+		{
+//			digitalwrite(GREENLED, LOW);
+			/* At a falling flank */
+			LengthPulse = Cntr_20ms - PrevFlank;
+			if (LengthPulse < DCF_Discr_150ms)
+				DCF77_appendSignal(0);
+			else
+				DCF77_appendSignal(1);
+		}
+		PrevSignal = CurrSignal;
+	}
+}
+
+/*******************************************************************************
+* Update Time/Date record (every second by ISR)
+*******************************************************************************/
+void Update_Time (void)
+{
+  u8 Mnth[12] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if (RTClock.seconds == 0)
+    	RTClock.nosync = Nosync;
+	RTClock.seconds++;								// Seconds
+	if (RTClock.seconds > 59)
+	{
+		Nosync++;
+		RTClock.seconds = 0;
+		RTClock.minutes++;							// Minutes
+		if (RTClock.minutes > 59)
+		{
+			RTClock.minutes = 0;
+			RTClock.hours++;						// Hours
+			if (RTClock.hours > 23)
+			{
+				RTClock.hours = 0;
+				RTClock.dayofweek++;				// Day of Week
+				if (RTClock.dayofweek > 7)
+					RTClock.dayofweek = 1;
+				RTClock.dayofmonth++;				// Date
+				if (RTClock.dayofmonth > Mnth[RTClock.month-1])
+				{
+					RTClock.dayofmonth = 1;
+					RTClock.month++;				// Month
+					if (RTClock.month > 12)
+					{
+						RTClock.month = 1;
+						RTClock.year++;				// Year
+						if (RTClock.year > 99)
+							RTClock.year = 0;
+					}
+				}
+			}
+		}
+	}
+}
 
 /*******************************************************************************
 * Initialize the DCF77 library.
-* Provide the pin number of the pin where the DCF77 signal occurs.
 *******************************************************************************/
-
-void DCF77_init(u8 dcfPin)
+void DCF77_start(u8 dcfPin)
 {
 	SignalPin  = dcfPin;
 	pinmode(SignalPin, INPUT);
@@ -76,10 +262,60 @@ void DCF77_init(u8 dcfPin)
 	PrevSignal	= 0;
 	PrevFlank	= 0;
 	BuffPntr	= 0;
-	Buff1 		= 0;
-	Buff2 		= 0;
+	Buff1		= 0;
+	Buff2		= 0;
+	Nosync		= 1;
+
+/*  Timer1 Configuration
+	   The timer clock prescale (TCKPS) is 1:64
+	   The TMR1 Count register increments on every PBCLK clock cycle
+	   PBCLK = CPUCLK / 2 = 40MHz => TMR1 inc. every 64/40MHZ = 1,6 us
+	   20 ms = 20000 us => 20000 / 1.6 = 12500 cycles
+*/
+	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
+	T1CON    = 0x20;					// prescaler 1:64, internal peripheral clock
+	TMR1     = 0;						// clear timer register
+	PR1      = 12500;					// load period register
+	IPC1SET  = 7;						// select interrupt priority and sub-priority
+	IFS0CLR  = 1 << INT_TIMER1_VECTOR;	// clear interrupt flag
+	IEC0SET  = 1 << INT_TIMER1_VECTOR;	// enable timer 1 interrupt
+	T1CONSET = 0x8000;					// start timer 1
 }
 
+/*******************************************************************************
+* Timer 1 interrupt (Vector 4)
+*******************************************************************************/
+// Put the ISR_wrapper in the good place
+void ISR_wrapper_vector_4(void) __attribute__ ((section (".vector_4")));
+
+// ISR_wrapper will call the DCF77_timer1Interrupt()
+void ISR_wrapper_vector_4(void) { Timer1Interrupt(); }
+
+// Tmr1Interrupt is declared as an interrupt routine
+void Timer1Interrupt(void) __attribute__ ((interrupt));
+
+void Timer1Interrupt()
+{
+	// is this an TMR1 interrupt ?
+	if (IntGetFlag(INT_TIMER1))
+	{
+		// Update time every second
+		Cntr_20ms++;
+		Cntr_sec++;
+    	if (Cntr_sec > 49)
+    	{
+      		Cntr_sec = 0;
+      		Update_Time();
+		}
+
+		DCF77_scanSignal();
+		IntClearFlag(INT_TIMER1);
+	}
+}
+
+/*******************************************************************************
+ * Displays the DCF code chain
+ ******************************************************************************/
 void Disp_Input_Binary(u32 Bits1, u32 Bits2)
 {
   u8 BitC;
@@ -99,142 +335,6 @@ void Disp_Input_Binary(u32 Bits1, u32 Bits2)
 			serial1write('0');
 	}
 	serial1println("  ");
-}
-
-void DCF77_appendSignal(u8 signal)
-{
-//	serial1printf("BuffPntr: %02d  ", BuffPntr);
-	if ((signal > 0) && (BuffPntr < 32))
-		Buff1 = Buff1 | (1 << BuffPntr);
-	if ((signal > 0) && (BuffPntr > 31))
-		Buff2 = Buff2 | (1 << (BuffPntr - 32));
-//	serial1printf("Append Buff: %08x %08x  \r\n", DCF77.Buff1, DCF77.Buff2);
-	BuffPntr++;
-	if (BuffPntr > 59)
-	{
-		BuffPntr = 0;
-		Buff1 	 = 0;
-		Buff2 	 = 0;
-	}
-}
-
-u8 Parity_Even (u32 Bits)
-{
-  u8 i;
-  u8 p = 0;
-	for (i = 0; i < 32; i++)
-		if ((Bits & (1 << i)) > 0)
-			p = !p;
-	return p;
-}
-
-
-void DCF77_finalizeBuffer(void)
-{
-  u8 Code, Par1, Par2, Par3;
-//	Disp_Input_Binary(Buff1, Buff2);
-
-	if (BuffPntr == 59)
-{
-		Code = (Buff1 >> 21) & 0x7F;
-		Par1 = Parity_Even(Code);
-		if ((Par1 & 1) == ((Buff1 >> 28) & 1))
-		{
-//			serial1printf("Par1= %1x   ", Par1);
-			DCF77.mm = bcd2bin(Code);
-		}
-		else
-		{
-			DCF77.mm++;
-			if (DCF77.mm > 59)
-				DCF77.mm = 0;
-				DCF77.hh++;
-				if (DCF77.hh > 23)
-					DCF77.hh = 0;
-		}
-//		serial1printf("mm= %02x  %d \r\n", Code, DCF77.mm);
-
-		Code = ((Buff1 >> 29) & 0x7) | ((Buff2 & 0x7) << 3);
-		Par2 = Parity_Even (Code);
-		if ((Par2 & 1) == ((Buff2 >> 3) & 1))
-		{
-//			serial1printf("Par2= %1x   ", Par2);
-			DCF77.hh = bcd2bin(Code);
-		}
-//		serial1printf("hh= %02x  %d \r\n", Code, DCF77.hh);
-
-		Code = (Buff2 >> 4) & 0x3FFFFF;
-		Par3 = Parity_Even (Code);
-		if ((Par3 & 1) == ((Buff2 >> 26) & 1))
-		{
-//			serial1printf("Par3= %1x   ", Par3);
-
-			Code = (Buff2 >> 10) & 0x7;
-			DCF77.dw = bcd2bin(Code);
-//			serial1printf("dw= %02x  %02d \r\n", Code, DCF77.dw);
-
-			Code = (Buff2 >> 4) & 0x3F;
-			DCF77.da = bcd2bin(Code);
-//			serial1printf("da= %02x  %02d \r\n", Code, DCF77.da);
-
-			Code = (Buff2 >> 13) & 0x1F;
-			DCF77.mo = bcd2bin(Code);
-//			serial1printf("mo= %02x  %02d \r\n", Code, DCF77.mo);
-
-			Code = (Buff2 >> 18) & 0xFF;
-			DCF77.yr = bcd2bin(Code);
-//			serial1printf("yr= %02x  %d \r\n", Code, DCF77.yr);
-			SyncTimout = 0;
-			DCF77.sync = 1;
-		}
-//		serial1printf("Tim=  %d:%02d \r\n", DCF77.hh, DCF77.mm);
-//		serial1printf("Dat=: %02d-%02d-%02d  %1d\r\n", DCF77.da, DCF77.mo, DCF77.yr, DCF77.dw);
-	}
-	// reset stuff
-	DCF77.ss    = 0;
-	BuffPntr    = 0;
-	Buff1 		= 0;
-	Buff2 		= 0;
-}
-
-/*******************************************************************************
- * Should be called every 20 ms in order to sample the DCF signal.
- * Returns the current state of the signal: 1 for HIGH, 0 for LOW.
- ******************************************************************************/
-
-u8 DCF77_scanSignal(void)
-{
-  u16 LengthPulse;
-  u16 CurrFlank;
-  u8  CurrSignal ;
-    CurrSignal = digitalread(SignalPin);
-	if (CurrSignal != PrevSignal)
-	{
-		if (CurrSignal == 1)
-		{
-			/* We detected a raising flank */
-			DCF77.ss++;
-			if (DCF77.ss > 59)
-				DCF77.ss = 0;
-			CurrFlank = millis();
-			if (CurrFlank - PrevFlank > DCF_Sync_millis)
-				DCF77_finalizeBuffer();
-			PrevFlank = CurrFlank;
-		}
-		else
-		{
-			/* or a falling flank */
-			LengthPulse = millis() - PrevFlank;
-			if (LengthPulse < DCF_Discr_millis)
-				DCF77_appendSignal(0);
-			else
-				DCF77_appendSignal(1);
-		}
-		PrevSignal = CurrSignal;
-	}
-	if (SyncTimout++ > 3000)
-		DCF77.sync = 0;
-	return CurrSignal;
 }
 
 #endif
