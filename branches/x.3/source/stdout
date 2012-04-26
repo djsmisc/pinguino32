@@ -1,39 +1,14 @@
 #----------------------------------------------------------------------------
 #	clean
 #----------------------------------------------------------------------------
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.o
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex
-rm -f -v /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o
+rm -f -v /home/regis/x.3/source/main32.o
+rm -f -v /home/regis/x.3/source/main32.elf
+« /home/regis/x.3/source/main32.elf » supprimé
+rm -f -v /home/regis/x.3/source/main32.hex
+rm -f -v /home/regis/x.3/p32/obj/non-free/processor.o
 #----------------------------------------------------------------------------
 #	copy
 #----------------------------------------------------------------------------
-cp /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/32MX440F256H.o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o
-#----------------------------------------------------------------------------
-#	compile and link
-#----------------------------------------------------------------------------
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-gcc -EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc -msoft-float -Wl,--defsym,_min_heap_size=16384 -Wl,-Map=/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/output.map -Wl,-L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/ -D __PIC32MX__ -D __32MX440F256H__ -D PIC32_PINGUINO_OTG -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG/procdefs.ld -T/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG/elf32pic32mx.x -L/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb -lm -lgcc -lc -fdollars-in-identifiers -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/examples/10.Libraries/i2c -I/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free -o /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/crt0.S\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/processor.o\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libcdc.a\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/obj/non-free/usb/libadb.a\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/lkr/PIC32_PINGUINO_OTG/ISRwrapper.S\
-		/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/non-free/p32xxxx.h\
-		-lm -lgcc -lc
-In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries/lcdi2c.c:75:0,
-                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:7,
-                 from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:29:
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/libraries/lcdi2c.h:164:0: warning: "EACUTE" redefined
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/define.h:5:0: note: this is the location of the previous definition
-In file included from /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.c:32:0:
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:90:28: warning: 'struct stat' declared inside parameter list
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/p32/include/pinguino/core/newlib.c:90:28: warning: its scope is only this definition or declaration, which is probably not what you want
-#----------------------------------------------------------------------------
-#	exec
-#----------------------------------------------------------------------------
-/home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/linux/p32/bin/mips-elf-objcopy -O ihex /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.elf /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex
-#----------------------------------------------------------------------------
-#	correct
-#----------------------------------------------------------------------------
-grep --binary --invert-match '^:040000059D006000FA' /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex > /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/temp.hex
-mv /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/temp.hex /home/regis/Hobbies/Electronique/Projets/Pinguino/svn/branches/x.3/source/main32.hex      
+cp /home/regis/x.3/p32/obj/non-free/32MX440F256H.o /home/regis/x.3/p32/obj/non-free/processor.o
+cp: impossible d'évaluer « /home/regis/x.3/p32/obj/non-free/32MX440F256H.o »: Aucun fichier ou dossier de ce type
+make: *** [copy] Erreur 1
