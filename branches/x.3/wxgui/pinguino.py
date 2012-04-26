@@ -27,7 +27,6 @@
 
 from check import *
 
-from wxgui._ import _
 
 EVT_RESULT_REVISION_ID = wx.NewId()
 
@@ -72,7 +71,7 @@ gui=False
 # ------------------------------------------------------------------------------
 # traducciones
 # ------------------------------------------------------------------------------
-
+from wxgui._ import _
 
 
 # ------------------------------------------------------------------------------
@@ -108,26 +107,28 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
     def __initPinguino__(self, parent):
         #self._init_ctrls(parent)
-        self.notebookEditor.Hide()
-        self.boardlist = boardlist
-        self.debugOutMessage = None
-        self.closing = False
-        self.GetTheme()
+	self.notebookEditor.Hide()
+	self.boardlist = boardlist
+	self.debugOutMessage = None
+	self.closing = False
+	self.recentsFiles = []
+	#self.OnBoard()
+	self.GetTheme()
 
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
         self._mgr = wx.aui.AuiManager(self)
 
-        self.loadSettings()
-        self.setOSvariables()
-        self.buildMenu()
-        self.buildOutput()
-        self.buildLateralPanel()
-        self.buildEditor()
-        self.ConnectAll()
-
-        self.trees = []
+	self.setOSvariables()
+	self.buildOutput()
+	self.buildLateralPanel()	
+	self.buildEditor()
+	self.buildMenu()
+	self.loadSettings()
+	self.DrawToolbar()	
+	self.ConnectAll()
+	self.trees = []
 
         #Threads
         EVT_RESULT_REVISION(self, self.setRevision)
@@ -151,10 +152,10 @@ class Pinguino(framePinguinoX, Editor):
         self.openLast()
 #        self.SendSizeEvent()
 
-    #----------------------------------------------------------------------
-    def translate(self, str):
-        """"""
-        return str
+    ##----------------------------------------------------------------------
+    #def translate(self, str):
+        #""""""
+        #return str
 
 
 
@@ -215,104 +216,110 @@ class Pinguino(framePinguinoX, Editor):
 # Event Management
 # ------------------------------------------------------------------------------
     def ConnectAll(self):
-        """"""
-        self.Bind(wx.EVT_CLOSE, self.OnExit)
-        self.Bind(wx.EVT_SIZE, self.OnResize)
+	""""""
+	self.Bind(wx.EVT_CLOSE, self.OnExit)
+	self.Bind(wx.EVT_SIZE, self.OnResize)
 
-        #file menu
-        self.Bind(wx.EVT_MENU, self.OnNew, self.menu.menuItemNew)
-        self.Bind(wx.EVT_MENU, self.OnOpen, self.menu.menuItemOpen)
-        #self.Bind(wx.EVT_MENU_RANGE, self.menu.menuRecents, id=wx.ID_FILE1, id2=wx.ID_FILE9)
-        self.Bind(wx.EVT_MENU, self.OnSave, self.menu.menuItemSave)
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, self.menu.menuItemSaveAs)
-        self.Bind(wx.EVT_MENU, self.OnClose, self.menu.menuItemClose)
-        self.Bind(wx.EVT_MENU, self.OnExit, self.menu.menuItemExit)
+	#file menu
+	self.Bind(wx.EVT_MENU, self.OnNew, self.menu.menuItemNew)
+	self.Bind(wx.EVT_MENU, self.OnOpen, self.menu.menuItemOpen)
+	#self.Bind(wx.EVT_MENU_RANGE, self.menu.menuRecents, id=wx.ID_FILE1, id2=wx.ID_FILE9)
+	self.Bind(wx.EVT_MENU, self.OnSave, self.menu.menuItemSave)
+	self.Bind(wx.EVT_MENU, self.OnSaveAs, self.menu.menuItemSaveAs)
+	self.Bind(wx.EVT_MENU, self.OnClose, self.menu.menuItemClose)
+	self.Bind(wx.EVT_MENU, self.OnSaveAll, self.menu.menuItemSaveAll)
+	self.Bind(wx.EVT_MENU, self.OnCloseAll, self.menu.menuItemCloseAll)
+	self.Bind(wx.EVT_MENU, self.OnExit, self.menu.menuItemExit)
 
-        #edit menu
-        self.Bind(wx.EVT_MENU, self.OnCopy, self.menu.menuItemCopy)
-        self.Bind(wx.EVT_MENU, self.OnPaste, self.menu.menuItemPaste)
-        self.Bind(wx.EVT_MENU, self.OnCut, self.menu.menuItemCut)
-        self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
-        self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
-        self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
-        self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
-        self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
-        self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
-        self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
-        self.Bind(wx.EVT_MENU, self.OnPreferences, self.menu.menuItemPreferences)
+	#edit menu
+	self.Bind(wx.EVT_MENU, self.OnCopy, self.menu.menuItemCopy)
+	self.Bind(wx.EVT_MENU, self.OnPaste, self.menu.menuItemPaste)
+	self.Bind(wx.EVT_MENU, self.OnCut, self.menu.menuItemCut)
+	self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
+	self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
+	self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
+	self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
+	self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
+	self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
+	self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
+	self.Bind(wx.EVT_MENU, self.OnIndent, self.menu.menuItemIndent)
+	self.Bind(wx.EVT_MENU, self.OnUnIndent, self.menu.menuItemUnIndent)
+	
+	self.Bind(wx.EVT_MENU, self.OnPreferences, self.menu.menuItemPreferences)
 
-        #view menu
-        self.Bind(wx.EVT_MENU, self.OnViewTools, self.menu.menuItemTools)
-        self.Bind(wx.EVT_MENU, self.OnViewOutput, self.menu.menuItemOutput)
-        self.Bind(wx.EVT_MENU, self.OnViewToolbar, self.menu.menuItemToolbar)
+	#view menu
+	self.Bind(wx.EVT_MENU, self.OnViewTools, self.menu.menuItemTools)
+	self.Bind(wx.EVT_MENU, self.OnViewOutput, self.menu.menuItemOutput)
+	self.Bind(wx.EVT_MENU, self.OnViewToolbar, self.menu.menuItemToolbar)
 
-        #pinguino menu
-        if DEV:
-            #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
-            self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
-            self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
-        for b in range(len(boardlist)):
-            self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
+	#pinguino menu
+	if DEV:
+	    #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
+	    self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
+	    self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
+	for b in range(len(boardlist)):
+	    self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
 
-        #self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
-        if DEV:
-            self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.menu.menuItemUSBCDC)
-            self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.menu.menuItemDebugNone)
+	#self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
+	if DEV:
+	    self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.menu.menuItemUSBCDC)
+	    self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.menu.menuItemDebugNone)
 
 
-        ##plugin
-        #self.Bind(wx.EVT_TOOL, self.OnPlugIn, id=self.ID_PLUG_ON)
-        #self.Bind(wx.EVT_TOOL, self.NoPlugIn, id=self.ID_PLUG_OFF)
+	##plugin
+	#self.Bind(wx.EVT_TOOL, self.OnPlugIn, id=self.ID_PLUG_ON)
+	#self.Bind(wx.EVT_TOOL, self.NoPlugIn, id=self.ID_PLUG_OFF)
 
-        # help menu
-        self.Bind(wx.EVT_TOOL, self.OnKeyword, self.menu.menuItemKeywords)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://www.pinguino.cc"), self.menu.menuItemWebSite)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://blog.pinguino.cc"), self.menu.menuItemBlog)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://forum.pinguino.cc"), self.menu.menuItemForum)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)
-        self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)
+	# help menu
+	self.Bind(wx.EVT_TOOL, self.OnKeyword, self.menu.menuItemKeywords)
+	self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://www.pinguino.cc"), self.menu.menuItemWebSite)
+	self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://blog.pinguino.cc"), self.menu.menuItemBlog)
+	self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://forum.pinguino.cc"), self.menu.menuItemForum)
+	self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)
+	self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)
+	self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)
+	self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)
 
-        self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
+	self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
+
 
 # ------------------------------------------------------------------------------
 # Output
 # ------------------------------------------------------------------------------
     def buildOutput(self):
-        self.panelOutput = wx.Panel(id=wx.NewId(), name='panel1', parent=self,
-                                    pos=wx.Point(0, 0), size=wx.Size(449, 169),
-                                    style=wx.TAB_TRAVERSAL)
+	self.panelOutput = panelOutput(self)
+	self.debuggingLine = self.panelOutput.debuggingLine
+	self.buttonSendDebug = self.panelOutput.buttonSendDebug
+	self.logwindow = self.panelOutput.logwindow
+	self.choicePort = self.panelOutput.choicePort
+	self.choicePort.Hide()
+	
+	#if os.name == "posix": name = "ttyACM"
+	#elif os.name == "nt": name = "COM"
+	
+	#ch = []
+	#for i in range(10): ch.append(name+str(i))
+	#self.choicePort.AppendItems(ch+["Auto"])
+	#self.choicePort.SetSelection(10)
+	self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
+	
+	self.debuggingLine.SetInsertionPoint(125)
+	self.debuggingLine.Hide()
+	self.buttonSendDebug.Hide()
+	
+	
+	self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
+	self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
+	
+	
+	# create a PaneInfo structure for output window
+	self.PaneOutputInfo=wx.aui.AuiPaneInfo()
+	self.PaneOutputInfo.CloseButton(False)
+	self.PaneOutputInfo.MaximizeButton(True)
+	self.PaneOutputInfo.MinimizeButton(True)
+	self.PaneOutputInfo.Caption(_("Output"))
+	self.PaneOutputInfo.Bottom()
 
-        self.logwindow = wx.TextCtrl(id=wx.NewId(), name='textCtrl1',
-                                     parent=self.panelOutput, pos=wx.Point(0, 0), size=wx.Size(449, 148),
-                                     style=wx.TE_READONLY | wx.TE_MULTILINE, value=u'')
-        self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
-        self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255))
-        self.logwindow.SetMinSize((-1, -1))
-
-        self.debuggingLine = wx.TextCtrl(id=wx.NewId(), name='textCtrl2',
-                                         parent=self.panelOutput, pos=wx.Point(0, 148), size=wx.Size(449, 21),
-                                         style=0, value=u'>>>')
-        self.debuggingLine.SetBackgroundColour(wx.Colour(0, 0, 0))
-        self.debuggingLine.SetForegroundColour(wx.Colour(255, 255, 255))
-        self.debuggingLine.SetInsertionPoint(125)
-        self.debuggingLine.Hide()
-        self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
-
-        self.boxSizer1 = wx.BoxSizer(orient=wx.VERTICAL)
-        self.boxSizer1.AddWindow(self.logwindow, 1, border=0, flag=wx.EXPAND)
-        self.boxSizer1.AddWindow(self.debuggingLine, 0, border=0, flag=wx.EXPAND)
-        self.panelOutput.SetSizer(self.boxSizer1)
-
-
-        # create a PaneInfo structure for output window
-        self.PaneOutputInfo=wx.aui.AuiPaneInfo()
-        self.PaneOutputInfo.CloseButton(False)
-        self.PaneOutputInfo.MaximizeButton(True)
-        self.PaneOutputInfo.MinimizeButton(True)
-        self.PaneOutputInfo.Caption(_("Output"))
-        self.PaneOutputInfo.Bottom()
 
 
 # ----------------------------------------------------------------------
@@ -321,50 +328,75 @@ class Pinguino(framePinguinoX, Editor):
     def buildMenu(self):
         self.menu = menubarPinguino()
 
-        #menu Board
-        self.board_menu= self.menu.menuBoard
-        for b in range(len(boardlist)):
-            self.board_menu.AppendRadioItem(boardlist[b].id, boardlist[b].name, "your board")
-        bid = self.config.ReadInt('Board', -1)
-        minbid = boardlist[0].id
-        maxbid = boardlist[len(boardlist)-1].id
-        if bid == -1 or bid < minbid or bid > maxbid:
-            bid = BOARD_DEFAULT.id
-        self.board_menu.Check(bid, True)
-        self.OnBoard(wx.Event)
+        ##menu Board
+        #self.board_menu= self.menu.menuBoard
+        #for b in range(len(boardlist)):
+            #self.board_menu.AppendRadioItem(boardlist[b].id, boardlist[b].name, "your board")
+        #bid = self.config.ReadInt('Board', -1)
+        #minbid = boardlist[0].id
+        #maxbid = boardlist[len(boardlist)-1].id
+        #if bid == -1 or bid < minbid or bid > maxbid:
+            #bid = BOARD_DEFAULT.id
+        #self.board_menu.Check(bid, True)
+        #self.OnBoard(wx.Event)
 
-        #menu Recents
-        self.filehistory.UseMenu(self.menu.menuRecents)
-        self.filehistory.AddFilesToMenu()
+        ##menu Recents
+        #self.filehistory.UseMenu(self.menu.menuRecents)
+        #self.filehistory.AddFilesToMenu()
 
         self.SetMenuBar(self.menu)
 
-        self.DrawToolbar()
+        #self.DrawToolbar()
 
+
+	
+    #----------------------------------------------------------------------
+    def addFile2Recent(self, file):
+	menu = self.menu.menuRecents
+	for item in menu.GetMenuItems():
+	    menu.DeleteItem(item)
+	    
+	if file in self.recentsFiles: self.recentsFiles.remove(file)
+	self.recentsFiles.insert(0, file)
+	self.recentsFiles = self.recentsFiles[:10]
+	for file in range(len(self.recentsFiles)):
+	    menu_r = wx.MenuItem(menu, wx.NewId(), self.recentsFiles[file], wx.EmptyString, wx.ITEM_NORMAL)
+	    self.Bind(wx.EVT_MENU, self.open_path(self.recentsFiles[file]), menu_r)
+	    menu.AppendItem(menu_r)
+        
+        self.menu.UpdateMenus()
+	
+	
+    #----------------------------------------------------------------------
+    def open_path(self,name):
+	def path(event=None):
+	    self.Open(name)
+	return path   
 
 
 # ----------------------------------------------------------------------
 # load settings from config file
 # ----------------------------------------------------------------------
     def loadSettings(self):
-        self.config = wx.FileConfig(localFilename = APP_CONFIG, style = wx.CONFIG_USE_LOCAL_FILE)
-        self.filehistory = wx.FileHistory()
-        self.filehistory.Load(self.config)
+	self.loadConfig()
+	
+	w = self.getConfig("IDE", "window/width")
+	h = self.getConfig("IDE", "window/height")
+        self.SetSize((w, h))
 
-        framesize = ( self.config.ReadInt('Window/Width', -1), self.config.ReadInt('Window/Height', -1))
-        if framesize == (0, 0): framesize = (400, 400)
-        self.SetSize(framesize)
-
-        #framepos = (self.config.ReadInt('Window/Posx', -1), self.config.ReadInt('Window/Posy', -1))
-
-        self.outputsize = (self.config.ReadInt('Output/Width', -1), self.config.ReadInt('Output/Height', -1))
-        if self.outputsize == (0, 0): self.outputsize = (400, 250)
-
-        self.debug =   self.config.ReadInt('Debug', -1)
-        if self.debug == '': self.debug = ID_NODEBUG
-
-        self.theme =   self.config.Read('Theme/name')
-        if self.theme == '': self.theme = THEME_DEFAULT
+	w = self.getConfig("IDE", "output/width")
+	h = self.getConfig("IDE", "output/height")
+	#self.logwindow.SetSize((w, h))
+	
+        self.theme = self.getConfig("IDE", "theme")
+	
+	boardName = self.getConfig("IDE","Board")
+	self.setBoard(boardName)
+	
+        for i in range(self.getConfig("Recents", "Recents_count")):
+            file = self.getConfig("Recents", "Recents_%d"%i)
+            if os.path.isfile(file):
+                self.addFile2Recent(file)
 
 
 # ----------------------------------------------------------------------
@@ -521,21 +553,48 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnBoard(self, event):
-        for b in range(len(boardlist)):
-            #clef = BOARD_DEFAULT_ID + b
-            bid = boardlist[b].id
-            if self.board_menu.IsChecked(bid):
-                self.curBoard = boardlist[b]
-                break
-        # clear all the lists before rebuild them
-        del self.rw[:]
-        del self.regobject[:]
-        del self.keywordList[:]
-        del self.reservedword[:]
-        del self.libinstructions[:]
-        self.readlib(self.curBoard)
+	# clear all the lists before rebuild them
+	del self.rw[:]
+	del self.regobject[:]
+	del self.keywordList[:]
+	del self.reservedword[:]
+	del self.libinstructions[:]
+	
+	if event == None: self.curBoard = boardlist[0]
+	else:
+	    self.curBoard = boardlist[event.Int]
+	    #self.setWaitCursor()
+	
+	#self.readlib(self.curBoard) #So slow	
+	t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+	t.start()
 
-        self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
+
+
+	#self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
+	    
+	if event != None:
+	    event.Skip()
+	    #self.setNormalCursor()
+	
+	
+    #----------------------------------------------------------------------
+    def setBoard(self, name):
+	# clear all the lists before rebuild them
+	del self.rw[:]
+	del self.regobject[:]
+	del self.keywordList[:]
+	del self.reservedword[:]
+	del self.libinstructions[:]
+	
+	for board in boardlist:
+	    if name == board.name:
+		self.curBoard = board
+		break
+    
+	self.readlib(self.curBoard) #So slow	
+	#t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+	#t.start()
 
 # ------------------------------------------------------------------------------
 # OnPaneClose: wx.aui managed window is about to be closed
@@ -562,11 +621,10 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def openLast(self):
-        for i in range(self.config.ReadInt('LastEdit/count')):
-            file = self.config.Read('LastEdit/file%d' %i)
+        for i in range(self.getConfig("Last", "Last_count")):
+            file = self.getConfig("Last", "Last_%d"%i)
             if os.path.isfile(file):
-                self.Open(file, self.reservedword, self.rw, self.filehistory, self.config)
-
+                self.Open(file)
 
 # ------------------------------------------------------------------------------
 # OnAbout:
@@ -725,54 +783,67 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def DrawToolbar(self):
-        try: self.toolbar.ClearTools()
-        except: self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
+	try: self.toolbar.ClearTools()
+	except: self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
 
-        # Get size of new theme's icons
-        icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-        iconSize = icon.GetSize()
+	# Get size of new theme's icons
+	icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+	iconSize = icon.GetSize()
 
-        # Update Bitmap size to fit new icons (not sure that it works !)
-        self.toolbar.SetToolBitmapSize(iconSize)
+	# Update Bitmap size to fit new icons (not sure that it works !)
+	self.toolbar.SetToolBitmapSize(iconSize)
+	
+	index = 0
+	for board in boardlist:
+	    if self.curBoard.id == board.id:
+		self.curBoard = board
+		break	
+	    index += 1
+	    
+	boards = []
+	for i in self.boardlist: boards.append(i.name)
+	self.choiceBoards = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
+	self.choiceBoards.SetSelection( index )
+	self.choiceBoards.Bind(wx.EVT_CHOICE, self.OnBoard)	
+
+	def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
+	    if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
+		id = wx.NewId()
+		self.toolbar.AddLabelTool(id,
+		                          name,
+		                          wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
+		                          wx.NullBitmap, wx.ITEM_NORMAL,
+		                          shdesc,
+		                          lngdesc)
+		self.Bind(wx.EVT_TOOL, function, id=id)
 
 
-        def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
-            if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
-                id = wx.NewId()
-                self.toolbar.AddLabelTool(id,
-                                          name,
-                                          wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
-                                          wx.NullBitmap, wx.ITEM_NORMAL,
-                                          shdesc,
-                                          lngdesc)
-                self.Bind(wx.EVT_TOOL, function, id=id)
-
-
-        add2Toolbar("new", "&New", self.OnNew, "New File")
-        add2Toolbar("open", "&Open", self.OnOpen, "Open File")
-        add2Toolbar("save", "&Save", self.OnSave, "Save File")
-        add2Toolbar("stop", "&Close", self.OnClose, "Close File")
-        self.toolbar.AddSeparator()
-        add2Toolbar("undo", "&Undo", self.OnUndo, "Undo")
-        add2Toolbar("redo", "&Redo", self.OnRedo, "Redo")
-        self.toolbar.AddSeparator()
-        add2Toolbar("cut", "&Cut", self.OnCut, "Cut")
-        add2Toolbar("copy", "&Copy", self.OnCopy, "Copy")
-        add2Toolbar("paste", "&Paste", self.OnPaste, "Paste")
-        add2Toolbar("clear", "&Clear", self.OnClear, "Clear")
-        add2Toolbar("select", "&Select", self.OnSelectall, "Select")
-        self.toolbar.AddSeparator()
-        add2Toolbar("find", "&Fin", self.OnFind, "Search in File")
-        add2Toolbar("replace", "&Replace", self.OnReplace, "Replace in File")
-        self.toolbar.AddSeparator()
-        add2Toolbar("runw", "&Verify", self.OnVerify, "Compile")
-        add2Toolbar("dwn", "&Upload", self.OnUpload, "Upload to Pinguino Board")
-        #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
-        add2Toolbar("preferences", "&Preferences", self.OnPreferences, "set preferences of Pinguino IDE")
-        self.toolbar.AddSeparator()
-        add2Toolbar("exit", "&Exit", self.OnExit, "Exit Pinguino IDE")
-        self.toolbar.Realize()
-        self.SetToolBar(self.toolbar)
+	add2Toolbar("new", "&New", self.OnNew, "New File")
+	add2Toolbar("open", "&Open", self.OnOpen, "Open File")
+	add2Toolbar("save", "&Save", self.OnSave, "Save File")
+	add2Toolbar("stop", "&Close", self.OnClose, "Close File")
+	self.toolbar.AddSeparator()
+	add2Toolbar("undo", "&Undo", self.OnUndo, "Undo")
+	add2Toolbar("redo", "&Redo", self.OnRedo, "Redo")
+	self.toolbar.AddSeparator()
+	add2Toolbar("cut", "&Cut", self.OnCut, "Cut")
+	add2Toolbar("copy", "&Copy", self.OnCopy, "Copy")
+	add2Toolbar("paste", "&Paste", self.OnPaste, "Paste")
+	add2Toolbar("clear", "&Clear", self.OnClear, "Clear")
+	add2Toolbar("select", "&Select", self.OnSelectall, "Select")
+	self.toolbar.AddSeparator()
+	add2Toolbar("find", "&Fin", self.OnFind, "Search in File")
+	add2Toolbar("replace", "&Replace", self.OnReplace, "Replace in File")
+	self.toolbar.AddSeparator()
+	self.toolbar.AddControl(self.choiceBoards)        
+	add2Toolbar("runw", "&Verify", self.OnVerify, "Compile")
+	add2Toolbar("dwn", "&Upload", self.OnUpload, "Upload to Pinguino Board")
+	#add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
+	add2Toolbar("preferences", "&Preferences", self.OnPreferences, "set preferences of Pinguino IDE")
+	self.toolbar.AddSeparator()
+	add2Toolbar("exit", "&Exit", self.OnExit, "Exit Pinguino IDE")
+	self.toolbar.Realize()
+	self.SetToolBar(self.toolbar)
 
 
 # ------------------------------------------------------------------------------

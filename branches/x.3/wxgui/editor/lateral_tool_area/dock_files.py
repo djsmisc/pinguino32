@@ -42,16 +42,17 @@ class File:
         self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Name', width=-1)
         self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Type', width=-1)
         self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Line', width=40)
-        self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='In function', width=1000)
+        #self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='In function', width=1000)
     
         self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Name', width=-1) 
         self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Return', width=-1) 
         self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Line', width=40)
         self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='Parameters', width=1000)
         
-        self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Name', width=130) 
-        self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Value', width=130) 
-        self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Line', width=1000)
+        self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Directive', width=130) 
+        self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Name', width=130) 
+        self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Value', width=130) 
+        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='Line', width=1000)
         
         
         
@@ -72,7 +73,7 @@ class File:
     #----------------------------------------------------------------------
     def moveToDefi(self, event=None):
         self.allDefi.reverse()
-        self.highlightline(int(self.allDefi[event.GetIndex()][2])-1, "#A9D1FF")
+        self.highlightline(int(self.allDefi[event.GetIndex()][3])-1, "#A9D1FF")
         self.allDefi.reverse()
         self.focus()    
         
@@ -82,7 +83,7 @@ class File:
         self.lateralVars.InsertStringItem(0, var[0])        
         self.lateralVars.SetStringItem(0, 1, var[1])         
         self.lateralVars.SetStringItem(0, 2, var[2])         
-        self.lateralVars.SetStringItem(0, 3, var[3])   
+        #self.lateralVars.SetStringItem(0, 3, var[3])   
         self.lateralVars.SetItemData(0, 1)
         
     #----------------------------------------------------------------------
@@ -97,7 +98,8 @@ class File:
     def addDefiInListCtrl(self, index, var):
         self.lateralDefi.InsertStringItem(0, var[0])            
         self.lateralDefi.SetStringItem(0, 1, var[1])         
-        self.lateralDefi.SetStringItem(0, 2, var[2])   
+        self.lateralDefi.SetStringItem(0, 2, var[2])        
+        self.lateralDefi.SetStringItem(0, 3, var[3])         
         self.lateralDefi.SetItemData(0, 1)
 
     #----------------------------------------------------------------------
@@ -116,7 +118,8 @@ class File:
         
         ReFunction = "[\s]*(unsigned)*[\s]*(" + tipos + ")[*]*[\s]*([\w]+)[\s]*\((.*)\)"
         ReVariable = "[\s]*(unsigned)*[\s]*(" + tipos + ")[\s]*(.*);"
-        ReDefines = "[\s]*#define[ ]+([\S]*)[ ]+([\S]*)"
+        ReDefines = "[\s]*#(define|ifndef|endif)[ ]+([\S]*)[ ]+([\S]*)"
+        ReInclude = "[\s]*#include[ ]+<[\s]*([\S]*)[\s]*>"
 
         self.allVars = []
         self.allFunc = []
@@ -151,20 +154,29 @@ class File:
             reg2 = re.match(ReVariable, linea)
             if reg2 != None:
                 cont = reg2.group(3)
+                a, b = -1, 0
+                if "{" in cont: a = cont.find("{")
+                if "}" in cont: b = cont.find("}")
+                cont = cont[:a] + cont[b:]
                 cont = cont.split(",")
-                
                 self.allVars.extend([[getVar(var),
                                     reg2.group(2),
-                                    str(count),
-                                    currentFunction] for var in cont])
+                                    str(count)] for var in cont])
                 
                 
             reg3 = re.match(ReDefines, linea)
             if reg3 != None:
                 self.allDefi.append([reg3.group(1),
                                      reg3.group(2),
+                                     reg3.group(3),
                                      str(count)])
                 
+            reg4 = re.match(ReInclude, linea)
+            if reg4 != None:
+                self.allDefi.append(["include",
+                                     reg4.group(1),
+                                     "",
+                                     str(count)])
                 
             count += 1
                 

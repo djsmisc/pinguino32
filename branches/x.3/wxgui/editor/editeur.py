@@ -46,6 +46,18 @@ faces = { 'helv' : 'Arial',
           'size2': 8,
           }
 
+class MyFileDropTarget(wx.FileDropTarget):
+    def __init__(self, Open):
+        wx.FileDropTarget.__init__(self)
+        self.Open = Open
+
+    def OnDropFiles(self, x, y, filenames):
+        #self.window.AppendText("%d file(s) dropped at (%d,%d):\n" % (len(filenames), x, y))
+        for file in filenames:
+            self.Open(file)
+            
+            
+
 ########################################################################
 class editor:
 
@@ -89,16 +101,6 @@ class editor:
             text = self.editeur.GetText()
             text = text.split("\n")
             return text.index(toFind)
-        
-    def OnMarginClick(self, evt):
-        if evt.GetMargin() == 3:
-            if evt.GetShift() and evt.GetControl():
-                self.stcpage[self.notebookEditor.GetSelection()].FoldAll()
-            else:
-                lineClicked = self.stcpage[self.notebookEditor.GetSelection()].LineFromPosition(evt.GetPosition())
-                if self.stcpage[self.notebookEditor.GetSelection()].GetFoldLevel(lineClicked) & stc.STC_FOLDLEVELHEADERFLAG:
-                    self.stcpage[self.notebookEditor.GetSelection()].ToggleFold(lineClicked) 
-
 
     #----------------------------------------------------------------------
     def buildSheet(self, name):
@@ -120,6 +122,9 @@ class editor:
         stc.SetMarginWidth(2, 10)
 
         stc.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,"fore:#000000,back:#afc8e1ff,size:500")                
+
+        stc.SetMarginSensitive(1, True)
+        stc.SetMarginSensitive(2, True)
 
         stc.SetMarginType(3, wx.stc.STC_MARGIN_SYMBOL)
         stc.SetMarginMask(3, wx.stc.STC_MASK_FOLDERS)
@@ -149,15 +154,17 @@ class editor:
         p.SetSizer(boxSizer)        
         boxSizer.AddWindow(stc, 1, border=0, flag=wx.EXPAND|wx.ADJUST_MINSIZE)
 
-        self.notebookEditor.AddPage(p,name)
+
+        self.notebookEditor.AddPage(p,os.path.split(name)[1])
         self.SendSizeEvent()
 #        self._mgr.Update()
         self.panelEditor.Layout()
-        self.sheetFunctions.append({})
+        self.sheetFunctions.append({})      
 
     #----------------------------------------------------------------------
-    def New(self,name,reservedword,rw):
+    def New(self, name):
         """ open a new tab """
+        
         self.background.Hide()
         self.notebookEditor.Show()
         self.buildSheet(name)
@@ -172,8 +179,9 @@ class editor:
         self.stcpage[newIdx].Bind(wx.EVT_LEFT_UP, self.onclick)
         self.stcpage[newIdx].Bind(wx.EVT_RIGHT_UP, self.onclick)
         #self.filename.append(os.getcwd()+"/"+name+".pde")        
-        self.filename.append(unicode(sys.path[0], 'utf8')+"/.temp/"+name+".pde")
-        self.seteditorproperties(reservedword,rw)
+        self.filename.append(name+".pde")
+        #self.filename.append(unicode(name, 'utf8')+".pde")
+        self.seteditorproperties(self.reservedword, self.rw)
         #x,y=self.GetSize()
         #self.stcpage[self.notebookEditor.GetSelection()].SetSize((x,y-20))
         self.editeur=self.stcpage[newIdx]
@@ -188,10 +196,12 @@ class editor:
         self.editeur.Bind(wx.EVT_LEFT_UP, self.OnLeftCklick)
         self.editeur.Bind(wx.EVT_KEY_UP, self.updateStatusBar)
         self.editeur.Bind(wx.stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
-        self.editeur.Bind(wx.stc.EVT_STC_DO_DROP, self.OnDrop)  
+        #self.editeur.Bind(wx.stc.EVT_STC_DO_DROP, self.OnDrop)  
         #self.editeur.Bind(wx.stc.EVT_STC_dr, self.OnDrag)        
         self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTLEFT, self.OnSavepointLeft)  
-        self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTREACHED, self.OnSavepointReached)  
+        self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTREACHED, self.OnSavepointReached)
+        
+        self.editeur.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
 
         self.insertSnippet("Insert Date {snippet}")
         self.editeur.GotoLine(self.editeur.LineCount)
@@ -201,6 +211,8 @@ class editor:
         self.update_dockFiles()
         #self._mgr.Update()
         
+        dt = MyFileDropTarget(self.Open)
+        self.editeur.SetDropTarget(dt)        
 
 
     #----------------------------------------------------------------------
@@ -215,7 +227,7 @@ class editor:
 
 # modified by r.blanchot 31/10/2010, 01/06/2011
 
-    def OpenDialog(self,type,extension,reservedword,rw, filehistory, config):
+    def OpenDialog(self,type,extension):
         """ Open Dialog and load file in a new editor """
         
         try: defaultDir=os.path.split(self.filename[self.notebookEditor.GetSelection()])[0]
@@ -232,26 +244,30 @@ class editor:
         if opendlg.ShowModal() == wx.ID_OK:
             paths = opendlg.GetPaths()
             for path in paths:
-                self.Open(path,reservedword,rw, filehistory, config)
+                self.Open(path)
 
 # added by r.blanchot 31/10/2010
 
-    def Open(self, path, reservedword, rw, filehistory, config):
+    def Open(self, path):
         """ Open file in a new editor """ 
         file = os.path.basename(path)
         # --- file history --- added by r.blanchot 03/11/2010
-        filehistory.AddFileToHistory(path)
-        filehistory.Save(config)
-        config.Flush()
+        #filehistory.AddFileToHistory(path)
+        #filehistory.Save(config)
+        #config.Flush()
         #
         alloaded=-1
         directory,extension = os.path.splitext(path)
-        for i in range(len(self.stcpage)):
-            if file.replace(extension,"")==self.notebookEditor.GetPageText(i):
-                alloaded=i
-        if alloaded!=-1:
+        #for i in range(len(self.stcpage)):
+            #try: file = unicode(file).encode("utf-8")
+            #except: pass
+            #if file == self.notebookEditor.GetPageText(i):
+                #alloaded=i
+        #if alloaded!=-1:
+        if path in self.filename:
+            
             dlg = wx.MessageDialog(self,
-                                   _("File is already opened, reload it ?"), _("Warning!"),
+                                   _("File is already opened, reload it ?"), _("Warning")+"!",
                                    wx.YES_NO | wx.ICON_WARNING)
             result=dlg.ShowModal()
             dlg.Destroy()                        
@@ -270,7 +286,8 @@ class editor:
                 self.inhibitChangeEvents = False
                 return
         self.inhibitChangeEvents = True
-        self.New(file.replace(extension,""),reservedword,rw)
+        self.New(file.replace(extension,""))
+                
         pageIdx = self.notebookEditor.GetSelection()
         self.stcpage[pageIdx].ClearAll()
         self.filename[pageIdx]=path
@@ -287,6 +304,10 @@ class editor:
         #self.stcpage[pageIdx].SetSavePoint()
         self.inhibitChangeEvents = False
         self.SendSizeEvent()
+        
+        self.addFile2Recent(path)
+        
+        
                 
     def Save(self,type,extension):
         """save the content of the editor to filename""" 
@@ -311,7 +332,7 @@ class editor:
             if (path!=""):
                 if os.path.exists(path):
                     dlg = wx.MessageDialog(self,
-                                           _("File already exist, Overwrite it ?"), _("Warning!"),
+                                           _("File already exist, Overwrite it ?"), _("Warning")+"!",
                                            wx.YES_NO | wx.ICON_WARNING
                                            )
                     result=dlg.ShowModal()
@@ -354,26 +375,28 @@ class editor:
 
     def CloseTab(self):
         """ close the current tab """
-        if len(self.onglet)>0:
-            pageIdx = self.notebookEditor.GetSelection()
-            if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
-                dlg = wx.MessageDialog(self,
-                                       _("Save file ?"), _("Warning!"),
-                                       wx.YES_NO | wx.ICON_WARNING
-                                       )
-                result=dlg.ShowModal()
-                dlg.Destroy()                        
-                if (result==wx.ID_YES):
-                    self.Save("Pde File","pde")  
-            self.filename.remove(self.filename[pageIdx])
-            self.onglet.remove(self.onglet[pageIdx])
-            self.stcpage.remove(self.stcpage[pageIdx])
-            self.notebookEditor.DeletePage(pageIdx)
-            self.sheetFunctions.remove(self.sheetFunctions[pageIdx])
-            #self.choiceFunctions.remove(self.choiceFunctions[page])
-            if pageIdx > 0:
-                self.notebookEditor.SetSelection(pageIdx-1)
-                self.notebookEditor.Update()
+        if len(self.onglet) <= 0: return False
+        
+        pageIdx = self.notebookEditor.GetSelection()
+        if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
+            dlg = wx.MessageDialog(self,
+                                   _("Save file ?"), _("Warning")+"!",
+                                   wx.YES_NO | wx.ICON_WARNING
+                                   )
+            result=dlg.ShowModal()
+            dlg.Destroy()                        
+            if (result==wx.ID_YES):
+                self.Save("Pde File","pde")  
+        self.filename.remove(self.filename[pageIdx])
+        self.onglet.remove(self.onglet[pageIdx])
+        self.stcpage.remove(self.stcpage[pageIdx])
+        self.notebookEditor.DeletePage(pageIdx)
+        self.sheetFunctions.remove(self.sheetFunctions[pageIdx])
+        #self.choiceFunctions.remove(self.choiceFunctions[page])
+        if pageIdx > 0:
+            self.notebookEditor.SetSelection(pageIdx-1)
+            self.notebookEditor.Update()
+        return True
 
 
     def GetPath(self):
