@@ -19,18 +19,14 @@
 	-------------------------------------------------------------------------*/
 
 // modified by Jean-pierre Mandon 2008/09/19
-// added bootloader V3.0 support - Régis Blanchot - 2012/02/11
+// added bootloader V4.0 support - Régis Blanchot - 2012/04/21
 // this function is part of Pinguino project
-
-#ifdef diolan
-#pragma stack 0x200 255
-#endif
 
 #include <pic18fregs.h>
 #include <const.h>
 #include <macro.h>
 
-#ifdef vasco
+#ifdef boot2
 	#include <common_types.h>
 	#include <boot_iface.h>
 #else
@@ -46,7 +42,7 @@
 #endif
 
 // only for compatibility with application_iface.o
-#ifdef vasco
+#ifdef boot2
 	#ifndef __USB__
 		void epap_in() { return; }
 		void epap_out() { return; }
@@ -145,7 +141,7 @@ void pinguino_main(void)
 	High Interrupt Vector
 	--------------------------------------------------------------------------*/
 
-#ifdef vasco
+#ifdef boot2
 #pragma code high_priority_isr 0x2020
 void high_priority_isr(void) __naked __interrupt 1
 #else
@@ -221,7 +217,7 @@ void high_priority_isr(void)
 	Low Interrupt Vector
 	--------------------------------------------------------------------------*/
 
-#ifdef vasco
+#ifdef boot2
 #pragma code low_priority_isr 0x4000
 void low_priority_isr(void) __naked __interrupt 2
 #else

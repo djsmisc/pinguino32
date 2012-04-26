@@ -97,11 +97,11 @@ class uploader8:
 	INTERFACE_ID					=	0x00
 	TIMEOUT							=	1200
 
-# Table with supported USB devices
-# device_id:[PIC name, flash size(in bytes), eeprom size (in bytes)] 
-# --------------------------------------------------------------------------
+	# Table with supported USB devices
+	# device_id:[PIC name, flash size(in bytes), eeprom size (in bytes)] 
+	# --------------------------------------------------------------------------
 
-devices_table = \
+	devices_table = \
 	{  
 		0x4740: ['18f13k50'	, 0x02000, 0x80 ],
 		0x4700: ['18lf13k50', 0x02000, 0x80 ],
@@ -123,7 +123,7 @@ devices_table = \
 		0x4CE0: ['18lf25j50', 0x08000, 0x00 ],
 		
 		0x4C40: ['18f26j50'	, 0x10000, 0x00 ],
-#modified below to avoid erasing on configuration bits	
+		#modified below to avoid erasing on configuration bits	
 		0x4D00: ['18lf26j50', 0x0FC00, 0x00 ],
 		
 		0x1200: ['18f4450'	, 0x04000, 0x00 ],
@@ -177,59 +177,12 @@ devices_table = \
 		else:		
 			return ERR_USB_WRITE
 # ------------------------------------------------------------------------------
-	def usbWrite(self, usbBuf):  
+	def getDeviceFlash(self, device_id, board):
 # ------------------------------------------------------------------------------
-		"""
-		controlMsg(requestType, request, buffer, value=0, index=0, timeout=100) -> bytesWritten|buffer
-		Performs a control request to the default control pipe on a device.
-		Arguments:
-			requestType: specifies the direction of data flow, the type of request
-				and the recipient.
-				= Host to Device, Class type, Interface recipient
-				= usb.TYPE_CLASS | usb.RECIP_INTERFACE | usb.ENDPOINT_OUT
-				= 0x21
-			request: specifies the request.
-				= SET_REPORT
-				= 0x9
-			buffer: if the transfer is a write transfer, buffer is a sequence 
-				with the transfer data, otherwise, buffer is the number of
-				bytes to read.
-			value: specific information to pass to the device. (default: 0)
-				= 0
-			index: specific information to pass to the device. (default: 0)
-				= 0
-			timeout: operation timeout in miliseconds. (default: 100)
-		Returns the number of bytes written.
-		"""
-		sent_bytes = handle.controlMsg(0x21, 0x09, usbBuf, 0x00, 0x00, self.DLN_TIMEOUT)
-		if sent_bytes == len(usbBuf):
-			return self.ERR_NONE
-		else:		
-			return self.ERR_USB_WRITE
-# ------------------------------------------------------------------------------
-	def transaction(self, handle, usbBuf):
-# ------------------------------------------------------------------------------
-		"""
-		Write a data packet to currently-open USB device 
-		Return 64 bytes from the device
-
-		interruptRead(endpoint, size, timeout=100) -> buffer
-		Performs a interrupt read request to the endpoint specified.
-		Arguments:
-			endpoint: endpoint number.
-			size: number of bytes to read.
-			timeout: operation timeout in miliseconds. (default: 100)
-		Returns a tuple with the data read.
-		"""
-		retry = 0
-		while retry < self.MAX_HID_RETRY:
-			status = self.usbWrite(handle, usbBuf)
-			if status == self.ERR_NONE:
-				return handle.interruptRead(1, 64, self.DLN_TIMEOUT)
-				#return handle.interruptRead(1, len(usbBuf), self.DLN_TIMEOUT)
-			else:
-				retry = retry + 1
-		return self.ERR_USB_WRITE
+		for n in self.devices_table:
+			if n == device_id:
+				return self.devices_table[n][1] - self.memstart			
+		return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
 	def resetDevice(self, handle):
 # ------------------------------------------------------------------------------
@@ -547,7 +500,7 @@ devices_table = \
 
 		#product = handle.getString(device.iProduct, 30)
 		#manufacturer = handle.getString(device.iManufacturer, 30)
-		self.txtWrite(output, "Pinguino HID bootloader %s\n" % self.getVersion(handle))
+		self.txtWrite(output, "Pinguino bootloader %s\n" % self.getVersion(handle))
 
 		# start writing
 		# ----------------------------------------------------------------------

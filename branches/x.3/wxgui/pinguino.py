@@ -22,23 +22,6 @@
     -------------------------------------------------------------------------"""
 
 # ------------------------------------------------------------------------------
-# changelog (see also file ChangeLog)
-# ------------------------------------------------------------------------------
-# x.3 regis blanchot
-# TODO: pinguino universal uploader class
-# TODO: pinguino debug stream class
-#
-# x.2 regis blanchot
-# multi-architecture support (8 and 32-bit)
-# multi-board support
-# multi-platform support (GNU/Linux, Win32, MacOSX)
-# improved command line execution
-# process time calculation
-# pinguino check list class (jp.mandon)
-# pinguino boards list class
-# pinguino version control class
-
-# ------------------------------------------------------------------------------
 # check dependencies
 # ------------------------------------------------------------------------------
 
@@ -83,7 +66,7 @@ EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
 # default
 # ------------------------------------------------------------------------------
 THEME_DEFAULT = "PinguinoX"
-BOARD_DEFAULT = Vasco2550()
+BOARD_DEFAULT = Pinguino2550()
 gui=False
 
 # ------------------------------------------------------------------------------
@@ -622,9 +605,9 @@ class Pinguino(framePinguinoX, Editor):
         info.SetLicence(licence)
 
         info.AddDeveloper('Jean-Pierre Mandon')
-        info.AddDeveloper('RÃ©gis Blanchot')
+        info.AddDeveloper('Regis Blanchot')
         info.AddDeveloper('Marcus Fazzi')
-        info.AddDeveloper('JesÃºs Carmona Esteban')
+        info.AddDeveloper('Jesus Carmona Esteban')
         info.AddDeveloper('Ivan Ricondo')
         info.AddDeveloper('Joan Espinoza')
         info.AddDeveloper('Yeison Cardona')
@@ -632,9 +615,9 @@ class Pinguino(framePinguinoX, Editor):
         info.AddDocWriter('Benoit Espinola')
         info.AddDocWriter('Sebastien Koechlin')
         info.AddDocWriter('Ivan Ricondo')
-        info.AddDocWriter('JesÃºs Carmona Esteban')
+        info.AddDocWriter('Jesus Carmona Esteban')
         info.AddDocWriter('Marcus Fazzi')
-        info.AddDocWriter('RÃ©gis Blanchot')
+        info.AddDocWriter('Régis Blanchot')
 
         info.AddArtist('France Cadet')
         info.AddArtist('Laurent Costes')
@@ -1065,7 +1048,7 @@ class Pinguino(framePinguinoX, Editor):
         else:
             if board.arch == 8:
                 fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
-                if board.bldr == 'vasco':
+                if board.bldr == 'boot2':
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                     "-mpic16",\
                                     "--denable-peeps",\
@@ -1085,7 +1068,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
-                else:# if board.bldr == 'diolan'
+                else:# if board.bldr == 'boot4'
 #                            "--extended",\
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                     "-mpic16",\
@@ -1134,7 +1117,7 @@ class Pinguino(framePinguinoX, Editor):
         else:
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
             if board.arch == 8:
-                if board.bldr == 'vasco':
+                if board.bldr == 'boot2':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "--denable-peeps",\
@@ -1143,7 +1126,7 @@ class Pinguino(framePinguinoX, Editor):
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                                   "-mpic16",\
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\
@@ -1162,8 +1145,9 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
-                else:# if board.bldr == 'diolan'
+                else:# if board.bldr == 'boot4'
 #                            "--extended",\
+#                                  os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "-mpic16",\
@@ -1173,7 +1157,7 @@ class Pinguino(framePinguinoX, Editor):
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + board.proc + '.lkr') + ",-m",\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
@@ -1185,7 +1169,6 @@ class Pinguino(framePinguinoX, Editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
-                                  os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
             else:
@@ -1224,19 +1207,23 @@ class Pinguino(framePinguinoX, Editor):
 
     def getCodeSize(self, filename, board):
         codesize = 0
+        address_Hi = 0
         totalsize = board.memend - board.memstart
         fichier = open(filename + ".hex", 'r')
         lines = fichier.readlines()
         for line in lines:
-            # count only data record
-            if line[7:9:1] == "00":
-                if board.arch == 8:
-                    # filter records below 0x2000 (by RASM)
-                    #if int(line[3:7:1],16) >= int("2000", 16):
-                    if int(line[3:7:1],16) >= board.memstart:
-                        codesize = codesize + int(line[1:3:1], 16)
-                else:
-                    codesize = codesize + int(line[1:3:1], 16)
+            byte_count = int(line[1:3], 16)
+            address_Lo = int(line[3:7], 16)
+            record_type= int(line[7:9], 16)
+            # extended linear address record
+            if record_type == 4:
+                address_Hi = int(line[9:13], 16) << 16
+			# address calculation
+            address = (address_Hi << 16) + address_Lo
+            # code size
+            if record_type == 0:
+                if address >= board.memstart:
+                    codesize = codesize + byte_count
         fichier.close()
         return "code size: " + str(codesize) + " / " + str(totalsize) + " bytes" + " (" + str(100*codesize/totalsize) + "% used)"
 
