@@ -54,12 +54,15 @@ Dictionary = [
 Autocompleter = {
     
 "directive": ["define", "include", "ifndef", "endif",],
-"reserved" : ["TRUE", "FALSE", "HIGH", "LOW", "INPUT", "OUTPUT", "FOSC", "MIPS", "ON", "OFF", "PORTA", "PORTB", "PORTC", "PORTD",
-              "if", "switch", "for", "while", "do", "continue", "break", "else", "returndr", "case","void", "BOOL", "char", "unsigned",
-              "short", "int", "long", "float", "double", "byte", "word", "struct", "union", "typedef", "enum", "char", "loop", "setup",
-              "if", "switch", "for", "while", "do", "continue", "break", "else", "returndr", "case","const", "static", "extern",
-              "volatile",],
-    
+"reserved" : ["TRUE", "FALSE", "HIGH", "LOW", "INPUT", "OUTPUT", "FOSC", "MIPS", "ON", "OFF",
+              "LED1", "LED2", "LED3", "LED4", "REDLED", "GREENLED", "BLUELED", "WHITELED", "YELLOWLED",
+              "PROGBUTTON", "USERBUTTON",
+              "PORTA", "PORTB", "PORTC", "PORTD", "PORTE", "PORTF", "PORTG",
+              "if", "switch", "for", "while", "do", "continue", "break", "else", "return", "case", "default",
+              "void", "const", "bool", "BOOL", "char", "unsigned", "short", "int", "long", "float", "double", "byte", "word",
+              "u8", "s8", "u16", "s16", "u32", "s32", "u64", "s64",
+              "struct", "union", "typedef", "enum", "register",  "static", "extern", "volatile",
+              "loop", "setup",],
 }
 
 
@@ -75,9 +78,9 @@ Snippet["switch( ) {snippet}"] = [8, "switch (){\n\tcase:\n\n\t\tbreak;\n\tdefau
 Snippet[_("Bare Minimum")+" {snippet}"] = [59, "void setup() {\n\t// put your setup code here, to run once:\n\t\n\t}\n\nvoid loop() {\n\t// put your main code here, to run repeatedly:\n\n\t}"]
 Snippet[_("Insert Date")+" {snippet}"] = [58 + len(_("Author:")),
 """/*----------------------------------------------------- 
-%s  --<>
-%s %s
-%s
+%s:  --<>
+%s: %s
+%s:
 
 -----------------------------------------------------*/
-""" %(_("Author:"), _("Date:"), "/".join([t[2], t[1], t[4]]), _("Description:"))]	
+""" %(_("Author"), _("Date"), "/".join([t[2], t[1], t[4]]), _("Description"))]	

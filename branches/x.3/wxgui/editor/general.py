@@ -71,6 +71,8 @@ class General:
         self.popupID6 = wx.NewId()
         self.popupID7 = wx.NewId()
         self.popupID8 = wx.NewId()
+        self.popupID9 = wx.NewId()
+        self.popupID10 = wx.NewId()
         self.popupIDhelp0 = wx.NewId()
         self.popupIDhelp1 = wx.NewId()
         self.popupIDhelp2 = wx.NewId()
@@ -83,6 +85,9 @@ class General:
         self.Bind(wx.EVT_MENU, lambda x:textEdit.Clear(), id=self.popupID6)
         self.Bind(wx.EVT_MENU, lambda x:textEdit.ClearAll(), id=self.popupID7)
         self.Bind(wx.EVT_MENU, lambda x:self.comentar(), id=self.popupID8)
+        self.Bind(wx.EVT_MENU, lambda x:self.OnIndent(), id=self.popupID9)
+        self.Bind(wx.EVT_MENU, lambda x:self.OnUnIndent(), id=self.popupID10)
+        
         
     #----------------------------------------------------------------------
     def contexMenuTools(self, event):
@@ -106,8 +111,11 @@ class General:
 
             menu.AppendMenu(self.popupIDhelp0, word, help)          
             menu.AppendSeparator()
-
+    
         menu.Append(self.popupID8, _("Comment/Uncomment"))
+        menu.Append(self.popupID9, _("Increase Indent"))
+        menu.Append(self.popupID10, _("Decrease Indent"))
+        
         menu.AppendSeparator()
 
         menu.Append(self.popupID1, _("Undo"))
@@ -123,12 +131,7 @@ class General:
         self.PopupMenu(menu)
         menu.Destroy()
         
-        
-    ##----------------------------------------------------------------------
-    #def updateLateral(self, event=None):
-        #self.update_dockFiles()
-        
-        
+
     #----------------------------------------------------------------------
     def wordUnderCursor(self,function=False):
 
@@ -197,13 +200,16 @@ class General:
                                   wx.WXK_RETURN]:
             return
         
+        print event.GetModifiers()
+        
         if event.GetModifiers() in [wx.MOD_CONTROL,
                                     wx.MOD_ALT,
                                     wx.MOD_ALTGR,
                                     wx.MOD_CMD,
                                     wx.MOD_META,
                                     #wx.MOD_SHIFT,
-                                    wx.MOD_WIN]:
+                                    wx.MOD_WIN,
+                                    wx.MOD_CONTROL+wx.MOD_SHIFT]:
             return 
         
         self.OnAutoCompleter()
@@ -242,9 +248,27 @@ class General:
             if i not in completersFilter: completersFilter.append(i)
         completersFilter.sort()
         
+        for i in Autocompleter["reserved"]:
+            if i in self.keywordList: self.keywordList.remove(i)
+        
         addInDict("snippet", Snippet.keys())
         addInDict("function", self.keywordList)
-        addInDict("reserved", Autocompleter["reserved"] + self.reservedword)
+        addInDict("reserved", Autocompleter["reserved"])
         addInDict("directive", Autocompleter["directive"])
 
         return completersFilter, icons
+    
+    
+    ##----------------------------------------------------------------------
+    #def setWaitCursor(self, event=None):
+        #self.toolbar.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
+        ##self.listBoxKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
+        ##self.richTextKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
+        #self.Update()
+        
+    ##----------------------------------------------------------------------
+    #def setNormalCursor(self):
+        #self.toolbar.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        ##self.listBoxKeywords.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        ##self.richTextKeywords.SetCursor(wx.StockCursor(wx.CURSOR_HAND))
+        #self.Update()

@@ -135,11 +135,7 @@ class Documents():
         path = os.path.join(self.currentLateralDir, self.temporalItem, sel)
         try: self.background.Hide()
         except: pass  #self.background not exist
-        self.Open(path,
-                  self.reservedword,
-                  self.rw,
-                  self.filehistory,
-                  self.config)
+        self.Open(path)
         event.Skip()
         
         

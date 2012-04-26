@@ -32,6 +32,10 @@ class Editor(Documents, Debugger, File, Search, editor, Testing, Menubar, Genera
         self.__initDockFile__()
         self.__initSearch__()
         
+        #self.getPOT()
+        
+        
+        
         self.lat.notebookLateral.SetSelection(0)   
 
         if locale.getdefaultlocale()[0][:2] == "es":

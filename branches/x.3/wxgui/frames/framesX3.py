@@ -41,6 +41,14 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuFile.AppendSeparator()
 		
+		self.menuItemSaveAll = wx.MenuItem( self.menuFile, wx.ID_ANY, _("Save all"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuFile.AppendItem( self.menuItemSaveAll )
+		
+		self.menuItemCloseAll = wx.MenuItem( self.menuFile, wx.ID_ANY, _("Close all"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuFile.AppendItem( self.menuItemCloseAll )
+		
+		self.menuFile.AppendSeparator()
+		
 		self.menuRecents = wx.Menu()
 		self.menuFile.AppendSubMenu( self.menuRecents, _("Recents") )
 		
@@ -62,6 +70,12 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuItemComment_Uncomment = wx.MenuItem( self.menuEdit, wx.ID_ANY, _("Comment/Uncomment")+ u"\t" + u"CTRL+L", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuEdit.AppendItem( self.menuItemComment_Uncomment )
+		
+		self.menuItemIndent = wx.MenuItem( self.menuEdit, wx.ID_ANY, _("Increase Indent")+ u"\t" + u"CTRL+>", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuEdit.AppendItem( self.menuItemIndent )
+		
+		self.menuItemUnIndent = wx.MenuItem( self.menuEdit, wx.ID_ANY, _("Decrease Indent")+ u"\t" + u"CTRL+<", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuEdit.AppendItem( self.menuItemUnIndent )
 		
 		self.menuEdit.AppendSeparator()
 		
@@ -123,9 +137,6 @@ class menubarPinguino ( wx.MenuBar ):
 		self.menuDebugMode.AppendItem( self.menuItemUART1 )
 		
 		self.menuPinguino.AppendSubMenu( self.menuDebugMode, _("Debug mode") )
-		
-		self.menuBoard = wx.Menu()
-		self.menuPinguino.AppendSubMenu( self.menuBoard, _("Board") )
 		
 		self.menuRevision = wx.Menu()
 		self.menuItemCheckRev = wx.MenuItem( self.menuRevision, wx.ID_ANY, _("Check last revision"), wx.EmptyString, wx.ITEM_NORMAL )
@@ -613,7 +624,7 @@ class framePreferences ( wx.Frame ):
 class framePinguinoX ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Pinguino IDE x.3"), pos = wx.DefaultPosition, size = wx.Size( 711,306 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Pinguino IDE x.3"), pos = wx.DefaultPosition, size = wx.Size( 711,370 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -653,6 +664,53 @@ class framePinguinoX ( wx.Frame ):
 		self.statusBarEditor = self.CreateStatusBar( 4, wx.ST_SIZEGRIP, wx.ID_ANY )
 		
 		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
+
+###########################################################################
+## Class panelOutput
+###########################################################################
+
+class panelOutput ( wx.Panel ):
+	
+	def __init__( self, parent ):
+		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL )
+		
+		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWFRAME ) )
+		
+		bSizer30 = wx.BoxSizer( wx.VERTICAL )
+		
+		choicePortChoices = []
+		self.choicePort = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 150,-1 ), choicePortChoices, 0 )
+		self.choicePort.SetSelection( 0 )
+		bSizer30.Add( self.choicePort, 0, 0, 5 )
+		
+		self.logwindow = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		self.logwindow.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.logwindow.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
+		
+		bSizer30.Add( self.logwindow, 1, wx.EXPAND, 5 )
+		
+		gbSizer2 = wx.GridBagSizer( 0, 0 )
+		gbSizer2.AddGrowableCol( 0 )
+		gbSizer2.SetFlexibleDirection( wx.BOTH )
+		gbSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		
+		self.debuggingLine = wx.TextCtrl( self, wx.ID_ANY, _(">>>"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.debuggingLine.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.debuggingLine.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
+		
+		gbSizer2.Add( self.debuggingLine, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.EXPAND, 5 )
+		
+		self.buttonSendDebug = wx.Button( self, wx.ID_ANY, _("Send"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		gbSizer2.Add( self.buttonSendDebug, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), 0, 5 )
+		
+		bSizer30.Add( gbSizer2, 0, wx.EXPAND, 5 )
+		
+		self.SetSizer( bSizer30 )
+		self.Layout()
 	
 	def __del__( self ):
 		pass
@@ -721,7 +779,7 @@ class panelLateral ( wx.Panel ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _("Documents"), True )
+		self.notebookLateral.AddPage( self.documents, _("Documents"), False )
 		self.file = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer7 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -767,7 +825,7 @@ class panelLateral ( wx.Panel ):
 		self.m_panel31 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer26 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText15 = wx.StaticText( self.m_panel31, wx.ID_ANY, _("Defines"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText15 = wx.StaticText( self.m_panel31, wx.ID_ANY, _("Directives"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText15.Wrap( -1 )
 		self.m_staticText15.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
 		
@@ -791,7 +849,7 @@ class panelLateral ( wx.Panel ):
 		self.file.SetSizer( bSizer7 )
 		self.file.Layout()
 		bSizer7.Fit( self.file )
-		self.notebookLateral.AddPage( self.file, _("File"), False )
+		self.notebookLateral.AddPage( self.file, _("File"), True )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
