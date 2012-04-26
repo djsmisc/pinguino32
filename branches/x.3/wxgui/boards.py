@@ -33,86 +33,53 @@ MICROCHIP_ID = 0x04D8
 PIC8_ID = 0xFEAA
 PIC32_ID = 0x003C
 
-class Vasco2550:
-	name='Generic 18F2550 + Vasco Bldr.'
+class Pinguino2550:
+	name='Pinguino 2550'
 	id=wx.NewId()
 	arch=8
-	bldr='vasco'
+	bldr='boot2'
 	proc='18f2550'
 	board='PIC18F2550'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x2000
 	memend=0x7fff
-	config=0x300000
-	shortarg='-g'
-	longarg='--vasco2550'
+	shortarg='-p'
+	longarg='--pinguino2550'
 
-class Vasco4550:
-	name='Generic 18F4550 + Vasco Bldr.'
+class Pinguino4550:
+	name='Pinguino 4550'
 	id=wx.NewId()
 	arch=8
-	bldr='vasco'
+	bldr='boot2'
 	proc='18f4550'
 	board='PIC18F4550'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x2000
 	memend=0x7fff
-	config=0x300000
-	shortarg='-G'
-	longarg='--vasco4550'
+	shortarg='-P'
+	longarg='--pinguino4550'
 
-class Diolan2550:
-	name='Generic 18F2550 + Diolan Bldr.'
+class Pinguino26J50:
+	name='Pinguino 26J50'
 	id=wx.NewId()
 	arch=8
-	bldr='diolan'
-	proc='18f2550'
-	board='PIC18F2550'
-	vendor=MICROCHIP_ID
-	product=PIC8_ID
-	memstart=0x800
-	memend=0x7fff
-	config=0x300000
-	shortarg='-d'
-	longarg='--diolan2550'
-
-class Diolan26J50:
-	name='Generic 18F26J50 + Diolan Bldr.'
-	id=wx.NewId()
-	arch=8
-	bldr='diolan'
+	bldr='boot4'
 	proc='18f26j50'
 	board='PIC18F26J50'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
-	memstart=0x800
-	memend=0xfff0
-	config=0xfff8
-	shortarg='-d2'
-	longarg='--diolan26j50'
-
-class Diolan4550:
-	name='Generic 18F4550 + Diolan Bldr.'
-	id=wx.NewId()
-	arch=8
-	bldr='diolan'
-	proc='18f4550'
-	board='PIC18F4550'
-	vendor=MICROCHIP_ID
-	product=PIC8_ID
-	memstart=0x800
-	memend=0x7fff
-	config=0x300000
-	shortarg='-D'
-	longarg='--diolan4550'
+	memstart=0x1000
+	memend=0x0FFF0
+	shortarg='-j'
+	longarg='--pinguino26j50'
 
 class PICuno_Equo:
 	name='PICuno Equo'
 	id=wx.NewId()
 	arch=8
-	bldr='vasco'
+	bldr='boot2'
 	proc='18f4550'
 	board='PICUNO_EQUO'
 	vendor=MICROCHIP_ID
@@ -120,14 +87,14 @@ class PICuno_Equo:
 	memstart=0x2000
 	memend=0x7fff
 	config=0x300000
-	shortarg='-p'
+	shortarg='-eq'
 	longarg='--picunoequo'
 
 class FreeJALduino:
 	name='FreeJALduino'
 	id=wx.NewId()
 	arch=8
-	bldr='vasco'
+	bldr='boot2'
 	proc='18f2550'
 	board='FREEJALDUINO'
 	vendor=MICROCHIP_ID
@@ -135,7 +102,7 @@ class FreeJALduino:
 	memstart=0x2000
 	memend=0x7fff
 	config=0x300000
-	shortarg='-j'
+	shortarg='-J'
 	longarg='--freejalduino'
 
 class PIC32_Pinguino:
@@ -181,7 +148,7 @@ class PIC32_Pinguino_Micro:
 	longarg='--olimex440Micro'
 
 class PIC32_Pinguino_220:
-	name='PIC32_Pinguino_220'
+	name='PIC32 Pinguino 220'
 	id=wx.NewId()
 	arch=32
 	bldr='microchip'
@@ -251,8 +218,7 @@ class UBW32_795:
 	longarg='--ubw795'
 
 boardlist = [
-                Vasco2550, Vasco4550,
-                Diolan2550, Diolan26J50, Diolan4550,
+                Pinguino2550, Pinguino4550, Pinguino26J50, 
                 PICuno_Equo, FreeJALduino,
                 PIC32_Pinguino, PIC32_Pinguino_OTG,
                 PIC32_Pinguino_Micro, PIC32_Pinguino_220,

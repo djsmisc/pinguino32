@@ -1,0 +1,8 @@
+DCF77.init DCF77_init#include <dcf77.c>
+DCF77.scanSignal DCF77_scanSignal#include <dcf77.c>
+DCF77.getDay DCF77_getDay#include <dcf77.c>
+DCF77.getMonth DCF77_getMonth#include <dcf77.c>
+DCF77.getYear DCF77_getYear#include <dcf77.c>
+DCF77.getSeconds DCF77_getSeconds#include <dcf77.c>
+DCF77.getMinutes DCF77_getMinutes#include <dcf77.c>
+DCF77.getHours DCF77_getHours#include <dcf77.c>

@@ -76,6 +76,7 @@ class Uploader:
     #need to be imported HERE!!
     from uploaderVSC import uploaderVSC
     from uploaderDLN import uploaderDLN
+    from uploader8   import uploader8
     #from uploaderMCC import uploaderMCC
 
     #----------------------------------------------------------------------
@@ -87,10 +88,12 @@ class Uploader:
 
         parameters = (self.logwindow, filename + '.hex', self.curBoard)
 
-        if self.curBoard.bldr == 'vasco':
+        if self.curBoard.bldr == 'boot2':
             curUploader = self.uploaderVSC(*parameters)
-        elif self.curBoard.bldr == 'diolan':
+        elif self.curBoard.bldr == 'boot3':
             curUploader = self.uploaderDLN(*parameters)
+        elif self.curBoard.bldr == 'boot4':
+            curUploader = self.uploader8(*parameters)
         elif self.curBoard.bldr == 'microchip':
             curUploader = self.uploaderMCC(*parameters)
 
@@ -101,6 +104,5 @@ class Uploader:
     def getBoard(self, boardlist):
         """"""
         #Code to get and return board parameters
-
         #return a board from boardlist
 
