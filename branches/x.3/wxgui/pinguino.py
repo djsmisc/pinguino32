@@ -114,8 +114,7 @@ class Pinguino(framePinguinoX, Editor):
 	self.recentsFiles = []
 	#self.OnBoard()
 	self.GetTheme()
-
-
+	
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
         self._mgr = wx.aui.AuiManager(self)
@@ -150,13 +149,6 @@ class Pinguino(framePinguinoX, Editor):
         self.__initIDE__()
 
         self.openLast()
-#        self.SendSizeEvent()
-
-    ##----------------------------------------------------------------------
-    #def translate(self, str):
-        #""""""
-        #return str
-
 
 
 # ------------------------------------------------------------------------------
@@ -294,13 +286,6 @@ class Pinguino(framePinguinoX, Editor):
 	self.choicePort = self.panelOutput.choicePort
 	self.choicePort.Hide()
 	
-	#if os.name == "posix": name = "ttyACM"
-	#elif os.name == "nt": name = "COM"
-	
-	#ch = []
-	#for i in range(10): ch.append(name+str(i))
-	#self.choicePort.AppendItems(ch+["Auto"])
-	#self.choicePort.SetSelection(10)
 	self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
 	
 	self.debuggingLine.SetInsertionPoint(125)
@@ -327,28 +312,8 @@ class Pinguino(framePinguinoX, Editor):
 # ----------------------------------------------------------------------
     def buildMenu(self):
         self.menu = menubarPinguino()
-
-        ##menu Board
-        #self.board_menu= self.menu.menuBoard
-        #for b in range(len(boardlist)):
-            #self.board_menu.AppendRadioItem(boardlist[b].id, boardlist[b].name, "your board")
-        #bid = self.config.ReadInt('Board', -1)
-        #minbid = boardlist[0].id
-        #maxbid = boardlist[len(boardlist)-1].id
-        #if bid == -1 or bid < minbid or bid > maxbid:
-            #bid = BOARD_DEFAULT.id
-        #self.board_menu.Check(bid, True)
-        #self.OnBoard(wx.Event)
-
-        ##menu Recents
-        #self.filehistory.UseMenu(self.menu.menuRecents)
-        #self.filehistory.AddFilesToMenu()
-
         self.SetMenuBar(self.menu)
-
-        #self.DrawToolbar()
-
-
+	
 	
     #----------------------------------------------------------------------
     def addFile2Recent(self, file):
@@ -379,50 +344,45 @@ class Pinguino(framePinguinoX, Editor):
 # ----------------------------------------------------------------------
     def loadSettings(self):
 	self.loadConfig()
+	try:
+	    w = self.getConfig("IDE", "window/width")
+	    h = self.getConfig("IDE", "window/height")
+	    self.SetSize((w, h))
+	except:
+	    self.setConfig("IDE", "Window/Width", 1000)
+	    self.setConfig("IDE", "Window/Height", 500)
+	    self.SetSize((1000, 500))
+	    
+	try:
+	    x = self.getConfig("IDE", "Window/Xpos")
+	    y = self.getConfig("IDE", "Window/Ypos")
+	    self.SetPosition((x, y))	
+	except:
+	    self.setConfig("IDE", "Window/Xpos", 100)
+	    self.setConfig("IDE", "Window/Ypos", 100) 
+	    self.SetPosition((100, 100))
+	    
+	#try:
+	    #w = self.getConfig("IDE", "output/width")
+	    #h = self.getConfig("IDE", "output/height")
+	    ##self.logwindow.SetSize((w, h))
 	
-	w = self.getConfig("IDE", "window/width")
-	h = self.getConfig("IDE", "window/height")
-        self.SetSize((w, h))
-
-	w = self.getConfig("IDE", "output/width")
-	h = self.getConfig("IDE", "output/height")
-	#self.logwindow.SetSize((w, h))
+	try: self.theme = self.getConfig("IDE", "theme")
+	except: self.theme = "PinguinoX"
 	
-        self.theme = self.getConfig("IDE", "theme")
-	
-	boardName = self.getConfig("IDE","Board")
+	try:
+	    boardName = self.getConfig("IDE","Board")
+	except:
+	    boardName = "Pinguino 2550"
 	self.setBoard(boardName)
 	
-        for i in range(self.getConfig("Recents", "Recents_count")):
-            file = self.getConfig("Recents", "Recents_%d"%i)
-            if os.path.isfile(file):
-                self.addFile2Recent(file)
+	try:
+	    for i in range(self.getConfig("Recents", "Recents_count")):
+		file = self.getConfig("Recents", "Recents_%d"%i)
+		if os.path.isfile(file):
+		    self.addFile2Recent(file)
+	except: pass
 
-
-# ----------------------------------------------------------------------
-# window
-# ----------------------------------------------------------------------
-    def setLanguage(self):
-        """"""
-
-
-
-        #loc = locale.getdefaultlocale()[0][0:2]
-
-        ## pt_BR Language Check, By Wagner de Queiroz, 2010-Mar,01
-        #if loc == "pt":
-            #loc = locale.getdefaultlocale()[0][0:5]
-        #if loc != "pt_BR":
-            #loc = locale.getdefaultlocale()[0][0:2]
-
-        #self.lang = gettext.translation('pinguino', LOCALE_DIR, languages=[loc], fallback=True)
-        #_=self.lang.ugettext
-
-        #_icon = wx.EmptyIcon()
-        #_icon.CopyFromBitmap(wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY))
-        #self.SetIcon(_icon)
-
-        #return _
 
 
 # ----------------------------------------------------------------------
@@ -475,20 +435,6 @@ class Pinguino(framePinguinoX, Editor):
         self._mgr.Update()
 
 
-
-## ------------------------------------------------------------------------------
-## Thread
-## ------------------------------------------------------------------------------
-    #def dthread(self):
-        #while self.debug_flag is True:
-            #if self.debug_handle:
-                #print ">>>debug:"
-                #print self.debug_handle.readline()
-            #time.sleep(0.01)
-
-    ## create the debug thread
-    #if DEV:
-        #debug_thread = threading.Thread(target=dthread)
 
 # ------------------------------------------------------------------------------
 # OnUpgrade
@@ -621,10 +567,12 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def openLast(self):
-        for i in range(self.getConfig("Last", "Last_count")):
-            file = self.getConfig("Last", "Last_%d"%i)
-            if os.path.isfile(file):
-                self.Open(file)
+	try:
+	    for i in range(self.getConfig("Last", "Last_count")):
+		file = self.getConfig("Last", "Last_%d"%i)
+		if os.path.isfile(file):
+		    self.Open(file)
+	except: pass
 
 # ------------------------------------------------------------------------------
 # OnAbout:
@@ -663,7 +611,7 @@ class Pinguino(framePinguinoX, Editor):
         info.SetLicence(licence)
 
         info.AddDeveloper('Jean-Pierre Mandon')
-        info.AddDeveloper('Regis Blanchot')
+        info.AddDeveloper('Régis Blanchot')
         info.AddDeveloper('Marcus Fazzi')
         info.AddDeveloper('Jesus Carmona Esteban')
         info.AddDeveloper('Ivan Ricondo')
@@ -679,7 +627,7 @@ class Pinguino(framePinguinoX, Editor):
 
         info.AddArtist('France Cadet')
         info.AddArtist('Laurent Costes')
-        info.AddArtist('Daniel RodrÃ­guez')
+        info.AddArtist('Daniel Rodrí­guez')
 
         info.AddTranslator('Joan Espinoza: Spanish, Portuguese')
         info.AddTranslator('Marin Purgar: Croatian')
