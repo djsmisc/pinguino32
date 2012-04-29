@@ -44,7 +44,7 @@ void setup() {
   lcd.pins(12, 11, 5, 4, 3, 2, 0, 0, 0, 0); // Use last 4 pins as zero for 4bits mode
 	
   // set up the LCD's number of columns and rows: 
-  lcd.begin(16, 2);
+  lcd.begin(16, 2, 0);
   // Print a message to the LCD.
   lcd.print("hello, world!");
 }

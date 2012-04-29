@@ -237,7 +237,7 @@ void _lcd_noAutoscroll(void) {
 }
 
 /** Initial Display settings! */
-void _lcd_begin(unsigned char lines, unsigned char dotsize) {
+void _lcd_begin(unsigned char cols, unsigned char lines, unsigned char dotsize) {
   if (lines > 1) {
     _displayfunction |= LCD_2LINE;
   }
