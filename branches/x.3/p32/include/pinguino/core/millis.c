@@ -35,21 +35,26 @@
  * must be declared as "volatile" to prevent caching.
  */
 volatile u32 _millis;
+#ifdef PIC32_PINGUINO_220
+volatile u32 _tmr2;
+#endif
 
 void millis_init(void)
 {
 	u32 pf;			// peripheral bus frequency
 
+	pf = GetPeripheralClock();
 	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 	T2CON=0;
-	TMR2=0x00;
 	#ifdef PIC32_PINGUINO_220
+	_tmr2 = pf / 1000 / 2;
+	TMR2 = 65535 - _tmr2;
 	IPC2bits.T2IP=1;
 	IPC2bits.T2IS=1;
 	IFS0bits.T2IF=0;
 	IEC0bits.T2IE=1;
 	#else
-	pf = GetPeripheralClock();
+	TMR2=0x00;
 	PR2 = pf / 1000 / 2; //0x4E00;
 	IPC2SET = 0x0000000D;
 	IFS0CLR = 0x00000100;
@@ -73,16 +78,17 @@ void Tmr2Interrupt()
 {
 	// is this an TMR2 interrupt ?
 	#ifdef PIC32_PINGUINO_220
-	TMR2=0xD910;	// because PR2 don't work on PIC32MX220F032D
+	TMR2 = _tmr2; // 0xD910;	// because PR2 don't work on PIC32MX220F032D
 	if (IFS0bits.T2IF)
 	#else
-	if (IntGetFlag(INT_TIMER2))
+	if (IntGetFlag(INT_TIMER2)) // TODO : add PIC32_PINGUINO_220 support
 	#endif
 	{
 		#ifdef PIC32_PINGUINO_220
 		IFS0bits.T2IF=0;
 		#else
-		IFS0CLR=0x00000100;
+		//IFS0CLR=0x00000100;
+		IntClearFlag(INT_TIMER2);
 		#endif
 		_millis++;
 	}
