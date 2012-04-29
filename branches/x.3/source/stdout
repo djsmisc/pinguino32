@@ -1,3 +1,0 @@
-error: duplicate symbol "_delay10ktcy" defined in "delay10ktcy.o" and "boot_iface.o"
-error: duplicate symbol "_delay1ktcy" defined in "delay1ktcy.o" and "boot_iface.o"
-error: duplicate symbol "_delay10tcy" defined in "delay10tcy.o" and "boot_iface.o"
