@@ -1,0 +1,16 @@
+[IDE]
+window/width = 1000
+window/height = 500
+window/xpos = 100
+window/ypos = 100
+output/width = 998
+output/height = 84
+theme = PinguinoX
+board = Pinguino 2550
+
+[Recents]
+recents_count = 0
+
+[Last]
+last_count = 0
+
