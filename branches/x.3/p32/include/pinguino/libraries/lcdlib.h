@@ -57,7 +57,7 @@ void _lcd_pins(unsigned char rs, unsigned char enable, unsigned char d0, unsigne
 void _lcd_init(unsigned char fourbitmode, unsigned char rs, unsigned char rw, unsigned char enable, 
 			unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3,
 			unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7);
-void _lcd_begin(unsigned char lines, unsigned char dotsize);
+void _lcd_begin(unsigned char cols, unsigned char lines, unsigned char dotsize);
 void _lcd_noAutoscroll(void);
 void _lcd_autoscroll(void);
 void _lcd_rightToLeft(void);

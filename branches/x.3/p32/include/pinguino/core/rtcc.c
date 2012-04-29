@@ -30,6 +30,7 @@
 #include <const.h>
 #include <macro.h>
 #include <system.c>
+#include <interrupt.c>
 #include <bcd.c>
 
 
