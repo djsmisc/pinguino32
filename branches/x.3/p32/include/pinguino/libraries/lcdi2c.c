@@ -252,9 +252,9 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
 
 	/// ---------- LCD Enable Cycle
 
-	LCD_EN = LOW;
-	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
-	Delayus(1);
+	//LCD_EN = LOW;
+	//I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
+	//Delayus(1);
 
 	LCD_EN = HIGH;
 	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
@@ -262,7 +262,7 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
 
 	LCD_EN = LOW;
 	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
-	Delayus(50);// E Enable Cycle > (300 + 200) = 500ns
+	Delayus(1);// E Enable Cycle > (300 + 200) = 500ns
 }
 
 /*	----------------------------------------------------------------------------
@@ -557,30 +557,32 @@ void lcdi2c_init(u8 numcol, u8 numline, u8 i2c_address)
 	PCF8574_address = 0b01001110 | i2c_address;
 	PCF8574_data.val = 0;
 
-	I2C_init(I2C1, I2C_MASTER_MODE, I2C_400KHZ);
+	//I2C_init(I2C1, I2C_MASTER_MODE, I2C_100KHZ);
+	//I2C_init(I2C1, I2C_MASTER_MODE, I2C_400KHZ);
+	I2C_init(I2C1, I2C_MASTER_MODE, I2C_1MHZ);
 
-	//Delayms(15);								// Wait more than 15 ms after VDD rises to 4.5V
+	Delayms(15);								// Wait more than 15 ms after VDD rises to 4.5V
 	lcdi2c_send4(0x30, LCD_CMD);				// 0x30 - Mode 8 bits
-	//Delayms(5);									// Wait for more than 4.1 ms
+	Delayms(5);									// Wait for more than 4.1 ms
 	lcdi2c_send4(0x30, LCD_CMD);				// 0x30 - Mode 8 bits
-	//Delayus(100);								// Wait more than 100 μs
+	Delayus(100);								// Wait more than 100 μs
 	lcdi2c_send4(0x30, LCD_CMD);				// 0x30 - Mode 8 bits
-	//Delayus(100);								// Wait more than 100 μs
+	Delayus(100);								// Wait more than 100 μs
 	lcdi2c_send4(0x20, LCD_CMD);				// 0x20 - Mode 4 bits
 	lcdi2c_send8(LCD_SYSTEM_SET_4BITS, LCD_CMD);// 0x28 - Mode 4 bits - 2 Lignes - 5x8
-	//Delayus(4);									// Wait more than 40 ns
-	lcdi2c_backlight();							// backlight on
-	lcdi2c_send8(LCD_DISPLAY_ON, LCD_CMD);		// 0x0C - Display ON + Cursor OFF + Blinking OFF
-	Delayus(4);									// Wait more than 40 ns
-	lcdi2c_send8(LCD_DISPLAY_CLEAR, LCD_CMD);   // 0x01 - Efface l'affichage + init. DDRAM
-	Delayms(2);									// le temps d'execution de Display Clear > 1.64ms
 	lcdi2c_send8(LCD_ENTRY_MODE_SET, LCD_CMD);  // 0x06 - Increment + Display not shifted (Déplacement automatique du curseur)
-	Delayus(4);									// Wait more than 40 ns
-	lcdi2c_send8(LCD_CURSOR_HOME, LCD_CMD);
-	Delayms(2);									// Wait for more than 1.64ms
-
+	lcdi2c_backlight();							// backlight on
+/*
+	lcdi2c_display();
+	lcdi2c_noBlink();
+	lcdi2c_noCursor();
+	lcdi2c_noAutoscroll();
+	lcdi2c_setCursor(0, 0);
+*/
+	lcdi2c_clear();
+	lcdi2c_home();
 	#ifndef __32MX220F032D__
-	lcdi2c_newpattern();						// Implante les nouveaux caracteres
+	//lcdi2c_newpattern();						// Implante les nouveaux caracteres
 	#endif
 }
 

@@ -41,7 +41,7 @@
  #include <debug.c>
 #endif
 #include <interrupt.c>			// interrupts routines
-#include <DCF77.h>
+#include <dcf77.h>
 #include <bcd.c>
 
 /*******************************************************************************

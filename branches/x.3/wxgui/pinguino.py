@@ -56,7 +56,7 @@ SOURCE_DIR    = os.path.join(HOME_DIR, 'source')
 LOCALE_DIR    = os.path.join(HOME_DIR, 'locale')
 P32_DIR        = os.path.join(HOME_DIR, 'p32')
 P8_DIR        = os.path.join(HOME_DIR, 'p8')
-SVN_DIR        = 'http://pinguino32.googlecode.com/svn/trunk/'
+SVN_DIR        = 'http://pinguino32.googlecode.com/svn/branches/x.3/'
 APP_CONFIG    = os.path.join(HOME_DIR, '.config')
 TEMP_DIR = os.path.join(HOME_DIR, '.temp')
 EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
@@ -1135,6 +1135,10 @@ class Pinguino(framePinguinoX, Editor):
             print("link " + board.proc)
         else:
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+#                                  '-llibpuf.lib',\
+#                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
+#                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
+#                                  os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
             if board.arch == 8:
                 if board.bldr == 'boot2':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
@@ -1158,10 +1162,6 @@ class Pinguino(framePinguinoX, Editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
-                                  '-llibpuf.lib',\
-                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'boot4'

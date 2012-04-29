@@ -122,7 +122,7 @@ void setup()
 	// pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
 	lcdi2c.init(16, 2, 0b01001110);			// display is 2x16, ic2 address is 01001110 (see above)
 	lcdi2c.backlight();						// turns backlight on
-	lcdi2c.clear();							// clear screen
+	lcdi2c.clear();						// clear screen
 	lcdi2c.home();							// set cursor at (0,0)
 	lcdi2c.printf("   lcdi2c demo  ");
 	lcdi2c.setCursor(0, 1);					// set cursor at line 1, col 0

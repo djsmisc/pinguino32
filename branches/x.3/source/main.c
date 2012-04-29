@@ -63,7 +63,7 @@ void pinguino_main(void)
 	PIE1 = 0;
 	PIE2 = 0;
 
-	#if defined(PIC18F4550) || defined(PIC18F4450) || defined(PIC18F2550) || defined(PIC18F2450)
+	#if defined(PIC18F4550) || defined(PIC18F4455) || defined(PIC18F2550) || defined(PIC18F2455)
 	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 	#endif
 

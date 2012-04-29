@@ -21,8 +21,10 @@
 	typedef unsigned long long 		u64;
 	
 /*	----------------------------------------------------------------------------
-	avr-gcc types
+	gcc types
 	--------------------------------------------------------------------------*/
+
+	//#include <types.h>
 
 	typedef unsigned char			byte;
 	typedef unsigned char			BYTE;
@@ -40,16 +42,19 @@
 	typedef unsigned long int		uint32_t;
 	typedef unsigned long long 		uint64_t;
 
-	/* 8 bits */
+	// 8 bits
 	typedef unsigned char			uchar;
 	typedef signed char				schar;
 	typedef unsigned char			UCHAR;
 	typedef signed char				CHAR;
 
-	/* 16 bits */
+	// 16 bits
 	typedef short int				INT;
 	typedef unsigned short int		UINT;
-	typedef unsigned short int		uint;
+/*
+ * 2012-04-28 Regis Blanchot - types.h: error: conflicting types
+ */ 
+//	typedef unsigned short int		uint;
 	typedef signed short int		sint;
 	typedef unsigned short int		word;
 	typedef short int				SHORT;
@@ -57,8 +62,8 @@
 	typedef unsigned short int		WORD;
 	typedef unsigned short int		WCHAR;
 
-	/* 32 bits */
-	typedef unsigned long int		ulong;
+	// 32 bits
+//	typedef unsigned long int		ulong;
 	typedef unsigned long int		ULONG;
 	typedef signed long int			slong;
 	typedef unsigned long int		dword; 
