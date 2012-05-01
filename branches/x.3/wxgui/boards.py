@@ -71,7 +71,7 @@ class Pinguino26J50:
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x1000
-	memend=0x0FFF0
+	memend=0xFFF0
 	shortarg='-j'
 	longarg='--pinguino26j50'
 

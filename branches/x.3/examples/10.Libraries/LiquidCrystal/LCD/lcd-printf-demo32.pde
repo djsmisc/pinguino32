@@ -18,12 +18,18 @@
 
 void setup()
 {
+	// initialize the library with the numbers of the interface pins
+	// lcd.pins(RS, E, D4, D5, D6, D7, 0, 0, 0, 0);		//4bits
+	// lcd.pins(RS, E, D0, D1, D2, D3, D4, D5, D6, D7);	//8bits
+
 	// UBW 32 mapping - 4 bits mode
-	//lcd(0, 2, 3, 4, 5, 6, 0, 0, 0, 0); // RS, E, D4 ~ D8	
-	lcd(36, 37, 38, 39, 40, 41, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	//lcd.pins(36, 37, 38, 39, 40, 41, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+
+	// PIC32-Pinguino(-OTG) - 4 bits mode
+	lcd.pins(12, 11, 5, 4, 3, 2, 0, 0, 0, 0); // Use last 4 pins as zero for 4bits mode
 
 	// LCD format
-	lcd.begin(2, 0); // lines, dotsize
+	lcd.begin(16, 2); // cols, lines, [dotsize]
 
 	lcd.home(); // 0, 0
 	lcd.printf("Sys.Clock: %02uMHz", GetSystemClock()/1000000);

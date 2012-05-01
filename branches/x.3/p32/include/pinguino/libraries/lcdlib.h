@@ -1,6 +1,8 @@
 #ifndef __LCDLIB_H__
 #define __LCDLIB_H__
 
+#include <typedef.h>
+
 // commands
 #define LCD_CLEARDISPLAY 0x01
 #define LCD_RETURNHOME 0x02
@@ -39,25 +41,25 @@
 #define LCD_5x10DOTS 0x04
 #define LCD_5x8DOTS 0x00
 
-unsigned char _rs_pin; // LOW: command.  HIGH: character.
-unsigned char _rw_pin; // LOW: write to LCD.  HIGH: read from LCD. NOT IMPLEMENTED! Connect RW to GND.
-unsigned char _enable_pin; // activated by a HIGH pulse.
-unsigned char _data_pins[8];
+u8 _rs_pin; 	// LOW: command.  HIGH: character.
+u8 _rw_pin; 	// LOW: write to LCD.  HIGH: read from LCD. NOT IMPLEMENTED! Connect RW to GND.
+u8 _enable_pin; // activated by a HIGH pulse.
+u8 _data_pins[8];
 
-unsigned char _displayfunction;
-unsigned char _displaycontrol;
-unsigned char _displaymode;
+u8 _displayfunction;
+u8 _displaycontrol;
+u8 _displaymode;
 
-unsigned char _initialized;
+u8 _initialized;
 
-unsigned char _numlines,_currline;
+u8 _numlines,_currline;
 
-void _lcd_pins(unsigned char rs, unsigned char enable, unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3, 
-			unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7);
-void _lcd_init(unsigned char fourbitmode, unsigned char rs, unsigned char rw, unsigned char enable, 
-			unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3,
-			unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7);
-void _lcd_begin(unsigned char cols, unsigned char lines, unsigned char dotsize);
+void _lcd_pins(u8 rs, u8 enable, u8 d0, u8 d1, u8 d2, u8 d3, 
+			u8 d4, u8 d5, u8 d6, u8 d7);
+void _lcd_init(u8 fourbitmode, u8 rs, u8 rw, u8 enable, 
+			u8 d0, u8 d1, u8 d2, u8 d3,
+			u8 d4, u8 d5, u8 d6, u8 d7);
+void _lcd_begin(u8 cols, u8 lines, u8 dotsize);
 void _lcd_noAutoscroll(void);
 void _lcd_autoscroll(void);
 void _lcd_rightToLeft(void);
@@ -72,15 +74,15 @@ void _lcd_display();
 void _lcd_noDisplay();
 void _lcd_clear();
 void _lcd_home();
-void _lcd_printNumber(unsigned long n, unsigned char base);
-void _lcd_printFloat(float number, unsigned char digits);
+void _lcd_printNumber(u32 n, u8 base);
+void _lcd_printFloat(float number, u8 digits);
 void _lcd_print(char *string);
 void _lcd_printf(char *fmt, ...);
-void _lcd_setCursor(unsigned char col, unsigned char row);
-void _lcd_command(unsigned char value);
-void _lcd_write(unsigned char value);
-void _lcd_send(unsigned char value, unsigned char mode);
-void _lcd_write8bits(unsigned char value);
-void _lcd_write4bits(unsigned char value);
+void _lcd_setCursor(u8 col, u8 row);
+void _lcd_command(u8 value);
+void _lcd_write(u8 value);
+void _lcd_send(u8 value, u8 mode);
+void _lcd_write8bits(u8 value);
+void _lcd_write4bits(u8 value);
 void _lcd_pulseEnable(void);
 #endif

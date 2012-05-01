@@ -1138,7 +1138,6 @@ class Pinguino(framePinguinoX, Editor):
 #                                  '-llibpuf.lib',\
 #                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
 #                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
-#                                  os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
             if board.arch == 8:
                 if board.bldr == 'boot2':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
@@ -1162,11 +1161,10 @@ class Pinguino(framePinguinoX, Editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
+                                  os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
-                                 stdout=fichier, stderr=STDOUT)
+                                  stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'boot4'
-#                            "--extended",\
-#                                  os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "-mpic16",\
@@ -1188,8 +1186,9 @@ class Pinguino(framePinguinoX, Editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
+                                  os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
-                                 stdout=fichier, stderr=STDOUT)
+                                  stdout=fichier, stderr=STDOUT)
             else:
                 # "PDEDIR=" + os.path.dirname(self.GetPath()),\
                 # can't be used with Command Line version since editor isn't used
@@ -1227,7 +1226,7 @@ class Pinguino(framePinguinoX, Editor):
     def getCodeSize(self, filename, board):
         codesize = 0
         address_Hi = 0
-        totalsize = board.memend - board.memstart
+        memfree = board.memend - board.memstart
         fichier = open(filename + ".hex", 'r')
         lines = fichier.readlines()
         for line in lines:
@@ -1244,7 +1243,7 @@ class Pinguino(framePinguinoX, Editor):
                 if address >= board.memstart:
                     codesize = codesize + byte_count
         fichier.close()
-        return "code size: " + str(codesize) + " / " + str(totalsize) + " bytes" + " (" + str(100*codesize/totalsize) + "% used)"
+        return "code size: " + str(codesize) + " / " + str(memfree) + " bytes" + " (" + str(100*codesize/memfree) + "% used)"
 
     #----------------------------------------------------------------------
     def OnPreferences(self, event=None):
