@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-#from uploaderDLN import uploaderDLN
-#from uploaderVSC import uploaderVSC
-#from uploaderMCC import uploaderMCC
-
 import usb
 
 ########################################################################

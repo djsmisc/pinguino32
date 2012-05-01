@@ -33,8 +33,8 @@ import time
 # !!! use True at your own risc as it could erase your bootloader !!!
 # ------------------------------------------------------------------------------
 
-#DEV = True
-DEV = False
+DEV = True
+#DEV = False
 
 HOME_DIR	= os.getcwd()
 fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
@@ -177,16 +177,16 @@ except:
     fichier.close()
     perror()
 
-if DEV:
-    try:	
-        import usb			# USB interface for Python
-        fichier.writelines('USB successfully loaded\n')
-    except:
-        fichier.writelines('USB python failed to be loaded\n')
-        fichier.writelines('Try to re-install PyUSB\n')
-        fichier.close()
-        perror()
+try:	
+    import usb		    	    # USB interface for Python
+    fichier.writelines('USB successfully loaded\n')
+except:
+    fichier.writelines('USB python failed to be loaded\n')
+    fichier.writelines('Try to re-install PyUSB\n')
+    fichier.close()
+    perror()
 
+if DEV:
     try:	
         import serial			# adds the PySerial library (http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download)
         fichier.writelines('Serial successfully loaded\n')

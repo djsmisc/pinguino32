@@ -37,7 +37,7 @@ class uploaderVSC(baseUploader):
 	""" upload .hex into pinguino device """
 
 	# --------------------------------------------------------------------------
-	memstart						= 0x1000		# bootloader offset
+	memstart						= 0x2000		# bootloader offset
 	memend							= 0
 	# --------------------------------------------------------------------------
 	
@@ -261,14 +261,14 @@ class uploaderVSC(baseUploader):
 		# check file to upload
 		# ----------------------------------------------------------------------
 
-		if filename == '':
-			self.txtWrite(output, "No program to write\n")
+		if self.filename == '':
+			self.txtWrite("No program to write\n")
 			self.closeDevice(handle)
 			return
 
-		fichier = open(filename, 'r')
+		fichier = open(self.filename, 'r')
 		if fichier == "":
-			self.txtWrite(output, "Unable to open %s\n" % filename)
+			self.txtWrite("Unable to open %s\n" % self.filename)
 			return
 		fichier.close()
 

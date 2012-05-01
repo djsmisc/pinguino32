@@ -1,26 +1,37 @@
-/*
- * LCD routines for use with pinguino 32X board, based on LiquidCrystal lib from Arduino project.
- * Port by Marcus Fazzi (anunakin@ieee.org)
- * LiquidCrystal original Arduino site: 
- *      http://www.arduino.cc/en/Tutorial/LiquidCrystal by David A. Mellis
- * Pins, Schematics and more info: 
- * 		http://pinguino.koocotte.org/index.php/LCD_Example
- * 		http://www.fazzi.eng.br
- */
+/*	----------------------------------------------------------------------------
+	FILE:  			lcdlib.c
+	PROJECT: 		pinguino32
+	PURPOSE: 		LCD routines for use with pinguino 32X board
+						Based on LiquidCrystal lib from Arduino project.
+	PROGRAMER: 		Port by Marcus Fazzi (anunakin@ieee.org)
+	FIRST RELEASE:	30 May 2011
+	Updated:		05 Mar 2012 - Marcus Fazzi
+					Changed function lcd to _lcd_pins & prefixed all other
+					function names with _lcd_
+	Updated:		29 Apr 2012 - R. Blanchot
+					Changed _lcd_begin() to get same syntax as Arduino's lib.
+					Changed variable types unsigned char and unsigned long
+					to Pinguino types u8 and u16 respectively and added
+					#include <typedef.h>
+	Updated:		01 May 2012 - M Harper
+					Changed to deal more consistently with single line displays
+						(changes identified by dated comments in code)
+	----------------------------------------------------------------------------
+	LiquidCrystal original Arduino site: 
+			http://www.arduino.cc/en/Tutorial/LiquidCrystal by David A. Mellis
+	Pins, Schematics and more info: 
+			http://pinguino.koocotte.org/index.php/LCD_Example
+ 			http://www.fazzi.eng.br
+*/
 
 #ifndef __LCDLIB_C__
 #define __LCDLIB_C__
 
-//Arduino like delays
-#include <delay.c>
-
-//Arduino like DigitalWrite and Read
-#include <digitalw.c>
-
-// pinguino printf own library
-#include <printf.c>
-
-#include <stdarg.h>
+#include <delay.c>		// Arduino like delays
+#include <digitalw.c>	// Arduino like DigitalWrite and Read
+#include <typedef.h>	// Pinguino's types (u8, u16, ...) 01 May 2012
+#include <printf.c>		// Pinguino printf (low footprint)
+#include <stdarg.h>		// Variable Arguments
 
 #ifndef __LCDLIB_H__
 #include <lcdlib.h>
@@ -37,7 +48,7 @@ void _lcd_pulseEnable(void) {
 }
 
 /** Write using 4bits mode */
-void _lcd_write4bits(unsigned char value) {
+void _lcd_write4bits(u8 value) {
 	int i;
 	for (i = 0; i < 4; i++) {		
 		digitalwrite(_data_pins[i], (value >> i) & 0x01);
@@ -46,7 +57,7 @@ void _lcd_write4bits(unsigned char value) {
 }
 
 /** Write using 8bits mode */
-void _lcd_write8bits(unsigned char value) {
+void _lcd_write8bits(u8 value) {
 	int i;
 	for (i = 0; i < 8; i++) {		
 		digitalwrite(_data_pins[i], (value >> i) & 0x01);
@@ -55,7 +66,7 @@ void _lcd_write8bits(unsigned char value) {
 }
 
 /** Send data to LCD 8 or 4 bits */
-void _lcd_send(unsigned char value, unsigned char mode) {
+void _lcd_send(u8 value, u8 mode) {
 	digitalwrite(_rs_pin, mode);
     if (_displayfunction & LCD_8BITMODE) {
 		_lcd_write8bits(value);
@@ -66,23 +77,37 @@ void _lcd_send(unsigned char value, unsigned char mode) {
 }
 
 /** Write a data character on LCD */
-void _lcd_write(unsigned char value) {
+void _lcd_write(u8 value) {
 	_lcd_send(value, HIGH);
 }
 
  
 /** Write a control command on LCD */
-void _lcd_command(unsigned char value) {
+void _lcd_command(u8 value) {
 	_lcd_send(value, LOW);
 }
 
 /** Setup line x column on LCD */
-void _lcd_setCursor(unsigned char col, unsigned char row) {
-  int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
-  if ( row > _numlines ) {
-    row = _numlines-1;    // we count rows starting w/0
-  }
-  _lcd_command(LCD_SETDDRAMADDR | (col + row_offsets[row]));
+void _lcd_setCursor(u8 col, u8 row) {
+	int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
+	/* Added 01 May 2012 by MFH
+		sets row_offsets for a single line display so that 
+		80 column space divided in 4 equal 20 column sections.
+		This means that if an n x 4 display is set to behave as
+		a single line display lines 1 and 2 are displayed and
+		lines 3 and 4 are 20 characters to the right.*/
+	if (_numlines==1) {
+		row_offsets[1] = 0x14;
+		row_offsets[2] = 0x28;
+		row_offsets[3] = 0x3C;
+		}
+	/* Removed 01 May 2012 by MFH as did not treat row
+		starts consistently for n x 2 and n x 4 displays
+	if ( row > _numlines ) {
+		row = _numlines-1;    // we count rows starting w/0
+	}
+*/
+	_lcd_command(LCD_SETDDRAMADDR | (col + row_offsets[row]));
 }
 
 /** Print a string on LCD */
@@ -105,9 +130,9 @@ void _lcd_printf(char *fmt, ...)
 }
 
 /** Print a number on LCD */
-void _lcd_printNumber(unsigned long n, unsigned char base) {  
-  unsigned char buf[8 * sizeof(long)]; // Assumes 8-bit chars. 
-  unsigned long i = 0;
+void _lcd_printNumber(u32 n, u8 base) {  
+  u8 buf[8 * sizeof(long)]; // Assumes 8-bit chars. 
+  u32 i = 0;
 
   if (n == 0) {
     _lcd_write('0');
@@ -126,9 +151,9 @@ void _lcd_printNumber(unsigned long n, unsigned char base) {
 }
 
 /** Print a float number to LCD */
-void _lcd_printFloat(float number, unsigned char digits) { 
-  unsigned char i, toPrint;
-  unsigned long int_part;
+void _lcd_printFloat(float number, u8 digits) { 
+  u8 i, toPrint;
+  u32 int_part;
   float rounding, remainder;
   
   // Handle negative numbers
@@ -145,7 +170,7 @@ void _lcd_printFloat(float number, unsigned char digits) {
   number += rounding;
 
   // Extract the integer part of the number and print it  
-  int_part = (unsigned long)number;
+  int_part = (u32)number;
   remainder = number - (float)int_part;
   _lcd_printNumber(int_part, 10);
 
@@ -156,7 +181,8 @@ void _lcd_printFloat(float number, unsigned char digits) {
   // Extract digits from the remainder one at a time
   while (digits-- > 0) {
     remainder *= 10.0;
-    toPrint = (unsigned int)remainder; //Integer part without use of math.h lib, I think better! (Fazzi)
+    toPrint = (u16)remainder;	//Integer part without use of math.h lib, 
+								//I think better! (Fazzi)
     _lcd_printNumber(toPrint, 10);
     remainder -= toPrint; 
   }
@@ -170,8 +196,8 @@ void _lcd_home(){
 
 /** Clear LCD */
 void _lcd_clear() {
-  _lcd_command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
-  Delayus(2000);  // this command takes a long time!
+  _lcd_command(LCD_CLEARDISPLAY);	// clear display, set cursor position to zero
+  Delayus(2000);  					// this command takes a long time!
 }
 
 /** Turn the display on/off (quickly) */
@@ -237,7 +263,7 @@ void _lcd_noAutoscroll(void) {
 }
 
 /** Initial Display settings! */
-void _lcd_begin(unsigned char cols, unsigned char lines, unsigned char dotsize) {
+void _lcd_begin(u8 cols, u8 lines, u8 dotsize) {
   if (lines > 1) {
     _displayfunction |= LCD_2LINE;
   }
@@ -311,9 +337,9 @@ void _lcd_begin(unsigned char cols, unsigned char lines, unsigned char dotsize) 
  * rs , rw, enable
  * pins => D0 ~ D7.
  */
-void _lcd_init(unsigned char fourbitmode, unsigned char rs, unsigned char rw, unsigned char enable, 
-			unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3,
-			unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7){
+void _lcd_init(u8 fourbitmode, u8 rs, u8 rw, u8 enable, 
+			u8 d0, u8 d1, u8 d2, u8 d3,
+			u8 d4, u8 d5, u8 d6, u8 d7){
   int i;
   _rs_pin = rs;
   _rw_pin = rw;
@@ -348,8 +374,8 @@ void _lcd_init(unsigned char fourbitmode, unsigned char rs, unsigned char rw, un
 }
 
 /** LCD 8 bits mode */
-void _lcd_pins(unsigned char rs, unsigned char enable, unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3, 
-			unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7) {
+void _lcd_pins(u8 rs, u8 enable, u8 d0, u8 d1, u8 d2, u8 d3, 
+			u8 d4, u8 d5, u8 d6, u8 d7) {
 	
 	_lcd_init(((d4 + d5 + d6 + d7)==0), rs, 99, enable, d0, d1, d2, d3, d4, d5, d6, d7);
 	
