@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------"""
 
 import codecs, sys, os
-from wxgui._ import _
+from wxgui._trad import _
 
 
 HOME_DIR    = sys.path[0]

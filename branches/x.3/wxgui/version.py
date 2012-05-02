@@ -24,7 +24,7 @@
 import pysvn		# checked in check.py
 import os
 
-from wxgui._ import _
+from wxgui._trad import _
 
 #	-----------------------------------------------------------------------------
 

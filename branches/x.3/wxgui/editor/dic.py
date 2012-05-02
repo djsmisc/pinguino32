@@ -27,7 +27,7 @@
 from time import ctime
 t=ctime().split(" ")
 
-from wxgui._ import _
+from wxgui._trad import _
 
 #To extend...
 

@@ -24,9 +24,13 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx, re
+import wx, re, os, sys
+from ConfigParser import RawConfigParser
 from dic import Snippet, Autocompleter
-from wxgui._ import _
+from wxgui._trad import _
+
+HOME_DIR    = sys.path[0]
+APP_CONFIG    = os.path.join(HOME_DIR, '.config')
 
 ########################################################################
 class General:
@@ -49,18 +53,35 @@ class General:
         self.statusBarEditor.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
 
+    #----------------------------------------------------------------------
+    def loadConfig(self):
+        if not os.path.isfile(APP_CONFIG):
+            file = open(APP_CONFIG, mode="w")
+            file.close()
+        config_file=open(APP_CONFIG,"r")
+        self.configIDE=RawConfigParser()
+        self.configIDE.readfp(config_file) 
+        config_file.close()
+        
+    #----------------------------------------------------------------------
+    def setConfig(self,section,opcion,valor):
+        if not section in self.configIDE.sections():
+            self.configIDE.add_section(section)
+        self.configIDE.set(section,opcion,valor)
+        
+    #----------------------------------------------------------------------
+    def saveConfig(self):
+        config_file=open(APP_CONFIG,"w")
+        self.configIDE.write(config_file)
+        config_file.close()
     
-    ##----------------------------------------------------------------------        
-    #def readUserFuntions(self, text):
-        #funciones = {}   
-        #tipos="int|float|char|BOOL|short|long|double|"\
-            #"byte|word|struct|union|enum|void"           
-        #for linea in text:
-            #if re.match("[ ]*//",linea)==None:
-                #reg=re.match("[ ]*(unsigned)*[ ]*(%s)[*]*[ ]*([^ ]+)[ ]*\(.*\)" %tipos,linea)
-                #if reg!=None: funciones[str(reg.group(3))] = linea  
-        #return funciones
-
+    #----------------------------------------------------------------------
+    def getConfig(self,section,option):
+        value = self.configIDE.get(section,option)
+        if value.isdigit(): return int(value)
+        elif value.isalpha(): return value
+        else: return value
+        
     #----------------------------------------------------------------------
     def _initIDs_(self,textEdit):
         self.popupID1 = wx.NewId()
@@ -199,8 +220,6 @@ class General:
                                   wx.WXK_BACK,
                                   wx.WXK_RETURN]:
             return
-        
-        print event.GetModifiers()
         
         if event.GetModifiers() in [wx.MOD_CONTROL,
                                     wx.MOD_ALT,

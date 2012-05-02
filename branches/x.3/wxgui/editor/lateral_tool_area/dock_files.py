@@ -54,8 +54,7 @@ class File:
         self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Value', width=130) 
         self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='Line', width=1000)
         
-        
-        
+
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):
         self.allVars.reverse()
@@ -126,10 +125,12 @@ class File:
         self.allDefi = []
         currentFunction = "None"
         
-        def getVar(var):
+        def getVar(var, tipo):
             if "=" in var: var = var[:var.find("=")]
-            if "[" in var: var = var[:var.find("[")]
-            return var.replace(" ", "")
+            if "[" in var:
+                var = var[:var.find("[")]
+                if tipo != "char": tipo = "vect"
+            return var.replace(" ", ""), tipo
         
         def getParam(param):
             param = param.split(",")
@@ -153,14 +154,17 @@ class File:
                                     
             reg2 = re.match(ReVariable, linea)
             if reg2 != None:
+                tipo = reg2.group(2)
                 cont = reg2.group(3)
-                a, b = -1, 0
-                if "{" in cont: a = cont.find("{")
-                if "}" in cont: b = cont.find("}")
-                cont = cont[:a] + cont[b:]
+                if "{" in cont:
+                    a = cont.find("{")
+                    cont = cont[:a]
+                if "}" in cont:
+                    b = cont.find("}")
+                    cont = cont+ cont[b:]
                 cont = cont.split(",")
-                self.allVars.extend([[getVar(var),
-                                    reg2.group(2),
+                self.allVars.extend([[getVar(var, reg2.group(2))[0],
+                                    getVar(var, reg2.group(2))[1],
                                     str(count)] for var in cont])
                 
                 

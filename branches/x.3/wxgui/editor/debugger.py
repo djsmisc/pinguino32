@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------"""
 
 import wx, serial, threading, sys, time
-from wxgui._ import _
+from wxgui._trad import _
 
 EVT_RESULT_DEBUG_ID = wx.NewId()
 

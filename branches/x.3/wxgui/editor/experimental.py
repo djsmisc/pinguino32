@@ -17,44 +17,14 @@ from ConfigParser import RawConfigParser
 from dic import Dictionary, Snippet
 
 
-HOME_DIR    = sys.path[0]
-APP_CONFIG    = os.path.join(HOME_DIR, '.config')
+
 
 ########################################################################
 class Testing():
     """"""
-    #----------------------------------------------------------------------
-    def loadConfig(self):
-        if not os.path.isfile(APP_CONFIG):
-            file = open(APP_CONFIG, mode="w")
-            file.close()
-        config_file=open(APP_CONFIG,"r")
-        self.configIDE=RawConfigParser()
-        self.configIDE.readfp(config_file) 
-        config_file.close()
-        
-    #----------------------------------------------------------------------
-    def setConfig(self,section,opcion,valor):
-        if not section in self.configIDE.sections():
-            self.configIDE.add_section(section)
-        self.configIDE.set(section,opcion,valor)
-        
-    #----------------------------------------------------------------------
-    def saveConfig(self):
-        config_file=open(APP_CONFIG,"w")
-        self.configIDE.write(config_file)
-        config_file.close()
-    
-    #----------------------------------------------------------------------
-    def getConfig(self,section,option):
-        value = self.configIDE.get(section,option)
-        if value.isdigit(): return int(value)
-        elif value.isalpha(): return value
-        else: return value
-            
-        
-            
-        
+
+
+   
     
     
     

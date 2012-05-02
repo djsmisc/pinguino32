@@ -3,7 +3,7 @@
 
 import wx, os
 from wxgui.pinguino import getOptions, Pinguino, setGui
-from wxgui._ import _
+from wxgui._trad import _
 
 
 ########################################################################

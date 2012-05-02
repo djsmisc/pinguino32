@@ -70,13 +70,19 @@ class AutoCompleter():
                                   wx.WXK_ESCAPE, 
                                   wx.WXK_INSERT,
                                   wx.WXK_NUMPAD_INSERT,
-                                  wx.WXK_SPACE, 
+                                  #wx.WXK_SPACE, 
                                   #wx.WXK_BACK,
                                   wx.WXK_RETURN, 
                                   ]:
             self.Close()
             event.Skip()
             return
+        
+        if event.GetKeyCode() in [wx.WXK_SPACE]:
+            textEdit.AddText(" ")
+            self.Close()
+            event.Skip()
+            return            
       
         if event.KeyCode == wx.WXK_BACK:
             textEdit.DeleteBack()
