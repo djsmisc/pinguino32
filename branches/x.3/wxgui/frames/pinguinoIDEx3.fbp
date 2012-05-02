@@ -1898,7 +1898,7 @@
                                             <object class="auinotebookpage" expanded="0">
                                                 <property name="bitmap"></property>
                                                 <property name="label">souce_code_font_size</property>
-                                                <property name="select">0</property>
+                                                <property name="select">1</property>
                                                 <object class="wxPanel" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -3237,7 +3237,7 @@
                                             <object class="auinotebookpage" expanded="0">
                                                 <property name="bitmap"></property>
                                                 <property name="label">open_save_files</property>
-                                                <property name="select">1</property>
+                                                <property name="select">0</property>
                                                 <object class="wxPanel" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>

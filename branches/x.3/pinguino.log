@@ -1,4 +1,4 @@
-Pinguino started at Tue May  1 15:03:08 2012
+Pinguino started at Wed May  2 13:53:23 2012
 
 Python version is OK (>=2.5)
 System host is GNU/Linux
@@ -22,5 +22,8 @@ Preferences successfully loaded
 ArgParse successfully loaded
 Pinguino Boards List successfully loaded
 Editor successfully loaded
-Pinguino Uploader failed
-You should have uploader.py at the wxgui/uploader/
+Pinguino Uploader successfully loaded
+pySVN successfully loaded
+Pinguino Version Control successfully loaded
+
+Everything is OK.

@@ -3,4 +3,4 @@
 
 import check
 import pinguino
-import _
+import _trad

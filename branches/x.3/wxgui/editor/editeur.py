@@ -36,7 +36,8 @@ import sys
 import codecs
 import wx.stc as stc
 import keyword
-from wxgui._ import _
+from wxgui._trad import _
+
 
 faces = { 'helv' : 'Arial',
           'times': 'Times New Roman',
@@ -256,7 +257,7 @@ class editor:
         #filehistory.Save(config)
         #config.Flush()
         #
-        alloaded=-1
+        #alloaded=-1
         directory,extension = os.path.splitext(path)
         #for i in range(len(self.stcpage)):
             #try: file = unicode(file).encode("utf-8")
@@ -282,7 +283,7 @@ class editor:
                 self.stcpage[alloaded].SetText(fichier.read())
                 fichier.close()
                 self.stcpage[alloaded].SetSavePoint()
-                self.notebookEditor.SetSelection(alloaded)
+                #self.notebookEditor.SetSelection(hhh)
                 self.inhibitChangeEvents = False
                 return
         self.inhibitChangeEvents = True

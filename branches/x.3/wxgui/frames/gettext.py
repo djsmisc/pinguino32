@@ -4,4 +4,4 @@
 #Emergency script translations
 #not permanent, I hope :)
 
-from wxgui._ import _ as gettext
+from wxgui._trad import _ as gettext
