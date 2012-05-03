@@ -33,11 +33,13 @@ ICONS_COMPLETER_DIR = os.path.join(sys.path[0], "theme", "icons_autocompleter")
 class AutoCompleter():
     
     #----------------------------------------------------------------------
-    def __initCompleter__(self, parent, index):
+    def __initCompleter__(self, parent, index, CharsCount, MaxItemsCount):
         self.IDE = parent
         self.index = index
-        self.CharsCount = 1
-        self.MaxItemsCount = 10
+        
+        self.CharsCount = CharsCount
+        self.MaxItemsCount = MaxItemsCount
+        
         
         if not len(self.index) > self.CharsCount: self.Close()
 
@@ -51,6 +53,7 @@ class AutoCompleter():
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.activated, self.listCtrlAutocompleter)
         self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)      
         self.setItems()
+        
         
         
     #----------------------------------------------------------------------
@@ -138,7 +141,11 @@ class AutoCompleter():
         for i in range(words): textEdit.WordRightEnd()
         
         #Add "()" to funtions
-        if event.GetText() in self.IDE.keywordList:
+	enable = "True"
+	try: enable = self.IDE.getConfig("Completer", "insertParentheses")
+	except: self.IDE.setConfig("Completer", "insertParentheses", enable)           
+
+        if event.GetText() in self.IDE.keywordList and enable == "True":
             textEdit.InsertText(textEdit.CurrentPos, "()")
             textEdit.CharRight()
             
