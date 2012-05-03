@@ -22,7 +22,9 @@
   TODO:
   **/
 #include <pic18fregs.h>
+#ifdef DEBUG_PRINT
 #include <string.h>
+#endif
 #include <typedef.h>
 
 #include "picUSB.h"
