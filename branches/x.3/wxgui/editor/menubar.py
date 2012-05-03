@@ -107,7 +107,7 @@ class Menubar:
         self.update_dockFiles()
         
     #----------------------------------------------------------------------
-    def OnCloseAll(self, event):
+    def OnCloseAll(self, event=None):
         while self.CloseTab():
             self.updatenotebook()
             self.update_dockFiles()

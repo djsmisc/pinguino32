@@ -40,3 +40,5 @@ class Editor(Documents, Debugger, File, Search, editor, Testing, Menubar, Genera
         if locale.getdefaultlocale()[0][:2] == "es":
             self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
         else: self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
+        
+        self.saveConfig()

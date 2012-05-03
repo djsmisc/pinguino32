@@ -271,7 +271,7 @@ class frameKeyWords ( wx.Frame ):
 class framePreferences ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Preferences - These features are NOT programmed"), pos = wx.DefaultPosition, size = wx.Size( 752,360 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Preferences"), pos = wx.DefaultPosition, size = wx.Size( 752,360 ), style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -322,7 +322,7 @@ class framePreferences ( wx.Frame ):
 		self.appearance.SetSizer( fgSizer3 )
 		self.appearance.Layout()
 		fgSizer3.Fit( self.appearance )
-		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), True, wx.NullBitmap )
 		self.souce_code_font_size = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer4 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer4.AddGrowableCol( 1 )
@@ -354,7 +354,7 @@ class framePreferences ( wx.Frame ):
 		self.m_staticText8.Wrap( -1 )
 		fgSizer4.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.spinCtrlSource = wx.SpinCtrl( self.souce_code_font_size, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 4 )
+		self.spinCtrlSource = wx.SpinCtrl( self.souce_code_font_size, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 2, 10, 4 )
 		fgSizer4.Add( self.spinCtrlSource, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -366,7 +366,7 @@ class framePreferences ( wx.Frame ):
 		self.souce_code_font_size.SetSizer( fgSizer4 )
 		self.souce_code_font_size.Layout()
 		fgSizer4.Fit( self.souce_code_font_size )
-		self.auinotebookPreferences.AddPage( self.souce_code_font_size, _("souce_code_font_size"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.souce_code_font_size, _("souce_code_font_size"), False, wx.NullBitmap )
 		self.auto_completion = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer5 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer5.AddGrowableCol( 1 )
@@ -382,14 +382,14 @@ class framePreferences ( wx.Frame ):
 		
 		fgSizer5.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_radioBtn3 = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("After characters"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer5.Add( self.m_radioBtn3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.radioBtnCompleterEn = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("After characters"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer5.Add( self.radioBtnCompleterEn, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_spinCtrl2 = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 2 )
-		fgSizer5.Add( self.m_spinCtrl2, 0, wx.ALL|wx.EXPAND|wx.LEFT, 5 )
+		self.spinCtrlCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 2 )
+		fgSizer5.Add( self.spinCtrlCompleterCount, 0, wx.ALL|wx.EXPAND|wx.LEFT, 5 )
 		
-		self.m_radioBtn4 = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("No show auto-completer"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer5.Add( self.m_radioBtn4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.radioBtnCompleterDis = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("No show auto-completer"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer5.Add( self.radioBtnCompleterDis, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
 		fgSizer5.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
@@ -398,18 +398,20 @@ class framePreferences ( wx.Frame ):
 		self.m_staticText12.Wrap( -1 )
 		fgSizer5.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_spinCtrl3 = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 5, 30, 15 )
-		fgSizer5.Add( self.m_spinCtrl3, 0, wx.ALL|wx.EXPAND, 5 )
+		self.spinCtrlItemsCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 5, 30, 15 )
+		fgSizer5.Add( self.spinCtrlItemsCompleterCount, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_checkBox11 = wx.CheckBox( self.auto_completion, wx.ID_ANY, _("Insert \"()\" in the functions."), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox11.SetValue(True) 
-		fgSizer5.Add( self.m_checkBox11, 0, wx.ALL, 5 )
+		self.checkBoxInsertParenthesis = wx.CheckBox( self.auto_completion, wx.ID_ANY, _("Insert \"()\" in the functions."), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.checkBoxInsertParenthesis.SetValue(True) 
+		fgSizer5.Add( self.checkBoxInsertParenthesis, 0, wx.ALL, 5 )
 		
 		self.auto_completion.SetSizer( fgSizer5 )
 		self.auto_completion.Layout()
 		fgSizer5.Fit( self.auto_completion )
 		self.auinotebookPreferences.AddPage( self.auto_completion, _("autocompletion"), False, wx.NullBitmap )
 		self.auto_insert = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.auto_insert.Enable( False )
+		
 		fgSizer6 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer6.AddGrowableCol( 1 )
 		fgSizer6.SetFlexibleDirection( wx.BOTH )
@@ -453,6 +455,8 @@ class framePreferences ( wx.Frame ):
 		fgSizer6.Fit( self.auto_insert )
 		self.auinotebookPreferences.AddPage( self.auto_insert, _("auto_insert"), False, wx.NullBitmap )
 		self.open_save_files = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.open_save_files.Enable( False )
+		
 		gSizer1 = wx.GridSizer( 2, 2, 0, 0 )
 		
 		sbSizer5 = wx.StaticBoxSizer( wx.StaticBox( self.open_save_files, wx.ID_ANY, _("New file") ), wx.VERTICAL )
@@ -519,6 +523,8 @@ class framePreferences ( wx.Frame ):
 		gSizer1.Fit( self.open_save_files )
 		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), False, wx.NullBitmap )
 		self.highligh = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.highligh.Enable( False )
+		
 		fgSizer7 = wx.FlexGridSizer( 2, 3, 0, 0 )
 		fgSizer7.AddGrowableCol( 1 )
 		fgSizer7.SetFlexibleDirection( wx.BOTH )
@@ -596,7 +602,7 @@ class framePreferences ( wx.Frame ):
 		self.buttonApply = wx.Button( self.m_panel29, wx.ID_ANY, _("Apply"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer2.Add( self.buttonApply, 0, wx.ALL, 5 )
 		
-		self.buttonCancel = wx.Button( self.m_panel29, wx.ID_ANY, _("Cancel"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.buttonCancel = wx.Button( self.m_panel29, wx.ID_ANY, _("Ok"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer2.Add( self.buttonCancel, 0, wx.ALL, 5 )
 		
 		self.m_panel29.SetSizer( fgSizer2 )

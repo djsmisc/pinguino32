@@ -78,9 +78,18 @@ class General:
     #----------------------------------------------------------------------
     def getConfig(self,section,option):
         value = self.configIDE.get(section,option)
-        if value.isdigit(): return int(value)
-        elif value.isalpha(): return value
-        else: return value
+        try:
+            if value.isdigit(): return int(value)
+            elif value.isalpha(): return value
+            else: return value
+        except:
+            return value
+	
+    #---------------------------------------------------------------------- 
+    def getElse(self, section, option, default):
+	try: default = self.getConfig(section, option)
+	except: self.setConfig(section, option, default)
+	return default
         
     #----------------------------------------------------------------------
     def _initIDs_(self,textEdit):
@@ -231,8 +240,17 @@ class General:
                                     wx.MOD_CONTROL+wx.MOD_SHIFT]:
             return 
         
-        self.OnAutoCompleter()
-        self.recent = False
+        
+        self.loadConfig()
+	enable = "True"
+	try: enable = self.getConfig("Completer", "Enable")
+	except: self.setConfig("Completer", "Enable", enable)        
+        
+        print enable
+        
+        if enable == "True":
+            self.OnAutoCompleter()
+            self.recent = False
         
         
     #----------------------------------------------------------------------
