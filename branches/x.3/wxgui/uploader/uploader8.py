@@ -38,8 +38,8 @@ class uploader8(baseUploader):
     """ upload .hex into pinguino device """
 
     # --------------------------------------------------------------------------
-    memstart                        = 0x1000        # bootloader offset
-    memend                            = 0
+    memstart                        = 0x0C00        # bootloader offset
+    memend                          = 0
     # --------------------------------------------------------------------------
 
     # General Data Packet Structure (usbBuf)

@@ -12,7 +12,7 @@
 #include <usb/usb_cdc.c>
 #include <typedef.h>
 #include <delay.c>
-#include <stdio.c>
+#include <stdio.c>                  // Pinguino printf
 #include <stdarg.h>
 
 void CDC_init()
