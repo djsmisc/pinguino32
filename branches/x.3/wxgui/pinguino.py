@@ -1275,11 +1275,22 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def OnAutoCompleter(self):
+	
+	CharsCount = 1
+	try: CharsCount = self.getConfig("Completer", "charscount") - 1
+	except: self.setConfig("Completer", "charscount", str(CharsCount+1))
+		
+	MaxItemsCount = 10
+	try: MaxItemsCount = self.getConfig("Completer", "MaxItemsCount")
+	except: self.setConfig("Completer", "MaxItemsCount", str(MaxItemsCount))
+	
+	print CharsCount
+	
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
         self.AutoCompleter = AutocompleterIDE(self)
-        self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True))
+        self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True), CharsCount, MaxItemsCount)
         app.SetTopWindow(self.AutoCompleter)
         self.AutoCompleter.Show()
         app.MainLoop()
@@ -1299,9 +1310,16 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def appyPreferences(self):
+    def applyPreferences(self):
+	self.Hide()
         self.toolbar.Destroy()
         self.DrawToolbar()
+	
+	self.OnSaveAll()
+	self.OnCloseAll()
+	self.openLast()
+	self.Show()
+	
 
 
 ########################################################################
