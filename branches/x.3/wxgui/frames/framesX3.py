@@ -99,7 +99,7 @@ class menubarPinguino ( wx.MenuBar ):
 		self.menuItemClear = wx.MenuItem( self.menuEdit, wx.ID_ANY, _("Clear"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuEdit.AppendItem( self.menuItemClear )
 		
-		self.menuItemSelectAll = wx.MenuItem( self.menuEdit, wx.ID_ANY, _("Sellect all"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemSelectAll = wx.MenuItem( self.menuEdit, wx.ID_ANY, _("Select all"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuEdit.AppendItem( self.menuItemSelectAll )
 		
 		self.menuEdit.AppendSeparator()
@@ -283,7 +283,7 @@ class framePreferences ( wx.Frame ):
 		self.m_panel24 = wx.Panel( self.m_splitter9, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer20 = wx.BoxSizer( wx.VERTICAL )
 		
-		listBoxPreferencesChoices = [ _("Appearance"), _("Source Code Font/Size"), _("Auto-completion"), _("Auto-insert"), _("Open/Save files"), _("Highligh") ]
+		listBoxPreferencesChoices = [ _("Appearance"), _("Source Code Font/Size"), _("Auto-completion"), _("Auto-insert"), _("Open/Save files"), _("Highlight") ]
 		self.listBoxPreferences = wx.ListBox( self.m_panel24, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listBoxPreferencesChoices, 0 )
 		bSizer20.Add( self.listBoxPreferences, 1, wx.ALL|wx.EXPAND, 5 )
 		
@@ -322,7 +322,7 @@ class framePreferences ( wx.Frame ):
 		self.appearance.SetSizer( fgSizer3 )
 		self.appearance.Layout()
 		fgSizer3.Fit( self.appearance )
-		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), True, wx.NullBitmap )
 		self.souce_code_font_size = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer4 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer4.AddGrowableCol( 1 )
@@ -388,7 +388,7 @@ class framePreferences ( wx.Frame ):
 		self.spinCtrlCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 2 )
 		fgSizer5.Add( self.spinCtrlCompleterCount, 0, wx.ALL|wx.EXPAND|wx.LEFT, 5 )
 		
-		self.radioBtnCompleterDis = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("No show auto-completer"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.radioBtnCompleterDis = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("Disable auto-completer"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer5.Add( self.radioBtnCompleterDis, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
@@ -501,7 +501,7 @@ class framePreferences ( wx.Frame ):
 		self.m_panel38 = wx.Panel( self.open_save_files, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer30 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.radioBtnOpenAll = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("All exist files"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.radioBtnOpenAll = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("All existing files"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer30.Add( self.radioBtnOpenAll, 0, wx.ALL, 5 )
 		
 		self.radioBtnOpenNever = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("Never"), wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -517,41 +517,41 @@ class framePreferences ( wx.Frame ):
 		self.open_save_files.SetSizer( gSizer1 )
 		self.open_save_files.Layout()
 		gSizer1.Fit( self.open_save_files )
-		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), True, wx.NullBitmap )
-		self.highligh = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), False, wx.NullBitmap )
+		self.highlight = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer7 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer7.AddGrowableCol( 0 )
 		fgSizer7.SetFlexibleDirection( wx.BOTH )
 		fgSizer7.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
-		self.textCtrlSearch = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Search and Replace"), wx.DefaultPosition, wx.Size( -1,-1 ), wx.TE_READONLY )
+		self.textCtrlSearch = wx.TextCtrl( self.highlight, wx.ID_ANY, _("Search and Replace"), wx.DefaultPosition, wx.Size( -1,-1 ), wx.TE_READONLY )
 		self.textCtrlSearch.SetBackgroundColour( wx.Colour( 251, 251, 104 ) )
 		
 		fgSizer7.Add( self.textCtrlSearch, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
 		
-		self.colourPickerSearch = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 251, 251, 104 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
+		self.colourPickerSearch = wx.ColourPickerCtrl( self.highlight, wx.ID_ANY, wx.Colour( 251, 251, 104 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
 		fgSizer7.Add( self.colourPickerSearch, 0, wx.ALL, 5 )
 		
-		self.textCtrlCodeNav = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Code Navigation"), wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.textCtrlCodeNav = wx.TextCtrl( self.highlight, wx.ID_ANY, _("Code Navigation"), wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
 		self.textCtrlCodeNav.SetBackgroundColour( wx.Colour( 130, 184, 226 ) )
 		
 		fgSizer7.Add( self.textCtrlCodeNav, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
 		
-		self.colourPickerCodeNav = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 130, 184, 226 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
+		self.colourPickerCodeNav = wx.ColourPickerCtrl( self.highlight, wx.ID_ANY, wx.Colour( 130, 184, 226 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
 		fgSizer7.Add( self.colourPickerCodeNav, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.textCtrlCurrentLine = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Selection"), wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.textCtrlCurrentLine = wx.TextCtrl( self.highlight, wx.ID_ANY, _("Selection"), wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
 		self.textCtrlCurrentLine.SetBackgroundColour( wx.Colour( 240, 119, 70 ) )
 		
 		fgSizer7.Add( self.textCtrlCurrentLine, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 10 )
 		
-		self.colourPickerCurrentLine = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 204, 230, 239 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
+		self.colourPickerCurrentLine = wx.ColourPickerCtrl( self.highlight, wx.ID_ANY, wx.Colour( 204, 230, 239 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
 		fgSizer7.Add( self.colourPickerCurrentLine, 0, wx.ALL, 5 )
 		
-		self.highligh.SetSizer( fgSizer7 )
-		self.highligh.Layout()
-		fgSizer7.Fit( self.highligh )
-		self.auinotebookPreferences.AddPage( self.highligh, _("highligh"), False, wx.NullBitmap )
+		self.highlight.SetSizer( fgSizer7 )
+		self.highlight.Layout()
+		fgSizer7.Fit( self.highlight )
+		self.auinotebookPreferences.AddPage( self.highlight, _("highligh"), False, wx.NullBitmap )
 		
 		bSizer21.Add( self.auinotebookPreferences, 1, wx.EXPAND |wx.ALL, 5 )
 		
