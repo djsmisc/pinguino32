@@ -47,7 +47,7 @@ class Search():
         
     #----------------------------------------------------------------------
     def updateFinds(self, event):
-        word = self.FindText.GetString(0,self.FindText.GetLastPosition())
+        word = self.FindText.GetValue()
         self.findWord(word)
         
     #---------------------------------------------------------------------- 
@@ -68,14 +68,14 @@ class Search():
 
     #----------------------------------------------------------------------
     def findprev(self,event):
-        word=self.FindText.GetString(0,self.FindText.GetLastPosition())
+        word = str(self.FindText.GetValue())
         result = self.findWord(word)
         
         if word == "" or result["count"] == 0: return False
         
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         self.findIndex -= 1
-        if self.findIndex == 0: self.findIndex = result["count"] - 1
+        if self.findIndex < 0: self.findIndex = result["count"] - 1
         line = textEdit.LineFromPosition(result["finds"][self.findIndex])
         color = self.getColorConfig("Highligh", "searchreplace", [255, 250, 70])        
         self.highlightline(line, color)
@@ -90,7 +90,7 @@ class Search():
 
     #----------------------------------------------------------------------
     def findnext(self,event):
-        word=self.FindText.GetString(0,self.FindText.GetLastPosition())
+        word = str(self.FindText.GetValue())
         result = self.findWord(word)
         
         if word == "" or result["count"] == 0: return False
@@ -131,8 +131,8 @@ class Search():
 
     #----------------------------------------------------------------------
     def replacetext(self, event=None):
-        word = self.FindText.GetString(0, self.FindText.GetLastPosition())
-        wordReplace = self.ReplaceText.GetString(0, self.ReplaceText.GetLastPosition())
+        word = str(self.FindText.GetValue())
+        wordReplace = str(self.ReplaceText.GetValue())
         if word == "": return False
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         textEdit.Clear()
@@ -147,8 +147,8 @@ class Search():
     #----------------------------------------------------------------------
     def replacealltext(self, event):
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
-        word = self.FindText.GetString(0, self.FindText.GetLastPosition())
-        wordReplace = self.ReplaceText.GetString(0, self.ReplaceText.GetLastPosition())
+        word = str(self.FindText.GetValue())
+        wordReplace = str(self.ReplaceText.GetValue())
         result = self.findWord(word)
         count = result["count"]
         
@@ -166,9 +166,11 @@ class Search():
 
     #----------------------------------------------------------------------
     def findWord(self, word):
-        """"""
+        if word == "": return
+        
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         plain = str(textEdit.GetTextUTF8())
+        word = str(word)
         
         count = plain.count(word)
         finds = [plain.find(word)]
