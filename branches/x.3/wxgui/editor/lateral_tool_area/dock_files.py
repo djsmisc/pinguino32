@@ -58,21 +58,24 @@ class File:
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):
         self.allVars.reverse()
-        self.highlightline(int(self.allVars[event.GetIndex()][2])-1, "#A9D1FF")
+        color = self.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        self.highlightline(int(self.allVars[event.GetIndex()][2])-1, color)
         self.allVars.reverse()
         self.focus()
         
     #----------------------------------------------------------------------
     def moveToFunc(self, event=None):
         self.allFunc.reverse()
-        self.highlightline(int(self.allFunc[event.GetIndex()][2])-1, "#A9D1FF")
+        color = self.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        self.highlightline(int(self.allFunc[event.GetIndex()][2])-1, color)
         self.allFunc.reverse()
         self.focus()
         
     #----------------------------------------------------------------------
     def moveToDefi(self, event=None):
         self.allDefi.reverse()
-        self.highlightline(int(self.allDefi[event.GetIndex()][3])-1, "#A9D1FF")
+        color = self.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        self.highlightline(int(self.allDefi[event.GetIndex()][3])-1, color)
         self.allDefi.reverse()
         self.focus()    
         

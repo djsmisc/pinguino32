@@ -1,12 +1,17 @@
 [IDE]
 window/width = 1000
 window/height = 500
-window/xpos = 99
-window/ypos = 72
+window/xpos = 97
+window/ypos = 16
 output/width = 998
 output/height = 84
 theme = PinguinoX
 board = Pinguino 2550
+
+[Open/Save]
+autosavetime = 10
+template = True
+autosave = False
 
 [Source]
 font = monospace
@@ -32,4 +37,9 @@ recents_count = 0
 
 [Last]
 last_count = 0
+
+[Highligh]
+searchreplace = [255, 250, 70]
+codenavigation = [54, 255, 101]
+selection = [241, 132, 88]
 
