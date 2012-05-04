@@ -246,15 +246,22 @@ class editor:
         self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTLEFT, self.OnSavepointLeft)  
         self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTREACHED, self.OnSavepointReached)
 
-        self.editeur.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
+        #self.editeur.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
+        
+        
+        color = self.getColorConfig("Highligh", "selection", [241, 132, 88])         
+        self.editeur.SetSelBackground(True, color)
 
-        self.insertSnippet("Insert Date {snippet}")
-        self.editeur.GotoLine(self.editeur.LineCount)
-        self.editeur.AppendText("\n\n")
-        self.editeur.GotoLine(self.editeur.LineCount)
-        self.insertSnippet("Bare Minimum {snippet}")
+        
+        if self.getElse("Open/Save", "template", "True") == "True":
+            self.insertSnippet("Insert Date {snippet}")
+            self.editeur.GotoLine(self.editeur.LineCount)
+            self.editeur.AppendText("\n\n")
+            self.editeur.GotoLine(self.editeur.LineCount)
+            self.insertSnippet("Bare Minimum {snippet}")
+        
+        
         self.update_dockFiles()
-        #self._mgr.Update()
 
         dt = MyFileDropTarget(self.Open)
         self.editeur.SetDropTarget(dt)        
@@ -412,6 +419,7 @@ class editor:
 
     def highlightline(self,line,color):
         """highlight a line """
+        #color = wx.Color.Set(*color)
         self.stcpage[self.notebookEditor.GetSelection()].GotoLine(line)
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineBack(color)
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(1)

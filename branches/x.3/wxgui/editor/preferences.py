@@ -52,17 +52,17 @@ class Preferences():
         #Source
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_FONTPICKER_CHANGED, self.setFont, self.fontPickerSource)
-        self.Bind(wx.EVT_SPINCTRL, self.setTabSize, self.spinCtrlSource)
-        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Source", "fontdefault", True), self.radioBtnSourcedefault)
-        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Source", "fontdefault", False), self.radioBtnSourceselected)
+        self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Source", "tabsize", self.spinCtrlSource.Value), self.spinCtrlSource)
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Source", "fontdefault", self.radioBtnSourcedefault.Value), self.radioBtnSourcedefault)
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Source", "fontdefault", self.radioBtnSourcedefault.Value), self.radioBtnSourceselected)
 
         #Auto-Completer
         #----------------------------------------------------------------------
-        self.Bind(wx.EVT_SPINCTRL, self.setCharsCount, self.spinCtrlCompleterCount)
-        self.Bind(wx.EVT_SPINCTRL, self.setItemsCount, self.spinCtrlItemsCompleterCount)
-        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Completer", "Enable", True), self.radioBtnCompleterEn)
-        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Completer", "Enable", False), self.radioBtnCompleterDis)
-        self.Bind(wx.EVT_CHECKBOX, self.setInsertParenthesis, self.checkBoxInsertParenthesis)
+        self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Completer", "charscount", self.spinCtrlCompleterCount.Value), self.spinCtrlCompleterCount)
+        self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Completer", "MaxItemsCount", self.spinCtrlItemsCompleterCount.Value), self.spinCtrlItemsCompleterCount)
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Completer", "Enable", self.radioBtnCompleterEn.Value), self.radioBtnCompleterEn)
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Completer", "Enable", self.radioBtnCompleterEn.Value), self.radioBtnCompleterDis)
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Completer", "insertParentheses", self.checkBoxInsertParenthesis.Value), self.checkBoxInsertParenthesis)
         
         #Insert
         #----------------------------------------------------------------------        
@@ -72,24 +72,32 @@ class Preferences():
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "keys", self.checkBoxKeys.Value), self.checkBoxKeys) 
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "parentheses", self.checkBoxParentheses.Value), self.checkBoxParentheses)  
 
+        #Open/Save
+        #----------------------------------------------------------------------
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "template", self.radioBtnFileTemplate.Value), self.radioBtnFileTemplate)  
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "autosave", self.radioBtnSaveEach.Value), self.radioBtnSaveEach)  
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "autosave", self.radioBtnSaveEach.Value), self.radioBtnSaveNever)
+        self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Open/Save", "autosavetime", self.spinCtrlSaveTime.Value), self.spinCtrlSaveTime)        
 
-
-
+        #Highligh
+        #----------------------------------------------------------------------
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerSearch, self.textCtrlSearch, "searchreplace"), self.colourPickerSearch)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCodeNav, self.textCtrlCodeNav, "codenavigation"), self.colourPickerCodeNav)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCurrentLine, self.textCtrlCurrentLine, "selection"), self.colourPickerCurrentLine)        
+        
+        
+        
+    #----------------------------------------------------------------------
+    def setColor(self, selColor, TextCtrl, option):
+        color = selColor.GetColour()
+        TextCtrl.SetBackgroundColour(color)
+        self.IDE.setConfig("Highligh", option, list(color))
+        
+        
     #----------------------------------------------------------------------
     def setInsertParenthesis(self, event):
         insertParentheses = event.GetInt()
         self.IDE.setConfig("Completer", "insertParentheses", insertParentheses==1)
-
-    #----------------------------------------------------------------------
-    def setCharsCount(self, event):
-        charsCount = event.GetInt()
-        self.IDE.setConfig("Completer", "charscount", charsCount)
-
-    #----------------------------------------------------------------------
-    def setItemsCount(self, event):
-        MaxItemsCount = event.GetInt()
-        self.IDE.setConfig("Completer", "MaxItemsCount", MaxItemsCount)
-
 
     #----------------------------------------------------------------------
     def setFont(self, event=None):
@@ -103,20 +111,9 @@ class Preferences():
             self.IDE.setConfig("Source", "size", font.PointSize)            
             
 
-    #----------------------------------------------------------------------
-    def setTabSize(self, event):
-        tabSize = event.GetInt()
-        self.IDE.setConfig("Source", "tabSize", tabSize)
-
 
     #----------------------------------------------------------------------
     def loadPreferences(self):
-
-        #def getElse(section, option, default):
-            #try: default = self.IDE.getConfig(section, option)
-            #except: self.IDE.setConfig(section, option, default)
-            #return default
-
         self.themeList = [f for f in os.listdir(THEME_DIR)
                           if os.path.isdir(os.path.join(THEME_DIR, f))
                           and not f.startswith(".")
@@ -168,18 +165,38 @@ class Preferences():
         
         value = self.IDE.getElse("Insert", "parentheses", "False") == "True"
         self.checkBoxParentheses.SetValue(value)
-
-
+        
+        value = self.IDE.getElse("Open/Save", "template", "True") == "True"
+        self.radioBtnFileTemplate.SetValue(value)
+        self.radioBtnFileEmpty.SetValue(not value)
+        
+        value = self.IDE.getElse("Open/Save", "autosave", "False") == "True"
+        self.radioBtnSaveEach.SetValue(value)
+        self.radioBtnSaveNever.SetValue(not value)
+        
+        value = self.IDE.getElse("Open/Save", "autosavetime", 10)
+        self.spinCtrlSaveTime.SetValue(value)
+        
+        value = self.IDE.getColorConfig("Highligh", "searchreplace", [255, 250, 70])
+        self.colourPickerSearch.SetColour(value)
+        self.textCtrlSearch.SetBackgroundColour(value)
+        
+        value = self.IDE.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        self.colourPickerCodeNav.SetColour(value)
+        self.textCtrlCodeNav.SetBackgroundColour(value)
+        
+        value = self.IDE.getColorConfig("Highligh", "selection", [241, 132, 88])
+        self.colourPickerCurrentLine.SetColour(value)
+        self.textCtrlCurrentLine.SetBackgroundColour(value)
+        
+        self.IDE.saveConfig()
+        
     #----------------------------------------------------------------------
     def setPage(self, event):
         if type(event) == type(""): string = event
         else: string = event.GetString()
         self.auinotebookPreferences.SetSelection(event.GetSelection())
         self.staticTextPage.SetLabel(string)
-
-    #----------------------------------------------------------------------
-    def readConfig(self, event=None):
-        print "Loading Config"
 
     #----------------------------------------------------------------------
     def writeConfig(self, event=None):
@@ -189,7 +206,17 @@ class Preferences():
 
     #----------------------------------------------------------------------
     def setDefaultConfig(self, event=None):
-        print "Restaurando Config"
+        defaultConfig = os.path.join("extra", "IDE", "config_default")
+        defaultConfig = open(defaultConfig, mode='r', buffering=1)
+        lines = defaultConfig.readlines()
+        defaultConfig.close()
+        config = open(".config", mode='w', buffering=1)
+        config.writelines(lines)
+        config.close()
+        
+        self.IDE.loadConfig()
+        self.IDE.applyPreferences()
+        self.loadPreferences()        
 
     #---------------------------------------------------------------------- 
     def SetTheme(self, event):

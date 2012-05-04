@@ -77,7 +77,8 @@ class Search():
         self.findIndex -= 1
         if self.findIndex == 0: self.findIndex = result["count"] - 1
         line = textEdit.LineFromPosition(result["finds"][self.findIndex])
-        self.highlightline(line,'yellow')
+        color = self.getColorConfig("Highligh", "searchreplace", [255, 250, 70])        
+        self.highlightline(line, color)
         self.focus()
         textEdit.SetSelection(result["finds"][self.findIndex], result["finds"][self.findIndex]+len(word))
         
@@ -98,7 +99,8 @@ class Search():
         self.findIndex += 1
         if self.findIndex >= result["count"]: self.findIndex = -1
         line = textEdit.LineFromPosition(result["finds"][self.findIndex])
-        self.highlightline(line,'yellow')
+        color = self.getColorConfig("Highligh", "searchreplace", [255, 250, 70])   
+        self.highlightline(line, color)
         self.focus()
         textEdit.SetSelection(result["finds"][self.findIndex], result["finds"][self.findIndex]+len(word))
         

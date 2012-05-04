@@ -52,6 +52,11 @@ class General:
         columna = str(textEdit.GetColumn(textEdit.CurrentPos)).rjust(3, "0")
         self.statusBarEditor.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
+        #color = self.getColorConfig("Highligh", "currentline", [255, 250, 70])   
+        ##self.highlightline(int(columna), color)
+        #self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineBack(color)
+        #self.Refresh()
+        
 
     #----------------------------------------------------------------------
     def loadConfig(self):
@@ -76,7 +81,7 @@ class General:
         config_file.close()
 
     #----------------------------------------------------------------------
-    def getConfig(self,section,option):
+    def getConfig(self, section, option):
         value = self.configIDE.get(section,option)
         try:
             if value.isdigit(): return int(value)
@@ -84,7 +89,22 @@ class General:
             else: return value
         except:
             return value
-
+        
+    #----------------------------------------------------------------------
+    def getColorConfig(self, section, option, default=[0, 0, 0, 0]):
+        try:
+            value = self.configIDE.get(section,option)
+            value = value[1:-1].split(",")
+            value = map(lambda x:int(x), value)
+            color = wx.Color()
+            color.Set(*value)
+            return color
+        except:
+            color = wx.Color()
+            color.Set(*default)
+            self.setConfig(section, option, default)
+            return color
+    
     #---------------------------------------------------------------------- 
     def getElse(self, section, option, default):
         try: default = self.getConfig(section, option)

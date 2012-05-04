@@ -95,6 +95,16 @@ class Menubar:
                 self.notebookEditor.SetPageText(i,chaine)
             self.stcpage[i].SetSavePoint()
             self.addFile2Recent(path)
+            
+        i = 0
+        self.setConfig("Last", "Last_count", len(self.filename))
+        for file in self.filename:
+            try: file = unicode(file).encode("utf-8")
+            except: pass          
+            self.setConfig("Last", "Last_%d" %i, file)
+            i += 1
+            
+        self.saveConfig()
 
     #----------------------------------------------------------------------
     def OnSaveAs(self, event):
