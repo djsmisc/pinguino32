@@ -35,6 +35,7 @@ APP_CONFIG    = os.path.join(HOME_DIR, '.config')
 ########################################################################
 class General:
 
+
     #----------------------------------------------------------------------
     def insertSnippet(self, key):
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
@@ -214,14 +215,9 @@ class General:
 
     #----------------------------------------------------------------------
     def OnLeftCklick(self, event):
-        """"""
-        try:
-            self.AutoCompleter.Close()
-        except:
-            pass
-
+        try: self.AutoCompleter.Close()
+        except: pass
         event.Skip()
-
 
 
     #----------------------------------------------------------------------
@@ -229,8 +225,17 @@ class General:
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         index = self.wordUnderCursor()
         for i in index: textEdit.DeleteBack()
-        textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
-        for i in range(Snippet[key][0]): textEdit.CharRight()
+        rep = Snippet[key][1].replace("\t", self.getIndent())
+        textEdit.InsertText(textEdit.CurrentPos, rep)
+        for i in range(Snippet[key][0][0]-1):
+            textEdit.LineDown()
+        if type(Snippet[key][0][1]) == type(1):
+            for i in range(Snippet[key][0][1]):
+                textEdit.CharRight()
+        elif  type(Snippet[key][0][1]) == type([]):
+            s = len(self.getIndent() * Snippet[key][0][1][0])
+            for i in range(Snippet[key][0][1][1]+s):
+                textEdit.CharRight()        
 
 
     #----------------------------------------------------------------------
@@ -267,8 +272,11 @@ class General:
         
 
         if enable == "True":
-            self.OnAutoCompleter()
-            self.recent = False
+            try:
+                self.OnAutoCompleter()
+                self.recent = False
+            except RuntimeError:
+                pass
             
     
     #----------------------------------------------------------------------

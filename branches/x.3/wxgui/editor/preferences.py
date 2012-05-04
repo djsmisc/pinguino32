@@ -37,6 +37,8 @@ class Preferences():
         self.IDE = parent
 
         self.auinotebookPreferences.SetTabCtrlHeight(0)
+        self.listBoxPreferences.SetSelection(0)
+        self.listBoxPreferences.SetFocus()
 
         self.Bind(wx.EVT_LISTBOX, self.setPage, self.listBoxPreferences)
         self.Bind(wx.EVT_BUTTON, self.setDefaultConfig, self.buttonRestore)

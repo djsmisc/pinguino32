@@ -173,7 +173,8 @@ class Menubar:
         posLineStart, posLineEnd = map(textEdit.PositionFromLine, [lineStart, lineEnd+1])
         textEdit.SetSelection(posLineStart, posLineEnd)
         selected = textEdit.GetSelectedText()
-        indent = "\t" + selected.replace("\n","\n\t", countLines)
+        indentSpace = self.getIndent()
+        indent = indentSpace + selected.replace("\n","\n"+indentSpace, countLines)
         textEdit.Clear()
         textEdit.InsertText(textEdit.CurrentPos, indent)
         textEdit.SetSelection(*map(textEdit.PositionFromLine, [lineStart, lineEnd]))
@@ -184,10 +185,11 @@ class Menubar:
         lineStart, lineEnd = map(textEdit.LineFromPosition,textEdit.GetSelection())
         countLines = lineEnd - lineStart
         posLineStart, posLineEnd = map(textEdit.PositionFromLine, [lineStart, lineEnd+1])
-        textEdit.SetSelection(posLineStart, posLineEnd)
+        textEdit.SetSelection(posLineStart, posLineEnd-1)
         selected = textEdit.GetSelectedText()
-        if str(selected.split("\n")[0]).startswith("\t"):
-            indent = selected.replace("\t", "", 1).replace("\n\t", "\n", countLines)
+        indentSpace = self.getIndent()
+        if str(selected.split("\n")[0]).startswith(indentSpace):
+            indent = selected.replace(indentSpace, "", 1).replace("\n"+indentSpace, "\n", countLines)
             textEdit.Clear()
             textEdit.InsertText(textEdit.CurrentPos, indent)
             textEdit.SetSelection(*map(textEdit.PositionFromLine, [lineStart, lineEnd]))
