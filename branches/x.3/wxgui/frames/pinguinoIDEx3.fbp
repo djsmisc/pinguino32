@@ -1710,7 +1710,7 @@
                                             <object class="auinotebookpage" expanded="0">
                                                 <property name="bitmap"></property>
                                                 <property name="label">appearance</property>
-                                                <property name="select">1</property>
+                                                <property name="select">0</property>
                                                 <object class="wxPanel" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -2790,12 +2790,12 @@
                                             <object class="auinotebookpage" expanded="0">
                                                 <property name="bitmap"></property>
                                                 <property name="label">auto_insert</property>
-                                                <property name="select">0</property>
+                                                <property name="select">1</property>
                                                 <object class="wxPanel" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
-                                                    <property name="enabled">0</property>
+                                                    <property name="enabled">1</property>
                                                     <property name="fg"></property>
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
@@ -2923,7 +2923,7 @@
                                                                 <property name="label">Brackets: []</property>
                                                                 <property name="maximum_size"></property>
                                                                 <property name="minimum_size"></property>
-                                                                <property name="name">m_checkBox6</property>
+                                                                <property name="name">checkBoxBrackets</property>
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
@@ -2990,7 +2990,7 @@
                                                                 <property name="label">Double quotes: &quot;&quot;</property>
                                                                 <property name="maximum_size"></property>
                                                                 <property name="minimum_size"></property>
-                                                                <property name="name">m_checkBox7</property>
+                                                                <property name="name">checkBoxDoubleCuotes</property>
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
@@ -3057,7 +3057,7 @@
                                                                 <property name="label">Keys: {}</property>
                                                                 <property name="maximum_size"></property>
                                                                 <property name="minimum_size"></property>
-                                                                <property name="name">m_checkBox8</property>
+                                                                <property name="name">checkBoxKeys</property>
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
@@ -3124,7 +3124,7 @@
                                                                 <property name="label">Parentheses: ()</property>
                                                                 <property name="maximum_size"></property>
                                                                 <property name="minimum_size"></property>
-                                                                <property name="name">m_checkBox9</property>
+                                                                <property name="name">checkBoxParentheses</property>
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
@@ -3191,7 +3191,7 @@
                                                                 <property name="label">Single quotes: &apos;&apos;</property>
                                                                 <property name="maximum_size"></property>
                                                                 <property name="minimum_size"></property>
-                                                                <property name="name">m_checkBox10</property>
+                                                                <property name="name">checkBoxSingleCuotes</property>
                                                                 <property name="permission">protected</property>
                                                                 <property name="pos"></property>
                                                                 <property name="size"></property>
