@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pinguino x.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-03 00:54-0400\n"
-"PO-Revision-Date: 2012-05-03 00:58-0400\n"
+"POT-Creation-Date: 2012-05-03 22:59-0400\n"
+"PO-Revision-Date: 2012-05-03 22:59-0400\n"
 "Last-Translator: Alexis Sánchez <aasanchez@gmail.com>\n"
 "Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
 "Language: \n"
@@ -62,7 +62,7 @@ msgstr "Completado"
 
 #: /opt/pinguino/x3/locale/sources/pinguino.py:457
 msgid "Checking repository revision number"
-msgstr "Verificando la ultima versión en el Repositorio"
+msgstr "Verificando la última versión en el Repositorio"
 
 #: /opt/pinguino/x3/locale/sources/pinguino.py:460
 msgid "Server temporarily unavailable."
@@ -82,7 +82,7 @@ msgstr "está disponible."
 
 #: /opt/pinguino/x3/locale/sources/pinguino.py:515
 msgid "Changing board"
-msgstr "Cambiando Pinguino"
+msgstr "Reconfigurando"
 
 #: /opt/pinguino/x3/locale/sources/pinguino.py:650
 msgid "Open file first !!"
@@ -375,7 +375,7 @@ msgstr "Actualización"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:149
 msgid "Revision"
-msgstr "Revisión"
+msgstr "Revision"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:151
 msgid "Pinguino"
@@ -440,7 +440,7 @@ msgstr "Apariencia"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:286
 msgid "Source Code Font/Size"
-msgstr "Fuente/Tamaño Codigo Fuente"
+msgstr "Formato codigo fuente"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:286
 msgid "Auto-completion"
@@ -476,15 +476,15 @@ msgstr "Usar seleccionada"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:353
 msgid "Tab size"
-msgstr "Tamaño de Pestaña"
+msgstr "Tamaño del tabulador"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:369
 msgid "souce_code_font_size"
-msgstr "souce_code_font_size"
+msgstr "Tamaño de Fuente"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:376
 msgid "Source completion"
-msgstr "Completado de codigo"
+msgstr "Completado de código"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:385
 msgid "After characters"
@@ -577,7 +577,7 @@ msgstr "Buscar y reemplazar"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:541
 msgid "Functions/Variables/Include search"
-msgstr "Busqueda Funciones/Variables/Search"
+msgstr "Busqueda Funciones/Variables/Includes"
 
 #: /opt/pinguino/x3/locale/sources/framesX3.py:552
 msgid "User"
