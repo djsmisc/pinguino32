@@ -67,20 +67,20 @@ Autocompleter = {
 
 
 Snippet = {}
-#Snippet[name {snippet}]=[set position,"to insert"]
-Snippet["void {snippet}"] = [5, "void (){\n\n\t}"]
-Snippet["while( ) {snippet}"] = [7, "while (){\n\n\t}"]
-Snippet["for {snippet}"] = [5, "for (){\n\n\t}"]
-Snippet["for (i=0;...{snippet}"] = [7, "for (i =  ;i< ;i++){\n\n\t}"]
-Snippet["if...else {snippet}"] = [4, "if (){\n\n\t}\nelse (){\n\n\t}"]
-Snippet["if...else if...else {snippet}"] = [4, "if (){\n\n\t}\nelse if (){\n\n\t}\nelse (){\n\n\t}"]
-Snippet["switch( ) {snippet}"] = [8, "switch (){\n\tcase:\n\n\t\tbreak;\n\tdefault:\n\n\t}"]
-Snippet[_("Bare Minimum")+" {snippet}"] = [59, "void setup() {\n\t// put your setup code here, to run once:\n\t\n\t}\n\nvoid loop() {\n\t// put your main code here, to run repeatedly:\n\n\t}"]
-Snippet[_("Insert Date")+" {snippet}"] = [58 + len(_("Author:")),
+#Snippet[name {snippet}]=[[cursorline, cursor position],"to insert"]
+Snippet["void {snippet}"] = [[1, 5], "void (){\n\n\t}"]
+Snippet["while( ) {snippet}"] = [[1, 7], "while (){\n\n\t}"]
+Snippet["for {snippet}"] = [[1, 5], "for (){\n\n\t}"]
+Snippet["for (i=0;...{snippet}"] = [[1, 9], "for (i =  ;i< ;i++){\n\n\t}"]
+Snippet["if...else {snippet}"] = [[1, 4], "if (){\n\n\t}\nelse (){\n\n\t}"]
+Snippet["if...else if...else {snippet}"] = [[1, 4], "if (){\n\n\t}\nelse if (){\n\n\t}\nelse (){\n\n\t}"]
+Snippet["switch( ) {snippet}"] = [[1, 8], "switch (){\n\tcase:\n\n\t\tbreak;\n\tdefault:\n\n\t}"]
+Snippet[_("Bare Minimum")+" {snippet}"] = [[3, [1, 0]], "void setup() {\n\t// put your setup code here, to run once:\n\t\n\t}\n\nvoid loop() {\n\t// put your main code here, to run repeatedly:\n\n\t}"]
+Snippet[_("Insert Date")+" {snippet}"] = [[2, 1 + len(_("Author:"))],
 """/*----------------------------------------------------- 
 %s:  --<>
 %s: %s
 %s:
 
 -----------------------------------------------------*/
-""" %(_("Author"), _("Date"), "/".join([t[2], t[1], t[4]]), _("Description"))]	
+""" %(_("Author"), _("Date"), "/".join([t[3], t[1], t[5]]), _("Description"))]	

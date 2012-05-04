@@ -495,35 +495,30 @@ class editor:
 
     def OnKeyDown(self,event):
         """ keydown windows event """
-
         global rw
         localkw=[]
         k_code = event.GetKeyCode()
-
-        # automatic indentation
-        if k_code == wx.WXK_RETURN and self.stcpage[self.notebookEditor.GetSelection()].AutoCompActive()!=1:
-            line=self.stcpage[self.notebookEditor.GetSelection()].GetCurrentLine()
-            text = self.stcpage[self.notebookEditor.GetSelection()].GetTextRange(self.stcpage[self.notebookEditor.GetSelection()].PositionFromLine(line), \
-                                                                                 self.stcpage[self.notebookEditor.GetSelection()].GetCurrentPos())
-            if text.strip() == u'':
-                self.stcpage[self.notebookEditor.GetSelection()].AddText('\r\n' + text)
-                self.stcpage[self.notebookEditor.GetSelection()].EnsureCaretVisible()
-                return
-            indent = self.stcpage[self.notebookEditor.GetSelection()].GetLineIndentation(line)
-            i_space = indent / self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth()
-            ndent = u'\r\n' + u'\t' * i_space
-            self.stcpage[self.notebookEditor.GetSelection()].AddText(ndent + \
-                                                                     ((indent - (self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth() * i_space)) * u' '))
-            self.stcpage[self.notebookEditor.GetSelection()].EnsureCaretVisible()
+        
+        if k_code == wx.WXK_RETURN:
+            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+            line = textEdit.GetCurLineUTF8()[0]
+            s = 0
+            for i in line:
+                if i.isspace(): s += 1
+                else: break
+            textEdit.InsertText(textEdit.CurrentPos, "\n"+" "*s)
+            for i in range(s+1): textEdit.CharRight()
             return
+    
+        event.Skip()
+        
+        
+    #----------------------------------------------------------------------
+    def getIndent(self):
+        indent = " " * self.getElse("Source", "tabSize", 4)
+        return indent
+        
 
-        # self completion
-        if k_code == 32 and event.ControlDown():
-            self.stcpage[self.notebookEditor.GetSelection()].AutoCompSetIgnoreCase(True)  # so this needs to match
-            self.stcpage[self.notebookEditor.GetSelection()].AutoCompSetAutoHide(True)        # auto hide list when nothing matches
-            self.stcpage[self.notebookEditor.GetSelection()].AutoCompShow(0, " ".join(keywordhelp))
-            event.Skip()
-        event.Skip()        
 
     def seteditorproperties(self,reservedword,rw):
         """ set the layout,keywords and layout for syntax"""
