@@ -62,14 +62,23 @@ class Preferences():
         self.Bind(wx.EVT_SPINCTRL, self.setItemsCount, self.spinCtrlItemsCompleterCount)
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Completer", "Enable", True), self.radioBtnCompleterEn)
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Completer", "Enable", False), self.radioBtnCompleterDis)
-        self.Bind(wx.EVT_CHECKBOX, self.setInsertParenthesis, self.checkBoxInsertParenthesis)	
+        self.Bind(wx.EVT_CHECKBOX, self.setInsertParenthesis, self.checkBoxInsertParenthesis)
+        
+        #Insert
+        #----------------------------------------------------------------------        
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "brackets", self.checkBoxBrackets.Value), self.checkBoxBrackets) 
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "doublecuotation", self.checkBoxDoubleCuotes.Value), self.checkBoxDoubleCuotes) 
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "singlecuotation", self.checkBoxSingleCuotes.Value), self.checkBoxSingleCuotes) 
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "keys", self.checkBoxKeys.Value), self.checkBoxKeys) 
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Insert", "parentheses", self.checkBoxParentheses.Value), self.checkBoxParentheses)  
+
 
 
 
     #----------------------------------------------------------------------
     def setInsertParenthesis(self, event):
         insertParentheses = event.GetInt()
-        self.IDE.setConfig("Completer", "insertParentheses", insertParentheses==1)    
+        self.IDE.setConfig("Completer", "insertParentheses", insertParentheses==1)
 
     #----------------------------------------------------------------------
     def setCharsCount(self, event):
@@ -144,7 +153,21 @@ class Preferences():
 
         value = self.IDE.getElse("Completer", "insertParentheses", "True") == "True"
         self.checkBoxInsertParenthesis.SetValue(value)
-
+        
+        value = self.IDE.getElse("Insert", "brackets", "False") == "True"
+        self.checkBoxBrackets.SetValue(value)
+        
+        value = self.IDE.getElse("Insert", "doublecuotation", "False") == "True"
+        self.checkBoxDoubleCuotes.SetValue(value)
+        
+        value = self.IDE.getElse("Insert", "singlecuotation", "False") == "True"
+        self.checkBoxSingleCuotes.SetValue(value)
+        
+        value = self.IDE.getElse("Insert", "keys", "False") == "True"
+        self.checkBoxKeys.SetValue(value)
+        
+        value = self.IDE.getElse("Insert", "parentheses", "False") == "True"
+        self.checkBoxParentheses.SetValue(value)
 
 
     #----------------------------------------------------------------------
