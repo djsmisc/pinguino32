@@ -39,13 +39,13 @@ import keyword
 from wxgui._trad import _
 
 
-faces = { 'helv' : 'Arial',
-          'times': 'Times New Roman',
-          'mono' : 'Courier New',
-          'other': 'Comic Sans MS',
-          'size' : 8,
-          'size2': 8,
-          }
+#faces = { 'helv' : 'Arial',
+            #'times': 'Times New Roman',
+            #'mono' : 'Courier New',
+            #'other': 'Comic Sans MS',
+            #'size' : 8,
+            #'size2': 8,
+            #}
 
 class MyFileDropTarget(wx.FileDropTarget):
     def __init__(self, Open):
@@ -56,8 +56,8 @@ class MyFileDropTarget(wx.FileDropTarget):
         #self.window.AppendText("%d file(s) dropped at (%d,%d):\n" % (len(filenames), x, y))
         for file in filenames:
             self.Open(file)
-            
-            
+
+
 
 ########################################################################
 class editor:
@@ -74,6 +74,35 @@ class editor:
         self.inhibitChangeEvents = False
         self.notebookEditor.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.update_dockFiles)
 
+    #----------------------------------------------------------------------
+    def getFontPreferences(self):	
+        self.loadConfig()
+
+        def setDefault():
+            font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+            self.setConfig("Source", "font", font.FaceName)
+            self.setConfig("Source", "size", font.PointSize)
+            return font
+
+        try:
+            if self.getConfig("Source", "fontdefault") == "False":
+                try:
+                    FaceNAme = self.getConfig("Source", "font")
+                    PointSize = self.getConfig("Source", "size")
+                    font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                    font.SetFaceName(FaceNAme)
+                    font.SetPointSize(PointSize)
+                except:
+                    font = setDefault()
+                return font
+
+            else:
+                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                return font
+        except:
+            self.setConfig("Source", "fontdefault", True)
+            font = setDefault()
+            return font
 
 
 
@@ -108,11 +137,26 @@ class editor:
         #ImageClose = os.path.join(sys.path[0], "wxgui", "resources", "close.png")
         p = wx.Panel(self.notebookEditor,-1, style = wx.NO_FULL_REPAINT_ON_RESIZE)
         self.onglet.append(p)
-        
+
         stc = wx.stc.StyledTextCtrl(id=wx.NewId(),
                                     name='styledTextCtrl1', parent=p,  # pos=wx.Point(0, 35),
                                     size=wx.Size(-1, -1), 
                                     style=wx.SUNKEN_BORDER)
+
+
+        stc.SetUseTabs(False)
+
+        self.loadConfig()
+        try:
+            tabSize = self.getConfig("Source", "tabSize")
+            stc.SetTabWidth(tabSize)
+        except:
+            tabSize = 4
+            self.setConfig("Source", "tabSize", tabSize)
+            stc.SetTabWidth(tabSize)
+
+        self.saveConfig()
+
 
         stc.SetLexer(wx.stc.STC_LEX_CPP)
 
@@ -148,7 +192,7 @@ class editor:
 
         p.SetAutoLayout( True )
         p.Layout()
-        
+
         boxSizer = wx.BoxSizer(orient=wx.VERTICAL)        
         boxSizer.Fit(p)
         boxSizer.SetSizeHints(p)
@@ -165,7 +209,7 @@ class editor:
     #----------------------------------------------------------------------
     def New(self, name):
         """ open a new tab """
-        
+
         self.background.Hide()
         self.notebookEditor.Show()
         self.buildSheet(name)
@@ -188,7 +232,7 @@ class editor:
         self.editeur=self.stcpage[newIdx]
         self.editeur.Bind(wx.EVT_CONTEXT_MENU, self.contexMenuTools)
         self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
-        #self.editeur.Bind(wx.stc.EVT_STC_CHARADDED, self.GetCharEvent)
+        self.editeur.Bind(wx.stc.EVT_STC_CHARADDED, self.InsertChar)
         #self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.keyEvent)        
         #self.editeur.Bind(wx.stc.EVT_STC_AUTOCOMP_SELECTION, self.inserted)
         self.editeur.Bind(wx.stc.EVT_STC_MODIFIED, self.updateStatusBar)
@@ -201,17 +245,24 @@ class editor:
         #self.editeur.Bind(wx.stc.EVT_STC_dr, self.OnDrag)        
         self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTLEFT, self.OnSavepointLeft)  
         self.editeur.Bind(wx.stc.EVT_STC_SAVEPOINTREACHED, self.OnSavepointReached)
-        
-        self.editeur.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
 
-        self.insertSnippet("Insert Date {snippet}")
-        self.editeur.GotoLine(self.editeur.LineCount)
-        self.editeur.AppendText("\n\n")
-        self.editeur.GotoLine(self.editeur.LineCount)
-        self.insertSnippet("Bare Minimum {snippet}")
-        self.update_dockFiles()
-        #self._mgr.Update()
+        #self.editeur.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
         
+        
+        color = self.getColorConfig("Highligh", "selection", [241, 132, 88])         
+        self.editeur.SetSelBackground(True, color)
+
+        
+        if self.getElse("Open/Save", "template", "True") == "True":
+            self.insertSnippet("Insert Date {snippet}")
+            self.editeur.GotoLine(self.editeur.LineCount)
+            self.editeur.AppendText("\n\n")
+            self.editeur.GotoLine(self.editeur.LineCount)
+            self.insertSnippet("Bare Minimum {snippet}")
+        
+        
+        self.update_dockFiles()
+
         dt = MyFileDropTarget(self.Open)
         self.editeur.SetDropTarget(dt)        
 
@@ -230,10 +281,10 @@ class editor:
 
     def OpenDialog(self,type,extension):
         """ Open Dialog and load file in a new editor """
-        
+
         try: defaultDir=os.path.split(self.filename[self.notebookEditor.GetSelection()])[0]
         except: defaultDir = sys.path[0]
-        
+
         opendlg = wx.FileDialog(self,
                                 message=_("Choose a file"),
                                 #defaultDir=sys.path[0],
@@ -266,7 +317,7 @@ class editor:
                 #alloaded=i
         #if alloaded!=-1:
         if path in self.filename:
-            
+
             dlg = wx.MessageDialog(self,
                                    _("File is already opened, reload it ?"), _("Warning")+"!",
                                    wx.YES_NO | wx.ICON_WARNING)
@@ -288,7 +339,7 @@ class editor:
                 return
         self.inhibitChangeEvents = True
         self.New(file.replace(extension,""))
-                
+
         pageIdx = self.notebookEditor.GetSelection()
         self.stcpage[pageIdx].ClearAll()
         self.filename[pageIdx]=path
@@ -305,11 +356,11 @@ class editor:
         #self.stcpage[pageIdx].SetSavePoint()
         self.inhibitChangeEvents = False
         self.SendSizeEvent()
-        
+
         self.addFile2Recent(path)
-        
-        
-                
+
+
+
     def Save(self,type,extension):
         """save the content of the editor to filename""" 
         if len(self.onglet)>0: 
@@ -368,6 +419,7 @@ class editor:
 
     def highlightline(self,line,color):
         """highlight a line """
+        #color = wx.Color.Set(*color)
         self.stcpage[self.notebookEditor.GetSelection()].GotoLine(line)
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineBack(color)
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(1)
@@ -377,7 +429,7 @@ class editor:
     def CloseTab(self):
         """ close the current tab """
         if len(self.onglet) <= 0: return False
-        
+
         pageIdx = self.notebookEditor.GetSelection()
         if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
             dlg = wx.MessageDialog(self,
@@ -435,7 +487,7 @@ class editor:
 
         if self.stcpage[self.notebookEditor.GetSelection()].GetCaretLineVisible()==True:
             self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(0)
-        
+
     def onclick(self,event):
         if self.stcpage[self.notebookEditor.GetSelection()].GetCaretLineVisible()==True:
             self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineVisible(0)
@@ -452,7 +504,7 @@ class editor:
         if k_code == wx.WXK_RETURN and self.stcpage[self.notebookEditor.GetSelection()].AutoCompActive()!=1:
             line=self.stcpage[self.notebookEditor.GetSelection()].GetCurrentLine()
             text = self.stcpage[self.notebookEditor.GetSelection()].GetTextRange(self.stcpage[self.notebookEditor.GetSelection()].PositionFromLine(line), \
-                                                                            self.stcpage[self.notebookEditor.GetSelection()].GetCurrentPos())
+                                                                                 self.stcpage[self.notebookEditor.GetSelection()].GetCurrentPos())
             if text.strip() == u'':
                 self.stcpage[self.notebookEditor.GetSelection()].AddText('\r\n' + text)
                 self.stcpage[self.notebookEditor.GetSelection()].EnsureCaretVisible()
@@ -461,7 +513,7 @@ class editor:
             i_space = indent / self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth()
             ndent = u'\r\n' + u'\t' * i_space
             self.stcpage[self.notebookEditor.GetSelection()].AddText(ndent + \
-                                                                ((indent - (self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth() * i_space)) * u' '))
+                                                                     ((indent - (self.stcpage[self.notebookEditor.GetSelection()].GetTabWidth() * i_space)) * u' '))
             self.stcpage[self.notebookEditor.GetSelection()].EnsureCaretVisible()
             return
 
@@ -482,22 +534,22 @@ class editor:
         for i in range(0,len(reservedword)):
             kw.append(reservedword[i])
 
-        font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)        
+        font = self.getFontPreferences()     
         self.stcpage[self.notebookEditor.GetSelection()].SetKeyWords(0, " ".join(keyword.kwlist))                 
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_PREPROCESSOR, "face:%s,size:10,fore:#d36820" %  font.GetFaceName())                
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_DEFAULT, "face:%s,size:10,fore:#000000" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENT, "face:%s,size:10,fore:#c81818" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINE, "face:%s,size:10,fore:#007F00" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_NUMBER, "face:%s,size:10,fore:#ff0000" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRING, "italic,face:%s,size:10,fore:#7f0000" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_CHARACTER, "face:%s,size:10,fore:#cc0000" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_WORD, "face:%s,size:10,fore:#0C36F0" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_OPERATOR, "face:%s,size:10" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_IDENTIFIER, "face:%s,size:10" % font.GetFaceName())
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRINGEOL, "fore:#000000,back:#E0C0E0,eol,size:%(size)d" % faces)
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTDOC, "fore:#5e5ef1,size:%(size)d" % faces)
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINEDOC,  "fore:#007F00,size:%(size)d" % faces)
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_GLOBALCLASS, "fore:#7F7F7F,size:%(size)d" % faces)
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_PREPROCESSOR, "face:%s,size:%d,fore:#d36820" %(font.GetFaceName(), font.GetPointSize()))                
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_DEFAULT, "face:%s,size:%d,fore:#000000" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENT, "face:%s,size:%d,fore:#c81818" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINE, "face:%s,size:%d,fore:#007F00" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_NUMBER, "face:%s,size:%d,fore:#ff0000" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRING, "italic,face:%s,size:%d,fore:#7f0000" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_CHARACTER, "face:%s,size:%d,fore:#cc0000" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_WORD, "face:%s,size:%d,fore:#0C36F0" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_OPERATOR, "face:%s,size:%d" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_IDENTIFIER, "face:%s,size:%d" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRINGEOL, "fore:#000000,back:#E0C0E0,eol,size:%d" % font.GetPointSize())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTDOC, "fore:#5e5ef1,size:%d" % font.GetPointSize())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTLINEDOC,  "fore:#007F00,size:%d" % font.GetPointSize())
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_GLOBALCLASS, "fore:#7F7F7F,size:%d" % font.GetPointSize())
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretForeground("BLACK")
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretWidth(1)
         self.stcpage[self.notebookEditor.GetSelection()].SetBackSpaceUnIndents(True)
@@ -506,6 +558,5 @@ class editor:
         self.stcpage[self.notebookEditor.GetSelection()].UsePopUp(1)
 
         return
-    
-    
-    
+
+

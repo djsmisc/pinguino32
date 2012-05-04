@@ -38,6 +38,18 @@ class ResultEventRevision(wx.PyEvent):
         wx.PyEvent.__init__(self)
         self.SetEventType(EVT_RESULT_REVISION_ID)
         self.data = data
+	
+	
+EVT_AUTO_SAVE_FILES_ID = wx.NewId()
+
+def EVT_AUTO_SAVE_FILES(win, func):
+    win.Connect(-1, -1, EVT_AUTO_SAVE_FILES_ID, func)
+
+class AutoSaveFiles(wx.PyEvent):
+    def __init__(self, data):
+	wx.PyEvent.__init__(self)
+	self.SetEventType(EVT_AUTO_SAVE_FILES_ID)
+	self.data = data
 
 
 # ------------------------------------------------------------------------------
@@ -131,16 +143,13 @@ class Pinguino(framePinguinoX, Editor):
 
         #Threads
         EVT_RESULT_REVISION(self, self.setRevision)
-
-
-
-        # ------------------------------------------------------------------------------
-        # check new release of Pinguino
-        # TODO: how to exclude compilers dir. from other OS ?
-        # ------------------------------------------------------------------------------
-
-        self.threadRevision = threading.Thread(target=self.getRevision, args=( ))
-        self.threadRevision.start()
+        threadRevision = threading.Thread(target=self.getRevision, args=( ))
+        threadRevision.start()
+	
+	EVT_AUTO_SAVE_FILES(self, self.autoSaveFiles)	
+	threadAutoSave = threading.Thread(target=self.AutoSave, args=())
+	threadAutoSave.start()
+	
 
         self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
         self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 0)
@@ -410,7 +419,7 @@ class Pinguino(framePinguinoX, Editor):
 
 
 # ------------------------------------------------------------------------------
-# Get revision
+# Thread Functions
 # ------------------------------------------------------------------------------
     def getRevision(self):
         try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
@@ -418,15 +427,31 @@ class Pinguino(framePinguinoX, Editor):
         wx.PostEvent(self, ResultEventRevision(sw))
 
 
+    #----------------------------------------------------------------------
+    def AutoSave(self):
+	while not self.closing:
+	    timeSave = self.getElse("Open/Save", "autosavetime", 10)
+	    for i in range(timeSave):
+		time.sleep(timeSave/timeSave)
+		if self.closing: return
+	    wx.PostEvent(self, AutoSaveFiles(None))
+	    
+	    
 # ------------------------------------------------------------------------------
-# Revision
+# Event Threads
 # ------------------------------------------------------------------------------
     def setRevision(self, event):
         self.localRev = event.data
         self.SetTitle('Pinguino IDE ' + pinguino_version + ' rev. ' + self.localRev)
         self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")\n", 1)
         self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
-
+	
+    #----------------------------------------------------------------------
+    def autoSaveFiles(self, event):
+	if self.getElse("Open/Save", "autosave", "False") == "True":
+	    self.OnSaveAll()
+	    
+	    
 # ------------------------------------------------------------------------------
 # Update
 # ------------------------------------------------------------------------------
@@ -1275,11 +1300,22 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def OnAutoCompleter(self):
+	
+	CharsCount = 1
+	try: CharsCount = self.getConfig("Completer", "charscount") - 1
+	except: self.setConfig("Completer", "charscount", str(CharsCount+1))
+		
+	MaxItemsCount = 10
+	try: MaxItemsCount = self.getConfig("Completer", "MaxItemsCount")
+	except: self.setConfig("Completer", "MaxItemsCount", str(MaxItemsCount))
+	
+	print CharsCount
+	
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
         self.AutoCompleter = AutocompleterIDE(self)
-        self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True))
+        self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True), CharsCount, MaxItemsCount)
         app.SetTopWindow(self.AutoCompleter)
         self.AutoCompleter.Show()
         app.MainLoop()
@@ -1299,9 +1335,16 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def appyPreferences(self):
+    def applyPreferences(self):
+	self.Hide()
         self.toolbar.Destroy()
         self.DrawToolbar()
+	
+	self.OnSaveAll()
+	self.OnCloseAll()
+	self.openLast()
+	self.Show()
+	
 
 
 ########################################################################

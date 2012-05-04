@@ -271,7 +271,7 @@ class frameKeyWords ( wx.Frame ):
 class framePreferences ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Preferences - These features are NOT programmed"), pos = wx.DefaultPosition, size = wx.Size( 752,360 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Preferences"), pos = wx.DefaultPosition, size = wx.Size( 752,360 ), style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -354,7 +354,7 @@ class framePreferences ( wx.Frame ):
 		self.m_staticText8.Wrap( -1 )
 		fgSizer4.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.spinCtrlSource = wx.SpinCtrl( self.souce_code_font_size, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 4 )
+		self.spinCtrlSource = wx.SpinCtrl( self.souce_code_font_size, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 2, 10, 4 )
 		fgSizer4.Add( self.spinCtrlSource, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -366,7 +366,7 @@ class framePreferences ( wx.Frame ):
 		self.souce_code_font_size.SetSizer( fgSizer4 )
 		self.souce_code_font_size.Layout()
 		fgSizer4.Fit( self.souce_code_font_size )
-		self.auinotebookPreferences.AddPage( self.souce_code_font_size, _("souce_code_font_size"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.souce_code_font_size, _("souce_code_font_size"), False, wx.NullBitmap )
 		self.auto_completion = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer5 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer5.AddGrowableCol( 1 )
@@ -382,14 +382,14 @@ class framePreferences ( wx.Frame ):
 		
 		fgSizer5.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_radioBtn3 = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("After characters"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer5.Add( self.m_radioBtn3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.radioBtnCompleterEn = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("After characters"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer5.Add( self.radioBtnCompleterEn, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_spinCtrl2 = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 2 )
-		fgSizer5.Add( self.m_spinCtrl2, 0, wx.ALL|wx.EXPAND|wx.LEFT, 5 )
+		self.spinCtrlCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 10, 2 )
+		fgSizer5.Add( self.spinCtrlCompleterCount, 0, wx.ALL|wx.EXPAND|wx.LEFT, 5 )
 		
-		self.m_radioBtn4 = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("No show auto-completer"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer5.Add( self.m_radioBtn4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.radioBtnCompleterDis = wx.RadioButton( self.auto_completion, wx.ID_ANY, _("No show auto-completer"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer5.Add( self.radioBtnCompleterDis, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
 		fgSizer5.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
@@ -398,12 +398,12 @@ class framePreferences ( wx.Frame ):
 		self.m_staticText12.Wrap( -1 )
 		fgSizer5.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_spinCtrl3 = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 5, 30, 15 )
-		fgSizer5.Add( self.m_spinCtrl3, 0, wx.ALL|wx.EXPAND, 5 )
+		self.spinCtrlItemsCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 5, 30, 15 )
+		fgSizer5.Add( self.spinCtrlItemsCompleterCount, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_checkBox11 = wx.CheckBox( self.auto_completion, wx.ID_ANY, _("Insert \"()\" in the functions."), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox11.SetValue(True) 
-		fgSizer5.Add( self.m_checkBox11, 0, wx.ALL, 5 )
+		self.checkBoxInsertParenthesis = wx.CheckBox( self.auto_completion, wx.ID_ANY, _("Insert \"()\" in the functions."), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.checkBoxInsertParenthesis.SetValue(True) 
+		fgSizer5.Add( self.checkBoxInsertParenthesis, 0, wx.ALL, 5 )
 		
 		self.auto_completion.SetSizer( fgSizer5 )
 		self.auto_completion.Layout()
@@ -421,32 +421,32 @@ class framePreferences ( wx.Frame ):
 		
 		fgSizer6.Add( self.m_staticText15, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_checkBox6 = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Brackets: []"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer6.Add( self.m_checkBox6, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		self.checkBoxBrackets = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Brackets: []"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer6.Add( self.checkBoxBrackets, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		
 		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_checkBox7 = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Double quotes: \"\""), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer6.Add( self.m_checkBox7, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		self.checkBoxDoubleCuotes = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Double quotes: \"\""), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer6.Add( self.checkBoxDoubleCuotes, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		
 		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_checkBox8 = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Keys: {}"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer6.Add( self.m_checkBox8, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		self.checkBoxKeys = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Keys: {}"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer6.Add( self.checkBoxKeys, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		
 		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_checkBox9 = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Parentheses: ()"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer6.Add( self.m_checkBox9, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		self.checkBoxParentheses = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Parentheses: ()"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer6.Add( self.checkBoxParentheses, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		
 		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_checkBox10 = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Single quotes: ''"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer6.Add( self.m_checkBox10, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		self.checkBoxSingleCuotes = wx.CheckBox( self.auto_insert, wx.ID_ANY, _("Single quotes: ''"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer6.Add( self.checkBoxSingleCuotes, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		self.auto_insert.SetSizer( fgSizer6 )
 		self.auto_insert.Layout()
@@ -460,11 +460,11 @@ class framePreferences ( wx.Frame ):
 		self.m_panel36 = wx.Panel( self.open_save_files, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer28 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_radioBtn9 = wx.RadioButton( self.m_panel36, wx.ID_ANY, _("With template"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer28.Add( self.m_radioBtn9, 0, wx.ALL, 5 )
+		self.radioBtnFileTemplate = wx.RadioButton( self.m_panel36, wx.ID_ANY, _("With template"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer28.Add( self.radioBtnFileTemplate, 0, wx.ALL, 5 )
 		
-		self.m_radioBtn10 = wx.RadioButton( self.m_panel36, wx.ID_ANY, _("Empty"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer28.Add( self.m_radioBtn10, 0, wx.ALL, 5 )
+		self.radioBtnFileEmpty = wx.RadioButton( self.m_panel36, wx.ID_ANY, _("Empty"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer28.Add( self.radioBtnFileEmpty, 0, wx.ALL, 5 )
 		
 		self.m_panel36.SetSizer( bSizer28 )
 		self.m_panel36.Layout()
@@ -480,14 +480,14 @@ class framePreferences ( wx.Frame ):
 		fgSizer8.SetFlexibleDirection( wx.BOTH )
 		fgSizer8.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
-		self.m_radioBtn15 = wx.RadioButton( self.m_panel37, wx.ID_ANY, _("Each (sec)"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer8.Add( self.m_radioBtn15, 0, wx.ALL, 5 )
+		self.radioBtnSaveEach = wx.RadioButton( self.m_panel37, wx.ID_ANY, _("Each (sec)"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer8.Add( self.radioBtnSaveEach, 0, wx.ALL, 5 )
 		
-		self.m_spinCtrl5 = wx.SpinCtrl( self.m_panel37, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 10, 500, 10 )
-		fgSizer8.Add( self.m_spinCtrl5, 0, wx.ALL, 5 )
+		self.spinCtrlSaveTime = wx.SpinCtrl( self.m_panel37, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 10, 300, 10 )
+		fgSizer8.Add( self.spinCtrlSaveTime, 0, wx.ALL, 5 )
 		
-		self.m_radioBtn16 = wx.RadioButton( self.m_panel37, wx.ID_ANY, _("Never"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer8.Add( self.m_radioBtn16, 0, wx.ALL, 5 )
+		self.radioBtnSaveNever = wx.RadioButton( self.m_panel37, wx.ID_ANY, _("Never"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer8.Add( self.radioBtnSaveNever, 0, wx.ALL, 5 )
 		
 		self.m_panel37.SetSizer( fgSizer8 )
 		self.m_panel37.Layout()
@@ -501,11 +501,11 @@ class framePreferences ( wx.Frame ):
 		self.m_panel38 = wx.Panel( self.open_save_files, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer30 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_radioBtn13 = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("All exist files"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer30.Add( self.m_radioBtn13, 0, wx.ALL, 5 )
+		self.radioBtnOpenAll = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("All exist files"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer30.Add( self.radioBtnOpenAll, 0, wx.ALL, 5 )
 		
-		self.m_radioBtn14 = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("Never"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer30.Add( self.m_radioBtn14, 0, wx.ALL, 5 )
+		self.radioBtnOpenNever = wx.RadioButton( self.m_panel38, wx.ID_ANY, _("Never"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer30.Add( self.radioBtnOpenNever, 0, wx.ALL, 5 )
 		
 		self.m_panel38.SetSizer( bSizer30 )
 		self.m_panel38.Layout()
@@ -517,56 +517,36 @@ class framePreferences ( wx.Frame ):
 		self.open_save_files.SetSizer( gSizer1 )
 		self.open_save_files.Layout()
 		gSizer1.Fit( self.open_save_files )
-		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), True, wx.NullBitmap )
 		self.highligh = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		fgSizer7 = wx.FlexGridSizer( 2, 3, 0, 0 )
-		fgSizer7.AddGrowableCol( 1 )
+		fgSizer7 = wx.FlexGridSizer( 2, 2, 0, 0 )
+		fgSizer7.AddGrowableCol( 0 )
 		fgSizer7.SetFlexibleDirection( wx.BOTH )
 		fgSizer7.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
+		self.textCtrlSearch = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Search and Replace"), wx.DefaultPosition, wx.Size( -1,-1 ), wx.TE_READONLY )
+		self.textCtrlSearch.SetBackgroundColour( wx.Colour( 251, 251, 104 ) )
 		
-		fgSizer7.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		fgSizer7.Add( self.textCtrlSearch, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
 		
-		self.m_textCtrl2 = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Search and Replace"), wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
-		self.m_textCtrl2.SetBackgroundColour( wx.Colour( 251, 251, 104 ) )
+		self.colourPickerSearch = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 251, 251, 104 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
+		fgSizer7.Add( self.colourPickerSearch, 0, wx.ALL, 5 )
 		
-		fgSizer7.Add( self.m_textCtrl2, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
+		self.textCtrlCodeNav = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Code Navigation"), wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.textCtrlCodeNav.SetBackgroundColour( wx.Colour( 130, 184, 226 ) )
 		
-		self.m_colourPicker1 = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 251, 251, 104 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
-		fgSizer7.Add( self.m_colourPicker1, 0, wx.ALL, 5 )
+		fgSizer7.Add( self.textCtrlCodeNav, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
 		
+		self.colourPickerCodeNav = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 130, 184, 226 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
+		fgSizer7.Add( self.colourPickerCodeNav, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		fgSizer7.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		self.textCtrlCurrentLine = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Selection"), wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.textCtrlCurrentLine.SetBackgroundColour( wx.Colour( 240, 119, 70 ) )
 		
-		self.m_textCtrl4 = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Functions/Variables/Include search"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_textCtrl4.SetBackgroundColour( wx.Colour( 130, 184, 226 ) )
+		fgSizer7.Add( self.textCtrlCurrentLine, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 10 )
 		
-		fgSizer7.Add( self.m_textCtrl4, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
-		
-		self.m_colourPicker3 = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 130, 184, 226 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
-		fgSizer7.Add( self.m_colourPicker3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-		
-		
-		fgSizer7.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		self.m_textCtrl3 = wx.TextCtrl( self.highligh, wx.ID_ANY, _("User"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_textCtrl3.SetBackgroundColour( wx.Colour( 149, 249, 149 ) )
-		
-		fgSizer7.Add( self.m_textCtrl3, 0, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 10 )
-		
-		self.m_colourPicker2 = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 149, 249, 149 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
-		fgSizer7.Add( self.m_colourPicker2, 0, wx.ALL, 5 )
-		
-		self.m_checkBox71 = wx.CheckBox( self.highligh, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-		fgSizer7.Add( self.m_checkBox71, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.ALL, 0 )
-		
-		self.m_textCtrl41 = wx.TextCtrl( self.highligh, wx.ID_ANY, _("Current Line"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_textCtrl41.SetBackgroundColour( wx.Colour( 204, 230, 239 ) )
-		
-		fgSizer7.Add( self.m_textCtrl41, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 10 )
-		
-		self.m_colourPicker4 = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 204, 230, 239 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
-		fgSizer7.Add( self.m_colourPicker4, 0, wx.ALL, 5 )
+		self.colourPickerCurrentLine = wx.ColourPickerCtrl( self.highligh, wx.ID_ANY, wx.Colour( 204, 230, 239 ), wx.DefaultPosition, wx.DefaultSize, wx.CLRP_DEFAULT_STYLE )
+		fgSizer7.Add( self.colourPickerCurrentLine, 0, wx.ALL, 5 )
 		
 		self.highligh.SetSizer( fgSizer7 )
 		self.highligh.Layout()
@@ -596,7 +576,7 @@ class framePreferences ( wx.Frame ):
 		self.buttonApply = wx.Button( self.m_panel29, wx.ID_ANY, _("Apply"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer2.Add( self.buttonApply, 0, wx.ALL, 5 )
 		
-		self.buttonCancel = wx.Button( self.m_panel29, wx.ID_ANY, _("Cancel"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.buttonCancel = wx.Button( self.m_panel29, wx.ID_ANY, _("Ok"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer2.Add( self.buttonCancel, 0, wx.ALL, 5 )
 		
 		self.m_panel29.SetSizer( fgSizer2 )
