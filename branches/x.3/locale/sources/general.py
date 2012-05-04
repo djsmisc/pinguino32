@@ -8,7 +8,7 @@
     contact:		yeison.eng@gmail.com 
     first release:	02/April/2012
     last release:	03/April/2012
-    
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
@@ -43,7 +43,7 @@ class General:
         textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
         for i in range(Snippet[key][0]): textEdit.CharRight()        
         self.recent = True
-        
+
     #----------------------------------------------------------------------
     def updateStatusBar(self, event=None):
         self.findIndex = -1
@@ -52,6 +52,11 @@ class General:
         columna = str(textEdit.GetColumn(textEdit.CurrentPos)).rjust(3, "0")
         self.statusBarEditor.SetStatusText(number=1, text="Line %s - Col %s" %(fila, columna))
         event.Skip()
+        #color = self.getColorConfig("Highligh", "currentline", [255, 250, 70])   
+        ##self.highlightline(int(columna), color)
+        #self.stcpage[self.notebookEditor.GetSelection()].SetCaretLineBack(color)
+        #self.Refresh()
+        
 
     #----------------------------------------------------------------------
     def loadConfig(self):
@@ -62,26 +67,50 @@ class General:
         self.configIDE=RawConfigParser()
         self.configIDE.readfp(config_file) 
         config_file.close()
-        
+
     #----------------------------------------------------------------------
     def setConfig(self,section,opcion,valor):
         if not section in self.configIDE.sections():
             self.configIDE.add_section(section)
         self.configIDE.set(section,opcion,valor)
-        
+
     #----------------------------------------------------------------------
     def saveConfig(self):
         config_file=open(APP_CONFIG,"w")
         self.configIDE.write(config_file)
         config_file.close()
-    
+
     #----------------------------------------------------------------------
-    def getConfig(self,section,option):
+    def getConfig(self, section, option):
         value = self.configIDE.get(section,option)
-        if value.isdigit(): return int(value)
-        elif value.isalpha(): return value
-        else: return value
+        try:
+            if value.isdigit(): return int(value)
+            elif value.isalpha(): return value
+            else: return value
+        except:
+            return value
         
+    #----------------------------------------------------------------------
+    def getColorConfig(self, section, option, default=[0, 0, 0, 0]):
+        try:
+            value = self.configIDE.get(section,option)
+            value = value[1:-1].split(",")
+            value = map(lambda x:int(x), value)
+            color = wx.Color()
+            color.Set(*value)
+            return color
+        except:
+            color = wx.Color()
+            color.Set(*default)
+            self.setConfig(section, option, default)
+            return color
+    
+    #---------------------------------------------------------------------- 
+    def getElse(self, section, option, default):
+        try: default = self.getConfig(section, option)
+        except: self.setConfig(section, option, default)
+        return default
+
     #----------------------------------------------------------------------
     def _initIDs_(self,textEdit):
         self.popupID1 = wx.NewId()
@@ -108,8 +137,8 @@ class General:
         self.Bind(wx.EVT_MENU, lambda x:self.comentar(), id=self.popupID8)
         self.Bind(wx.EVT_MENU, lambda x:self.OnIndent(), id=self.popupID9)
         self.Bind(wx.EVT_MENU, lambda x:self.OnUnIndent(), id=self.popupID10)
-        
-        
+
+
     #----------------------------------------------------------------------
     def contexMenuTools(self, event):
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
@@ -132,11 +161,11 @@ class General:
 
             menu.AppendMenu(self.popupIDhelp0, word, help)          
             menu.AppendSeparator()
-    
+
         menu.Append(self.popupID8, _("Comment/Uncomment"))
         menu.Append(self.popupID9, _("Increase Indent"))
         menu.Append(self.popupID10, _("Decrease Indent"))
-        
+
         menu.AppendSeparator()
 
         menu.Append(self.popupID1, _("Undo"))
@@ -151,7 +180,7 @@ class General:
 
         self.PopupMenu(menu)
         menu.Destroy()
-        
+
 
     #----------------------------------------------------------------------
     def wordUnderCursor(self,function=False):
@@ -181,8 +210,8 @@ class General:
                     l+=len(word)
                     if pos<l: return word     
             else: return word
-            
-            
+
+
     #----------------------------------------------------------------------
     def OnLeftCklick(self, event):
         """"""
@@ -190,10 +219,10 @@ class General:
             self.AutoCompleter.Close()
         except:
             pass
-             
+
         event.Skip()
-        
-        
+
+
 
     #----------------------------------------------------------------------
     def insertSnippet(self, key):
@@ -202,8 +231,8 @@ class General:
         for i in index: textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
         for i in range(Snippet[key][0]): textEdit.CharRight()
-        
-        
+
+
     #----------------------------------------------------------------------
     def keyEvent(self, event):
         #List of key to ignore
@@ -220,7 +249,7 @@ class General:
                                   wx.WXK_BACK,
                                   wx.WXK_RETURN]:
             return
-        
+
         if event.GetModifiers() in [wx.MOD_CONTROL,
                                     wx.MOD_ALT,
                                     wx.MOD_ALTGR,
@@ -229,62 +258,96 @@ class General:
                                     #wx.MOD_SHIFT,
                                     wx.MOD_WIN,
                                     wx.MOD_CONTROL+wx.MOD_SHIFT]:
-            return 
+            return
         
-        self.OnAutoCompleter()
-        self.recent = False
+        self.loadConfig()
         
+
+        enable = self.getElse("Completer", "Enable", "True")
         
+
+        if enable == "True":
+            self.OnAutoCompleter()
+            self.recent = False
+            
+    
+    #----------------------------------------------------------------------
+    def InsertChar(self, event=None):
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        
+        try: key = chr(event.Key)
+        except: key = None
+        
+        print key
+
+        if self.getElse("Insert", "brackets", "False") == "True" and key == "[":
+            textEdit.InsertText(textEdit.CurrentPos, "]")
+        
+        elif self.getElse("Insert", "doublecuotation", "False") == "True" and key == '"':
+            textEdit.InsertText(textEdit.CurrentPos, '"')
+        
+        elif self.getElse("Insert", "singlecuotation", "False") == "True" and key == "'":
+            textEdit.InsertText(textEdit.CurrentPos, "'")
+        
+        elif self.getElse("Insert", "keys", "False") == "True" and key == "{":
+            textEdit.InsertText(textEdit.CurrentPos, "}")
+        
+        elif self.getElse("Insert", "parentheses", "False") == "True" and key == "(":
+            textEdit.InsertText(textEdit.CurrentPos, ")")
+        
+             
+
+
     #----------------------------------------------------------------------
     def getCompleters(self):
         icons = {}
         def addInDict(icon, list):
             for item in list:
                 icons[item] = icon
-                
+
         varbls = []
-                
+
         for i in self.allVars:
             icons[i[0][:]] = i[1][:]
             varbls.append(i[0][:])
-            
-        
+
+
         for i in self.allFunc:
             icons[i[0][:]] = "function"
             varbls.append(i[0][:])
-        
+
         for i in self.allDefi:
             icons[i[0][:]] = "directive"
             varbls.append(i[0][:])
-            
+
         autoComp = []
         for key in Autocompleter.keys(): autoComp.extend(Autocompleter[key][:])
-        
+
         completer = self.keywordList + self.reservedword + Snippet.keys() + varbls[:] + autoComp
-        
+
         completersFilter = []
         for i in completer:
             if i not in completersFilter: completersFilter.append(i)
         completersFilter.sort()
-        
+
         for i in Autocompleter["reserved"]:
             if i in self.keywordList: self.keywordList.remove(i)
-        
+
         addInDict("snippet", Snippet.keys())
         addInDict("function", self.keywordList)
         addInDict("reserved", Autocompleter["reserved"])
         addInDict("directive", Autocompleter["directive"])
 
         return completersFilter, icons
-    
-    
+
+
     ##----------------------------------------------------------------------
     #def setWaitCursor(self, event=None):
         #self.toolbar.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
         ##self.listBoxKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
         ##self.richTextKeywords.SetCursor(wx.StockCursor(wx.CURSOR_WAIT))
         #self.Update()
-        
+
     ##----------------------------------------------------------------------
     #def setNormalCursor(self):
         #self.toolbar.SetCursor(wx.StockCursor(wx.CURSOR_HAND))

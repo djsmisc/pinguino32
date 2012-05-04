@@ -101,10 +101,11 @@ Modify or Update the portable objects (*.po) and machine objects (*.mo) files
 is very easy and simple to.
 
 You only need to do these steps to modify or update your language files:
-	A) Download/Install "poedit" (Easy to use GUI tool to edit po/mo files)
-	B) Execute poedit, and open the pinguino.po file of your language dir
-	C) Edit the traduced values, and save. poedit will re-generate .mo file
-	D) Execute your pinguino IDE !! you can see your changes
+	A) Download/Install "poedit" (Easy to use GUI tool to edit po/mo files).
+	B) Execute translate.sh, (sh translate.sh).
+	C) Edit the the Poedit SearchPath.
+	D) Edit the traduced values, and save. poedit will re-generate .mo file
+	E) Execute your pinguino IDE !! you can see your changes
 
 Please, don't forget to send us your modified files (.po/.mo) to include them
 in the new versions of PinguinoIDE. Thanks a lot !!

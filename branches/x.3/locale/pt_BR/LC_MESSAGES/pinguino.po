@@ -1,184 +1,731 @@
-# Traducao PinguinoBetaX.
-# Copyright (C) 2011 Wagner de Queiroz
-# FIRST AUTHOR <wagnerdequeiroz@gmail.com>, 2011.
+# Brazilian Portuguese translations for Pinguino X.3
+# Brasileiros traduções de português para Pinguino X.3.
+# Licensed under General Public License (GPL)
+# Alexis Sánchez <aasanchez@gmail.com>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pinguino x\n"
-"POT-Creation-Date: 2011-08-30 16:29+BRT\n"
-"PO-Revision-Date: 2011-08-30 17:08-0300\n"
-"Last-Translator: Wagner de Queiroz <wagnerdequeiroz@gmail.com>\n"
-"Language-Team: PinguinoVE <wagnerdequeiroz@gmail.com>\n"
+"Project-Id-Version: Pinguino x.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-04 01:12-0400\n"
+"PO-Revision-Date: 2012-05-04 01:13-0400\n"
+"Last-Translator: Alexis Sánchez <aasanchez@gmail.com>\n"
+"Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "X-Poedit-Language: Portuguese\n"
 "X-Poedit-Country: BRAZIL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: /opt/pinguino/x3/locale/sources\n"
 
-#: pinguinobetax.py:672
+#: /opt/pinguino/x3/locale/sources/pinguino.py:145
+#: /opt/pinguino/x3/locale/sources/pinguino.py:146
+msgid "loading..."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:146
+#: /opt/pinguino/x3/locale/sources/pinguino.py:427
+#, fuzzy
+msgid "Welcome to Pinguino IDE"
+msgstr "Bem vindo ao Pinguino"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:201
+#: /opt/pinguino/x3/locale/sources/pinguino.py:554
+#: /opt/pinguino/x3/locale/sources/framesX3.py:113
+msgid "Tools"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:305
+#: /opt/pinguino/x3/locale/sources/framesX3.py:117
+msgid "Output"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:417
+msgid "unknown"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:444
+msgid "Upgrading ..."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:447
+msgid "Local version is not under revision control."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:449
+msgid "Done"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:457
+msgid "Checking repository revision number"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:460
+msgid "Server temporarily unavailable."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:465
+msgid "You have the latest version."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:468
+msgid "Revision "
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:468
+msgid " is available."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:515
+msgid "Changing board"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:650
+msgid "Open file first !!"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:651
+#: /opt/pinguino/x3/locale/sources/editeur.py:271
+#: /opt/pinguino/x3/locale/sources/editeur.py:336
+#: /opt/pinguino/x3/locale/sources/editeur.py:384
+msgid "Warning"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:656
+#, fuzzy
+msgid "Board:"
+msgstr "Placa"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:657
+msgid "Proc:"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:658
+#, fuzzy
+msgid "File:"
+msgstr "Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:676
+msgid "error while compiling file "
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:680
+msgid "error while linking"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:683
+msgid "compilation done"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:685
+msgid "seconds process time"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:714
+msgid "File must be verified/compiled before upload"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:715
+#: /opt/pinguino/x3/locale/sources/pinguino.py:722
+msgid "Warning!"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:721
+msgid "File must be saved before upload"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:771
 msgid "New File"
 msgstr "Novo Arquivo"
 
-#: pinguinobetax.py:674
+#: /opt/pinguino/x3/locale/sources/pinguino.py:772
 msgid "Open File"
 msgstr "Abrir Arquivo"
 
-#: pinguinobetax.py:676
+#: /opt/pinguino/x3/locale/sources/pinguino.py:773
 msgid "Save File"
 msgstr "Salvar o Arquivo"
 
-#: pinguinobetax.py:678
+#: /opt/pinguino/x3/locale/sources/pinguino.py:774
 msgid "Close File"
 msgstr "Fechar Arquivo"
 
-#: pinguinobetax.py:216
-msgid "New"
-msgstr "Novo"
-
-#: pinguinobetax.py:218
-msgid "Open"
-msgstr "Open"
-
-#: pinguinobetax.py:220
-msgid "Save"
-msgstr "Salvar"
-
-#: pinguinobetax.py:222
-msgid "Save as"
-msgstr "Salvar como"
-
-#: pinguinobetax.py:224
-msgid "Close"
-msgstr "Fechar"
-
-#: pinguinobetax.py:226
-msgid "Exit"
-msgstr "Sair"
-
-#: pinguinobetax.py:231
-msgid "File"
-msgstr "Arquivo"
-
-#: pinguinobetax.py:235
+#: /opt/pinguino/x3/locale/sources/pinguino.py:776
+#: /opt/pinguino/x3/locale/sources/framesX3.py:63
+#: /opt/pinguino/x3/locale/sources/general.py:142
 msgid "Undo"
 msgstr "Desfazer"
 
-#: pinguinobetax.py:237
+#: /opt/pinguino/x3/locale/sources/pinguino.py:777
+#: /opt/pinguino/x3/locale/sources/framesX3.py:66
+#: /opt/pinguino/x3/locale/sources/general.py:143
 msgid "Redo"
 msgstr "Refazer"
 
-#: pinguinobetax.py:240
-msgid "Find"
-msgstr "Procurar"
-
-#: pinguinobetax.py:242
-msgid "Replace"
-msgstr "Substituir"
-
-#: pinguinobetax.py:246
+#: /opt/pinguino/x3/locale/sources/pinguino.py:779
+#: /opt/pinguino/x3/locale/sources/framesX3.py:90
+#: /opt/pinguino/x3/locale/sources/general.py:145
 msgid "Cut"
 msgstr "Cortar"
 
-#: pinguinobetax.py:248
+#: /opt/pinguino/x3/locale/sources/pinguino.py:780
+#: /opt/pinguino/x3/locale/sources/framesX3.py:93
+#: /opt/pinguino/x3/locale/sources/general.py:146
 msgid "Copy"
 msgstr "Copiar"
 
-#: pinguinobetax.py:250
+#: /opt/pinguino/x3/locale/sources/pinguino.py:781
+#: /opt/pinguino/x3/locale/sources/framesX3.py:96
+#: /opt/pinguino/x3/locale/sources/general.py:147
 msgid "Paste"
 msgstr "Colar"
 
-#: pinguinobetax.py:252
+#: /opt/pinguino/x3/locale/sources/pinguino.py:782
+#: /opt/pinguino/x3/locale/sources/framesX3.py:99
+#: /opt/pinguino/x3/locale/sources/general.py:148
 msgid "Clear"
 msgstr "Limpar"
 
-#: pinguinobetax.py:254
-msgid "Select all"
+#: /opt/pinguino/x3/locale/sources/pinguino.py:783
+#, fuzzy
+msgid "Select"
 msgstr "Selecionar Tudo"
 
-#: pinguinobetax.py:256
+#: /opt/pinguino/x3/locale/sources/pinguino.py:785
+#, fuzzy
+msgid "Search in File"
+msgstr "Abrir Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:786
+#, fuzzy
+msgid "Replace in File"
+msgstr "Abrir Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:789
+#, fuzzy
+msgid "Compile"
+msgstr "Compilador 32 Bits"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:790
+#, fuzzy
+msgid "Upload to Pinguino Board"
+msgstr "Bem vindo ao Pinguino"
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:792
+msgid "set preferences of Pinguino IDE"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:794
+msgid "Exit Pinguino IDE"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/pinguino.py:866
+msgid "Board config"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/editeur.py:238
+#, fuzzy
+msgid "Choose a file"
+msgstr "Fechar Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/editeur.py:271
+msgid "File is already opened, reload it ?"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/editeur.py:323
+#, fuzzy
+msgid "Save file as"
+msgstr "Salvar o Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/editeur.py:336
+msgid "File already exist, Overwrite it ?"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/editeur.py:384
+#, fuzzy
+msgid "Save file ?"
+msgstr "Salvar o Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/debugger.py:120
+#: /opt/pinguino/x3/locale/sources/debugger.py:229
+#: /opt/pinguino/x3/locale/sources/debugger.py:247
+msgid "Connected"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/debugger.py:152
+msgid "Select port..."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/debugger.py:231
+#: /opt/pinguino/x3/locale/sources/debugger.py:250
+#: /opt/pinguino/x3/locale/sources/debugger.py:269
+msgid "No device connected"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/debugger.py:242
+#, fuzzy
+msgid "Debugging!"
+msgstr "Debugar"
+
+#: /opt/pinguino/x3/locale/sources/debugger.py:274
+msgid "device disconnected"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:27
+msgid "New"
+msgstr "Novo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:30
+msgid "Open"
+msgstr "Open"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:33
+msgid "Save"
+msgstr "Salvar"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:36
+msgid "Save as"
+msgstr "Salvar como"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:39
+msgid "Close"
+msgstr "Fechar"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:44
+#, fuzzy
+msgid "Save all"
+msgstr "Salvar como"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:47
+#, fuzzy
+msgid "Close all"
+msgstr "Fechar Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:53
+msgid "Recents"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:57
+msgid "Exit"
+msgstr "Sair"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:60
+#: /opt/pinguino/x3/locale/sources/framesX3.py:852
+msgid "File"
+msgstr "Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:71
+#: /opt/pinguino/x3/locale/sources/general.py:136
+msgid "Comment/Uncomment"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:74
+#: /opt/pinguino/x3/locale/sources/general.py:137
+msgid "Increase Indent"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:77
+#: /opt/pinguino/x3/locale/sources/general.py:138
+msgid "Decrease Indent"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:82
+msgid "Find"
+msgstr "Procurar"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:85
+#: /opt/pinguino/x3/locale/sources/framesX3.py:900
+msgid "Replace"
+msgstr "Substituir"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:102
+#, fuzzy
+msgid "Sellect all"
+msgstr "Selecionar Tudo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:107
+#, fuzzy
+msgid "Preferences..."
+msgstr "Prerefencias"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:110
 msgid "Edit"
 msgstr "Editar"
 
-#: pinguinobetax.py:268
-msgid "Themes"
-msgstr "Temas"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:121
+msgid "Toolbar"
+msgstr ""
 
-#: pinguinobetax.py:271
-msgid "USB Bulk"
-msgstr "USB"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:125
+msgid "View"
+msgstr ""
 
-#: pinguinobetax.py:274
-msgid "CDC"
-msgstr "CDC"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:129
+msgid "None"
+msgstr ""
 
-#: pinguinobetax.py:277
-msgid "Debug"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:133
+msgid "USB CDC (serial emulation)"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:136
+msgid "UART (serial)"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:139
+#, fuzzy
+msgid "Debug mode"
 msgstr "Debugar"
 
-#: pinguinobetax.py:278
-msgid "Preferences"
-msgstr "Prerefencias"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:142
+msgid "Check last revision"
+msgstr ""
 
-#: pinguinobetax.py:281
-#: pinguinobetax.py:282
-#: pinguinobetax.py:290
-#: pinguinobetax.py:291
-#: pinguinobetax.py:292
-#: pinguinobetax.py:293
-#: pinguinobetax.py:294
-msgid "your board"
-msgstr "Sua Placa"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:145
+msgid "Upgrade"
+msgstr ""
 
-#: pinguinobetax.py:283
-msgid "Board"
-msgstr "Placa"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:149
+msgid "Revision"
+msgstr ""
 
-#: pinguinobetax.py:295
-msgid "32 bits development tools"
-msgstr "Ferramentas de desenvolvimento 32 Bits"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:151
+msgid "Pinguino"
+msgstr ""
 
-#: pinguinobetax.py:316
-msgid "32 bits Compiler"
-msgstr "Compilador 32 Bits"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:154
+msgid "Keywords"
+msgstr ""
 
-#: pinguinobetax.py:319
+#: /opt/pinguino/x3/locale/sources/framesX3.py:158
 msgid "Website"
 msgstr "Site"
 
-#: pinguinobetax.py:321
+#: /opt/pinguino/x3/locale/sources/framesX3.py:161
 msgid "Wiki"
 msgstr "Wiki"
 
-#: pinguinobetax.py:323
+#: /opt/pinguino/x3/locale/sources/framesX3.py:164
 msgid "Forum"
 msgstr "Forum"
 
-#: pinguinobetax.py:325
+#: /opt/pinguino/x3/locale/sources/framesX3.py:167
 msgid "Blog"
 msgstr "BLog"
 
-#: pinguinobetax.py:327
+#: /opt/pinguino/x3/locale/sources/framesX3.py:170
 msgid "Group"
 msgstr "Grupo de Discussao"
 
-#: pinguinobetax.py:329
-msgid "Tutorial"
-msgstr "Tutoriais"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:173
+msgid "Shop"
+msgstr ""
 
-#: pinguinobetax.py:331
+#: /opt/pinguino/x3/locale/sources/framesX3.py:176
+msgid "Links"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:180
 msgid "About..."
 msgstr "Sobre ..."
 
-#: pinguinobetax.py:333
+#: /opt/pinguino/x3/locale/sources/framesX3.py:183
 msgid "Help"
 msgstr "Ajuda"
 
-#: pinguinobetax.py:372
+#: /opt/pinguino/x3/locale/sources/framesX3.py:197
+msgid "Pinguino Functions"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:209
+msgid " "
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:274
+msgid "Preferences - These features are NOT programmed"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:286
+#: /opt/pinguino/x3/locale/sources/framesX3.py:296
+msgid "Appearance"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:286
+msgid "Source Code Font/Size"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:286
+msgid "Auto-completion"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:286
+msgid "Auto-insert"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:286
+#, fuzzy
+msgid "Open/Save files"
+msgstr "Salvar o Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:286
+msgid "Highligh"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:310
+#, fuzzy
+msgid "Theme"
+msgstr "Temas"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:325
+msgid "appearance"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:334
+msgid "Use default"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:340
+msgid "Use selected"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:353
+msgid "Tab size"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:369
+msgid "souce_code_font_size"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:376
+msgid "Source completion"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:385
+msgid "After characters"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:391
+msgid "No show auto-completer"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:397
+msgid "Items count"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:404
+msgid "Insert \"()\" in the functions."
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:411
+msgid "autocompletion"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:418
+msgid "Auto-close"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:424
+msgid "Brackets: []"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:430
+msgid "Double quotes: \"\""
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:436
+msgid "Keys: {}"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:442
+msgid "Parentheses: ()"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:448
+msgid "Single quotes: ''"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:454
+msgid "auto_insert"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:458
+#, fuzzy
+msgid "New file"
+msgstr "Novo Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:463
+msgid "With template"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:466
+msgid "Empty"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:476
+msgid "Auto-save"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:483
+msgid "Each (sec)"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:489
+#: /opt/pinguino/x3/locale/sources/framesX3.py:507
+msgid "Never"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:499
+#, fuzzy
+msgid "Open last files"
+msgstr "Abrir Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:504
+msgid "All exist files"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:520
+msgid "open_save_files"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:530
+msgid "Search and Replace"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:541
+msgid "Functions/Variables/Include search"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:552
+msgid "User"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:563
+msgid "Current Line"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:574
+msgid "highligh"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:590
+msgid "Restore Defaults"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:596
+msgid "Apply"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:599
+msgid "Cancel"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:627
+msgid "Pinguino IDE x.3"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:653
 msgid "Editor"
 msgstr "Editor"
 
-#: pinguinobetax.py:455
-msgid "Welcome to Pinguino "
-msgstr "Bem vindo ao Pinguino"
+#: /opt/pinguino/x3/locale/sources/framesX3.py:701
+msgid ">>>"
+msgstr ""
 
+#: /opt/pinguino/x3/locale/sources/framesX3.py:707
+msgid "Send"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:740
+msgid "Directories"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:759
+#, fuzzy
+msgid "Files"
+msgstr "Arquivo"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:768
+msgid "*.*"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:768
+msgid "*.pde"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:782
+msgid "Documents"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:792
+msgid "Functions"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:813
+msgid "Variables"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:828
+msgid "Directives"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:859
+msgid "Search:"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:870
+#, fuzzy
+msgid "Replace:"
+msgstr "Substituir"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:886
+msgid "Previous"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:889
+msgid "Next"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:903
+#, fuzzy
+msgid "Replace all"
+msgstr "Substituir"
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:927
+msgid "Search"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/framesX3.py:957
+msgid "Auto-completer"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/general.py:130
+msgid "Open wiki page in the web browser"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/general.py:131
+msgid "Read description"
+msgstr ""
+
+#: /opt/pinguino/x3/locale/sources/general.py:150
+#, fuzzy
+msgid "Clear All"
+msgstr "Limpar"
+
+#~ msgid "USB Bulk"
+#~ msgstr "USB"
+
+#~ msgid "CDC"
+#~ msgstr "CDC"
+
+#~ msgid "your board"
+#~ msgstr "Sua Placa"
+
+#~ msgid "32 bits development tools"
+#~ msgstr "Ferramentas de desenvolvimento 32 Bits"
+
+#~ msgid "Tutorial"
+#~ msgstr "Tutoriais"
