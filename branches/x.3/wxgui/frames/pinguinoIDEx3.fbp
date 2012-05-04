@@ -399,7 +399,7 @@
                     <property name="help"></property>
                     <property name="id">wxID_ANY</property>
                     <property name="kind">wxITEM_NORMAL</property>
-                    <property name="label">Sellect all</property>
+                    <property name="label">Select all</property>
                     <property name="name">menuItemSelectAll</property>
                     <property name="permission">none</property>
                     <property name="shortcut"></property>
@@ -1357,16 +1357,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer19</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxSplitterWindow" expanded="0">
+                    <object class="wxSplitterWindow" expanded="1">
                         <property name="bg"></property>
                         <property name="context_help"></property>
                         <property name="context_menu">1</property>
@@ -1423,7 +1423,7 @@
                         <event name="OnSplitterSashPosChanging"></event>
                         <event name="OnSplitterUnsplit"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="splitteritem" expanded="0">
+                        <object class="splitteritem" expanded="1">
                             <object class="wxPanel" expanded="0">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
@@ -1482,7 +1482,7 @@
                                         <property name="proportion">1</property>
                                         <object class="wxListBox" expanded="0">
                                             <property name="bg"></property>
-                                            <property name="choices">&quot;Appearance&quot; &quot;Source Code Font/Size&quot; &quot;Auto-completion&quot; &quot;Auto-insert&quot; &quot;Open/Save files&quot; &quot;Highligh&quot;</property>
+                                            <property name="choices">&quot;Appearance&quot; &quot;Source Code Font/Size&quot; &quot;Auto-completion&quot; &quot;Auto-insert&quot; &quot;Open/Save files&quot; &quot;Highlight&quot;</property>
                                             <property name="context_help"></property>
                                             <property name="context_menu">1</property>
                                             <property name="enabled">1</property>
@@ -1536,8 +1536,8 @@
                                 </object>
                             </object>
                         </object>
-                        <object class="splitteritem" expanded="0">
-                            <object class="wxPanel" expanded="0">
+                        <object class="splitteritem" expanded="1">
+                            <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -1710,7 +1710,7 @@
                                             <object class="auinotebookpage" expanded="0">
                                                 <property name="bitmap"></property>
                                                 <property name="label">appearance</property>
-                                                <property name="select">0</property>
+                                                <property name="select">1</property>
                                                 <object class="wxPanel" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -2557,7 +2557,7 @@
                                                                 <property name="font"></property>
                                                                 <property name="hidden">0</property>
                                                                 <property name="id">wxID_ANY</property>
-                                                                <property name="label">No show auto-completer</property>
+                                                                <property name="label">Disable auto-completer</property>
                                                                 <property name="maximum_size"></property>
                                                                 <property name="minimum_size"></property>
                                                                 <property name="name">radioBtnCompleterDis</property>
@@ -3237,7 +3237,7 @@
                                             <object class="auinotebookpage" expanded="0">
                                                 <property name="bitmap"></property>
                                                 <property name="label">open_save_files</property>
-                                                <property name="select">1</property>
+                                                <property name="select">0</property>
                                                 <object class="wxPanel" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -3815,7 +3815,7 @@
                                                                                     <property name="font"></property>
                                                                                     <property name="hidden">0</property>
                                                                                     <property name="id">wxID_ANY</property>
-                                                                                    <property name="label">All exist files</property>
+                                                                                    <property name="label">All existing files</property>
                                                                                     <property name="maximum_size"></property>
                                                                                     <property name="minimum_size"></property>
                                                                                     <property name="name">radioBtnOpenAll</property>
@@ -3939,7 +3939,7 @@
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">highligh</property>
+                                                    <property name="name">highlight</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
                                                     <property name="size"></property>
@@ -4345,7 +4345,7 @@
                         </object>
                     </object>
                 </object>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
