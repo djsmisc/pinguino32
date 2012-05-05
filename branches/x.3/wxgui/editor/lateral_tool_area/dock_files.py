@@ -27,6 +27,8 @@
 import wx, re
 import sys, os
 
+from wxgui._trad import _
+
 ########################################################################
 class File:
     #----------------------------------------------------------------------
@@ -39,20 +41,20 @@ class File:
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
     
-        self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Name', width=-1)
-        self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Type', width=-1)
-        self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Line', width=40)
+        self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=-1)
+        self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Type"), width=-1)
+        self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=40)
         #self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='In function', width=1000)
     
-        self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Name', width=-1) 
-        self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Return', width=-1) 
-        self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Line', width=40)
-        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='Parameters', width=1000)
+        self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=-1) 
+        self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Return"), width=-1) 
+        self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=40)
+        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Parameters"), width=1000)
         
-        self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Directive', width=130) 
-        self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading='Name', width=130) 
-        self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading='Value', width=130) 
-        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='Line', width=1000)
+        self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Directive"), width=130) 
+        self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=130) 
+        self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=130) 
+        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=1000)
         
 
     #----------------------------------------------------------------------
@@ -84,8 +86,7 @@ class File:
     def addVarInListCtrl(self, index, var):
         self.lateralVars.InsertStringItem(0, var[0])        
         self.lateralVars.SetStringItem(0, 1, var[1])         
-        self.lateralVars.SetStringItem(0, 2, var[2])         
-        #self.lateralVars.SetStringItem(0, 3, var[3])   
+        self.lateralVars.SetStringItem(0, 2, var[2])    
         self.lateralVars.SetItemData(0, 1)
         
     #----------------------------------------------------------------------

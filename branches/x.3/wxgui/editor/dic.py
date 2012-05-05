@@ -24,33 +24,16 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
+import os
 from time import ctime
 t=ctime().split(" ")
 
 from wxgui._trad import _
 
-#To extend...
+if os.name == "posix": date = "/".join([t[3], t[1], t[5]])
+elif os.name == "nt": date = "/".join([t[2], t[1], t[4]])
+else: date = "dd/mm/aaaa"
 
-Dictionary = [
-    
-    #type
-    #"void", "BOOL", "char", "unsigned", "short", "int", "long", "float", "double", "byte", "word", "struct", "union",
-    #"typedef", "enum", "char", "loop", "setup", 
-    
-    #reserved
-    #"TRUE", "FALSE", "HIGH", "LOW", "INPUT", "OUTPUT", "FOSC", "MIPS", "ON", "OFF", "PORTA", "PORTB", "PORTC", "PORTD",
-    
-    #directives
-    #"define", "include", "ifndef", "endif",
-    
-    #calificadores
-    #"const", "static", "extern", "volatile",
-    
-    #control
-    
-]
-
-#TODO: complete list...
 Autocompleter = {
     
 "directive": ["define", "include", "ifndef", "endif",],
@@ -83,4 +66,4 @@ Snippet[_("Insert Date")+" {snippet}"] = [[2, 1 + len(_("Author:"))],
 %s:
 
 -----------------------------------------------------*/
-""" %(_("Author"), _("Date"), "/".join([t[3], t[1], t[5]]), _("Description"))]	
+""" %(_("Author"), _("Date"), date, _("Description"))]	

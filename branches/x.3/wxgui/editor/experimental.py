@@ -14,9 +14,6 @@ import sys, os, zipfile, re, wx
 import  wx.lib.mixins.listctrl  as  listmix
 from ConfigParser import RawConfigParser
 
-from dic import Dictionary, Snippet
-
-
 
 
 ########################################################################

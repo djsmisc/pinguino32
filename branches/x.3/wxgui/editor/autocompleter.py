@@ -25,7 +25,7 @@
 -------------------------------------------------------------------------"""
 
 import wx, sys, os
-from dic import Snippet, Dictionary
+from dic import Snippet
 
 ICONS_COMPLETER_DIR = os.path.join(sys.path[0], "theme", "icons_autocompleter")
 
