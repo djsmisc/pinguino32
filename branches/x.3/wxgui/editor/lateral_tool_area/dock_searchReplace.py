@@ -27,6 +27,8 @@
 import wx
 import sys, os
 
+from wxgui._trad import _
+
 ########################################################################
 class Search():
     #----------------------------------------------------------------------
@@ -161,7 +163,7 @@ class Search():
         textEdit.AddText(plain)
         textEdit.GotoPos(pos)
         
-        self.lat.searchReplaceInfo.SetLabel("Replaced %d matches in the file." %count)
+        self.lat.searchReplaceInfo.SetLabel(_("Replaced %d matches in the file.") %count)
 
 
     #----------------------------------------------------------------------
@@ -181,6 +183,6 @@ class Search():
                   "count": count,
                   "finds": finds,}
         
-        self.lat.searchReplaceInfo.SetLabel("Finded %d matches in the file." %count)
+        self.lat.searchReplaceInfo.SetLabel(_("Finded %d matches in the file.") %count)
         
         return result
