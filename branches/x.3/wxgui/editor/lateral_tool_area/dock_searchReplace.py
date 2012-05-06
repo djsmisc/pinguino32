@@ -62,9 +62,7 @@ class Search():
         self.lat.notebookLateral.SetSelection(2)
         self.lat.panelReplace.Hide()
         self.lat.m_staticText4.Hide()
-        self.lat.searchCtrlReplace.Hide()
-        #self.Bind(wx.EVT_BUTTON, self.findnext, self.lat.buttonNext)  
-        #self.Bind(wx.EVT_BUTTON, self.findprev, self.lat.buttonPrev)			   
+        self.lat.searchCtrlReplace.Hide()			   
         self.FindText.SetFocus()
         self.updateIDE()		
 
@@ -121,15 +119,10 @@ class Search():
         self.lat.panelReplace.Show()
         self.lat.m_staticText4.Show()
         self.lat.searchCtrlReplace.Show()        
-        #self.Bind(wx.EVT_BUTTON, self.findnext, self.lat.buttonNext)  
-        #self.Bind(wx.EVT_BUTTON, self.findprev, self.lat.buttonPrev)
-        #self.Bind(wx.EVT_BUTTON, self.replacetext, self.lat.buttonReplace)  
-        #self.Bind(wx.EVT_BUTTON, self.replacealltext, self.lat.buttonReplaceAll)
         self.FindText.SetFocus()
         self.lat.buttonReplace.Disable()
         self.lat.buttonReplaceAll.Disable()
         self.updateIDE()
-
 
     #----------------------------------------------------------------------
     def replacetext(self, event=None):
@@ -140,6 +133,7 @@ class Search():
         textEdit.Clear()
         textEdit.InsertText(textEdit.CurrentPos, wordReplace)
         self.findIndex -= 1
+        self.findnext(event)
         if not self.findnext(event):
             self.lat.buttonReplace.Disable()
             self.lat.buttonReplaceAll.Disable()

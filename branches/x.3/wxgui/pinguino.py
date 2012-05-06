@@ -118,13 +118,11 @@ class Pinguino(framePinguinoX, Editor):
 # init
 # ------------------------------------------------------------------------------
     def __initPinguino__(self, parent):
-        #self._init_ctrls(parent)
 	self.notebookEditor.Hide()
 	self.boardlist = boardlist
 	self.debugOutMessage = None
 	self.closing = False
 	self.recentsFiles = []
-	#self.OnBoard()
 	self.GetTheme()
 	
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
@@ -149,7 +147,6 @@ class Pinguino(framePinguinoX, Editor):
 	EVT_AUTO_SAVE_FILES(self, self.autoSaveFiles)	
 	threadAutoSave = threading.Thread(target=self.AutoSave, args=())
 	threadAutoSave.start()
-	
 
         self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
         self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 0)
@@ -353,36 +350,21 @@ class Pinguino(framePinguinoX, Editor):
 # ----------------------------------------------------------------------
     def loadSettings(self):
 	self.loadConfig()
-	try:
-	    w = self.getConfig("IDE", "window/width")
-	    h = self.getConfig("IDE", "window/height")
-	    self.SetSize((w, h))
-	except:
-	    self.setConfig("IDE", "Window/Width", 1000)
-	    self.setConfig("IDE", "Window/Height", 500)
-	    self.SetSize((1000, 500))
+
+	w = self.getElse("IDE", "window/width", 1000)
+	h = self.getElse("IDE", "window/height", 500)
+	self.SetSize((w, h))
 	    
-	try:
-	    x = self.getConfig("IDE", "Window/Xpos")
-	    y = self.getConfig("IDE", "Window/Ypos")
-	    self.SetPosition((x, y))	
-	except:
-	    self.setConfig("IDE", "Window/Xpos", 100)
-	    self.setConfig("IDE", "Window/Ypos", 100) 
-	    self.SetPosition((100, 100))
+	x = self.getElse("IDE", "Window/Xpos", 100)
+	y = self.getElse("IDE", "Window/Ypos", 100)
+	self.SetPosition((x, y))
 	    
-	#try:
-	    #w = self.getConfig("IDE", "output/width")
-	    #h = self.getConfig("IDE", "output/height")
-	    ##self.logwindow.SetSize((w, h))
+	maxim = self.getElse("IDE", "Maximized", "False")
+	if maxim == "True": self.Maximize()
 	
-	try: self.theme = self.getConfig("IDE", "theme")
-	except: self.theme = "PinguinoX"
+	self.theme = self.getElse("IDE", "theme", "PinguinoX")
 	
-	try:
-	    boardName = self.getConfig("IDE","Board")
-	except:
-	    boardName = "Pinguino 2550"
+	boardName = self.getElse("IDE", "Board", "Pinguino 2550")
 	self.setBoard(boardName)
 	
 	try:
@@ -1309,16 +1291,19 @@ class Pinguino(framePinguinoX, Editor):
 	try: MaxItemsCount = self.getConfig("Completer", "MaxItemsCount")
 	except: self.setConfig("Completer", "MaxItemsCount", str(MaxItemsCount))
 	
-	print CharsCount
-	
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
-        app = wx.PySimpleApp(0)
-        wx.InitAllImageHandlers()
-        self.AutoCompleter = AutocompleterIDE(self)
-        self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True), CharsCount, MaxItemsCount)
-        app.SetTopWindow(self.AutoCompleter)
-        self.AutoCompleter.Show()
-        app.MainLoop()
+	if self.wordUnderCursor(True) == None: return
+	if len(self.wordUnderCursor(True)) > CharsCount:
+	    try: self.AutoCompleter.Close()
+	    except: pass
+	    
+	    textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+	    app = wx.PySimpleApp(0)
+	    wx.InitAllImageHandlers()
+	    self.AutoCompleter = AutocompleterIDE(self)
+	    self.AutoCompleter.__initCompleter__(self, self.wordUnderCursor(True), CharsCount, MaxItemsCount)
+	    app.SetTopWindow(self.AutoCompleter)
+	    self.AutoCompleter.Show()
+	    app.MainLoop()
 
     #----------------------------------------------------------------------
     def OnDrop(self, event):

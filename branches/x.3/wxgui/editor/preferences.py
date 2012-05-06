@@ -183,7 +183,7 @@ class Preferences():
         self.colourPickerSearch.SetColour(value)
         self.textCtrlSearch.SetBackgroundColour(value)
         
-        value = self.IDE.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        value = self.IDE.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
         self.colourPickerCodeNav.SetColour(value)
         self.textCtrlCodeNav.SetBackgroundColour(value)
         

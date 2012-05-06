@@ -154,7 +154,7 @@ class editor:
             tabSize = 4
             self.setConfig("Source", "tabSize", tabSize)
             stc.SetTabWidth(tabSize)
-
+            
         self.saveConfig()
 
 
@@ -509,6 +509,18 @@ class editor:
             textEdit.InsertText(textEdit.CurrentPos, "\n"+" "*s)
             for i in range(s+1): textEdit.CharRight()
             return
+        
+        elif  k_code == wx.WXK_BACK:
+            # El editor inserta espacios en lugar de tabuladores, con este arreglo
+            # backSpace elimina espacios y NO tabuladores.
+            # El motivo: stc.SetBackSpaceUnIndents(False) NO FUNCIONA!!!
+            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+            if textEdit.GetSelectedText() == "":
+                textEdit.SetSelection(textEdit.CurrentPos-1, textEdit.CurrentPos)
+                textEdit.Clear()
+                return    
+        
+        
     
         event.Skip()
         

@@ -251,7 +251,7 @@ class General:
                                   wx.WXK_INSERT,
                                   wx.WXK_NUMPAD_INSERT,
                                   wx.WXK_SPACE, 
-                                  wx.WXK_BACK,
+                                  #wx.WXK_BACK,
                                   wx.WXK_RETURN]:
             return
 
@@ -265,7 +265,7 @@ class General:
                                     wx.MOD_CONTROL+wx.MOD_SHIFT]:
             return
         
-        self.loadConfig()
+        #self.loadConfig()
         
 
         enable = self.getElse("Completer", "Enable", "True")
@@ -286,8 +286,6 @@ class General:
         try: key = chr(event.Key)
         except: key = None
         
-        print key
-
         if self.getElse("Insert", "brackets", "False") == "True" and key == "[":
             textEdit.InsertText(textEdit.CurrentPos, "]")
         
@@ -319,14 +317,13 @@ class General:
             icons[i[0][:]] = i[1][:]
             varbls.append(i[0][:])
 
-
         for i in self.allFunc:
             icons[i[0][:]] = "function"
             varbls.append(i[0][:])
 
         for i in self.allDefi:
-            icons[i[0][:]] = "directive"
-            varbls.append(i[0][:])
+            icons[i[1][:]] = "directive"
+            varbls.append(i[1][:])
 
         autoComp = []
         for key in Autocompleter.keys(): autoComp.extend(Autocompleter[key][:])
