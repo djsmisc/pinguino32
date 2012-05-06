@@ -34,7 +34,7 @@ class Documents():
         self.lateralDir = self.lat.listCtrlDir
         self.lateralFiles = self.lat.listCtrlFiles
         self.recentPathsDir = []
-        self.currentLateralDir = os.path.join(sys.path[0],"examples")
+        self.currentLateralDir = os.path.join(os.getcwd(),"examples")
         self.temporalItem = self.currentLateralDir
         
         self.lateralDir.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Columns0', width=-1)  

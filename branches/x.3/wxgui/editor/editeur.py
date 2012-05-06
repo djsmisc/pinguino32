@@ -134,7 +134,7 @@ class editor:
 
     #----------------------------------------------------------------------
     def buildSheet(self, name):
-        #ImageClose = os.path.join(sys.path[0], "wxgui", "resources", "close.png")
+        #ImageClose = os.path.join(os.getcwd(), "wxgui", "resources", "close.png")
         p = wx.Panel(self.notebookEditor,-1, style = wx.NO_FULL_REPAINT_ON_RESIZE)
         self.onglet.append(p)
 
@@ -283,11 +283,11 @@ class editor:
         """ Open Dialog and load file in a new editor """
 
         try: defaultDir=os.path.split(self.filename[self.notebookEditor.GetSelection()])[0]
-        except: defaultDir = sys.path[0]
+        except: defaultDir = os.getcwd()
 
         opendlg = wx.FileDialog(self,
                                 message=_("Choose a file"),
-                                #defaultDir=sys.path[0],
+                                #defaultDir=os.getcwd(),
                                 defaultDir=defaultDir, 
                                 defaultFile="",
                                 wildcard=type+" (*"+extension+")|*"+extension,

@@ -36,7 +36,7 @@ import locale
 class functionsHelp():
     #----------------------------------------------------------------------
     def __initfunctionsHelp__(self, parent, keywordList=None, keyword=None):
-        self.path = os.path.join(sys.path[0],".temp","data.html")
+        self.path = os.path.join(os.getcwd(),".temp","data.html")
         #self._init_ctrls(parent)
         self.richTextKeywords.Clear()
         self.checkListKeywords.Clear()

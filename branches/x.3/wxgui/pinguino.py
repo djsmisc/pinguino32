@@ -62,7 +62,7 @@ pinguino_version="x.3"
 # paths
 # ------------------------------------------------------------------------------
 
-HOME_DIR    = sys.path[0]
+HOME_DIR    = os.getcwd()
 THEME_DIR    = os.path.join(HOME_DIR, 'theme')
 SOURCE_DIR    = os.path.join(HOME_DIR, 'source')
 LOCALE_DIR    = os.path.join(HOME_DIR, 'locale')

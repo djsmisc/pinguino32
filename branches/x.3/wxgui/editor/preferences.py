@@ -27,7 +27,7 @@
 import wx
 import sys, os
 
-HOME_DIR = sys.path[0]
+HOME_DIR = os.getcwd()
 THEME_DIR = os.path.join(HOME_DIR, 'theme')
 
 ########################################################################
