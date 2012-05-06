@@ -49,8 +49,8 @@ class Testing():
 
     #----------------------------------------------------------------------
     def getPOT(self):
-        main = os.path.join(sys.path[0], "wxgui")
-        PythonFiles = [os.path.join(sys.path[0], "pinguino.py")]
+        main = os.path.join(os.getcwd(), "wxgui")
+        PythonFiles = [os.path.join(os.getcwd(), "pinguino.py")]
         exceptions = ["argparse.py"]
         
         def getData(path):
@@ -62,22 +62,12 @@ class Testing():
                     getData(os.path.join(path, i))
         getData(main)
         
-        path = sys.path[0]
+        path = os.getcwd()
         files = " ".join(PythonFiles)
         os.system("xgettext -k_ -kN_ -o pinguino.pot %s" %files)
 
             
-
-    #----------------------------------------------------------------------
-    def OnMarginClick(self, evt):
-        if evt.GetMargin() == 3:
-            if evt.GetShift() and evt.GetControl():
-                self.stcpage[self.notebookEditor.GetSelection()].FoldAll()
-            else:
-                lineClicked = self.stcpage[self.notebookEditor.GetSelection()].LineFromPosition(evt.GetPosition())
-                if self.stcpage[self.notebookEditor.GetSelection()].GetFoldLevel(lineClicked) & wx.stc.STC_FOLDLEVELHEADERFLAG:
-                    self.stcpage[self.notebookEditor.GetSelection()].ToggleFold(lineClicked)
-                    
+    
         #elif evt.GetMargin() in [1, 2]:
             #textEdit = self.stcpage[self.notebookEditor.GetSelection()]
             #line = textEdit.LineFromPosition(evt.Position)
@@ -152,7 +142,7 @@ class Testing():
         
     ##----------------------------------------------------------------------
     #def get_all_modules(self):
-        #path= os.path.join(sys.path[0], "plugins")
+        #path= os.path.join(os.getcwd(), "plugins")
         #ficheros=os.listdir(path)
         #all_modules=[]
         #for file in ficheros:

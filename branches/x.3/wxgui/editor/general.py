@@ -29,7 +29,7 @@ from ConfigParser import RawConfigParser
 from dic import Snippet, Autocompleter
 from wxgui._trad import _
 
-HOME_DIR    = sys.path[0]
+HOME_DIR    = os.getcwd()
 APP_CONFIG    = os.path.join(HOME_DIR, '.config')
 
 ########################################################################
@@ -347,6 +347,19 @@ class General:
         addInDict("directive", Autocompleter["directive"])
 
         return completersFilter, icons
+    
+    
+
+    #----------------------------------------------------------------------
+    def OnMarginClick(self, evt):
+        if evt.GetMargin() == 3:
+            if evt.GetShift() and evt.GetControl():
+                self.stcpage[self.notebookEditor.GetSelection()].FoldAll()
+            else:
+                lineClicked = self.stcpage[self.notebookEditor.GetSelection()].LineFromPosition(evt.GetPosition())
+                if self.stcpage[self.notebookEditor.GetSelection()].GetFoldLevel(lineClicked) & wx.stc.STC_FOLDLEVELHEADERFLAG:
+                    self.stcpage[self.notebookEditor.GetSelection()].ToggleFold(lineClicked)
+                
 
 
     ##----------------------------------------------------------------------

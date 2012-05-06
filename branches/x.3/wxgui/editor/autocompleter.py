@@ -8,7 +8,7 @@
     contact:		yeison.eng@gmail.com 
     first release:	03/April/2012
     last release:	03/April/2012
-    
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
@@ -27,20 +27,20 @@
 import wx, sys, os
 from dic import Snippet
 
-ICONS_COMPLETER_DIR = os.path.join(sys.path[0], "theme", "icons_autocompleter")
+ICONS_COMPLETER_DIR = os.path.join(os.getcwd(), "theme", "icons_autocompleter")
 
 ########################################################################
 class AutoCompleter():
-    
+
     #----------------------------------------------------------------------
     def __initCompleter__(self, parent, index, CharsCount, MaxItemsCount):
         self.IDE = parent
         self.index = index
-        
+
         self.CharsCount = CharsCount
         self.MaxItemsCount = MaxItemsCount
-        
-        
+
+
         if not len(self.index) > self.CharsCount: self.Close()
 
         self.listCtrlAutocompleter.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Completers', width=-1)
@@ -48,24 +48,24 @@ class AutoCompleter():
         self.il = wx.ImageList(14, 14)
         self.listCtrlAutocompleter.SetImageList(self.il, wx.IMAGE_LIST_SMALL)
         self.listCtrlAutocompleter.SetFocus()
-        
-            
+
+
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.activated, self.listCtrlAutocompleter)
         self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)      
         self.setItems()
-        
-        
-        
+
+
+
     #----------------------------------------------------------------------
     def onCharEvent(self, event):
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
-        
+
         if event.GetKeyCode() in [wx.WXK_DOWN,
                                   wx.WXK_UP]:
             event.Skip()
             return
-            
-        
+
+
         if event.GetKeyCode() in [wx.WXK_ALT,
                                   #wx.WXK_SHIFT,
                                   #wx.WXK_RIGHT,
@@ -80,13 +80,13 @@ class AutoCompleter():
             self.Close()
             event.Skip()
             return
-        
+
         if event.GetKeyCode() in [wx.WXK_SPACE]:
             textEdit.AddText(" ")
             self.Close()
             event.Skip()
             return            
-      
+
         if event.KeyCode == wx.WXK_BACK:
             textEdit.DeleteBack()
             self.index = self.index[:-1]
@@ -95,22 +95,22 @@ class AutoCompleter():
             else: self.Close()
             event.Skip()
             return
-        
+
         if event.KeyCode == wx.WXK_RETURN: return        
-        
+
         try:
             if chr(event.GetKeyCode()).isalnum() or chr(event.GetKeyCode()) == ".":
                 textEdit.AddText(chr(event.GetKeyCode()))
         except: pass
-        
+
         self.index = self.IDE.wordUnderCursor(True)
-        
+
         if len(self.index) > self.CharsCount:
             self.setItems()
         else: self.Close()
-        
+
         event.Skip()
-        
+
 
     #----------------------------------------------------------------------
     def addItem(self, name, icon):
@@ -122,8 +122,8 @@ class AutoCompleter():
         pn = os.path.normpath(os.path.join(ICONS_COMPLETER_DIR, "%s.png" %name))
         bitmap = wx.Bitmap(pn, wx.BITMAP_TYPE_PNG)        
         return self.il.Add(bitmap)
- 
-        
+
+
     #----------------------------------------------------------------------
     def activated(self, event=None):
         if event.GetText() in Snippet:
@@ -134,23 +134,23 @@ class AutoCompleter():
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         for i in index: textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, event.GetText())
-        
+
         #Set cursor position at the last word (dot is a word)
         words = 1
         if "." in event.GetText(): words = 3
         for i in range(words): textEdit.WordRightEnd()
-        
+
         #Add "()" to funtions
-	enable = "True"
-	try: enable = self.IDE.getConfig("Completer", "insertParentheses")
-	except: self.IDE.setConfig("Completer", "insertParentheses", enable)           
+        enable = "True"
+        try: enable = self.IDE.getConfig("Completer", "insertParentheses")
+        except: self.IDE.setConfig("Completer", "insertParentheses", enable)           
 
         if event.GetText() in self.IDE.keywordList and enable == "True":
             textEdit.InsertText(textEdit.CurrentPos, "()")
             textEdit.CharRight()
-            
+
         self.Close()
-            
+
     #----------------------------------------------------------------------
     def setItems(self):  
         index = self.index
@@ -163,8 +163,8 @@ class AutoCompleter():
         for word in completers:
             #print word
             if word.lower().startswith(index.lower()): items.append(word)
-            
-            
+
+
         self.SetPosition(self.getPositionCompleter())
         self.listCtrlAutocompleter.DeleteAllItems()
         #print items
@@ -177,7 +177,7 @@ class AutoCompleter():
             self.setMinimunSize()
             self.Show()
         else: self.Close()
-                    
+
     #----------------------------------------------------------------------
     def getPositionCompleter(self):
         #if os.name == "posix":
@@ -194,7 +194,7 @@ class AutoCompleter():
         except wx._core.PyDeadObjectError: pass
         if os.name == "posix": pos += wx.Point(0, self.IDE.MenuBar.Size[1])
         return pos
-    
+
     #----------------------------------------------------------------------
     def setMinimunSize(self):
         count = self.listCtrlAutocompleter.ItemCount
@@ -206,6 +206,5 @@ class AutoCompleter():
         h = (h / 2) + 1   
         if count > self.MaxItemsCount: self.SetSizeWH(-1, self.MaxItemsCount*h)
         else: self.SetSizeWH(-1, count*h + scrollH)
-            
-            
-            
+
+

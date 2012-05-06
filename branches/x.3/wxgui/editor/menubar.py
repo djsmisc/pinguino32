@@ -28,7 +28,7 @@ import codecs, sys, os
 from wxgui._trad import _
 
 
-HOME_DIR    = sys.path[0]
+HOME_DIR    = os.getcwd()
 TEMP_DIR = os.path.join(HOME_DIR, '.temp')
 
 ########################################################################
