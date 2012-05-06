@@ -218,7 +218,8 @@ class Menubar:
         self.setConfig("IDE", "Output/Width", w)
         self.setConfig("IDE", "Output/Height", h)
         
-        
+        maxim = self.IsMaximized()
+        self.setConfig("IDE", "Maximized", maxim)
         
         i = 0
         self.setConfig("Recents", "Recents_count", len(self.recentsFiles))
@@ -228,7 +229,6 @@ class Menubar:
             self.setConfig("Recents", "Recents_%d" %i, file)
             i += 1
             
-            
         i = 0
         self.setConfig("Last", "Last_count", len(self.filename))
         for file in self.filename:
@@ -237,55 +237,11 @@ class Menubar:
             self.setConfig("Last", "Last_%d" %i, file)
             i += 1
         
-            
-        
         self.setConfig("IDE", "Theme", self.theme)
         
         self.setConfig("IDE","Board", self.curBoard.name)
         
         self.saveConfig()
-
-        ## ---save settings-----------------------------------------------
-        ##if not self.IsIconized() and not self.IsMaximized():
-        #w, h = self.GetSize()
-        #self.config.WriteInt('Window/Width', w)
-        #self.config.WriteInt('Window/Height', h)
-        ##self.config.WriteInt("frame/sashposition", self.splitterWindow1.GetSashPosition())
-        ##x, y = self.GetPosition()
-        ##self.config.WriteInt('Window/Posx', x)
-        ##self.config.WriteInt('Window/Posy', y)
-
-        #w, h = self.logwindow.GetSize()
-        #self.config.WriteInt('Output/Width', w)
-        #self.config.WriteInt('Output/Height', h)
-
-        #i = 0
-        #self.config.WriteInt("LastEdit/count", len(self.filename))
-        #for file in self.filename:
-            #self.config.Write("LastEdit/file%d" %i, file)
-            #i += 1
-
-        ##for t in self.themeList:
-        ##	tid = self.theme_menu.FindItem(t)
-        ##	if self.theme_menu.IsChecked(tid):
-        #self.config.Write('Theme/name', self.theme)
-
-        ##Save the last files in the editor
-        ##for b in range(len(self.boardlist)):
-            ##bid = self.boardlist[b].id
-            ##if self.board_menu.IsChecked(bid):
-                ##self.config.WriteInt('Board', bid)
-        #self.config.WriteInt('Board', self.curBoard.id)
-                
-        
-
-        ##if DEV:
-            ##for d in range(self.ID_ENDDEBUG - self.ID_DEBUG - 1):
-                ##did = self.ID_DEBUG + d + 1
-                ##if self.menu.menuDebugMode.IsChecked(did):
-                    ##self.config.WriteInt('Debug', did)
-
-        #self.config.Flush()
 
         # ----------------------------------------------------------------------
         # deinitialize the frame manager

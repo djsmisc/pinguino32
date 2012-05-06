@@ -13,7 +13,7 @@ from preferences import Preferences
 from funtions_help import functionsHelp
 from autocompleter import AutoCompleter
 
-import locale
+import locale, sys
 
 ########################################################################
 class Editor(Documents, Debugger, File, Search, editor, Menubar, General):
@@ -28,7 +28,6 @@ class Editor(Documents, Debugger, File, Search, editor, Menubar, General):
         self.__initDebugger__()
         self.__initDockFile__()
         self.__initSearch__()  
-        
         
         self.lat.notebookLateral.SetSelection(0)   
 

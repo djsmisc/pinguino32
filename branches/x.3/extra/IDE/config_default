@@ -7,6 +7,7 @@ output/width = 998
 output/height = 84
 theme = PinguinoX
 board = Pinguino 2550
+maximized = False
 
 [Open/Save]
 autosavetime = 10
@@ -40,6 +41,6 @@ last_count = 0
 
 [Highligh]
 searchreplace = [255, 250, 70]
-codenavigation = [54, 255, 101]
+codenavigation = [120, 255, 152]
 selection = [241, 132, 88]
 

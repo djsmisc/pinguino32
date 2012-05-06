@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	31/March/2012
-    last release:	31/March/2012
+    last release:	06/May/2012
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -44,7 +44,6 @@ class File:
         self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=-1)
         self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Type"), width=-1)
         self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=40)
-        #self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading='In function', width=1000)
     
         self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=-1) 
         self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Return"), width=-1) 
@@ -56,31 +55,35 @@ class File:
         self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=130) 
         self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=1000)
         
-
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit.GotoLine(textEdit.LineCount)
         self.allVars.reverse()
-        color = self.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
         self.highlightline(int(self.allVars[event.GetIndex()][2])-1, color)
         self.allVars.reverse()
-        self.focus()
+        textEdit.SetFocus()
         
     #----------------------------------------------------------------------
     def moveToFunc(self, event=None):
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit.GotoLine(textEdit.LineCount)
         self.allFunc.reverse()
-        color = self.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
         self.highlightline(int(self.allFunc[event.GetIndex()][2])-1, color)
         self.allFunc.reverse()
-        self.focus()
+        textEdit.SetFocus()
         
     #----------------------------------------------------------------------
     def moveToDefi(self, event=None):
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit.GotoLine(textEdit.LineCount)
         self.allDefi.reverse()
-        color = self.getColorConfig("Highligh", "codenavigation", [54, 255, 101])
+        color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
         self.highlightline(int(self.allDefi[event.GetIndex()][3])-1, color)
         self.allDefi.reverse()
-        self.focus()    
-        
+        textEdit.SetFocus()  
         
     #----------------------------------------------------------------------
     def addVarInListCtrl(self, index, var):
