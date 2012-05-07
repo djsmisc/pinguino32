@@ -434,12 +434,12 @@ class editor:
         if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
             dlg = wx.MessageDialog(self,
                                    _("Save file ?"), _("Warning")+"!",
-                                   wx.YES_NO | wx.ICON_WARNING
+                                   wx.YES_NO | wx.ICON_WARNING | wx.CANCEL
                                    )
             result=dlg.ShowModal()
-            dlg.Destroy()                        
-            if (result==wx.ID_YES):
-                self.Save("Pde File","pde")  
+            dlg.Destroy()
+            if (result==wx.ID_CANCEL): return True
+            if (result==wx.ID_YES): self.Save("Pde File","pde")  
         self.filename.remove(self.filename[pageIdx])
         self.onglet.remove(self.onglet[pageIdx])
         self.stcpage.remove(self.stcpage[pageIdx])
