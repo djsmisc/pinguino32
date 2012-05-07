@@ -18,16 +18,13 @@ pack, and how to modify or update the built-in translation files.
 2.- LANGUAGE SUPPORT
 ===============================================================================
 In this Translation Directory, whe had include traduction files for these languages:
-	(da) Danish
+	(da) Detush
 	(en) English
 	(es) Spanish
 	(fr) French
-	(hr) Croatian
 	(it) Italian
-	(nl) Dutch
 	(pt) Portuguese
 	(pt_BR) Portuguese BRAZIL
-	(ro) Rumano
 
 This is a initial selection, based on the list of countries of Pinguino users
 and activist around the world, refered by J.P.Mandon at HackingLab's Blog.
@@ -43,7 +40,7 @@ In the pinguino IDE directory, you can see this directory structure:
 
 	.
 	|-- HOW TO
-	|-- da
+	|-- de
 	|   `-- LC_MESSAGES
 	|       |-- pinguino.mo
 	|       `-- pinguino.po
@@ -59,15 +56,7 @@ In the pinguino IDE directory, you can see this directory structure:
 	|   `-- LC_MESSAGES
 	|       |-- pinguino.mo
 	|       `-- pinguino.po
-	|-- hr
-	|   `-- LC_MESSAGES
-	|       |-- pinguino.mo
-	|       `-- pinguino.po
 	|-- it
-	|   `-- LC_MESSAGES
-	|       |-- pinguino.mo
-	|       `-- pinguino.po
-	|-- nl
 	|   `-- LC_MESSAGES
 	|       |-- pinguino.mo
 	|       `-- pinguino.po
@@ -76,10 +65,6 @@ In the pinguino IDE directory, you can see this directory structure:
 	|       |-- pinguino.mo
 	|       `-- pinguino.po
 	|-- pt_BR
-	|   `-- LC_MESSAGES
-	|       |-- pinguino.mo
-	|       `-- pinguino.po
-	|-- ro
 	    `-- LC_MESSAGES
 	        |-- pinguino.mo
 	        `-- pinguino.po
