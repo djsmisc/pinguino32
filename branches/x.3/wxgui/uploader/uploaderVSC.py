@@ -132,7 +132,7 @@ class uploaderVSC(baseUploader):
 		for i in range(len(block)):
 			usbBuf = usbBuf + chr(block[i])
 		# write data packet on usb device
-		self.usbWrite(usbBuf)
+		print self.usbWrite(usbBuf)
 # ------------------------------------------------------------------------------
 	def hexWrite(self):
 # ------------------------------------------------------------------------------
@@ -205,8 +205,7 @@ class uploaderVSC(baseUploader):
 		# ----------------------------------------------------------------------
 		# 32-bit : mem start at 0x9D0000000000 ?
 
-		for i in range(self.memstart, max_address):
-			print i
+		for i in range(self.memstart, max_address+64):
 			data.append(0xFF)
 
 		# 2nd pass : parse bytes from line into data
@@ -215,6 +214,7 @@ class uploaderVSC(baseUploader):
 		address_Hi	= 0
 
 		for line in lines:
+			print line
 			byte_count = int(line[1:3], 16)
 			address_Lo = int(line[3:7], 16) # four hex digits
 			record_type= int(line[7:9], 16)
@@ -241,14 +241,14 @@ class uploaderVSC(baseUploader):
 
 		# erase and write blocks 
 		# ----------------------------------------------------------------------
-
+		print(self.memstart,"  ",max_address,"  ",self.memend)
 		usbBuf = []
-		for i in range(self.memstart, max_address):
+		for i in range(self.memstart, max_address+64):
 			if i % 64 == 0:
 				self.eraseBlock(i)
-			if i % self.VSC_BLOCKSIZE == 0:
+			if i % self.VSC_BLOCKSIZE == 0:			
 				if usbBuf != []:
-					self.issueBlock(address + i - self.VSC_BLOCKSIZE, usbBuf)
+					self.issueBlock(i - self.VSC_BLOCKSIZE, usbBuf)
 				usbBuf = []
 			if data[i - self.memstart] != []:
 				usbBuf.append(data[i - self.memstart])
@@ -297,7 +297,7 @@ class uploaderVSC(baseUploader):
 		#print "Serial: %s" % handle.getString(device.iSerialNumber, 30)
 		#self.getDeviceFamily(self, handle):
 		#self.getProgramMemory(self, handle):
-		self.memend = self.getDeviceFlash(board.proc)
+		self.memend = self.getDeviceFlash(self.board.proc)
 		memfree = self.memend - self.memstart
 		self.txtWrite("%d bytes free (%d KB)\n" % (memfree, memfree/1024))
 
@@ -306,7 +306,7 @@ class uploaderVSC(baseUploader):
 
 		#product = handle.getString(device.iProduct, 30)
 		#manufacturer = handle.getString(device.iManufacturer, 30)
-		self.txtWrite(output, "Pinguino bootloader v2.12\n")
+		self.txtWrite("Pinguino bootloader v2.12\n")
 
 		# start writing
 		# ----------------------------------------------------------------------
