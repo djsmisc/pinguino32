@@ -143,7 +143,7 @@ void pinguino_main(void)
 
 #ifdef boot2
 #pragma code high_priority_isr 0x2020
-void high_priority_isr(void) __naked __interrupt 1
+void high_priority_isr(void) interrupt 1
 #else
 void high_priority_isr(void)
 #endif
@@ -219,7 +219,7 @@ void high_priority_isr(void)
 
 #ifdef boot2
 #pragma code low_priority_isr 0x4000
-void low_priority_isr(void) __naked __interrupt 2
+void low_priority_isr(void) interrupt 2
 #else
 void low_priority_isr(void)
 #endif
