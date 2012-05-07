@@ -4,15 +4,15 @@
 # Alexis Sánchez <aasanchez@gmail.com>, 2012.
 #
 # Wiki page: http://wiki.pinguino.cc/index.php/Locale_for_Italian
-# Last ID: 2534
+# Last ID: 2547
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Pinguino x.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-04 14:53-0400\n"
-"PO-Revision-Date: 2012-05-04 14:56-0400\n"
-"Last-Translator: Moreno Manzini <moreno@mediacom.it>\n"
+"PO-Revision-Date: 2012-05-06 23:27-0400\n"
+"Last-Translator: Moreno Manzini  <moreno@mediacom.it>\n"
 "Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -333,7 +333,6 @@ msgid "Replace"
 msgstr "Sostituisci"
 
 #: framesX3.py:102
-#, fuzzy
 msgid "Select all"
 msgstr "Seleziona tutto"
 
@@ -434,9 +433,8 @@ msgid " "
 msgstr " "
 
 #: framesX3.py:274
-#, fuzzy
 msgid "Preferences"
-msgstr "Preferenze..."
+msgstr "Preferenze"
 
 #: framesX3.py:286
 #: framesX3.py:296
@@ -460,7 +458,6 @@ msgid "Open/Save files"
 msgstr "Apertura/Salvataggio file"
 
 #: framesX3.py:286
-#, fuzzy
 msgid "Highlight"
 msgstr "Evidenziatore"
 
@@ -497,7 +494,6 @@ msgid "After characters"
 msgstr "Dopo n caratteri"
 
 #: framesX3.py:391
-#, fuzzy
 msgid "Disable auto-completer"
 msgstr "Nascondi il completamento automatico"
 
@@ -571,7 +567,6 @@ msgid "Open last files"
 msgstr "Apri l'ultimo file"
 
 #: framesX3.py:504
-#, fuzzy
 msgid "All existing files"
 msgstr "Tutti i file presenti"
 
@@ -585,10 +580,9 @@ msgstr "Cerca e sostituisci"
 
 #: framesX3.py:535
 msgid "Code Navigation"
-msgstr ""
+msgstr "Navigazione nel codice"
 
 #: framesX3.py:543
-#, fuzzy
 msgid "Selection"
 msgstr "Seleziona"
 

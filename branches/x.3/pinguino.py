@@ -19,7 +19,7 @@ class MySplashScreen(wx.SplashScreen):
         memDC.SetFont(wx.Font(10, wx.SWISS, wx.ITALIC, wx.NORMAL))
         memDC.SetTextForeground(wx.BLACK)
         memDC.SelectObject(bmp)
-        memDC.DrawText(_("loading ..."), 10, 355)
+        memDC.DrawText(_("loading..."), 10, 355)
         memDC.SelectObject(wx.NullBitmap)
         # TODO : replace wx.BORDER_SIMPLE (windows only)		
         wx.SplashScreen.__init__(self, bmp,

@@ -640,9 +640,11 @@ class Pinguino(framePinguinoX, Editor):
         info.AddDeveloper('Régis Blanchot')
         info.AddDeveloper('Marcus Fazzi')
         info.AddDeveloper('Jesus Carmona Esteban')
-        info.AddDeveloper('Ivan Ricondo')
-        info.AddDeveloper('Joan Espinoza')
+        info.AddDeveloper('Alfred Broda')
         info.AddDeveloper('Yeison Cardona')
+        info.AddDeveloper('Henk Van Beek')
+        info.AddDeveloper('Björn Pfeiffer')
+        info.AddDeveloper('Alexis Sánchez')     
 
         info.AddDocWriter('Benoit Espinola')
         info.AddDocWriter('Sebastien Koechlin')
@@ -655,11 +657,10 @@ class Pinguino(framePinguinoX, Editor):
         info.AddArtist('Laurent Costes')
         info.AddArtist('Daniel Rodrí­guez')
 
-        info.AddTranslator('Joan Espinoza: Spanish, Portuguese')
-        info.AddTranslator('Marin Purgar: Croatian')
-        info.AddTranslator('Wim Heirman: Dutch')
-        info.AddTranslator('Vasile Guta Ciucur: Romanian')
-        info.AddTranslator('Wagner de Queiroz: Brazilian portuguese')
+        info.AddTranslator('Joan Espinoza')
+        info.AddTranslator('Alexis Sánchez')
+        info.AddTranslator('Régis Blanchot')
+        info.AddTranslator('Moreno Manzini ')
 
         wx.AboutBox(info)
 
