@@ -468,11 +468,11 @@ class Pinguino(framePinguinoX, Editor):
             return
         self.svnRev = self.sr.current_version()
         if self.svnRev == self.localRev:
-            self.UPGRADE.Enable(False)
+            self.menu.menuItemUpgrade.Enable(False)
             self.displaymsg(_("You have the latest version.")+"\n", 0)
         else:
-            self.UPGRADE.Enable(True)
-            self.displaymsg(_("Revision ") + self.svnRev + _(" is available.")+"\n", 0)
+            self.menu.menuItemUpgrade.Enable(True)
+            self.displaymsg(_("Revision") +" "+ self.svnRev +" "+ _("is available.")+"\n", 0)
 
 
 # ------------------------------------------------------------------------------
