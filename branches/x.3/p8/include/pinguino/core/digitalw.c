@@ -131,20 +131,20 @@ u8 digitalread(u8 pin)
 	switch (port[pin])
 	{
 		case pB:
-			reg = TRISB;
+			reg = PORTB;
 			break;
 		case pC:
-			reg = TRISC;
+			reg = PORTC;
 			break;
 		case pA:
-			reg = TRISA;
+			reg = PORTA;
 			break;
 		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
 		case pD:
-			reg = TRISD;
+			reg = PORTD;
 			break;
 		case pE:
-			reg = TRISE;
+			reg = PORTE;
 			break;
 		#endif
 	}
