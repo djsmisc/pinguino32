@@ -225,7 +225,14 @@ class General:
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         index = self.wordUnderCursor()
         for i in index: textEdit.DeleteBack()
-        rep = Snippet[key][1].replace("\t", self.getIndent())
+        
+        line = textEdit.GetCurLineUTF8()[0]
+        s = 0
+        for i in line:
+            if i.isspace(): s += 1
+            else: break
+        rep = Snippet[key][1].replace("\n", "\n"+" "*s).replace("\t", self.getIndent())
+        
         textEdit.InsertText(textEdit.CurrentPos, rep)
         for i in range(Snippet[key][0][0]-1):
             textEdit.LineDown()
@@ -235,7 +242,8 @@ class General:
         elif  type(Snippet[key][0][1]) == type([]):
             s = len(self.getIndent() * Snippet[key][0][1][0])
             for i in range(Snippet[key][0][1][1]+s):
-                textEdit.CharRight()        
+                textEdit.CharRight()
+                
 
 
     #----------------------------------------------------------------------
