@@ -354,10 +354,16 @@ class Pinguino(framePinguinoX, Editor):
 	w = self.getElse("IDE", "window/width", 1000)
 	h = self.getElse("IDE", "window/height", 500)
 	self.SetSize((w, h))
-	    
-	x = self.getElse("IDE", "Window/Xpos", 100)
-	y = self.getElse("IDE", "Window/Ypos", 100)
-	self.SetPosition((x, y))
+	
+	# TODO fix the bug on windows for negative frame position 	    
+	try:
+		x = self.getElse("IDE", "Window/Xpos", 100)
+		y = self.getElse("IDE", "Window/Ypos", 100)
+		self.SetPosition((x, y))
+	except:
+		self.setConfig("IDE", "Window/Xpos", 0)
+		self.setConfig("IDE", "Window/Ypos", 0)
+		self.SetPosition((0, 0))
 	    
 	maxim = self.getElse("IDE", "Maximized", "False")
 	if maxim == "True": self.Maximize()
