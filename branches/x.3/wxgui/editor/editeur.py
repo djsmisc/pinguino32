@@ -518,8 +518,17 @@ class editor:
             if textEdit.GetSelectedText() == "":
                 textEdit.SetSelection(textEdit.CurrentPos-1, textEdit.CurrentPos)
                 textEdit.Clear()
-                return    
-        
+                return
+            
+            
+        elif  k_code == wx.WXK_TAB:
+            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+            if textEdit.GetSelectedText() == "":
+                textEdit.InsertText(textEdit.CurrentPos, self.getIndent())
+                for i in self.getIndent(): textEdit.CharRight()
+                return  
+    
+    
         
     
         event.Skip()

@@ -71,7 +71,8 @@ class AutoCompleter():
                                   #wx.WXK_RIGHT,
                                   #wx.WXK_LEFT,
                                   wx.WXK_ESCAPE, 
-                                  wx.WXK_INSERT,
+                                  wx.WXK_INSERT, 
+                                  wx.WXK_TAB,
                                   wx.WXK_NUMPAD_INSERT,
                                   #wx.WXK_SPACE, 
                                   #wx.WXK_BACK,
@@ -80,6 +81,8 @@ class AutoCompleter():
             self.Close()
             event.Skip()
             return
+                     
+            
 
         if event.GetKeyCode() in [wx.WXK_SPACE]:
             textEdit.AddText(" ")
@@ -96,7 +99,7 @@ class AutoCompleter():
             event.Skip()
             return
 
-        if event.KeyCode == wx.WXK_RETURN: return        
+        if event.KeyCode == wx.WXK_RETURN: return
 
         try:
             if chr(event.GetKeyCode()).isalnum() or chr(event.GetKeyCode()) == ".":
