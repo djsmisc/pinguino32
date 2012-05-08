@@ -1182,10 +1182,8 @@ class Pinguino(framePinguinoX, Editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
-                                  #'-llibpuf.lib',\
                                   os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
                                   os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'usb.o'),\
                                   os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
                                   os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
