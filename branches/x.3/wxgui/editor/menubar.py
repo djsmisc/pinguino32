@@ -213,7 +213,6 @@ class Menubar:
         self.setConfig("IDE", "Window/Xpos", x)
         self.setConfig("IDE", "Window/Ypos", y)
         
-        
         w, h = self.logwindow.GetSize()
         self.setConfig("IDE", "Output/Width", w)
         self.setConfig("IDE", "Output/Height", h)
