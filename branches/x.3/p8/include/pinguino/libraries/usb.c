@@ -9,6 +9,8 @@
 
 #define __USB__
 
+volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+
 // Size of the power EP application buffer
 #define EP1_BUFFER_SIZE 64
 #define EP2_BUFFER_SIZE 64
