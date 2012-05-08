@@ -24,7 +24,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx, re, os, sys
+import wx, re, os, sys, string
 from ConfigParser import RawConfigParser
 from dic import Snippet, Autocompleter
 from wxgui._trad import _
@@ -243,42 +243,20 @@ class General:
             s = len(self.getIndent() * Snippet[key][0][1][0])
             for i in range(Snippet[key][0][1][1]+s):
                 textEdit.CharRight()
-                
-
 
     #----------------------------------------------------------------------
     def keyEvent(self, event):
-        #List of key to ignore
-        if event.GetKeyCode() in [wx.WXK_UP,
-                                  wx.WXK_DOWN,
-                                  #wx.WXK_SHIFT,
-                                  wx.WXK_ALT,
-                                  wx.WXK_RIGHT,
-                                  wx.WXK_LEFT,
-                                  wx.WXK_ESCAPE, 
-                                  wx.WXK_INSERT,
-                                  wx.WXK_NUMPAD_INSERT,
-                                  wx.WXK_SPACE, 
-                                  #wx.WXK_BACK,
-                                  wx.WXK_RETURN]:
+        if event.KeyCode in [wx.WXK_ESCAPE,
+                             wx.WXK_TAB,
+                             wx.WXK_RETURN,
+                             wx.WXK_NUMPAD_ENTER,]:
+            event.Skip()
             return
 
-        if event.GetModifiers() in [wx.MOD_CONTROL,
-                                    wx.MOD_ALT,
-                                    wx.MOD_ALTGR,
-                                    wx.MOD_CMD,
-                                    wx.MOD_META,
-                                    #wx.MOD_SHIFT,
-                                    wx.MOD_WIN,
-                                    wx.MOD_CONTROL+wx.MOD_SHIFT]:
-            return
+        try: chr(event.KeyCode)
+        except: return        
         
-        #self.loadConfig()
-        
-
         enable = self.getElse("Completer", "Enable", "True")
-        
-
         if enable == "True":
             try:
                 self.OnAutoCompleter()
