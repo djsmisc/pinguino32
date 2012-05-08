@@ -51,44 +51,69 @@ class AutoCompleter():
 
 
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.activated, self.listCtrlAutocompleter)
-        self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)      
+        self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)
+        self.Bind(wx.EVT_KEY_UP, self.onKeyEvent)
         self.setItems()
-
-
 
     #----------------------------------------------------------------------
     def onCharEvent(self, event):
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
+        
+        if event.GetKeyCode() in [wx.WXK_BACK,]:
+            event.Skip()
+            return
+        try:
+            textEdit.AddText(chr(event.GetKeyCode()))
+            
+            try: key = chr(event.GetKeyCode())
+            except: key = None
+            
+            if self.IDE.getElse("Insert", "brackets", "False") == "True" and key == "[":
+                textEdit.InsertText(textEdit.CurrentPos, "]")
+            
+            elif self.IDE.getElse("Insert", "doublecuotation", "False") == "True" and key == '"':
+                textEdit.InsertText(textEdit.CurrentPos, '"')
+            
+            elif self.IDE.getElse("Insert", "singlecuotation", "False") == "True" and key == "'":
+                textEdit.InsertText(textEdit.CurrentPos, "'")
+            
+            elif self.IDE.getElse("Insert", "keys", "False") == "True" and key == "{":
+                textEdit.InsertText(textEdit.CurrentPos, "}")
+            
+            elif self.IDE.getElse("Insert", "parentheses", "False") == "True" and key == "(":
+                textEdit.InsertText(textEdit.CurrentPos, ")")            
+            
+            
+        except: pass
+        event.Skip()
+        
+
+    #----------------------------------------------------------------------
+    def onKeyEvent(self, event):
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
 
         if event.GetKeyCode() in [wx.WXK_DOWN,
                                   wx.WXK_UP]:
             event.Skip()
             return
-
-
-        if event.GetKeyCode() in [wx.WXK_ALT,
-                                  #wx.WXK_SHIFT,
-                                  #wx.WXK_RIGHT,
-                                  #wx.WXK_LEFT,
-                                  wx.WXK_ESCAPE, 
-                                  wx.WXK_INSERT, 
-                                  wx.WXK_TAB,
-                                  wx.WXK_NUMPAD_INSERT,
-                                  #wx.WXK_SPACE, 
-                                  #wx.WXK_BACK,
-                                  wx.WXK_RETURN, 
-                                  ]:
+        
+        if event.GetKeyCode() in [wx.WXK_TAB]:
+            textEdit.AddText(self.IDE.getIndent())
             self.Close()
             event.Skip()
             return
-                     
-            
-
-        if event.GetKeyCode() in [wx.WXK_SPACE]:
-            textEdit.AddText(" ")
+        
+        if event.GetKeyCode() in [wx.WXK_RIGHT]:
+            textEdit.CharRight()
             self.Close()
             event.Skip()
-            return            
+            return
+        
+        if event.GetKeyCode() in [wx.WXK_LEFT]:
+            textEdit.CharLeft()
+            self.Close()
+            event.Skip()
+            return
 
         if event.KeyCode == wx.WXK_BACK:
             textEdit.DeleteBack()
@@ -99,12 +124,13 @@ class AutoCompleter():
             event.Skip()
             return
 
-        if event.KeyCode == wx.WXK_RETURN: return
-
-        try:
-            if chr(event.GetKeyCode()).isalnum() or chr(event.GetKeyCode()) == ".":
-                textEdit.AddText(chr(event.GetKeyCode()))
-        except: pass
+        
+        #try: chr(event.KeyCode)
+        #except:
+            #self.Close()
+            #event.Skip()
+            #return 
+        
 
         self.index = self.IDE.wordUnderCursor(True)
 
@@ -135,7 +161,7 @@ class AutoCompleter():
             return 
         index = self.index
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
-        for i in index: textEdit.DeleteBack()
+        for i in index + "1": textEdit.DeleteBack()
         textEdit.InsertText(textEdit.CurrentPos, event.GetText())
 
         #Set cursor position at the last word (dot is a word)

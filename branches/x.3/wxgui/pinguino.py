@@ -512,6 +512,7 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnBoard(self, event):
+
 	# clear all the lists before rebuild them
 	del self.rw[:]
 	del self.regobject[:]
@@ -744,7 +745,7 @@ class Pinguino(framePinguinoX, Editor):
 
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------	
 
     def DrawToolbar(self):
 	try: self.toolbar.ClearTools()
@@ -768,7 +769,9 @@ class Pinguino(framePinguinoX, Editor):
 	for i in self.boardlist: boards.append(i.name)
 	self.choiceBoards = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
 	self.choiceBoards.SetSelection( index )
-	self.choiceBoards.Bind(wx.EVT_CHOICE, self.OnBoard)	
+	self.choiceBoards.Bind(wx.EVT_CHOICE, self.OnBoard)
+	self.choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+	
 
 	def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
 	    if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
