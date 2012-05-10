@@ -263,6 +263,9 @@ class Pinguino(framePinguinoX, Editor):
 	if DEV:
 	    self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.menu.menuItemUSBCDC)
 	    self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.menu.menuItemDebugNone)
+	    
+	self.Bind(wx.EVT_MENU, self.OnVerify, self.menu.menuItemCompile)
+	self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
 
 
 	##plugin
