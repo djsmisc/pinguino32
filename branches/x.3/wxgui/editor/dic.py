@@ -24,15 +24,10 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import os
-from time import ctime
-t=ctime().split(" ")
+import os, time
+date = time.ctime()
 
 from wxgui._trad import _
-
-if os.name == "posix": date = "/".join([t[3], t[1], t[5]])
-elif os.name == "nt": date = "/".join([t[2], t[1], t[4]])
-else: date = "dd/mm/aaaa"
 
 Autocompleter = {
     
