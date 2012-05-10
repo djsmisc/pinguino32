@@ -37,7 +37,7 @@ or the code must be modified to ignore the CD and WD inputs.
 #endif
 
 #ifdef PIC32_PINGUINO_MICRO
-	#define SDCS				41	// RB13/MMC_#SS Card Select output
+	#define SDCS				40	// RB13/MMC_#SS Card Select output
 	#define READ_LED			10  // Yellow Led
 	#define WRITE_LED			10  // Yellow Led
 #endif
