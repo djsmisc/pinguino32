@@ -148,6 +148,14 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuPinguino.AppendSubMenu( self.menuRevision, _("Revision") )
 		
+		self.menuPinguino.AppendSeparator()
+		
+		self.menuItemCompile = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("Compile")+ u"\t" + u"F5", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuPinguino.AppendItem( self.menuItemCompile )
+		
+		self.menuItemUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("Upload")+ u"\t" + u"F6", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuPinguino.AppendItem( self.menuItemUpload )
+		
 		self.Append( self.menuPinguino, _("Pinguino") ) 
 		
 		self.menuHelp = wx.Menu()

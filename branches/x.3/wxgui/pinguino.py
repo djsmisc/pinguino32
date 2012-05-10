@@ -387,11 +387,15 @@ class Pinguino(framePinguinoX, Editor):
 	perspectiva = self._mgr.SavePerspective()
 	nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
 	nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
-	oOutput = int(re.match(panelOutput, perspectiva).group(1))
-	oLateral = int(re.match(panelLateral, perspectiva).group(1))
-	perspectiva = perspectiva.replace("dock_size(3,0,0)=%d" %oOutput, "dock_size(3,0,0)=%d" %nOutput)
-	perspectiva = perspectiva.replace("dock_size(2,0,0)=%d" %oLateral, "dock_size(2,0,0)=%d" %nLateral)
-	self._mgr.LoadPerspective(perspectiva)
+	try:
+	    oOutput = int(re.match(panelOutput, perspectiva).group(1))   
+	    oLateral = int(re.match(panelLateral, perspectiva).group(1))
+	    perspectiva = perspectiva.replace("dock_size(3,0,0)=%d" %oOutput, "dock_size(3,0,0)=%d" %nOutput)
+	    perspectiva = perspectiva.replace("dock_size(2,0,0)=%d" %oLateral, "dock_size(2,0,0)=%d" %nLateral)
+	    self._mgr.LoadPerspective(perspectiva)
+	except:
+	    print "No perspective"
+	    
 
 # ----------------------------------------------------------------------
 # get OS name and define some OS dependant variable
