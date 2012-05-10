@@ -1239,17 +1239,21 @@ class Pinguino(framePinguinoX, Editor):
                     if ligne.find('error')!=-1:
                         self.displaymsg(ligne, 0)
             fichier.close()
-            if sys.platform=='win32':
-                if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
-                    fichiersource=open(os.path.join(SOURCE_DIR,"main32tmp.hex"),'r')
-                    fichierdest=open(os.path.join(SOURCE_DIR,"main32.hex"),'w+')
-                    for line in fichiersource:
-                        if line!=":040000059D006000FA\n":
-                            fichierdest.writelines(line)
-                    fichiersource.close()
-                    fichierdest.close()
-                    os.remove(os.path.join(SOURCE_DIR,"main32tmp.hex"))
-            return sortie.poll()
+	    if sys.platform=='win32':
+		if board.board=='PIC32_PINGUINO_220':
+		    badrecord=":040000059D0040001A\n"
+		else:
+		    badrecord=":040000059D006000FA\n"                
+		if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
+		    fichiersource=open(os.path.join(SOURCE_DIR,"main32tmp.hex"),'r')
+		    fichierdest=open(os.path.join(SOURCE_DIR,"main32.hex"),'w+')
+		    for line in fichiersource:
+			if line!=badrecord:
+			    fichierdest.writelines(line)
+		    fichiersource.close()
+		    fichierdest.close()
+		    os.remove(os.path.join(SOURCE_DIR,"main32tmp.hex"))
+	    return sortie.poll()
 
 # ------------------------------------------------------------------------------
 # getCodeSize
@@ -1303,7 +1307,6 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def OnAutoCompleter(self):
-	
 	CharsCount = 1
 	try: CharsCount = self.getConfig("Completer", "charscount") - 1
 	except: self.setConfig("Completer", "charscount", str(CharsCount+1))
