@@ -184,6 +184,8 @@ class Pinguino(framePinguinoX, Editor):
             self.imageBackground.SetSize((5000,5000)) # :)
         self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
         self.background.CentreOnParent(wx.BOTH)
+	
+	self.notebookEditor.SetMinSize((50, 100))
 
         # ------------------------------------------------------------------------------
         # add the panes to the manager
@@ -194,7 +196,7 @@ class Pinguino(framePinguinoX, Editor):
         self._mgr.AddPane(self.lat, self.PaneLateral, '')
         self._mgr.AddPane(self.panelEditor, wx.CENTER , '')
         self._mgr.Update()
-
+		
 
 # ------------------------------------------------------------------------------
 # Lateral
@@ -202,7 +204,6 @@ class Pinguino(framePinguinoX, Editor):
     def buildLateralPanel(self):
         self.PaneLateral=wx.aui.AuiPaneInfo()
         self.PaneLateral.CloseButton(True)
-        #self.PaneLateral.MaximizeButton(True)
         self.PaneLateral.MinimizeButton(True)
         self.PaneLateral.Caption(_("Tools"))
         self.PaneLateral.Right()
@@ -289,6 +290,7 @@ class Pinguino(framePinguinoX, Editor):
 	self.debuggingLine = self.panelOutput.debuggingLine
 	self.buttonSendDebug = self.panelOutput.buttonSendDebug
 	self.logwindow = self.panelOutput.logwindow
+	
 	self.choicePort = self.panelOutput.choicePort
 	self.choicePort.Hide()
 	
@@ -298,10 +300,8 @@ class Pinguino(framePinguinoX, Editor):
 	self.debuggingLine.Hide()
 	self.buttonSendDebug.Hide()
 	
-	
 	self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
 	self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
-	
 	
 	# create a PaneInfo structure for output window
 	self.PaneOutputInfo=wx.aui.AuiPaneInfo()
@@ -310,7 +310,6 @@ class Pinguino(framePinguinoX, Editor):
 	self.PaneOutputInfo.MinimizeButton(True)
 	self.PaneOutputInfo.Caption(_("Output"))
 	self.PaneOutputInfo.Bottom()
-
 
 
 # ----------------------------------------------------------------------
@@ -379,8 +378,17 @@ class Pinguino(framePinguinoX, Editor):
 		if os.path.isfile(file):
 		    self.addFile2Recent(file)
 	except: pass
-
-
+	    
+	panelOutput = "[\S]*dock_size\(3,0,0\)=([\d]*)[\S]*"
+	panelLateral = "[\S]*dock_size\(2,0,0\)=([\d]*)[\S]*"
+	perspectiva = self._mgr.SavePerspective()
+	nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
+	nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
+	oOutput = int(re.match(panelOutput, perspectiva).group(1))
+	oLateral = int(re.match(panelLateral, perspectiva).group(1))
+	perspectiva = perspectiva.replace("dock_size(3,0,0)=%d" %oOutput, "dock_size(3,0,0)=%d" %nOutput)
+	perspectiva = perspectiva.replace("dock_size(2,0,0)=%d" %oLateral, "dock_size(2,0,0)=%d" %nLateral)
+	self._mgr.LoadPerspective(perspectiva)
 
 # ----------------------------------------------------------------------
 # get OS name and define some OS dependant variable
@@ -1232,15 +1240,11 @@ class Pinguino(framePinguinoX, Editor):
                         self.displaymsg(ligne, 0)
             fichier.close()
             if sys.platform=='win32':
-                if board.board=='PIC32_PINGUINO_220':
-                    badrecord=":040000059D0040001A\n"
-                else:
-                    badrecord=":040000059D006000FA\n"                
                 if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
                     fichiersource=open(os.path.join(SOURCE_DIR,"main32tmp.hex"),'r')
                     fichierdest=open(os.path.join(SOURCE_DIR,"main32.hex"),'w+')
                     for line in fichiersource:
-                        if line!=badrecord:
+                        if line!=":040000059D006000FA\n":
                             fichierdest.writelines(line)
                     fichiersource.close()
                     fichierdest.close()
@@ -1346,6 +1350,8 @@ class Pinguino(framePinguinoX, Editor):
 	self.OnCloseAll()
 	self.openLast()
 	self.Show()
+	
+	print self._mgr.SavePerspective()
 	
 
 
