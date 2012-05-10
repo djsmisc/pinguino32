@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com
     first release:	02/April/2012
-    last release:	06/May/2012
+    last release:	09/May/2012
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import codecs, sys, os
+import codecs, sys, os, re
 from wxgui._trad import _
 
 
@@ -240,6 +240,14 @@ class Menubar:
         
         self.setConfig("IDE","Board", self.curBoard.name)
         
+        panelOutput = "[\S]*dock_size\(3,0,0\)=([\d]*)[\S]*"
+        panelLateral = "[\S]*dock_size\(2,0,0\)=([\d]*)[\S]*"
+        perspectiva = self._mgr.SavePerspective()
+        try: self.setConfig("IDE", "PerspectiveOutput", re.match(panelOutput, perspectiva).group(1))
+        except: self.setConfig("IDE", "PerspectiveOutput", "119")
+        try: self.setConfig("IDE", "PerspectiveLateral", re.match(panelLateral, perspectiva).group(1))
+        except: self.setConfig("IDE", "PerspectiveLateral", "286")
+            
         self.saveConfig()
 
         # ----------------------------------------------------------------------
@@ -271,7 +279,6 @@ class Menubar:
     def OnViewToolbar(self, event):
         if self.menu.menuItemToolbar.IsChecked():
             self.DrawToolbar()
-            #self.toolbar.Show()
         else:
             self.toolbar.Destroy()
         self.updateIDE()

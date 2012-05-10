@@ -8,6 +8,8 @@ output/height = 84
 theme = PinguinoX
 board = Pinguino 2550
 maximized = False
+perspectiveoutput = 119
+perspectivelateral = 286
 
 [Open/Save]
 autosavetime = 10
