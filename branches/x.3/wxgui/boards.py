@@ -161,6 +161,34 @@ class PIC32_Pinguino_220:
 	shortarg='-m'
 	longarg='--olimex220'
 
+class GENERIC32MX250F128:
+	name='GENERIC32MX250F128'
+	id=wx.NewId()
+	arch=32
+	bldr='microchip'
+	proc='32MX250F128B'
+	board='GENERIC32MX250F128'
+	vendor=MICROCHIP_ID
+	product=PIC32_ID
+	memstart=0x00000
+	memend=0x20000
+	shortarg='-N'
+	longarg='--generic250'
+
+class GENERIC32MX220F032:
+	name='GENERIC32MX220F032'
+	id=wx.NewId()
+	arch=32
+	bldr='microchip'
+	proc='32MX220F032B'
+	board='GENERIC32MX220F032'
+	vendor=MICROCHIP_ID
+	product=PIC32_ID
+	memstart=0x00000
+	memend=0x07FFF
+	shortarg='-n'
+	longarg='--generic220'
+		
 class Emperor_460:
 	name='Emperor 460'
 	id=wx.NewId()
@@ -222,6 +250,7 @@ boardlist = [
                 PICuno_Equo, FreeJALduino,
                 PIC32_Pinguino, PIC32_Pinguino_OTG,
                 PIC32_Pinguino_Micro, PIC32_Pinguino_220,
+                GENERIC32MX250F128, GENERIC32MX220F032,
                 Emperor_460, Emperor_795,
                 UBW32_460, UBW32_795
 			]
