@@ -38,7 +38,7 @@
 int main()
 {
 	// default peripheral freq. is CPUCoreFrequency / 2 (cf. system.c)
-	#ifdef __32MX220F032D__
+	#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
 	SystemConfig(40000000);	// default clock frequency is 40Mhz
 	#else
 	SystemConfig(80000000);	// default clock frequency is 80Mhz

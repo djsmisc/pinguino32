@@ -32,30 +32,44 @@ LIBDIRS		=	-L$(OBJDIR)/usb
 # unsupported record in hex file / Jean-pierre Mandon 2012
 # ------------------------------------------------------------------------------
 
+BADRECORD='^:040000059D006000FA'
 ifeq ($(BOARD),PIC32_PINGUINO_220)
-	REMOVE = grep --binary --invert-match '^:040000059D0040001A' $(SRCDIR)/main32.hex > $(SRCDIR)/temp.hex
-else
-	REMOVE = grep --binary --invert-match '^:040000059D006000FA' $(SRCDIR)/main32.hex > $(SRCDIR)/temp.hex
+	BADRECORD = '^:040000059D0040001A'
 endif
+ifeq ($(BOARD),GENERIC32MX250F128)
+	BADRECORD = '^:040000059D0040001A'
+endif
+ifeq ($(BOARD),GENERIC32MX220F032)
+	BADRECORD = '^:040000059D0040001A'
+endif
+
+REMOVE = grep --binary --invert-match $(BADRECORD) $(SRCDIR)/main32.hex > $(SRCDIR)/temp.hex
 
 # ------------------------------------------------------------------------------
 # heap size / Regis Blanchot 2012
 # ------------------------------------------------------------------------------
 
+HEAP_SIZE=16384
 ifeq ($(BOARD),PIC32_PINGUINO_220)
 	HEAP_SIZE = 512
-else
-	HEAP_SIZE = 16384
+endif
+ifeq ($(BOARD),GENERIC32MX220F032)
+	HEAP_SIZE = 512
 endif
 
 # ------------------------------------------------------------------------------
 # select the cdc library / Jean-pierre Mandon 2012
 # ------------------------------------------------------------------------------
 
+CDCLIBRARY = libcdc.a
 ifeq ($(BOARD),PIC32_PINGUINO_220)
 	CDCLIBRARY = libcdc220.a
-else
-	CDCLIBRARY = libcdc.a
+endif
+ifeq ($(BOARD),GENERIC32MX250F128)
+	CDCLIBRARY = libcdc220.a
+endif
+ifeq ($(BOARD),GENERIC32MX220F032)
+	CDCLIBRARY = libcdc220.a
 endif
 
 # ------------------------------------------------------------------------------
