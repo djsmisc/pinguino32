@@ -10,6 +10,7 @@
 	[23-02-11][Marcus Fazzi][Removed  asm("di")/asm("ei") from GetCP0Count/SetCP0Count]
 	[30-01-12][Régis Blanchot][Added P32MX220F032D support]
 	[06-02-12][Roland Haag][Added new clock settings]
+	[13-05-12][Jean-Pierre Mandon][added P32MX250F128B and P32MX220F032B support]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -33,7 +34,7 @@
 #include <const.h>
 #include <typedef.h>
 
-#if defined(PIC32_PINGUINO_220)
+#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	#define CPUCOREMAXFREQUENCY	40000000L	// 40 MHz
 #else
 	#define CPUCOREMAXFREQUENCY	80000000L	// 80 MHz
@@ -432,7 +433,7 @@ void SystemClocksWriteSettings(const SystemClocksSettings *s)
   OSCCONbits.PBDIV = s->PBDIV;
   
   // Set wait states
-#if defined(PIC32_PINGUINO_220)
+#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	// TODO
 	PMMODEbits.WAITB = 0b00;								// Data wait of 1 TPB
 #else
@@ -473,7 +474,7 @@ u32 GetPeripheralClock()
 void SetFlashWaitStates_old()
 {
 	SystemUnlock();
-#if defined(PIC32_PINGUINO_220)
+#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	PMMODEbits.WAITB = 0b00;					// Data wait of 1 TPB
 #else
 	CHECON = (GetSystemClock() / 20) - 1;		// FlashWaitStates

@@ -51,11 +51,13 @@ void IOsetSpecial()
 // All Analog Pins as Digital IOs
 void IOsetDigital()
 {
-	#ifdef __32MX220F032D__
-	DDPCONbits.JTAGEN=0;		// check : already in system.c
-	ANSELA = 0;
-	ANSELB = 0;
-	ANSELC = 0;
+	#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
+			DDPCONbits.JTAGEN=0;		// check : already in system.c
+			ANSELA = 0;
+			ANSELB = 0;
+			#if defined(__32MX220F032D__)
+				ANSELC = 0;
+			#endif
 	#else
 	AD1PCFG = 0xFFFF;
 	#endif

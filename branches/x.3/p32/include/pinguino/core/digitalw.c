@@ -18,6 +18,7 @@
 	[30-01-12][rblanchot@gmail.com][added PIC32-PINGUINO-220 et PIC32-PINGUINO-MICRO]
 	[03-03-12][jp.mandon@gmail.com][added UEXT pin for PIC32-PINGUINO-MX220]
 	[29-03-12][hgmvanbeek@gmail.com][extended PIC32-PINGUINO-MICRO pinning]
+	[13-05-12][jp.mandon@gmail.com][extended GENERIC250F128 and GENERIC220F032 pinning]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -137,6 +138,32 @@ const u32 pinmask[]={	_8,_9,_2,_3,_4,_5,_6,_7,	// D0-D7	: C8,C9,C2,C3,C4,C5,C6,C
 
 //----------------------------------------------------------------------
 
+#ifdef GENERIC32MX250F128
+
+const u32 portmask[]={	pB,pB,pB,pB,pB,pB,pB,pA,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
+				  		pB,pB,pB,pB,pB,pA,			// D8-D13	: B4,B3,B2,B1,B0,A0
+						pA };						// D14 		: A1
+
+const u32 pinmask[]={	_15,_14,_13,_9,_8,_7,_5,_4,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
+						_4,_3,_2,_1,_0,_0,			// D8-D13	: B4,B3,B2,B1,B0,A0
+						_1 };						// D14 		: A1
+#endif
+
+//----------------------------------------------------------------------
+
+#ifdef GENERIC32MX220F032
+
+const u32 portmask[]={	pB,pB,pB,pB,pB,pB,pB,pA,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
+				  		pB,pB,pB,pB,pB,pA,			// D8-D13	: B4,B3,B2,B1,B0,A0
+						pA };						// D14 		: A1
+
+const u32 pinmask[]={	_15,_14,_13,_9,_8,_7,_5,_4,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
+						_4,_3,_2,_1,_0,_0,			// D8-D13	: B4,B3,B2,B1,B0,A0
+						_1 };						// D14 		: A1
+#endif
+
+//----------------------------------------------------------------------
+
 #if defined(EMPEROR460) || defined(EMPEROR795)
 
 const u32 portmask[]=
@@ -208,22 +235,30 @@ void pinmode(u8 pin,u8 state)
 		case pB: if (state) TRISBSET=pinmask[pin];
 				else TRISBCLR=pinmask[pin];
 				break;
-		case pC: if (state) TRISCSET=pinmask[pin];
-				else TRISCCLR=pinmask[pin];
-				break;
+		#ifndef __32MX250F128B__
+			#ifndef __32MX220F032B__				
+			case pC: if (state) TRISCSET=pinmask[pin];
+					else TRISCCLR=pinmask[pin];
+					break;
+			#endif
+		#endif
 		#ifndef __32MX220F032D__
-		case pD: if (state) TRISDSET=pinmask[pin];
-				else TRISDCLR=pinmask[pin];
-				break;
-		case pE: if (state) TRISESET=pinmask[pin];
-				else TRISECLR=pinmask[pin];
-				break;
-		case pF: if (state) TRISFSET=pinmask[pin];
-				else TRISFCLR=pinmask[pin];
-				break;
-		case pG: if (state) TRISGSET=pinmask[pin];
-				else TRISGCLR=pinmask[pin];
-				break;
+			#ifndef __32MX250F128B__
+				#ifndef __32MX220F032B__		
+				case pD: if (state) TRISDSET=pinmask[pin];
+						else TRISDCLR=pinmask[pin];
+						break;
+				case pE: if (state) TRISESET=pinmask[pin];
+						else TRISECLR=pinmask[pin];
+						break;
+				case pF: if (state) TRISFSET=pinmask[pin];
+						else TRISFCLR=pinmask[pin];
+						break;
+				case pG: if (state) TRISGSET=pinmask[pin];
+						else TRISGCLR=pinmask[pin];
+						break;
+				#endif
+			#endif
 		#endif
 	}
 }
@@ -242,22 +277,30 @@ u8 pinread(u8 pin)
 		case pB:
 			reg = TRISB;
 			break;
-		case pC:
-			reg = TRISC;
-			break;
+		#ifndef __32MX250F128B__
+			#ifndef __32MX220F032B__			
+			case pC:
+				reg = TRISC;
+				break;
+			#endif
+		#endif
 		#ifndef __32MX220F032D__
-		case pD:
-			reg = TRISD;
-			break;
-		case pE:
-			reg = TRISE;
-			break;
-		case pF:
-			reg = TRISF;
-			break;
-		case pG:
-			reg = TRISG;
-			break;
+			#ifndef __32MX250F128B__
+				#ifndef __32MX220F032B__		
+				case pD:
+					reg = TRISD;
+					break;
+				case pE:
+					reg = TRISE;
+					break;
+				case pF:
+					reg = TRISF;
+					break;
+				case pG:
+					reg = TRISG;
+					break;
+				#endif
+			#endif
 		#endif
 	}
 	if ((reg & pinmask[pin])!=0)
@@ -278,22 +321,30 @@ void digitalwrite(u8 pin,u8 state)
 		case pB: if (state) PORTBSET=pinmask[pin];
 				else PORTBCLR=pinmask[pin];
 				break;
-		case pC: if (state) PORTCSET=pinmask[pin];
-				else PORTCCLR=pinmask[pin];
-				break;
+		#ifndef __32MX250F128B__
+				#ifndef __32MX220F032B__			
+				case pC: if (state) PORTCSET=pinmask[pin];
+						else PORTCCLR=pinmask[pin];
+						break;
+				#endif
+		#endif
 		#ifndef __32MX220F032D__
-		case pD: if (state) PORTDSET=pinmask[pin];
-				else PORTDCLR=pinmask[pin];
-				break;
-		case pE: if (state) PORTESET=pinmask[pin];
-				else PORTECLR=pinmask[pin];
-				break;
-		case pF: if (state) PORTFSET=pinmask[pin];
-				else PORTFCLR=pinmask[pin];
-				break;
-		case pG: if (state) PORTGSET=pinmask[pin];
-				else PORTGCLR=pinmask[pin];
-				break;
+			#ifndef __32MX250F128B__
+				#ifndef __32MX220F032B__
+				case pD: if (state) PORTDSET=pinmask[pin];
+						else PORTDCLR=pinmask[pin];
+						break;
+				case pE: if (state) PORTESET=pinmask[pin];
+						else PORTECLR=pinmask[pin];
+						break;
+				case pF: if (state) PORTFSET=pinmask[pin];
+						else PORTFCLR=pinmask[pin];
+						break;
+				case pG: if (state) PORTGSET=pinmask[pin];
+						else PORTGCLR=pinmask[pin];
+						break;
+				#endif
+			#endif
 		#endif
 	}
 }
@@ -308,17 +359,26 @@ u8 digitalread(u8 pin)
 		#endif
 		case pB: return((PORTB&pinmask[pin])!=0);
 				break;
-		case pC: return((PORTC&pinmask[pin])!=0);
-				break;
+		#ifndef __32MX250F128B__
+			#ifndef __32MX220F032B__				
+			case pC: return((PORTC&pinmask[pin])!=0);
+					break;
+			#endif
+		#endif
 		#ifndef __32MX220F032D__
-		case pD: return((PORTD&pinmask[pin])!=0);
-				break;
-		case pE: return((PORTE&pinmask[pin])!=0);
-				break;
-		case pF: return((PORTF&pinmask[pin])!=0);
-				break;
-		case pG: return((PORTG&pinmask[pin])!=0);
-				break;
+			#ifndef __32MX250F128B__
+				#ifndef __32MX220F032B__		
+				case pD: return((PORTD&pinmask[pin])!=0);
+						break;
+				case pE: return((PORTE&pinmask[pin])!=0);
+						break;
+				case pF: return((PORTF&pinmask[pin])!=0);
+						break;
+				case pG: return((PORTG&pinmask[pin])!=0);
+						break;
+				#endif
+			#endif
+		
 		#endif
 		default: return -1;
 	}

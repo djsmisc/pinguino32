@@ -473,14 +473,23 @@ void SerialPinConfigure(u8 port)
 			TRISBbits.TRISB4 = OUTPUT;	// RB4 / U1TX output
 			TRISAbits.TRISA4 = INPUT;	// RA4 / U1RX input
 #endif			
+#if defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
+			TRISBbits.TRISB2=INPUT;		// RB2 is input ( RX )
+			TRISBbits.TRISB3=OUTPUT;	// RB3 is output ( TX )
+#endif
 			break;
 		case UART2:
 #ifdef PIC32_PINGUINO_220
 			TRISCbits.TRISC9 = OUTPUT;	// RC9 / U2TX output
 			TRISCbits.TRISC8 = INPUT;	// RC8 / U2RX input				
 #else
-			TRISFbits.TRISF5 = OUTPUT;	// RF5 / U2TX output
-			TRISFbits.TRISF4 = INPUT;	// RF4 / U2RX input
+	#if defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
+		TRISBbits.TRISB1=INPUT;		// RB1 is input ( RX )
+		TRISBbits.TRISB0=OUTPUT;	// RB0 is output ( TX )
+	#else
+		TRISFbits.TRISF5 = OUTPUT;	// RF5 / U2TX output
+		TRISFbits.TRISF4 = INPUT;	// RF4 / U2RX input
+	#endif
 #endif
 			break;
 //32MX4xx not have UART3,4,5 AND 6
