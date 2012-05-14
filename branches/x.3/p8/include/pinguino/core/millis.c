@@ -1,13 +1,14 @@
 // millis library for pinguino
 // Jean-Pierre MANDON 2009
 // added interrupt.c functions (regis blanchot 2011)
+// [14-05-12][jp.mandon changed long to u32 and Millis to millis / thanks mark harper]
 
 #ifndef __MILLIS__
 #define __MILLIS__
 
 #include "interrupt.c"
 
-long _millis;
+volatile u32 _millis;
 
 void millis_init(void)
 {
@@ -17,7 +18,7 @@ void millis_init(void)
 	_millis = 0;
 }
 
-long Millis()
+u32 millis()
 {
 	return(_millis);
 }
