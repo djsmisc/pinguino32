@@ -154,16 +154,18 @@ class AutoCompleter():
 
 
     #----------------------------------------------------------------------
-    def activated(self, event=None):
-        if event.GetText() in Snippet:
-            self.IDE.insertSnippet(event.GetText())
-            self.Close()
-            return 
+    def activated(self, event=None): 
         index = self.index
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         for i in index + "1": textEdit.DeleteBack()
-        textEdit.InsertText(textEdit.CurrentPos, event.GetText())
+        
+        if event.GetText() in Snippet:
+            self.IDE.insertSnippet(event.GetText())
+            self.Close()
+            return
 
+        textEdit.InsertText(textEdit.CurrentPos, event.GetText())
+         
         #Set cursor position at the last word (dot is a word)
         words = 1
         if "." in event.GetText(): words = 3

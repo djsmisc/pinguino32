@@ -35,16 +35,6 @@ APP_CONFIG    = os.path.join(HOME_DIR, '.config')
 ########################################################################
 class General:
 
-
-    #----------------------------------------------------------------------
-    def insertSnippet(self, key):
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
-        index = self.wordUnderCursor()
-        for i in index: textEdit.DeleteBack()
-        textEdit.InsertText(textEdit.CurrentPos, Snippet[key][1])
-        for i in range(Snippet[key][0]): textEdit.CharRight()        
-        self.recent = True
-
     #----------------------------------------------------------------------
     def updateStatusBar(self, event=None):
         self.findIndex = -1
