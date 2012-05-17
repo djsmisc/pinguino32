@@ -4,15 +4,15 @@
 # Alexis Sánchez <aasanchez@gmail.com>, 2012.
 #
 # Wiki page: http://wiki.pinguino.cc/index.php/Locale_for_Deutsch
-# Last ID: 2529
+# Last ID: 2669
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Pinguino x.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-04 14:23-0400\n"
-"PO-Revision-Date: 2012-05-04 14:24-0400\n"
-"Last-Translator: Alexis Sánchez <aasanchez@gmail.com>\n"
+"POT-Creation-Date: 2012-05-17 13:55-0400\n"
+"PO-Revision-Date: 2012-05-17 13:56-0400\n"
+"Last-Translator: Morob65 (Wifi of Pinguino.cc user)\n"
 "Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -24,268 +24,90 @@ msgstr ""
 "X-Poedit-Country: Germany\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: /opt/pinguino/x3/locale/sources\n"
+"X-Poedit-SearchPath-0: /home/alexis/Pinguino/x3/locale/sources\n"
 
-#: pinguino.py:154
-#: pinguino.py:155
-msgid "loading..."
+#: general.py:150
+msgid "Open wiki page in the web browser"
+msgstr "Die Wiki Seite wird im WWW Programm geöffnet."
+
+#: general.py:151
+msgid "Read description"
+msgstr "Beschreibung lesen"
+
+#: general.py:156
+#: framesX3.py:71
+msgid "Comment/Uncomment"
 msgstr ""
 
-#: pinguino.py:155
-#: pinguino.py:446
-msgid "Welcome to Pinguino IDE"
+#: general.py:157
+#: framesX3.py:74
+msgid "Increase Indent"
 msgstr ""
 
-#: pinguino.py:210
-#: pinguino.py:579
-#: framesX3.py:113
-msgid "Tools"
+#: general.py:158
+#: framesX3.py:77
+msgid "Decrease Indent"
 msgstr ""
 
-#: pinguino.py:314
-#: framesX3.py:117
-msgid "Output"
-msgstr ""
-
-#: pinguino.py:426
-msgid "unknown"
-msgstr ""
-
-#: pinguino.py:469
-msgid "Upgrading ..."
-msgstr ""
-
-#: pinguino.py:472
-msgid "Local version is not under revision control."
-msgstr ""
-
-#: pinguino.py:474
-msgid "Done"
-msgstr ""
-
-#: pinguino.py:482
-msgid "Checking repository revision number"
-msgstr ""
-
-#: pinguino.py:485
-msgid "Server temporarily unavailable."
-msgstr ""
-
-#: pinguino.py:490
-msgid "You have the latest version."
-msgstr ""
-
-#: pinguino.py:493
-msgid "Revision "
-msgstr ""
-
-#: pinguino.py:493
-msgid " is available."
-msgstr ""
-
-#: pinguino.py:540
-msgid "Changing board"
-msgstr ""
-
-#: pinguino.py:675
-msgid "Open file first !!"
-msgstr ""
-
-#: pinguino.py:676
-#: editeur.py:322
-#: editeur.py:387
-#: editeur.py:436
-msgid "Warning"
-msgstr ""
-
-#: pinguino.py:681
-msgid "Board:"
-msgstr ""
-
-#: pinguino.py:682
-msgid "Proc:"
-msgstr ""
-
-#: pinguino.py:683
-msgid "File:"
-msgstr ""
-
-#: pinguino.py:701
-msgid "error while compiling file "
-msgstr ""
-
-#: pinguino.py:705
-msgid "error while linking"
-msgstr ""
-
-#: pinguino.py:708
-msgid "compilation done"
-msgstr ""
-
-#: pinguino.py:710
-msgid "seconds process time"
-msgstr ""
-
-#: pinguino.py:739
-msgid "File must be verified/compiled before upload"
-msgstr ""
-
-#: pinguino.py:740
-#: pinguino.py:747
-msgid "Warning!"
-msgstr ""
-
-#: pinguino.py:746
-msgid "File must be saved before upload"
-msgstr ""
-
-#: pinguino.py:796
-msgid "New File"
-msgstr ""
-
-#: pinguino.py:797
-msgid "Open File"
-msgstr ""
-
-#: pinguino.py:798
-msgid "Save File"
-msgstr ""
-
-#: pinguino.py:799
-msgid "Close File"
-msgstr ""
-
-#: pinguino.py:801
+#: general.py:162
 #: framesX3.py:63
-#: general.py:171
-msgid "Undo"
-msgstr ""
-
-#: pinguino.py:802
-#: framesX3.py:66
-#: general.py:172
-msgid "Redo"
-msgstr ""
-
-#: pinguino.py:804
-#: framesX3.py:90
-#: general.py:174
-msgid "Cut"
-msgstr ""
-
-#: pinguino.py:805
-#: framesX3.py:93
-#: general.py:175
-msgid "Copy"
-msgstr ""
-
-#: pinguino.py:806
-#: framesX3.py:96
-#: general.py:176
-msgid "Paste"
-msgstr ""
-
-#: pinguino.py:807
-#: framesX3.py:99
-#: general.py:177
-msgid "Clear"
-msgstr ""
-
 #: pinguino.py:808
-msgid "Select"
-msgstr ""
+msgid "Undo"
+msgstr "Rückgängig"
 
-#: pinguino.py:810
-msgid "Search in File"
-msgstr ""
+#: general.py:163
+#: framesX3.py:66
+#: pinguino.py:809
+msgid "Redo"
+msgstr "Wiederherstellen"
 
+#: general.py:165
+#: framesX3.py:90
 #: pinguino.py:811
-msgid "Replace in File"
-msgstr ""
+msgid "Cut"
+msgstr "Ausschneiden"
 
+#: general.py:166
+#: framesX3.py:93
+#: pinguino.py:812
+msgid "Copy"
+msgstr "Kopieren"
+
+#: general.py:167
+#: framesX3.py:96
+#: pinguino.py:813
+msgid "Paste"
+msgstr "Einfügen"
+
+#: general.py:168
+#: framesX3.py:99
 #: pinguino.py:814
-msgid "Compile"
-msgstr ""
+msgid "Clear"
+msgstr "Löschen"
 
-#: pinguino.py:815
-msgid "Upload to Pinguino Board"
-msgstr ""
-
-#: pinguino.py:817
-msgid "set preferences of Pinguino IDE"
-msgstr ""
-
-#: pinguino.py:819
-msgid "Exit Pinguino IDE"
-msgstr ""
-
-#: pinguino.py:891
-msgid "Board config"
-msgstr ""
-
-#: editeur.py:289
-msgid "Choose a file"
-msgstr ""
-
-#: editeur.py:322
-msgid "File is already opened, reload it ?"
-msgstr ""
-
-#: editeur.py:374
-msgid "Save file as"
-msgstr ""
-
-#: editeur.py:387
-msgid "File already exist, Overwrite it ?"
-msgstr ""
-
-#: editeur.py:436
-msgid "Save file ?"
-msgstr ""
-
-#: debugger.py:120
-#: debugger.py:229
-#: debugger.py:247
-msgid "Connected"
-msgstr ""
-
-#: debugger.py:152
-msgid "Select port..."
-msgstr ""
-
-#: debugger.py:231
-#: debugger.py:250
-#: debugger.py:269
-msgid "No device connected"
-msgstr ""
-
-#: debugger.py:242
-msgid "Debugging!"
-msgstr ""
-
-#: debugger.py:274
-msgid "device disconnected"
+#: general.py:170
+msgid "Clear All"
 msgstr ""
 
 #: framesX3.py:27
 msgid "New"
-msgstr ""
+msgstr "Neu"
 
 #: framesX3.py:30
 msgid "Open"
-msgstr ""
+msgstr "Öffnen"
 
 #: framesX3.py:33
 msgid "Save"
-msgstr ""
+msgstr "Sichern"
 
 #: framesX3.py:36
 msgid "Save as"
-msgstr ""
+msgstr "Sichern als"
 
 #: framesX3.py:39
 msgid "Close"
-msgstr ""
+msgstr "Schliessen"
 
 #: framesX3.py:44
 msgid "Save all"
@@ -293,7 +115,7 @@ msgstr ""
 
 #: framesX3.py:47
 msgid "Close all"
-msgstr ""
+msgstr "Alle schliessen"
 
 #: framesX3.py:53
 msgid "Recents"
@@ -304,37 +126,22 @@ msgid "Exit"
 msgstr ""
 
 #: framesX3.py:60
-#: framesX3.py:832
+#: framesX3.py:840
 msgid "File"
-msgstr ""
-
-#: framesX3.py:71
-#: general.py:165
-msgid "Comment/Uncomment"
-msgstr ""
-
-#: framesX3.py:74
-#: general.py:166
-msgid "Increase Indent"
-msgstr ""
-
-#: framesX3.py:77
-#: general.py:167
-msgid "Decrease Indent"
-msgstr ""
+msgstr "Datei"
 
 #: framesX3.py:82
 msgid "Find"
-msgstr ""
+msgstr "Suchen"
 
 #: framesX3.py:85
-#: framesX3.py:880
+#: framesX3.py:888
 msgid "Replace"
-msgstr ""
+msgstr "Ersetzen"
 
 #: framesX3.py:102
 msgid "Select all"
-msgstr ""
+msgstr "Alles asuwählen"
 
 #: framesX3.py:107
 msgid "Preferences..."
@@ -342,7 +149,18 @@ msgstr ""
 
 #: framesX3.py:110
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
+
+#: framesX3.py:113
+#: pinguino.py:208
+#: pinguino.py:583
+msgid "Tools"
+msgstr "Werkzeuge"
+
+#: framesX3.py:117
+#: pinguino.py:314
+msgid "Output"
+msgstr "Ausgabe"
 
 #: framesX3.py:121
 msgid "Toolbar"
@@ -377,315 +195,500 @@ msgid "Upgrade"
 msgstr ""
 
 #: framesX3.py:149
+#: pinguino.py:496
 msgid "Revision"
 msgstr ""
 
-#: framesX3.py:151
-msgid "Pinguino"
+#: framesX3.py:153
+#: pinguino.py:821
+msgid "Compile"
+msgstr "Übersetzen"
+
+#: framesX3.py:156
+msgid "Upload"
 msgstr ""
 
-#: framesX3.py:154
+#: framesX3.py:159
+msgid "Pinguino"
+msgstr "Pinguino"
+
+#: framesX3.py:162
 msgid "Keywords"
 msgstr ""
 
-#: framesX3.py:158
+#: framesX3.py:166
 msgid "Website"
-msgstr ""
+msgstr "WWW Seite"
 
-#: framesX3.py:161
+#: framesX3.py:169
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
-#: framesX3.py:164
+#: framesX3.py:172
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
-#: framesX3.py:167
+#: framesX3.py:175
 msgid "Blog"
-msgstr ""
+msgstr "Blog"
 
-#: framesX3.py:170
+#: framesX3.py:178
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
-#: framesX3.py:173
+#: framesX3.py:181
 msgid "Shop"
-msgstr ""
+msgstr "Shop"
 
-#: framesX3.py:176
+#: framesX3.py:184
 msgid "Links"
-msgstr ""
+msgstr "Links"
 
-#: framesX3.py:180
+#: framesX3.py:188
 msgid "About..."
-msgstr ""
+msgstr "Über ..."
 
-#: framesX3.py:183
+#: framesX3.py:191
 msgid "Help"
-msgstr ""
+msgstr "Hilfe"
 
-#: framesX3.py:197
+#: framesX3.py:205
 msgid "Pinguino Functions"
-msgstr ""
+msgstr "Pinguino Funktionen"
 
-#: framesX3.py:209
+#: framesX3.py:217
 msgid " "
 msgstr ""
 
-#: framesX3.py:274
+#: framesX3.py:282
 msgid "Preferences"
 msgstr ""
 
-#: framesX3.py:286
-#: framesX3.py:296
+#: framesX3.py:294
+#: framesX3.py:304
 msgid "Appearance"
 msgstr ""
 
-#: framesX3.py:286
+#: framesX3.py:294
 msgid "Source Code Font/Size"
 msgstr ""
 
-#: framesX3.py:286
+#: framesX3.py:294
 msgid "Auto-completion"
 msgstr ""
 
-#: framesX3.py:286
+#: framesX3.py:294
 msgid "Auto-insert"
 msgstr ""
 
-#: framesX3.py:286
+#: framesX3.py:294
 msgid "Open/Save files"
 msgstr ""
 
-#: framesX3.py:286
+#: framesX3.py:294
 msgid "Highlight"
 msgstr ""
 
-#: framesX3.py:310
+#: framesX3.py:318
 msgid "Theme"
-msgstr ""
+msgstr "Thema"
 
-#: framesX3.py:325
+#: framesX3.py:333
 msgid "appearance"
 msgstr ""
 
-#: framesX3.py:334
+#: framesX3.py:342
 msgid "Use default"
 msgstr ""
 
-#: framesX3.py:340
+#: framesX3.py:348
 msgid "Use selected"
 msgstr ""
 
-#: framesX3.py:353
+#: framesX3.py:361
 msgid "Tab size"
 msgstr ""
 
-#: framesX3.py:369
+#: framesX3.py:377
 msgid "souce_code_font_size"
 msgstr ""
 
-#: framesX3.py:376
+#: framesX3.py:384
 msgid "Source completion"
 msgstr ""
 
-#: framesX3.py:385
+#: framesX3.py:393
 msgid "After characters"
 msgstr ""
 
-#: framesX3.py:391
+#: framesX3.py:399
 msgid "Disable auto-completer"
 msgstr ""
 
-#: framesX3.py:397
+#: framesX3.py:405
 msgid "Items count"
 msgstr ""
 
-#: framesX3.py:404
+#: framesX3.py:412
 msgid "Insert \"()\" in the functions."
 msgstr ""
 
-#: framesX3.py:411
+#: framesX3.py:419
 msgid "autocompletion"
 msgstr ""
 
-#: framesX3.py:418
+#: framesX3.py:426
 msgid "Auto-close"
 msgstr ""
 
-#: framesX3.py:424
+#: framesX3.py:432
 msgid "Brackets: []"
 msgstr ""
 
-#: framesX3.py:430
+#: framesX3.py:438
 msgid "Double quotes: \"\""
 msgstr ""
 
-#: framesX3.py:436
+#: framesX3.py:444
 msgid "Keys: {}"
 msgstr ""
 
-#: framesX3.py:442
+#: framesX3.py:450
 msgid "Parentheses: ()"
 msgstr ""
 
-#: framesX3.py:448
+#: framesX3.py:456
 msgid "Single quotes: ''"
 msgstr ""
 
-#: framesX3.py:454
+#: framesX3.py:462
 msgid "auto_insert"
 msgstr ""
 
-#: framesX3.py:458
+#: framesX3.py:466
 msgid "New file"
-msgstr ""
+msgstr "Neue Datei"
 
-#: framesX3.py:463
+#: framesX3.py:471
 msgid "With template"
 msgstr ""
 
-#: framesX3.py:466
+#: framesX3.py:474
 msgid "Empty"
-msgstr ""
+msgstr "Leer"
 
-#: framesX3.py:476
+#: framesX3.py:484
 msgid "Auto-save"
 msgstr ""
 
-#: framesX3.py:483
+#: framesX3.py:491
 msgid "Each (sec)"
 msgstr ""
 
-#: framesX3.py:489
-#: framesX3.py:507
+#: framesX3.py:497
+#: framesX3.py:515
 msgid "Never"
-msgstr ""
+msgstr "Nie"
 
-#: framesX3.py:499
+#: framesX3.py:507
 msgid "Open last files"
-msgstr ""
+msgstr "Die letzte Datei öffnen"
 
-#: framesX3.py:504
+#: framesX3.py:512
 msgid "All existing files"
 msgstr ""
 
-#: framesX3.py:520
+#: framesX3.py:528
 msgid "open_save_files"
 msgstr ""
 
-#: framesX3.py:527
-msgid "Search and Replace"
-msgstr ""
-
 #: framesX3.py:535
+msgid "Search and Replace"
+msgstr "Suchen und Ersetzen"
+
+#: framesX3.py:543
 msgid "Code Navigation"
 msgstr ""
 
-#: framesX3.py:543
+#: framesX3.py:551
 msgid "Selection"
-msgstr ""
+msgstr "Auswahl"
 
-#: framesX3.py:554
+#: framesX3.py:562
 msgid "highligh"
 msgstr ""
 
-#: framesX3.py:570
+#: framesX3.py:578
 msgid "Restore Defaults"
 msgstr ""
 
-#: framesX3.py:576
+#: framesX3.py:584
 msgid "Apply"
 msgstr ""
 
-#: framesX3.py:579
+#: framesX3.py:587
 msgid "Ok"
 msgstr ""
 
-#: framesX3.py:607
+#: framesX3.py:615
 msgid "Pinguino IDE x.3"
 msgstr ""
 
-#: framesX3.py:633
+#: framesX3.py:641
 msgid "Editor"
 msgstr ""
 
-#: framesX3.py:681
+#: framesX3.py:689
 msgid ">>>"
 msgstr ""
 
-#: framesX3.py:687
+#: framesX3.py:695
 msgid "Send"
 msgstr ""
 
-#: framesX3.py:720
+#: framesX3.py:728
 msgid "Directories"
 msgstr ""
 
-#: framesX3.py:739
+#: framesX3.py:747
 msgid "Files"
-msgstr ""
+msgstr "Dateien"
 
-#: framesX3.py:748
+#: framesX3.py:756
 msgid "*.*"
-msgstr ""
+msgstr "*.*"
 
-#: framesX3.py:748
+#: framesX3.py:756
 msgid "*.pde"
-msgstr ""
+msgstr "*.pde"
 
-#: framesX3.py:762
+#: framesX3.py:770
 msgid "Documents"
-msgstr ""
+msgstr "Dokumente"
 
-#: framesX3.py:772
+#: framesX3.py:780
 msgid "Functions"
-msgstr ""
+msgstr "Funktionen"
 
-#: framesX3.py:793
+#: framesX3.py:801
 msgid "Variables"
-msgstr ""
+msgstr "Variablen"
 
-#: framesX3.py:808
+#: framesX3.py:816
 msgid "Directives"
 msgstr ""
 
-#: framesX3.py:839
+#: framesX3.py:847
 msgid "Search:"
-msgstr ""
+msgstr "Suche:"
 
-#: framesX3.py:850
+#: framesX3.py:858
 msgid "Replace:"
-msgstr ""
+msgstr "Ersetze:"
 
-#: framesX3.py:866
+#: framesX3.py:874
 msgid "Previous"
 msgstr ""
 
-#: framesX3.py:869
+#: framesX3.py:877
 msgid "Next"
 msgstr ""
 
-#: framesX3.py:883
+#: framesX3.py:891
 msgid "Replace all"
 msgstr ""
 
-#: framesX3.py:907
+#: framesX3.py:915
 msgid "Search"
-msgstr ""
+msgstr "Suche"
 
-#: framesX3.py:937
+#: framesX3.py:945
 msgid "Auto-completer"
 msgstr ""
 
-#: general.py:159
-msgid "Open wiki page in the web browser"
+#: editeur.py:289
+msgid "Choose a file"
+msgstr "eine Datei auswählen"
+
+#: editeur.py:322
+msgid "File is already opened, reload it ?"
+msgstr "Dei Datei ist anders geöffnet, erst neu laden?"
+
+#: editeur.py:322
+#: editeur.py:387
+#: editeur.py:436
+#: pinguino.py:681
+msgid "Warning"
+msgstr "Warnung"
+
+#: editeur.py:374
+msgid "Save file as"
+msgstr "die Datei sichern als "
+
+#: editeur.py:387
+msgid "File already exist, Overwrite it ?"
+msgstr "Die Datei existiert, diese überschreiben?"
+
+#: editeur.py:436
+msgid "Save file ?"
+msgstr "Die Datei sichern?"
+
+#: pinguino.py:151
+#: pinguino.py:152
+msgid "loading..."
+msgstr "laden ..."
+
+#: pinguino.py:152
+#: pinguino.py:449
+msgid "Welcome to Pinguino IDE"
+msgstr "Willkommen in der Pinguino IDE"
+
+#: pinguino.py:429
+msgid "unknown"
+msgstr "unbekannt"
+
+#: pinguino.py:472
+msgid "Upgrading ..."
 msgstr ""
 
-#: general.py:160
-msgid "Read description"
+#: pinguino.py:475
+msgid "Local version is not under revision control."
 msgstr ""
 
-#: general.py:179
-msgid "Clear All"
+#: pinguino.py:477
+msgid "Done"
 msgstr ""
+
+#: pinguino.py:485
+msgid "Checking repository revision number"
+msgstr ""
+
+#: pinguino.py:488
+msgid "Server temporarily unavailable."
+msgstr "Server zeitweise nicht verfügbar."
+
+#: pinguino.py:493
+msgid "You have the latest version."
+msgstr "Du hast die letzte Version."
+
+#: pinguino.py:496
+msgid "is available."
+msgstr " ist verfügbar."
+
+#: pinguino.py:544
+msgid "Changing board"
+msgstr ""
+
+#: pinguino.py:680
+msgid "Open file first !!"
+msgstr "Datei zuerst öffnen !!"
+
+#: pinguino.py:686
+msgid "Board:"
+msgstr "Board:"
+
+#: pinguino.py:687
+msgid "Proc:"
+msgstr ""
+
+#: pinguino.py:688
+msgid "File:"
+msgstr "Datei:"
+
+#: pinguino.py:706
+msgid "error while compiling file "
+msgstr ""
+
+#: pinguino.py:710
+msgid "error while linking"
+msgstr ""
+
+#: pinguino.py:713
+msgid "compilation done"
+msgstr "Übersetzung abgeschlossen"
+
+#: pinguino.py:715
+msgid "seconds process time"
+msgstr ""
+
+#: pinguino.py:744
+msgid "File must be verified/compiled before upload"
+msgstr "Die Datei muß geändert/übersetzt werden, bevor diese hochgeladen werden kann."
+
+#: pinguino.py:745
+#: pinguino.py:752
+msgid "Warning!"
+msgstr "Warnung!"
+
+#: pinguino.py:751
+msgid "File must be saved before upload"
+msgstr "Die Datei muß gespeichert werden, bevor diese hochgeladen werden kann"
+
+#: pinguino.py:803
+msgid "New File"
+msgstr "Neue Datei"
+
+#: pinguino.py:804
+msgid "Open File"
+msgstr "Datei öffnen"
+
+#: pinguino.py:805
+msgid "Save File"
+msgstr "Datei sichern"
+
+#: pinguino.py:806
+msgid "Close File"
+msgstr "Datei schliessen"
+
+#: pinguino.py:815
+msgid "Select"
+msgstr "Auswählen"
+
+#: pinguino.py:817
+msgid "Search in File"
+msgstr "in der Datei suchen"
+
+#: pinguino.py:818
+msgid "Replace in File"
+msgstr "in der Datei ersetzen"
+
+#: pinguino.py:822
+msgid "Upload to Pinguino Board"
+msgstr "hochladen zum Pinguino Board"
+
+#: pinguino.py:824
+msgid "set preferences of Pinguino IDE"
+msgstr ""
+
+#: pinguino.py:826
+msgid "Exit Pinguino IDE"
+msgstr "Verlasse Pinguino IDE"
+
+#: pinguino.py:898
+msgid "Board config"
+msgstr "Boardkonfiguration"
+
+#: debugger.py:120
+#: debugger.py:229
+#: debugger.py:247
+msgid "Connected"
+msgstr "verbunden"
+
+#: debugger.py:152
+msgid "Select port..."
+msgstr "Port auswählen"
+
+#: debugger.py:231
+#: debugger.py:250
+#: debugger.py:269
+msgid "No device connected"
+msgstr "kein Gerät angeschlossen"
+
+#: debugger.py:242
+msgid "Debugging!"
+msgstr ""
+
+#: debugger.py:274
+msgid "device disconnected"
+msgstr "Gerät entfernt"
+
