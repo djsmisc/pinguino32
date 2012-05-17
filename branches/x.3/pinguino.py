@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import wx, os
+import wx, os, sys
 from wxgui.pinguino import getOptions, Pinguino, setGui
 from wxgui._trad import _
 
@@ -49,9 +49,17 @@ class MySplashScreen(wx.SplashScreen):
 ########################################################################
 class MyApp(wx.App):
     def OnInit(self):
-        splash = MySplashScreen()
-        splash.Show()
-        return True
+		if sys.platform=='darwin':
+			setGui(True)
+			frame = Pinguino(None)
+			frame.__initPinguino__(None)
+			app.SetTopWindow(frame)
+			#app.cent
+			frame.Show()
+		else:			
+			splash = MySplashScreen()
+			splash.Show()
+		return True
 
 
 #----------------------------------------------------------------------
