@@ -528,49 +528,52 @@ class Pinguino(framePinguinoX, Editor):
 
     def OnBoard(self, event):
 
-	# clear all the lists before rebuild them
-	del self.rw[:]
-	del self.regobject[:]
-	del self.keywordList[:]
-	del self.reservedword[:]
-	del self.libinstructions[:]
-	
-	if event == None: self.curBoard = boardlist[0]
-	else:
-	    self.curBoard = boardlist[event.Int]
-	    #self.setWaitCursor()
-	
-	#self.readlib(self.curBoard) #So slow
-	self.displaymsg(_("Changing board")+"...\n", 1)
-	t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-	t.start()
+		# clear all the lists before rebuild them
+		del self.rw[:]
+		del self.regobject[:]
+		del self.keywordList[:]
+		del self.reservedword[:]
+		del self.libinstructions[:]
+		
+		if event == None: self.curBoard = boardlist[0]
+		else:
+			self.curBoard = boardlist[event.Int]
+			#self.setWaitCursor()
+		
+		#self.readlib(self.curBoard) #So slow
+		self.displaymsg(_("Changing board")+"...\n", 1)
+		if sys.platform=='darwin':
+			self.readlib(self.curBoard) #So slow
+		else:
+			t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+			t.start()
 
 
 
-	#self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
-	    
-	if event != None:
-	    event.Skip()
-	    #self.setNormalCursor()
+		#self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
+			
+		if event != None:
+			event.Skip()
+			#self.setNormalCursor()
 	
 	
     #----------------------------------------------------------------------
     def setBoard(self, name):
-	# clear all the lists before rebuild them
-	del self.rw[:]
-	del self.regobject[:]
-	del self.keywordList[:]
-	del self.reservedword[:]
-	del self.libinstructions[:]
-	
-	for board in boardlist:
-	    if name == board.name:
-		self.curBoard = board
-		break
-    
-	self.readlib(self.curBoard) #So slow	
-	#t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-	#t.start()
+		# clear all the lists before rebuild them
+		del self.rw[:]
+		del self.regobject[:]
+		del self.keywordList[:]
+		del self.reservedword[:]
+		del self.libinstructions[:]
+		
+		for board in boardlist:
+			if name == board.name:
+				self.curBoard = board
+				break
+		
+		self.readlib(self.curBoard) #So slow	
+		#t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+		#t.start()
 
 # ------------------------------------------------------------------------------
 # OnPaneClose: wx.aui managed window is about to be closed
