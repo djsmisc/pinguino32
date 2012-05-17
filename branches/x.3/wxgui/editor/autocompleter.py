@@ -59,14 +59,17 @@ class AutoCompleter():
     def onCharEvent(self, event):
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         
-        if event.GetKeyCode() in [wx.WXK_BACK,]:
+        if event.GetKeyCode() in [wx.WXK_BACK, wx.WXK_ESCAPE, wx.WXK_DELETE,]:
             event.Skip()
             return
         try:
-            textEdit.AddText(chr(event.GetKeyCode()))
             
             try: key = chr(event.GetKeyCode())
-            except: key = None
+            except:
+                event.Skip()
+                return 
+            
+            textEdit.AddText(key)
             
             if self.IDE.getElse("Insert", "brackets", "False") == "True" and key == "[":
                 textEdit.InsertText(textEdit.CurrentPos, "]")
@@ -124,13 +127,6 @@ class AutoCompleter():
             event.Skip()
             return
 
-        
-        #try: chr(event.KeyCode)
-        #except:
-            #self.Close()
-            #event.Skip()
-            #return 
-        
 
         self.index = self.IDE.wordUnderCursor(True)
 
@@ -143,6 +139,7 @@ class AutoCompleter():
 
     #----------------------------------------------------------------------
     def addItem(self, name, icon):
+        if icon in ["u8", "u16", "u32", "u64"]: icon = "ux"
         self.listCtrlAutocompleter.InsertImageStringItem(0, name, self.GetIconCompleter(icon))
         self.listCtrlAutocompleter.SetItemData(0, 1)  
 
@@ -179,6 +176,11 @@ class AutoCompleter():
         if event.GetText() in self.IDE.keywordList and enable == "True":
             textEdit.InsertText(textEdit.CurrentPos, "()")
             textEdit.CharRight()
+            self.Close()
+            return 
+            
+        textEdit.InsertText(textEdit.CurrentPos, " ")
+        textEdit.CharRight()    
 
         self.Close()
 

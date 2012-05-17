@@ -114,14 +114,14 @@ except:
     fichier.close()
     perror()
 
-try:
-    import wx.aui
-    fichier.writelines('wx.aui successfully loaded\n')
-except:
-    fichier.writelines('wx.aui failed\n')
-    fichier.writelines('Try to re-install WXPython 2.8\n')
-    fichier.close()
-    perror()
+#try:
+    #import wx.aui
+    #fichier.writelines('wx.aui successfully loaded\n')
+#except:
+    #fichier.writelines('wx.aui failed\n')
+    #fichier.writelines('Try to re-install WXPython 2.8\n')
+    #fichier.close()
+    #perror()
 
 try:	
     import re
