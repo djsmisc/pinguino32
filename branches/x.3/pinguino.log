@@ -1,11 +1,10 @@
-Pinguino started at Tue May 15 13:49:56 2012
+Pinguino started at Thu May 17 18:12:28 2012
 
 Python version is OK (>=2.5)
 System host is GNU/Linux
 8-bit compiler OK.
 32-bit compiler OK.
 wx.python successfully loaded
-wx.aui successfully loaded
 Regex successfully loaded
 Shutil successfully loaded
 Subprocess successfully loaded

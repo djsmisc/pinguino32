@@ -120,10 +120,10 @@ class File:
         text = textEdit.GetText().split("\n")
         
         tipos="int|float|char|BOOL|short|long|double|"\
-            "byte|word|struct|union|enum|void|u8"        
+            "byte|word|struct|union|enum|u8|u16|u32|u64"        
         
-        ReFunction = "[\s]*(unsigned)*[\s]*(" + tipos + ")[*]*[\s]*([\w]+)[\s]*\((.*)\)"
-        ReVariable = "[\s]*(unsigned)*[\s]*(" + tipos + ")[\s]*(.*);"
+        ReFunction = "[\s]*(unsigned|volatile)*[\s]*(" + tipos + "|void" ")[*]*[\s]*([\w]+)[\s]*\(([^)]*)\)"
+        ReVariable = "[\s]*(unsigned|volatile)*[\s]*(" + tipos + ")[\s]*(.*);"
         ReDefines = "[\s]*#(define|ifndef|endif)[ ]+([\S]*)[ ]+([\S]*)"
         ReInclude = "[\s]*#include[ ]+<[\s]*([\S]*)[\s]*>"
 

@@ -268,12 +268,12 @@ class Debugger:
                 except UnboundLocalError:
                     self.logwindow.WriteText(_("No device connected")+"!")
                     self.menu.menuItemDebugNone.Check()
-                    #wx.PostEvent(self, ResultEventDebug(None)) 
+                    wx.PostEvent(self, ResultEventDebug(None)) 
 
                 except serial.serialutil.SerialException:
                     self.logwindow.WriteText("\n"+_("device disconnected")+"!")
                     self.menu.menuItemDebugNone.Check()
-                    #wx.PostEvent(self, ResultEventDebug(None))
+                    wx.PostEvent(self, ResultEventDebug(None))
                 except:
                     pass
 
