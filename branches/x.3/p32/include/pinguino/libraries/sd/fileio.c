@@ -11,6 +11,10 @@
 	based on original code by Regis Blanchot and FatFS example for PIC24
 	----------------------------------------------------------------------------
  	[30-03-12][hgmvanbeek@gmail.com][Some cards have no card detect and no write protect]
+	07 May 2012	As part of providing support for PIC32 Pinguino Micro and
+					potentially other cards removed #if defined (PIC32_Pinguino) etc
+					and #endif in function mount() so that SDCS is set via mount 
+					for all cards.
 */
 
 #ifndef __FILEIO_C__
@@ -38,9 +42,7 @@ char mount(unsigned char pin) {
 	int flag, i;
 	FRESULT r;
 
-#if !defined (PIC32_PINGUINO) && !defined (PIC32_PINGUINO_OTG) && !defined (PIC32_PINGUINO_MICRO)
 	SDCS = pin;
-#endif
 
 	// 0. init the I/Os
 #ifdef SD_DEBUG

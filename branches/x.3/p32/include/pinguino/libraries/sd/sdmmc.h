@@ -4,8 +4,18 @@
 ** 07/20/07 v1.4 LDJ
 ** 11/22/07 v1.5 LDJ
 **
-	[29-03-12][hgmvanbeek@gmail.com][defined PIC32-PINGUINO-MICRO pinning]
-    [30-03-12][hgmvanbeek@gmail.com][Yellow Led indicates SD activity ]
+** [29-03-12][hgmvanbeek@gmail.com][defined PIC32-PINGUINO-MICRO pinning]
+** [30-03-12][hgmvanbeek@gmail.com][Yellow Led indicates SD activity ]
+** 07 May 2012	As part of providing support for PIC32 Pinguino Micro, and
+					potentially other boards, remmed out board specific definitions
+					of SDCS, READ_LED and WRITE_LED.  SDCS is now set via the
+					SD.mount() function.  For the PIC32 Pinguino, the PIC32 Pinguino
+					OTG and the PIC32 Pinguino Micro, LED1, the green LED is
+					connected to the SCK2 line so the green LED flashes, all be it
+					very briefly every time a card is accessed.
+					Previous lines have been left in for reference
+					and also as a prototype if boards with Card Detect or Write 
+					Protect are added in future.
 */
 
 #ifndef __SDMMC_H__
@@ -16,30 +26,33 @@
 /*
 				PIC32MX4xx
 FUNCTION		SPI1 / SPI2
-SCK			RD10 / RG6  = D13
-SDI			RC4  / RG7  = D12
-SDO	 		RD0  / RG8  = D11
-CS				RB1  / RG9  = D10
+SCK			RD10 / RG6  = OTG D13
+SDI			RC4  / RG7  = OTG D12
+SDO	 		RD0  / RG8  = OTG D11
+SS				RB1  / RG9  = OTG D10 but separate line used for SDCS
 CD				RF0  / NA
 WD				RF1  / NA
 
-TO CHECK: When using PIC32MX4xx (PIC32-Pinguino), the SPI2 port cannot be chosen
-or the code must be modified to ignore the CD and WD inputs.
+Note: When using PIC32MX4xx (PIC32-Pinguino/OTG/Micro), as the SPI2 port is 
+		used the code has been be modified to ignore the CD and WD inputs.
 */
 
 // I/O definitions
+// 07 May 2012 - not used SDCS now set via SD.mount() function for all boards
 #if defined(PIC32_PINGUINO) || defined (PIC32_PINGUINO_OTG)
-	//#define READ_LED			13
-	//#define WRITE_LED			13
-	//#define SDWP				   // Write Protect input
-	//#define SDCD					// Card Detect input
-	//#define SDCS					8	// D8_MMC_#SS Card Select output
+	//#define SDCS				 8	// RB13/MMC_#SS Card Select output
+	//#define READ_LED		30	// Yellow Led	
+	//#define WRITE_LED		30	// Yellow Led
+	//#define SDWP					// No Write Protect input
+	//#define SDCD					// No Card Detect input
 #endif
 
 #ifdef PIC32_PINGUINO_MICRO
-	#define SDCS				40	// RB13/MMC_#SS Card Select output
-	#define READ_LED			10  // Yellow Led
-	#define WRITE_LED			10  // Yellow Led
+	//#define SDCS				40	// RB13/MMC_#SS Card Select output
+	//#define READ_LED		10	// Yellow Led
+	//#define WRITE_LED		10	// Yellow Led
+	//#define SDWP					// No Write Protect input
+	//#define SDCD					// No Card Detect input
 #endif
 
 // SD card commands

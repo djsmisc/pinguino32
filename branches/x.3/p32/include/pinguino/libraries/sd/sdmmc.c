@@ -5,6 +5,10 @@
 ** 7/14/07 v2.0 LDJ
 **
 [30-03-12][hgmvanbeek@gmail.com][Some cards have no card detect and no write protect]
+** 07 May 2012	Changes made to allow SD card library to support
+**					PIC32 Pinguino and PIC32 Pinguino Micro that have neither
+**					SD card presence nor WP switch detection switches.
+**					see functions getCD() and getWP() below.
 */
 
 #ifndef __SDMMC_C__
@@ -234,7 +238,8 @@ int writeSECTOR(LBA a, char *p)
 //          FALSE card not present
 int getCD(void)
 {
-#if defined (PIC32_PINGUINO_OTG) || (PIC32_PINGUINO_MICRO)
+// 07 May 2012 ** Added specific support for PIC32 Pinguino and Micro
+#if defined (PIC32_PINGUINO) || defined (PIC32_PINGUINO_OTG) || defined (PIC32_PINGUINO_MICRO)
 	return TRUE;
 #else
 	return (SDCD);
@@ -246,7 +251,8 @@ int getCD(void)
 //          FALSE write protection tab OPEN
 int getWP(void)
 {
-#if defined (PIC32_PINGUINO_OTG) || (PIC32_PINGUINO_MICRO)
+// 07 May 2012 ** Added specific support for PIC32 Pinguino and Micro
+#if defined (PIC32_PINGUINO) || defined (PIC32_PINGUINO_OTG) || defined (PIC32_PINGUINO_MICRO)
 	return FALSE;
 #else
 	return (SDWP);
