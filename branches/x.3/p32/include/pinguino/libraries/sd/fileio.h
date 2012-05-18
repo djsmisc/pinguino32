@@ -6,6 +6,10 @@
  ** 01/16/03	v1.0 LDJ PIC18
  ** 08/17/06 v2.0 LDJ PIC24 and SDMMC cards porting
 [30-03-12][hgmvanbeek@gmail.com][Some cards have no card detect and no write protect]
+07 May 2012	As part of providing support for PIC32 Pinguino Micro and
+				potentially other cards removed #if !defined (PIC32_Pinguino) etc
+				and #endif under "globals" so that SDCS is declared in the same
+				manner for all cards and then set via the SD.mount() function.
  */
 
 #ifndef __FILEIO_H__
@@ -52,9 +56,7 @@ typedef struct {
 } DIRTABLE;
 
 // globals
-#if !defined (PIC32_PINGUINO) && !defined (PIC32_PINGUINO_OTG) && !defined (PIC32_PINGUINO_MICRO)
 char SDCS;
-#endif
 
 char FError; // error mail box
 FATFS *Fat; // mounting info for storage device

@@ -11,9 +11,22 @@
  /
  /-------------------------------------------------------------------------*/
 
+// 07 May 2012 - Changes made to allow SD card library to support
+//						PIC32 Pinguino Micro and potentially other cards that
+//						do not support the use of the RTCC library.
+
 #include "ff.h"
 #include "diskio.h"
-#include <rtcc.c>
+
+// For boards known to support the RTCC library ***Added 07 May 2012
+// to allow SD Library to support PIC32 Pinguino Micro, which
+// which does not have a RTCC crystal and associated components,
+// and would not operate if #include <rtcc.c> is included.
+// See also changes to get_fattime() below.
+
+#if defined (PIC32_PINGUINO) || defined (PIC32_PINGUINO_OTG)
+	#include <rtcc.c>
+#endif
 
 /* Definitions for MMC/SDC command */
 #define CMD0   (0)			/* GO_IDLE_STATE */
@@ -550,8 +563,6 @@ void disk_timerproc(void) {
 /*---------------------------------------------------------*/
 /* User Provided RTC Function for FatFs module             */
 /*---------------------------------------------------------*/
-/* User Provided RTC Function for FatFs module             */
-/*---------------------------------------------------------*/
 /* This is a real time clock service to be called from     */
 /* FatFs module. Any valid time must be returned even if   */
 /* the system does not support an RTC.                     */
@@ -568,14 +579,21 @@ void disk_timerproc(void) {
 
 DWORD get_fattime(void) {
 	DWORD tmr = 0;
+
+// Pre-processor commands added so only use RTCC if the board is known
+// to support the RTCC ** Added 07 May 2012
+
+// For boards known to support the RTCC library
+
+#if defined (PIC32_PINGUINO) || defined (PIC32_PINGUINO_OTG)
 	rtccTime pTm, cTm;
 	rtccDate pDt, cDt;
 
 	RTCC_GetTimeDate(&pTm, &pDt);	// get time and date from RTC
-									// assumes RTC has been set and is running
-									// OK - could be expanded to check that RTC
-									// is running and that a valid value is
-									// being returned by the RTC
+											// assumes RTC has been set and is running
+											// OK - could be expanded to check that RTC
+											// is running and that a valid value is
+											// being returned by the RTC
 	cTm = RTCC_ConvertTime(&pTm);	// convert time from bcd to decimal format
 	cDt = RTCC_ConvertDate(&pDt);	// convert date from bcd to decimal format
 
@@ -584,10 +602,20 @@ DWORD get_fattime(void) {
 //			| (WORD) (pTm.hour) | (WORD) (pTm.min) | (WORD) (pTm.sec);
 	tmr = cDt.year + 20;
 	tmr = (tmr << 4) | cDt.mon;		// shifts left 4 bits and adds month
-	tmr = (tmr << 5) | cDt.mday;	// shifts left 5 bits and adds m.day
-	tmr = (tmr << 5) | cTm.hour;	// shifts left 5 bits and adds hour
+	tmr = (tmr << 5) | cDt.mday;		// shifts left 5 bits and adds m.day
+	tmr = (tmr << 5) | cTm.hour;		// shifts left 5 bits and adds hour
 	tmr = (tmr << 6) | cTm.min;		// shift left 6 bits and adds minutes
 	tmr = (tmr << 5) | (cTm.sec/2);	// shifts left 5 bits and adds seconds/2
+
+//	For other boards use a fixed date and time of 01 Jan 2012 12:00:00
+#else
+     tmr = 12 + 20;
+     tmr = (tmr << 4) | 1;       // shifts left 4 bits and adds month
+     tmr = (tmr << 5) | 1;    	// shifts left 5 bits and adds m.day
+     tmr = (tmr << 5) | 12;    	// shifts left 5 bits and adds hour
+     tmr = (tmr << 6) | 0;       // shift left 6 bits and adds minutes
+     tmr = (tmr << 5) | (0/2);   // shifts left 5 bits and adds seconds/2
+#endif
 
 	return tmr;
 }
