@@ -46,10 +46,15 @@ endif
 # select the cdc library / Jean-pierre Mandon 2012
 # ------------------------------------------------------------------------------
 
-ifeq ($(BOARD),PIC32_PINGUINO_220)
-CDCLIBRARY = libcdc220.a
-else
 CDCLIBRARY = libcdc.a
+ifeq ($(BOARD),PIC32_PINGUINO_220)
+	CDCLIBRARY = libcdc220.a
+endif
+ifeq ($(BOARD),GENERIC32MX250F128)
+	CDCLIBRARY = libcdc220.a
+endif
+ifeq ($(BOARD),GENERIC32MX220F032)
+	CDCLIBRARY = libcdc220.a
 endif
 
 # ------------------------------------------------------------------------------
