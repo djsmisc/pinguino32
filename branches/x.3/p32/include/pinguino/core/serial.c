@@ -25,6 +25,7 @@
 	// 21 set.2011 Marcus Fazzi added support for UART3
 	// 23 set.2011 Marcus Fazzi added support for UART4,5 AND 6
 	// 18 feb.2012 jp mandon added support for PIC32-PIGUINO-220
+	// 19 may.2012 jp mandon added support for GENERIC32MX250F128 and GENERIC32MX220F032
 	
 #ifndef __SERIAL__
 #define __SERIAL__
@@ -537,7 +538,7 @@ void SerialIntConfigure(u8 port, u8 priority, u8 subpriority)
 	switch (port)
 	{
 		case UART1:
-			#ifdef PIC32_PINGUINO_220
+			#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 				IPC8bits.U1IP = priority;
 				IPC8bits.U1IS = subpriority;
 				IEC1bits.U1RXIE=1;
@@ -547,7 +548,7 @@ void SerialIntConfigure(u8 port, u8 priority, u8 subpriority)
 			#endif
 			break;
 		case UART2:
-			#ifdef PIC32_PINGUINO_220
+			#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 				IPC9bits.U2IP = priority;
 				IPC9bits.U2IS = subpriority;
 				IEC1bits.U2RXIE=1;
@@ -937,40 +938,40 @@ void SerialGetDataBuffer(u8 port)
 void Serial1Interrupt(void)
 {
 	// Is this an RX interrupt from UART1 ?
-	#ifdef PIC32_PINGUINO_220
+	#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U1RXIF)
 	#else	
 	if (IntGetFlag(INT_UART1_RECEIVER))
 	#endif
 	{
 		SerialGetDataBuffer(UART1);
-		#ifdef PIC32_PINGUINO_220
+		#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U1RXIF=0;
 		#else	
 		IntClearFlag(INT_UART1_RECEIVER);
 		#endif
 	}
 	// Is this an TX interrupt from UART1 ?
-	#ifdef PIC32_PINGUINO_220
+	#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U1TXIF)
 	#else		
 	if (IntGetFlag(INT_UART1_TRANSMITTER))
 	#endif
 	{
-		#ifdef PIC32_PINGUINO_220
+		#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U1TXIF=0;
 		#else			
 		IntClearFlag(INT_UART1_TRANSMITTER);
 		#endif
 	}
 	// Is this an ERROR interrupt from UART1 ?
-	#ifdef PIC32_PINGUINO_220
+	#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U1EIF)
 	#else	
 	if (IntGetFlag(INT_UART1_ERROR))
 	#endif
 	{
-		#ifdef PIC32_PINGUINO_220
+		#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U1EIF=0;
 		#else	
 		IntClearFlag(INT_UART1_ERROR);
@@ -982,7 +983,7 @@ void Serial1Interrupt(void)
 void Serial2Interrupt(void)
 {
 	// Is this an RX interrupt from UART2 ?
-	#ifdef PIC32_PINGUINO_220
+	#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U2RXIF)
 	#else
 	if (IntGetFlag(INT_UART2_RECEIVER))
@@ -991,33 +992,33 @@ void Serial2Interrupt(void)
 	{
 		SerialGetDataBuffer(UART2);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
-		#ifdef PIC32_PINGUINO_220
+		#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U2RXIF=0;
 		#else		
 		IntClearFlag(INT_UART2_RECEIVER);
 		#endif
 	}
 	// Is this an TX interrupt from UART2 ?
-	#ifdef PIC32_PINGUINO_220
+	#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U2TXIF)
 	#else	
 	if (IntGetFlag(INT_UART2_TRANSMITTER))
 	#endif
 	{
-		#ifdef PIC32_PINGUINO_220
+		#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U2TXIF=0;
 		#else	
 		IntClearFlag(INT_UART2_TRANSMITTER);
 		#endif
 	}
 	// Is this an ERROR interrupt from UART2 ?
-	#ifdef PIC32_PINGUINO_220
+	#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U2EIF)
 	#else	
 	if (IntGetFlag(INT_UART2_ERROR))
 	#endif
 	{
-		#ifdef PIC32_PINGUINO_220
+		#ifd defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U2EIF=0;
 		#else	
 		IntClearFlag(INT_UART2_ERROR);
