@@ -73,7 +73,7 @@ int main()
 	while (1)
 	{
 		#ifdef __USBCDC
-			#ifdef __32MX220F032D__
+			#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
 				USB_Service( );
 			#else
 				CDCTxService();

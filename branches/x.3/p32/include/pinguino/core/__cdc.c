@@ -90,7 +90,9 @@ void INTEnableInterrupts()
 	IntEnable(INT_USB);
 }
 
-#ifndef __32MX220F032D__
+#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
+// nothing to do
+#else
 
 // this is the Set Line coding CallBack function
  
@@ -154,10 +156,10 @@ void USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event_usb)
 void CDC_init()
 {
 	USBDeviceInit();		// Initializes USB module SFRs and firmware
-	#ifndef __32MX220F032D__
+	#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
+		// nothing to do
+	#else
 		USBDeviceAttach();
-//	#else
-//		Delayms(1500);
 	#endif
 	Delayms(1500);
 }
