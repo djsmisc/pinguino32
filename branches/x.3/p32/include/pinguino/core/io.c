@@ -91,6 +91,33 @@ void IOsetRemap()
 	CFGCONbits.PMDLOCK=1;	
 	SystemLock();
 #endif
+#if defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
+	SystemUnlock();
+	CFGCONbits.IOLOCK=0;			// unlock configuration
+	CFGCONbits.PMDLOCK=0;
+	/*
+	#ifdef __SERIAL__
+		U2RXRbits.U2RXR=6;			// Define U2RX as RC8 ( D0 )
+		RPC9Rbits.RPC9R=2;			// Define U2TX as RC9 ( D1 )
+		U1RXRbits.U1RXR=2;			// Define U1RX as RA4 ( UEXT SERIAL )
+		RPB4Rbits.RPB4R=1;			// Define U1TX as RB4 ( UEXT SERIAL )
+	#endif
+	#ifdef __SPI__
+		SDI1Rbits.SDI1R=5;			// Define SDI1 as RA8 ( UEXT SPI )
+		RPA9Rbits.RPA9R=3;			// Define SDO1 as RA9 ( UEXT SPI )
+	#endif
+	*/ 
+	#ifdef __PWM__
+		RPB4Rbits.RPB4R  =0b0101;	// PWM1 = OC1 as pin 8  = RB4
+		RPB5Rbits.RPB5R  =0b0101;	// PWM2 = OC2 as pin 6  = RB5
+		RPB14Rbits.RPB14R=0b0101;	// PWM3 = OC3 as pin 1  = RB14
+		RPB13Rbits.RPB13R =0b0101;	// PWM4 = OC4 as pin 2  = RB13
+		RPA4Rbits.RPA4R =0b0110;	// PWM5 = OC5 as pin 7  = RA4
+	#endif
+	CFGCONbits.IOLOCK=1;			// relock configuration
+	CFGCONbits.PMDLOCK=1;	
+	SystemLock();
+#endif
 }
 
 #endif /* __REMAP_C */
