@@ -406,7 +406,7 @@ class Pinguino(framePinguinoX, Editor):
             self.osdir = 'macosx'
             self.debug_port = '/dev/tty.usbmodem1912'
             self.c8 = 'sdcc'
-            self.u32 = 'ubw32'
+            self.u32 = 'mphidflash'
             self.make = 'make'
         elif sys.platform == 'win32':
             self.osdir = 'win32'
