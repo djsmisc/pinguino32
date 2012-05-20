@@ -10,7 +10,6 @@
 	CHANGELOG:
 	[20-02-12][Régis Blanchot][Exported in this file]
 	[25-02-12][Régis Blanchot][Added PWM remap. for PIC32 PINGUINO 220]
-	[19-05-12][Jean-Pierre Mandon][Added ANALOG,PWM,SPI,SERIAL remap for GENERIC 32 bits board]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -67,10 +66,10 @@ void IOsetDigital()
 // PIC32 Peripheral Remappage
 void IOsetRemap()
 {
-SystemUnlock();
-CFGCONbits.IOLOCK=0;			// unlock configuration
-CFGCONbits.PMDLOCK=0;
 #if defined(PIC32_PINGUINO_220)
+	SystemUnlock();
+	CFGCONbits.IOLOCK=0;			// unlock configuration
+	CFGCONbits.PMDLOCK=0;
 	#ifdef __SERIAL__
 		U2RXRbits.U2RXR=6;			// Define U2RX as RC8 ( D0 )
 		RPC9Rbits.RPC9R=2;			// Define U2TX as RC9 ( D1 )
@@ -88,30 +87,10 @@ CFGCONbits.PMDLOCK=0;
 		RPB13Rbits.RPB13R=0b0110;	// PWM3 = OC5 as D12 = RB13
 		RPB15Rbits.RPB15R=0b0101;	// PWM4 = OC1 as D13 = RB15
 	#endif
+	CFGCONbits.IOLOCK=1;			// relock configuration
+	CFGCONbits.PMDLOCK=1;	
+	SystemLock();
 #endif
-#if defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
-	#ifdef __SERIAL__
-		U2RXRbits.U2RXR=0b0010;		// Define U2RX as RB1 ( pin 11 )
-		RPB0Rbits.RPB0R=0b0010;		// Define U2TX as RB0 ( pin 12 )
-		U1RXRbits.U1RXR=0b0100;		// Define U1RX as RB2 ( pin 10 )
-		RPB3Rbits.RPB3R=0b0001;		// Define U1TX as RB3 ( pin 9 )
-	#endif
-	#ifdef __SPI__
-		SDI1Rbits.SDI1R=0b0001;		// Define SDI1 as RB5 ( pin 6 )
-		RPB13Rbits.RPB13R=0b0011;	// Define SDO1 as RB13 ( pin 2 )
-		RPB7Rbits.RPB7R=0b0011;		// define SS1 as RB7 ( pin 5 )
-	#endif
-	#ifdef __PWM__
-		RPB4Rbits.RPB4R  =0b0101;	// PWM1 = OC1 as pin 8  = RB4
-		RPB5Rbits.RPB5R  =0b0101;	// PWM2 = OC2 as pin 6  = RB5
-		RPB14Rbits.RPB14R=0b0101;	// PWM3 = OC3 as pin 1  = RB14
-		RPB13Rbits.RPB13R =0b0101;	// PWM4 = OC4 as pin 2  = RB13
-		RPA4Rbits.RPA4R =0b0110;	// PWM5 = OC5 as pin 7  = RA4
-	#endif
-#endif
-CFGCONbits.IOLOCK=1;			// relock configuration
-CFGCONbits.PMDLOCK=1;	
-SystemLock();
 }
 
 #endif /* __REMAP_C */
