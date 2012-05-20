@@ -173,7 +173,7 @@ void CDCputs(u8 *buffer, u8 length)
 	{
 		if (mUSBUSARTIsTxTrfReady())
 			break;
-		#ifdef __32MX220F032D__	
+		#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
 			USB_Service();
 		#else
 			CDCTxService();
@@ -182,7 +182,7 @@ void CDCputs(u8 *buffer, u8 length)
 	if (i > 0)
 	{
 		putUSBUSART(buffer,length);
-		#ifdef __32MX220F032D__	
+		#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
 			USB_Service();
 		#else
 			CDCTxService();
@@ -195,7 +195,7 @@ u8 CDCgets(u8 *buffer)
 {
 	u8 numBytesRead;
 		
-	#ifdef __32MX220F032D__
+	#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
 		USB_Service();
 		numBytesRead = USB_Service_CDC_GetString( buffer );
 	#else
