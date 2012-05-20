@@ -102,6 +102,7 @@ class Pinguino(framePinguinoX, Editor):
     debug_handle=False
     debug_thread=False
     debug_flag=False
+    in_verify=0
 
 
     noname=0
@@ -451,8 +452,9 @@ class Pinguino(framePinguinoX, Editor):
 	
     #----------------------------------------------------------------------
     def autoSaveFiles(self, event):
-	if self.getElse("Open/Save", "autosave", "False") == "True":
-	    self.OnSaveAll()
+		if self.in_verify==0:
+			if self.getElse("Open/Save", "autosave", "False") == "True":
+				self.OnSaveAll()
 	    
 	    
 # ------------------------------------------------------------------------------
@@ -677,6 +679,7 @@ class Pinguino(framePinguinoX, Editor):
 
     def OnVerify(self, event):
         global lang
+        self.in_verify=1
         t0 = time.time()
         if self.GetPath()==-1:
             dlg = wx.MessageDialog(self,
@@ -718,7 +721,8 @@ class Pinguino(framePinguinoX, Editor):
                 self.displaymsg(str(time.time() - t0) + " "+_("seconds process time")+"\n",0)
                 os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
                 #os.remove(filename+".c")
-
+        self.in_verify=0
+        
 # ------------------------------------------------------------------------------
 # OnUpload:
 # ------------------------------------------------------------------------------
