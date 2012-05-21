@@ -26,9 +26,8 @@
 
 #ifndef __PIN_H
 #define __PIN_H
-	
-#ifdef PICUNO_EQUO
 
+#if defined(PICUNO_EQUO)
 	#define C7 		0
 //	#define RC7 	0
 	#define RX 		0
@@ -121,7 +120,7 @@
 	#define LED1	20
 	#define USERLED	20
 
-#else // Generic 18F2550 or Generic 18F4550
+#else // Generic 18Fx550 or Generic 18Fx5j50
 
 	#define B0 0
 //	#define RB0 0
@@ -194,6 +193,11 @@
 	#define C2 12
 //	#define RC2 12
 	#define CCP1 12
+
+    #if defined(PIC18F26J50) || defined(PIC18F46J50)
+	#define LED1	12
+	#define USERLED	12
+    #endif
 	
 	#define A0 13
 //	#define RA0 13
@@ -211,13 +215,15 @@
 //	#define RA3 16
 	#define AN3 16
 
+    #if defined(PIC18F2550) || defined(PIC18F4550)
 	// run led pin
 	#define A4 18
 	//#define RA4 18
-	#define RUNLED		PORTAbits.RA4
-	#define LED1		PORTAbits.RA4
-	#define USERLED	PORTAbits.RA4
-
+	#define RUNLED 18
+	#define LED1 18
+	#define USERLED 18
+    #endif
+    
 	#define A5 17
 //	#define RA5 17
 	#define AN4 17

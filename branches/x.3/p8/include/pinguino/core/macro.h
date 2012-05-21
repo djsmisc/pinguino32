@@ -13,24 +13,24 @@
 
 	#define nop()					{_asm nop _endasm;}
 	#define clrwdt()				{_asm clrwdt _endasm;}
-	#define reset()				{_asm reset _endasm;}
-	#define sleep()				{OSCCONbits.IDLEN = 0;\
-										_asm sleep _endasm;}
+	#define reset()				    {_asm reset _endasm;}
+	#define sleep()				    {OSCCONbits.IDLEN = 0;\
+									_asm sleep _endasm;}
 
 	#define interrupts()			INTCONbits.GIE  = 1;
-	#define noInterrupts()		INTCONbits.GIE  = 0;
+	#define noInterrupts()		    INTCONbits.GIE  = 0;
 
 	/// C
 
-	#define NoEndLoop		while(1)
+	#define NoEndLoop		        while(1)
 
 	/// BYTES
 
-	#define highByte(x)			((unsigned char) ((x) >> 8))
+	#define highByte(x)			    ((unsigned char) ((x) >> 8))
 	#define high8(x)				((unsigned char) ((x) >> 8))
-	#define lowByte(x)			((unsigned char) ((x) & 0xFF))
-	#define low8(x)				((unsigned char) ((x) & 0xFF))
-	#define make16(low,high)	(low | (high << 8))
+	#define lowByte(x)			    ((unsigned char) ((x) & 0xFF))
+	#define low8(x)				    ((unsigned char) ((x) & 0xFF))
+	#define make16(low,high)	    (low | (high << 8))
 
 	/// MATH
 
@@ -74,7 +74,7 @@
 
 	// Clear (0) bit #n from octet
 	#define BitClear(octet, n) \
-		(octet &= !(1 << n))
+		(octet &= ~(1 << n))			//(octet &= !(1 << n))
 
 	#define BitWrite(value, bit, bitvalue) \
 		(bitvalue ? bitSet(value, bit) : bitClear(value, bit))

@@ -37,11 +37,6 @@ from uploader import baseUploader
 class uploader8(baseUploader):
     """ upload .hex into pinguino device """
 
-    # --------------------------------------------------------------------------
-    memstart                        = 0x0C00        # bootloader offset
-    memend                          = 0
-    # --------------------------------------------------------------------------
-
     # General Data Packet Structure (usbBuf)
     # --------------------------------------------------------------------------
     #    __________________
@@ -99,7 +94,7 @@ class uploader8(baseUploader):
     INTERFACE_ID                    =    0x00
     TIMEOUT                         =    1200
 
-    # Table with supported USB devices
+    # Table with Microchip USB devices
     # device_id:[PIC name] 
     # --------------------------------------------------------------------------
 
@@ -155,6 +150,8 @@ class uploader8(baseUploader):
 
 # ------------------------------------------------------------------------------
     def initDevice(self):
+# ------------------------------------------------------------------------------
+#   TODO: to move in uploader.py ?
 # ------------------------------------------------------------------------------
         """ init pinguino device """
         #conf = self.device.configurations[0]
@@ -338,7 +335,7 @@ class uploader8(baseUploader):
                 address = (address_Hi << 16) + address_Lo
 
             # code size
-            if address >= self.board.memstart:
+            if (address >= self.board.memstart) and (address < self.board.memend):
                 codesize = codesize + byte_count
 
             # max address
@@ -353,6 +350,7 @@ class uploader8(baseUploader):
         # ----------------------------------------------------------------------
 
         for i in range(max_address - self.board.memstart):
+        #for i in range(max_address + 64 - self.board.memstart):
             data.append(0xFF)
 
         # 2nd pass : parse bytes from line into data
@@ -395,6 +393,7 @@ class uploader8(baseUploader):
         # ----------------------------------------------------------------------
 
         if "j" in board.proc :
+            #print board.proc
             sizeMax = (self.board.memend - self.board.memstart) / 1024
             size1024 = (max_address - self.board.memstart) / 1024
             if size1024 > sizeMax:
@@ -419,6 +418,7 @@ class uploader8(baseUploader):
 
         usbBuf = []
         for addr in range(self.board.memstart, max_address):
+        #for addr in range(self.board.memstart, max_address + 64):
             index = addr - self.board.memstart
             #print hex(addr)
             if addr % self.BLOCKSIZE == 0:

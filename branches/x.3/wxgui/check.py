@@ -175,7 +175,7 @@ except:
     fichier.writelines('Webbrowser failed\n')
     fichier.writelines('Try to re-install Python\n')
     fichier.close()
-    perror()	
+    perror()
 
 try:	
     import usb		    	    # USB interface for Python
