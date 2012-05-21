@@ -197,7 +197,6 @@ class Pinguino(framePinguinoX, Editor):
         self._mgr.AddPane(self.lat, self.PaneLateral, '')
         self._mgr.AddPane(self.panelEditor, wx.CENTER , '')
         self._mgr.Update()
-		
 
 # ------------------------------------------------------------------------------
 # Lateral
@@ -208,9 +207,6 @@ class Pinguino(framePinguinoX, Editor):
         self.PaneLateral.MinimizeButton(True)
         self.PaneLateral.Caption(_("Tools"))
         self.PaneLateral.Right()
-        
-        
-
 
 # ------------------------------------------------------------------------------
 # Event Management
@@ -767,7 +763,7 @@ class Pinguino(framePinguinoX, Editor):
 
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
-# ------------------------------------------------------------------------------	
+# ------------------------------------------------------------------------------
 
     def DrawToolbar(self):
 	try: self.toolbar.ClearTools()
@@ -1131,12 +1127,12 @@ class Pinguino(framePinguinoX, Editor):
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'boot4'
-#                            "--extended",\
+#                                    "--extended",\
+#                                    "--opt-code-size",\
+#                                    "--denable-peeps",\
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                     "-mpic16",\
-                                    "--denable-peeps",\
                                     "--obanksel=9",\
-                                    "--opt-code-size",\
                                     "--optimize-cmp",\
                                     "--optimize-df",\
                                     "-p" + board.proc,\
@@ -1178,9 +1174,6 @@ class Pinguino(framePinguinoX, Editor):
             print("link " + board.proc)
         else:
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
-#                                  '-llibpuf.lib',\
-#                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
-#                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
             if board.arch == 8:
                 if board.bldr == 'boot2':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
@@ -1211,15 +1204,16 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                   stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'boot4'
+#                                  "--denable-peeps",\
+#                                  "--opt-code-size",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "-mpic16",\
-                                  "--denable-peeps",\
                                   "--obanksel=9",\
-                                  "--opt-code-size",\
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--no-crt",\
+                                  "--ivt-loc=" + str(board.memstart),\
                                   "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\
@@ -1235,7 +1229,7 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                   stdout=fichier, stderr=STDOUT)
-            else:
+            else:#if board.arch == 32:
                 # "PDEDIR=" + os.path.dirname(self.GetPath()),\
                 # can't be used with Command Line version since editor isn't used
                 sortie=Popen([self.make,\
@@ -1321,6 +1315,7 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def OnAutoCompleter(self):
+	
 	CharsCount = 1
 	try: CharsCount = self.getConfig("Completer", "charscount") - 1
 	except: self.setConfig("Completer", "charscount", str(CharsCount+1))

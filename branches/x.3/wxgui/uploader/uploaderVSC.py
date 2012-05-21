@@ -36,11 +36,6 @@ from uploader import baseUploader
 class uploaderVSC(baseUploader):
 	""" upload .hex into pinguino device """
 
-	# --------------------------------------------------------------------------
-	memstart						= 0x2000		# bootloader offset
-	memend							= 0
-	# --------------------------------------------------------------------------
-	
 	# Vasco Bulk bootloader commands
 	# --------------------------------------------------------------------------
 
@@ -70,10 +65,10 @@ class uploaderVSC(baseUploader):
 
 	devices_table = \
 	{  
-		0x1260: ['18f2455'	, 0x06000, 0xFF ],
-		0x1240: ['18f2550'	, 0x08000, 0xFF ],
-		0x1220: ['18f4455'	, 0x06000, 0xFF ],
-		0x1200: ['18f4550'	, 0x08000, 0xFF ],
+		0x1260: ['18f2455'],
+		0x1240: ['18f2550'],
+		0x1220: ['18f4455'],
+		0x1200: ['18f4550']
 	}
 
 # ------------------------------------------------------------------------------
@@ -86,13 +81,6 @@ class uploaderVSC(baseUploader):
 			handle.claimInterface(self.VSC_INTERFACE_ID)
 			return handle
 		return self.ERR_USB_INIT1
-# ------------------------------------------------------------------------------
-	def getDeviceFlash(self, proc):
-# ------------------------------------------------------------------------------
-		for n in self.devices_table:
-			if self.devices_table[n][0] == proc :
-				return self.devices_table[n][1] - self.memstart			
-		return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
 	def usbWrite(self, usbBuf):
 # ------------------------------------------------------------------------------
@@ -132,7 +120,7 @@ class uploaderVSC(baseUploader):
 		for i in range(len(block)):
 			usbBuf = usbBuf + chr(block[i])
 		# write data packet on usb device
-		print self.usbWrite(usbBuf)
+		self.usbWrite(usbBuf)
 # ------------------------------------------------------------------------------
 	def hexWrite(self):
 # ------------------------------------------------------------------------------
@@ -190,11 +178,11 @@ class uploaderVSC(baseUploader):
 				address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
 
 			# code size
-			if address >= self.memstart:
+			if address >= self.board.memstart:
 				codesize = codesize + byte_count
 
 			# max address
-			if (address > old_address) and (address < self.memend):
+			if (address > old_address) and (address < self.board.memend):
 				max_address = address + byte_count
 				old_address = address
 
@@ -203,9 +191,9 @@ class uploaderVSC(baseUploader):
 
 		# fill data sequence with 0xFF
 		# ----------------------------------------------------------------------
-		# 32-bit : mem start at 0x9D0000000000 ?
 
-		for i in range(self.memstart, max_address+64):
+		for i in range(self.board.memstart, max_address + 64):
+			#print i
 			data.append(0xFF)
 
 		# 2nd pass : parse bytes from line into data
@@ -214,7 +202,6 @@ class uploaderVSC(baseUploader):
 		address_Hi	= 0
 
 		for line in lines:
-			print line
 			byte_count = int(line[1:3], 16)
 			address_Lo = int(line[3:7], 16) # four hex digits
 			record_type= int(line[7:9], 16)
@@ -223,9 +210,9 @@ class uploaderVSC(baseUploader):
 
 			# data record
 			if record_type == self.Data_Record:
-				if (address >= self.memstart) and (address < self.memend):
+				if (address >= self.board.memstart) and (address < self.board.memend):
 					for i in range(byte_count):
-						data[address - self.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
+						data[address - self.board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 
 			# end of file record
 			elif record_type == self.End_Of_File_Record:
@@ -241,17 +228,17 @@ class uploaderVSC(baseUploader):
 
 		# erase and write blocks 
 		# ----------------------------------------------------------------------
-		print(self.memstart,"  ",max_address,"  ",self.memend)
+
 		usbBuf = []
-		for i in range(self.memstart, max_address+64):
+		for i in range(self.board.memstart, max_address + 64):
 			if i % 64 == 0:
 				self.eraseBlock(i)
-			if i % self.VSC_BLOCKSIZE == 0:			
+			if i % self.VSC_BLOCKSIZE == 0:
 				if usbBuf != []:
 					self.issueBlock(i - self.VSC_BLOCKSIZE, usbBuf)
 				usbBuf = []
-			if data[i - self.memstart] != []:
-				usbBuf.append(data[i - self.memstart])
+			if data[i - self.board.memstart] != []:
+				usbBuf.append(data[i - self.board.memstart])
 
 		return self.ERR_NONE
 # ------------------------------------------------------------------------------
@@ -289,24 +276,12 @@ class uploaderVSC(baseUploader):
 			self.txtWrite("Try to restart the bootloader mode\n")
 			return
 
-		# find out flash memory characteristics
-		# ----------------------------------------------------------------------
-
-		#print "Vendor: %s - %s" % (hex(device.idVendor), handle.getString(device.iManufacturer, 30))
-		#print "Product: %s - %s" % (hex(device.idProduct), handle.getString(device.iProduct, 30))
-		#print "Serial: %s" % handle.getString(device.iSerialNumber, 30)
-		#self.getDeviceFamily(self, handle):
-		#self.getProgramMemory(self, handle):
-		self.memend = self.getDeviceFlash(self.board.proc)
-		memfree = self.memend - self.memstart
-		self.txtWrite("%d bytes free (%d KB)\n" % (memfree, memfree/1024))
-
 		# find out bootloader version
 		# ----------------------------------------------------------------------
 
 		#product = handle.getString(device.iProduct, 30)
 		#manufacturer = handle.getString(device.iManufacturer, 30)
-		self.txtWrite("Pinguino bootloader v2.12\n")
+		self.txtWrite("Bootloader v2.12\n")
 
 		# start writing
 		# ----------------------------------------------------------------------

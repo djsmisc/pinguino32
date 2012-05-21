@@ -79,8 +79,10 @@ class Uploader:
     def __init__(self, logwindow, filename, Board):
         self.logwindow = logwindow
         self.filename = filename
-        if type(Board) == type([]): self.curBoard = self.getBoard(Board)
-        else: self.curBoard = Board
+        if type(Board) == type([]):
+            self.curBoard = self.getBoard(Board)
+        else:
+            self.curBoard = Board
 
         parameters = (self.logwindow, filename + '.hex', self.curBoard)
 

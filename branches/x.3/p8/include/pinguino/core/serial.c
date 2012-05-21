@@ -33,7 +33,7 @@
 #include <stdio.c>
 #include <typedef.h>
 
-#define FLOAT 10
+//#define FLOAT 10
 
 #ifndef RXBUFFERLENGTH
 #define RXBUFFERLENGTH 128              // rx buffer length
@@ -53,6 +53,7 @@ void serial_begin(unsigned long baudrate)
 	spbrg=(48000000/(4*baudrate))-1;
 	highbyte=spbrg/256;
 	lowbyte=spbrg%256;
+#if defined (PIC18F2550) || defined (PIC18F4550)
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
 	BAUDCONbits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
@@ -60,15 +61,31 @@ void serial_begin(unsigned long baudrate)
 	RCSTA=0x90;                             // set RCEN and SPEN
 	BAUDCONbits.RCIDL=1;			// set receive active
 	PIE1bits.RCIE=1;                        // enable interrupt on RX
-	INTCONbits.PEIE=1;                      // enable peripheral interrupts
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
+	TXSTAbits.TXEN=1;                       // enable TX
+#endif
+#ifdef PIC18F26J50
+	TXSTA1bits.BRGH=1;               	  	// set BRGH bit
+	BAUDCON1bits.BRG16=1;					// set 16 bits SPBRG
+	SPBRGH1=highbyte;                        // set UART speed SPBRGH
+	SPBRG1=lowbyte;   						// set UART speed SPBRGL
+	RCSTA1=0x90;                             // set RCEN and SPEN
+	BAUDCON1bits.RCIDL=1;			// set receive active
+    PIR1bits.RC1IF = 0;		// Clear interrupt flag
+	PIE1bits.RC1IE=1;                        // enable interrupt on RX
+	IPR1bits.RC1IP=1;                        // define high priority for RX interrupt
+	TXSTA1bits.TXEN=1;                       // enable TX
+	PIR1bits.TX1IF=0;
+	PIE1bits.TX1IE=0;
+#endif
 	wpointer=1;                             // initialize write pointer
 	rpointer=1;                             // initialize read pointer
-	TXSTAbits.TXEN=1;                       // enable TX
+	INTCONbits.PEIE=1;                      // enable peripheral interrupts
 	INTCONbits.GIE=1;
+	RCONbits.IPEN = 1;       // enable interrupt priorities
 }
 
-// new character receive ?	
+// new character receive ?
 unsigned char serial_available()
 {
 	return(wpointer!=rpointer);
@@ -77,8 +94,14 @@ unsigned char serial_available()
 // write char
 void serial_putchar(unsigned char caractere)
 {
+#if defined (PIC18F2550) || defined (PIC18F4550)
 	while (!TXSTAbits.TRMT);
 	TXREG=caractere;		        // yes, send char
+#endif
+#ifdef PIC18F26J50
+	while (!TXSTA1bits.TRMT);
+	TXREG1=caractere;		        // yes, send char
+#endif
 }
 
 // serial_int is called by interruption service routine
@@ -87,8 +110,14 @@ void serial_interrupt(void)
 	char caractere;
 	unsigned char newwp;
 
+#if defined (PIC18F2550) || defined (PIC18F4550)
 	PIR1bits.RCIF=0;				// clear RX interrupt flag
 	caractere=RCREG;				// take received char
+#endif
+#ifdef PIC18F26J50
+	PIR1bits.RC1IF=0;				// clear RX interrupt flag
+	caractere=RCREG1;				// take received char
+#endif
 	if (wpointer!=RXBUFFERLENGTH-1)	// if not last place in buffer
 		newwp=wpointer+1;			// place=place+1
 	else
@@ -182,7 +211,7 @@ void serial_print(char *fmt,...)
 	va_list ap;
 	unsigned char *s;
 	//char chaine[8];
-        
+
 	va_start(ap, fmt);
 	s = va_start(ap, fmt);
 
@@ -202,7 +231,7 @@ void serial_print(char *fmt,...)
 			break;
 		case BIN:
 			serial_printf("%b",fmt);
-			break;           
+			break;
 		default:
 			serial_printf(fmt);
 			break;
@@ -227,7 +256,7 @@ void serial_print(char *fmt,...)
 		case BIN:
 			uitoa((int)fmt, chaine, 2);
 			serial_printf(chaine);
-			break;           
+			break;
 		default:
 			serial_printf(fmt);
 			break;

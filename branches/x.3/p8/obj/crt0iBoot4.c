@@ -29,8 +29,8 @@
 /*	----------------------------------------------------------------------------
 	based on Microchip MPLAB-C18 startup files
 	2011-11-20 - regis blanchot - modified for pinguino project
-	compilation : sdcc -c -y -o crt0i18fxxxx.o -mpic16 -p18fxxxx crt0i.c
- 	mv crt0i18fxxxx.o p8/obj
+	compilation : ./sdcc -c -o crt0i18f26j50.o -mpic16 -p18f26j50 crt0iBoot4.c
+ 	mv crt0i18f26j50.o p8/obj
  	-------------------------------------------------------------------------*/
 
 extern stack_end;
@@ -69,7 +69,7 @@ extern void low_priority_isr (void);
 	Revectored entry points 
 	-------------------------------------------------------------------------*/
 
-#pragma code _entry 0x1000
+#pragma code _entry 0x0C00
 void _entry (void) __naked __interrupt 0
 {
 //	pinguino_main ();
@@ -78,13 +78,13 @@ void _entry (void) __naked __interrupt 0
 	__endasm;
 }
 
-#pragma code _hpisr 0x1008
+#pragma code _hpisr 0x0C08
 void _hpisr (void) __naked __interrupt 1
 {
 	high_priority_isr ();
 }
 
-#pragma code _lpisr 0x1018
+#pragma code _lpisr 0x0C18
 void _lpisr (void) __naked __interrupt 2
 {
 	low_priority_isr ();

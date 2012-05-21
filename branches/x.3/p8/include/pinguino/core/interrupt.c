@@ -6,7 +6,7 @@
 	FIRST RELEASE:	24-12-2010
 	LAST RELEASE:	17-05-2011
 	----------------------------------------------------------------------------
-	TODO : 
+	TODO :
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,10 @@
 		#define USERINT
 	#endif
 
+    #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC1826J50) && !defined(PIC1846J50)
+        #error "Error : this library is intended to be used only with 8-bit Pinguino" 
+    #endif
+    
 	#include <pic18fregs.h>
 	//#include <macro.h>
 
@@ -180,7 +184,7 @@
 	///
 	/// T3CON: TIMER3 CONTROL REGISTER
 	///
-	
+
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T3_16BIT			0b11111111 // 1 = Enables register read/write of Timer3 in one 16-bit operation
 	#define T3_8BIT				0b01111111 // 0 = Enables register read/write of Timer3 in two 8-bit operations
@@ -273,13 +277,25 @@ void detachInterrupt(u8 inter)
 			PIE2bits.OSCFIE = INT_DISABLE;
 			break;
 		case INT_CM:
+		#if defined(PIC18F4550) || defined(PIC18F2550)
 			PIE2bits.CMIE = INT_DISABLE;
+		#endif
+		#ifdef PIC18F26J50
+			PIE2bits.CM1IE = INT_DISABLE;
+		#endif
 			break;
+		#if defined(PIC18F4550) || defined(PIC18F2550)
 		case INT_EE:
 			PIE2bits.EEIE = INT_DISABLE;
 			break;
+		#endif
 		case INT_BCL:
+		#if defined(PIC18F4550) || defined(PIC18F2550)
 			PIE2bits.BCLIE = INT_DISABLE;
+		#endif
+		#ifdef PIC18F26J50
+			PIE2bits.BCL1IE = INT_DISABLE;
+		#endif
 			break;
 		case INT_HLVD:
 			PIE2bits.HLVDIE = INT_DISABLE;
@@ -302,7 +318,7 @@ void detachInterrupt(u8 inter)
 void int_init()
 {
 	u8 i;
-	
+
 	RCONbits.IPEN = 1;					// Enable HP/LP interrupts
 	INTCONbits.GIEH = 1;				// Enable HP interrupts
 	INTCONbits.GIEL = 1;				// Enable LP interrupts
@@ -374,7 +390,7 @@ void int_stop()
 	--------------------------------------------------------------------------*/
 
 #ifdef TMR0INT
-char OnTimer0(callback func, u8 timediv, u16 delay)
+u8 OnTimer0(callback func, u8 timediv, u16 delay)
 {
 	u8 _t0con = 0;
 
@@ -428,7 +444,7 @@ char OnTimer0(callback func, u8 timediv, u16 delay)
 #endif
 
 #ifdef TMR1INT
-char OnTimer1(callback func, u8 timediv, u16 delay)
+u8 OnTimer1(callback func, u8 timediv, u16 delay)
 {
 	u8 _t1con = 0;
 
@@ -526,7 +542,7 @@ void OnRTC(callback func, u16 delay)
 #endif
 
 #ifdef TMR2INT
-char OnTimer2(callback func, u8 timediv, u16 delay)
+u8 OnTimer2(callback func, u8 timediv, u16 delay)
 {
 	u8 _t2con = 0;
 	u8 _pr2 = 0;
@@ -579,7 +595,7 @@ char OnTimer2(callback func, u8 timediv, u16 delay)
 #endif
 
 #ifdef TMR3INT
-char OnTimer3(callback func, u8 timediv, u16 delay)
+u8 OnTimer3(callback func, u8 timediv, u16 delay)
 {
 	u8 _t3con = 0;
 
@@ -949,10 +965,10 @@ void OnEvent(u8 inter, callback func)
 			case INT_BCL:					// bus collision
 				PIR2bits.BCLIF = 0;
 				break;
-			case INT_USB:					// usb 
+			case INT_USB:					// usb
 				PIR2bits.USBIF = 0;
 				break;
-			case INT_SSP:				
+			case INT_SSP:
 				PIR1bits.SSPIF = 0;
 				break;
 		}
@@ -999,7 +1015,7 @@ void OnUSB(callback func)		{	OnEvent(INT_USB, func);	}
 #endif
 
 #ifdef SSPINT
-void OnParallel(callback func)	{	OnEvent(INT_SSP, func);	}
+void OnParallel(callback func)	    {	OnEvent(INT_SSP, func);	}
 void OnI2CRequest(callback func)	{	OnEvent(INT_SSP, func);	}
 void OnI2CReceive(callback func)	{	OnEvent(INT_SSP, func);	}
 #endif

@@ -7,7 +7,7 @@
 	author:			Regis Blanchot
 	contact:		rblanchot@gmail.com 
 	first release:	2011-10-23
-	last release:	2011-11-19
+	last release:	2012-05-04
 	
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@ class Pinguino2550:
 	board='PIC18F2550'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
-	memstart=0x2000
+	memstart=0x2000       # bootloader offset
 	memend=0x7fff
 	shortarg='-p'
 	longarg='--pinguino2550'
@@ -56,7 +56,7 @@ class Pinguino4550:
 	board='PIC18F4550'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
-	memstart=0x2000
+	memstart=0x2000       # bootloader offset
 	memend=0x7fff
 	shortarg='-P'
 	longarg='--pinguino4550'
@@ -70,7 +70,7 @@ class Pinguino26J50:
 	board='PIC18F26J50'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
-	memstart=0x0C00
+	memstart=0x0C00       # bootloader offset
 	memend=0xFFF0
 	shortarg='-j'
 	longarg='--pinguino26j50'
