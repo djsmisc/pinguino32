@@ -524,13 +524,11 @@ class editor:
         elif  k_code == wx.WXK_TAB:
             textEdit = self.stcpage[self.notebookEditor.GetSelection()]
             if textEdit.GetSelectedText() == "":
-                textEdit.InsertText(textEdit.CurrentPos, self.getIndent())
-                for i in self.getIndent(): textEdit.CharRight()
+                textEdit.InsertText(textEdit.CurrentPos, self.getNormIdent())
+                for i in self.getNormIdent(): textEdit.CharRight()
                 return  
     
-    
-        
-    
+
         event.Skip()
         
         
@@ -538,9 +536,19 @@ class editor:
     def getIndent(self):
         indent = " " * self.getElse("Source", "tabSize", 4)
         return indent
+    
+    #----------------------------------------------------------------------
+    def getNormIdent(self):
+        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        columna = textEdit.GetColumn(textEdit.CurrentPos)
+        idn = len(self.getIndent())
+        rango = range(0, columna+idn+1, idn)
+        for i in rango:
+            if columna < i: break
+        norm_indent = i - columna
+        return " " * norm_indent
         
-
-
+    #----------------------------------------------------------------------
     def seteditorproperties(self,reservedword,rw):
         """ set the layout,keywords and layout for syntax"""
         global keywordhelp

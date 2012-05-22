@@ -214,9 +214,9 @@ class General:
     def insertSnippet(self, key):
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
         index = self.wordUnderCursor()
-        for i in index: textEdit.DeleteBack()
         
         line = textEdit.GetCurLineUTF8()[0]
+        
         s = 0
         for i in line:
             if i.isspace(): s += 1
