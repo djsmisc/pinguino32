@@ -150,7 +150,7 @@ void pinguino_main(void)
 #pragma code high_priority_isr 0x2020
 void high_priority_isr(void) interrupt 1
 #else
-void high_priority_isr(void)
+void high_priority_isr(void) __interrupt 1
 #endif
 {
 #ifdef __USBCDC
@@ -232,7 +232,7 @@ void high_priority_isr(void)
 #pragma code low_priority_isr 0x4000
 void low_priority_isr(void) interrupt 2
 #else
-void low_priority_isr(void)
+void low_priority_isr(void) __interrupt 2
 #endif
 {
 #ifdef USERINT
