@@ -1127,14 +1127,14 @@ class Pinguino(framePinguinoX, Editor):
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'boot4'
-#                                    "--extended",\
 #                                    "--opt-code-size",\
-#                                    "--denable-peeps",\
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                     "-mpic16",\
                                     "--obanksel=9",\
                                     "--optimize-cmp",\
                                     "--optimize-df",\
+                                    "--denable-peeps",\
+                                    "--ivt-loc=" + str(board.memstart),\
                                     "-p" + board.proc,\
                                     "-D" + board.board,\
                                     "-D" + board.bldr,\
@@ -1204,7 +1204,6 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                   stdout=fichier, stderr=STDOUT)
                 else:# if board.bldr == 'boot4'
-#                                  "--denable-peeps",\
 #                                  "--opt-code-size",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
@@ -1212,7 +1211,8 @@ class Pinguino(framePinguinoX, Editor):
                                   "--obanksel=9",\
                                   "--optimize-cmp",\
                                   "--optimize-df",\
-                                  "--no-crt",\
+                                  "--denable-peeps",\
+                                  "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0' + board.proc + '.o'),\
                                   "--ivt-loc=" + str(board.memstart),\
                                   "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                                   "-p" + board.proc,\
@@ -1226,7 +1226,6 @@ class Pinguino(framePinguinoX, Editor):
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
                                   '-llibsdcc.lib',\
-                                  os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                   stdout=fichier, stderr=STDOUT)
             else:#if board.arch == 32:
