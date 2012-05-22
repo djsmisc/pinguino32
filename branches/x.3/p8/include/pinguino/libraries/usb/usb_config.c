@@ -121,14 +121,16 @@ __code USB_Configuration_Descriptor libconfiguration_descriptor = {
     ENDPOINT_DESCRIPTOR,                        // Descriptor Type
     0x03,                                       // Endpoint Address
     0x02,                                       // Attribute = Bulk Transfer
-	0x40,0x00,
+//	0x40,0x00, fixed by A. Gentric
+    0x0040,
     0x00},                                      // Poll Intervall
     // Endpoint 2 IN
     {sizeof(USB_Endpoint_Descriptor),           // Size of Descriptor
     ENDPOINT_DESCRIPTOR,                        // Descriptor Type
     0x83,                                       // Endpoint Address
     0x02,                                       // Attribute = Bulk Transfer
-	0x40,0x00,
+//	0x40,0x00, fixed by A. Gentric
+    0x0040,
     0x00}
 };
 #endif
