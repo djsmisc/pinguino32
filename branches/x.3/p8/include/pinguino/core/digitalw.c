@@ -44,13 +44,13 @@ const u8 port[29]={	pB, pB, pB, pB, pB, pB, pB, pB,
 #endif
 
 #ifdef PIC18F2550
-const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,
+const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,
 					_6,_7,_0,_1,_2,
-					_0,_1,_2,_3,_5};
+					_0,_1,_2,_3,_5,_4};
 
-const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB,
+const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB,
 					pC, pC, pC, pC, pC,
-					pA, pA, pA, pA, pA};
+					pA, pA, pA, pA, pA, pA};
 #endif
 
 #ifdef PIC18F26J50
@@ -97,8 +97,7 @@ void digitalwrite(int output,int state)
 	}
 }
 
-/*
-int digitalread(u8 input)
+u8 digitalread(u8 input)
 {
 	switch (port[input])
 	{
@@ -122,8 +121,8 @@ int digitalread(u8 input)
 	}
 	return (0);
 }
-*/
 
+/*
 u8 digitalread(u8 pin)
 {
 	u16 reg;
@@ -153,8 +152,9 @@ u8 digitalread(u8 pin)
 	else
 		return 0;
 }
+*/
 
-void pinmode(int input, int state)
+void pinmode(u8 input, u8 state)
 {
 	switch (port[input])
 	{
