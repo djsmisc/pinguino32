@@ -716,58 +716,6 @@ class panelLateral ( wx.Panel ):
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 		
 		self.notebookLateral = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.documents = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer4 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.m_splitter3 = wx.SplitterWindow( self.documents, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
-		self.m_splitter3.Bind( wx.EVT_IDLE, self.m_splitter3OnIdle )
-		
-		self.m_panel5 = wx.Panel( self.m_splitter3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer5 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.m_staticText1 = wx.StaticText( self.m_panel5, wx.ID_ANY, _("Directories"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText1.Wrap( -1 )
-		self.m_staticText1.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
-		
-		bSizer5.Add( self.m_staticText1, 0, wx.EXPAND, 5 )
-		
-		comboBoxDirChoices = []
-		self.comboBoxDir = wx.ComboBox( self.m_panel5, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, comboBoxDirChoices, 0 )
-		bSizer5.Add( self.comboBoxDir, 0, wx.EXPAND, 5 )
-		
-		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
-		bSizer5.Add( self.listCtrlDir, 1, wx.EXPAND, 5 )
-		
-		self.m_panel5.SetSizer( bSizer5 )
-		self.m_panel5.Layout()
-		bSizer5.Fit( self.m_panel5 )
-		self.m_panel6 = wx.Panel( self.m_splitter3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer6 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.m_staticText2 = wx.StaticText( self.m_panel6, wx.ID_ANY, _("Files"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText2.Wrap( -1 )
-		self.m_staticText2.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
-		
-		bSizer6.Add( self.m_staticText2, 0, wx.EXPAND, 5 )
-		
-		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
-		bSizer6.Add( self.listCtrlFiles, 1, wx.EXPAND, 5 )
-		
-		choiceFileChoices = [ _("*.*"), _("*.pde") ]
-		self.choiceFile = wx.Choice( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceFileChoices, 0 )
-		self.choiceFile.SetSelection( 1 )
-		bSizer6.Add( self.choiceFile, 0, wx.EXPAND, 5 )
-		
-		self.m_panel6.SetSizer( bSizer6 )
-		self.m_panel6.Layout()
-		bSizer6.Fit( self.m_panel6 )
-		self.m_splitter3.SplitHorizontally( self.m_panel5, self.m_panel6, 0 )
-		bSizer4.Add( self.m_splitter3, 1, wx.EXPAND, 5 )
-		
-		self.documents.SetSizer( bSizer4 )
-		self.documents.Layout()
-		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _("Documents"), False )
 		self.file = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer7 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -838,6 +786,58 @@ class panelLateral ( wx.Panel ):
 		self.file.Layout()
 		bSizer7.Fit( self.file )
 		self.notebookLateral.AddPage( self.file, _("File"), True )
+		self.documents = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer4 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_splitter3 = wx.SplitterWindow( self.documents, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.m_splitter3.Bind( wx.EVT_IDLE, self.m_splitter3OnIdle )
+		
+		self.m_panel5 = wx.Panel( self.m_splitter3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer5 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_staticText1 = wx.StaticText( self.m_panel5, wx.ID_ANY, _("Directories"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText1.Wrap( -1 )
+		self.m_staticText1.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
+		
+		bSizer5.Add( self.m_staticText1, 0, wx.EXPAND, 5 )
+		
+		comboBoxDirChoices = []
+		self.comboBoxDir = wx.ComboBox( self.m_panel5, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, comboBoxDirChoices, 0 )
+		bSizer5.Add( self.comboBoxDir, 0, wx.EXPAND, 5 )
+		
+		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
+		bSizer5.Add( self.listCtrlDir, 1, wx.EXPAND, 5 )
+		
+		self.m_panel5.SetSizer( bSizer5 )
+		self.m_panel5.Layout()
+		bSizer5.Fit( self.m_panel5 )
+		self.m_panel6 = wx.Panel( self.m_splitter3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer6 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_staticText2 = wx.StaticText( self.m_panel6, wx.ID_ANY, _("Files"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText2.Wrap( -1 )
+		self.m_staticText2.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
+		
+		bSizer6.Add( self.m_staticText2, 0, wx.EXPAND, 5 )
+		
+		self.listCtrlFiles = wx.ListCtrl( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
+		bSizer6.Add( self.listCtrlFiles, 1, wx.EXPAND, 5 )
+		
+		choiceFileChoices = [ _("*.*"), _("*.pde") ]
+		self.choiceFile = wx.Choice( self.m_panel6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceFileChoices, 0 )
+		self.choiceFile.SetSelection( 1 )
+		bSizer6.Add( self.choiceFile, 0, wx.EXPAND, 5 )
+		
+		self.m_panel6.SetSizer( bSizer6 )
+		self.m_panel6.Layout()
+		bSizer6.Fit( self.m_panel6 )
+		self.m_splitter3.SplitHorizontally( self.m_panel5, self.m_panel6, 0 )
+		bSizer4.Add( self.m_splitter3, 1, wx.EXPAND, 5 )
+		
+		self.documents.SetSizer( bSizer4 )
+		self.documents.Layout()
+		bSizer4.Fit( self.documents )
+		self.notebookLateral.AddPage( self.documents, _("Documents"), False )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
@@ -922,10 +922,6 @@ class panelLateral ( wx.Panel ):
 	def __del__( self ):
 		pass
 	
-	def m_splitter3OnIdle( self, event ):
-		self.m_splitter3.SetSashPosition( 0 )
-		self.m_splitter3.Unbind( wx.EVT_IDLE )
-	
 	def m_splitter4OnIdle( self, event ):
 		self.m_splitter4.SetSashPosition( 119 )
 		self.m_splitter4.Unbind( wx.EVT_IDLE )
@@ -933,6 +929,10 @@ class panelLateral ( wx.Panel ):
 	def m_splitter8OnIdle( self, event ):
 		self.m_splitter8.SetSashPosition( 137 )
 		self.m_splitter8.Unbind( wx.EVT_IDLE )
+	
+	def m_splitter3OnIdle( self, event ):
+		self.m_splitter3.SetSashPosition( 0 )
+		self.m_splitter3.Unbind( wx.EVT_IDLE )
 	
 
 ###########################################################################

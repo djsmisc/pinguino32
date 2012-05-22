@@ -179,8 +179,9 @@ class AutoCompleter():
             self.Close()
             return 
             
-        textEdit.InsertText(textEdit.CurrentPos, " ")
-        textEdit.CharRight()    
+        #Ugly space :)
+        #textEdit.InsertText(textEdit.CurrentPos, " ")
+        #textEdit.CharRight()    
 
         self.Close()
 
