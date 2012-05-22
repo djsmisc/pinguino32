@@ -1212,7 +1212,7 @@ class Pinguino(framePinguinoX, Editor):
                                   "--optimize-cmp",\
                                   "--optimize-df",\
                                   "--denable-peeps",\
-                                  "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0' + board.proc + '.o'),\
+                                  "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                                   "--ivt-loc=" + str(board.memstart),\
                                   "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                                   "-p" + board.proc,\
