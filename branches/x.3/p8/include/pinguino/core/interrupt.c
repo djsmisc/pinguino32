@@ -30,7 +30,7 @@
 		#define USERINT
 	#endif
 
-    #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC1826J50) && !defined(PIC1846J50)
+    #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC18F26J50) && !defined(PIC18F46J50)
         #error "Error : this library is intended to be used only with 8-bit Pinguino" 
     #endif
     
