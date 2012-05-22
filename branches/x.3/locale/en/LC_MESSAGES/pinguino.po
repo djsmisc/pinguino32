@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pinguino x.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-17 13:49-0400\n"
-"PO-Revision-Date: 2012-05-17 13:50-0400\n"
-"Last-Translator: Mf01 (wiki user) \n"
+"POT-Creation-Date: 2012-05-22 13:09-0400\n"
+"PO-Revision-Date: 2012-05-22 13:09-0400\n"
+"Last-Translator: Alexis Sánchez <aasanchez@gmail.com>\n"
 "Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -51,37 +51,37 @@ msgstr ""
 
 #: /home/alexis/Pinguino/x3/locale/sources/general.py:162
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:63
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:808
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:811
 msgid "Undo"
 msgstr "Undo"
 
 #: /home/alexis/Pinguino/x3/locale/sources/general.py:163
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:66
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:809
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:812
 msgid "Redo"
 msgstr "Redo"
 
 #: /home/alexis/Pinguino/x3/locale/sources/general.py:165
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:90
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:811
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:814
 msgid "Cut"
 msgstr "Cut"
 
 #: /home/alexis/Pinguino/x3/locale/sources/general.py:166
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:93
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:812
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:815
 msgid "Copy"
 msgstr "Copy"
 
 #: /home/alexis/Pinguino/x3/locale/sources/general.py:167
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:96
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:813
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:816
 msgid "Paste"
 msgstr "Paste"
 
 #: /home/alexis/Pinguino/x3/locale/sources/general.py:168
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:99
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:814
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:817
 msgid "Clear"
 msgstr "Clear all"
 
@@ -153,12 +153,12 @@ msgstr "Edit"
 
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:113
 #: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:208
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:583
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:584
 msgid "Tools"
 msgstr ""
 
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:117
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:314
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:311
 msgid "Output"
 msgstr ""
 
@@ -195,12 +195,12 @@ msgid "Upgrade"
 msgstr ""
 
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:149
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:496
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:494
 msgid "Revision"
 msgstr ""
 
 #: /home/alexis/Pinguino/x3/locale/sources/framesX3.py:153
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:821
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:824
 msgid "Compile"
 msgstr ""
 
@@ -517,7 +517,7 @@ msgstr ""
 #: /home/alexis/Pinguino/x3/locale/sources/editeur.py:322
 #: /home/alexis/Pinguino/x3/locale/sources/editeur.py:387
 #: /home/alexis/Pinguino/x3/locale/sources/editeur.py:436
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:681
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:683
 msgid "Warning"
 msgstr "Warning"
 
@@ -533,138 +533,138 @@ msgstr ""
 msgid "Save file ?"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:151
 #: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:152
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:153
 msgid "loading..."
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:152
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:449
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:153
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:446
 msgid "Welcome to Pinguino IDE"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:429
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:426
 msgid "unknown"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:472
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:470
 msgid "Upgrading ..."
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:475
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:473
 msgid "Local version is not under revision control."
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:477
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:475
 msgid "Done"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:485
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:483
 msgid "Checking repository revision number"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:488
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:486
 msgid "Server temporarily unavailable."
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:493
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:491
 msgid "You have the latest version."
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:496
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:494
 msgid "is available."
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:544
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:542
 msgid "Changing board"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:680
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:682
 msgid "Open file first !!"
 msgstr "Open file first !!"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:686
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:688
 msgid "Board:"
 msgstr "Board:"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:687
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:689
 msgid "Proc:"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:688
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:690
 msgid "File:"
 msgstr "File:"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:706
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:708
 msgid "error while compiling file "
 msgstr "error while compiling file "
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:710
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:712
 msgid "error while linking"
 msgstr "error while linking"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:713
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:715
 msgid "compilation done"
 msgstr "compilation done"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:715
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:717
 msgid "seconds process time"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:744
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:747
 msgid "File must be verified/compiled before upload"
 msgstr "File must be verified before upload"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:745
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:752
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:748
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:755
 msgid "Warning!"
 msgstr "Warning!"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:751
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:754
 msgid "File must be saved before upload"
 msgstr "File must be saved before upload"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:803
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:806
 msgid "New File"
 msgstr "New File"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:804
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:807
 msgid "Open File"
 msgstr "Open File"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:805
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:808
 msgid "Save File"
 msgstr "Save File"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:806
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:809
 msgid "Close File"
 msgstr "Close File"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:815
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:818
 msgid "Select"
 msgstr "Select All"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:817
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:820
 msgid "Search in File"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:818
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:821
 msgid "Replace in File"
 msgstr "Replace"
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:822
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:825
 msgid "Upload to Pinguino Board"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:824
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:827
 msgid "set preferences of Pinguino IDE"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:826
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:829
 msgid "Exit Pinguino IDE"
 msgstr ""
 
-#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:898
+#: /home/alexis/Pinguino/x3/locale/sources/pinguino.py:901
 msgid "Board config"
 msgstr ""
 
