@@ -71,7 +71,7 @@ class Pinguino26J50:
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x0C00       # bootloader offset
-	memend=0xFFF0
+	memend=0xFFF8
 	shortarg='-j'
 	longarg='--pinguino26j50'
 
