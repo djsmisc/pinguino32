@@ -38,6 +38,8 @@ import wx.stc as stc
 import keyword
 from wxgui._trad import _
 
+from dic import Autocompleter
+
 
 #faces = { 'helv' : 'Arial',
             #'times': 'Times New Roman',
@@ -551,15 +553,13 @@ class editor:
     #----------------------------------------------------------------------
     def seteditorproperties(self,reservedword,rw):
         """ set the layout,keywords and layout for syntax"""
-        global keywordhelp
-        keywordhelp=rw
         #self.stcpage[self.notebookEditor.GetSelection()].SetLexer(stc.STC_LEX_CPP)
-        kw = keyword.kwlist                
-        for i in range(0,len(reservedword)):
-            kw.append(reservedword[i])
+        kw = keyword.kwlist
+        kw.extend(reservedword)
+        kw.extend(Autocompleter["reserved"])
 
         font = self.getFontPreferences()     
-        self.stcpage[self.notebookEditor.GetSelection()].SetKeyWords(0, " ".join(keyword.kwlist))                 
+        self.stcpage[self.notebookEditor.GetSelection()].SetKeyWords(0, " ".join(kw))                 
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_PREPROCESSOR, "face:%s,size:%d,fore:#d36820" %(font.GetFaceName(), font.GetPointSize()))                
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_DEFAULT, "face:%s,size:%d,fore:#000000" %(font.GetFaceName(), font.GetPointSize()))
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENT, "face:%s,size:%d,fore:#c81818" %(font.GetFaceName(), font.GetPointSize()))
@@ -576,7 +576,7 @@ class editor:
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_GLOBALCLASS, "fore:#7F7F7F,size:%d" % font.GetPointSize())
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretForeground("BLACK")
         self.stcpage[self.notebookEditor.GetSelection()].SetCaretWidth(1)
-        self.stcpage[self.notebookEditor.GetSelection()].SetBackSpaceUnIndents(True)
+        #self.stcpage[self.notebookEditor.GetSelection()].SetBackSpaceUnIndents(True)
         #self.stcpage[self.notebookEditor.GetSelection()].SetMarginWidth(0, 30)
         #self.stcpage[self.notebookEditor.GetSelection()].SetMarginType(0,stc.STC_MARGIN_NUMBER)
         self.stcpage[self.notebookEditor.GetSelection()].UsePopUp(1)
