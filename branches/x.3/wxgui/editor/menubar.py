@@ -66,11 +66,15 @@ class Menubar:
     def OnSave(self, event=None):
         """ Save file without dialog box """
         if len(self.onglet)>0:
+            code = self.stcpage[self.notebookEditor.GetSelection()].GetTextUTF8()
             path=self.filename[self.notebookEditor.GetSelection()]
             fichier=codecs.open(path,'w','utf8')
-            for i in range(0,self.stcpage[self.notebookEditor.GetSelection()].GetLineCount()):
-                fichier.writelines(self.stcpage[self.notebookEditor.GetSelection()].GetLine(i))
+            #for i in range(0,self.stcpage[self.notebookEditor.GetSelection()].GetLineCount()):
+                #fichier.writelines(self.stcpage[self.notebookEditor.GetSelection()].GetLine(i))
+                
+            fichier.write(code)
             fichier.close()
+            
             if self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())[0]=="*":
                 chaine=self.notebookEditor.GetPageText(self.notebookEditor.GetSelection())
                 chaine=chaine[1:len(chaine)]

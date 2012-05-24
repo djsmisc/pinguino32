@@ -305,19 +305,8 @@ class editor:
     def Open(self, path):
         """ Open file in a new editor """ 
         file = os.path.basename(path)
-        # --- file history --- added by r.blanchot 03/11/2010
-        #filehistory.AddFileToHistory(path)
-        #filehistory.Save(config)
-        #config.Flush()
-        #
-        #alloaded=-1
         directory,extension = os.path.splitext(path)
-        #for i in range(len(self.stcpage)):
-            #try: file = unicode(file).encode("utf-8")
-            #except: pass
-            #if file == self.notebookEditor.GetPageText(i):
-                #alloaded=i
-        #if alloaded!=-1:
+
         if path in self.filename:
 
             dlg = wx.MessageDialog(self,
@@ -328,17 +317,13 @@ class editor:
             if (result==wx.ID_NO):
                 return
             else:
-                self.inhibitChangeEvents = True
-                self.stcpage[alloaded].ClearAll()
+                index = self.filename.index(path)
+                self.stcpage[index].ClearAll()
                 fichier=open(path,'r')
-                #for line in fichier:
-                #    self.stcpage[alloaded].addtext(line)
-                self.stcpage[alloaded].SetText(fichier.read())
+                self.stcpage[index].SetText(fichier.read())
                 fichier.close()
-                self.stcpage[alloaded].SetSavePoint()
-                #self.notebookEditor.SetSelection(hhh)
-                self.inhibitChangeEvents = False
                 return
+            
         self.inhibitChangeEvents = True
         self.New(file.replace(extension,""))
 
