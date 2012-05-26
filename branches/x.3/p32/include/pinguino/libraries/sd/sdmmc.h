@@ -16,6 +16,7 @@
 					Previous lines have been left in for reference
 					and also as a prototype if boards with Card Detect or Write 
 					Protect are added in future.
+** 26 May 2012 Minor bug fix - added two missing function prototypes
 */
 
 #ifndef __SDMMC_H__
@@ -81,20 +82,27 @@ Note: When using PIC32MX4xx (PIC32-Pinguino/OTG/Micro), as the SPI2 port is
 #define E_COMMAND_ACK       0x80
 #define E_INIT_TIMEOUT      0x81
 
-
 typedef unsigned LBA;  // logic block address, 32 bit wide
 
+// Function prototypes
+unsigned char writeSPI(unsigned char);
+                        // send one byte and receive one byte at the same time
+
 void initSD(void);		// initializes I/O pins and SPI
+
 void disableSD(void);	// deselect SD card
 void enableSD(void);		// select SD card
 
-int initMedia(void);   // initializes the SD/MMC memory device
+int sendSDCmd(unsigned char, unsigned);
+                        // send command to SD card
 
-int getCD();            // check card presence
-int getWP();            // check write protection tab
+int initMedia(void);   // initializes the SD/MMC memory device
 
 int readSECTOR(LBA, char *);  // reads a block of data
 int writeSECTOR(LBA, char *);  // writes a block of data
+
+int getCD();            // check card presence
+int getWP();            // check write protection tab
 
 #endif /* __SDMMC_H__ */
 
