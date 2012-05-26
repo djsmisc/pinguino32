@@ -16,6 +16,9 @@
 	Updated:		01 May 2012 - M Harper
 					Changed to deal more consistently with single line displays
 						(changes identified by dated comments in code)
+	Updated:		26 May 2012 - M Harper
+					Reverted _lcd_begin() to syntax prior to x.3 r359 29 Apr 2012
+					for consistency with P8 and fix broken LCD examples
 	----------------------------------------------------------------------------
 	LiquidCrystal original Arduino site: 
 			http://www.arduino.cc/en/Tutorial/LiquidCrystal by David A. Mellis
@@ -263,7 +266,7 @@ void _lcd_noAutoscroll(void) {
 }
 
 /** Initial Display settings! */
-void _lcd_begin(u8 cols, u8 lines, u8 dotsize) {
+void _lcd_begin(u8 lines, u8 dotsize) {
   if (lines > 1) {
     _displayfunction |= LCD_2LINE;
   }

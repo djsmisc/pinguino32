@@ -1,19 +1,27 @@
- /*
- * LCD routines for use with pinguino board, based on LiquidCrystal lib from Arduino project.
- * Port by Marcus Fazzi (marcus@fazzi.eng.br)
- * LiquidCrystal original Arduino site: 
- *      http://www.arduino.cc/en/Tutorial/LiquidCrystal by David A. Mellis
- * Pins, Schematics and more info: 
- * 		http://pinguino.koocotte.org/index.php/LCD_Example
- * 		http://anunakin.blogspot.com
- * 28/01/2011 : lcdprintf by RegisBlanchot (rblanchot@gmail.com)
- * 03/03/2012 : Library updated, new function names
- *            : lcdlib.pdl updated
- *            : LiquiqCrystal examples updated
- */
+ /*	----------------------------------------------------------------------------
+	FILE:  			lcdlib.c
+	PROJECT: 		pinguino8
+	PURPOSE: 		LCD routines for use with pinguino board, 
+					based on LiquidCrystal lib from Arduino project.
+	PROGRAMER: 		Orignal port by Marcus Fazzi (marcus@fazzi.eng.br)
+	Updated - 28 Jan 2011 : lcdprintf by RegisBlanchot (rblanchot@gmail.com)
+	Updated - 03 Mar 2012 : Library updated, new function names
+							: lcdlib.pdl updated
+							: LiquidCrystal examples updated
+	Updated:		26 May 2012 - M Harper
+					Changed to deal more consistently with single line displays
+					as included in P32 lcdlib.c at x.3 r363.
+					(changes identified by dated comments in code)
+ 	----------------------------------------------------------------------------
+	LiquidCrystal original Arduino site: 
+			http://www.arduino.cc/en/Tutorial/LiquidCrystal by David A. Mellis
+	Pins, Schematics and more info: 
+			http://pinguino.koocotte.org/index.php/LCD_Example
+ 			http://www.fazzi.eng.br
+*/
 
-#ifndef __LCD_C
-#define __LCD_C
+#ifndef __LCDLIB_C__
+#define __LCDLIB_C__
 
 #include <delay.c>		//Arduino like delays
 #include <digitalw.c>	//Arduino like DigitalWrite and Read
@@ -78,24 +86,26 @@ void _lcd_command(uchar value)
 	_lcd_send(value, LOW);
 }
 
-/** Write formated string on LCD **/
-//  added 28/01/2011 rblanchot@gmail.com
-void _lcd_printf(char *fmt, ...)
-{
-	va_list args;
-
-	va_start(args, fmt);
-	pprintf(_lcd_write, fmt, args);
-	va_end(args);
-}
-
 /** Setup line x column on LCD */
 void _lcd_setCursor(u8 col, u8 row)
 {
-	const u8 row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
-
-	if ( row > _numlines )
+	u8 row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
+	/* Added 26 May 2012 by MFH
+		sets row_offsets for a single line display so that 
+		80 column space divided in 4 equal 20 column sections.
+		This means that if an n x 4 display is set to behave as
+		a single line display lines 1 and 2 are displayed and
+		lines 3 and 4 are 20 characters to the right.*/
+	if (_numlines==1) {
+		row_offsets[1] = 0x14;
+		row_offsets[2] = 0x28;
+		row_offsets[3] = 0x3C;
+		}
+	/* Removed 26 May 2012 by MFH as did not treat row
+		starts consistently for n x 2 and n x 4 displays
+	if ( row > _numlines ) 
 		row = _numlines-1;    // we count rows starting w/0
+	*/
 	_lcd_command(LCD_SETDDRAMADDR | (col + row_offsets[row]));
 }
 
@@ -105,6 +115,18 @@ void _lcd_print(char *string)
 	u8 i;
 	for( i=0; string[i]; i++)
 		_lcd_write(string[i]);
+}
+
+
+/** Write formated string on LCD **/
+//  added 28/01/2011 rblanchot@gmail.com
+void _lcd_printf(char *fmt, ...)
+{
+	va_list args;
+
+	va_start(args, fmt);
+	pprintf(_lcd_write, fmt, args);
+	va_end(args);
 }
 
 /** Print a number on LCD */
@@ -136,7 +158,6 @@ void _lcd_printFloat(float number, u8 digits)
 	u16 int_part;
 	float rounding, remainder;
 
-	// Handle negative numbers
 	// Handle negative numbers
 	if (number < 0.0)
 	{
