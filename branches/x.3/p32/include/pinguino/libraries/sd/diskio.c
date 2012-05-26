@@ -11,12 +11,15 @@
  /
  /-------------------------------------------------------------------------*/
 
-// 07 May 2012 - Changes made to allow SD card library to support
-//						PIC32 Pinguino Micro and potentially other cards that
-//						do not support the use of the RTCC library.
+// 07 May 2012 Changes made to allow SD card library to support
+//					PIC32 Pinguino Micro and potentially other cards that
+//					do not support the use of the RTCC library.
+// 25 May 2012 Added includes for delay.c and digitalw.c
 
 #include "ff.h"
 #include "diskio.h"
+#include <delay.c>
+#include <digitalw.c>
 
 // For boards known to support the RTCC library ***Added 07 May 2012
 // to allow SD Library to support PIC32 Pinguino Micro, which
