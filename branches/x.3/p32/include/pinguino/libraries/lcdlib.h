@@ -59,7 +59,7 @@ void _lcd_pins(u8 rs, u8 enable, u8 d0, u8 d1, u8 d2, u8 d3,
 void _lcd_init(u8 fourbitmode, u8 rs, u8 rw, u8 enable, 
 			u8 d0, u8 d1, u8 d2, u8 d3,
 			u8 d4, u8 d5, u8 d6, u8 d7);
-void _lcd_begin(u8 cols, u8 lines, u8 dotsize);
+void _lcd_begin(u8 lines, u8 dotsize);
 void _lcd_noAutoscroll(void);
 void _lcd_autoscroll(void);
 void _lcd_rightToLeft(void);
