@@ -119,6 +119,7 @@ class Pinguino(framePinguinoX, Editor):
 # init
 # ------------------------------------------------------------------------------
     def __initPinguino__(self, parent):
+	sys.setrecursionlimit(1500)
 	self.notebookEditor.Hide()
 	self.boardlist = boardlist
 	self.debugOutMessage = None
