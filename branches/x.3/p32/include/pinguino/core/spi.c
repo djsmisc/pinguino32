@@ -5,12 +5,14 @@
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
 					Marcus Fazzi <anunakin@gmail.com>
 					Jean-Pierre Mandon <jp.mandon@gmail.com>
-	FIRST RELEASE:	16 mar. 2011
-	LAST RELEASE:	20 feb. 2012
+	FIRST RELEASE:	16 Mar 2011
+	LAST RELEASE:	28 May 2012
 	----------------------------------------------------------------------------
 	CHANGELOG : 
-	24 may. 2011 - jp.mandon - fixed a bug in SPI_write, RX int flag must be called even for write
-	20 feb. 2012 - r.blanchot - added PIC32_PINGUINO_220 support
+	24 May 2011 - jp.mandon - fixed a bug in SPI_write, RX int flag must be called even for write
+	20 Feb 2012 - r.blanchot - added PIC32_PINGUINO_220 support
+	28 May 2012 - MFH - 	added PIC32_PINGUINO_MICRO support and fixed a bug
+								in SPI_clock() identified by dk (KiloOne)
  	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
@@ -41,7 +43,7 @@
 #include <interrupt.c>
 
 #ifndef SPIx				// Use SPI port 1, see PIC32 Datasheet
-	#if defined(PIC32_PINGUINO_OTG) || defined(PIC32_PINGUINO)
+	#if defined(PIC32_PINGUINO_OTG) || defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_MICRO)  //dk MICRO added
 		#define SPIx 2		// default SPI port is 2 for 32MX440F256H which has only one SPI port
 	#else
 		#define SPIx 1		// default SPI port is 1
@@ -149,7 +151,7 @@ void SPI_clock(u32 speed)
 	Fpb = GetPeripheralClock();
 	if (speed > (Fpb / 2))
 	{
-		CLKSPD = 0;		// use the maximum baud rate possible
+		CLKSPD = 0;			// use the maximum baud rate possible
 		return;
 	}
 	else
@@ -157,8 +159,8 @@ void SPI_clock(u32 speed)
 		clk = (Fpb / (2 * speed)) - 1;
 		if (clk > 511)
 			CLKSPD = 511;	// use the minimum baud rate possible
-			return;
-		CLKSPD = clk;
+		else					// ** fix for bug identified by dk=KiloOne
+			CLKSPD = clk;	// use calculated divider-baud rate
 	}
 }
 
