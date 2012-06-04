@@ -279,7 +279,7 @@ class frameKeyWords ( wx.Frame ):
 class framePreferences ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Preferences"), pos = wx.DefaultPosition, size = wx.Size( 752,360 ), style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Preferences"), pos = wx.DefaultPosition, size = wx.Size( 752,413 ), style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -801,9 +801,8 @@ class panelLateral ( wx.Panel ):
 		
 		bSizer5.Add( self.m_staticText1, 0, wx.EXPAND, 5 )
 		
-		comboBoxDirChoices = []
-		self.comboBoxDir = wx.ComboBox( self.m_panel5, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, comboBoxDirChoices, 0 )
-		bSizer5.Add( self.comboBoxDir, 0, wx.EXPAND, 5 )
+		self.dirPicker = wx.DirPickerCtrl( self.m_panel5, wx.ID_ANY, wx.EmptyString, _("Select a folder"), wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		bSizer5.Add( self.dirPicker, 0, wx.EXPAND, 0 )
 		
 		self.listCtrlDir = wx.ListCtrl( self.m_panel5, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.RAISED_BORDER )
 		bSizer5.Add( self.listCtrlDir, 1, wx.EXPAND, 5 )

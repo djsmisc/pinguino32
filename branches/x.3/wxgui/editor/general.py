@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	02/April/2012
-    last release:	06/May/2012
+    last release:	03/June/2012
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -241,8 +241,8 @@ class General:
                              wx.WXK_RETURN,
                              wx.WXK_NUMPAD_ENTER,]:
             event.Skip()
-            return
-
+            return     
+    
         try: chr(event.KeyCode)
         except: return        
         

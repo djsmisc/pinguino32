@@ -449,9 +449,9 @@ class Pinguino(framePinguinoX, Editor):
 	
     #----------------------------------------------------------------------
     def autoSaveFiles(self, event):
-		if self.in_verify==0:
-			if self.getElse("Open/Save", "autosave", "False") == "True":
-				self.OnSaveAll()
+	if self.in_verify==0:
+	    if self.getElse("Open/Save", "autosave", "False") == "True":
+		self.OnSaveAll()
 	    
 	    
 # ------------------------------------------------------------------------------

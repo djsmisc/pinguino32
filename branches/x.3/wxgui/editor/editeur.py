@@ -348,7 +348,7 @@ class editor:
 
 
 
-    def Save(self,type,extension):
+    def Save(self,type,extensionSave):
         """save the content of the editor to filename""" 
         if len(self.onglet)>0: 
             pageIdx = self.notebookEditor.GetSelection()
@@ -361,7 +361,7 @@ class editor:
                 message=_("Save file as")+" ...", 
                 defaultDir=directory, 
                 defaultFile=file, 
-                wildcard=type+" (*"+extension+")|*"+extension,
+                wildcard=type+" (*"+extensionSave+")|*"+extensionSave,
                 style=wx.SAVE)
             filedlg.SetFilterIndex(2)
             if filedlg.ShowModal() == wx.ID_OK:
