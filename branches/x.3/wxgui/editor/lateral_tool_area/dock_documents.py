@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	31/March/2012
-    last release:	06/May/2012
+    last release:	03/June
     
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -47,7 +47,7 @@ class Documents():
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnSelChanged, self.lateralDir)
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnDirSelected, self.lateralDir)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnOpenFile, self.lateralFiles)
-        self.Bind(wx.EVT_COMBOBOX, self.setDirCombo, self.lat.comboBoxDir)
+        self.Bind(wx.EVT_DIRPICKER_CHANGED, self.setDirPicker, self.lat.dirPicker)
         self.Bind(wx.EVT_CHOICE, lambda x:self.buildLateralFiles(self.temporalItem), self.lat.choiceFile)
 
         
@@ -69,12 +69,7 @@ class Documents():
     #----------------------------------------------------------------------
     def buildLateralDir(self, path):
         self.fixSizeDock()
-        self.currentLateralDir = path
-        if path in self.recentPathsDir: self.recentPathsDir.remove(path)
-        self.recentPathsDir.append(path)
-        self.lat.comboBoxDir.Clear()
-        self.lat.comboBoxDir.AppendItems(self.recentPathsDir)
-        self.lat.comboBoxDir.SetSelection(self.lat.comboBoxDir.Count-1)
+        self.lat.dirPicker.SetPath(path)
         dirs = os.listdir(path)
         dirs.sort()
         self.lateralDir.DeleteAllItems()
@@ -90,9 +85,9 @@ class Documents():
         listDir.SetItemData(0, 0)
      
     #----------------------------------------------------------------------
-    def setDirCombo(self, event):
+    def setDirPicker(self, event):
         self.fixSizeDock()
-        path = event.GetString()
+        path =  event.Path
         self.buildLateralDir(path)
         
     #----------------------------------------------------------------------
@@ -111,23 +106,27 @@ class Documents():
     #--------------------------------------------------------------------------
     def OnSelChanged(self, event):
         self.fixSizeDock()
-        path = self.currentLateralDir
+        path = self.lat.dirPicker.GetPath()
         sel = event.GetLabel()
         if sel == "..":
             self.currentLateralDir = os.path.split(path)[0]
             self.buildLateralDir(self.currentLateralDir)
         else:
-            self.currentLateralDir = os.path.join(path, sel)
-            self.buildLateralDir(self.currentLateralDir)            
-        
+            allFiles = os.listdir(os.path.join(path, sel))
+            allFiles = (file for file in allFiles if not file.startswith("."))
+            for file in allFiles:
+                if os.path.isdir(os.path.join(path, sel, file)):
+                    self.currentLateralDir = os.path.join(path, sel)
+                    self.buildLateralDir(self.currentLateralDir)
+                    return
+                
     #----------------------------------------------------------------------
     def OnDirSelected(self, event):
         self.fixSizeDock()
+        path = self.lat.dirPicker.GetPath()
         sel = event.GetLabel()
-        if sel == "..":
-            self.buildLateralFiles(self.currentLateralDir)
-        else:
-            self.buildLateralFiles(os.path.join(self.currentLateralDir, sel))
+        if sel == "..": self.buildLateralFiles(path)
+        else: self.buildLateralFiles(os.path.join(path, sel))
         
     #--------------------------------------------------------------------------
     def OnOpenFile(self, event):

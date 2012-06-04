@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	03/April/2012
-    last release:	06/May/2012
+    last release:	03/June/2012
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -54,18 +54,28 @@ class AutoCompleter():
         self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)
         self.Bind(wx.EVT_KEY_UP, self.onKeyEvent)
         self.setItems()
-
+        
     #----------------------------------------------------------------------
     def onCharEvent(self, event):
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         
-        if event.GetKeyCode() in [wx.WXK_BACK, wx.WXK_ESCAPE, wx.WXK_DELETE,]:
+        if event.GetKeyCode() in [wx.WXK_ESCAPE]:
+            self.Close()
+            return
+
+        if event.GetKeyCode() in [wx.WXK_BACK, wx.WXK_DELETE, ]:
             event.Skip()
             return
+        
+        code = event.GetKeyCode()
+        
         try:
-            
-            try: key = chr(event.GetKeyCode())
-            except:
+            if code >= 32 and code <= 126:  #Caracter imprimible
+                key = chr(event.GetKeyCode())
+            #elif code < 32:
+                #self.Close()
+                #return
+            else:
                 event.Skip()
                 return 
             
@@ -89,19 +99,22 @@ class AutoCompleter():
             
         except: pass
         event.Skip()
-        
 
     #----------------------------------------------------------------------
     def onKeyEvent(self, event):
-        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]        
 
         if event.GetKeyCode() in [wx.WXK_DOWN,
                                   wx.WXK_UP]:
             event.Skip()
             return
         
+        if event.GetKeyCode() in [wx.WXK_ESCAPE, wx.WXK_DELETE]:
+            self.Close()
+            return
+        
         if event.GetKeyCode() in [wx.WXK_TAB]:
-            textEdit.AddText(self.IDE.getIndent())
+            self.activated()
             self.Close()
             event.Skip()
             return
@@ -126,7 +139,6 @@ class AutoCompleter():
             else: self.Close()
             event.Skip()
             return
-
 
         self.index = self.IDE.wordUnderCursor(True)
 
@@ -154,18 +166,19 @@ class AutoCompleter():
     def activated(self, event=None): 
         index = self.index
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
-        for i in index + "1": textEdit.DeleteBack()
+        for i in index: textEdit.DeleteBack()
         
-        if event.GetText() in Snippet:
-            self.IDE.insertSnippet(event.GetText())
+        current = self.listCtrlAutocompleter.GetItemText(self.listCtrlAutocompleter.GetFocusedItem())
+        if current in Snippet:
+            self.IDE.insertSnippet(current)
             self.Close()
             return
 
-        textEdit.InsertText(textEdit.CurrentPos, event.GetText())
+        textEdit.InsertText(textEdit.CurrentPos, current)
          
         #Set cursor position at the last word (dot is a word)
         words = 1
-        if "." in event.GetText(): words = 3
+        if "." in current: words = 3
         for i in range(words): textEdit.WordRightEnd()
 
         #Add "()" to funtions
@@ -173,7 +186,7 @@ class AutoCompleter():
         try: enable = self.IDE.getConfig("Completer", "insertParentheses")
         except: self.IDE.setConfig("Completer", "insertParentheses", enable)           
 
-        if event.GetText() in self.IDE.keywordList and enable == "True":
+        if current in self.IDE.keywordList and enable == "True":
             textEdit.InsertText(textEdit.CurrentPos, "()")
             textEdit.CharRight()
             self.Close()
@@ -189,19 +202,13 @@ class AutoCompleter():
     def setItems(self):  
         index = self.index
         completers, icons = self.IDE.getCompleters()
-        #completersFilter = []
-        #for i in completers:
-            #if i not in completersFilter: completersFilter.append(i)
-        #completersFilter.sort()
         items = []
+        completers.reverse()
         for word in completers:
-            #print word
             if word.lower().startswith(index.lower()): items.append(word)
-
 
         self.SetPosition(self.getPositionCompleter())
         self.listCtrlAutocompleter.DeleteAllItems()
-        #print items
         if len(items) > 0:
             for item in items:
                 try: icon = icons[item]

@@ -7,7 +7,7 @@
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
     first release:	03/March/2012
-    last release:	02/May/2012
+    last release:	03/June/2012
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -53,9 +53,7 @@ class ResultListPorts(wx.PyEvent):
 class Debugger:
     #----------------------------------------------------------------------
     def __initDebugger__(self):
-
         EVT_RESULT_DEBUG(self, self.updateDebgging)
-        #EVT_LIST_PORTS(self, self.updateCDCPorts)
 
         self.history = []
         self.historyIndex = 0
@@ -69,47 +67,17 @@ class Debugger:
         else:
             self.CDC_NAME_PORT = "/dev/ttyACM%d"
 
-        #t = threading.Thread(target=self.GetListPorts, args=( ))
-        #t.start()
-
-
-    #----------------------------------------------------------------------
-    def GetListPorts(self, max_ports=20):
-        """"""
-        #while not self.closing:
-
-            #time.sleep(5)
-
-
-            #list_ports = []
-            #for i in range(max_ports):
-                #try:
-                    #port = serial.Serial(self.CDC_NAME_PORT %i)
-                    #port.close()
-                    #list_ports.append(self.CDC_NAME_PORT %i)
-                #except:
-                    #pass
-
-            #return list_ports
-
-            ##wx.PostEvent(self, ResultEventDebug(list_ports)) 
-
-
-
 
     #----------------------------------------------------------------------
     def updateCDCPorts(self, max_ports=20):
-
         list_ports = []
         for i in range(max_ports):
             try:
                 port = serial.Serial(self.CDC_NAME_PORT %i)
                 port.close()
                 list_ports.append(self.CDC_NAME_PORT %i)
-            except:
-                pass
-
-        print list_ports
+            except: pass
+            
         return list_ports
 
 
@@ -120,16 +88,12 @@ class Debugger:
             self.logwindow.WriteText(_("Connected")+": "+name+"\n")
         return connect    
 
-
-
     #----------------------------------------------------------------------
     def setDebugger(self, event=None, mode=None):
         if mode == None:
             self.debuggingLine.Hide()
             self.buttonSendDebug.Hide()
             self.choicePort.Hide()
-            #self.logwindow.Clear()
-            #self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
             self.updateIDE()
             return 
 
@@ -195,55 +159,41 @@ class Debugger:
                                   wx.WXK_RETURN]:
             self.sendLine()
 
-        elif event.GetKeyCode() == wx.WXK_UP:
+        elif event.GetKeyCode() == wx.WXK_UP and len(self.history) > 0:
             self.historyIndex += 1
             if self.historyIndex > len(self.history): self.historyIndex = 0
             self.debuggingLine.Clear()
             self.debuggingLine.SetValue(">>>"+self.history[-self.historyIndex])
             self.debuggingLine.SetInsertionPoint(len(self.debuggingLine.Value))            
 
-        elif event.GetKeyCode() == wx.WXK_DOWN:
+        elif event.GetKeyCode() == wx.WXK_DOWN and len(self.history) > 0:
             self.historyIndex -= 1
             if self.historyIndex < 0: self.historyIndex = len(self.history)
             self.debuggingLine.Clear()
             self.debuggingLine.SetValue(">>>"+self.history[-self.historyIndex])
             self.debuggingLine.SetInsertionPoint(len(self.debuggingLine.Value))
 
+                
 
     #----------------------------------------------------------------------
     def changeCDCPort(self, event):
-
-        print event.String
-
-
-        #self.PausaDebug = True
-
         port = event.String
-        try:
-            self.pinguinoCDC.close()
-        except:
-            pass
-
+        try: self.pinguinoCDC.close()
+        except: pass
         try:
             self.pinguinoCDC = serial.Serial(port, timeout=1)
             self.logwindow.WriteText(_("Connected")+": "+port+"\n")
         except:
             self.logwindow.WriteText(_("No device connected")+"!")
-
-        #self.PausaDebug = False
-
+            
 
     #----------------------------------------------------------------------
     def debugCDC(self):
-        """"""
-
         ports = self.currentCDCPorts
-
         wx.PostEvent(self, ResultEventDebug(_("Debugging!")+"\n"))
 
         if len(ports) == 1:
             self.pinguinoCDC = serial.Serial(ports[0], timeout=1)
-            #self.logwindow.WriteText()
             wx.PostEvent(self, ResultEventDebug(_("Connected")+": "+ports[0]+"\n"))
 
         elif len(ports) == 0:
@@ -251,9 +201,7 @@ class Debugger:
             self.menu.menuItemDebugNone.Check()
             wx.PostEvent(self, ResultEventDebug(None))
 
-
         if len(ports) > 0:
-
             while not self.menu.menuItemDebugNone.IsChecked():
                 time.sleep(0.05)
 
@@ -274,6 +222,7 @@ class Debugger:
                     self.logwindow.WriteText("\n"+_("device disconnected")+"!")
                     self.menu.menuItemDebugNone.Check()
                     wx.PostEvent(self, ResultEventDebug(None))
+                    
                 except:
                     pass
 
