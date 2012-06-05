@@ -79,9 +79,9 @@ class uploader8(baseUploader):
     #WRITE_CONFIG_CMD               =    0x07
     RESET_CMD                       =    0xFF
 
-    # Block's size to write (TODO : should be 32)
+    # Block's size to write
     # --------------------------------------------------------------------------
-    BLOCKSIZE                       =    16
+    BLOCKSIZE                       =    32
 
     # bulk endpoints
     # --------------------------------------------------------------------------
@@ -94,7 +94,7 @@ class uploader8(baseUploader):
     INTERFACE_ID                    =    0x00
     TIMEOUT                         =    1200
 
-    # Table with Microchip USB devices
+    # Table with Microchip 8-bit USB devices
     # device_id:[PIC name] 
     # --------------------------------------------------------------------------
 
@@ -172,19 +172,22 @@ class uploader8(baseUploader):
         """ send command to the bootloader """
         sent_bytes = self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
         if sent_bytes == len(usbBuf):
+            # whatever is returned, USB packet size is always 64 bytes long in high speed mode
             return self.handle.bulkRead(self.IN_EP, 64, self.TIMEOUT)
-            #return ERR_NONE
+            #return self.ERR_NONE
         else:        
-            return ERR_USB_WRITE
+            return self.ERR_USB_WRITE
 # ------------------------------------------------------------------------------
     def resetDevice(self):
 # ------------------------------------------------------------------------------
         """ reset device """
-        usbBuf = [0] * 1
+        usbBuf = [0] * 64
         # command code
         usbBuf[self.BOOT_CMD] = self.RESET_CMD
         # write data packet
-        self.sendCMD(usbBuf)
+        usbBuf = self.sendCMD(usbBuf)
+        # wait 1 second
+        #time.sleep(1)
 # ------------------------------------------------------------------------------
     def getVersion(self):
 # ------------------------------------------------------------------------------
@@ -198,8 +201,8 @@ class uploader8(baseUploader):
             return self.ERR_USB_WRITE
         else:        
             # major.minor.subminor
-            return    str(usbBuf[self.BOOT_VER_MAJOR]) + "." + \
-                    str(usbBuf[self.BOOT_VER_MINOR])
+            return str(usbBuf[self.BOOT_VER_MAJOR]) + "." + \
+                   str(usbBuf[self.BOOT_VER_MINOR])
 # ------------------------------------------------------------------------------
     def getDeviceID(self):
 # ------------------------------------------------------------------------------
@@ -226,18 +229,18 @@ class uploader8(baseUploader):
                 return self.devices_table[n][0]
         return self.ERR_DEVICE_NOT_FOUND
 # ------------------------------------------------------------------------------
-    def eraseFlash(self, address, size):
+    def eraseFlash(self, address, numBlocks):
 # ------------------------------------------------------------------------------
-        """ erase n * 64-byte blocks of flash memory """
+        """ erase numBlocks of flash memory """
         usbBuf = [0] * 64
         # command code
         usbBuf[self.BOOT_CMD] = self.ERASE_FLASH_CMD
+        # number of blocks to erase
+        usbBuf[self.BOOT_SIZE] = numBlocks
         # block address
         usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
         usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
         usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
-        # size in 64 byte blocks
-        usbBuf[self.BOOT_SIZE] = size
         # write data packet and get response
         #print usbBuf
         usbBuf = self.sendCMD(usbBuf)
@@ -249,31 +252,31 @@ class uploader8(baseUploader):
         usbBuf = [0] * 64
         # command code
         usbBuf[self.BOOT_CMD] = self.READ_FLASH_CMD 
-        # address
-        usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
-        usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
-        usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
-        # size of block
+        # size of block in bytes
         usbBuf[self.BOOT_CMD_LEN] = length
+        # address of the block
+        usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
+        usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
+        usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
         # send request to the bootloader
-        #usbBuf = self.sendCMD(handle, usbBuf)
-        self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
-        return self.handle.bulkRead(self.IN_EP, self.BOOT_DATA_START + length, self.TIMEOUT)
+        return self.sendCMD(usbBuf)
+        #self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
+        #return self.handle.bulkRead(self.IN_EP, self.BOOT_DATA_START + length, self.TIMEOUT)
 # ------------------------------------------------------------------------------
     def writeFlash(self, address, block):
 # ------------------------------------------------------------------------------
         """ write a block of code """
-        usbBuf = [0xFF] * 64
+        usbBuf = [0] * 64
         # command code
         usbBuf[self.BOOT_CMD] = self.WRITE_FLASH_CMD 
+        # size of block
+        usbBuf[self.BOOT_CMD_LEN] = len(block)
         # block's address
         usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
         usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
         usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
-        # size of block
-        usbBuf[self.BOOT_CMD_LEN] = len(block)
         # add data to the packet
-        for i in range(0, 16):
+        for i in range(len(block)):
             usbBuf[self.BOOT_DATA_START + i] = block[i]
         # write data packet on usb device
         #print usbBuf
@@ -285,20 +288,20 @@ class uploader8(baseUploader):
         """ Parse the Hex File Format and send data to usb device """
 
         """
-        [0]        Start code, one character, an ASCII colon ':'.
-        [1:3]    Byte count, two hex digits, a number of bytes (hex digit pairs) in the data field. 16 (0x10) or 32 (0x20) bytes of data are the usual compromise values between line length and address overhead.
-        [3:7]    Address, four hex digits, a 16-bit address of the beginning of the memory position for the data. Limited to 64 kilobytes, the limit is worked around by specifying higher bits via additional record types. This address is big endian.
-        [7:9]    Record type, two hex digits, 00 to 05, defining the type of the data field.
-        [9:*]    Data, a sequence of n bytes of the data themselves, represented by 2n hex digits.
-        [*:*]    Checksum, two hex digits - the least significant byte of the two's complement of the sum of the values of all fields except fields 1 and 6 (Start code ":" byte and two hex digits of the Checksum). It is calculated by adding together the hex-encoded bytes (hex digit pairs), then leaving only the least significant byte of the result, and making a 2's complement (either by subtracting the byte from 0x100, or inverting it by XOR-ing with 0xFF and adding 0x01). If you are not working with 8-bit variables, you must suppress the overflow by AND-ing the result with 0xFF. The overflow may occur since both 0x100-0 and (0x00 XOR 0xFF)+1 equal 0x100. If the checksum is correctly calculated, adding all the bytes (the Byte count, both bytes in Address, the Record type, each Data byte and the Checksum) together will always result in a value wherein the least significant byte is zero (0x00).
+        [0]     Start code, one character, an ASCII colon ':'.
+        [1:3]   Byte count, two hex digits, a number of bytes (hex digit pairs) in the data field. 16 (0x10) or 32 (0x20) bytes of data are the usual compromise values between line length and address overhead.
+        [3:7]   Address, four hex digits, a 16-bit address of the beginning of the memory position for the data. Limited to 64 kilobytes, the limit is worked around by specifying higher bits via additional record types. This address is big endian.
+        [7:9]   Record type, two hex digits, 00 to 05, defining the type of the data field.
+        [9:*]   Data, a sequence of n bytes of the data themselves, represented by 2n hex digits.
+        [*:*]   Checksum, two hex digits - the least significant byte of the two's complement of the sum of the values of all fields except fields 1 and 6 (Start code ":" byte and two hex digits of the Checksum). It is calculated by adding together the hex-encoded bytes (hex digit pairs), then leaving only the least significant byte of the result, and making a 2's complement (either by subtracting the byte from 0x100, or inverting it by XOR-ing with 0xFF and adding 0x01). If you are not working with 8-bit variables, you must suppress the overflow by AND-ing the result with 0xFF. The overflow may occur since both 0x100-0 and (0x00 XOR 0xFF)+1 equal 0x100. If the checksum is correctly calculated, adding all the bytes (the Byte count, both bytes in Address, the Record type, each Data byte and the Checksum) together will always result in a value wherein the least significant byte is zero (0x00).
                 For example, on :0300300002337A1E
                 03 + 00 + 30 + 00 + 02 + 33 + 7A = E2, 2's complement is 1E
         """
 
         data        = []
-        old_address = 0
-        max_address    = 0
-        address_Hi    = 0
+        old_address = 0 # or self.board.memstart ?
+        max_address = 0
+        address_Hi  = 0
         codesize    = 0
 
         # read hex file
@@ -317,6 +320,7 @@ class uploader8(baseUploader):
             record_type= int(line[7:9], 16)
             
             address = (address_Hi << 16) + address_Lo
+            #print "address =", address
 
             # checksum calculation
             end = 9 + byte_count * 2 # position of checksum at end of line
@@ -332,7 +336,7 @@ class uploader8(baseUploader):
             # extended linear address record
             if record_type == self.Extended_Linear_Address_Record:
                 address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
-                address = (address_Hi << 16) + address_Lo
+                #address = (address_Hi << 16) + address_Lo
 
             # code size
             if (address >= self.board.memstart) and (address < self.board.memend):
@@ -342,7 +346,10 @@ class uploader8(baseUploader):
             if (address > old_address) and (address < self.board.memend):
                 max_address = address + byte_count
                 old_address = address
+                #print "max address =", max_address
 
+        # max_address must be divisible by self.BLOCKSIZE
+        #max_address = max_address + self.BLOCKSIZE - (max_address % self.BLOCKSIZE)        <= ERROR
         max_address = max_address + 64 - (max_address % 64)
         #print self.board.memstart, max_address, self.board.memend    
 
@@ -356,12 +363,12 @@ class uploader8(baseUploader):
         # 2nd pass : parse bytes from line into data
         # ----------------------------------------------------------------------
 
-        address_Hi    = 0
+        address_Hi = 0
 
         for line in lines:
-            byte_count = int(line[1:3], 16)
-            address_Lo = int(line[3:7], 16) # four hex digits
-            record_type= int(line[7:9], 16)
+            byte_count  = int(line[1:3], 16)
+            address_Lo  = int(line[3:7], 16) # four hex digits
+            record_type = int(line[7:9], 16)
 
             # 32-bit address
             address = (address_Hi << 16) + address_Lo
@@ -384,6 +391,7 @@ class uploader8(baseUploader):
             elif record_type == self.Extended_Linear_Address_Record:
                 address_Hi = int(line[9:13], 16) # upper 16 bits (bits 16-31) of the data address
                 #print "address_Hi = " + hex(address_Hi)
+                #address = (address_Hi << 16) + address_Lo
 
             # unsupported record type
             else:
@@ -392,26 +400,31 @@ class uploader8(baseUploader):
         # erase memory from self.board.memstart to max_address 
         # ----------------------------------------------------------------------
 
+        # Pinguino x6j50
         if "j" in board.proc :
             #print board.proc
-            sizeMax = (self.board.memend - self.board.memstart) / 1024
-            size1024 = (max_address - self.board.memstart) / 1024
-            if size1024 > sizeMax:
-                return self.ERR_USB_ERASE
-            else:
-                self.eraseFlash(self.board.memstart, size1024)
+            numBlocksMax  = 1 + ((self.board.memend - self.board.memstart) / 1024)
+            numBlocks1024 = 1 + ((max_address - self.board.memstart) / 1024)
+            #print "numBlocks1024 =", numBlocks1024
+
+            if numBlocks1024 > numBlocksMax:
+                numBlocks1024 = numBlocksMax
+
+            self.eraseFlash(self.board.memstart, numBlocks1024)
+
+        # Pinguino x550
         else:
-            size64 = (max_address - self.board.memstart) / 64
-            if size64 > 511:
+            numBlocks64 = 1 + ((max_address - self.board.memstart) / 64)
+            if numBlocks64 > 511:
                 return self.ERR_USB_ERASE
-            if size64 < 256:
-                self.eraseFlash(self.board.memstart, size64)
+            if numBlocks64 < 256:
+                self.eraseFlash(self.board.memstart, numBlocks64)
             else:
                 # erase flash memory from self.board.memstart to self.board.memstart + 0x4000
-                self.eraseFlash(handle, self.board.memstart, 255)
+                self.eraseFlash(self.board.memstart, 255)
                 # erase flash memory from self.board.memstart + 0x4000 to max_address
-                size64 = size64 - 255
-                self.eraseFlash(self.board.memstart + 0x4000, size64)
+                numBlocks64 = numBlocks64 - 255
+                self.eraseFlash(self.board.memstart + 0x4000, numBlocks64)
 
         # write 32-bit blocks
         # ----------------------------------------------------------------------

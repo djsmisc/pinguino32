@@ -298,7 +298,12 @@ void detachInterrupt(u8 inter)
 		#endif
 			break;
 		case INT_HLVD:
+		#if defined(PIC18F4550) || defined(PIC18F2550)
 			PIE2bits.HLVDIE = INT_DISABLE;
+		#endif
+		#ifdef PIC18F26J50
+			PIE2bits.LVDIE = INT_DISABLE;
+		#endif
 			break;
 		#ifdef PIC18F4550
 		case INT_SSP:
@@ -436,7 +441,7 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TIMER0 is already used !");
+		debug("Error : interrupt TIMER0 is already used !");
 		return false;
 	}
 	#endif
@@ -492,7 +497,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TIMER1 is already used !");
+		debug("Error : interrupt TIMER1 is already used !");
 		return INT_TMR1;
 	}
 	#endif
@@ -534,7 +539,7 @@ void OnRTC(callback func, u16 delay)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TIMER1 is already used !");
+		debug("Error : interrupt TIMER1 is already used !");
 	}
 	#endif
 }
@@ -587,7 +592,7 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TIMER2 is already used !");
+		debug("Error : interrupt TIMER2 is already used !");
 		return INT_TMR2;
 	}
 	#endif
@@ -643,7 +648,7 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TIMER3 is already used !");
+		debug("Error : interrupt TIMER3 is already used !");
 		return INT_TMR3;
 	}
 	#endif
@@ -682,7 +687,7 @@ void OnCounter0(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TMR0 is already used !");
+		debug("Error : interrupt TMR0 is already used !");
 	}
 	#endif
 }
@@ -710,7 +715,7 @@ void OnCounter1(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TMR1 is already used !");
+		debug("Error : interrupt TMR1 is already used !");
 	}
 	#endif
 }
@@ -738,7 +743,7 @@ void OnCounter3(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt TMR3 is already used !");
+		debug("Error : interrupt TMR3 is already used !");
 	}
 	#endif
 }
@@ -771,7 +776,7 @@ void OnChangePin0(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt INT0 is already used !");
+		debug("Error : interrupt INT0 is already used !");
 	}
 	#endif
 }
@@ -794,7 +799,7 @@ void OnChangePin1(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt INT1 is already used !");
+		debug("Error : interrupt INT1 is already used !");
 	}
 	#endif
 }
@@ -817,7 +822,7 @@ void OnChangePin2(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt INT2 is already used !");
+		debug("Error : interrupt INT2 is already used !");
 	}
 	#endif
 }
@@ -848,7 +853,7 @@ void OnChangePin4to7(callback func, u8 pin, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt RB is already used !");
+		debug("Error : interrupt RB is already used !");
 	}
 	#endif
 }
@@ -878,7 +883,7 @@ void OnCompare1(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt CCP1 is already used !");
+		debug("Error : interrupt CCP1 is already used !");
 	}
 	#endif
 }
@@ -899,7 +904,7 @@ void OnCompare2(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt CCP2 is already used !");
+		debug("Error : interrupt CCP2 is already used !");
 	}
 	#endif
 }
@@ -919,7 +924,7 @@ void OnCompareAll(callback func, u8 config)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt CM is already used !");
+		debug("Error : interrupt CM is already used !");
 	}
 	#endif
 }
@@ -976,7 +981,7 @@ void OnEvent(u8 inter, callback func)
 	#ifdef DEBUG
 	else
 	{
-		serial_printf("Error : interrupt #%u is already used !", inter);
+		debug("Error : interrupt #%u is already used !", inter);
 	}
 	#endif
 }
