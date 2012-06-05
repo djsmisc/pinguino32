@@ -1,5 +1,6 @@
 //#include <stdio.h>
 //#include <stdlib.h>
+#include <typedef.h>
 
 // commands
 #define LCD_CLEARDISPLAY 0x01
@@ -78,8 +79,8 @@ void _lcd_printFloat(float number, u8 digits);
 void _lcd_print(char *string);
 void _lcd_printf(char *fmt, ...);
 void _lcd_setCursor(u8 col, u8 row);
-void _lcd_command(uchar value);
-void _lcd_write(uchar value);
+void _lcd_command(u8 value);
+void _lcd_write(u8 value);
 void _lcd_send(u8 value, u8 mode);
 void _lcd_write8bits(u8 value);
 void _lcd_write4bits(u8 value);
