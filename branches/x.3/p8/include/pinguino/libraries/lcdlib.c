@@ -75,13 +75,13 @@ void _lcd_send(u8 value, u8 mode)
 }
 
 /** Write a data character on LCD */
-void _lcd_write(uchar value)
+void _lcd_write(u8 value)
 {
 	_lcd_send(value, HIGH);
 }
 
 /** Write a control command on LCD */
-void _lcd_command(uchar value)
+void _lcd_command(u8 value)
 {
 	_lcd_send(value, LOW);
 }
