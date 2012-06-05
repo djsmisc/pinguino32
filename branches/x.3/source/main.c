@@ -65,11 +65,12 @@ void pinguino_main(void)
 	#endif
 
 	#if defined(PIC18F46J50) || defined(PIC18F26J50)
+    // Enable the PLL and wait 2+ms until the PLL locks
     unsigned int pll_startup_counter = 600;
-  {
-      OSCTUNEbits.PLLEN = 1;  //Enable the PLL and wait 2+ms until the PLL locks before enabling USB module
-      while(pll_startup_counter--);
-  }
+    {
+        OSCTUNEbits.PLLEN = 1;
+        while(pll_startup_counter--);
+    }
 	ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
 	ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
 	#endif
@@ -77,8 +78,8 @@ void pinguino_main(void)
 	PIE1 = 0;
 	PIE2 = 0;
 
-	#ifdef USERINT
-	int_init();					// Disable all interrupts
+	#ifdef USERINT              // Enable General/Peripheral interrupts
+	int_init();					// Disable all individual interrupts
 	#endif
 
 	#ifdef __USB__
@@ -147,10 +148,15 @@ void pinguino_main(void)
 	--------------------------------------------------------------------------*/
 
 #ifdef boot2
+
 #pragma code high_priority_isr 0x2020
 void high_priority_isr(void) interrupt 1
+
 #else
-void high_priority_isr(void) __interrupt 1
+
+//#pragma code high_priority_isr 0x0C08
+void high_priority_isr(void) //__interrupt 1
+
 #endif
 {
 #ifdef __USBCDC
@@ -194,7 +200,7 @@ void high_priority_isr(void) __interrupt 1
 	#if defined(PIC18F46J50) || defined(PIC18F26J50)
 		if (PIR1bits.RC1IF) 
 	#endif
-			serial_interrupt();
+		serial_interrupt();
 #endif
 
 #ifdef __MILLIS__
@@ -229,11 +235,17 @@ void high_priority_isr(void) __interrupt 1
 	--------------------------------------------------------------------------*/
 
 #ifdef boot2
+
 #pragma code low_priority_isr 0x4000
 void low_priority_isr(void) interrupt 2
+
 #else
+
+//#pragma code low_priority_isr 0x0C18
 void low_priority_isr(void) __interrupt 2
+
 #endif
+
 {
 #ifdef USERINT
 	userinterrupt();

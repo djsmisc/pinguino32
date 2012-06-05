@@ -187,7 +187,7 @@ See http://www.usb.org/developers/devclass_docs/usbcdc11.pdf Chap. 6.2.13
 **/
 typedef struct
 {
-   u16 dwDTERate;			/*!< Data terminal rate, in bits per second. */
+   u32 dwDTERate;			/*!< Data terminal rate, in bits per second. */
    u8 bCharFormat;			/*!< Stop bits<ul><li>0 - 1 Stop bit</li><li>1 - 1.5 Stop bits</li><li>2 - 2 Stop bits</li></ul> */
    u8 bParityType;			/*!< Parity<ul><li>0 - None</li><li>1 - Odd</li><li>2 - Even</li><li>3 - Mark</li><li>4 - Space</li></ul> */
    u8 bDataBits;			/*!< Data bits (5, 6, 7, 8 or 16). */

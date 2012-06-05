@@ -1,130 +1,121 @@
-/*	----------------------------------------------------------------------------
-	crt0i.c - SDCC pic16 port runtime start code with initialisation
+/*-------------------------------------------------------------------------
+   crt0i.c - SDCC pic16 port runtime start code with initialisation
 
-	Copyright (C) 2004, Vangelis Rokas <vrokas at otenet.gr>
+   Copyright (C) 2004, Vangelis Rokas <vrokas at otenet.gr>
 
-	This library is free software; you can redistribute it and/or modify it
-	under the terms of the GNU General Public License as published by the
-	Free Software Foundation; either version 2.1, or (at your option) any
-	later version.
+   This library is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any
+   later version.
 
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License 
-	along with this library; see the file COPYING. If not, write to the
-	Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
-	MA 02110-1301, USA.
+   You should have received a copy of the GNU General Public License 
+   along with this library; see the file COPYING. If not, write to the
+   Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
 
-	As a special exception, if you link this library with other files,
-	some of which are compiled with SDCC, to produce an executable,
-	this library does not by itself cause the resulting executable to
-	be covered by the GNU General Public License. This exception does
-	not however invalidate any other reasons why the executable file
-	might be covered by the GNU General Public License.
-	-------------------------------------------------------------------------*/
+   As a special exception, if you link this library with other files,
+   some of which are compiled with SDCC, to produce an executable,
+   this library does not by itself cause the resulting executable to
+   be covered by the GNU General Public License. This exception does
+   not however invalidate any other reasons why the executable file
+   might be covered by the GNU General Public License.
+-------------------------------------------------------------------------*/
 
-/*	----------------------------------------------------------------------------
-	based on Microchip MPLAB-C18 startup files
-	2011-11-20 - regis blanchot - modified for pinguino project
-	compilation : ./sdcc -c -o crt0i18f26j50.o -mpic16 -p18f26j50 crt0iBoot4.c
- 	mv crt0i18f26j50.o p8/obj
- 	-------------------------------------------------------------------------*/
+/*
+ * based on Microchip MPLAB-C18 startup files
+ */
 
 extern stack_end;
 extern TBLPTRU;
 extern TBLPTRH;
 extern TBLPTRL;
-extern TABLAT;
-extern TABLWT;
-extern EECON1;
-extern EECON2;
 extern FSR0L;
 extern FSR0H;
+extern TABLAT;
 extern POSTINC0;
 
 #if 1
-/* global variable for forcing gplink to add _cinit section */
+// global variable for forcing gplink to add _cinit section
 char __uflags = 0;
 #endif
 
-/*	----------------------------------------------------------------------------
-	Prototypes
-	-------------------------------------------------------------------------*/
-
-void _startup (void) __naked;
-void _do_cinit (void) __naked;
-void _entry (void) __naked __interrupt 0;
-void _hpisr (void) __naked __interrupt 1;
-void _lpisr (void) __naked __interrupt 2;
-
-// pinguino main.c functions
-extern void pinguino_main (void);
-extern void high_priority_isr (void);
-extern void low_priority_isr (void);
-
-/*	----------------------------------------------------------------------------
-	Revectored entry points 
-	-------------------------------------------------------------------------*/
-
-#pragma code _entry 0x0C00
-void _entry (void) __naked __interrupt 0
-{
-//	pinguino_main ();
-	__asm 
-	goto __startup 
-	__endasm;
-}
-
-#pragma code _hpisr 0x0C08
-void _hpisr (void) __naked __interrupt 1
-{
-	high_priority_isr ();
-}
-
-#pragma code _lpisr 0x0C18
-void _lpisr (void) __naked __interrupt 2
-{
-	low_priority_isr ();
-}
-
-/*	----------------------------------------------------------------------------
-	Stock Startup crt0i.c library. 
-	-------------------------------------------------------------------------*/
-
-/* Access bank selector. */
+// Access bank selector
 #define a 0
 
+// external reference to the pinguino's main() and isr() routines
+extern void pinguino_main (void);
+//extern void high_priority_isr(void);
+//extern void low_priority_isr(void);
+
+void _entry (void) __naked __interrupt 0;
+//void _hpisr(void) __interrupt 1;
+//void _lpisr(void) __interrupt 2;
+void _startup (void) __naked;
+void _do_cinit (void) __naked;
+
+// Interrupt vectors are moved at ENTRY, ENTRY + 0x08 and ENTRY + 0x18
+// at compilation time, cf. Makefile : --ivt-loc = $(ENTRY) 
+// No needs to use #pragma
+
+// The bootloader have 2 jumps at 0x08 and 0x18
+// to respectively ENTRY + 0x08 and ENTRY + 0x18
+
+//#pragma code _entry 0x0C00
+void _entry (void) __naked __interrupt 0
+{
+    __asm
+    goto    __startup
+    __endasm;
+}
+/*
+//#pragma code _hpisr 0x0C08
+void _hpisr (void) __naked __interrupt 1
+{
+    high_priority_isr();
+}
+
+//#pragma code _lpisr 0x0C18
+void _lpisr (void) __naked __interrupt 2
+{
+    low_priority_isr();
+}
+*/
 void _startup (void) __naked
 {
-	__asm
-	; Initialize the stack pointer
-	lfsr    1, _stack_end
-	lfsr    2, _stack_end
+    __asm
+    ; Initialize the stack pointer
+    lfsr    1, _stack_end
+    lfsr    2, _stack_end
 
-	; 1st silicon does not do this on POR
-	clrf    _TBLPTRU, a
+    ; 1st silicon does not do this on POR
+    clrf    _TBLPTRU, a
 
-	; Initialize the flash memory access configuration.
-	; This is harmless for non-flash devices, so we do it on all parts.
-	bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, TBLPTR accesses flash program memory
-	bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, TBLPTR accesses flash program memory
-	__endasm;
+    ; Initialize the flash memory access configuration.
+    ; This is harmless for non-flash devices, so we do it on all parts.
+    bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
+    bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
+    __endasm;
 
-	/* Initialize global and/or static variables. */
-	_do_cinit ();
+    /* Initialize global and/or static variables. */
+    _do_cinit ();
 
-	/* Call the main routine. */
-	pinguino_main ();
+    /* Call the main routine. */
+    pinguino_main ();
 
-	__asm
-lockup:
-	; Returning from main will lock up.
-	bra     lockup
-	__endasm;
+    /*
+    __asm
+    lockup:
+    ; Returning from main will lock up.
+    bra     lockup
+    __endasm;
+    */
 }
+
 
 /* the cinit table will be filled by the linker */
 extern __code struct

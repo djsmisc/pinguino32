@@ -7,6 +7,7 @@
 
 #ifndef __DEBUG_C
 #define __DEBUG_C
+#define DEBUG
 
 #include <stdarg.h>
 
