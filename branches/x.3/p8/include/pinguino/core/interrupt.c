@@ -128,12 +128,35 @@
 	/// T1CON: TIMER1 CONTROL REGISTER
 	///
 
+	#if defined(PIC18F2550) || defined(PIC18F4550)
+
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T1_16BIT			0b11111111	// 16-bit mode
 	#define T1_8BIT				0b01111111	// 8-bit mode
+
 	// bit 6 T1RUN: Timer1 System Clock Status bit
 	#define T1_RUN_FROM_OSC		0b11111111 // 1 = Device clock is derived from Timer1 oscillator
 	#define T1_RUN_FROM_ANOTHER	0b10111111 // 0 = Device clock is derived from another source
+
+	// bit 1 TMR1CS: Timer1 Clock Source Select bit
+	#define T1_SOURCE_EXT		0b11111111	// 1 = External clock from RC0/T13CKI
+	#define T1_SOURCE_INT		0b11111101	// 0 = Internal clock source (FOSC/4)
+
+    #endif
+
+	#if defined(PIC18F26J50) || defined(PIC18F46J50)
+
+    // bit 7-6 TMR1CS<1:0>: Timer1 Clock Source Select bits
+    #define T1_SOURCE_EXT       0b10111111  // Timer1 clock source is the T1OSC or T1CKI pin
+    #define T1_RUN_FROM_OSC     0b01111111  // Timer1 clock source is the system clock (FOSC)(1)
+    #define T1_SOURCE_INT       0b00111111  // Timer1 clock source is the instruction clock (FOSC/4)
+
+	// bit 1 RD16: 16-Bit Read/Write Mode Enable bit
+	#define T1_16BIT			0b11111111	// 16-bit mode
+	#define T1_8BIT				0b11111101	// 8-bit mode
+
+    #endif
+
 	// bit 5-4 T1CKPS1:T1CKPS0: Timer1 Input Clock Prescale Select bits
 	#define T1_PS_1_1			0b11001111	// 1:1 prescale value
 	#define T1_PS_1_2			0b11011111	// 1:2 prescale value
@@ -145,9 +168,6 @@
 	// bit 2 T1SYNC: Timer1 External Clock Input Synchronization Select bit
 	#define T1_SYNC_EXT_ON		0b11111011	// Synchronize external clock input
 	#define T1_SYNC_EXT_OFF		0b11111111	// Do not synchronize external clock input
-	// bit 1 TMR1CS: Timer1 Clock Source Select bit
-	#define T1_SOURCE_EXT		0b11111111	// 1 = External clock from RC0/T13CKI
-	#define T1_SOURCE_INT		0b11111101	// 0 = Internal clock source (FOSC/4)
 	// bit 0 TMR1ON: Timer1 On bit
 	#define T1_ON				0b11111111	// 1 = Enables Timer1
 	#define T1_OFF				0b11111110	// 0 = Stops Timer1
@@ -185,6 +205,8 @@
 	/// T3CON: TIMER3 CONTROL REGISTER
 	///
 
+	#if defined(PIC18F2550) || defined(PIC18F4550)
+
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T3_16BIT			0b11111111 // 1 = Enables register read/write of Timer3 in one 16-bit operation
 	#define T3_8BIT				0b01111111 // 0 = Enables register read/write of Timer3 in two 8-bit operations
@@ -202,11 +224,44 @@
 	#define T3_NOT_SYNC			0b11111111 // 1 = Do not synchronize external clock input
 	#define T3_SYNC				0b11111011 // 0 = Synchronize external clock input
 	// bit 1 TMR3CS: Timer3 Clock Source Select bit
-	#define T3_EXT_CLK			0b11111111 // 1 = External clock input from Timer1 oscillator or T13CKI (on the rising edge after the first falling edge)
-	#define T3_INT_CLK			0b11111101 // 0 = Internal clock (FOSC/4)
+	#define T3_SOURCE_EXT			0b11111111 // 1 = External clock input from Timer1 oscillator or T13CKI (on the rising edge after the first falling edge)
+	#define T3_SOURCE_INT			0b11111101 // 0 = Internal clock (FOSC/4)
 	// bit 0 TMR3ON: Timer3 On bit
 	#define T3_ON				0b11111111 // 1 = Enables Timer3
 	#define T3_OFF				0b11111110 // 0 = Stops Timer3
+
+    #endif
+
+	#if defined(PIC18F26J50) || defined(PIC18F46J50)
+
+    // bit 7-6 TMR3CS<1:0>: Timer1 Clock Source Select bits
+    #define T3_SOURCE_EXT       0b10111111  // Timer3 clock source is the T1OSC or T1CKI pin
+    #define T3_RUN_FROM_OSC     0b01111111  // Timer3 clock source is the system clock (FOSC)(1)
+    #define T3_SOURCE_INT       0b00111111  // Timer3 clock source is the instruction clock (FOSC/4)
+	// bit 5-4 T3CKPS1:T3CKPS0: Timer3 Input Clock Prescale Select bits
+	#define T3_PS_1_8			0b11111111 // 1:8 Prescale value
+	#define T3_PS_1_4			0b11101111 // 1:4 Prescale value
+	#define T3_PS_1_2			0b11011111 // 1:2 Prescale value
+	#define T3_PS_1_1			0b11001111 // 1:1 Prescale value
+    // bit 3 T3OSCEN: Timer3 Oscillator Source Select bit
+    // When TMR3CS<1:0> = T3_SOURCE_EXT:
+    #define T3_SOURCE_T1OSC     0b11111111  // Power up the Timer1 crystal driver (T1OSC) and supply the Timer3 clock from the crystal output
+    #define T3_SOURCE_T3OSC     0b11111011  // Timer1 crystal driver is off, Timer3 clock is from the T3CKI digital input pin assigned in PPS module(2)
+    // When TMR3CS<1:0> = T3_RUN_FROM_OSC or T3_SOURCE_INT:
+    //#define T3_SOURCE_T1OSC     0b11111111  // Power up the Timer1 crystal driver (T1OSC)
+    #define T3_SOURCE_T1OFF     0b11111011  // Timer1 crystal driver is off(2)
+	// bit 2 T3SYNC: Timer3 External Clock Input Synchronization Control bit
+	// When TMR3CS = T3_SOURCE_EXT:
+	#define T3_NOT_SYNC			0b11111111 // 1 = Do not synchronize external clock input
+	#define T3_SYNC				0b11111011 // 0 = Synchronize external clock input
+	// bit 1 RD16: 16-Bit Read/Write Mode Enable bit
+	#define T3_16BIT			0b11111111	// 16-bit mode
+	#define T3_8BIT				0b11111101	// 8-bit mode
+	// bit 0 TMR3ON: Timer3 On bit
+	#define T3_ON				0b11111111 // 1 = Enables Timer3
+	#define T3_OFF				0b11111110 // 0 = Stops Timer3
+
+    #endif
 
 	typedef void (*callback) (void);				// type of: void callback()
 
@@ -466,14 +521,24 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				// 1us = 1.000 ns = 12 cy
 				preloadH[INT_TMR1] = high8(0xFFFF - 12);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 12);
+                #if defined(PIC18F2550) || defined(PIC18F4550)
 				_t1con = T1_OFF & T1_16BIT & T1_PS_1_1 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+                #endif
+                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+				_t1con = T1_OFF & T1_16BIT & T1_PS_1_1 & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+                #endif
 				break;
 			case INT_MILLISEC:
 				// 1ms = 1.000.000ns = 12.000 cy
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR1] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 1500);
+                #if defined(PIC18F2550) || defined(PIC18F4550)
 				_t1con = T1_OFF & T1_16BIT & T1_PS_1_8 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+                #endif
+                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+				_t1con = T1_OFF & T1_16BIT & T1_PS_1_8 & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+                #endif
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
@@ -482,7 +547,12 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				preloadH[INT_TMR1] = high8(0xFFFF - 60000); // 62500
 				preloadL[INT_TMR1] =  low8(0xFFFF - 60000);
 				intCountLimit[INT_TMR1] = delay * 25;
+                #if defined(PIC18F2550) || defined(PIC18F4550)
 				_t1con = T1_OFF & T1_16BIT & T1_PS_1_8 & T1_RUN_FROM_ANOTHER & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+                #endif
+                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+				_t1con = T1_OFF & T1_16BIT & T1_PS_1_8 & T1_OSC_OFF & T1_SYNC_EXT_OFF & T1_SOURCE_INT;
+                #endif
 				break;
 		}
 
@@ -526,7 +596,12 @@ void OnRTC(callback func, u16 delay)
 		// T1SYNC  = 0	When TMR1CS = 1, Synchronize external clock input
 		// TMR1CS  = 1	External clock from RC0/T1OSO/T13CKI pin (on the rising edge)
 		// TMR1ON  = 0	Stops Timer1
+        #if defined(PIC18F2550) || defined(PIC18F4550)
 		_t1con = T1_OFF & T1_16BIT & T1_PS_1_1 & T1_RUN_FROM_ANOTHER & T1_OSC_ON & T1_SYNC_EXT_ON & T1_SOURCE_EXT;
+        #endif
+        #if defined(PIC18F26J50) || defined(PIC18F46J50)
+		_t1con = T1_OFF & T1_16BIT & T1_PS_1_1 & T1_OSC_ON & T1_SYNC_EXT_ON & T1_SOURCE_EXT;
+        #endif
 		//_t1con = 0b10001110;
 
 		IPR1bits.TMR1IP = INT_LOW_PRIORITY;
@@ -613,18 +688,30 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 
 		switch(timediv)
 		{
+            // nb : T3_SOURCE_INT => Fosc/4
+            // 1 cy = 1/(Fosc/4)=4/Fosc=4/48MHz=83ns
 			case INT_MICROSEC:
 				// 1us = 1.000 ns = 12 cy
 				preloadH[INT_TMR3] = high8(0xFFFF - 12);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 12);
-				_t3con = T3_OFF & T3_16BIT & T3_PS_1_1 & T3_INT_CLK;
+                #if defined(PIC18F2550) || defined(PIC18F4550)
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_1 & T3_SOURCE_INT;
+                #endif
+                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_1 & T3_SOURCE_INT & T3_SOURCE_T1OSC;
+                #endif
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR3] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 1500);
-				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_INT_CLK;
+                #if defined(PIC18F2550) || defined(PIC18F4550)
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_SOURCE_INT;
+                #endif
+                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_SOURCE_INT & T3_SOURCE_T1OFF;//T3_SOURCE_T1OSC;
+                #endif
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
@@ -633,7 +720,12 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				preloadH[INT_TMR3] = high8(0xFFFF - 60000);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 60000);
 				intCountLimit[INT_TMR3] = delay * 25;
-				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_INT_CLK;
+                #if defined(PIC18F2550) || defined(PIC18F4550)
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_SOURCE_INT;
+                #endif
+                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+				_t3con = T3_OFF & T3_16BIT & T3_PS_1_8 & T3_SOURCE_INT & T3_SOURCE_T1OSC;
+                #endif
 				break;
 		}
 
@@ -736,7 +828,7 @@ void OnCounter3(callback func, u8 config)
 		preloadL[INT_TMR3] = 0;
 		TMR3H = 0;
 		TMR3L = 0;
-		T3CON = T3_ON & T3_16BIT & T3_PS_1_8 & T3_EXT_CLK; // default
+		T3CON = T3_ON & T3_16BIT & T3_PS_1_8 & T3_SOURCE_EXT; // default
 		T3CON |= config;
 		PIR2bits.TMR3IF = 0;
 	}
