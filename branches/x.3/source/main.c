@@ -155,7 +155,7 @@ void high_priority_isr(void) interrupt 1
 #else
 
 //#pragma code high_priority_isr 0x0C08
-void high_priority_isr(void) //__interrupt 1
+void high_priority_isr(void) __interrupt 1
 
 #endif
 {
