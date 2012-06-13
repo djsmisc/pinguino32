@@ -82,5 +82,7 @@
 	#define Bit(b) \
 		(1 << (b))
 
+    #define Not(b) \
+        (255 - b)
+        
 #endif
-
