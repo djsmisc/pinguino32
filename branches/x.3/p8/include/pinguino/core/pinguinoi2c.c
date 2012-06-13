@@ -61,12 +61,15 @@
 #include <stdarg.h>
 
 // Mode I2C
-#define I2C_WRITE			0
-#define I2C_READ			1
+#define I2C_WRITE		0
+#define I2C_READ		1
 #define I2C_MASTER_MODE	0
 #define I2C_SLAVE_MODE	1
-#define I2C_SLEW_OFF		0
+#define I2C_SLEW_OFF	0
 #define I2C_SLEW_ON		1
+#define I2C_100KHZ		0
+#define I2C_400KHZ		1
+#define I2C_1MHZ		2
 
 typedef void (*i2c_stdout) (void);				// type of :	void foo(int x)
 static i2c_stdout _i2c_onRequest_function;	// then : 		void pputchar(void)
@@ -74,7 +77,7 @@ static i2c_stdout _i2c_onReceive_function;	// then : 		void pputchar(void)
 
 /// PROTOTYPES
 
-void I2C_master();   
+void I2C_master(u16);   
 void I2C_slave(u16);   
 void I2C_init(u8, u16);
 void I2C_interrupt();
@@ -99,9 +102,9 @@ static void I2C_sendID(u16, u8);
 	---------- Initialitation Functions for Master and Slave
 	--------------------------------------------------------------------------*/
 
-void I2C_master()   
+void I2C_master(u16 speed)   
 {
-	I2C_init(I2C_MASTER_MODE, I2C_SLEW_OFF);
+	I2C_init(I2C_MASTER_MODE, speed);
 }
 
 void I2C_slave(u16 DeviceID)   
@@ -120,7 +123,7 @@ void I2C_slave(u16 DeviceID)
 	RB1 = SCL
 	--------------------------------------------------------------------------*/
 
-void I2C_init(u8 mode, u16 sspadd)
+void I2C_init(u8 mode, u16 sora)
 {
 	// In Slave mode, the SCL and SDA pins must be configured as inputs
 	#if defined(PIC18F26J50)
@@ -141,7 +144,7 @@ void I2C_init(u8 mode, u16 sspadd)
 			SSPCON1 = 0b00101110;		// Slave mode,  7-bit address with Start and Stop bit interrupts enabled
 			//SSPCON1 = 0b00101111;		// Slave mode, 10-bit address with Start and Stop bit interrupts enabled
 /*	---------------------------------------------------------------------------*/
-			SSPADD = sspadd;				// Slave 7-bit address
+			SSPADD = sora;				// Slave 7-bit address
 			// TODO							// Slave 10-bit address
 /*	---------------------------------------------------------------------------*/
 			break;
@@ -149,18 +152,21 @@ void I2C_init(u8 mode, u16 sspadd)
 		default:// I2C_MASTER_MODE
 			SSPCON1 = 0b00101000;		// Master Mode, clock = FOSC/(4 * (SSPADD + 1))
 			// datasheet p208
-			switch (sspadd)
+			switch (sora)
 			{
-				case I2C_SLEW_ON:
+                case I2C_1MHZ:
+					// SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
+					SSPSTAT = 0b10000000;		// Slew Mode Off
+					SSPADD = 11;				// 1MHz = FOSC/(4 * (SSPADD + 1))
+				case I2C_400KHZ:
 					// SMP = 0 = Slew rate control enabled for High-Speed mode (400 kHz)
 					SSPSTAT = 0b00000000;		// Slew Mode On
-					SSPADD = 29;					// 400kHz = FOSC/(4 * (SSPADD + 1))
-				case I2C_SLEW_OFF:
+					SSPADD = 29;				// 400kHz = FOSC/(4 * (SSPADD + 1))
+				case I2C_100KHZ:
 				default:
 					// SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
 					SSPSTAT = 0b10000000;		// Slew Mode Off
-					SSPADD = 119;					// 100kHz = FOSC/(4 * (SSPADD + 1))
-					//SSPADD = 11;					// 1MHz = FOSC/(4 * (SSPADD + 1))
+					SSPADD = 119;				// 100kHz = FOSC/(4 * (SSPADD + 1))
 			}
 	}
 	SSPCON2 = 0;

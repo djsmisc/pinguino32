@@ -243,11 +243,11 @@
 
 static void lcdi2c_send4(u8 quartet, u8 mode)
 {
-											// D7 D6 D5 D4 EN RW RS   BL
-	PCF8574_data.val = quartet;	// x  x  x  x  0  0  0    0
-	LCD_EN = LOW;						// x  x  x  x  0  0  0    0
+									// D7 D6 D5 D4 EN RW RS   BL
+	PCF8574_data.val = quartet;     // x  x  x  x  0  0  0    0
+	LCD_EN = LOW;                   // x  x  x  x  0  0  0    0
 	LCD_RW = LCD_WRITE;				// x  x  x  x  0  0  0    0
-	LCD_RS = mode;						// x  x  x  x  0  0  0/1  0
+	LCD_RS = mode;					// x  x  x  x  0  0  0/1  0
 	LCD_BL = Backlight;				// x  x  x  x  0  0  0/1  0/1
 
 	/// ---------- LCD Enable Cycle
@@ -551,7 +551,7 @@ void lcdi2c_init(u8 numcol, u8 numline, u8 i2c_address)
 	PCF8574_address = 0b01001110 | i2c_address;
 	PCF8574_data.val = 0;
 
-	I2C_init(I2C_MASTER_MODE, I2C_SLEW_OFF);
+	I2C_init(I2C_MASTER_MODE, I2C_1MHZ);
 
 	//Delayms(15);								// Wait more than 15 ms after VDD rises to 4.5V
 	lcdi2c_send4(0x30, LCD_CMD);			// 0x30 - Mode 8 bits

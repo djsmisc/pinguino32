@@ -11,7 +11,7 @@ int i;
 
 void setup()
 {
-	I2C.master();			//I2C_MASTER_MODE, I2C_SLEW_OFF
+	I2C.master(I2C_100KHZ); // other possible values are I2C_400KHZ and I2C_1MHZ
 	Serial.begin(9600);
 	for (i=0;i<8;i++)
 		i2c_buffer[i]=0;
