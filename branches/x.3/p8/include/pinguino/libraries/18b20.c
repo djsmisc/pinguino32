@@ -131,9 +131,9 @@
 			/// NB: The power-up default of these bits is R0 = 1 and R1 = 1 (12-bit resolution)
 		}
 		
-		if (!DS18B20Configure(pin, num, 0, 0, res)) return FALSE; // no alarm
+		if (!DS18B20Configure(pin, num, 0, 0, res)) return false; // no alarm
 
-		if (OneWireReset(pin)) return FALSE;
+		if (OneWireReset(pin)) return false;
 
 		if (num == SKIPROM)
 		{
@@ -143,7 +143,7 @@
 		else
 		{
 			// Talk to a particular device
-			if (!DS18B20MatchRom(pin, num)) return FALSE;
+			if (!DS18B20MatchRom(pin, num)) return false;
 		}
 
 		OneWireWrite(pin, CONVERT_T);		// Start temperature conversion
@@ -151,7 +151,7 @@
 		while (busy == LOW)					// Wait while busy ( = bus is low)
 			busy = OneWireRead(pin);
 
-		if (OneWireReset(pin)) return FALSE;
+		if (OneWireReset(pin)) return false;
 
 		if (num == SKIPROM)
 		{
@@ -161,7 +161,7 @@
 		else
 		{
 			// Talk to a particular device
-			if (!DS18B20MatchRom(pin, num)) return FALSE;
+			if (!DS18B20MatchRom(pin, num)) return false;
 		}
 
 		OneWireWrite(pin, READ_SCRATCHPAD);// Read scratchpad
@@ -169,7 +169,7 @@
 		temp_lsb = OneWireRead(pin);		// byte 0 of scratchpad : temperature lsb
 		temp_msb = OneWireRead(pin);		// byte 1 of scratchpad : temperature msb
 
-		if (OneWireReset(pin)) return FALSE;
+		if (OneWireReset(pin)) return false;
 
 		// Calculation
 		// ---------------------------------------------------------------------
@@ -205,7 +205,7 @@
 		t->fraction = (temp & 0x0F) * 625;
 		t->fraction /= 100;					// two digits after decimal 
 
-		return TRUE;
+		return true;
 	}
 
 /*	----------------------------------------------------------------------------
@@ -223,7 +223,7 @@
 
 	u8 DS18B20Configure(u8 pin, u8 num, u8 TH, u8 TL, u8 config)
 	{
-		if (OneWireReset(pin)) return FALSE;
+		if (OneWireReset(pin)) return false;
 		if (num == SKIPROM)
 		{
 			// Skip ROM, address all devices
@@ -238,7 +238,7 @@
 		OneWireWrite(pin, TH);				// The first data byte is written into the TH register (byte 2 of the scratchpad)
 		OneWireWrite(pin, TL);				// The second byte is written into the TL register (byte 3)
 		OneWireWrite(pin, config);			// The third byte is written into the configuration register (byte 4)
-		return TRUE;
+		return true;
 	}
 
 /*	----------------------------------------------------------------------------
@@ -258,11 +258,11 @@
 	u8 DS18B20MatchRom(u8 pin, u8 num)
 	{
 		u8 i;
-		if (OneWireReset(pin)) return FALSE;
+		if (OneWireReset(pin)) return false;
 		OneWireWrite(pin, MATCHROM);	// Match Rom
 		for (i = 0; i < 8; i++)			// Send the Address ROM Code.
 			OneWireWrite(pin, DS18B20Rom[num][i]);
-		return TRUE;
+		return true;
 	}
 
 /*	----------------------------------------------------------------------------
@@ -330,7 +330,7 @@
 	u8 DS18B20GetFirst(u8 pin)
 	{
 		lastDiscrep = 0;			// reset the rom search last discrepancy global
-		doneFlag = FALSE;
+		doneFlag = false;
 		return DS18B20GetNext(pin);	// call Next and return its return value
 	}
 
@@ -353,14 +353,14 @@
 		u8 nxt;						// return value
 		int flag;
 
-		nxt = FALSE;					// set the next flag to false
+		nxt = false;					// set the next flag to false
 		dowcrc = 0;					// reset the dowcrc
 
 		flag = OneWireReset(pin);			// reset the 1-wire
 		if(flag||doneFlag)				// no parts -> return false
 		{
 			lastDiscrep = 0;			// reset the search
-			return FALSE;
+			return false;
 		}
 		// send SearchROM command for all eight bytes
 		OneWireWrite(pin, SEARCHROM);
@@ -408,7 +408,7 @@
 		{
 			lastDiscrep = discrepMarker;
 			doneFlag = (lastDiscrep == 0);
-			nxt = TRUE;								// indicates search is not complete yet, more parts remain
+			nxt = true;								// indicates search is not complete yet, more parts remain
 		}
 		return nxt;
 	}

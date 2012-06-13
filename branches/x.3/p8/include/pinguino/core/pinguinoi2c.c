@@ -1,9 +1,9 @@
 /*	----------------------------------------------------------------------------
-	FILE:				pinguinoi2c.c
-	PROJECT:			pinguino (This library is optimized for Pinguino 18F2550)
-	PURPOSE:			Include all functions to handle I2C communication for Master and Slave
+	FILE:			pinguinoi2c.c
+	PROJECT:		pinguino (This library is optimized for Pinguino 18F2550)
+	PURPOSE:		Include all functions to handle I2C communication for Master and Slave
 	PROGRAMER:		Régis Blanchot, Jean-Pierre Mandon, Jesús Carmona Esteban & Rafael Salazar
-	VERSION:			1.1
+	VERSION:		1.1
 	FIRST RELEASE:	03 apr. 2010
 	LAST RELEASE:	07 apr. 2011
 	----------------------------------------------------------------------------
@@ -53,9 +53,9 @@
 #define __I2C__
 
 #include <pic18fregs.h>
-//#include "typedef.h"
-//#include "macro.h"
-//#include "const.h"
+#include <typedef.h>
+#include <macro.h>
+#include <const.h>
 #include <interrupt.c>
 #include <stdio.c>
 #include <stdarg.h>
@@ -78,9 +78,11 @@ void I2C_master();
 void I2C_slave(u16);   
 void I2C_init(u8, u16);
 void I2C_interrupt();
-void I2C_printf(u8, char *, ...);
+//void I2C_printf(u8, u8 *, ...);
 //void I2C_OnRequest(void (*)(void));
 //void IC2_OnReceive(void (*)(void));
+u8 I2C_write(u8, u8 *, u8);
+u8 I2C_read(u8, u8 *, u8);
 u8 I2C_writechar(u8);
 u8 I2C_readchar();
 u8 I2C_send(u8, u8);
@@ -121,8 +123,14 @@ void I2C_slave(u16 DeviceID)
 void I2C_init(u8 mode, u16 sspadd)
 {
 	// In Slave mode, the SCL and SDA pins must be configured as inputs
+	#if defined(PIC18F26J50)
+	TRISBbits.TRISB5 = INPUT;			// SDA = INPUT
+	TRISBbits.TRISB4 = INPUT;			// SCL = INPUT
+    #else
 	TRISBbits.TRISB0 = INPUT;			// SDA = INPUT
 	TRISBbits.TRISB1 = INPUT;			// SCL = INPUT
+    #endif
+    
 	switch (mode)
 	{
 		case I2C_SLAVE_MODE:
@@ -164,8 +172,8 @@ void I2C_init(u8 mode, u16 sspadd)
 	---------- Send a formated string to the slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-
-void I2C_printf(u8 address, char *fmt, ...)
+/*
+void I2C_printf(u8 address, u8 *fmt, ...)
 {
 	va_list args;
 
@@ -174,6 +182,43 @@ void I2C_printf(u8 address, char *fmt, ...)
 	pprintf(I2C_writechar, fmt, args);
 	I2C_stop();
 	va_end(args);
+}
+*/
+/*	----------------------------------------------------------------------------
+	---------- Send a string to the slave
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+u8 I2C_write(u8 address, u8 *string, u8 length)
+{
+    u8 i;
+    
+	I2C_sendID(address, I2C_WRITE);
+    for (i=0; i<length; i++)
+    {
+        if (I2C_writechar(string[i]) == 0)
+            return (0);
+    }
+	I2C_stop();
+	return (1);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Get a string from the slave
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+u8 I2C_read(u8 address, u8 *buffer, u8 length)
+{
+    u8 i;
+    
+	I2C_sendID(address, I2C_WRITE);
+    for (i=0; i<length; i++)
+    {
+        buffer[i] = I2C_get(address);
+    }
+	I2C_stop();
+	return (1);
 }
 
 /*	----------------------------------------------------------------------------
@@ -269,9 +314,9 @@ static void I2C_sendID(u16 DeviceID, u8 r_w)
 	0 = NAck
 	--------------------------------------------------------------------------*/
 
-u8 I2C_writechar(u8 byte)
+u8 I2C_writechar(u8 b)
 {
-	SSPBUF = byte;
+	SSPBUF = b;
 	I2C_wait();
 	return (!SSPCON2bits.ACKSTAT);
 }

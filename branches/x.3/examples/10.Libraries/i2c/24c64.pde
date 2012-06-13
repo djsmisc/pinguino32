@@ -6,11 +6,12 @@ u8 string[10]={0,0,'A','B','C','D','E','F','G','H'};	// string to write to i2c m
 // second byte is LSB 
 u8 I2C_address=0x51;						// i2c address of 24C64
 u8 address_to_read[2]={0,0};
+u8 i2c_buffer[8];
 int i;
 
 void setup()
 {
-	I2C.init();			//I2C_MASTER_MODE, I2C_SLEW_OFF
+	I2C.master();			//I2C_MASTER_MODE, I2C_SLEW_OFF
 	Serial.begin(9600);
 	for (i=0;i<8;i++)
 		i2c_buffer[i]=0;
@@ -34,7 +35,7 @@ void loop()
 	}
 	Serial.println("try to read 8 bytes to eeprom");
 	I2C.write(I2C_address, address_to_read, 2);
-	i=I2C.read(I2C_address, 8);
+	i=I2C.read(I2C_address, i2c_buffer, 8);
 	if  (i==1)
 	{
 		Serial.println("received 8 bytes from eeprom");

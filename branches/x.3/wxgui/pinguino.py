@@ -688,7 +688,7 @@ class Pinguino(framePinguinoX, Editor):
             return
         self.displaymsg(_("Board:")+"\t" + self.curBoard.name + "\n", 1)
         self.displaymsg(_("Proc:")+"\t" + self.curBoard.proc + "\n", 0)
-	self.displaymsg(_("File:")+"\t" + self.GetPath() + "\n", 0)
+        self.displaymsg(_("File:")+"\t" + self.GetPath() + "\n", 0)
         self.OnSave()
         filename=self.GetPath()
         filename,extension=os.path.splitext(filename)

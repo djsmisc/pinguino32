@@ -4,6 +4,7 @@ OnTimer0 OnTimer0#include <interrupt.c>#define TMR0INT
 OnTimer1 OnTimer1#include <interrupt.c>#define TMR1INT
 OnTimer2 OnTimer2#include <interrupt.c>#define TMR2INT
 OnTimer3 OnTimer3#include <interrupt.c>#define TMR3INT
+OnTimer4 OnTimer4#include <interrupt.c>#define TMR4INT
 OnRTC OnRTC#include <interrupt.c>#define TMR1INT
 OnCounter0 OnCounter0#include <interrupt.c>#define CNTR0INT
 OnCounter1 OnCounter1#include <interrupt.c>#define CNTR1INT

@@ -72,6 +72,7 @@
 #ifndef __LCDI2C_C
 #define __LCDI2C_C
 
+#include <typedef.h>
 #include <lcdi2c.h>
 #include <pcf8574.h>
 #include <stdarg.h>

@@ -28,9 +28,13 @@
 #ifndef __EEPROM_C
 	#define __EEPROM_C
 
-	//#include <pic18fregs.h>
-	//#include "typedef.h"
-	//#include "macro.h"
+    #if !defined (PIC18F2550) && !defined (PIC18F4550)
+        #error "Error : this library is intended to be used only with 8-bit Pinguino with EEPROM" 
+    #endif
+
+	#include <pic18fregs.h>
+	#include "typedef.h"
+	#include "macro.h"
 
 /**	----------------------------------------------------------------------------
 	---------- myEEPROM_read8()
@@ -107,13 +111,13 @@ void EEPROM_write8(u8 address, u8 mydata)
 
 void EEPROM_write16(u8 address, u16 mydata)
 {
-	u8 hibyte;
-	u8 lobyte;
+	//u8 hibyte;
+	//u8 lobyte;
 
-	lobyte = (u8)mydata;
-	hibyte = (u8)(mydata >> 8);
-	EEPROM_write8(address,   hibyte);
-	EEPROM_write8(address+1, lobyte);
+	//lobyte = (u8)mydata;
+	//hibyte = (u8)(mydata >> 8);
+	EEPROM_write8(address,   high8(mydata));
+	EEPROM_write8(address+1, low8(mydata));
 }
 
 #endif

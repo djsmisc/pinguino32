@@ -69,158 +69,160 @@
 	VDD		16		supply voltage
 	--------------------------------------------------------------------------*/
 
-#ifndef __lcdi2c_h
-	#define __lcdi2c_h
+#ifndef __LCDI2C_H
+#define __LCDI2C_H
 
-	#define LCD_MASK		0b11110000	// On ne commande que D7 a D4
+#include <typedef.h>
 
-	#define LCD_BL	PCF8574_data.bits.bit0	// P0
-	#define LCD_RS	PCF8574_data.bits.bit1	// P1
-	#define LCD_RW	PCF8574_data.bits.bit2	// P2
-	#define LCD_EN	PCF8574_data.bits.bit3	// P3
-	#define LCD_D4	PCF8574_data.bits.bit4	// P4
-	#define LCD_D5	PCF8574_data.bits.bit5	// P5
-	#define LCD_D6	PCF8574_data.bits.bit6	// P6
-	#define LCD_D7	PCF8574_data.bits.bit7	// P7
+#define LCD_MASK		0b11110000	// On ne commande que D7 a D4
 
-	#define LCD_WRITE		0
-	#define LCD_READ		1
-	#define LCD_DATA		1
-	#define LCD_CMD		0
+#define LCD_BL	PCF8574_data.bits.bit0	// P0
+#define LCD_RS	PCF8574_data.bits.bit1	// P1
+#define LCD_RW	PCF8574_data.bits.bit2	// P2
+#define LCD_EN	PCF8574_data.bits.bit3	// P3
+#define LCD_D4	PCF8574_data.bits.bit4	// P4
+#define LCD_D5	PCF8574_data.bits.bit5	// P5
+#define LCD_D6	PCF8574_data.bits.bit6	// P6
+#define LCD_D7	PCF8574_data.bits.bit7	// P7
 
-	#define LCD_DISPLAY_CLEAR		0b00000001 	// 0x01
-	#define LCD_CURSOR_HOME			0b00000010 	// 0x02
-	#define LCD_ENTRY_MODE_SET		0b00000110 	// 0x06 Increment + Display not shifted
-	// Display : 00001DCB avec D=Display, C=Cursor et B=Blinking
-	#define LCD_DISPLAY_ON			0b00001100 	// 0x0C Display ON + Cursor OFF + Blinking OFF
-	#define LCD_DISPLAY_OFF			0b00001000 	// 0x08 Display OFF + Cursor OFF + Blinking OFF
-	#define LCD_SYSTEM_SET_4BITS	0b00101000 	// 0x28 Mode 4 bits - 2 lignes - 5x7
-	#define LCD_SYSTEM_SET_8BITS	0b00111000 	// 0x38 Mode 8 bits - 2 lignes - 5x7
-	#define LCD_ADRESS_LINE1		0b10000000 	// DB7=1 pour adresser DD-RAM + Adresse Ligne 1 (0x00) = 0x80
-	#define LCD_ADRESS_LINE2		0b11000000 	// DB7=1 pour adresser DD-RAM + Adresse Ligne 2 (0x40) = 0xC0
-	#define LCD_ADRESS_NUMBER		0b00110000 	// Adresse RAM du code ASCII pour les chiffres
-	#define LCD_ADRESS_CGRAM		0b01000000 	// 0x40 Adresse CGRAM
+#define LCD_WRITE		0
+#define LCD_READ		1
+#define LCD_DATA		1
+#define LCD_CMD		0
 
-	// commands
-	#define LCD_CLEARDISPLAY		0x01
-	#define LCD_RETURNHOME			0x02
-	#define LCD_ENTRYMODESET		0x04
-	#define LCD_DISPLAYCONTROL		0x08
-	#define LCD_CURSORSHIFT			0x10
-	#define LCD_FUNCTIONSET			0x20
-	#define LCD_SETCGRAMADDR		0x40
-	#define LCD_SETDDRAMADDR		0x80
+#define LCD_DISPLAY_CLEAR		0b00000001 	// 0x01
+#define LCD_CURSOR_HOME			0b00000010 	// 0x02
+#define LCD_ENTRY_MODE_SET		0b00000110 	// 0x06 Increment + Display not shifted
+// Display : 00001DCB avec D=Display, C=Cursor et B=Blinking
+#define LCD_DISPLAY_ON			0b00001100 	// 0x0C Display ON + Cursor OFF + Blinking OFF
+#define LCD_DISPLAY_OFF			0b00001000 	// 0x08 Display OFF + Cursor OFF + Blinking OFF
+#define LCD_SYSTEM_SET_4BITS	0b00101000 	// 0x28 Mode 4 bits - 2 lignes - 5x7
+#define LCD_SYSTEM_SET_8BITS	0b00111000 	// 0x38 Mode 8 bits - 2 lignes - 5x7
+#define LCD_ADRESS_LINE1		0b10000000 	// DB7=1 pour adresser DD-RAM + Adresse Ligne 1 (0x00) = 0x80
+#define LCD_ADRESS_LINE2		0b11000000 	// DB7=1 pour adresser DD-RAM + Adresse Ligne 2 (0x40) = 0xC0
+#define LCD_ADRESS_NUMBER		0b00110000 	// Adresse RAM du code ASCII pour les chiffres
+#define LCD_ADRESS_CGRAM		0b01000000 	// 0x40 Adresse CGRAM
 
-	// flags for display entry mode
-	#define LCD_ENTRYRIGHT			0x00
-	#define LCD_ENTRYLEFT			0x02
-	#define LCD_ENTRYSHIFTINCREMENT 0x01
-	#define LCD_ENTRYSHIFTDECREMENT 0x00
+// commands
+#define LCD_CLEARDISPLAY		0x01
+#define LCD_RETURNHOME			0x02
+#define LCD_ENTRYMODESET		0x04
+#define LCD_DISPLAYCONTROL		0x08
+#define LCD_CURSORSHIFT			0x10
+#define LCD_FUNCTIONSET			0x20
+#define LCD_SETCGRAMADDR		0x40
+#define LCD_SETDDRAMADDR		0x80
 
-	// flags for display on/off control
-	#define LCD_DISPLAYON			0x04
-	#define LCD_DISPLAYOFF			0x00
-	#define LCD_CURSORON				0x02
-	#define LCD_CURSOROFF			0x00
-	#define LCD_BLINKON				0x01
-	#define LCD_BLINKOFF				0x00
+// flags for display entry mode
+#define LCD_ENTRYRIGHT			0x00
+#define LCD_ENTRYLEFT			0x02
+#define LCD_ENTRYSHIFTINCREMENT 0x01
+#define LCD_ENTRYSHIFTDECREMENT 0x00
 
-	// flags for display/cursor shift
-	#define LCD_DISPLAYMOVE			0x08
-	#define LCD_CURSORMOVE			0x00
-	#define LCD_MOVERIGHT			0x04
-	#define LCD_MOVELEFT				0x00
+// flags for display on/off control
+#define LCD_DISPLAYON			0x04
+#define LCD_DISPLAYOFF			0x00
+#define LCD_CURSORON				0x02
+#define LCD_CURSOROFF			0x00
+#define LCD_BLINKON				0x01
+#define LCD_BLINKOFF				0x00
 
-	// flags for function set
-	#define LCD_8BITMODE				0x10
-	#define LCD_4BITMODE				0x00
-	#define LCD_2LINE					0x08
-	#define LCD_1LINE					0x00
-	#define LCD_5x10DOTS				0x04
-	#define LCD_5x8DOTS				0x00
+// flags for display/cursor shift
+#define LCD_DISPLAYMOVE			0x08
+#define LCD_CURSORMOVE			0x00
+#define LCD_MOVERIGHT			0x04
+#define LCD_MOVELEFT				0x00
 
-	#define LCD_CENTER				101
-	#define LCD_RIGHT					102
-	#define LCD_LEFT					103
+// flags for function set
+#define LCD_8BITMODE				0x10
+#define LCD_4BITMODE				0x00
+#define LCD_2LINE					0x08
+#define LCD_1LINE					0x00
+#define LCD_5x10DOTS				0x04
+#define LCD_5x8DOTS				0x00
 
-	#define DEGRE						0b11011111 	// Code ASCII pour le symbole degre
-	#define SIGMA						0b11100101 	// Code ASCII pour le symbole sigma
-	#define MICRO						0b11100100 	// Code ASCII pour le symbole micro
-	#define INFINI						0b11110011 	// Code ASCII pour le symbole infini
-	#define ESPACE						0x20		 	// Code ASCII pour un espace
+#define LCD_CENTER				101
+#define LCD_RIGHT					102
+#define LCD_LEFT					103
 
-	#define HEXADECIMAL				16
-	#define DECIMAL					10
-	#define OCTAL						8
-	#define BINAIRE					2
+#define DEGRE						0b11011111 	// Code ASCII pour le symbole degre
+#define SIGMA						0b11100101 	// Code ASCII pour le symbole sigma
+#define MICRO						0b11100100 	// Code ASCII pour le symbole micro
+#define INFINI						0b11110011 	// Code ASCII pour le symbole infini
+#define ESPACE						0x20		 	// Code ASCII pour un espace
 
-	#define ACIRC						0		// â
-	#define AGRAVE						1		// à
+#define HEXADECIMAL				16
+#define DECIMAL					10
+#define OCTAL						8
+#define BINAIRE					2
 
-	#define CCEDIL						2		// ç
+#define ACIRC						0		// â
+#define AGRAVE						1		// à
 
-	#define EACUTE						3		// é
-	#define EGRAVE						4		// è
-	#define ECIRC						5		// ê
-	#define ETREMA						6		// ë
-	#define EURO						7		// €
+#define CCEDIL						2		// ç
 
-	#define ICIRC						8		// î
-	#define ITREMA						9		// ï
+#define EACUTE						3		// é
+#define EGRAVE						4		// è
+#define ECIRC						5		// ê
+#define ETREMA						6		// ë
+#define EURO						7		// €
 
-	#define OCIRC						10		// ô
+#define ICIRC						8		// î
+#define ITREMA						9		// ï
 
-	#define UGRAVE						11		// ù
-	#define UCIRC						12		// û
+#define OCIRC						10		// ô
 
-	/// VARIABLES GLOBALES
+#define UGRAVE						11		// ù
+#define UCIRC						12		// û
 
-	extern u8 Backlight;
+/// VARIABLES GLOBALES
 
-	extern const u8 car0[8];
-	extern const u8 car1[8];
-	extern const u8 car2[8];
-	extern const u8 car3[8];
-	extern const u8 car4[8];
-	extern const u8 car5[8];
-	extern const u8 car6[8];
-	extern const u8 car7[8];
-	extern const u8 car8[8];
-	extern const u8 car9[8];
-	extern const u8 car10[8];
-	extern const u8 car11[8];
-	extern const u8 car12[8];
+extern u8 Backlight;
 
-	/// PROTOTYPES
+extern const u8 car0[8];
+extern const u8 car1[8];
+extern const u8 car2[8];
+extern const u8 car3[8];
+extern const u8 car4[8];
+extern const u8 car5[8];
+extern const u8 car6[8];
+extern const u8 car7[8];
+extern const u8 car8[8];
+extern const u8 car9[8];
+extern const u8 car10[8];
+extern const u8 car11[8];
+extern const u8 car12[8];
 
-	// private
-	static void lcdi2c_send4(u8, u8);
-	static void lcdi2c_send8(u8, u8);
+/// PROTOTYPES
 
-	// public
-	void lcdi2c_init(u8, u8, u8);
-	void lcdi2c_backlight();
-	void lcdi2c_noBacklight();
-	void lcdi2c_clear();
-	void lcdi2c_clearLine(u8);
-	void lcdi2c_home();
-	void lcdi2c_noAutoscroll();
-	void lcdi2c_autoscroll();
-	void lcdi2c_rightToLeft();
-	void lcdi2c_leftToRight();
-	void lcdi2c_scrollDisplayRight();
-	void lcdi2c_scrollDisplayLeft();
-	void lcdi2c_blink();
-	void lcdi2c_noBlink();
-	void lcdi2c_cursor();
-	void lcdi2c_noCursor();
-	void lcdi2c_display();
-	void lcdi2c_noDisplay();
-	void lcdi2c_setCursor(u8, u8);
-	void lcdi2c_write(u8);
-	void lcdi2c_printf(char*, ...);
-	void lcdi2c_newchar(const u8 *, u8);
-	void lcdi2c_newpattern();
+// private
+static void lcdi2c_send4(u8, u8);
+static void lcdi2c_send8(u8, u8);
+
+// public
+void lcdi2c_init(u8, u8, u8);
+void lcdi2c_backlight();
+void lcdi2c_noBacklight();
+void lcdi2c_clear();
+void lcdi2c_clearLine(u8);
+void lcdi2c_home();
+void lcdi2c_noAutoscroll();
+void lcdi2c_autoscroll();
+void lcdi2c_rightToLeft();
+void lcdi2c_leftToRight();
+void lcdi2c_scrollDisplayRight();
+void lcdi2c_scrollDisplayLeft();
+void lcdi2c_blink();
+void lcdi2c_noBlink();
+void lcdi2c_cursor();
+void lcdi2c_noCursor();
+void lcdi2c_display();
+void lcdi2c_noDisplay();
+void lcdi2c_setCursor(u8, u8);
+void lcdi2c_write(u8);
+void lcdi2c_printf(char*, ...);
+void lcdi2c_newchar(const u8 *, u8);
+void lcdi2c_newpattern();
 
 #endif
 
