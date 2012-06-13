@@ -9,7 +9,7 @@
 
 void setup()
 {
-	int i;
+	u16 i;
 	// write a 0 to all 256 bytes of the EEPROM
 	for (i = 0; i < 256; i++)
 		EEPROM.write(i, 0);

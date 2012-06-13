@@ -78,7 +78,7 @@ void setup()
 	PCF8574_address = 0b01001110;
 	PCF8574_data.val = 0;
 
-	I2C.init();		// I2C_MASTER_MODE, I2C_SLEW_OFF
+	I2C.master();		// I2C_MASTER_MODE, I2C_SLEW_OFF
 }
 
 void loop()

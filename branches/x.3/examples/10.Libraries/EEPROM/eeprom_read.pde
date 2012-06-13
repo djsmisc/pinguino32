@@ -9,8 +9,8 @@
  */
 
 // start reading from the first byte (address 0) of the EEPROM
-int address = 0;
-byte value;
+u16 address = 0;
+u8 value;
 
 void setup()
 {

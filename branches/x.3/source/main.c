@@ -64,7 +64,7 @@ void pinguino_main(void)
 	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 	#endif
 
-	#if defined(PIC18F46J50) || defined(PIC18F26J50)
+	#if defined(PIC18F26J50)
     // Enable the PLL and wait 2+ms until the PLL locks
     unsigned int pll_startup_counter = 600;
     {
@@ -78,7 +78,7 @@ void pinguino_main(void)
 	PIE1 = 0;
 	PIE2 = 0;
 
-	#ifdef USERINT              // Enable General/Peripheral interrupts
+	#ifdef ONEVENT//USERINT              // Enable General/Peripheral interrupts
 	int_init();					// Disable all individual interrupts
 	#endif
 
@@ -90,7 +90,7 @@ void pinguino_main(void)
 
 	setup();
 
-	#ifdef USERINT
+	#ifdef ONEVENT//USERINT
 	int_start();				// Enable all timers interrupts
 	#endif
 
@@ -226,7 +226,11 @@ void high_priority_isr(void) __interrupt 1
 #endif
 
 #ifdef __PS2KEYB__
-	keyboard_irr();
+	keyboard_isr();
+#endif
+
+#ifdef __DCF77__
+	dcf77_interrupt();
 #endif
 }
 
@@ -249,5 +253,9 @@ void low_priority_isr(void) __interrupt 2
 {
 #ifdef USERINT
 	userinterrupt();
+#endif
+
+#ifdef ONEVENT
+	userlowinterrupt();
 #endif
 }

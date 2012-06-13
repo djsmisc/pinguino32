@@ -70,7 +70,7 @@ void _lcd_send(u8 value, u8 mode)
 	else
 	{
 		_lcd_write4bits(value >> 4);	// Upper 4 bits first
-		_lcd_write4bits(value);		// Lower 4 bits second
+		_lcd_write4bits(value);		    // Lower 4 bits second
 	}
 }
 
