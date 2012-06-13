@@ -3,11 +3,11 @@
 // modification 2009/08/08 18F4550
 // regis blanchot 2011/08/09 : FreeJALduino support
 // regis blanchot 2012/02/14 : Pinguino 26J50 support
-// regis blanchot 2012/04/23 : new digitalread (thanks to JP Mandon)
 
 #ifndef __DIGITALW__
 #define __DIGITALW__
 
+#include <pic18fregs.h>
 #include <typedef.h>
 
 #define pB	0
@@ -73,7 +73,7 @@ const u8 mask[14]={_7,_6,_2,_3,_0,_2,_1,_1,_2,_3,_4,_5,_6,_7};
 const u8 port[14]={1,1,0,0,3,1,1,3,3,3,3,3,3,3};
 #endif
 
-void digitalwrite(int output,int state)
+void digitalwrite(u8 output, u8 state)
 {
 	switch (port[output])
 	{
@@ -121,38 +121,6 @@ u8 digitalread(u8 input)
 	}
 	return (0);
 }
-
-/*
-u8 digitalread(u8 pin)
-{
-	u16 reg;
-
-	switch (port[pin])
-	{
-		case pB:
-			reg = PORTB;
-			break;
-		case pC:
-			reg = PORTC;
-			break;
-		case pA:
-			reg = PORTA;
-			break;
-		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
-		case pD:
-			reg = PORTD;
-			break;
-		case pE:
-			reg = PORTE;
-			break;
-		#endif
-	}
-	if ((reg & mask[pin])!=0)
-		return 1;
-	else
-		return 0;
-}
-*/
 
 void pinmode(u8 input, u8 state)
 {

@@ -34,14 +34,14 @@
 		#define ONEVENT
 	#endif
 
-    #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC18F26J50) && !defined(PIC18F46J50)
+    #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC18F26J50)
         #error "Error : this library is intended to be used only with 8-bit Pinguino" 
     #endif
     
 	#include <pic18fregs.h>
 	#include <typedef.h>
 	#include <interrupt.h>
-	//#include <macro.h>
+	#include <macro.h>
 
 	typedef void (*callback) (void);				// type of: void callback()
 
@@ -87,7 +87,7 @@ void detachInterrupt(u8 inter)
 		case INT_TMR3:
 			PIE2bits.TMR3IE = INT_DISABLE;
 			break;
-        #if defined(PIC18F26J50) || defined(PIC18F46J50)
+        #if defined(PIC18F26J50)
 		case INT_TMR4:
 			PIE3bits.TMR4IE = INT_DISABLE;
 			break;
@@ -198,7 +198,9 @@ void int_start()
 	#endif
 
 	#ifdef TMR4INT
+    #if defined(PIC18F26J50)
 		T4CONbits.TMR4ON = ON;
+	#endif
 	#endif
 }
 
@@ -228,7 +230,9 @@ void int_stop()
 	#endif
 
 	#ifdef TMR4INT
+    #if defined(PIC18F26J50)
 		T4CONbits.TMR4ON = OFF;
+	#endif
 	#endif
 }
 
@@ -260,21 +264,21 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 				// 1 us = 1.000 ns = 12 cy
 				preloadH[INT_TMR0] = high8(0xFFFF - 12);
 				preloadL[INT_TMR0] =  low8(0xFFFF - 12);
-				_t0con = T0_OFF & T0_16BIT & T0_CLK & T0_PS_OFF;
+				_t0con = T0_OFF & T0_16BIT & T0_SOURCE_INT & T0_PS_OFF;
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR0] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR0] =  low8(0xFFFF - 1500);
-				_t0con = T0_OFF & T0_16BIT & T0_CLK & T0_PS_ON & T0_PS_1_8;
+				_t0con = T0_OFF & T0_16BIT & T0_SOURCE_INT & T0_PS_ON & T0_PS_1_8;
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
 				// 12.000.000 / 256 = 46875
 				preloadH[INT_TMR0] = high8(0xFFFF - 46875);
 				preloadL[INT_TMR0] =  low8(0xFFFF - 46875);
-				_t0con = T0_OFF & T0_16BIT & T0_CLK & T0_PS_ON & T0_PS_1_256;
+				_t0con = T0_OFF & T0_16BIT & T0_SOURCE_INT & T0_PS_ON & T0_PS_1_256;
 				break;
 		}
 
@@ -542,7 +546,7 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 #endif
 
 #ifdef TMR4INT
-#if defined(PIC18F26J50) || defined(PIC18F46J50)
+#if defined(PIC18F26J50)
 u8 OnTimer4(callback func, u8 timediv, u16 delay)
 {
 	u8 _t4con = 0;
@@ -595,7 +599,7 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
 }
 #else
 #error "Your processor don't have any Timer4."
-#endif /* defined(PIC18F26J50) || defined(PIC18F46J50) */
+#endif /* defined(PIC18F26J50) */
 #endif /* TMR4INT */
 
 /*	----------------------------------------------------------------------------
@@ -623,7 +627,7 @@ void OnCounter0(callback func, u8 config)
 		preloadL[INT_TMR0] = 0;
 		TMR0H = 0;
 		TMR0L = 0;
-		T0CON = T0_ON | T0_16BIT | T0_CKI | T0_L2H | T0_PS_ON | T0_PS_1_2;
+		T0CON = T0_ON | T0_16BIT | T0_SOURCE_EXT | T0_L2H | T0_PS_ON | T0_PS_1_2;
 		T0CON |= config;
 		INTCONbits.TMR0IF = 0;
 	}

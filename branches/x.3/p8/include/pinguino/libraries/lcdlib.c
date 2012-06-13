@@ -32,7 +32,7 @@
 /** Positive pulse on E */
 void _lcd_pulseEnable(void)
 {
-	digitalwrite(_enable_pin, LOW);
+	//digitalwrite(_enable_pin, LOW);
 	//Delayus(1);    
 	digitalwrite(_enable_pin, HIGH);
 	//Delayus(1);    // enable pulse must be >450ns

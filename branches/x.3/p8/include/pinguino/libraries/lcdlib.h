@@ -1,3 +1,6 @@
+#ifndef __LCDLIB_H__
+#define __LCDLIB_H__
+
 //#include <stdio.h>
 //#include <stdlib.h>
 #include <typedef.h>
@@ -40,9 +43,9 @@
 #define LCD_5x10DOTS 0x04
 #define LCD_5x8DOTS 0x00
 
-u8 _rs_pin = 8; // LOW: command.  HIGH: character.
-u8 _rw_pin = -1; // LOW: write to LCD.  HIGH: read from LCD.
-u8 _enable_pin = 9; // activated by a HIGH pulse.
+u8 _rs_pin = 8;         // LOW: command.  HIGH: character.
+u8 _rw_pin = -1;        // LOW: write to LCD.  HIGH: read from LCD.
+u8 _enable_pin = 9;     // activated by a HIGH pulse.
 u8 _data_pins[8];
 
 u8 _displayfunction;
@@ -85,3 +88,5 @@ void _lcd_send(u8 value, u8 mode);
 void _lcd_write8bits(u8 value);
 void _lcd_write4bits(u8 value);
 void _lcd_pulseEnable(void);
+
+#endif /* __LCDLIB_H__ */
