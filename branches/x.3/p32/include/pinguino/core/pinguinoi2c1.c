@@ -35,6 +35,9 @@
 #include <system.c>
 #include <i2c.c>
 
+#define NACK	true
+#define ACK		false
+
 	/// PROTOTYPES
 
 void I2C1_init();
@@ -44,6 +47,7 @@ u8   I2C1_get(u16);
 void I2C1_sendID(u16, u8);
 u8   I2C1_writechar(u8);
 u8   I2C1_readchar();
+u8   I2C1_readcharAck();
 void I2C1_wait();
 void I2C1_start();
 void I2C1_stop();
@@ -115,7 +119,16 @@ u8 I2C1_writechar(u8 byte)
 
 u8 I2C1_readchar()
 {
-	return I2C_readchar(I2C1, true);
+	return I2C_readchar(I2C1, NACK);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Get a byte from the slave
+	--------------------------------------------------------------------------*/
+
+u8 I2C1_readcharAck()
+{
+	return I2C_readchar(I2C1, ACK);
 }
 
 /*	----------------------------------------------------------------------------

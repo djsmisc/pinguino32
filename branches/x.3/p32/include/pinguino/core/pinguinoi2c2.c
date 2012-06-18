@@ -35,15 +35,19 @@
 #include <system.c>
 #include <i2c.c>
 
+#define NACK	true
+#define ACK		false
+
 	/// PROTOTYPES
 
 void I2C2_init();
-u8 I2C2_write(u16, u8*, u8);
-u8 I2C2_send(u16, u8);
-u8 I2C2_get(u16);
+u8   I2C2_write(u16, u8*, u8);
+u8   I2C2_send(u16, u8);
+u8   I2C2_get(u16);
 void I2C2_sendID(u16, u8);
-u8 I2C2_writechar(u8);
-u8 I2C2_readchar();
+u8   I2C2_writechar(u8);
+u8   I2C2_readchar();
+u8   I2C2_readcharAck();
 void I2C2_wait();
 void I2C2_start();
 void I2C2_stop();
@@ -73,9 +77,9 @@ u8 I2C2_write(u16 adress, u8* bytes, u8 length)
 	---------- Send a byte to the slave
 	--------------------------------------------------------------------------*/
 
-u8 I2C2_send(u16 adress, u8 byte)
+u8 I2C2_send(u16 address, u8 byte)
 {
-	return I2C_send(I2C2, adress, byte);
+	return I2C_send(I2C2, address, byte);
 }
 
 /*	----------------------------------------------------------------------------
@@ -111,7 +115,16 @@ u8 I2C2_writechar(u8 byte)
 
 u8 I2C2_readchar()
 {
-	return I2C_readchar(I2C2);
+	return I2C_readchar(I2C2, NACK);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Get a byte from the slave
+	--------------------------------------------------------------------------*/
+
+u8 I2C2_readcharAck()
+{
+	return I2C_readchar(I2C2, ACK);
 }
 
 /*	----------------------------------------------------------------------------
