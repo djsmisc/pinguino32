@@ -56,6 +56,9 @@
 #ifndef __PCF8574_H
 	#define __PCF8574_H
 
+    #include <typedef.h>
+    #include <macro.h>
+
 	typedef union
 	{
 		u8 val;
@@ -79,5 +82,9 @@
 	extern Byte PCF8574_data;	// les registres du PCF8574
 	extern u8 PCF8574_address;
 
-#endif
+    // prototypes
+    
+    void PCF8574_init(u16 speed);
+    u8 PCF8574_write(u8 mydata);
 
+#endif

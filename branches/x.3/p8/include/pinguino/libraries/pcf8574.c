@@ -56,8 +56,8 @@
 #ifndef __PCF8574_C
 	#define __PCF8574_C
 
-//#include <typedef.h>
-//#include <macro.h>
+#include <typedef.h>
+#include <macro.h>
 #include <pinguinoi2c.c>
 #include <pcf8574.h>
 
@@ -67,18 +67,19 @@
 	---------- RAZ de la variable d'echange entre Pic et PCF8574
 	--------------------------------------------------------------------------*/
 
-void PCF8574_init(void)
+void PCF8574_init(u16 speed)
 {
 	PCF8574_data.val = 0;
+    I2C_init(I2C_MASTER_MODE, speed);
 }
 
 /**	----------------------------------------------------------------------------
 	---------- PCF8574_write
 	----------------------------------------------------------------------------
-	---------- Ecriture d'un octet sur le port du PCF8574 via le bus I2C
+	---------- Write a byte on the PCF8574
 	--------------------------------------------------------------------------*/
 
-u8 PCF8574_write(u8 mydata)
+u8 PCF8574_write(u8 address, u8 mydata)
 {
 	/** In Master Transmitter mode, the
 	first byte transmitted contains the slave address of the
@@ -92,13 +93,13 @@ u8 PCF8574_write(u8 mydata)
 	u8 bRet = 0x00;
 
 	I2C_start();
-	I2C_write(PCF8574P_ADDRESS | I2C_WRITE);
+	I2C_writechar(address | I2C_WRITE);
 	if (SSPCON2bits.ACKSTAT) //Si AckStat == 1, on n'a pas reçu d'acquittement
 	{
 		I2C_stop();
 		return bRet;
 	}
-	I2C_write(mydata);
+	I2C_writechar(mydata);
 	if (!SSPCON2bits.ACKSTAT ) //Si on reçoit un acquitement, on retourne 1
 	{
 		bRet = 0x01;
@@ -108,4 +109,3 @@ u8 PCF8574_write(u8 mydata)
 }
 
 #endif
-

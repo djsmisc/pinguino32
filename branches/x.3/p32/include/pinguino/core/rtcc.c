@@ -33,7 +33,6 @@
 #include <interrupt.c>
 #include <bcd.c>
 
-
 // RTCC definitions
 
 typedef void (*callback) (void);	// type of: void callback()
