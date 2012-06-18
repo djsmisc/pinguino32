@@ -370,7 +370,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 	#endif
 }
 
-void OnRTC(callback func, u16 delay)
+void OnRTCC(callback func, u16 delay)
 {
 	u8 _t1con = 0;
 

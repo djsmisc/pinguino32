@@ -70,20 +70,18 @@ typedef union
 	} bits;
 } Byte;
 
-Byte PCF8574_data;	// PCF8574's registers
-u8 PCF8574_address;	// PCF8574's I2C address
+Byte PCF8574_data;	                // PCF8574's registers
+u8 PCF8574_address = 0b01001110;	// PCF8574's I2C address
 
 void setup()
 {
-	PCF8574_address = 0b01001110;
 	PCF8574_data.val = 0;
-
-	I2C.master(I2C_100KHZ); // other possible values are I2C_400KHZ and I2C_1MHZ
+	PCF8574.init(I2C_100KHZ);
 }
 
 void loop()
 {
 	PCF8574_data.bits.P0 ^= 1; // 1 then 0
-	I2C.send(PCF8574_address, PCF8574_data.val);
+	PCF8574.write(PCF8574_address, PCF8574_data.val);
 	delay(500);
 }

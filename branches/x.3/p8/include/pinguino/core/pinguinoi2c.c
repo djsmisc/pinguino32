@@ -1,13 +1,13 @@
 /*	----------------------------------------------------------------------------
 	FILE:			pinguinoi2c.c
-	PROJECT:		pinguino (This library is optimized for Pinguino 18F2550)
+	PROJECT:		pinguino
 	PURPOSE:		Include all functions to handle I2C communication for Master and Slave
 	PROGRAMER:		Régis Blanchot, Jean-Pierre Mandon, Jesús Carmona Esteban & Rafael Salazar
 	VERSION:		1.1
 	FIRST RELEASE:	03 apr. 2010
-	LAST RELEASE:	07 apr. 2011
+	LAST RELEASE:	18 jun. 2012
 	----------------------------------------------------------------------------
-	TODO : Arduino Compatibility
+	TODO : Arduino Compatibility ???
 
 	begin() initializes pinguino as an I2C master
 	begin(address) initializes pinguino as a slave at address address. 
@@ -57,8 +57,12 @@
 #include <macro.h>
 #include <const.h>
 #include <interrupt.c>
-#include <stdio.c>
-#include <stdarg.h>
+//#include <stdio.c>
+//#include <stdarg.h>
+
+// Modules
+#define I2C1            1
+#define I2C2            2
 
 // Mode I2C
 #define I2C_WRITE		0
@@ -71,45 +75,49 @@
 #define I2C_400KHZ		1
 #define I2C_1MHZ		2
 
-typedef void (*i2c_stdout) (void);				// type of :	void foo(int x)
-static i2c_stdout _i2c_onRequest_function;	// then : 		void pputchar(void)
-static i2c_stdout _i2c_onReceive_function;	// then : 		void pputchar(void)
+//typedef void (*i2c_stdout) (void);				// type of :	void foo(int x)
+//i2c_stdout _i2c_onRequest_function;	// then : 		void pputchar(void)
+//i2c_stdout _i2c_onReceive_function;	// then : 		void pputchar(void)
 
 /// PROTOTYPES
 
-void I2C_master(u16);   
-void I2C_slave(u16);   
-void I2C_init(u8, u16);
-void I2C_interrupt();
-//void I2C_printf(u8, u8 *, ...);
-//void I2C_OnRequest(void (*)(void));
+// high-level functions
+void I2C_master(u8, u16);   
+void I2C_slave(u8, u16);   
+void I2C_init(u8, u8, u16);
+//void I2C_printf(u8, u8, u8 *, ...);
+u8 I2C_write(u8, u8, u8 *, u8);
+u8 I2C_read(u8, u8, u8 *, u8);
+u8 I2C_send(u8, u8, u8);
+u8 I2C_get(u8, u8);
+void I2C_sendID(u8, u16, u8);
+
+// low-level function
+u8 I2C_writechar(u8, u8);
+u8 I2C_readchar(u8);
+u8 I2C_waitAck(u8);
+void I2C_wait(u8);
+void I2C_start(u8);
+void I2C_stop(u8);
+void I2C_restart(u8);
+void I2C_sendNack(u8);
+void I2C_sendAck(u8);
+//void I2C_interrupt();
+//void I2C_OnRequest(void (*)(void));       // TODO : move to interrupt.c ?
 //void IC2_OnReceive(void (*)(void));
-u8 I2C_write(u8, u8 *, u8);
-u8 I2C_read(u8, u8 *, u8);
-u8 I2C_writechar(u8);
-u8 I2C_readchar();
-u8 I2C_send(u8, u8);
-u8 I2C_get(u8);
-static void I2C_wait();
-static void I2C_start();
-static void I2C_stop();
-static void I2C_restart();
-static void I2C_sendNack();
-static void I2C_sendAck();
-static void I2C_sendID(u16, u8);
 
 /*	----------------------------------------------------------------------------
 	---------- Initialitation Functions for Master and Slave
 	--------------------------------------------------------------------------*/
 
-void I2C_master(u16 speed)   
+void I2C_master(u8 module, u16 speed)   
 {
-	I2C_init(I2C_MASTER_MODE, speed);
+	I2C_init(module, I2C_MASTER_MODE, speed);
 }
 
-void I2C_slave(u16 DeviceID)   
+void I2C_slave(u8 module, u16 DeviceID)   
 {
-	I2C_init(I2C_SLAVE_MODE, DeviceID);
+	I2C_init(module, I2C_SLAVE_MODE, DeviceID);
 }
 
 /*	----------------------------------------------------------------------------
@@ -123,55 +131,118 @@ void I2C_slave(u16 DeviceID)
 	RB1 = SCL
 	--------------------------------------------------------------------------*/
 
-void I2C_init(u8 mode, u16 sora)
+void I2C_init(u8 module, u8 mode, u16 sora)
 {
-	// In Slave mode, the SCL and SDA pins must be configured as inputs
-	#if defined(PIC18F26J50)
-	TRISBbits.TRISB5 = INPUT;			// SDA = INPUT
-	TRISBbits.TRISB4 = INPUT;			// SCL = INPUT
-    #else
-	TRISBbits.TRISB0 = INPUT;			// SDA = INPUT
-	TRISBbits.TRISB1 = INPUT;			// SCL = INPUT
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
     #endif
     
-	switch (mode)
+   	switch(module)
 	{
-		case I2C_SLAVE_MODE:
-			intUsed[INT_SSP] = INT_USED;
-			// Enabling interrupts (peripheral & general)
-			INTCONbits.PEIE=1;
-			INTCONbits.GIE=1;
-			SSPCON1 = 0b00101110;		// Slave mode,  7-bit address with Start and Stop bit interrupts enabled
-			//SSPCON1 = 0b00101111;		// Slave mode, 10-bit address with Start and Stop bit interrupts enabled
-/*	---------------------------------------------------------------------------*/
-			SSPADD = sora;				// Slave 7-bit address
-			// TODO							// Slave 10-bit address
-/*	---------------------------------------------------------------------------*/
-			break;
-		case I2C_MASTER_MODE:
-		default:// I2C_MASTER_MODE
-			SSPCON1 = 0b00101000;		// Master Mode, clock = FOSC/(4 * (SSPADD + 1))
-			// datasheet p208
-			switch (sora)
-			{
-                case I2C_1MHZ:
-					// SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
-					SSPSTAT = 0b10000000;		// Slew Mode Off
-					SSPADD = 11;				// 1MHz = FOSC/(4 * (SSPADD + 1))
-				case I2C_400KHZ:
-					// SMP = 0 = Slew rate control enabled for High-Speed mode (400 kHz)
-					SSPSTAT = 0b00000000;		// Slew Mode On
-					SSPADD = 29;				// 400kHz = FOSC/(4 * (SSPADD + 1))
-				case I2C_100KHZ:
-				default:
-					// SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
-					SSPSTAT = 0b10000000;		// Slew Mode Off
-					SSPADD = 119;				// 100kHz = FOSC/(4 * (SSPADD + 1))
-			}
-	}
-	SSPCON2 = 0;
-	PIR1bits.SSPIF = 0;
-	PIR2bits.BCLIF = 0;
+		case I2C1:
+
+            // In Slave mode, the SCL and SDA pins must be configured as inputs
+            #if defined(PIC18F26J50)
+            TRISBbits.TRISB5 = INPUT;			// SDA1 = INPUT
+            TRISBbits.TRISB4 = INPUT;			// SCL1 = INPUT
+            #else
+            TRISBbits.TRISB0 = INPUT;			// SDA = INPUT
+            TRISBbits.TRISB1 = INPUT;			// SCL = INPUT
+            #endif
+            
+            switch (mode)
+            {
+                case I2C_SLAVE_MODE:
+                    intUsed[INT_SSP] = INT_USED;
+                    // Enabling interrupts (peripheral & general)
+                    INTCONbits.PEIE=1;
+                    INTCONbits.GIE=1;
+                    SSPCON1 = 0b00101110;		// Slave mode,  7-bit address with Start and Stop bit interrupts enabled
+                    //SSPCON1 = 0b00101111;		// Slave mode, 10-bit address with Start and Stop bit interrupts enabled
+        /*	---------------------------------------------------------------------------*/
+                    SSPADD = sora;				// Slave 7-bit address
+                    // TODO						// Slave 10-bit address
+        /*	---------------------------------------------------------------------------*/
+                    break;
+
+                case I2C_MASTER_MODE:
+                default:// I2C_MASTER_MODE
+                    SSPCON1 = 0b00101000;		// Master Mode, clock = FOSC/(4 * (SSPADD + 1))
+                    // datasheet p208
+                    switch (sora)
+                    {
+                        case I2C_1MHZ:
+                            // SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
+                            SSPSTAT = 0b10000000;		// Slew Mode Off
+                            SSPADD = 11;				// 1MHz = FOSC/(4 * (SSPADD + 1))
+
+                        case I2C_400KHZ:
+                            // SMP = 0 = Slew rate control enabled for High-Speed mode (400 kHz)
+                            SSPSTAT = 0b00000000;		// Slew Mode On
+                            SSPADD = 29;				// 400kHz = FOSC/(4 * (SSPADD + 1))
+
+                        case I2C_100KHZ:
+                        default:
+                            // SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
+                            SSPSTAT = 0b10000000;		// Slew Mode Off
+                            SSPADD = 119;				// 100kHz = FOSC/(4 * (SSPADD + 1))
+                    }
+            }
+            SSPCON2 = 0;
+            PIR1bits.SSPIF = 0;
+            PIR2bits.BCLIF = 0;
+            break;
+
+        #if defined(PIC18F26J50)
+		case I2C2:
+
+            // In Slave mode, the SCL and SDA pins must be configured as inputs
+            TRISDbits.TRISD1 = INPUT;			// SDA2 = INPUT
+            TRISDbits.TRISD0 = INPUT;			// SCL2 = INPUT
+            
+            switch (mode)
+            {
+                case I2C_SLAVE_MODE:
+                    intUsed[INT_SSP] = INT_USED;
+                    // Enabling interrupts (peripheral & general)
+                    INTCONbits.PEIE=1;
+                    INTCONbits.GIE=1;
+                    SSPCON2 = 0b00101110;		// Slave mode,  7-bit address with Start and Stop bit interrupts enabled
+                    //SSPCON1 = 0b00101111;		// Slave mode, 10-bit address with Start and Stop bit interrupts enabled
+        /*	---------------------------------------------------------------------------*/
+                    SSPADD = sora;				// Slave 7-bit address
+                    // TODO						// Slave 10-bit address
+        /*	---------------------------------------------------------------------------*/
+                    break;
+
+                case I2C_MASTER_MODE:
+                default:// I2C_MASTER_MODE
+                    SSPCON2 = 0b00101000;		// Master Mode, clock = FOSC/(4 * (SSPADD + 1))
+                    // datasheet p208
+                    switch (sora)
+                    {
+                        case I2C_1MHZ:
+                            // SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
+                            SSP2STAT = 0b10000000;		// Slew Mode Off
+                            SSP2ADD = 11;				// 1MHz = FOSC/(4 * (SSPADD + 1))
+
+                        case I2C_400KHZ:
+                            // SMP = 0 = Slew rate control enabled for High-Speed mode (400 kHz)
+                            SSP2STAT = 0b00000000;		// Slew Mode On
+                            SSP2ADD = 29;				// 400kHz = FOSC/(4 * (SSPADD + 1))
+
+                        case I2C_100KHZ:
+                        default:
+                            // SMP = 1 = Slew rate control disabled for Standard Speed mode (100 kHz and 1 MHz)
+                            SSP2STAT = 0b10000000;		// Slew Mode Off
+                            SSP2ADD = 119;				// 100kHz = FOSC/(4 * (SSPADD + 1))
+                    }
+            }
+            SSP2CON2 = 0;
+            PIR1bits.SSP2IF = 0;
+            PIR2bits.BCL2IF = 0;
+            break;
+        #endif
 }
 
 /*	----------------------------------------------------------------------------
@@ -191,69 +262,73 @@ void I2C_printf(u8 address, u8 *fmt, ...)
 }
 */
 /*	----------------------------------------------------------------------------
-	---------- Send a string to the slave
+	---------- Send x bytes to the slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
-u8 I2C_write(u8 address, u8 *string, u8 length)
+u8 I2C_write(u8 module, u8 address, u8 *buffer, u8 length)
 {
     u8 i;
     
-	I2C_sendID(address, I2C_WRITE);
+	I2C_start(module);
+	I2C_sendID(module, address, I2C_WRITE);
     for (i=0; i<length; i++)
     {
-        if (I2C_writechar(string[i]) == 0)
+        if (I2C_writechar(module, buffer[i]) == 0)
             return (0);
     }
-	I2C_stop();
+	I2C_stop(module);
 	return (1);
 }
 
 /*	----------------------------------------------------------------------------
-	---------- Get a string from the slave
+	---------- Get x bytes from the slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
-u8 I2C_read(u8 address, u8 *buffer, u8 length)
+u8 I2C_read(u8 module, u8 address, u8 *buffer, u8 length)
 {
     u8 i;
     
-	I2C_sendID(address, I2C_WRITE);
+	I2C_start(module);
+	I2C_sendID(module, address, I2C_WRITE);
     for (i=0; i<length; i++)
     {
-        buffer[i] = I2C_get(address);
+        buffer[i] = I2C_get(module, address);
     }
-	I2C_stop();
+	I2C_stop(module);
 	return (1);
 }
 
 /*	----------------------------------------------------------------------------
-	---------- Send a byte to slave
+	---------- Send 1 byte to slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
-u8 I2C_send(u8 address, u8 byte)
+u8 I2C_send(u8 module, u8 address, u8 byte)
 {
-	I2C_sendID(address, I2C_WRITE);
-	if (I2C_writechar(byte) == 0)
+	I2C_start(module);
+	I2C_sendID(module, address, I2C_WRITE);
+	if (I2C_writechar(module, byte) == 0)
 		return (0);
-	I2C_stop();
+	I2C_stop(module);
 	return (1);
 }
 
 /*	----------------------------------------------------------------------------
-	---------- Get a byte from slave
+	---------- Get 1 byte from slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
-u8 I2C_get(u8 address)
+u8 I2C_get(u8 module, u8 address)
 {
 	u8 byte;
 
-	I2C_sendID(address, I2C_READ);
-	byte = I2C_readchar();
-	I2C_sendNack();
-	I2C_stop();
+	I2C_start(module);
+	I2C_sendID(module, address, I2C_READ);
+	byte = I2C_readchar(module);
+	I2C_sendNack(module);
+	I2C_stop(module);
 	return (byte);
 }
 
@@ -271,12 +346,12 @@ u8 I2C_get(u8 address)
 	For 10 bits address Device:                
 		Device address Format = 1 1 1 1 0 0 A9 A8 A7 A6 A5 A4 A3 A2 A1 A0
 		were: A9:A0 are Device address,
-	r_w
+	rw
 		I2C_READ (1) or I2C_WRITE (0) parameter
 	If the device is busy then it resends until accepted
 	--------------------------------------------------------------------------*/
 
-static void I2C_sendID(u16 DeviceID, u8 r_w)
+void I2C_sendID(u8 module, u16 DeviceID, u8 rw)
 {         
 	u8 temp;
 
@@ -284,28 +359,26 @@ static void I2C_sendID(u16 DeviceID, u8 r_w)
 	if (DeviceID > 0x00FF)
 	{         
 		temp = (DeviceID >> 7) & 0x06;	// set A9 and A8 to temp.bit2 and temp.bit1
-		temp = temp | 0xF0 | r_w;			// set DeviceID address Hi format = 11110(A9A8)(R/W)
-		I2C_start();
-		if (I2C_writechar(temp) != 1)
+		temp = temp | 0xF0 | rw;		// set DeviceID address Hi format = 11110(A9A8)(R/W)
+		if (I2C_writechar(module, temp) != 1)
 		{
 			do {
-				I2C_restart();
-			} while ( I2C_writechar(temp) != 1);
-			temp = (DeviceID << 1 & 0xFE) | r_w;
-			I2C_writechar(temp);
+				I2C_restart(module);
+			} while ( I2C_writechar(module, temp) != 1);
+			temp = (DeviceID << 1 & 0xFE) | rw;
+			I2C_writechar(module, temp);
 		}
 	}
 	// 7-bit address
 	else
 	{         
-		temp = DeviceID;// << 1 & 0b11111110;
-		temp = temp | r_w;
-		I2C_start();
-		if (I2C_writechar(temp) != 1)
+		temp = DeviceID;
+		temp = temp | rw;               // bit 0 commands read or write mode
+		if (I2C_writechar(module, temp) != 1)
 		{
 			do {
-				I2C_restart();
-			} while (I2C_writechar(temp) != 1);
+				I2C_restart(module);
+			} while (I2C_writechar(module, temp) != 1);
 		}
 	}
 }
@@ -320,11 +393,29 @@ static void I2C_sendID(u16 DeviceID, u8 r_w)
 	0 = NAck
 	--------------------------------------------------------------------------*/
 
-u8 I2C_writechar(u8 b)
+u8 I2C_writechar(u8 module, u8 b)
 {
-	SSPBUF = b;
-	I2C_wait();
-	return (!SSPCON2bits.ACKSTAT);
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPBUF = b;
+            I2C_wait(module);
+            return (!SSPCON2bits.ACKSTAT);
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPBUF = b;
+            I2C_wait(module);
+            return (!SSPCON2bits.ACKSTAT);
+            break;
+        #endif
+    }
+
 }
 
 /*	----------------------------------------------------------------------------
@@ -332,38 +423,295 @@ u8 I2C_writechar(u8 b)
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
-u8 I2C_readchar()
+u8 I2C_readchar(u8 module)
 {
-	SSPCON2bits.RCEN = 1;
-	I2C_wait();
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON2bits.RCEN = 1;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPCON2bits.RCEN = 1;
+            break;
+        #endif
+    }
+
+	I2C_wait(module);
 	return (SSPBUF);
 }
+
+/*	----------------------------------------------------------------------------
+	---------- Wait for the module to finish it's last action
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_wait(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            while (PIR1bits.SSPIF == 0);
+            PIR1bits.SSPIF = 0;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            while (PIR1bits.SSPIF == 0);
+            PIR1bits.SSPIF = 0;
+            break;
+        #endif
+    }
+
+}
+
+/*	----------------------------------------------------------------------------
+	---------- I2C_ start bit
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_start(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON2bits.SEN = 1;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPCON2bits.SEN = 1;
+            break;
+        #endif
+    }
+
+	I2C_wait(module);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Send stop bit
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_stop(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON2bits.PEN = 1;
+            break;
+        
+        #if defined(PIC18F26J50)
+        case I2C2:
+            SSPCON2bits.PEN = 1;
+            break;
+        #endif
+    }
+
+	I2C_wait(module);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Send stop bit
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_restart(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON2bits.RSEN=1;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPCON2bits.RSEN=1;
+            break;
+        #endif
+    }
+
+	I2C_wait(module);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Wait for Acknowledge (Ack) from the slave
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+u8 I2C_waitAck(u8 module)
+{
+	u8 i=0;
+
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            while(SSPCON2bits.ACKSTAT == 1) 
+            {
+                i++;
+                if(i==0) return -1;
+            }
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            while(SSPCON2bits.ACKSTAT == 1) 
+            {
+                i++;
+                if(i==0) return -1;
+            }
+            break;
+        #endif
+    }
+
+	return 0;
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Abort reading
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_readAbort(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON1bits.WCOL = 0;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPCON1bits.WCOL = 0;
+            break;
+        #endif
+    }
+
+	I2C_stop(module);
+	I2C_wait(module);  
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Send a Not Acknowledge (NAck) to the slave
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_sendNack(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON2bits.ACKDT = 1;
+            SSPCON2bits.ACKEN = 1;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPCON2bits.ACKDT = 1;
+            SSPCON2bits.ACKEN = 1;
+            break;
+        #endif
+    }
+
+	I2C_wait(module);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- Send an Acknowledge (Ack) to the slave
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+
+void I2C_sendAck(u8 module)
+{
+    #if !defined(PIC18F26J50)
+    if (module > I2C1) module = I2C1;
+    #endif
+
+   	switch(module)
+	{
+		case I2C1:
+            SSPCON2bits.ACKDT = 0;
+            SSPCON2bits.ACKEN = 1;
+            break;
+        
+        #if defined(PIC18F26J50)
+		case I2C2:
+            SSPCON2bits.ACKDT = 0;
+            SSPCON2bits.ACKEN = 1;
+            break;
+        #endif
+    }
+
+	I2C_wait(module);
+}
+
+#endif
+
+
+//
+//  TODO: move the following to interrupt.c ?
+//
+
+
 
 /*	----------------------------------------------------------------------------
 	---------- OnRequest
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-
+/*
 void I2C_OnRequest(i2c_stdout func)
 {
 	_i2c_onRequest_function = func;
 }
-
+*/
 /*	----------------------------------------------------------------------------
 	---------- OnReceive
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-
-void IC2_OnReceive(i2c_stdout func)
+/*
+void I2C_OnReceive(i2c_stdout func)
 {
 	_i2c_onReceive_function = func;
 }
-
+*/
 /*	----------------------------------------------------------------------------
 	---------- Interrupt handler for I2C slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-
+/*
 void I2C_interrupt()
 {
 	if (PIR1bits.SSPIF)
@@ -375,102 +723,4 @@ void I2C_interrupt()
 			_i2c_onReceive_function();
 	}
 }
-
-/*	----------------------------------------------------------------------------
-	---------- Wait for the module to finish it's last action
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_wait()
-{
-	while (PIR1bits.SSPIF == 0);
-	PIR1bits.SSPIF = 0;
-}
-
-/*	----------------------------------------------------------------------------
-	---------- I2C_ start bit
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_start()
-{
-	SSPCON2bits.SEN = 1;
-	I2C_wait();
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Send stop bit
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_stop()
-{
-	SSPCON2bits.PEN = 1;
-	I2C_wait();
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Send stop bit
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_restart()
-{
-	SSPCON2bits.RSEN=1;
-	I2C_wait();
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Wait for Acknowledge (Ack) from the slave
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static u8 I2C_waitAck()
-{
-	u8 i=0;
-	while(SSPCON2bits.ACKSTAT == 1) 
-	{
-		i++;
-		if(i==0) return -1;
-	}
-	return 0;
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Abort reading
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_readAbort()
-{
-	SSPCON1bits.WCOL = 0;
-	I2C_stop();
-	I2C_wait();  
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Send a Not Acknowledge (NAck) to the slave
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_sendNack()
-{
-	SSPCON2bits.ACKDT = 1;
-	SSPCON2bits.ACKEN = 1;
-	I2C_wait();
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Send an Acknowledge (Ack) to the slave
-	----------------------------------------------------------------------------
-	--------------------------------------------------------------------------*/
-
-static void I2C_sendAck()
-{
-	SSPCON2bits.ACKDT = 0;
-	SSPCON2bits.ACKEN = 1;
-	I2C_wait();
-}
-
-#endif
-
+*/

@@ -46,17 +46,27 @@
  #include <debug.c>
 #endif
 
+/*
+    Timer1 Configuration : 1 tick every T1OVERLOAD=20ms
+    The timer clock prescale (TCKPS) is 1:8 (T1_PS_1_8)
+    The TMR1 Count register increments on every FOSC/4 cycle (T1_SOURCE_INT)
+    FOSC/4 = 12MHz => TMR1 inc. every 8/12MHZ = 2/3 = 0,66666667 us
+    20 ms = 20000 us => 20 x 1500 = 30.000 cycles = 0x8ACF
+*/
+#define T1OVERLOAD  30          // max. 43 ms
+#define T1PRELOAD   (T1OVERLOAD * 1500)
+
 /*******************************************************************************
 * if a puls is longer than 150 ms it is a "1", otherwise it is a "0".
 *******************************************************************************/
 
-#define DCF_Discr_150ms (150 / 20)
+#define DCF_Discr_150ms (150 / T1OVERLOAD)
 
 /*******************************************************************************
  * if during 1500 ms no puls has arrived means a start of a new pulstrain.
 *******************************************************************************/
 
-#define DCF_Sync_1500ms (1500 / 20)
+#define DCF_Sync_1500ms (1500 / T1OVERLOAD)
 
 /*******************************************************************************
 * Global variables
@@ -295,15 +305,8 @@ void DCF77_start(u8 dcfPin)
     IPR1bits.TMR1IP = INT_HIGH_PRIORITY;
     PIE1bits.TMR1IE = INT_ENABLE;
     PIR1bits.TMR1IF = 0;
-/*
-    Timer1 Configuration : 1 tick every 20ms
-    The timer clock prescale (TCKPS) is 1:8 (T1_PS_1_8)
-    The TMR1 Count register increments on every FOSC/4 cycle (T1_SOURCE_INT)
-    FOSC/4 = 12MHz => TMR1 inc. every 8/12MHZ = 2/3 = 0,66666667 us
-    20 ms = 20000 us => 20000 / (2/3) = 30.000 cycles = 0x8ACF
-*/
-    TMR1H = 0x8A;
-    TMR1L = 0xCF;
+    TMR1H = high8(T1PRELOAD);
+    TMR1L =  low8(T1PRELOAD);
     #if defined(PIC18F2550) || defined(PIC18F4550)
     T1CON = T1_ON | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT | T1_RUN_FROM_ANOTHER;
     #elif defined(PIC18F26J50) || defined(PIC18F46J50)
