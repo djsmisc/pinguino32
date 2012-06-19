@@ -59,22 +59,6 @@
     #include <typedef.h>
     #include <macro.h>
 
-	typedef union
-	{
-		u8 val;
-		struct
-		{
-			unsigned bit0 :1;
-			unsigned bit1 :1;
-			unsigned bit2 :1;
-			unsigned bit3 :1;
-			unsigned bit4 :1;
-			unsigned bit5 :1;
-			unsigned bit6 :1;
-			unsigned bit7 :1;
-		} bits;
-	} _Byte;
-
 	//extern _Byte _PCF8574_data;
 	//extern u8 _PCF8574_address;
     //extern u8 _PCF8574_module;

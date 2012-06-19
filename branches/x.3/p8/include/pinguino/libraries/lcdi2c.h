@@ -74,6 +74,24 @@
 
 #include <typedef.h>
 
+typedef union
+{
+    u8 val;
+    struct
+    {
+        unsigned bit0 :1;
+        unsigned bit1 :1;
+        unsigned bit2 :1;
+        unsigned bit3 :1;
+        unsigned bit4 :1;
+        unsigned bit5 :1;
+        unsigned bit6 :1;
+        unsigned bit7 :1;
+    } bits;
+} _Byte_;
+
+extern _Byte_ PCF8574_data;
+
 #define LCD_MASK		        0b11110000	// On ne commande que D7 a D4
 
 #define LCD_BL	PCF8574_data.bits.bit0	// P0
@@ -175,26 +193,10 @@
 #define UGRAVE					11		// ù
 #define UCIRC					12		// û
 
-typedef union
-{
-    u8 val;
-    struct
-    {
-        unsigned bit0 :1;
-        unsigned bit1 :1;
-        unsigned bit2 :1;
-        unsigned bit3 :1;
-        unsigned bit4 :1;
-        unsigned bit5 :1;
-        unsigned bit6 :1;
-        unsigned bit7 :1;
-    } bits;
-} _Byte_;
-
 /// VARIABLES GLOBALES
 
 extern u8 Backlight;
-
+/*
 extern const u8 car0[8];
 extern const u8 car1[8];
 extern const u8 car2[8];
@@ -208,7 +210,7 @@ extern const u8 car9[8];
 extern const u8 car10[8];
 extern const u8 car11[8];
 extern const u8 car12[8];
-
+*/
 /// PROTOTYPES
 
 // private
@@ -238,7 +240,7 @@ void lcdi2c_setCursor(u8, u8);
 void lcdi2c_write(u8);
 void lcdi2c_printf(char*, ...);
 void lcdi2c_newchar(const u8 *, u8);
-void lcdi2c_newpattern();
+//void lcdi2c_newpattern();
 
 #endif
 
