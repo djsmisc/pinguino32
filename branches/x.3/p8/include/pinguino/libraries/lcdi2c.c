@@ -88,7 +88,7 @@
 	---------- 1/ réservation de l'emplacement 0 (max. 7) pour la lettre "é" : lcdi2c_newchar(car3, 0);
 	---------- 2/ écriture du nouveau caractère sur le LCD : lcdi2c_write(0);
 	--------------------------------------------------------------------------*/
-
+/*
 	const u8 car0[8]={
 	    0b00000100,      //â
 	    0b00001010,
@@ -219,7 +219,7 @@
 	    0b00001101,
 	    0b00000000
 	};
-
+*/
 /*	----------------------------------------------------------------------------
 	---------- global variables
 	--------------------------------------------------------------------------*/
@@ -511,7 +511,7 @@ void lcdi2c_newchar(const u8 *c, u8 char_code)
 /*	----------------------------------------------------------------------------
 	---------- Définition de 8 nouveaux caractères
 	--------------------------------------------------------------------------*/
-
+/*
 void lcdi2c_newpattern()
 {
 	lcdi2c_newchar(car0,  ACIRC);			// â
@@ -533,7 +533,7 @@ void lcdi2c_newpattern()
 	//lcdi2c_newchar(car11,  UGRAVE);	// ù
 	//lcdi2c_newchar(car12, UCIRC);		// û
 }
-
+*/
 /*	----------------------------------------------------------------------------
 	---------- Initialisation du LCD
 	----------------------------------------------------------------------------
@@ -569,7 +569,7 @@ void lcdi2c_init(u8 numcol, u8 numline, u8 i2c_address)
 	Delayms(2);					// le temps d'execution de Display Clear > 1.64ms
 	lcdi2c_send8(LCD_ENTRY_MODE_SET, LCD_CMD);   	// 0x06 - Increment + Display not shifted (Déplacement automatique du curseur)
 	//Delayus(4);				// Wait more than 40 ns
-	lcdi2c_newpattern();				// Implante les nouveaux caracteres
+	//lcdi2c_newpattern();				// Implante les nouveaux caracteres
 }
 
 #endif
