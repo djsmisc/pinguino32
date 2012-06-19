@@ -79,14 +79,14 @@ void setup()
     lcdi2c.clear();                     // clear screen
     lcdi2c.home();                      // set cursor at (0,0)
     lcdi2c.printf("   lcdi2c demo  ");
-    delay(1000);     
+    //delay(1000);     
 }
 
 void loop()
 {
     lcdi2c.setCursor(0, 1);					// set cursor at line 1, col 0
     lcdi2c.printf("i=%d ", i++);
-    //delay(300);
+    delay(300);
 }
 
 /*

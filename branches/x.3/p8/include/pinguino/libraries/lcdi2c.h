@@ -1,7 +1,7 @@
 /*	----------------------------------------------------------------------------
-	FILE:				lcdi2c.h
-	PROJECT:			pinguino - http://www.pinguino.cc/
-	PURPOSE:			driving lcd display through i2c pcf8574 i/o expander
+	FILE:			lcdi2c.h
+	PROJECT:		pinguino - http://www.pinguino.cc/
+	PURPOSE:		driving lcd display through i2c pcf8574 i/o expander
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	29 jul. 2008
 	LAST RELEASE:	06 apr. 2011
@@ -41,31 +41,31 @@
 	---------- PCF8574P
 	----------------------------------------------------------------------------
 
-	+5V		A0		-|o|-		VDD	+5V
-	+5V		A1		-|	|-		SDA	pull-up 1K8 au +5V
+	+5V		A0		-|o |-		VDD	    +5V
+	+5V		A1		-|	|-		SDA	    pull-up 1K8 au +5V
 	+5V		A2		-|	|-		SCL 	pull-up 1K8 au +5V
 	LCD_BL	P0		-|	|-		INT
 	LCD_RS	P1		-|	|-		P7		LCD_D7
 	LCD_RW	P2		-|	|-		P6		LCD_D6
 	LCD_EN	P3		-|	|-		P5		LCD_D5
-	GRND		VSS	-|	|-		P4		LCD_D4
+	GRND	VSS 	-|	|-		P4		LCD_D4
 
-	SYMBOL 	PIN	DESCRIPTION						NB
-	A0			1		address input 0				adress = 0 1 0 0 A2 A1 A0 0
-	A1			2		address input 1				A0, A1 et A2 relies au +5V
-	A2			3		address input 2				donc adress = 01001110 = 0x4E
-	P0			4		quasi-bidirectional I/O 0	LCD_BL
-	P1			5		quasi-bidirectional I/O 1	LCD_RS
-	P2			6		quasi-bidirectional I/O 2	LCD_RW
-	P3			7		quasi-bidirectional I/O 3	LCD_EN
+	SYMBOL 	PIN	    DESCRIPTION					NB
+	A0		1		address input 0				adress = 0 1 0 0 A2 A1 A0 0
+	A1		2		address input 1				A0, A1 et A2 relies au +5V
+	A2		3		address input 2				donc adress = 01001110 = 0x4E
+	P0		4		quasi-bidirectional I/O 0	LCD_BL
+	P1		5		quasi-bidirectional I/O 1	LCD_RS
+	P2		6		quasi-bidirectional I/O 2	LCD_RW
+	P3		7		quasi-bidirectional I/O 3	LCD_EN
 	VSS		8		supply ground
-	P4			9		quasi-bidirectional I/O 4	LCD_D4
-	P5			10		quasi-bidirectional I/O 5	LCD_D5
-	P6			11		quasi-bidirectional I/O 6	LCD_D6
-	P7			12		quasi-bidirectional I/O 7	LCD_D7
+	P4		9		quasi-bidirectional I/O 4	LCD_D4
+	P5		10		quasi-bidirectional I/O 5	LCD_D5
+	P6		11		quasi-bidirectional I/O 6	LCD_D6
+	P7		12		quasi-bidirectional I/O 7	LCD_D7
 	INT		13		interrupt output (active LOW)
-	SCL		14		serial clock line				uC_SCL
-	SDA		15		serial data line				uC_SDA
+	SCL		14		serial clock line			uC_SCL
+	SDA		15		serial data line			uC_SDA
 	VDD		16		supply voltage
 	--------------------------------------------------------------------------*/
 
@@ -74,7 +74,7 @@
 
 #include <typedef.h>
 
-#define LCD_MASK		0b11110000	// On ne commande que D7 a D4
+#define LCD_MASK		        0b11110000	// On ne commande que D7 a D4
 
 #define LCD_BL	PCF8574_data.bits.bit0	// P0
 #define LCD_RS	PCF8574_data.bits.bit1	// P1
@@ -85,10 +85,10 @@
 #define LCD_D6	PCF8574_data.bits.bit6	// P6
 #define LCD_D7	PCF8574_data.bits.bit7	// P7
 
-#define LCD_WRITE		0
-#define LCD_READ		1
-#define LCD_DATA		1
-#define LCD_CMD		0
+#define LCD_WRITE		        0
+#define LCD_READ		        1
+#define LCD_DATA		        1
+#define LCD_CMD		            0
 
 #define LCD_DISPLAY_CLEAR		0b00000001 	// 0x01
 #define LCD_CURSOR_HOME			0b00000010 	// 0x02
@@ -122,58 +122,74 @@
 // flags for display on/off control
 #define LCD_DISPLAYON			0x04
 #define LCD_DISPLAYOFF			0x00
-#define LCD_CURSORON				0x02
+#define LCD_CURSORON			0x02
 #define LCD_CURSOROFF			0x00
 #define LCD_BLINKON				0x01
-#define LCD_BLINKOFF				0x00
+#define LCD_BLINKOFF			0x00
 
 // flags for display/cursor shift
 #define LCD_DISPLAYMOVE			0x08
 #define LCD_CURSORMOVE			0x00
 #define LCD_MOVERIGHT			0x04
-#define LCD_MOVELEFT				0x00
+#define LCD_MOVELEFT			0x00
 
 // flags for function set
-#define LCD_8BITMODE				0x10
-#define LCD_4BITMODE				0x00
-#define LCD_2LINE					0x08
-#define LCD_1LINE					0x00
-#define LCD_5x10DOTS				0x04
+#define LCD_8BITMODE			0x10
+#define LCD_4BITMODE			0x00
+#define LCD_2LINE				0x08
+#define LCD_1LINE				0x00
+#define LCD_5x10DOTS			0x04
 #define LCD_5x8DOTS				0x00
 
 #define LCD_CENTER				101
-#define LCD_RIGHT					102
-#define LCD_LEFT					103
+#define LCD_RIGHT				102
+#define LCD_LEFT				103
 
-#define DEGRE						0b11011111 	// Code ASCII pour le symbole degre
-#define SIGMA						0b11100101 	// Code ASCII pour le symbole sigma
-#define MICRO						0b11100100 	// Code ASCII pour le symbole micro
-#define INFINI						0b11110011 	// Code ASCII pour le symbole infini
-#define ESPACE						0x20		 	// Code ASCII pour un espace
+#define DEGRE					0b11011111 	// Code ASCII pour le symbole degre
+#define SIGMA					0b11100101 	// Code ASCII pour le symbole sigma
+#define MICRO					0b11100100 	// Code ASCII pour le symbole micro
+#define INFINI					0b11110011 	// Code ASCII pour le symbole infini
+#define ESPACE					0x20		 	// Code ASCII pour un espace
 
 #define HEXADECIMAL				16
 #define DECIMAL					10
-#define OCTAL						8
+#define OCTAL					8
 #define BINAIRE					2
 
-#define ACIRC						0		// â
-#define AGRAVE						1		// à
+#define ACIRC					0		// â
+#define AGRAVE					1		// à
 
-#define CCEDIL						2		// ç
+#define CCEDIL					2		// ç
 
-#define EACUTE						3		// é
-#define EGRAVE						4		// è
-#define ECIRC						5		// ê
-#define ETREMA						6		// ë
-#define EURO						7		// €
+#define EACUTE					3		// é
+#define EGRAVE					4		// è
+#define ECIRC					5		// ê
+#define ETREMA					6		// ë
+#define EURO					7		// €
 
-#define ICIRC						8		// î
-#define ITREMA						9		// ï
+#define ICIRC					8		// î
+#define ITREMA					9		// ï
 
-#define OCIRC						10		// ô
+#define OCIRC					10		// ô
 
-#define UGRAVE						11		// ù
-#define UCIRC						12		// û
+#define UGRAVE					11		// ù
+#define UCIRC					12		// û
+
+typedef union
+{
+    u8 val;
+    struct
+    {
+        unsigned bit0 :1;
+        unsigned bit1 :1;
+        unsigned bit2 :1;
+        unsigned bit3 :1;
+        unsigned bit4 :1;
+        unsigned bit5 :1;
+        unsigned bit6 :1;
+        unsigned bit7 :1;
+    } bits;
+} _Byte_;
 
 /// VARIABLES GLOBALES
 

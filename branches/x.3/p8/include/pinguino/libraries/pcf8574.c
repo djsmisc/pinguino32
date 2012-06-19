@@ -61,16 +61,23 @@
 #include <pinguinoi2c.c>
 #include <pcf8574.h>
 
+u8 _PCF8574_module;
+
 /**	----------------------------------------------------------------------------
 	---------- PCF8574_init
 	----------------------------------------------------------------------------
 	---------- RAZ de la variable d'echange entre Pic et PCF8574
 	--------------------------------------------------------------------------*/
 
-void PCF8574_init(u16 speed)
+void PCF8574_init(u8 module, u16 speed)
 {
-	PCF8574_data.val = 0;
-    I2C_init(I2C_MASTER_MODE, speed);
+	//_PCF8574_data.val = 0;
+    #if !defined(PIC18F26J50)
+        _PCF8574_module = I2C1;
+    #else
+        _PCF8574_module = module;
+    #endif
+    I2C_init(_PCF8574_module, I2C_MASTER_MODE, speed);
 }
 
 /**	----------------------------------------------------------------------------
@@ -92,19 +99,34 @@ u8 PCF8574_write(u8 address, u8 mydata)
 
 	u8 bRet = 0x00;
 
-	I2C_start();
-	I2C_writechar(address | I2C_WRITE);
-	if (SSPCON2bits.ACKSTAT) //Si AckStat == 1, on n'a pas reçu d'acquittement
+	I2C_start(_PCF8574_module);
+	I2C_writechar(_PCF8574_module, address | I2C_WRITE);
+
+    #if !defined(PIC18F26J50)
+	if (SSPCON2bits.ACKSTAT)    // no Acknowledgment received
 	{
-		I2C_stop();
+		I2C_stop(_PCF8574_module);
 		return bRet;
 	}
-	I2C_writechar(mydata);
-	if (!SSPCON2bits.ACKSTAT ) //Si on reçoit un acquitement, on retourne 1
+	I2C_writechar(_PCF8574_module, mydata);
+	if (!SSPCON2bits.ACKSTAT )  // Acknowledgment received
 	{
 		bRet = 0x01;
 	}
-	I2C_stop();
+    #else
+	if (SSP2CON2bits.ACKSTAT)   // no Acknowledgment received
+	{
+		I2C_stop(_PCF8574_module);
+		return bRet;
+	}
+	I2C_writechar(_PCF8574_module, mydata);
+	if (!SSP2CON2bits.ACKSTAT )  // Acknowledgment received
+	{
+		bRet = 0x01;
+	}
+    #endif
+    
+	I2C_stop(_PCF8574_module);
 	return bRet;
 }
 

@@ -1,10 +1,10 @@
 /*	----------------------------------------------------------------------------
-	FILE:				pcf8574.h
-	PROJECT:			pinguino - http://www.pinguino.cc/
-	PURPOSE:			driving pcf8574 i/o expander
+	FILE:			pcf8574.h
+	PROJECT:		pinguino - http://www.pinguino.cc/
+	PURPOSE:		driving pcf8574 i/o expander
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	29 jul. 2008
-	LAST RELEASE:	06 apr. 2011
+	LAST RELEASE:	19 jun. 2012
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -73,18 +73,15 @@
 			unsigned bit6 :1;
 			unsigned bit7 :1;
 		} bits;
-	} Byte;							// nom du type
+	} _Byte;
 
-	// Byte toto;
-	// toto.val = 255;			// si on veut utiliser la variable complète
-	// toto.bits.bit5 = 1;		// si on veut utiliser un bit
-
-	extern Byte PCF8574_data;	// les registres du PCF8574
-	extern u8 PCF8574_address;
+	//extern _Byte _PCF8574_data;
+	//extern u8 _PCF8574_address;
+    //extern u8 _PCF8574_module;
 
     // prototypes
     
-    void PCF8574_init(u16 speed);
-    u8 PCF8574_write(u8 mydata);
+    void PCF8574_init(u8, u16);
+    u8 PCF8574_write(u8, u8);
 
 #endif
