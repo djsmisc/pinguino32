@@ -213,9 +213,9 @@ void high_priority_isr(void) __interrupt 1
 	}	
 #endif
 
-#ifdef __I2C__
-	I2C_interrupt();
-#endif
+//#ifdef __I2C__
+//	I2C_interrupt();
+//#endif
 
 #ifdef SERVOSLIBRARY
 	servos_interrupt();

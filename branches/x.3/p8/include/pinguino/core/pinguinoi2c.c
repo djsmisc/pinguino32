@@ -75,7 +75,7 @@
 #define I2C_400KHZ		1
 #define I2C_1MHZ		2
 
-//typedef void (*i2c_stdout) (void);				// type of :	void foo(int x)
+//typedef void (*i2c_stdout) (void);	// type of :	void foo(int x)
 //i2c_stdout _i2c_onRequest_function;	// then : 		void pputchar(void)
 //i2c_stdout _i2c_onReceive_function;	// then : 		void pputchar(void)
 
@@ -134,7 +134,7 @@ void I2C_slave(u8 module, u16 DeviceID)
 void I2C_init(u8 module, u8 mode, u16 sora)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
     
    	switch(module)
@@ -159,10 +159,10 @@ void I2C_init(u8 module, u8 mode, u16 sora)
                     INTCONbits.GIE=1;
                     SSPCON1 = 0b00101110;		// Slave mode,  7-bit address with Start and Stop bit interrupts enabled
                     //SSPCON1 = 0b00101111;		// Slave mode, 10-bit address with Start and Stop bit interrupts enabled
-        /*	---------------------------------------------------------------------------*/
+/*	---------------------------------------------------------------------------*/
                     SSPADD = sora;				// Slave 7-bit address
                     // TODO						// Slave 10-bit address
-        /*	---------------------------------------------------------------------------*/
+/*	---------------------------------------------------------------------------*/
                     break;
 
                 case I2C_MASTER_MODE:
@@ -239,10 +239,11 @@ void I2C_init(u8 module, u8 mode, u16 sora)
                     }
             }
             SSP2CON2 = 0;
-            PIR1bits.SSP2IF = 0;
-            PIR2bits.BCL2IF = 0;
+            PIR3bits.SSP2IF = 0;
+            PIR3bits.BCL2IF = 0;
             break;
         #endif
+    }
 }
 
 /*	----------------------------------------------------------------------------
@@ -369,6 +370,7 @@ void I2C_sendID(u8 module, u16 DeviceID, u8 rw)
 			I2C_writechar(module, temp);
 		}
 	}
+    
 	// 7-bit address
 	else
 	{         
@@ -396,26 +398,23 @@ void I2C_sendID(u8 module, u16 DeviceID, u8 rw)
 u8 I2C_writechar(u8 module, u8 b)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
-   	switch(module)
-	{
-		case I2C1:
-            SSPBUF = b;
-            I2C_wait(module);
-            return (!SSPCON2bits.ACKSTAT);
-            break;
-        
-        #if defined(PIC18F26J50)
-		case I2C2:
-            SSPBUF = b;
-            I2C_wait(module);
-            return (!SSPCON2bits.ACKSTAT);
-            break;
-        #endif
+   	if (module == I2C1)
+    {
+        SSPBUF = b;
+        I2C_wait(module);
+        return (!SSPCON2bits.ACKSTAT);
     }
-
+    #if defined(PIC18F26J50)
+    else
+    {
+        SSPBUF = b;
+        I2C_wait(module);
+        return (!SSP2CON2bits.ACKSTAT);
+    }
+    #endif
 }
 
 /*	----------------------------------------------------------------------------
@@ -426,24 +425,23 @@ u8 I2C_writechar(u8 module, u8 b)
 u8 I2C_readchar(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
-   	switch(module)
-	{
-		case I2C1:
-            SSPCON2bits.RCEN = 1;
-            break;
-        
-        #if defined(PIC18F26J50)
-		case I2C2:
-            SSPCON2bits.RCEN = 1;
-            break;
-        #endif
+   	if (module == I2C1)
+    {
+        SSPCON2bits.RCEN = 1;
+        I2C_wait(module);
+        return (SSPBUF);
     }
-
-	I2C_wait(module);
-	return (SSPBUF);
+    #if defined(PIC18F26J50)
+    else
+    {
+        SSP2CON2bits.RCEN = 1;
+        I2C_wait(module);
+        return (SSP2BUF);
+    }
+    #endif
 }
 
 /*	----------------------------------------------------------------------------
@@ -454,7 +452,7 @@ u8 I2C_readchar(u8 module)
 void I2C_wait(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -466,8 +464,8 @@ void I2C_wait(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            while (PIR1bits.SSPIF == 0);
-            PIR1bits.SSPIF = 0;
+            while (PIR3bits.SSP2IF == 0);
+            PIR3bits.SSP2IF = 0;
             break;
         #endif
     }
@@ -482,7 +480,7 @@ void I2C_wait(u8 module)
 void I2C_start(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -493,7 +491,7 @@ void I2C_start(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            SSPCON2bits.SEN = 1;
+            SSP2CON2bits.SEN = 1;
             break;
         #endif
     }
@@ -509,7 +507,7 @@ void I2C_start(u8 module)
 void I2C_stop(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -520,7 +518,7 @@ void I2C_stop(u8 module)
         
         #if defined(PIC18F26J50)
         case I2C2:
-            SSPCON2bits.PEN = 1;
+            SSP2CON2bits.PEN = 1;
             break;
         #endif
     }
@@ -536,7 +534,7 @@ void I2C_stop(u8 module)
 void I2C_restart(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -547,7 +545,7 @@ void I2C_restart(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            SSPCON2bits.RSEN=1;
+            SSP2CON2bits.RSEN=1;
             break;
         #endif
     }
@@ -565,7 +563,7 @@ u8 I2C_waitAck(u8 module)
 	u8 i=0;
 
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -580,7 +578,7 @@ u8 I2C_waitAck(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            while(SSPCON2bits.ACKSTAT == 1) 
+            while(SSP2CON2bits.ACKSTAT == 1) 
             {
                 i++;
                 if(i==0) return -1;
@@ -600,7 +598,7 @@ u8 I2C_waitAck(u8 module)
 void I2C_readAbort(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -611,7 +609,7 @@ void I2C_readAbort(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            SSPCON1bits.WCOL = 0;
+            SSP2CON1bits.WCOL = 0;
             break;
         #endif
     }
@@ -628,7 +626,7 @@ void I2C_readAbort(u8 module)
 void I2C_sendNack(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -640,8 +638,8 @@ void I2C_sendNack(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            SSPCON2bits.ACKDT = 1;
-            SSPCON2bits.ACKEN = 1;
+            SSP2CON2bits.ACKDT = 1;
+            SSP2CON2bits.ACKEN = 1;
             break;
         #endif
     }
@@ -657,7 +655,7 @@ void I2C_sendNack(u8 module)
 void I2C_sendAck(u8 module)
 {
     #if !defined(PIC18F26J50)
-    if (module > I2C1) module = I2C1;
+    module = I2C1;
     #endif
 
    	switch(module)
@@ -669,8 +667,8 @@ void I2C_sendAck(u8 module)
         
         #if defined(PIC18F26J50)
 		case I2C2:
-            SSPCON2bits.ACKDT = 0;
-            SSPCON2bits.ACKEN = 1;
+            SSP2CON2bits.ACKDT = 0;
+            SSP2CON2bits.ACKEN = 1;
             break;
         #endif
     }

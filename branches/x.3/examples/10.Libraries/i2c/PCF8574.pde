@@ -1,10 +1,10 @@
 /*	----------------------------------------------------------------------------
-	FILE:			pcf8574.pde
-	PROJECT:		pinguino
-	PURPOSE:		driving led through i2c pcf8574 i/o expander
-	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	06 apr. 2011
-	LAST RELEASE:	06 apr. 2011
+	FILE:           pcf8574.pde
+	PROJECT:        pinguino
+	PURPOSE:        driving led through i2c pcf8574 i/o expander
+	PROGRAMER:      regis blanchot <rblanchot@gmail.com>
+	FIRST RELEASE:  06 apr. 2011
+	LAST RELEASE:   19 jun. 2012
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -76,7 +76,7 @@ u8 PCF8574_address = 0b01001110;	// PCF8574's I2C address
 void setup()
 {
 	PCF8574_data.val = 0;
-	PCF8574.init(I2C_100KHZ);
+	PCF8574.init(I2C1, I2C_100KHZ);
 }
 
 void loop()
