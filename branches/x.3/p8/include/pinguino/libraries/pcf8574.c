@@ -97,7 +97,7 @@ u8 PCF8574_write(u8 address, u8 mydata)
 	Stop conditions are output to indicate the beginning
 	and the end of a serial transfer. */
 
-	I2C_send(_PCF8574_module, address, mydata);
+	return I2C_send(_PCF8574_module, address, mydata);
 
 /*
 	u8 bRet = 0x00;

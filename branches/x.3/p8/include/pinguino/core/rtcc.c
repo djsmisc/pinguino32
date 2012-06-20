@@ -4,7 +4,7 @@
 	PURPOSE: 		Real Time Clock and Calendar functions
 	PROGRAMER: 		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	15 jun 2012
-	LAST RELEASE:	15 jun 2012
+	LAST RELEASE:	20 jun 2012
 	----------------------------------------------------------------------------
 	TODO :
 	----------------------------------------------------------------------------
@@ -30,16 +30,18 @@
     #error "Error : your Pinguino has no RTCC module." 
 #endif
 
+#include <pic18fregs.h>
 #include <typedef.h>
 #include <const.h>
 #include <macro.h>
 #include <interrupt.h>
 #include <bcd.c>
+#include <digitalw.c>
 
 // RTCC definitions
 
-typedef void (*callback) (void);	// type of: void callback()
-static callback intFunction;
+//typedef void (*callback) (void);	// type of: void callback()
+//static callback intFunction;
 
 // union/structure for read/write of time into the RTCC device
 typedef union
@@ -79,6 +81,10 @@ typedef enum
 	RTCC_WR_DSBL,					// WR is disabled
 }rtccRes;
 
+// global variables
+rtccTime _rtccTime_;
+rtccDate _rtccDate_;
+
 // Repeat alarm every ...
 #define RTCC_ALARM_EVERY_HALF_SECOND	0b0000
 #define RTCC_ALARM_EVERY_SECOND 		0b0001
@@ -93,31 +99,32 @@ typedef enum
 
 // Prototypes
 
-rtccTime RTCC_ConvertTime(rtccTime *);
-rtccDate RTCC_ConvertDate(rtccDate *);
-int RTCC_SetWriteEnable(void);
-int RTCC_SetWriteDisable(void);
-int RTCC_GetWriteEnable(void);
+void RTCC_ConvertTime(rtccTime*);
+void RTCC_ConvertDate(rtccDate*);
+
+void RTCC_SetWriteEnable(void);
+void RTCC_SetWriteDisable(void);
+u8 RTCC_GetWriteEnable(void);
 void RTCC_Enable(void);
 void RTCC_Disable(void);
-int RTCC_GetEnable(void);
+u8 RTCC_GetEnable(void);
 void RTCC_Wait(void);
 
-void RTCC_init(void);
+void RTCC_init(u32, u32, s16);
+void RTCC_Test(u8);
 void RTCC_Shutdown(void);
-rtccRes RTCC_Open(u32, u32, s16);
 
-void OnRTCC(callback);
-void RTCCInterrupt(void);
+//void OnRTCC(callback);
+//void RTCCInterrupt(void);
 
 void RTCC_SetCalibration(s16);
 s16 RTCC_GetCalibration(void);
 
 void RTCC_SetTime(u32);
 void RTCC_SetDate(u32);
-void RTCC_SetTimeDate(u32 , u32);
-rtccTime RTCC_GetTime(void);
-rtccDate RTCC_GetDate(void);
+void RTCC_SetTimeDate(u32, u32);
+void RTCC_GetTime(rtccTime*);
+void RTCC_GetDate(rtccDate*);
 void RTCC_GetTimeDate(rtccTime*, rtccDate*);
 /*
 void RTCC_SetAlarmEnable(int);
@@ -187,25 +194,19 @@ void RTCC_AlarmIntDisable(void);
 	Conversion routines from bcd to decimal format
 	---------------------------------------------------------------------------*/
 
-rtccTime RTCC_ConvertTime(rtccTime *pTm)
+void RTCC_ConvertTime(rtccTime *pTm)
 {
-	rtccTime t0;
-	
-	t0.hour = bcd2bin(pTm->hour);
-	t0.min  = bcd2bin(pTm->min);
-	t0.sec  = bcd2bin(pTm->sec);
-	return t0;
+	pTm->hour = bcd2bin(pTm->hour);
+	pTm->min  = bcd2bin(pTm->min);
+	pTm->sec  = bcd2bin(pTm->sec);
 }
 
-rtccDate RTCC_ConvertDate(rtccDate *pDt)
+void RTCC_ConvertDate(rtccDate *pDt)
 {
-	rtccDate d0;
-	
-	d0.wday = bcd2bin(pDt->wday);
-	d0.mday = bcd2bin(pDt->mday);
-	d0.mon  = bcd2bin(pDt->mon);
-	d0.year = bcd2bin(pDt->year);
-	return d0;
+	pDt->wday = bcd2bin(pDt->wday);
+	pDt->mday = bcd2bin(pDt->mday);
+	pDt->mon  = bcd2bin(pDt->mon);
+	pDt->year = bcd2bin(pDt->year);
 }
 
 /*	-----------------------------------------------------------------------------
@@ -216,28 +217,34 @@ rtccDate RTCC_ConvertDate(rtccDate *pDt)
 
 void RTCC_SetWriteEnable(void)
 {
-    __asm
-    movlb   0x0F            ;RTCCFG is banked
-    bcf     INTCON, GIE     ;Disable interrupts
-    movlw   0x55            ;Magic sequence
-    movwf   EECON2
-    movlw   0xAA
-    movwf   EECON2
-    bsf     RTCCFG,RTCWREN  ;Enable write
-    __endasm
+    u8 status=0;
+    
+    if (INTCONbits.GIE)
+    {
+        INTCONbits.GIE = 0; // disable interrupts
+        status = 1;
+    }
+    EECON2 = 0x55;          // magic sequence
+    EECON2 = 0xAA;
+    RTCCFGbits.RTCWREN = 1; // enable write
+    if (status)
+        INTCONbits.GIE = 1; // enable interrupts back
 }
 
 void RTCC_SetWriteDisable(void)
 {
-    __asm
-    movlb   0x0F            ;RTCCFG is banked
-    bcf     INTCON, GIE     ;Disable interrupts
-    movlw   0x55            ;Magic sequence
-    movwf   EECON2
-    movlw   0xAA
-    movwf   EECON2
-    bcf     RTCCFG,RTCWREN  ;Disable write
-    __endasm
+    u8 status=0;
+    
+    if (INTCONbits.GIE)
+    {
+        INTCONbits.GIE = 0; // disable interrupts
+        status = 1;
+    }
+    EECON2 = 0x55;          // magic sequence
+    EECON2 = 0xAA;
+    RTCCFGbits.RTCWREN = 0; // disable write
+    if (status)
+        INTCONbits.GIE = 1; // enable interrupts back
 }
 
 /*	-----------------------------------------------------------------------------
@@ -293,30 +300,36 @@ u8 RTCC_GetEnable(void)
 void RTCC_Wait(void)
 {
     while (RTCCFGbits.RTCSYNC != 1); // if already in the middle of SYNC, wait for next period
-    while (RTCCFGbits.RTCSYNC == 1); // wait while RTCC registers are unsafe to read
+    //while (RTCCFGbits.RTCSYNC == 1); // wait while RTCC registers are unsafe to read
 }
 
 /********************************************************************************
-    INIT, OPEN, SHUTDOWN THE RTCC MODULE
+    INIT, SHUTDOWN and TEST THE RTCC MODULE
 ********************************************************************************/
 
 /*	-----------------------------------------------------------------------------
 	The function initializes the RTCC device.
-	-----------------------------------------------------------------------------
-    TODO * enables the INTRC oscillator (CONFIG3L<1>),
-    * enables the RTCC,
-    * disables RTCC write,
-    * disables the Alarm and the RTCC clock ouput (RTCOE=0),
-    * clears the alarm interrupt flag.
+    TODO * enables the INTRC oscillator (CONFIG3L<1>)
+    *It enables the secondary oscillator (SOSC),
+    *sets the desired time, date and calibration
+    *enables the RTCC,
+    *disables the Alarm and the RTCC clock output (RTCOE=0), 
+    *disables RTCC writes.
+    *clears the alarm interrupt flag.
 	---------------------------------------------------------------------------*/
 
-void RTCC_init(void)
+void RTCC_init(u32 tm, u32 dt, s16 drift)
 {
     //#pragma config RTCOSC = INTOSCREF     
+
+	RTCC_SetTime(tm);
+	RTCC_SetDate(dt);
+	RTCC_SetCalibration(drift);
+
 	RTCC_Enable();
 	RTCC_SetWriteDisable();
-	RTCC_AlarmDisable();
-	RTCC_OutputDisable();
+	//RTCC_AlarmDisable();
+	//RTCC_OutputDisable();
 	PIR3bits.RTCCIF = 0;
 }
 
@@ -332,43 +345,43 @@ void RTCC_Shutdown(void)
 {
 	RTCC_Disable();
 	RTCC_SetWriteDisable();
-	RTCC_AlarmDisable();
-	RTCC_OutputDisable();
+	//RTCC_AlarmDisable();
+	//RTCC_OutputDisable();
 	PIR3bits.RTCCIF = 0;
 }
 
 /*	-----------------------------------------------------------------------------
-	The function initializes the RTCC device.
-		*It enables the secondary oscillator (SOSC),
-		*sets the desired time, date and calibration
-		*enables the RTCC,
-		*disables the Alarm and the RTCC clock output (RTCOE=0), 
-		*disables RTCC writes.
-		*clears the alarm interrupt flag.
-	---------------------------------------------------------------------------*/
+	RTCC test function
+    Blink a led connected to "pin"
+ 	---------------------------------------------------------------------------*/
 
-rtccRes RTCC_Open(u32 tm, u32 dt, int drift)
+void RTCC_Test(u8 pin)
 {
-	RTCC_SetTime(tm);
-	RTCC_SetDate(dt);
-	RTCC_SetCalibration(drift);
-	RTCC_init();
+    pinmode(pin, OUTPUT);
+    if (RTCCFGbits.HALFSEC==0)
+    {
+        digitalwrite(pin, 1);
+    }
+    if (RTCCFGbits.HALFSEC==1)
+    {
+        digitalwrite(pin, 0);
+    }
 }
 
 /********************************************************************************
     INTERRUPT FUNCTIONS
 ********************************************************************************/
-
+/*
 void OnRTCC(callback userfunc)
 {
 	intFunction = userfunc;
 }
-
+*/
 /*	-----------------------------------------------------------------------------
 	RTCC Interrupt Routine
 	This one is private
 	---------------------------------------------------------------------------*/
-
+/*
 void RTCCInterrupt(void)
 {
 	if (PIR3bits.RTCCIF)
@@ -377,7 +390,7 @@ void RTCCInterrupt(void)
 		intFunction();
 	}
 }
-
+*/
 /********************************************************************************
     TIME FUNCTIONS
 ********************************************************************************/
@@ -388,16 +401,18 @@ void RTCCInterrupt(void)
 
 void RTCC_SetTime(u32 tm)
 {
+    rtccTime t0;
     u8 dummy;
         
+    t0.l = tm;
 	RTCC_SetWriteEnable();
     RTCCFGbits.RTCPTR1 = 0;     
     RTCCFGbits.RTCPTR0 = 1;     
 	while (RTCCFGbits.RTCSYNC);	// When RTCSYNC = 0, the registers can be safely accessed by the CPU
-    RTCVALL = tm.hour;     
+    RTCVALL = t0.hour;     
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-    RTCVALL = tm.sec;
-    RTCVALH = tm.min;   
+    RTCVALL = t0.sec;
+    RTCVALH = t0.min;   
  	RTCC_SetWriteDisable();
 }
 
@@ -407,17 +422,19 @@ void RTCC_SetTime(u32 tm)
 
 void RTCC_SetDate(u32 dt)
 {
+    rtccDate d0;
     u8 dummy;
         
+    d0.l = dt;
 	RTCC_SetWriteEnable();
     RTCCFGbits.RTCPTR1 = 1; // value decrements on every read or write of RTCVALH until it reaches ‘00’
     RTCCFGbits.RTCPTR0 = 1; 
-    RTCVALL = dt.year;    
+    RTCVALL = d0.year;    
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-    RTCVALL = dt.day;      
-    RTCVALH = dt.month;   
+    RTCVALL = d0.mday;      
+    RTCVALH = d0.mon;   
     //RTCVALL = tm.hour;  
-    RTCVALH = dt.wday;
+    RTCVALH = d0.wday;
  	RTCC_SetWriteDisable();
 }
 
@@ -441,69 +458,69 @@ void RTCC_SetTimeDate(u32 tm, u32 dt)
     not occur.
 	---------------------------------------------------------------------------*/
 
-rtccTime RTCC_ReadTime(void)
+void RTCC_ReadTime(rtccTime* pTm)
 {
-	rtccTime tm;
 	u8 dummy;
 
     RTCC_Wait();
     RTCCFGbits.RTCPTR1 = 0;
     RTCCFGbits.RTCPTR0 = 1;
-    tm.hour = RTCVALL;     
+    pTm->hour = RTCVALL;     
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-    tm.sec = RTCVALL;
-    tm.min = RTCVALH;   
-	return tm;
+    pTm->sec = RTCVALL;
+    pTm->min = RTCVALH;   
 }
 
-rtccTime RTCC_GetTime(void)
+void RTCC_GetTime(rtccTime* pTm0)
 {
-	rtccTime t0, t1;
+	rtccTime Tm1;
 
 	do
 	{
-        t0 = RTCC_ReadTime();
-        t1 = RTCC_ReadTime();
-	} while (t0.l != t1.l);
-	return t0;
+        RTCC_ReadTime(pTm0);
+        RTCC_ReadTime(&Tm1);
+	}
+    while (pTm0->l != Tm1.l);
+
+    RTCC_ConvertTime(pTm0);
 }
 
-rtccDate RTCC_ReadDate(void)
+void RTCC_ReadDate(rtccDate* pDt)
 {
-	rtccDate dt;
 	u8 dummy;
 
     RTCC_Wait();
 	RTCCFGbits.RTCPTR1 = 1;
 	RTCCFGbits.RTCPTR0 = 1;
-	dt.year = RTCVALL;
+	pDt->year = RTCVALL;
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-	dt.day = RTCVALL;
-	dt.mon = RTCVALH;
+	pDt->mday = RTCVALL;
+	pDt->mon = RTCVALH;
 	dummy = RTCVALL;
-	dt.wday = RTCVALH;
-	return dt;
+	pDt->wday = RTCVALH;
 }
 
-rtccDate RTCC_GetDate(void)
+void RTCC_GetDate(rtccDate* pDt0)
 {
-	rtccDate d0, d1;
+	rtccDate Dt1;
 
 	do
 	{
-        d0 = RTCC_ReadDate();
-        d1 = RTCC_ReadDate();
-	} while (d0.l != d1.l);
-	return d0;
+        RTCC_ReadDate(pDt0);
+        RTCC_ReadDate(&Dt1);
+	}
+    while (pDt0->l != Dt1.l);
+
+    RTCC_ConvertDate(pDt0);
 }
 
 void RTCC_GetTimeDate(rtccTime* pTm, rtccDate* pDt)
 {
-	rtccTime	tm;
-	rtccDate	dt;
+	rtccTime tm;
+	rtccDate dt;
 
-    dt = RTCC_GetDate();
-    tm = RTCC_GetTime();
+    RTCC_GetDate(&dt);
+    RTCC_GetTime(&tm);
 	pTm->l = tm.l;
 	pDt->l = dt.l;
 }
@@ -528,7 +545,7 @@ void RTCC_SetCalibration(s16 cal)
 	Return 10-bit clock pulse calibration
 	---------------------------------------------------------------------------*/
 
-int RTCC_GetCalibration(void)
+s16 RTCC_GetCalibration(void)
 {
 	 return RTCCAL;
 }

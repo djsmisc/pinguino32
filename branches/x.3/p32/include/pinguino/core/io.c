@@ -8,7 +8,7 @@
 	LAST RELEASE:	16 feb. 2012
 	----------------------------------------------------------------------------
 	CHANGELOG:
-	[20-02-12][Régis Blanchot][Exported in this file]
+	[20-02-12][Régis Blanchot][Exported from main32.c in this file]
 	[25-02-12][Régis Blanchot][Added PWM remap. for PIC32 PINGUINO 220]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or

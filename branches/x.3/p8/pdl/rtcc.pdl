@@ -1,10 +1,6 @@
 RTCC.init RTCC_init#include <rtcc.c>
-RTCC.open RTCC_Open#include <rtcc.c>
-
 RTCC.shutdown RTCC_Shutdown#include <rtcc.c>
-
-RTCC.convertTime RTCC_ConvertTime#include <rtcc.c>
-RTCC.convertDate RTCC_ConvertDate#include <rtcc.c>
+RTCC.test RTCC_Test#include <rtcc.c>
 
 RTCC.setWriteEnable RTCC_SetWriteEnable#include <rtcc.c>
 RTCC.setWriteDisable RTCC_SetWriteDisable#include <rtcc.c>
