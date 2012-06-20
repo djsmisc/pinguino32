@@ -86,7 +86,7 @@ void loop()
 {
     lcdi2c.setCursor(0, 1);					// set cursor at line 1, col 0
     lcdi2c.printf("i=%d ", i++);
-    delay(300);
+    delay(100);
 }
 
 /*

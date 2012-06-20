@@ -22,10 +22,54 @@
 	--------------------------------------------------------------------------*/
 
 #ifndef __SYSTEM_C
-	#define __SYSTEM_C
-	
-	#define GetSystemClock()	48000000
-	#define GetInstructionClock()	(GetSystemClock()/4)
-	#define GetPeripheralClock()	GetInstructionClock()	
+#define __SYSTEM_C
+
+#include <pic18fregs.h>
+#include <typedef.h>
+#include <const.h>
+#include <macro.h>
+
+#define GetSystemClock()	    48000000
+#define GetInstructionClock()	(GetSystemClock()/4)
+#define GetPeripheralClock()	GetInstructionClock()	
+
+u8 _gie_status_ = 0;
+
+/*	----------------------------------------------------------------------------
+	SystemUnlock() perform a system unlock sequence
+	--------------------------------------------------------------------------*/
+
+void SystemUnlock()
+{
+    if (INTCONbits.GIE)
+    {
+        INTCONbits.GIE = 0; // disable interrupts
+        _gie_status_ = 1;
+    }
+    EECON2 = 0x55;          // magic sequence
+    EECON2 = 0xAA;
+}
+
+/*	----------------------------------------------------------------------------
+	SystemLock() relock OSCCON by relocking the SYSKEY
+	--------------------------------------------------------------------------*/
+
+void SystemLock()
+{
+    if (_gie_status_)
+        INTCONbits.GIE = 1; // enable interrupts back
+}
+
+/*	----------------------------------------------------------------------------
+	Software Reset
+	--------------------------------------------------------------------------*/
+
+void SystemReset()
+{
+	// TODO
+	// prevent any unwanted code execution until reset occurs
+	while(1);
+}
+
 #endif
 

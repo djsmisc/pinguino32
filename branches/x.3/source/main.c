@@ -25,6 +25,8 @@
 #include <pic18fregs.h>
 #include <const.h>
 #include <macro.h>
+#include <system.c>
+#include <io.c>
 
 #ifdef boot2
 	#include <common_types.h>
@@ -60,21 +62,10 @@
 
 void pinguino_main(void)
 {
-	#if defined(PIC18F4550) || defined(PIC18F4455) || defined(PIC18F2550) || defined(PIC18F2455)
-	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
-	#endif
-
-	#if defined(PIC18F26J50)
-    // Enable the PLL and wait 2+ms until the PLL locks
-    unsigned int pll_startup_counter = 600;
-    {
-        OSCTUNEbits.PLLEN = 1;
-        while(pll_startup_counter--);
-    }
-	ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
-	ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
-	#endif
-
+    IOsetSpecial();
+    IOsetDigital();
+    IOsetRemap();
+    
 	PIE1 = 0;
 	PIE2 = 0;
 
@@ -197,7 +188,7 @@ void high_priority_isr(void) __interrupt 1
 		if (PIR1bits.RCIF) 
 	#endif
 
-	#if defined(PIC18F46J50) || defined(PIC18F26J50)
+	#if defined(PIC18F26J50)
 		if (PIR1bits.RC1IF) 
 	#endif
 		serial_interrupt();
