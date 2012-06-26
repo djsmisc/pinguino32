@@ -27,7 +27,6 @@
 
 from check import *
 
-
 EVT_RESULT_REVISION_ID = wx.NewId()
 
 def EVT_RESULT_REVISION(win, func):
@@ -318,9 +317,16 @@ class Pinguino(framePinguinoX, Editor):
 # ----------------------------------------------------------------------
     def buildMenu(self):
         self.menu = menubarPinguino()
-        self.SetMenuBar(self.menu)
-	
-	
+        
+	if not DEV:  #Can't disable submenu (wx.menu)
+	    self.menu.menuItemDebugNone.Enable(False)
+	    self.menu.menuItemUSBCDC.Enable(False)
+	    self.menu.menuItemUART1.Enable(False)
+	    self.menu.menuItemCheckRev.Enable(False)
+	    self.menu.menuItemUpgrade.Enable(False)	    
+
+	self.SetMenuBar(self.menu)
+	    
     #----------------------------------------------------------------------
     def addFile2Recent(self, file):
 	menu = self.menu.menuRecents
