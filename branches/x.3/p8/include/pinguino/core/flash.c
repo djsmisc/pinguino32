@@ -24,11 +24,12 @@
 	--------------------------------------------------------------------------*/
 
 #ifndef __FLASH_C__
-	#define __FLASH_C__
+#define __FLASH_C__
 
-	//#include <pic18fregs.h>
+#include <pic18fregs.h>
+#include <typedef.h>
 
-void EraseFlash(unsigned int address)
+void EraseFlash(u16 address)
 {
 	TBLPTRU=0;
 	TBLPTRH=address>>8;
@@ -39,7 +40,7 @@ void EraseFlash(unsigned int address)
 		bsf     _EECON1, 2
 		bsf     _EECON1, 4
 		bcf     _INTCON, 7
-			movlw   0x55
+        movlw   0x55
 		movwf   _EECON2
 		movlw   0xaa
 		movwf   _EECON2
@@ -47,23 +48,23 @@ void EraseFlash(unsigned int address)
 	__endasm;
 }
 
-int ReadFlash(unsigned int address)
+u16 ReadFlash(u16 address)
 {
-	unsigned char high8,low8;
+	u8 h8,l8;
 
 	TBLPTRU=0;
 	TBLPTRH=address>>8;
 	TBLPTRL=address;
 	__asm tblrd*+ __endasm;
-	low8=TABLAT;
+	l8=TABLAT;
 	__asm tblrd*+ __endasm;
-	high8=TABLAT;
-	return((high8<<8)+low8);
+	h8=TABLAT;
+	return((h8<<8)+l8);
 }
 
-void WriteFlash(unsigned int destination_add, char *destination)
+void WriteFlash(u16 destination_add, u8 *destination)
 {
-	static uchar i;
+	static u8 i;
 
 	TBLPTRU=0;
 	TBLPTRH=destination_add>>8;

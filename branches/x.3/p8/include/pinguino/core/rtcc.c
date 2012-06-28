@@ -37,6 +37,7 @@
 #include <interrupt.h>
 #include <bcd.c>
 #include <digitalw.c>
+#include <system.c>
 
 // RTCC definitions
 
@@ -217,34 +218,38 @@ void RTCC_ConvertDate(rtccDate *pDt)
 
 void RTCC_SetWriteEnable(void)
 {
-    u8 status=0;
-    
-    if (INTCONbits.GIE)
-    {
-        INTCONbits.GIE = 0; // disable interrupts
-        status = 1;
-    }
-    EECON2 = 0x55;          // magic sequence
-    EECON2 = 0xAA;
+    __asm
+    movlb   0x0F        ;RTCCFG is banked
+    bcf     _INTCON,7,1 ;GIE
+    movlw   0x55
+    movwf   _EECON2,1 
+    movlw   0xAA
+    movwf   _EECON2,1
+    bsf     _RTCCFG,5,1 ;RTCWREN
+    __endasm;
+/*
+    SystemUnlock();
     RTCCFGbits.RTCWREN = 1; // enable write
-    if (status)
-        INTCONbits.GIE = 1; // enable interrupts back
+    SystemLock();
+*/
 }
 
 void RTCC_SetWriteDisable(void)
 {
-    u8 status=0;
-    
-    if (INTCONbits.GIE)
-    {
-        INTCONbits.GIE = 0; // disable interrupts
-        status = 1;
-    }
-    EECON2 = 0x55;          // magic sequence
-    EECON2 = 0xAA;
+    __asm
+    movlb   0x0F        ;RTCCFG is banked
+    bcf     _INTCON,7,1 ;GIE
+    movlw   0x55
+    movwf   _EECON2,1 
+    movlw   0xAA
+    movwf   _EECON2,1
+    bcf     _RTCCFG,5,1 ;RTCWREN
+    __endasm;
+/*
+    SystemUnlock();
     RTCCFGbits.RTCWREN = 0; // disable write
-    if (status)
-        INTCONbits.GIE = 1; // enable interrupts back
+    SystemLock();
+*/
 }
 
 /*	-----------------------------------------------------------------------------
@@ -327,7 +332,6 @@ void RTCC_init(u32 tm, u32 dt, s16 drift)
 	RTCC_SetCalibration(drift);
 
 	RTCC_Enable();
-	RTCC_SetWriteDisable();
 	//RTCC_AlarmDisable();
 	//RTCC_OutputDisable();
 	PIR3bits.RTCCIF = 0;
@@ -473,14 +477,14 @@ void RTCC_ReadTime(rtccTime* pTm)
 
 void RTCC_GetTime(rtccTime* pTm0)
 {
-	rtccTime Tm1;
+	//rtccTime Tm1;
 
-	do
-	{
+	//do
+	//{
         RTCC_ReadTime(pTm0);
-        RTCC_ReadTime(&Tm1);
-	}
-    while (pTm0->l != Tm1.l);
+    //    RTCC_ReadTime(&Tm1);
+	//}
+    //while (pTm0->l != Tm1.l);
 
     RTCC_ConvertTime(pTm0);
 }
@@ -502,14 +506,14 @@ void RTCC_ReadDate(rtccDate* pDt)
 
 void RTCC_GetDate(rtccDate* pDt0)
 {
-	rtccDate Dt1;
+	//rtccDate Dt1;
 
-	do
-	{
+	//do
+	//{
         RTCC_ReadDate(pDt0);
-        RTCC_ReadDate(&Dt1);
-	}
-    while (pDt0->l != Dt1.l);
+    //    RTCC_ReadDate(&Dt1);
+	//}
+    //while (pDt0->l != Dt1.l);
 
     RTCC_ConvertDate(pDt0);
 }

@@ -28,7 +28,7 @@
 #ifndef __ONEWIRE_C
 	#define __ONEWIRE_C
 
-	//#include <typedef.h>
+	#include <typedef.h>
 	#include <macro.h>
 	#include <delay.c>
 	#include <digitalw.c>

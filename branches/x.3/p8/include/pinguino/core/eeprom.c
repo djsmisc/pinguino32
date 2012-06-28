@@ -33,8 +33,8 @@
     #endif
 
 	#include <pic18fregs.h>
-	#include "typedef.h"
-	#include "macro.h"
+	#include <typedef.h>
+	#include <macro.h>
 
 /**	----------------------------------------------------------------------------
 	---------- myEEPROM_read8()

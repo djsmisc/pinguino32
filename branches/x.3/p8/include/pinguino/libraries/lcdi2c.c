@@ -74,7 +74,7 @@
 
 #include <typedef.h>
 #include <lcdi2c.h>
-#include <pcf8574.h>
+//#include <pcf8574.h>
 #include <stdarg.h>
 #include <delay.c>
 #include <pinguinoi2c.c>
@@ -252,13 +252,20 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
 
 	/// ---------- LCD Enable Cycle
 
+	I2C_start();
+    I2C_writechar(PCF8574_address | I2C_WRITE);
+
 	LCD_EN = HIGH;
-	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
+	// I2C_send(PCF8574_address, PCF8574_data.val);
 	// E Pulse Width > 300ns
+    I2C_writechar(PCF8574_data.val);
 
 	LCD_EN = LOW;
-	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
+	// I2C_send(PCF8574_address, PCF8574_data.val);
 	// E Enable Cycle > (300 + 200) = 500ns
+    I2C_writechar(PCF8574_data.val);
+
+	I2C_stop();
 }
 
 /*	----------------------------------------------------------------------------
@@ -277,7 +284,7 @@ static void lcdi2c_send8(u8 octet, u8 mode)
 {
 	lcdi2c_send4(octet & LCD_MASK, mode);			// envoie les "Upper 4 bits"
 	lcdi2c_send4((octet << 4) & LCD_MASK, mode);	// envoie les "Lower 4 bits"
-	Delayus(46);			 // Wait for instruction excution time (more than 46us)
+	//Delayus(46);			 // Wait for instruction excution time (more than 46us)
 }
 
 /*	----------------------------------------------------------------------------
@@ -288,7 +295,11 @@ void lcdi2c_backlight()
 {
 	Backlight = ON;	// 0 = ON since PCF8574 is logical inverted
 	LCD_BL = Backlight;
-	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
+	//I2C_send(PCF8574_address, PCF8574_data.val);
+	I2C_start();
+    I2C_writechar(PCF8574_address | I2C_WRITE);
+    I2C_writechar(PCF8574_data.val);
+	I2C_stop();
 }
 
 /*	----------------------------------------------------------------------------
@@ -299,7 +310,11 @@ void lcdi2c_noBacklight()
 {
 	Backlight = OFF;	// 1 = OFF since PCF8574 is logical inverted
 	LCD_BL = Backlight;
-	I2C_send(I2C1, PCF8574_address, PCF8574_data.val);
+	//I2C_send(PCF8574_address, PCF8574_data.val);
+	I2C_start();
+    I2C_writechar(PCF8574_address | I2C_WRITE);
+    I2C_writechar(PCF8574_data.val);
+	I2C_stop();
 }
 
 /*	----------------------------------------------------------------------------
@@ -551,7 +566,7 @@ void lcdi2c_init(u8 numcol, u8 numline, u8 i2c_address)
 	PCF8574_address = 0b01001110 | i2c_address;
 	PCF8574_data.val = 0;
 
-	I2C_init(I2C1, I2C_MASTER_MODE, I2C_1MHZ);
+	I2C_init(I2C_MASTER_MODE, I2C_100KHZ);
 
 	//Delayms(15);								// Wait more than 15 ms after VDD rises to 4.5V
 	lcdi2c_send4(0x30, LCD_CMD);			// 0x30 - Mode 8 bits

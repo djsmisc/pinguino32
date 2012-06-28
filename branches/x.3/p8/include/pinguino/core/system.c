@@ -41,6 +41,16 @@ u8 _gie_status_ = 0;
 
 void SystemUnlock()
 {
+    __asm
+    movlb   0x0F        ;RTCCFG is banked
+    bcf     _INTCON,7,1 ;GIE
+    movlw   0x55
+    movwf   _EECON2,1 
+    movlw   0xAA
+    movwf   _EECON2,1
+    __endasm;
+
+/*
     if (INTCONbits.GIE)
     {
         INTCONbits.GIE = 0; // disable interrupts
@@ -48,6 +58,7 @@ void SystemUnlock()
     }
     EECON2 = 0x55;          // magic sequence
     EECON2 = 0xAA;
+*/
 }
 
 /*	----------------------------------------------------------------------------
@@ -56,8 +67,10 @@ void SystemUnlock()
 
 void SystemLock()
 {
+/*
     if (_gie_status_)
         INTCONbits.GIE = 1; // enable interrupts back
+*/
 }
 
 /*	----------------------------------------------------------------------------

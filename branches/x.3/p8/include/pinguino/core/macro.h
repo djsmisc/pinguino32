@@ -66,7 +66,7 @@
 
 	// Read bit #n from octet
 	#define BitRead(octet, n) \
-		(octet = octet >> n & 1)
+		(octet = (octet >> n) & 1)
 
 	// Set bit #n from octet
 	#define BitSet(octet, n) \

@@ -12,6 +12,8 @@
 
 #define SPI
 
+#include <pic18fregs.h>
+#include <typedef.h>
 #include <spi.h>
 #include <digitalw.c>
 

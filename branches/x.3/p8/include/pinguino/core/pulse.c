@@ -8,6 +8,7 @@
 #ifndef __PULSE__
 #define __PULSE__
 
+#include <typedef.h>
 #include <digitalw.c>
  
 /**
@@ -16,13 +17,13 @@
 * to 3 minutes in length, but must be called at least a few dozen microseconds
 * before the start of the pulse. 
 */
-unsigned long pulseIn(unsigned char pin, unsigned char state, unsigned long timeout){
+u16 pulseIn(u8 pin, u8 state, u16 timeout){
 	
-	unsigned long width = 0; // keep initialization out of time critical area
+	u16 width = 0; // keep initialization out of time critical area
 	
 	// convert the timeout from microseconds to a number of times through
-	unsigned long numloops = 0;
-	unsigned long maxloops = timeout / 10; //We have a microsecond by 10 loops (mean).
+	u16 numloops = 0;
+	u16 maxloops = timeout / 10; //We have a microsecond by 10 loops (mean).
 	
 	// wait for any previous pulse to end
 	while (digitalread(pin) == state)

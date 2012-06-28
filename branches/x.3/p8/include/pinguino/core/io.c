@@ -45,19 +45,11 @@ void IOsetDigital()
 	#endif
 
 	#if defined(PIC18F26J50)
-    // Enable the PLL and wait 2+ms until the PLL locks
-    // RB : Already enabled in the bootloader
-    /*
-    unsigned int pll_startup_counter = 600;
-    {
-        OSCTUNEbits.PLLEN = 1;
-        while(pll_startup_counter--);
-    }
-    */ 
 	ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
 	ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
 	#endif
 }
+
 /**
  * PIC  PINGUINO    PPS
  * 0    RB0         RP3
@@ -89,7 +81,7 @@ void IOsetRemap()
 
 	SystemUnlock();
 	PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
-	SystemLock();
+	//SystemLock();
 
 	#ifdef __SERIAL__
     RPINR16 = 4;                    // RP4 <- RX2
@@ -99,7 +91,8 @@ void IOsetRemap()
 
 	#ifdef __SPI__
     RPINR21 = 6;                    // RP6 <- SDI2
-    RPINR22 = 5;                    // RP5 <- SCK2
+    //RPINR22 = 5;                    // RP5 <- SCK2
+    RPOR5 = 10;                     // RP5 -> SCK2
     RPOR4 = 9;                      // RP4 -> SDO2 (func. num. 9)
     // TODO RPINR23 = ;                     // SPI2 Slave Select Input (SS2IN)
 	#endif
@@ -111,7 +104,7 @@ void IOsetRemap()
 
 	SystemUnlock();
 	PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
-	SystemLock();
+	//SystemLock();
 
     #endif
 }

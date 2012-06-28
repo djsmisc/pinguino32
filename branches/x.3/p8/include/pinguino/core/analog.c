@@ -9,6 +9,9 @@
 #define DEFAULT		0
 #define	EXTERNAL	1
 
+#include <pic18fregs.h>
+#include <typedef.h>
+
 void analog_init(void)
 {
 #if defined(PIC18F4550)
@@ -29,7 +32,7 @@ void analog_init(void)
 }
 
 
-void analogReference(unsigned char Type)
+void analogReference(u8 Type)
 {
 	if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
 		ADCON1|=0x00;			//Vref+ = VDD
@@ -37,9 +40,9 @@ void analogReference(unsigned char Type)
 		ADCON1|=0x10;			//Vref+ = External source
 }
 
-unsigned int analogread(unsigned char channel)
+u16 analogread(u8 channel)
 {
-	unsigned int result=0;
+	u16 result=0;
 // #if defined(PIC18F4550) || defined(PICUNO_EQUO)
 // ADCON1=0x07;
 // #else

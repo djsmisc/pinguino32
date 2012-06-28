@@ -63,6 +63,7 @@
 	#define R1_32	1	// thirty-second rest / demisemiquaver rest
 	#define R1_64	0	// sixty-fourth rest / hemidemisemiquaver rest
 
+    #include <typedef.h>
 	#include <delay.c>
 	#include <digitalw.c>
 	#include <pwm.c>

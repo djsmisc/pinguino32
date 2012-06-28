@@ -30,8 +30,9 @@
 		#define USERINT
 	#endif
 */
-	#ifndef ONEVENT
-		#define ONEVENT
+
+	#ifndef ON_EVENT
+		#define ON_EVENT
 	#endif
 
     #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC18F26J50)

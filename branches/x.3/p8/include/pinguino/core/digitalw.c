@@ -54,13 +54,13 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB,
 #endif
 
 #ifdef PIC18F26J50
-const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,
-					_6,_7,_0,_1,_2,
-					_0,_1,_2,_3,_5};
+const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+					_6,_7,_0,_1,_2,                 // 8 - 12
+					_0,_1,_2,_3,_5};                // 13 -17
 
-const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB,
-					pC, pC, pC, pC, pC,
-					pA, pA, pA, pA, pA};
+const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
+					pC, pC, pC, pC, pC,             // 8 - 12
+					pA, pA, pA, pA, pA};            // 13 - 17
 #endif
 
 #ifdef FREEJALDUINO
