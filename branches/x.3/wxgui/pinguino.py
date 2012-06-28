@@ -186,7 +186,7 @@ class Pinguino(framePinguinoX, Editor):
         self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
         self.background.CentreOnParent(wx.BOTH)
 	
-	self.notebookEditor.SetMinSize((50, 100))
+        self.notebookEditor.SetMinSize((50, 100))
 
         # ------------------------------------------------------------------------------
         # add the panes to the manager

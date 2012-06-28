@@ -62,14 +62,21 @@
 
 void pinguino_main(void)
 {
+   	#if defined(PIC18F26J50)
+    // Enable the PLL and wait 2+ms until the PLL locks
+    u16 pll_startup_counter = 600;
+    OSCTUNEbits.PLLEN = 1;
+    while(pll_startup_counter--);
+	#endif
+
+	PIE1 = 0;
+	PIE2 = 0;
+
     IOsetSpecial();
     IOsetDigital();
     IOsetRemap();
     
-	PIE1 = 0;
-	PIE2 = 0;
-
-	#ifdef ONEVENT//USERINT              // Enable General/Peripheral interrupts
+	#ifdef ON_EVENT             // Enable General/Peripheral interrupts
 	int_init();					// Disable all individual interrupts
 	#endif
 
@@ -81,7 +88,7 @@ void pinguino_main(void)
 
 	setup();
 
-	#ifdef ONEVENT//USERINT
+	#ifdef ON_EVENT
 	int_start();				// Enable all timers interrupts
 	#endif
 
@@ -246,7 +253,7 @@ void low_priority_isr(void) __interrupt 2
 	userinterrupt();
 #endif
 
-#ifdef ONEVENT
+#ifdef ON_EVENT
 	userlowinterrupt();
 #endif
 }

@@ -6,7 +6,9 @@
 #ifndef __MILLIS__
 #define __MILLIS__
 
-#include "interrupt.c"
+#include <pic18fregs.h>
+#include <typedef.h>
+#include <interrupt.c>
 
 volatile u32 _millis;
 

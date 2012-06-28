@@ -1,21 +1,22 @@
 
 #ifndef __ARDDELAY__
 #define __ARDDELAY__
-
 #ifndef __DELAY_H__
 #include <delay.h>
 #endif
 
-void Delayms(unsigned long milliseconde)
+#include <typedef.h>
+
+void Delayms(u16 milliseconde)
 {
-	unsigned long i;
+	u16 i;
 	
 	for (i=0;i<milliseconde;i++) delay10ktcy(1);
 }
 
-void Delayus(int microsecondes)
+void Delayus(u16 microsecondes)
 {
-	unsigned int i;
+	u16 i;
 	
 	for (i=0;i<microsecondes;i++);
 }

@@ -28,10 +28,11 @@
 #ifndef __PINGUINOSERIAL
 #define __PINGUINOSERIAL
 
+#include <pic18fregs.h>
+#include <typedef.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.c>
-#include <typedef.h>
 
 //#define FLOAT 10
 
