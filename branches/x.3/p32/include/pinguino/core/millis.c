@@ -21,8 +21,10 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
+// 05 jul 2012 gagabi Added support for GENERIC 32 bits boards
 // 06 feb 2012 Z Added volatile for _millis variable
 // 17 apr 2010 Regis Blanchot added millis=f(pbclk)
+
 
 #ifndef __MILLIS__
 #define __MILLIS__
@@ -35,7 +37,7 @@
  * must be declared as "volatile" to prevent caching.
  */
 volatile u32 _millis;
-#ifdef PIC32_PINGUINO_220
+#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
 volatile u32 _tmr2;
 #endif
 
@@ -46,7 +48,7 @@ void millis_init(void)
 	pf = GetPeripheralClock();
 	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 	T2CON=0;
-	#ifdef PIC32_PINGUINO_220
+	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
 	_tmr2 = pf / 1000 / 2;
 	TMR2 = 65535 - _tmr2;
 	IPC2bits.T2IP=1;
@@ -77,14 +79,14 @@ u32 millis()
 void Tmr2Interrupt()
 {
 	// is this an TMR2 interrupt ?
-	#ifdef PIC32_PINGUINO_220
+	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
 	TMR2 = _tmr2; // 0xD910;	// because PR2 don't work on PIC32MX220F032D
 	if (IFS0bits.T2IF)
 	#else
 	if (IntGetFlag(INT_TIMER2)) // TODO : add PIC32_PINGUINO_220 support
 	#endif
 	{
-		#ifdef PIC32_PINGUINO_220
+		#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
 		IFS0bits.T2IF=0;
 		#else
 		//IFS0CLR=0x00000100;
