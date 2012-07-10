@@ -1405,6 +1405,13 @@ def getOptions():
                                     help='compile code for ' + boardlist[b].board + ' board')
     return parser.parse_args()
 
+# ------------------------------------------------------------------------------
+# getVersion
+# ------------------------------------------------------------------------------
+
+def getVersion():
+    return pinguino_version
+
 #----------------------------------------------------------------------
 def setGui(bool):
     global gui
