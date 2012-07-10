@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 import wx, os, sys
-from wxgui.pinguino import getOptions, Pinguino, setGui
+from wxgui.pinguino import getOptions, getVersion, Pinguino, setGui
 from wxgui._trad import _
 
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     options = getOptions()
 
     if options.version == True:
-        print "current version is " + pinguino_version
+        print "current version is " + getVersion() #pinguino_version
         sys.exit(1)
 
     if options.author == True:
