@@ -11,6 +11,14 @@
 
 #include <stdarg.h>
 
+#if defined(USBCDCDEBUG)
+#include <__cdc.c>
+#endif
+
+#if defined(UART1DEBUG)
+#include <serial.c>
+#endif
+
 void debug(const char *format, ...)
 {
 	va_list args;
@@ -20,19 +28,9 @@ void debug(const char *format, ...)
 	#endif
 
 	#if defined(USBCDCDEBUG)
-		#include <__cdc.c>
 		CDCprintf("debug: ");
 		CDCprintf(format, args);
 		CDCprintf("\r\n");
-	#endif
-
-	#if defined(USBBULKDEBUG)
-	#endif
-
-	#if defined(USBHIDDEBUG)
-	#endif
-
-	#if defined(USBOTGDEBUG)
 	#endif
 
 	#if defined(UART1DEBUG)

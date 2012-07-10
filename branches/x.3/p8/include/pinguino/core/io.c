@@ -81,7 +81,7 @@ void IOsetRemap()
 
 	SystemUnlock();
 	PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
-	//SystemLock();
+	SystemLock();
 
 	#ifdef __SERIAL__
     RPINR16 = 4;                    // RP4 <- RX2
@@ -89,24 +89,24 @@ void IOsetRemap()
     //RPINR17 = ;                     // EUSART2 Clock Input (CKR2)
 	#endif
 
-	#ifdef __SPI__
-    RPINR21 = 6;                    // RP6 <- SDI2
-    //RPINR22 = 5;                    // RP5 <- SCK2
-    RPOR5 = 10;                     // RP5 -> SCK2
-    RPOR4 = 9;                      // RP4 -> SDO2 (func. num. 9)
-    // TODO RPINR23 = ;                     // SPI2 Slave Select Input (SS2IN)
+	#ifdef __SPI2__
+    RPINR21 = 6;                    // RP6 (RB3) <- SDI2
+    RPOR5 = 10;                     // RP5 (RB2) -> SCK2
+    RPOR4 = 9;                      // RP4 (RB1) -> SDO2 (func. num. 9)
+    //RPOR3 = 12;                     // RP3 (RB0) -> SS2 (SPI DMA Slave Select)
 	#endif
 
 	#ifdef __PWM__
-    // TODO RPINR24 = ;                     // PWM Fault Input (FLT0)
+    // TODO
+    // RPINR24 = ;                     // PWM Fault Input (FLT0)
     
 	#endif
 
 	SystemUnlock();
 	PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
-	//SystemLock();
+	SystemLock();
 
-    #endif
+    #endif /* defined(PIC18F26J50) */
 }
 
 #endif /* __REMAP_C */

@@ -113,7 +113,7 @@ void CDCprintln(const u8 *fmt, ...)
 }
 
 // CDC.getKey
-char CDCgetkey()
+u8 CDCgetkey()
 {
 	u8 buffer[64];		// always get a full packet
 
@@ -122,7 +122,7 @@ char CDCgetkey()
 }
 
 // CDC.getString
-char * CDCgetstring(void)
+u8 * CDCgetstring(void)
 {
 	u8 c, i = 0;
 	static u8 buffer[80];

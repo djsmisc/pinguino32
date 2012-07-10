@@ -72,8 +72,8 @@
 #ifndef __STEPPER_C
 #define __STEPPER_C
 
-#include "digitalw.c"
-#include "millis.c"
+#include <digitalw.c>
+#include <millis.c>
 
 int this_direction;					// Direction of rotation
 int this_speed;						// Speed in RPMs
@@ -106,6 +106,7 @@ void Stepper_stepMotor(int thisStep);
 
 void Stepper_init(int number_of_steps, int motor_pin_1, int motor_pin_2, int motor_pin_3, int motor_pin_4)
 {
+    millis_init();
 	if (motor_pin_3 == 0 && motor_pin_4 == 0)
 	{
 		this_step_number = 0;							// which step the motor is on
@@ -180,10 +181,10 @@ void Stepper_step(int steps_to_move)
 	while(steps_left > 0)
 	{
 		// move only if the appropriate delay has passed:
-		if (Millis() - this_last_step_time >= this_step_delay)
+		if (millis() - this_last_step_time >= this_step_delay)
 		{
 			// get the timeStamp of when you stepped:
-			this_last_step_time = Millis();
+			this_last_step_time = millis();
 			// increment or decrement the step number,
 			// depending on direction:
 			if (this_direction == 1)

@@ -1,3 +1,6 @@
+rtccTime rtccTime#include <rtcc.c>
+rtccDate rtccDate#include <rtcc.c>
+
 RTCC.init RTCC_init#include <rtcc.c>
 RTCC.shutdown RTCC_Shutdown#include <rtcc.c>
 RTCC.test RTCC_Test#include <rtcc.c>

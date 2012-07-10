@@ -14,9 +14,14 @@
 	#define RAD_TO_DEG	57.295779513082320876798154814105
 
 	// already defined in common_types.h
-	//#define FALSE			0 
-	//#define TRUE			!FALSE
+    #ifndef FALSE
+	#define FALSE			0
+    #endif
 	#define false			0 
+    
+    #ifndef TRUE
+	#define TRUE			!FALSE
+    #endif
 	#define true			!false
 
 	#define INPUT			1

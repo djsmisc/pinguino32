@@ -27,6 +27,7 @@
 #define __PINGUINOPWM
 
 #include <pic18fregs.h>
+#include <typedef.h>
 #include <digitalw.c>
 #include <system.c>
 #include <interrupt.c>
@@ -139,7 +140,7 @@ void PWM_set_dutycycle(u8 pin, u16 duty)
 			break;
 		default:
 			#ifdef DEBUG
-				serial_printf("Invalid Pin (must be CCP1=5 or CCP2=6)\n");
+				#error "Invalid Pin (must be CCP1=5 or CCP2=6)"
 			#endif
 	}
 

@@ -5,7 +5,7 @@ char *string = "Hello world!";
 char c = 65;
 int i = 333;
 long l = 115200;
-float f = 3.14159265; // floating point support is not yet implemented in printf
+float f = 3.14159265;
 
 void setup()
 {

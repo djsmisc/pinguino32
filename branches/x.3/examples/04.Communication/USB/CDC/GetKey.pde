@@ -1,6 +1,6 @@
 //	Output GNU/Linux:	sudo minicom -o -D /dev/ttyACM0
 
-char c;
+u8 c=0;
 
 void setup()
 {
@@ -8,7 +8,7 @@ void setup()
 
 void loop()
 {
-	CDC.printf("Press a Key ...\r\n");
-	c = CDC.getKey();
-	CDC.printf("You pressed key [%c], code ASCII is \"%d\"\r\n", c, c);
+    CDC.printf("Press a Key ...\r\n");
+    c = CDC.getKey();
+    CDC.printf("You pressed key [%c], code ASCII is \"%d\"\r\n", c, c);
 }

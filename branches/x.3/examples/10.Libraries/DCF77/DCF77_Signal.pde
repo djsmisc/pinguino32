@@ -22,16 +22,16 @@ void setup(void)
 {
 	Serial.begin(9600);
 	Serial.println("\r\n*  Pinguino DCF77 demo  *");
-	pinMode(GREENLED, OUTPUT);
+	pinMode(12, OUTPUT);
 	DCF77.start(DCF77Pin);
 }
 
 void loop(void)
 {
 	if (digitalRead(DCF77Pin) == 1)
-		digitalWrite(GREENLED, HIGH);
+		digitalWrite(12, HIGH);
 	else
-		digitalWrite(GREENLED, LOW);
+		digitalWrite(12, LOW);
 
 	if (RTClock.seconds != PrevSec)
 	{

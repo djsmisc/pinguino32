@@ -3,14 +3,12 @@
 	PROJECT:			pinguino32X
 	PURPOSE:			interrupts management
 	PROGRAMER:			regis blanchot <rblanchot@gmail.com>
-	
-	- UART3/4/5/6 for PIC32MX795 support Marcus Fazzi <anunakin@gmail.com>	
-	
 	FIRST RELEASE:		16 nov. 2010
 	LAST RELEASE:		23 set. 2011
 	----------------------------------------------------------------------------
 	CHANGELOG:
-	[xx-xx-xx][name][comment]
+    ???             Marcus Fazzi <anunakin@gmail.com> added UART3/4/5/6 for PIC32MX795 support
+    05 jul. 2012    Gagabi Added support for GENERIC 32 bits boards in intconfiguresystem()
  	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -26,8 +24,6 @@
 	License along with this library; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
-
-// 05 jul. 2012 gagabi Added support for GENERIC 32 bits boards in intconfiguresystem()
 
 #ifndef __INTERRUPT_C
 #define __INTERRUPT_C
@@ -832,16 +828,16 @@ unsigned int IntGetVectorSubPriority(u8 vector)
 
 void IntClearFlag(u8 numinter)
 {
-#if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
 		BitClear(IFS2, numinter);
 	}
 	else if (numinter > 31 && numinter <= 63) 
-#else
+    #else
 	if (numinter > 31)
-#endif
+    #endif
 	{
 		numinter -= 32;
 		BitClear(IFS1, numinter);
@@ -864,16 +860,16 @@ void IntClearFlag(u8 numinter)
 
 unsigned int IntGetFlag(u8 numinter)
 {
-#if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
 		return BitRead(IFS2, numinter);
 	}
 	else if (numinter > 31 && numinter <= 63)
-#else
+    #else
 	if (numinter > 31)
-#endif
+    #endif
 	{		
 		numinter -= 32;
 		return BitRead(IFS1, numinter);
@@ -893,16 +889,16 @@ unsigned int IntGetFlag(u8 numinter)
 
 void IntEnable(u8 numinter)
 {
-#if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
 		BitSet(IFS2, numinter);
 	}
 	else if (numinter > 31 && numinter <= 63) 
-#else
+    #else
 	if (numinter > 31)
-#endif
+    #endif
 	{
 		numinter -= 32;
 		BitSet(IEC1, numinter);
@@ -922,16 +918,16 @@ void IntEnable(u8 numinter)
 
 void IntDisable(u8 numinter)
 {
-#if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
 		BitClear(IFS2, numinter);
 	}
 	else if (numinter > 31 && numinter <= 63) 
-#else
+    #else
 	if (numinter > 31)
-#endif
+    #endif
 	{
 		numinter -= 32;
 		BitClear(IEC1, numinter);
@@ -1061,7 +1057,7 @@ void IntConfigureSystem(u8 mode)
 	temp = _CP0_GET_STATUS(); // Get Status
 	temp |= 0x00400000; // Set BEV bit
 	_CP0_SET_STATUS(temp); // Update Status
-	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​​F032)
+	#if defined(PIC32_PINGUINO_220) || defined(GENERIC32MX250F128) || defined(GENERIC32MX220​​F032)
 	_CP0_SET_EBASE(0xBD003000); // Set an EBase value of 0xBD003000	
 	#else
 	_CP0_SET_EBASE(0xBD005000); // Set an EBase value of 0xBD005000	

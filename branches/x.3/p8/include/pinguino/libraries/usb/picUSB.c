@@ -22,10 +22,7 @@
   TODO:
   **/
 #include <pic18fregs.h>
-#ifdef DEBUG_PRINT
 #include <string.h>
-#endif
-#include <typedef.h>
 
 #include "picUSB.h"
 #include "usb_config.h"
@@ -71,12 +68,12 @@ u8 requestHandled;                    // Set to 1 if request was understood and 
 
 u8 *outPtr;                           // Data to send to the host
 u8 *inPtr;                            // Data from the host
-word wCount;                            // Number of u8s of data
+word wCount;                            // Number of bytes of data
 
   // HID Class variables
 u8 hidIdleRate;
 u8 hidProtocol;                       // [0] Boot Protocol [1] Report Protocol
-u8 hidRxLen;                          // # of u8s put into buffer
+u8 hidRxLen;                          // # of bytes put into buffer
 
   /** Buffer descriptors Table (see datasheet page 171)
   RAM Bank 4 (0x400 though 0x4ff) is used spcifically for endpoint buffer control in a structure known as Buffer Descriptor Table (BDTZ).<br>
@@ -89,6 +86,7 @@ volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
 
   // Put endpoint 0 buffers into dual port RAM
 #pragma udata usbram5 SetupPacket controlTransferBuffer
+//volatile BufferDescriptorTable ep_bdt[32];
 volatile setupPacketStruct SetupPacket;
 volatile u8 controlTransferBuffer[EP0_BUFFER_SIZE];
 
@@ -192,7 +190,7 @@ static void GetStatus(void) {
     u8 endpointNum = SetupPacket.wIndex0 & 0x0F;
     u8 endpointDir = SetupPacket.wIndex0 & 0x80;
     requestHandled = 1;
-  // Endpoint descriptors are 8 u8s long, with each in and out taking 4 u8s
+  // Endpoint descriptors are 8 bytes long, with each in and out taking 4 bytes
   // within the endpoint. (See PIC datasheet.)
     inPtr = (u8 *)&EP_OUT_BD(0) + (endpointNum * 8);
     if (endpointDir)
@@ -234,7 +232,7 @@ static void SetFeature(void) {
     if ((feature == ENDPOINT_HALT) && (endpointNum != 0)) {
   // Halt endpoint (as long as it isn't endpoint 0)
       requestHandled = 1;
-  // Endpoint descriptors are 8 u8s long, with each in and out taking 4 u8s
+  // Endpoint descriptors are 8 bytes long, with each in and out taking 4 bytes
   // within the endpoint. (See PIC datasheet.)
       inPtr = (u8 *)&EP_OUT_BD(0) + (endpointNum * 8);
       if (endpointDir)
@@ -370,7 +368,7 @@ void InDataStage(unsigned char ep) {
 #endif
   word bufferSize;
 
-  // Determine how many u8s are going to the host
+  // Determine how many bytes are going to the host
   if(wCount < EP0_BUFFER_SIZE)
     bufferSize = wCount;
   else
@@ -387,7 +385,7 @@ void InDataStage(unsigned char ep) {
   EP_IN_BD(ep).Cnt = (u8)(bufferSize & 0xFF);
   EP_IN_BD(ep).ADDR = PTR16(&controlTransferBuffer);
 
-  // Update the number of u8s that still need to be sent.  Getting
+  // Update the number of bytes that still need to be sent.  Getting
   // all the data back to the host can take multiple transactions, so
   // we need to track how far along we are.
   wCount = wCount - bufferSize;
@@ -420,7 +418,7 @@ void OutDataStage(unsigned char ep) {
   //    printf("OutDataStage: %d\r\n", bufferSize);
 #endif
 
-  // Accumulate total number of u8s read
+  // Accumulate total number of bytes read
   wCount = wCount + bufferSize;
 
   outPtr = (u8*)&controlTransferBuffer;
@@ -457,7 +455,7 @@ void SetupStage(void) {
   ctrlTransferStage = SETUP_STAGE;
   requestHandled = 0;                   // Default is that request hasn't been handled
   HIDPostProcess = 0;                   // Assume standard request until know otherwise
-  wCount = 0;                           // No u8s transferred
+  wCount = 0;                           // No bytes transferred
 
   // See if this is a standard (as definded in USB chapter 9) request
   ProcessStandardRequest();
@@ -618,6 +616,7 @@ void ProcessControlTransfer(void) {
 #endif
   }
 }
+
 
 
 void EnableUSBModule(void) {

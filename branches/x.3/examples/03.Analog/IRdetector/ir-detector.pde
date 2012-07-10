@@ -38,12 +38,12 @@ void IR_emitterOn(u8 pin)
 	// We take 3.5V / 430Ω to find our peak current of 8.1mA.
 	// If we set our PWM duty-cycle to 20%,
 	// we then have an average current of 1.6mA supplied to each LED.
-	PWM.setpercentdutycycle(pin, 25);// duty cycle = 25%
+	PWM.setPercentDutyCycle(pin, 25);// duty cycle = 25%
 }
 
 void IR_emitterOff(u8 pin)
 {
-	PWM.setpercentdutycycle(pin, 0);// duty cycle = 25%
+	PWM.setPercentDutyCycle(pin, 0);// duty cycle = 25%
 }
 
 // Send burst on every timer interrupt.
@@ -88,15 +88,12 @@ void IR_reception()
 
 void setup()
 {
-	Debug();
-	#ifndef DEBUG
 	Serial.begin(9600);
-	#endif
 	Serial.printf("************************\n");
 	Serial.printf("* IR Obstacle Detector *\n");
 	Serial.printf("************************\n");
 
-	PWM.setfrequency(38000);								// Use Timer2 to make a 38 KHz carrier frequency
+	PWM.setFrequency(38000);								// Use Timer2 to make a 38 KHz carrier frequency
 	OnTimer0(IR_transmission, INT_MICROSEC, 500);	// Use Timer0 to send burst every 500 us
 	OnChangePin0(IR_reception, INT_FALLING_EDGE);	// Goes to 0 if a carrier is received
 }

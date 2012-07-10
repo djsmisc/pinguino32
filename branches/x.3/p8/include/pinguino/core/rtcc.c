@@ -3,8 +3,11 @@
 	PROJECT: 		pinguino
 	PURPOSE: 		Real Time Clock and Calendar functions
 	PROGRAMER: 		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	15 jun 2012
-	LAST RELEASE:	20 jun 2012
+	FIRST RELEASE:	15 Jun 2012
+	LAST RELEASE:	30 Jun 2012
+	----------------------------------------------------------------------------
+    CHANGELOG :
+    * 30 Jun 2012   Regis Blanchot  Changed rtccTime and rtccDate to match dcf77
 	----------------------------------------------------------------------------
 	TODO :
 	----------------------------------------------------------------------------
@@ -49,9 +52,9 @@ typedef union
 {
 	struct
 	{
-		u8	sec;		// BCD codification for seconds, 00-59
-		u8	min;		// BCD codification for minutes, 00-59
-		u8	hour;		// BCD codification for hours, 00-24
+		u8	seconds;	// BCD codification for seconds, 00-59
+		u8	minutes;	// BCD codification for minutes, 00-59
+		u8	hours;		// BCD codification for hours, 00-24
 	};					// field access
 	u8		b[4];		// byte access
 	u16		w[2];		// 16 bits access
@@ -63,9 +66,9 @@ typedef union
 {
 	struct
 	{
-		u8	wday;		// BCD codification for day of the week, 00-06
-		u8	mday;		// BCD codification for day of the month, 01-31
-		u8	mon;		// BCD codification for month, 01-12
+		u8	dayofweek;	// BCD codification for day of the week, 00-06
+		u8	dayofmonth;	// BCD codification for day of the month, 01-31
+		u8	month;		// BCD codification for month, 01-12
 		u8	year;		// BCD codification for years, 00-99
 	};								// field access
 	u8		b[4];		// byte access
@@ -197,17 +200,17 @@ void RTCC_AlarmIntDisable(void);
 
 void RTCC_ConvertTime(rtccTime *pTm)
 {
-	pTm->hour = bcd2bin(pTm->hour);
-	pTm->min  = bcd2bin(pTm->min);
-	pTm->sec  = bcd2bin(pTm->sec);
+	pTm->hours    = bcd2bin(pTm->hours);
+	pTm->minutes  = bcd2bin(pTm->minutes);
+	pTm->seconds  = bcd2bin(pTm->seconds);
 }
 
 void RTCC_ConvertDate(rtccDate *pDt)
 {
-	pDt->wday = bcd2bin(pDt->wday);
-	pDt->mday = bcd2bin(pDt->mday);
-	pDt->mon  = bcd2bin(pDt->mon);
-	pDt->year = bcd2bin(pDt->year);
+	pDt->dayofweek  = bcd2bin(pDt->dayofweek);
+	pDt->dayofmonth = bcd2bin(pDt->dayofmonth);
+	pDt->month      = bcd2bin(pDt->month);
+	pDt->year       = bcd2bin(pDt->year);
 }
 
 /*	-----------------------------------------------------------------------------
@@ -218,38 +221,38 @@ void RTCC_ConvertDate(rtccDate *pDt)
 
 void RTCC_SetWriteEnable(void)
 {
+/*
     __asm
     movlb   0x0F        ;RTCCFG is banked
-    bcf     _INTCON,7,1 ;GIE
+    ;bcf     _INTCON,7,1 ;GIE
     movlw   0x55
     movwf   _EECON2,1 
     movlw   0xAA
     movwf   _EECON2,1
     bsf     _RTCCFG,5,1 ;RTCWREN
     __endasm;
-/*
+*/
     SystemUnlock();
     RTCCFGbits.RTCWREN = 1; // enable write
     SystemLock();
-*/
 }
 
 void RTCC_SetWriteDisable(void)
 {
+/*
     __asm
     movlb   0x0F        ;RTCCFG is banked
-    bcf     _INTCON,7,1 ;GIE
+    ;bcf     _INTCON,7,1 ;GIE
     movlw   0x55
     movwf   _EECON2,1 
     movlw   0xAA
     movwf   _EECON2,1
     bcf     _RTCCFG,5,1 ;RTCWREN
     __endasm;
-/*
+*/
     SystemUnlock();
     RTCCFGbits.RTCWREN = 0; // disable write
     SystemLock();
-*/
 }
 
 /*	-----------------------------------------------------------------------------
@@ -264,6 +267,7 @@ u8 RTCC_GetWriteEnable(void)
 /*	-----------------------------------------------------------------------------
 	RTCC module is enabled
 	The write operations have to be enabled first.
+    * clears the alarm interrupt flag.
  	---------------------------------------------------------------------------*/
 
 void RTCC_Enable(void)
@@ -271,6 +275,7 @@ void RTCC_Enable(void)
 	RTCC_SetWriteEnable();
     RTCCFGbits.RTCEN = 1;
 	RTCC_SetWriteDisable();
+	PIR3bits.RTCCIF = 0;
 }
 
 /*	-----------------------------------------------------------------------------	
@@ -319,13 +324,13 @@ void RTCC_Wait(void)
     *sets the desired time, date and calibration
     *enables the RTCC,
     *disables the Alarm and the RTCC clock output (RTCOE=0), 
-    *disables RTCC writes.
-    *clears the alarm interrupt flag.
 	---------------------------------------------------------------------------*/
 
 void RTCC_init(u32 tm, u32 dt, s16 drift)
 {
-    //#pragma config RTCOSC = INTOSCREF     
+    /// /!\ RTCC uses T1OSC/T1CKI as clock
+    /// Bootloader v4.x : #pragma config RTCOSC = T1OSCREF
+    /// TODO : #pragma config RTCOSC = INTOSCREF     
 
 	RTCC_SetTime(tm);
 	RTCC_SetDate(dt);
@@ -334,7 +339,6 @@ void RTCC_init(u32 tm, u32 dt, s16 drift)
 	RTCC_Enable();
 	//RTCC_AlarmDisable();
 	//RTCC_OutputDisable();
-	PIR3bits.RTCCIF = 0;
 }
 
 /*	-----------------------------------------------------------------------------
@@ -348,7 +352,6 @@ void RTCC_init(u32 tm, u32 dt, s16 drift)
 void RTCC_Shutdown(void)
 {
 	RTCC_Disable();
-	RTCC_SetWriteDisable();
 	//RTCC_AlarmDisable();
 	//RTCC_OutputDisable();
 	PIR3bits.RTCCIF = 0;
@@ -413,10 +416,10 @@ void RTCC_SetTime(u32 tm)
     RTCCFGbits.RTCPTR1 = 0;     
     RTCCFGbits.RTCPTR0 = 1;     
 	while (RTCCFGbits.RTCSYNC);	// When RTCSYNC = 0, the registers can be safely accessed by the CPU
-    RTCVALL = t0.hour;     
+    RTCVALL = t0.hours;     
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-    RTCVALL = t0.sec;
-    RTCVALH = t0.min;   
+    RTCVALL = t0.seconds;
+    RTCVALH = t0.minutes;   
  	RTCC_SetWriteDisable();
 }
 
@@ -435,10 +438,10 @@ void RTCC_SetDate(u32 dt)
     RTCCFGbits.RTCPTR0 = 1; 
     RTCVALL = d0.year;    
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-    RTCVALL = d0.mday;      
-    RTCVALH = d0.mon;   
+    RTCVALL = d0.dayofmonth;      
+    RTCVALH = d0.month;   
     //RTCVALL = tm.hour;  
-    RTCVALH = d0.wday;
+    RTCVALH = d0.dayofweek;
  	RTCC_SetWriteDisable();
 }
 
@@ -469,10 +472,10 @@ void RTCC_ReadTime(rtccTime* pTm)
     RTCC_Wait();
     RTCCFGbits.RTCPTR1 = 0;
     RTCCFGbits.RTCPTR0 = 1;
-    pTm->hour = RTCVALL;     
+    pTm->hours = RTCVALL;     
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-    pTm->sec = RTCVALL;
-    pTm->min = RTCVALH;   
+    pTm->seconds = RTCVALL;
+    pTm->minutes = RTCVALH;   
 }
 
 void RTCC_GetTime(rtccTime* pTm0)
@@ -498,10 +501,10 @@ void RTCC_ReadDate(rtccDate* pDt)
 	RTCCFGbits.RTCPTR0 = 1;
 	pDt->year = RTCVALL;
     dummy = RTCVALH;        // dummy read of RTCVALH to auto-decrement RTCPTR    
-	pDt->mday = RTCVALL;
-	pDt->mon = RTCVALH;
+	pDt->dayofmonth = RTCVALL;
+	pDt->month = RTCVALH;
 	dummy = RTCVALL;
-	pDt->wday = RTCVALH;
+	pDt->dayofweek = RTCVALH;
 }
 
 void RTCC_GetDate(rtccDate* pDt0)

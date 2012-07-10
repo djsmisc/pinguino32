@@ -9,10 +9,8 @@
 	one revolution in the other direction.  
 
 	Created 11 Mar. 2007
-	Modified 30 Nov. 2009
-	by Tom Igoe
-	Adapted 18 May 2011
-	by Régis Blanchot
+	Modified 30 Nov. 2009 by Tom Igoe
+	Adapted 18 May 2011	by Régis Blanchot
 */
 
 // change this to fit the number of steps per revolution for your motor
