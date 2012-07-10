@@ -85,10 +85,7 @@ void IR_reception()
 
 void setup()
 {
-	Debug();
-	#ifndef DEBUG
 	Serial.begin(9600);
-	#endif
 	Serial.printf("************************\n");
 	Serial.printf("* IR Obstacle Detector *\n");
 	Serial.printf("************************\n");
