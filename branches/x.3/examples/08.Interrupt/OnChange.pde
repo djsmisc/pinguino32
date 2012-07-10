@@ -35,12 +35,12 @@ u8 phase = 0;
 // Turn the IR LEDs on or off.
 void IR_emitterOn(u8 pin)
 {
-	PWM.setpercentdutycycle(pin, 25);// duty cycle = 25%
+	PWM.setPercentDutyCycle(pin, 25);// duty cycle = 25%
 }
 
 void IR_emitterOff(u8 pin)
 {
-	PWM.setpercentdutycycle(pin, 0);// duty cycle = 0
+	PWM.setPercentDutyCycle(pin, 0);// duty cycle = 0
 }
 
 // Send burst on every timer interrupt.
@@ -93,7 +93,7 @@ void setup()
 	Serial.printf("* IR Obstacle Detector *\n");
 	Serial.printf("************************\n");
 
-	PWM.setfrequency(38000);						// Use Timer2 to make a 38 KHz carrier frequency
+	PWM.setFrequency(38000);						// Use Timer2 to make a 38 KHz carrier frequency
 	OnTimer0(IR_transmission, INT_MICROSEC, 500);	// Use Timer0 to send burst every 500 us
 	OnChangePin0(IR_reception, INT_FALLING_EDGE);	// Goes to 0 if a carrier is received
 }

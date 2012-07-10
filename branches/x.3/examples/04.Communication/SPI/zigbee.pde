@@ -1,5 +1,3 @@
-#define PIC18F4550
-
 #define CS 3		
 #define SDI 2		
 #define SDO 0		

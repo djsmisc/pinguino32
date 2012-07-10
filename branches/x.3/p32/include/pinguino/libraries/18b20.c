@@ -4,10 +4,11 @@
 	PURPOSE:		One wire driver to use with DS18B20 digital temperature sensor.
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	28 Sep 2010
-	LAST RELEASE:	17 Jan 2012
+	LAST RELEASE:	26 Jun 2012
 	----------------------------------------------------------------------------
 	02 Jun 2011	Jean-Pierre Mandon	fixed a bug in decimal part of the measure
 	17 Jan 2012	Mark Harper			update to deal correctly with negative temperatures
+	29 Jun 2012 Régis Blanchot		changed CRC calculation to save 8-bit Pinguino's RAM
 	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
@@ -52,6 +53,8 @@
 	u8 doneFlag = 0;		// Done flag
 	u8 numROMs;
 	u8 dowcrc;
+    
+    /*
 	const u8 dscrc_table[] = {
 		0, 94,188,226, 97, 63,221,131,194,156,126, 32,163,253, 31, 65,
 		157,195, 33,127,252,162, 64, 30, 95, 1,227,189, 62, 96,130,220,
@@ -69,7 +72,8 @@
 		87, 9,235,181, 54,104,138,212,149,203, 41,119,244,170, 72, 22,
 		233,183, 85, 11,136,214, 52,106, 43,117,151,201, 74, 20,246,168,
 		116, 42,200,150, 21, 75,169,247,182,232, 10, 84,215,137,107, 53};
-
+    */
+    
 	/// DS18B20 ROM COMMANDS
 
 	#define SEARCHROM			0xF0	//
@@ -416,24 +420,69 @@
 /*	----------------------------------------------------------------------------
 	---------- CRC
 	----------------------------------------------------------------------------
-	* Arguments:
-	* Description:	Update the CRC for transmitted and received data using
-					the CCITT 16bit algorithm (X^8 + X^5 + X + 1).
+	* Arguments:    x
+    * Global:       dowcrc - global crc stored here
+ 	* Description:	Update the CRC for transmitted and received data using
+					8-bit CRC equivalent polynomial function : x^8 + x^5 + x + 1
+    * 1rst method
+		dowcrc = dscrc_table[dowcrc^x];
+		return dowcrc;
+    * 2nd method
+        int i = (x ^ dowcrc) & 0xff;
+        dowcrc = 0;
+        if(i & 1)
+        dowcrc ^= 0x5e;
+        if(i & 2)
+        dowcrc ^= 0xbc;
+        if(i & 4)
+        dowcrc ^= 0x61;
+        if(i & 8)
+        dowcrc ^= 0xc2;
+        if(i & 0x10)
+        dowcrc ^= 0x9d;
+        if(i & 0x20)
+        dowcrc ^= 0x23;
+        if(i & 0x40)
+        dowcrc ^= 0x46;
+        if(i & 0x80)
+        dowcrc ^= 0x8c;
+        return dowcrc;
+    * 3rd method
+        unsigned char r1[16] = {
+        0x00, 0x5e, 0xbc, 0xe2, 0x61, 0x3f, 0xdd, 0x83, 
+        0xc2, 0x9c, 0x7e, 0x20, 0xa3, 0xfd, 0x1f, 0x41};
+        unsigned char r2[16] = {
+        0x00, 0x9d, 0x23, 0xbe, 0x46, 0xdb, 0x65, 0xf8,
+        0x8c, 0x11, 0xaf, 0x32, 0xca, 0x57, 0xe9, 0x74};
+        int i = (x ^ dowcrc) & 0xff;
+        dowcrc = r1[i&0xf] ^ r2[i>>4];
+        return dowcrc;
 	--------------------------------------------------------------------------*/
 
 	u8 DS18B20_crc(u8 x)
 	{
-/*		TODO:
-		unsigned char ser_data;
-		static unsigned int crc;
-		crc = (unsigned char)(crc >> 8) | (crc << 8);
-		crc ^= ser_data;
-		crc ^= (unsigned char)(crc & 0xff) >> 4;
-		crc ^= (crc << 8) << 4;
-		crc ^= ((crc & 0xff) << 4) << 1;
-*/
-		dowcrc = dscrc_table[dowcrc^x];
-		return dowcrc;
+        u16 i = (x ^ dowcrc) & 0xff;
+
+        dowcrc = 0;
+
+        if(i & 1)
+        dowcrc ^= 0x5e;
+        if(i & 2)
+        dowcrc ^= 0xbc;
+        if(i & 4)
+        dowcrc ^= 0x61;
+        if(i & 8)
+        dowcrc ^= 0xc2;
+        if(i & 0x10)
+        dowcrc ^= 0x9d;
+        if(i & 0x20)
+        dowcrc ^= 0x23;
+        if(i & 0x40)
+        dowcrc ^= 0x46;
+        if(i & 0x80)
+        dowcrc ^= 0x8c;
+
+        return dowcrc;
 	}
 
 #endif

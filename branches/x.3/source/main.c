@@ -1,8 +1,16 @@
 /*	-------------------------------------------------------------------------
-	main.c - Application main function
-
-	(c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr> 
-
+	FILE:			main.c
+	PROJECT:		pinguino
+	PURPOSE:		application main function
+	PROGRAMER:		(c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr>
+	FIRST RELEASE:	19 Sep 2008
+	LAST RELEASE:	01 Jul 2012
+	----------------------------------------------------------------------------
+    CHANGELOG :
+    19 Sep 2008 - Jean-pierre Mandon - adapted to Pinguino  
+    21 Apr 2012 - Régis Blanchot - added bootloader v4.x support
+    20 Jun 2012 - Régis Blanchot - added io.c support (remapping)
+	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
 	License as published by the Free Software Foundation; either
@@ -18,15 +26,10 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	-------------------------------------------------------------------------*/
 
-// modified by Jean-pierre Mandon 2008/09/19
-// added bootloader V4.0 support - Régis Blanchot - 2012/04/21
-// this function is part of Pinguino project
-
 #include <pic18fregs.h>
 #include <const.h>
 #include <macro.h>
 #include <system.c>
-#include <io.c>
 
 #ifdef boot2
 	#include <common_types.h>
@@ -34,15 +37,12 @@
 #else
 	#include <typedef.h>
 #endif
-
-#include "define.h"
-#include <pin.h>
-
+/*
 #ifdef __USB__
 	#include <usb.h>
 	#include <usb.c>
 #endif
-
+*/
 // only for compatibility with application_iface.o
 #ifdef boot2
 	#ifndef __USB__
@@ -53,6 +53,12 @@
 	#endif
 #endif
 
+#include "define.h"
+// files that need define.h to be included first
+#include <pin.h>
+#include <io.c>
+
+// user's .pde file translated to C
 #include "user.c"
 
 /*	----------------------------------------------------------------------------
@@ -86,17 +92,17 @@ void pinguino_main(void)
 	INTCONbits.GIE  = 1;
 	#endif
 
-	setup();
+	//setup();
 
-	#ifdef ON_EVENT
-	int_start();				// Enable all timers interrupts
-	#endif
+	//#ifdef ON_EVENT
+	//int_start();				// Enable all defined timers interrupts
+	//#endif
 
 	#ifdef ANALOG
 	analog_init();
 	#endif
 
-	#ifdef __MILLIS__
+	#ifdef __MILLIS__           // Use Timer 0
 	millis_init();
 	#endif
 
@@ -118,25 +124,27 @@ void pinguino_main(void)
 	INTCONbits.GIE  = 1;
 	#endif
 
-	#ifdef __SERIAL__
+	#ifdef __PS2KEYB__
+	keyboard_init()
+	#endif
+
+	#if defined(__SERIAL__) || defined(SERVOSLIBRARY)
 	INTCONbits.PEIE = 1;
 	INTCONbits.GIE  = 1;
 	#endif 
 
+/*  RB : millis.c/millis_init() did already the job
 	#ifdef MILLIS
 	INTCONbits.TMR0IE= 1;
 	INTCONbits.GIE  = 1;
 	#endif 
+*/
 
-	#ifdef SERVOSLIBRARY
-	INTCONbits.PEIE = 1;
-	INTCONbits.GIE  = 1;
+	setup();
+	#ifdef ON_EVENT
+	int_start();				// Enable all defined timers interrupts
 	#endif
 
-	#ifdef __PS2KEYB__
-	keyboard_init()
-	#endif
-		
 	while (1)
 		loop();
 }

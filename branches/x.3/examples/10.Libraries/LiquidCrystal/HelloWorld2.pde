@@ -7,14 +7,14 @@
  */
 
 
-#define LED 65
+#define LED 13
 unsigned long counter;
 
 void setup(){
 	//8 bits mode
 	//lcd(0, 1, 66, 67, 70, 71, 2, 3, 4, 5); // RS, E, D0 ~ D7
 	//4 bits mode, dont use last four pins ...
-	lcd(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 	
 	//LCD format
 	lcd.begin(4, 0);

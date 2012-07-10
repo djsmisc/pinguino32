@@ -10,15 +10,15 @@
 					ex.: RB0 --- 470 Ohms ---<|--- GND
 	--------------------------------------------------------------------------*/
 
-#define LED0	0
-#define LED1	1
-#define LED2	2
-#define LED3	3
+#define myLED0	0
+#define myLED1	1
+#define myLED2	2
+#define myLED3	3
 
-void blink0() {	toggle(LED0); }
-void blink1() {	toggle(LED1); }
-void blink2() {	toggle(LED2); }
-void blink3() {	toggle(LED3); }
+void blink0() {	toggle(myLED0); }
+void blink1() {	toggle(myLED1); }
+void blink2() {	toggle(myLED2); }
+void blink3() {	toggle(myLED3); }
 
 void setup()
 {

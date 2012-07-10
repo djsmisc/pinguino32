@@ -1,10 +1,10 @@
 /*	----------------------------------------------------------------------------
-	FILE:				lcdi2c_demo32.pde
-	PROJECT:			pinguino
-	PURPOSE:			driving lcd display through i2c pcf8574 i/o expander
-	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	06 apr. 2011
-	LAST RELEASE:	06 apr. 2011
+	FILE:           lcdi2c.pde
+	PROJECT:        pinguino
+	PURPOSE:        driving lcd display through i2c pcf8574 i/o expander
+	PROGRAMER:      regis blanchot <rblanchot@gmail.com>
+	FIRST RELEASE:  06 apr. 2011
+	LAST RELEASE:   12 jun. 2012
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -25,31 +25,31 @@
 	---------- PCF8574P
 	----------------------------------------------------------------------------
 
-	+5V		A0		-|o|-		VDD	+5V
-	+5V		A1		-|	|-		SDA	pull-up 1K8 au +5V
-	+5V		A2		-|	|-		SCL 	pull-up 1K8 au +5V
-	LCD_BL	P0		-|	|-		INT
-	LCD_RS	P1		-|	|-		P7		LCD_D7
-	LCD_RW	P2		-|	|-		P6		LCD_D6
-	LCD_EN	P3		-|	|-		P5		LCD_D5
-	GRND		VSS	-|	|-		P4		LCD_D4
+	+5V		A0		-|o |-		VDD		+5V
+	+5V		A1		-|	 |-		SDA		pull-up 1K8 au +5V
+	+5V		A2		-|	 |-		SCL 	pull-up 1K8 au +5V
+	LCD_BL	P0		-|	 |-		INT
+	LCD_RS	P1		-|	 |-		P7		LCD_D7
+	LCD_RW	P2		-|	 |-		P6		LCD_D6
+	LCD_EN	P3		-|	 |-		P5		LCD_D5
+	GRND	VSS		-|	 |-		P4		LCD_D4
 
-	SYMBOL 	PIN	DESCRIPTION						NB
-	A0			1		address input 0				adress = 0 1 0 0 A2 A1 A0 0
-	A1			2		address input 1				A0, A1 et A2 connected to +5V
-	A2			3		address input 2				then adress = 01001110 = 0x4E
-	P0			4		quasi-bidirectional I/O 0	LCD_BL
-	P1			5		quasi-bidirectional I/O 1	LCD_RS
-	P2			6		quasi-bidirectional I/O 2	LCD_RW
-	P3			7		quasi-bidirectional I/O 3	LCD_EN
+	SYMBOL 	PIN		DESCRIPTION					NB
+	A0		1		address input 0				adress = 0 1 0 0 A2 A1 A0 0
+	A1		2		address input 1				A0, A1 et A2 connected to +5V
+	A2		3		address input 2				then adress = 01001110 = 0x4E
+	P0		4		quasi-bidirectional I/O 0	LCD_BL
+	P1		5		quasi-bidirectional I/O 1	LCD_RS
+	P2		6		quasi-bidirectional I/O 2	LCD_RW
+	P3		7		quasi-bidirectional I/O 3	LCD_EN
 	VSS		8		supply ground
-	P4			9		quasi-bidirectional I/O 4	LCD_D4
-	P5			10		quasi-bidirectional I/O 5	LCD_D5
-	P6			11		quasi-bidirectional I/O 6	LCD_D6
-	P7			12		quasi-bidirectional I/O 7	LCD_D7
+	P4		9		quasi-bidirectional I/O 4	LCD_D4
+	P5		10		quasi-bidirectional I/O 5	LCD_D5
+	P6		11		quasi-bidirectional I/O 6	LCD_D6
+	P7		12		quasi-bidirectional I/O 7	LCD_D7
 	INT		13		interrupt output (active LOW)
-	SCL		14		serial clock line				To Pinguino SCL
-	SDA		15		serial data line				To Pinguino SDA
+	SCL		14		serial clock line			To Pinguino SCL
+	SDA		15		serial data line			To Pinguino SDA
 	VDD		16		supply voltage
 	--------------------------------------------------------------------------*/
 	
@@ -65,78 +65,26 @@
 	06 - EN (P3)
 	07 a 10 - D0 to D3 connected to GND.
 	11 a 16 - D4 to D7 connected to PCF8574
-	15 - LED+ ???
-	16 - LED- ???
+	15 - LED+ 380 Ohm to +5V
+	16 - LED- to GND
 	--------------------------------------------------------------------------*/
 
-#define EACUTE 0
-
-// Global vars
-
-u8 s  = 0;
-u8 m  = 0;
-u8 h = 0;
-
-// This function is called every sec.
-
-void tick()
-{
-	s++;
-	
-	if (s > 59)
-	{
-		s = 0;
-		m++;
-	}
-	
-	if (m > 59)
-	{
-		m = 0;
-		h++;
-	}
-	
-	if (h > 23)
-	{
-		h = 0;
-	}
-	
-	lcdi2c.setCursor(4, 1); // col 4, line 1
-	lcdi2c.printf("%02u:%02u:%02u", h, m, s);
-}
+u16 i=0;
 
 void setup()
 {
-	// eacute = é
-	const u8 eacute[8]={
-		0b00000100,
-		0b00001000,
-		0b00001110,
-		0b00010001,
-		0b00011111,
-		0b00010000,
-		0b00001110,
-		0b00000000
-	};
-	// pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
-	lcdi2c.init(16, 2, 0b01001110);		// display is 2x16, ic2 address is 01001110 (see above)
-	lcdi2c.backlight();						// turns backlight on
-	lcdi2c.clear();							// clear screen
-	lcdi2c.home();								// set cursor at (0,0)
-	lcdi2c.printf("   lcdi2c demo  ");
-	lcdi2c.setCursor(0, 1);					// set cursor at line 1, col 0
-	lcdi2c.printf(" Regis Blanchot ");
-	// define new char
-	lcdi2c.newchar(eacute, EACUTE);		// eacute is assigned to ascii 0
-	lcdi2c.setCursor(2, 1);					// set cursor at line 1, col 2
-	lcdi2c.write(EACUTE);					// replace 'e' by 'é'
-	delay(5000);								// wait for 5 sec.
-	lcdi2c.clearLine(1);
+    // pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
+    lcdi2c.init(16, 2, 0b01001110);     // display is 2x16, ic2 address is 01001110 (see above)
+    lcdi2c.backlight();                 // turns backlight on
+    lcdi2c.clear();                     // clear screen
+    lcdi2c.home();                      // set cursor at (0,0)
+    lcdi2c.printf("   lcdi2c demo  ");
 }
 
 void loop()
 {
-	tick();
-	delay(1000);
+    lcdi2c.setCursor(0, 1);					// set cursor at line 1, col 0
+    lcdi2c.printf("i=%d ", i++);
 }
 
 /*

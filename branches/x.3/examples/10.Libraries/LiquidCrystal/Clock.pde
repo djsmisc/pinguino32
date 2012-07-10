@@ -1,5 +1,5 @@
 /*	----------------------------------------------------------------------------
-	lcd.printf demo for 32-bit
+	lcd.printf demo
 	<rblanchot@gmail.com>
 	----------------------------------------------------------------------------
 	---------- LCD 2x16
@@ -15,23 +15,55 @@
 	15 - LED+ (R = 470 Ohm to +5V)
 	16 - LED- (GND)
 	---------------------------------------------------------------------------*/
+ 
+// Global vars
+
+u8 s  = 0;
+u8 m  = 0;
+u8 h = 0;
+
+// This function is called every sec. by timer 0
+
+void tick()
+{
+	s++;
+	
+	if (s > 59)
+	{
+		s = 0;
+		m++;
+	}
+	
+	if (m > 59)
+	{
+		m = 0;
+		h++;
+	}
+	
+	if (h > 23)
+	{
+		h = 0;
+	}
+	
+	lcd.setCursor(4, 1);
+	lcd.printf("%02u:%02u:%02u", h, m, s);
+}
 
 void setup()
 {
-//
-//
-	lcd(36, 37, 38, 39, 40, 41, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	// 4 bits mode, last four pins arenot used
+	lcd(8, 9, 0, 1, 2, 3, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 
-//
-	begin(2, 0); // lines, dotsize
+	// LCD format
+	lcd.begin(2, 0); // lines, dotsize
 
-	home(); // 0, 0
-	lcdprintf("Sys.Clock: %02uMHz", GetSystemClock()/1000000);
-	setCursor(0, 1);
-	lcdprintf("Per.Clock: %02uMHz", GetPeripheralClock()/1000000);
+	lcd.home(); // 0, 0
+	lcd.printf(" lcd.printf demo");
+	
+	// Timer0 call function tick() every sec.
+	OnTimer0(tick, INT_MILLISEC, 1000);
 }
  
 void loop()
 {
 }
-

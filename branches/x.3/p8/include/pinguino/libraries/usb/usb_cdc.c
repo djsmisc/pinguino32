@@ -4,9 +4,9 @@ All CDC functions should go here
 
 //#include <string.h>
 #include <typedef.h>
-#include "usb_cdc.h"
-#include "picUSB.h"
-#include "usb_config.h"
+#include <usb/usb_cdc.h>
+#include <usb/picUSB.h>
+#include <usb/usb_config.h>
 
 #ifdef USB_USE_CDC
 
@@ -21,7 +21,7 @@ volatile u8 CDCTxBuffer[CDC_BULK_IN_SIZE];
 USB_CDC_Line_Coding line_config;
 Zero_Packet_Length zlp;
 
-u8 CDCgets(char *buffer);
+u8 CDCgets(u8 *buffer);
 
 /**
 Special Setup function for CDC Class to handle Setup requests.
@@ -95,47 +95,61 @@ void ProcessCDCRequest(void)
   @param lenght Number of u8s to be read
   @return number of u8s acutally read
   **/
-u8 CDCgets(char *buffer) {
-  u8 i=0;
-  u8 length=64;
-  if (deviceState != CONFIGURED) return 0;
-  // Only Process if we own the buffer aka not own by SIE
-  if (!CONTROL_LINE) return 0;
-  // Only process if a serial device is connected
-  if (!EP_OUT_BD(CDC_DATA_EP_NUM).Stat.UOWN) {
-#ifdef DEBUG_PRINT_CDC
-    printf("Rx on EP %d, Size %d\r\n", CDC_DATA_EP_NUM, EP_OUT_BD(CDC_DATA_EP_NUM).Cnt);
-#endif
-  // check how much bytes came
-    if (length > EP_OUT_BD(CDC_DATA_EP_NUM).Cnt) length = EP_OUT_BD(CDC_DATA_EP_NUM).Cnt;
-    for (i=0; i < EP_OUT_BD(CDC_DATA_EP_NUM).Cnt; i++) {
-      buffer[i] = CDCRxBuffer[i];
-#ifdef DEBUG_PRINT_CDC
-      printf("%c",CDCRxBuffer[i]);
-#endif
+u8 CDCgets(u8 *buffer)
+{
+    u8 i=0;
+    u8 length=64;
+
+    if (deviceState != CONFIGURED)
+        return 0;
+
+    // Only Process if we own the buffer aka not own by SIE
+    if (!CONTROL_LINE)
+        return 0;
+
+    // Only process if a serial device is connected
+    if (!EP_OUT_BD(CDC_DATA_EP_NUM).Stat.UOWN)
+    {
+        #ifdef DEBUG_PRINT_CDC
+        printf("Rx on EP %d, Size %d\r\n", CDC_DATA_EP_NUM, EP_OUT_BD(CDC_DATA_EP_NUM).Cnt);
+        #endif
+        // check how much bytes came
+        if (length > EP_OUT_BD(CDC_DATA_EP_NUM).Cnt)
+            length = EP_OUT_BD(CDC_DATA_EP_NUM).Cnt;
+            
+        for (i=0; i < EP_OUT_BD(CDC_DATA_EP_NUM).Cnt; i++)
+        {
+            buffer[i] = CDCRxBuffer[i];
+            #ifdef DEBUG_PRINT_CDC
+            printf("%c",CDCRxBuffer[i]);
+            #endif
+        }
+        
+        #ifdef DEBUG_PRINT_CDC
+        printf("->");
+        #endif
+        // clear BDT Stat bits beside DTS and then togle DTS
+        EP_OUT_BD(CDC_DATA_EP_NUM).Stat.uc &= 0x40;
+        EP_OUT_BD(CDC_DATA_EP_NUM).Stat.DTS = !EP_OUT_BD(CDC_DATA_EP_NUM).Stat.DTS;
+        // reset buffer count and handle controll of buffer to USB
+        EP_OUT_BD(CDC_DATA_EP_NUM).Cnt = sizeof(CDCRxBuffer);
+        EP_OUT_BD(CDC_DATA_EP_NUM).Stat.uc |= BDS_UOWN | BDS_DTSEN;
     }
-#ifdef DEBUG_PRINT_CDC
-    printf("->");
-#endif
-  // clear BDT Stat bits beside DTS and then togle DTS
-    EP_OUT_BD(CDC_DATA_EP_NUM).Stat.uc &= 0x40;
-    EP_OUT_BD(CDC_DATA_EP_NUM).Stat.DTS = !EP_OUT_BD(CDC_DATA_EP_NUM).Stat.DTS;
-  // reset buffer count and handle controll of buffer to USB
-    EP_OUT_BD(CDC_DATA_EP_NUM).Cnt = sizeof(CDCRxBuffer);
-    EP_OUT_BD(CDC_DATA_EP_NUM).Stat.uc |= BDS_UOWN | BDS_DTSEN;
-  }
-  // return number of bytes read
-  return i;
+    // return number of bytes read
+    return i;
 }
 
-u8 CDCputs(char *buffer, u8 length) {
+u8 CDCputs(u8 *buffer, u8 length)
+{
   u8 i=0;
 
   if (deviceState != CONFIGURED) return 0;
   if (!CONTROL_LINE) return 0;
-  if (!EP_IN_BD(CDC_DATA_EP_NUM).Stat.UOWN) {
+  if (!EP_IN_BD(CDC_DATA_EP_NUM).Stat.UOWN)
+  {
     if (length > CDC_BULK_IN_SIZE) length = CDC_BULK_IN_SIZE;
-    for (i=0; i < length; i++) {
+    for (i=0; i < length; i++)
+    {
       CDCTxBuffer[i] = buffer[i];
 #ifdef DEBUG_PRINT_CDC
       printf("%c",CDCTxBuffer[i]);
@@ -152,7 +166,6 @@ u8 CDCputs(char *buffer, u8 length) {
   // reset Buffer to original state
     EP_IN_BD(CDC_DATA_EP_NUM).Stat.uc |= BDS_UOWN | BDS_DTSEN;
   }
-  //return i;
   return i;
 }
 

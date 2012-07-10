@@ -14,3 +14,16 @@ I2C.stop I2C_stop#include <pinguinoi2c.c>
 I2C.restart I2C_restart#include <pinguinoi2c.c>
 I2C.sendNack I2C_sendNack#include <pinguinoi2c.c>
 I2C.sendAck I2C_sendAck#include <pinguinoi2c.c>
+
+Wire.begin I2C_init#include <pinguinoi2c.c>
+
+Wire.write I2C_write#include <pinguinoi2c.c>
+Wire.requestFrom I2C_read#include <pinguinoi2c.c>
+
+Wire.send I2C_writechar#include <pinguinoi2c.c>
+Wire.receive I2C_readchar#include <pinguinoi2c.c>
+
+Wire.beginTransmission I2C_start#include <pinguinoi2c.c>
+Wire.endTransmission I2C_stop#include <pinguinoi2c.c>
+
+Wire.available I2C_available#include <pinguinoi2c.c>

@@ -25,7 +25,6 @@
 // 06 feb 2012 Z Added volatile for _millis variable
 // 17 apr 2010 Regis Blanchot added millis=f(pbclk)
 
-
 #ifndef __MILLIS__
 #define __MILLIS__
 

@@ -22,7 +22,7 @@ void setup()
 	// create an instance of the stepper class, specifying
 	// the number of steps of the motor and the pins it's
 	// attached to
-	Stepper(STEPS, 0, 1, 2, 3);
+	Stepper.init(STEPS, 0, 1, 2, 3);
 	// set the speed of the motor to 30 RPMs
 	Stepper.setSpeed(30);
 }

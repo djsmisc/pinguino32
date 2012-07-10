@@ -1,4 +1,4 @@
-u8 n=0;
+u16 i=0;
 
 void setup()
 {
@@ -6,5 +6,5 @@ void setup()
 
 void loop()
 {
-	CDC.printf("n = %03d \r\n", n++);
+	CDC.printf("i=%d \r\n", i++);
 }

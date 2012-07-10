@@ -4,7 +4,7 @@
  Receives from the main serial port, sends to the others. 
  Receives from serial port 1, sends to the main serial (Serial 0).
  
- This example works only on the Arduino Mega
+ This example works only on 32-bit Pinguino
  
  The circuit: 
  * Any serial device attached to Serial port 1
@@ -20,14 +20,14 @@
 
 void setup() {
   // initialize both serial ports:
-  Serial.begin(9600);
   Serial1.begin(9600);
+  Serial2.begin(9600);
 }
 
 void loop() {
-  // read from port 1, send to port 0:
-  if (Serial1.available()) {
-    int inByte = Serial1.read();
-    Serial.print(inByte, BYTE); 
+  // read from port 2, send to port 1:
+  if (Serial2.available()) {
+    int inByte = Serial2.read();
+    Serial1.print(inByte, BYTE); 
   }
 }
