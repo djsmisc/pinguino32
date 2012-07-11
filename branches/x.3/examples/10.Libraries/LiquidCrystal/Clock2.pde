@@ -23,7 +23,7 @@ void setup(){
 	//lcd(8, 9, 0, 1, 2, 3, 4, 5, 6, 7); // RS, E, D0 ~ D7
 	
 	//4 bits mode, dont use last four pins ...
-	lcd.pins(8, 9, 0, 1, 2, 3, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 	
 	//LCD format
 	lcd.begin(2, 0);

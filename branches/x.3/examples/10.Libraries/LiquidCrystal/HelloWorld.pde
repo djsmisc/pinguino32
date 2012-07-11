@@ -41,7 +41,7 @@ void setup() {
   // initialize the library with the numbers of the interface pins
   //lcd.pins(RS, E, D4, D5, D6, D7, 0, 0, 0, 0); //4bits
   //lcd.pins(RS, E, D0, D1, D2, D3, D4, D5, D6, D7); //8bits
-  lcd.pins(12, 11, 5, 4, 3, 2, 0, 0, 0, 0); // Use last 4 pins as zero for 4bits mode
+  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 	
   // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);

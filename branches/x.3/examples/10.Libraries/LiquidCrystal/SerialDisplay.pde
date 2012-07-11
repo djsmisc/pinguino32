@@ -10,16 +10,15 @@
  (e.g. from the Serial Monitor) on an attached LCD.
  
  The circuit:
- * LCD RS pin to digital pin 12
- * LCD Enable pin to digital pin 11
- * LCD D4 pin to digital pin 5
- * LCD D5 pin to digital pin 4
- * LCD D6 pin to digital pin 3
- * LCD D7 pin to digital pin 2
+ * LCD RS pin to digital pin 0
+ * LCD Enable pin to digital pin 1
+ * LCD D4 pin to digital pin 2
+ * LCD D5 pin to digital pin 3
+ * LCD D6 pin to digital pin 4
+ * LCD D7 pin to digital pin 5
  * LCD R/W pin to ground
  * 10K resistor:
  * ends to +5V and ground
- * wiper to LCD VO pin (pin 3)
  
  Library originally added 18 Apr 2008
  by David A. Mellis
@@ -42,13 +41,13 @@ void setup(){
   // initialize the library with the numbers of the interface pins
   //lcd.pins(RS, E, D4, D5, D6, D7, 0, 0, 0, 0); //4bits
   //lcd.pins(RS, E, D0, D1, D2, D3, D4, D5, D6, D7); //8bits
-  lcd.pins(12, 11, 5, 4, 3, 2, 0, 0, 0, 0); // Use last 4 pins as zero for 4bits mode
+  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
     // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);
   // initialize the serial communications:
   Serial.begin(9600);
   
-  pinMode(GREENLED, OUTPUT);
+  pinMode(13, OUTPUT);
 }
 
 void loop()
@@ -66,8 +65,8 @@ void loop()
       lcd.write(Serial.read());
     }
   }
-  digitalWrite(GREENLED, HIGH);
+  digitalWrite(13, HIGH);
   delay(100);
-  digitalWrite(GREENLED, LOW);
+  digitalWrite(13, LOW);
   delay(100);
 }
