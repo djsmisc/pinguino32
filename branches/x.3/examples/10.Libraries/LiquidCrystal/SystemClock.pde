@@ -1,5 +1,5 @@
 /*	----------------------------------------------------------------------------
-	lcd.printf demo for 32-bit
+	System Clock Demo
 	<rblanchot@gmail.com>
 	----------------------------------------------------------------------------
 	---------- LCD 2x16
@@ -26,15 +26,15 @@ void setup()
 	//lcd.pins(36, 37, 38, 39, 40, 41, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 
 	// PIC32-Pinguino(-OTG) - 4 bits mode
-	lcd.pins(12, 11, 5, 4, 3, 2, 0, 0, 0, 0); // Use last 4 pins as zero for 4bits mode
+  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 
 	// LCD format
 	lcd.begin(16, 2); // cols, lines, [dotsize]
 
 	lcd.home(); // 0, 0
-	lcd.printf("Sys.Clock: %02uMHz", GetSystemClock()/1000000);
+	lcd.printf("Sys.Clock: %02uMHz", getSystemClock()/1000000);
 	lcd.setCursor(0, 1);
-	lcd.printf("Per.Clock: %02uMHz", GetPeripheralClock()/1000000);
+	lcd.printf("Per.Clock: %02uMHz", getPeripheralClock()/1000000);
 }
  
 void loop()

@@ -40,7 +40,7 @@
 
 void setup() {
   // initialize the library with the numbers of the interface pins
-  lcd.pins(12, 11, 5, 4, 3, 2, 0, 0, 0, 0);
+  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
   // set up the LCD's number of columns and rows: 
   lcd.begin(16,2);
   

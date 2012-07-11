@@ -1,5 +1,5 @@
 /*	----------------------------------------------------------------------------
-	lcd.printf demo
+	Simple Clock demo
 	<rblanchot@gmail.com>
 	----------------------------------------------------------------------------
 	---------- LCD 2x16
@@ -26,39 +26,38 @@ u8 h = 0;
 
 void tick()
 {
-	s++;
-	
-	if (s > 59)
-	{
-		s = 0;
-		m++;
-	}
-	
-	if (m > 59)
-	{
-		m = 0;
-		h++;
-	}
-	
-	if (h > 23)
-	{
-		h = 0;
-	}
-	
-	lcd.setCursor(4, 1);
-	lcd.printf("%02u:%02u:%02u", h, m, s);
+    s++;
+
+    if (s > 59)
+    {
+        s = 0;
+        m++;
+
+        if (m > 59)
+        {
+            m = 0;
+            h++;
+
+            if (h > 23)
+            {
+                h = 0;
+            }
+        }
+    }     
+    lcd.setCursor(4, 1);
+    lcd.printf("%02u:%02u:%02u", h, m, s);
 }
 
 void setup()
 {
-	// 4 bits mode, last four pins arenot used
-	lcd(8, 9, 0, 1, 2, 3, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+	// 4 bits mode, last four pins are not used
+  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
 
 	// LCD format
 	lcd.begin(2, 0); // lines, dotsize
 
 	lcd.home(); // 0, 0
-	lcd.printf(" lcd.printf demo");
+	lcd.printf("Simple Clock Demo");
 	
 	// Timer0 call function tick() every sec.
 	OnTimer0(tick, INT_MILLISEC, 1000);
