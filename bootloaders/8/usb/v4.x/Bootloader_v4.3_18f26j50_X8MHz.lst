@@ -1,0 +1,3120 @@
+gplink-0.14.2 #725 (Jul  4 2012)
+Copyright (c) 1998-2012 gputils project
+Listing File Generated: 7-4-2012  21:30:28
+ 
+ 
+Address  Value    Disassembly              Source
+-------  -----    -----------              ------
+                                           ;--------------------------------------------------------
+                                           ; File Created by SDCC : free open source ANSI-C Compiler
+                                           ; Version 3.2.0 #8004 (Jul  4 2012) (Linux)
+                                           ; This file was generated Wed Jul  4 21:30:28 2012
+                                           ;--------------------------------------------------------
+                                           ; PIC16 port for the Microchip 16-bit core micros
+                                           ;--------------------------------------------------------
+                                           	list	p=18f26j50
+                                           
+                                           	radix dec
+                                           
+                                           ;--------------------------------------------------------
+                                           ; public variables in this module
+                                           ;--------------------------------------------------------
+                                           	global	_stack
+                                           	global	_stack_end
+                                           	global	_start_write
+                                           	global	_set_boot_address
+                                           	global	_disable_boot
+                                           	global	_usb_configure_endpoints
+                                           	global	_usb_ep_data_out_callback
+                                           	global	_main
+                                           	global	_high_priority_isr
+                                           	global	_low_priority_isr
+                                           	global	_device_descriptor
+                                           	global	_configuration_descriptor
+                                           
+                                           ;--------------------------------------------------------
+                                           ; extern variables in this module
+                                           ;--------------------------------------------------------
+                                           	extern	_PPSCONbits
+                                           	extern	_UEP0bits
+                                           	extern	_UEP1bits
+                                           	extern	_UEP2bits
+                                           	extern	_UEP3bits
+                                           	extern	_UEP4bits
+                                           	extern	_UEP5bits
+                                           	extern	_UEP6bits
+                                           	extern	_UEP7bits
+                                           	extern	_UEP8bits
+                                           	extern	_UEP9bits
+                                           	extern	_UEP10bits
+                                           	extern	_UEP11bits
+                                           	extern	_UEP12bits
+                                           	extern	_UEP13bits
+                                           	extern	_UEP14bits
+                                           	extern	_UEP15bits
+                                           	extern	_UIEbits
+                                           	extern	_UEIEbits
+                                           	extern	_UADDRbits
+                                           	extern	_UCFGbits
+                                           	extern	_PADCFG1bits
+                                           	extern	_REFOCONbits
+                                           	extern	_RTCCALbits
+                                           	extern	_RTCCFGbits
+                                           	extern	_ODCON3bits
+                                           	extern	_ODCON2bits
+                                           	extern	_ODCON1bits
+                                           	extern	_ANCON0bits
+                                           	extern	_ANCON1bits
+                                           	extern	_DSWAKELbits
+                                           	extern	_DSWAKEHbits
+                                           	extern	_DSCONLbits
+                                           	extern	_DSCONHbits
+                                           	extern	_TCLKCONbits
+                                           	extern	_CVRCONbits
+                                           	extern	_PMSTATLbits
+                                           	extern	_PMSTATHbits
+                                           	extern	_PMELbits
+                                           	extern	_PMEHbits
+                                           	extern	_PMMODELbits
+                                           	extern	_PMMODEHbits
+                                           	extern	_PMCONLbits
+                                           	extern	_PMCONHbits
+                                           	extern	_UFRMLbits
+                                           	extern	_UFRMHbits
+                                           	extern	_UIRbits
+                                           	extern	_UEIRbits
+                                           	extern	_USTATbits
+                                           	extern	_UCONbits
+                                           	extern	_PMADDRHbits
+                                           	extern	_CMSTATbits
+                                           	extern	_CMSTATUSbits
+                                           	extern	_SSP2CON2bits
+                                           	extern	_SSP2CON1bits
+                                           	extern	_SSP2STATbits
+                                           	extern	_SSP2ADDbits
+                                           	extern	_T4CONbits
+                                           	extern	_T3CONbits
+                                           	extern	_BAUDCON2bits
+                                           	extern	_BAUDCONbits
+                                           	extern	_BAUDCON1bits
+                                           	extern	_BAUDCTLbits
+                                           	extern	_PORTAbits
+                                           	extern	_PORTBbits
+                                           	extern	_PORTCbits
+                                           	extern	_PORTDbits
+                                           	extern	_PORTEbits
+                                           	extern	_HLVDCONbits
+                                           	extern	_DMACON2bits
+                                           	extern	_DMACON1bits
+                                           	extern	_LATAbits
+                                           	extern	_LATBbits
+                                           	extern	_LATCbits
+                                           	extern	_LATDbits
+                                           	extern	_LATEbits
+                                           	extern	_ALRMRPTbits
+                                           	extern	_ALRMCFGbits
+                                           	extern	_TRISAbits
+                                           	extern	_TRISBbits
+                                           	extern	_TRISCbits
+                                           	extern	_TRISDbits
+                                           	extern	_TRISEbits
+                                           	extern	_T3GCONbits
+                                           	extern	_T1GCONbits
+                                           	extern	_OSCTUNEbits
+                                           	extern	_RCSTA2bits
+                                           	extern	_PIE1bits
+                                           	extern	_PIR1bits
+                                           	extern	_IPR1bits
+                                           	extern	_PIE2bits
+                                           	extern	_PIR2bits
+                                           	extern	_IPR2bits
+                                           	extern	_PIE3bits
+                                           	extern	_PIR3bits
+                                           	extern	_IPR3bits
+                                           	extern	_EECON1bits
+                                           	extern	_TXSTA2bits
+                                           	extern	_RCSTAbits
+                                           	extern	_RCSTA1bits
+                                           	extern	_TXSTAbits
+                                           	extern	_TXSTA1bits
+                                           	extern	_CTMUICONbits
+                                           	extern	_CTMUCONLbits
+                                           	extern	_CTMUCONHbits
+                                           	extern	_CCP2CONbits
+                                           	extern	_ECCP2CONbits
+                                           	extern	_ECCP2DELbits
+                                           	extern	_PWM2CONbits
+                                           	extern	_ECCP2ASbits
+                                           	extern	_PSTR2CONbits
+                                           	extern	_CCP1CONbits
+                                           	extern	_ECCP1CONbits
+                                           	extern	_ECCP1DELbits
+                                           	extern	_PWM1CONbits
+                                           	extern	_ECCP1ASbits
+                                           	extern	_PSTR1CONbits
+                                           	extern	_WDTCONbits
+                                           	extern	_ADCON1bits
+                                           	extern	_ADCON0bits
+                                           	extern	_SSP1CON2bits
+                                           	extern	_SSPCON2bits
+                                           	extern	_SSP1CON1bits
+                                           	extern	_SSPCON1bits
+                                           	extern	_SSP1STATbits
+                                           	extern	_SSPSTATbits
+                                           	extern	_SSP1ADDbits
+                                           	extern	_SSPADDbits
+                                           	extern	_T2CONbits
+                                           	extern	_T1CONbits
+                                           	extern	_RCONbits
+                                           	extern	_CM2CONbits
+                                           	extern	_CM2CON1bits
+                                           	extern	_CM1CONbits
+                                           	extern	_CM1CON1bits
+                                           	extern	_OSCCONbits
+                                           	extern	_T0CONbits
+                                           	extern	_STATUSbits
+                                           	extern	_INTCON3bits
+                                           	extern	_INTCON2bits
+                                           	extern	_INTCONbits
+                                           	extern	_STKPTRbits
+                                           	extern	_deviceState
+                                           	extern	_selfPowered
+                                           	extern	_currentConfiguration
+                                           	extern	_ep_bdt
+                                           	extern	_SetupPacket
+                                           	extern	_controlTransferBuffer
+                                           	extern	_bootCmd
+                                           	extern	_outPtr
+                                           	extern	_inPtr
+                                           	extern	_wCount
+                                           	extern	_RPOR0
+                                           	extern	_RPOR1
+                                           	extern	_RPOR2
+                                           	extern	_RPOR3
+                                           	extern	_RPOR4
+                                           	extern	_RPOR5
+                                           	extern	_RPOR6
+                                           	extern	_RPOR7
+                                           	extern	_RPOR8
+                                           	extern	_RPOR9
+                                           	extern	_RPOR10
+                                           	extern	_RPOR11
+                                           	extern	_RPOR12
+                                           	extern	_RPOR13
+                                           	extern	_RPOR17
+                                           	extern	_RPOR18
+                                           	extern	_RPOR19
+                                           	extern	_RPOR20
+                                           	extern	_RPOR21
+                                           	extern	_RPOR22
+                                           	extern	_RPOR23
+                                           	extern	_RPOR24
+                                           	extern	_RPINR1
+                                           	extern	_RPINR2
+                                           	extern	_RPINR3
+                                           	extern	_RPINR4
+                                           	extern	_RPINR6
+                                           	extern	_RPINR7
+                                           	extern	_RPINR8
+                                           	extern	_RPINR12
+                                           	extern	_RPINR13
+                                           	extern	_RPINR16
+                                           	extern	_RPINR17
+                                           	extern	_RPINR21
+                                           	extern	_RPINR22
+                                           	extern	_RPINR23
+                                           	extern	_RPINR24
+                                           	extern	_PPSCON
+                                           	extern	_UEP0
+                                           	extern	_UEP1
+                                           	extern	_UEP2
+                                           	extern	_UEP3
+                                           	extern	_UEP4
+                                           	extern	_UEP5
+                                           	extern	_UEP6
+                                           	extern	_UEP7
+                                           	extern	_UEP8
+                                           	extern	_UEP9
+                                           	extern	_UEP10
+                                           	extern	_UEP11
+                                           	extern	_UEP12
+                                           	extern	_UEP13
+                                           	extern	_UEP14
+                                           	extern	_UEP15
+                                           	extern	_UIE
+                                           	extern	_UEIE
+                                           	extern	_UADDR
+                                           	extern	_UCFG
+                                           	extern	_PADCFG1
+                                           	extern	_REFOCON
+                                           	extern	_RTCCAL
+                                           	extern	_RTCCFG
+                                           	extern	_ODCON3
+                                           	extern	_ODCON2
+                                           	extern	_ODCON1
+                                           	extern	_ANCON0
+                                           	extern	_ANCON1
+                                           	extern	_DSWAKEL
+                                           	extern	_DSWAKEH
+                                           	extern	_DSCONL
+                                           	extern	_DSCONH
+                                           	extern	_DSGPR0
+                                           	extern	_DSGPR1
+                                           	extern	_TCLKCON
+                                           	extern	_CVRCON
+                                           	extern	_PMSTATL
+                                           	extern	_PMSTATH
+                                           	extern	_PMEL
+                                           	extern	_PMEH
+                                           	extern	_PMDIN2L
+                                           	extern	_PMDIN2H
+                                           	extern	_PMDOUT2L
+                                           	extern	_PMDOUT2H
+                                           	extern	_PMMODEL
+                                           	extern	_PMMODEH
+                                           	extern	_PMCONL
+                                           	extern	_PMCONH
+                                           	extern	_UFRM
+                                           	extern	_UFRML
+                                           	extern	_UFRMH
+                                           	extern	_UIR
+                                           	extern	_UEIR
+                                           	extern	_USTAT
+                                           	extern	_UCON
+                                           	extern	_DMABCH
+                                           	extern	_DMABCL
+                                           	extern	_RXADDRH
+                                           	extern	_RXADDRL
+                                           	extern	_TXADDRH
+                                           	extern	_TXADDRL
+                                           	extern	_PMDIN1L
+                                           	extern	_PMDIN1H
+                                           	extern	_PMADDRL
+                                           	extern	_PMDOUT1L
+                                           	extern	_PMADDRH
+                                           	extern	_PMDOUT1H
+                                           	extern	_CMSTAT
+                                           	extern	_CMSTATUS
+                                           	extern	_SSP2CON2
+                                           	extern	_SSP2CON1
+                                           	extern	_SSP2STAT
+                                           	extern	_SSP2ADD
+                                           	extern	_SSP2BUF
+                                           	extern	_T4CON
+                                           	extern	_PR4
+                                           	extern	_TMR4
+                                           	extern	_T3CON
+                                           	extern	_TMR3L
+                                           	extern	_TMR3H
+                                           	extern	_BAUDCON2
+                                           	extern	_SPBRGH2
+                                           	extern	_BAUDCON
+                                           	extern	_BAUDCON1
+                                           	extern	_BAUDCTL
+                                           	extern	_SPBRGH
+                                           	extern	_SPBRGH1
+                                           	extern	_PORTA
+                                           	extern	_PORTB
+                                           	extern	_PORTC
+                                           	extern	_PORTD
+                                           	extern	_PORTE
+                                           	extern	_HLVDCON
+                                           	extern	_DMACON2
+                                           	extern	_DMACON1
+                                           	extern	_LATA
+                                           	extern	_LATB
+                                           	extern	_LATC
+                                           	extern	_LATD
+                                           	extern	_LATE
+                                           	extern	_ALRMVALL
+                                           	extern	_ALRMVALH
+                                           	extern	_ALRMRPT
+                                           	extern	_ALRMCFG
+                                           	extern	_TRISA
+                                           	extern	_TRISB
+                                           	extern	_TRISC
+                                           	extern	_TRISD
+                                           	extern	_TRISE
+                                           	extern	_T3GCON
+                                           	extern	_RTCVALL
+                                           	extern	_RTCVALH
+                                           	extern	_T1GCON
+                                           	extern	_OSCTUNE
+                                           	extern	_RCSTA2
+                                           	extern	_PIE1
+                                           	extern	_PIR1
+                                           	extern	_IPR1
+                                           	extern	_PIE2
+                                           	extern	_PIR2
+                                           	extern	_IPR2
+                                           	extern	_PIE3
+                                           	extern	_PIR3
+                                           	extern	_IPR3
+                                           	extern	_EECON1
+                                           	extern	_EECON2
+                                           	extern	_TXSTA2
+                                           	extern	_TXREG2
+                                           	extern	_RCREG2
+                                           	extern	_SPBRG2
+                                           	extern	_RCSTA
+                                           	extern	_RCSTA1
+                                           	extern	_TXSTA
+                                           	extern	_TXSTA1
+                                           	extern	_TXREG
+                                           	extern	_TXREG1
+                                           	extern	_RCREG
+                                           	extern	_RCREG1
+                                           	extern	_SPBRG
+                                           	extern	_SPBRG1
+                                           	extern	_CTMUICON
+                                           	extern	_CTMUCONL
+                                           	extern	_CTMUCONH
+                                           	extern	_CCP2CON
+                                           	extern	_ECCP2CON
+                                           	extern	_CCPR2
+                                           	extern	_CCPR2L
+                                           	extern	_CCPR2H
+                                           	extern	_ECCP2DEL
+                                           	extern	_PWM2CON
+                                           	extern	_ECCP2AS
+                                           	extern	_PSTR2CON
+                                           	extern	_CCP1CON
+                                           	extern	_ECCP1CON
+                                           	extern	_CCPR1
+                                           	extern	_CCPR1L
+                                           	extern	_CCPR1H
+                                           	extern	_ECCP1DEL
+                                           	extern	_PWM1CON
+                                           	extern	_ECCP1AS
+                                           	extern	_PSTR1CON
+                                           	extern	_WDTCON
+                                           	extern	_ADCON1
+                                           	extern	_ADCON0
+                                           	extern	_ADRES
+                                           	extern	_ADRESL
+                                           	extern	_ADRESH
+                                           	extern	_SSP1CON2
+                                           	extern	_SSPCON2
+                                           	extern	_SSP1CON1
+                                           	extern	_SSPCON1
+                                           	extern	_SSP1STAT
+                                           	extern	_SSPSTAT
+                                           	extern	_SSP1ADD
+                                           	extern	_SSPADD
+                                           	extern	_SSP1BUF
+                                           	extern	_SSPBUF
+                                           	extern	_T2CON
+                                           	extern	_PR2
+                                           	extern	_TMR2
+                                           	extern	_T1CON
+                                           	extern	_TMR1L
+                                           	extern	_TMR1H
+                                           	extern	_RCON
+                                           	extern	_CM2CON
+                                           	extern	_CM2CON1
+                                           	extern	_CM1CON
+                                           	extern	_CM1CON1
+                                           	extern	_OSCCON
+                                           	extern	_T0CON
+                                           	extern	_TMR0L
+                                           	extern	_TMR0H
+                                           	extern	_STATUS
+                                           	extern	_FSR2L
+                                           	extern	_FSR2H
+                                           	extern	_PLUSW2
+                                           	extern	_PREINC2
+                                           	extern	_POSTDEC2
+                                           	extern	_POSTINC2
+                                           	extern	_INDF2
+                                           	extern	_BSR
+                                           	extern	_FSR1L
+                                           	extern	_FSR1H
+                                           	extern	_PLUSW1
+                                           	extern	_PREINC1
+                                           	extern	_POSTDEC1
+                                           	extern	_POSTINC1
+                                           	extern	_INDF1
+                                           	extern	_WREG
+                                           	extern	_FSR0L
+                                           	extern	_FSR0H
+                                           	extern	_PLUSW0
+                                           	extern	_PREINC0
+                                           	extern	_POSTDEC0
+                                           	extern	_POSTINC0
+                                           	extern	_INDF0
+                                           	extern	_INTCON3
+                                           	extern	_INTCON2
+                                           	extern	_INTCON
+                                           	extern	_PROD
+                                           	extern	_PRODL
+                                           	extern	_PRODH
+                                           	extern	_TABLAT
+                                           	extern	_TBLPTR
+                                           	extern	_TBLPTRL
+                                           	extern	_TBLPTRH
+                                           	extern	_TBLPTRU
+                                           	extern	_PC
+                                           	extern	_PCL
+                                           	extern	_PCLATH
+                                           	extern	_PCLATU
+                                           	extern	_STKPTR
+                                           	extern	_TOS
+                                           	extern	_TOSL
+                                           	extern	_TOSH
+                                           	extern	_TOSU
+                                           	extern	_EnableUSBModule
+                                           	extern	_ProcessUSBTransactions
+                                           
+                                           ;--------------------------------------------------------
+                                           ;	Equates to used internal registers
+                                           ;--------------------------------------------------------
+                                           STATUS	equ	0xfd8
+                                           FSR0L	equ	0xfe9
+                                           FSR0H	equ	0xfea
+                                           FSR1L	equ	0xfe1
+                                           FSR2L	equ	0xfd9
+                                           INDF0	equ	0xfef
+                                           POSTDEC1	equ	0xfe5
+                                           PREINC1	equ	0xfe4
+                                           PLUSW2	equ	0xfdb
+                                           PRODL	equ	0xff3
+                                           
+                                           
+                                           ; Internal registers
+                                           .registers	udata_ovr	0x0000
+                                           r0x00	res	1
+                                           r0x01	res	1
+                                           r0x02	res	1
+                                           r0x03	res	1
+                                           r0x04	res	1
+                                           
+                                           
+                                           ustat_main_00	udata	0X0200
+                                           _stack         	res	254
+                                           _stack_end     	res	1
+                                           
+                                           ;--------------------------------------------------------
+                                           ; interrupt vector
+                                           ;--------------------------------------------------------
+                                           
+                                           ;--------------------------------------------------------
+                                           ; global & static initialisations
+                                           ;--------------------------------------------------------
+                                           ; ; Starting pCode block
+                                           S_main__high_priority_isr	code	0X000008
+                                           _high_priority_isr:
+000008   ef04     goto    0xc08            	goto 0x0C00 + 0x08
+00000a   f006
+                                           	
+                                           ; ; Starting pCode block
+                                           S_main__low_priority_isr	code	0X000018
+                                           _low_priority_isr:
+000018   ef0c     goto    0xc18            	goto 0x0C00 + 0x18
+00001a   f006
+                                           	
+                                           ; I code from now on!
+                                           ; ; Starting pCode block
+                                           S_main__main	code
+                                           _main:
+                                           ;	.line	329; main.c	EP_IN_BD(1).ADDR = PTR16(&bootCmd);
+000850   0e80     movlw   0x80             	MOVLW	LOW(_bootCmd)
+000852   6e00     movwf   0, 0             	MOVWF	r0x00
+000854   0e04     movlw   0x4              	MOVLW	HIGH(_bootCmd)
+000856   6e01     movwf   0x1, 0           	MOVWF	r0x01
+000858   5000     movf    0, 0, 0          	MOVF	r0x00, W
+00085a   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 14)
+00085c   6f0e     movwf   0xe, 0x1         	MOVWF	(_ep_bdt + 14), B
+00085e   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+                                           ; removed redundant BANKSEL
+000860   6f0f     movwf   0xf, 0x1         	MOVWF	(_ep_bdt + 15), B
+000862   0104     movlb   0x4              	BANKSEL	_currentConfiguration
+                                           ;	.line	330; main.c	currentConfiguration = 0x00;
+000864   6bcc     clrf    0xcc, 0x1        	CLRF	_currentConfiguration, B
+000866   8c9b     bsf     0x9b, 0x6, 0     	bsf _OSCTUNEbits, 6 ; Enable the PLL (PLLEN=bit6)
+                                           	; Wait 2+ms until the PLL locks before enabling USB module
+                                           	; Clock frequency = 48 MHz
+                                           	; Delay > 0.002 seconds > 24000 cycles
+000868   0eff     movlw   0xff             	movlw 0xFF
+00086a   6e00     movwf   0, 0             	movwf r0x00
+00086c   0eff     movlw   0xff             	movlw 0xFF
+00086e   6e01     movwf   0x1, 0           	movwf r0x01
+                                           startup_loop:
+000870   2e00     decfsz  0, 0x1, 0        	decfsz r0x00, f
+000872   d7fe     bra     0x870            	bra startup_loop
+000874   2e01     decfsz  0x1, 0x1, 0      	decfsz r0x01, f
+000876   d7fc     bra     0x870            	bra startup_loop
+000878   0e0f     movlw   0xf              	movlw 0x0F
+00087a   6f48     movwf   0x48, 0x1        	movwf _ANCON0 ; Default all pins to digital
+00087c   6f49     movwf   0x49, 0x1        	movwf _ANCON1 ; Default all pins to digital
+00087e   9494     bcf     0x94, 0x2, 0     	bcf _TRISC, 2 ; led output
+000880   848b     bsf     0x8b, 0x2, 0     	bsf _LATC, 2 ; led on
+000882   0e31     movlw   0x31             	movlw b'00110001' ; prescaler 8 (0b11)
+000884   6ecd     movwf   0xcd, 0          	movwf _T1CON ; timer 1 on,
+000886   8cf2     bsf     0xf2, 0x6, 0     	bsf _INTCON, 6 ; Enable Peripheral interrupt (PEIE=bit6)
+000888   8ef2     bsf     0xf2, 0x7, 0     	bsf _INTCON, 7 ; Enable General interrupt (GIE=bit7)
+00088a   0e00     movlw   0                	movlw 0x00 ; EECON1=0
+00088c   6ea6     movwf   0xa6, 0          	movwf _EECON1 ;
+00088e   0e14     movlw   0x14             	movlw b'00010100' ; (0x14) Enable pullup resistors and full speed mode
+000890   010f     movlb   0xf              	banksel _UCFG
+000892   6f39     movwf   0x39, 0x1        	movwf _UCFG, b
+                                           	
+000894   0104     movlb   0x4              	BANKSEL	_deviceState
+                                           ;	.line	387; main.c	deviceState = DETACHED;
+000896   6bcb     clrf    0xcb, 0x1        	CLRF	_deviceState, B
+                                           _00205_DS_:
+000898   0104     movlb   0x4              	BANKSEL	_deviceState
+                                           ;	.line	388; main.c	while(deviceState != CONFIGURED)
+00089a   51cb     movf    0xcb, 0, 0x1     	MOVF	_deviceState, W, B
+00089c   0a05     xorlw   0x5              	XORLW	0x05
+00089e   e005     bz      0x8aa            	BZ	_00222_DS_
+                                           ;	.line	390; main.c	EnableUSBModule();
+0008a0   ec12     call    0xa24, 0         	CALL	_EnableUSBModule
+0008a2   f005
+                                           ;	.line	391; main.c	ProcessUSBTransactions();
+0008a4   ecaa     call    0x954, 0         	CALL	_ProcessUSBTransactions
+0008a6   f004
+0008a8   d7f7     bra     0x898            	BRA	_00205_DS_
+                                           _00222_DS_:
+                                           ;	.line	394; main.c	while(1)
+0008aa   6a00     clrf    0, 0             	CLRF	r0x00
+0008ac   6a01     clrf    0x1, 0           	CLRF	r0x01
+0008ae   6a02     clrf    0x2, 0           	CLRF	r0x02
+                                           _00215_DS_:
+                                           ;	.line	396; main.c	ProcessUSBTransactions();
+0008b0   ecaa     call    0x954, 0         	CALL	_ProcessUSBTransactions
+0008b2   f004
+                                           ;	.line	399; main.c	if (led_counter == 0)
+0008b4   5000     movf    0, 0, 0          	MOVF	r0x00, W
+0008b6   1001     iorwf   0x1, 0, 0        	IORWF	r0x01, W
+0008b8   e102     bnz     0x8be            	BNZ	_00209_DS_
+0008ba   0e04     movlw   0x4              	movlw 1 << 2 ; toggle
+0008bc   1a8b     xorwf   0x8b, 0x1, 0     	xorwf _LATC, f ; the led
+                                           	
+                                           _00209_DS_:
+                                           ;	.line	406; main.c	led_counter++;
+0008be   4a00     infsnz  0, 0x1, 0        	INFSNZ	r0x00, F
+0008c0   2a01     incf    0x1, 0x1, 0      	INCF	r0x01, F
+                                           ;	.line	409; main.c	if (PIR1bits.TMR1IF == 1)
+0008c2   6a03     clrf    0x3, 0           	CLRF	r0x03
+0008c4   b09e     btfsc   0x9e, 0, 0       	BTFSC	_PIR1bits, 0
+0008c6   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+0008c8   5003     movf    0x3, 0, 0        	MOVF	r0x03, W
+0008ca   0a01     xorlw   0x1              	XORLW	0x01
+0008cc   e1f1     bnz     0x8b0            	BNZ	_00215_DS_
+                                           ;	.line	411; main.c	t1_count++;
+0008ce   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+                                           ;	.line	412; main.c	PIR1bits.TMR1IF = 0;
+0008d0   909e     bcf     0x9e, 0, 0       	BCF	_PIR1bits, 0
+                                           ;	.line	415; main.c	if (t1_count > BOOT_TIMER_TICS)
+0008d2   0ee6     movlw   0xe6             	MOVLW	0xe6
+0008d4   5c02     subwf   0x2, 0, 0        	SUBWF	r0x02, W
+0008d6   e3ec     bnc     0x8b0            	BNC	_00215_DS_
+                                           ;	.line	417; main.c	disable_boot();
+0008d8   ec2b     call    0xa56, 0         	CALL	_disable_boot
+0008da   f005
+0008dc   ef00     goto    0xc00            	goto 0x0C00 ; start user app
+0008de   f006
+                                           	
+0008e0   d7e7     bra     0x8b0            	BRA	_00215_DS_
+0008e2   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__usb_ep_data_out_callback	code
+                                           _usb_ep_data_out_callback:
+                                           ;	.line	155; main.c	void usb_ep_data_out_callback(char end_point)
+00002a   cfd9     movff   0xfd9, 0xfe5     	MOVFF	FSR2L, POSTDEC1
+00002c   ffe5
+00002e   cfe1     movff   0xfe1, 0xfd9     	MOVFF	FSR1L, FSR2L
+000030   ffd9
+000032   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+000034   ffe5
+000036   c001     movff   0x1, 0xfe5       	MOVFF	r0x01, POSTDEC1
+000038   ffe5
+00003a   c002     movff   0x2, 0xfe5       	MOVFF	r0x02, POSTDEC1
+00003c   ffe5
+00003e   c003     movff   0x3, 0xfe5       	MOVFF	r0x03, POSTDEC1
+000040   ffe5
+000042   c004     movff   0x4, 0xfe5       	MOVFF	r0x04, POSTDEC1
+000044   ffe5
+000046   0e02     movlw   0x2              	MOVLW	0x02
+000048   cfdb     movff   0xfdb, 0         	MOVFF	PLUSW2, r0x00
+00004a   f000
+                                           ;	.line	159; main.c	EP_IN_BD(end_point).Cnt = 0x00;
+00004c   4400     rlncf   0, 0, 0          	RLNCF	r0x00, W
+00004e   0bfe     andlw   0xfe             	ANDLW	0xfe
+000050   6e01     movwf   0x1, 0           	MOVWF	r0x01
+000052   2801     incf    0x1, 0, 0        	INCF	r0x01, W
+                                           ; #	MOVWF	r0x00
+                                           ; #;;multiply lit val:0x04 by variable r0x00 and store in r0x00
+                                           ; #	MOVF	r0x00, W
+000054   6e00     movwf   0, 0             	MOVWF	r0x00
+000056   0d04     mullw   0x4              	MULLW	0x04
+000058   cff3     movff   0xff3, 0         	MOVFF	PRODL, r0x00
+00005a   f000
+00005c   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+00005e   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+000060   6e02     movwf   0x2, 0           	MOVWF	r0x02
+000062   6a03     clrf    0x3, 0           	CLRF	r0x03
+000064   be00     btfsc   0, 0x7, 0        	BTFSC	r0x00, 7
+000066   6803     setf    0x3, 0           	SETF	r0x03
+000068   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00006a   2203     addwfc  0x3, 0x1, 0      	ADDWFC	r0x03, F
+00006c   4a02     infsnz  0x2, 0x1, 0      	INFSNZ	r0x02, F
+00006e   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+000070   c002     movff   0x2, 0xfe9       	MOVFF	r0x02, FSR0L
+000072   ffe9
+000074   c003     movff   0x3, 0xfea       	MOVFF	r0x03, FSR0H
+000076   ffea
+000078   0e00     movlw   0                	MOVLW	0x00
+00007a   6eef     movwf   0xef, 0          	MOVWF	INDF0
+                                           ;	.line	160; main.c	set_boot_address();
+00007c   ec90     call    0xb20, 0         	CALL	_set_boot_address
+00007e   f005
+000080   848b     bsf     0x8b, 0x2, 0     	bsf _LATC, 2 ; led on
+                                           	
+000082   0104     movlb   0x4              	BANKSEL	_bootCmd
+                                           ;	.line	167; main.c	if (bootCmd.cmd == READ_VERSION)
+000084   5180     movf    0x80, 0, 0x1     	MOVF	_bootCmd, W, B
+000086   e116     bnz     0xb4             	BNZ	_00140_DS_
+                                           ;	.line	169; main.c	bootCmd.buffer[2] = MINOR_VERSION;
+000088   0e03     movlw   0x3              	MOVLW	0x03
+                                           ; removed redundant BANKSEL
+00008a   6f82     movwf   0x82, 0x1        	MOVWF	(_bootCmd + 2), B
+                                           ;	.line	170; main.c	bootCmd.buffer[3] = MAJOR_VERSION;
+00008c   0e04     movlw   0x4              	MOVLW	0x04
+                                           ; removed redundant BANKSEL
+00008e   6f83     movwf   0x83, 0x1        	MOVWF	(_bootCmd + 3), B
+                                           ;	.line	171; main.c	EP_IN_BD(end_point).Cnt = 4;
+000090   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+000092   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+000094   6e02     movwf   0x2, 0           	MOVWF	r0x02
+000096   6a03     clrf    0x3, 0           	CLRF	r0x03
+000098   be00     btfsc   0, 0x7, 0        	BTFSC	r0x00, 7
+00009a   6803     setf    0x3, 0           	SETF	r0x03
+00009c   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00009e   2203     addwfc  0x3, 0x1, 0      	ADDWFC	r0x03, F
+0000a0   4a02     infsnz  0x2, 0x1, 0      	INFSNZ	r0x02, F
+0000a2   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+0000a4   c002     movff   0x2, 0xfe9       	MOVFF	r0x02, FSR0L
+0000a6   ffe9
+0000a8   c003     movff   0x3, 0xfea       	MOVFF	r0x03, FSR0H
+0000aa   ffea
+0000ac   0e04     movlw   0x4              	MOVLW	0x04
+0000ae   6eef     movwf   0xef, 0          	MOVWF	INDF0
+                                           ;	.line	172; main.c	T1CON = 0b00000000; // disable timer 1
+0000b0   6acd     clrf    0xcd, 0          	CLRF	_T1CON
+0000b2   d099     bra     0x1e6            	BRA	_00141_DS_
+                                           _00140_DS_:
+0000b4   0104     movlb   0x4              	BANKSEL	_bootCmd
+                                           ;	.line	175; main.c	else if (bootCmd.cmd == READ_FLASH)
+0000b6   5180     movf    0x80, 0, 0x1     	MOVF	_bootCmd, W, B
+0000b8   0a01     xorlw   0x1              	XORLW	0x01
+0000ba   e129     bnz     0x10e            	BNZ	_00137_DS_
+                                           ;	.line	179; main.c	for (counter=0; counter < bootCmd.len; counter++)
+0000bc   6a02     clrf    0x2, 0           	CLRF	r0x02
+                                           _00147_DS_:
+0000be   0104     movlb   0x4              	BANKSEL	(_bootCmd + 1)
+0000c0   5181     movf    0x81, 0, 0x1     	MOVF	(_bootCmd + 1), W, B
+0000c2   5c02     subwf   0x2, 0, 0        	SUBWF	r0x02, W
+0000c4   e20f     bc      0xe4             	BC	_00150_DS_
+0000c6   0009     tblrd   *+               	TBLRD*+
+                                           	
+                                           ;	.line	184; main.c	bootCmd.xdat[counter] = TABLAT;
+0000c8   0e85     movlw   0x85             	MOVLW	LOW(_bootCmd + 5)
+0000ca   2402     addwf   0x2, 0, 0        	ADDWF	r0x02, W
+0000cc   6e03     movwf   0x3, 0           	MOVWF	r0x03
+0000ce   6a04     clrf    0x4, 0           	CLRF	r0x04
+0000d0   0e04     movlw   0x4              	MOVLW	HIGH(_bootCmd + 5)
+0000d2   2204     addwfc  0x4, 0x1, 0      	ADDWFC	r0x04, F
+0000d4   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+0000d6   ffe9
+0000d8   c004     movff   0x4, 0xfea       	MOVFF	r0x04, FSR0H
+0000da   ffea
+0000dc   cff5     movff   0xff5, 0xfef     	MOVFF	_TABLAT, INDF0
+0000de   ffef
+                                           ;	.line	179; main.c	for (counter=0; counter < bootCmd.len; counter++)
+0000e0   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+0000e2   d7ed     bra     0xbe             	BRA	_00147_DS_
+                                           _00150_DS_:
+                                           ;	.line	187; main.c	EP_IN_BD(end_point).Cnt = 5 + bootCmd.len;
+0000e4   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+0000e6   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+0000e8   6e02     movwf   0x2, 0           	MOVWF	r0x02
+0000ea   6a03     clrf    0x3, 0           	CLRF	r0x03
+0000ec   be00     btfsc   0, 0x7, 0        	BTFSC	r0x00, 7
+0000ee   6803     setf    0x3, 0           	SETF	r0x03
+0000f0   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+0000f2   2203     addwfc  0x3, 0x1, 0      	ADDWFC	r0x03, F
+0000f4   4a02     infsnz  0x2, 0x1, 0      	INFSNZ	r0x02, F
+0000f6   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+0000f8   0e05     movlw   0x5              	MOVLW	0x05
+0000fa   0104     movlb   0x4              	BANKSEL	(_bootCmd + 1)
+0000fc   2581     addwf   0x81, 0, 0x1     	ADDWF	(_bootCmd + 1), W, B
+0000fe   6e04     movwf   0x4, 0           	MOVWF	r0x04
+000100   c002     movff   0x2, 0xfe9       	MOVFF	r0x02, FSR0L
+000102   ffe9
+000104   c003     movff   0x3, 0xfea       	MOVFF	r0x03, FSR0H
+000106   ffea
+000108   c004     movff   0x4, 0xfef       	MOVFF	r0x04, INDF0
+00010a   ffef
+00010c   d06c     bra     0x1e6            	BRA	_00141_DS_
+                                           _00137_DS_:
+00010e   0104     movlb   0x4              	BANKSEL	_bootCmd
+                                           ;	.line	224; main.c	else if (bootCmd.cmd == WRITE_FLASH)
+000110   5180     movf    0x80, 0, 0x1     	MOVF	_bootCmd, W, B
+000112   0a02     xorlw   0x2              	XORLW	0x02
+000114   e001     bz      0x118            	BZ	_00194_DS_
+000116   d03b     bra     0x18e            	BRA	_00134_DS_
+                                           _00194_DS_:
+                                           ;	.line	230; main.c	EECON1bits.WPROG = 1; // Enable single-word write
+000118   8aa6     bsf     0xa6, 0x5, 0     	BSF	_EECON1bits, 5
+                                           ;	.line	231; main.c	for (counter=0; counter < bootCmd.len; counter+=2)
+00011a   6a02     clrf    0x2, 0           	CLRF	r0x02
+                                           _00151_DS_:
+00011c   0104     movlb   0x4              	BANKSEL	(_bootCmd + 1)
+00011e   5181     movf    0x81, 0, 0x1     	MOVF	(_bootCmd + 1), W, B
+000120   5c02     subwf   0x2, 0, 0        	SUBWF	r0x02, W
+000122   e223     bc      0x16a            	BC	_00154_DS_
+                                           ;	.line	233; main.c	TBLPTRL =  bootCmd.addrl + counter;
+000124   5002     movf    0x2, 0, 0        	MOVF	r0x02, W
+                                           ; removed redundant BANKSEL
+000126   2582     addwf   0x82, 0, 0x1     	ADDWF	(_bootCmd + 2), W, B
+000128   6ef6     movwf   0xf6, 0          	MOVWF	_TBLPTRL
+                                           ;	.line	234; main.c	TABLAT = bootCmd.xdat[counter];
+00012a   0e85     movlw   0x85             	MOVLW	LOW(_bootCmd + 5)
+00012c   2402     addwf   0x2, 0, 0        	ADDWF	r0x02, W
+00012e   6e03     movwf   0x3, 0           	MOVWF	r0x03
+000130   6a04     clrf    0x4, 0           	CLRF	r0x04
+000132   0e04     movlw   0x4              	MOVLW	HIGH(_bootCmd + 5)
+000134   2204     addwfc  0x4, 0x1, 0      	ADDWFC	r0x04, F
+000136   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+000138   ffe9
+00013a   c004     movff   0x4, 0xfea       	MOVFF	r0x04, FSR0H
+00013c   ffea
+00013e   cfef     movff   0xfef, 0xff5     	MOVFF	INDF0, _TABLAT
+000140   fff5
+000142   000d     tblwt   *+               	TBLWT*+ ; TBLPTR is incremented after the write
+                                           	
+                                           ;	.line	238; main.c	TABLAT = bootCmd.xdat[counter + 1];
+000144   2802     incf    0x2, 0, 0        	INCF	r0x02, W
+000146   6e03     movwf   0x3, 0           	MOVWF	r0x03
+000148   6a04     clrf    0x4, 0           	CLRF	r0x04
+00014a   0e85     movlw   0x85             	MOVLW	LOW(_bootCmd + 5)
+00014c   2603     addwf   0x3, 0x1, 0      	ADDWF	r0x03, F
+00014e   0e04     movlw   0x4              	MOVLW	HIGH(_bootCmd + 5)
+000150   2204     addwfc  0x4, 0x1, 0      	ADDWFC	r0x04, F
+000152   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+000154   ffe9
+000156   c004     movff   0x4, 0xfea       	MOVFF	r0x04, FSR0H
+000158   ffea
+00015a   cfef     movff   0xfef, 0xff5     	MOVFF	INDF0, _TABLAT
+00015c   fff5
+00015e   000c     tblwt   *                	TBLWT* ; TBLPTR is not incremented after the write
+                                           	
+                                           ;	.line	242; main.c	start_write();
+000160   ec86     call    0xb0c, 0         	CALL	_start_write
+000162   f005
+                                           ;	.line	231; main.c	for (counter=0; counter < bootCmd.len; counter+=2)
+000164   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+000166   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+000168   d7d9     bra     0x11c            	BRA	_00151_DS_
+                                           _00154_DS_:
+                                           ;	.line	244; main.c	EECON1bits.WPROG = 0;	// Disable single-word write
+00016a   9aa6     bcf     0xa6, 0x5, 0     	BCF	_EECON1bits, 5
+                                           ;	.line	245; main.c	EP_IN_BD(end_point).Cnt = 1;
+00016c   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+00016e   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+000170   6e02     movwf   0x2, 0           	MOVWF	r0x02
+000172   6a03     clrf    0x3, 0           	CLRF	r0x03
+000174   be00     btfsc   0, 0x7, 0        	BTFSC	r0x00, 7
+000176   6803     setf    0x3, 0           	SETF	r0x03
+000178   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00017a   2203     addwfc  0x3, 0x1, 0      	ADDWFC	r0x03, F
+00017c   4a02     infsnz  0x2, 0x1, 0      	INFSNZ	r0x02, F
+00017e   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+000180   c002     movff   0x2, 0xfe9       	MOVFF	r0x02, FSR0L
+000182   ffe9
+000184   c003     movff   0x3, 0xfea       	MOVFF	r0x03, FSR0H
+000186   ffea
+000188   0e01     movlw   0x1              	MOVLW	0x01
+00018a   6eef     movwf   0xef, 0          	MOVWF	INDF0
+00018c   d02c     bra     0x1e6            	BRA	_00141_DS_
+                                           _00134_DS_:
+00018e   0104     movlb   0x4              	BANKSEL	_bootCmd
+                                           ;	.line	277; main.c	else if (bootCmd.cmd ==  ERASE_FLASH)
+000190   5180     movf    0x80, 0, 0x1     	MOVF	_bootCmd, W, B
+000192   0a03     xorlw   0x3              	XORLW	0x03
+000194   e120     bnz     0x1d6            	BNZ	_00131_DS_
+                                           ;	.line	282; main.c	for (counter=0; counter < bootCmd.len; counter++)
+000196   6a02     clrf    0x2, 0           	CLRF	r0x02
+                                           _00155_DS_:
+000198   0104     movlb   0x4              	BANKSEL	(_bootCmd + 1)
+00019a   5181     movf    0x81, 0, 0x1     	MOVF	(_bootCmd + 1), W, B
+00019c   5c02     subwf   0x2, 0, 0        	SUBWF	r0x02, W
+00019e   e20a     bc      0x1b4            	BC	_00158_DS_
+                                           ;	.line	284; main.c	EECON1bits.FREE = 1;    // allow a program memory erase operation
+0001a0   88a6     bsf     0xa6, 0x4, 0     	BSF	_EECON1bits, 4
+                                           ;	.line	285; main.c	start_write();
+0001a2   ec86     call    0xb0c, 0         	CALL	_start_write
+0001a4   f005
+                                           ;	.line	286; main.c	EECON1bits.FREE = 0;    // inhibit program memory erase operation
+0001a6   98a6     bcf     0xa6, 0x4, 0     	BCF	_EECON1bits, 4
+0001a8   0e04     movlw   0x4              	movlw 0x04 ; 0x04 + (TBLPTRH) -> TBLPTRH
+0001aa   26f7     addwf   0xf7, 0x1, 0     	addwf _TBLPTRH, 1 ; (W) + (TBLPTRH) -> TBLPTRH
+                                           	; (C) is affected
+0001ac   0e00     movlw   0                	movlw 0x00 ; 0x00 + (TBLPTRU) + (C) -> TBLPTRU
+0001ae   22f8     addwfc  0xf8, 0x1, 0     	addwfc _TBLPTRU, 1 ; (W) + (TBLPTRU) + (C) -> TBLPTRU
+                                           	
+                                           ;	.line	282; main.c	for (counter=0; counter < bootCmd.len; counter++)
+0001b0   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+0001b2   d7f2     bra     0x198            	BRA	_00155_DS_
+                                           _00158_DS_:
+                                           ;	.line	298; main.c	EP_IN_BD(end_point).Cnt = 1;
+0001b4   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+0001b6   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+0001b8   6e02     movwf   0x2, 0           	MOVWF	r0x02
+0001ba   6a03     clrf    0x3, 0           	CLRF	r0x03
+0001bc   be00     btfsc   0, 0x7, 0        	BTFSC	r0x00, 7
+0001be   6803     setf    0x3, 0           	SETF	r0x03
+0001c0   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+0001c2   2203     addwfc  0x3, 0x1, 0      	ADDWFC	r0x03, F
+0001c4   4a02     infsnz  0x2, 0x1, 0      	INFSNZ	r0x02, F
+0001c6   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+0001c8   c002     movff   0x2, 0xfe9       	MOVFF	r0x02, FSR0L
+0001ca   ffe9
+0001cc   c003     movff   0x3, 0xfea       	MOVFF	r0x03, FSR0H
+0001ce   ffea
+0001d0   0e01     movlw   0x1              	MOVLW	0x01
+0001d2   6eef     movwf   0xef, 0          	MOVWF	INDF0
+0001d4   d008     bra     0x1e6            	BRA	_00141_DS_
+                                           _00131_DS_:
+0001d6   0104     movlb   0x4              	BANKSEL	_bootCmd
+                                           ;	.line	302; main.c	else if (bootCmd.cmd ==  RESET)
+0001d8   5180     movf    0x80, 0, 0x1     	MOVF	_bootCmd, W, B
+0001da   0aff     xorlw   0xff             	XORLW	0xff
+0001dc   e104     bnz     0x1e6            	BNZ	_00141_DS_
+                                           ;	.line	304; main.c	disable_boot();
+0001de   ec2b     call    0xa56, 0         	CALL	_disable_boot
+0001e0   f005
+0001e2   ef00     goto    0xc00            	goto 0x0C00 ; start user app
+0001e4   f006
+                                           	
+                                           _00141_DS_:
+                                           ;	.line	310; main.c	if (EP_IN_BD(end_point).Cnt > 0)
+0001e6   6a02     clrf    0x2, 0           	CLRF	r0x02
+0001e8   be00     btfsc   0, 0x7, 0        	BTFSC	r0x00, 7
+0001ea   6802     setf    0x2, 0           	SETF	r0x02
+0001ec   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+0001ee   2600     addwf   0, 0x1, 0        	ADDWF	r0x00, F
+0001f0   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+0001f2   2202     addwfc  0x2, 0x1, 0      	ADDWFC	r0x02, F
+0001f4   4a00     infsnz  0, 0x1, 0        	INFSNZ	r0x00, F
+0001f6   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+0001f8   c000     movff   0, 0xfe9         	MOVFF	r0x00, FSR0L
+0001fa   ffe9
+0001fc   c002     movff   0x2, 0xfea       	MOVFF	r0x02, FSR0H
+0001fe   ffea
+000200   cfef     movff   0xfef, 0         	MOVFF	INDF0, r0x00
+000202   f000
+000204   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000206   e009     bz      0x21a            	BZ	_00146_DS_
+000208   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 12)
+                                           ;	.line	312; main.c	if (EP_IN_BD(1).Stat.DTS)
+00020a   ad0c     btfss   0xc, 0x6, 0x1    	BTFSS	(_ep_bdt + 12), 6, B
+00020c   d003     bra     0x214            	BRA	_00143_DS_
+                                           ;	.line	313; main.c	EP_IN_BD(1).Stat.uc = 0b10001000;
+00020e   0e88     movlw   0x88             	MOVLW	0x88
+                                           ; removed redundant BANKSEL
+000210   6f0c     movwf   0xc, 0x1         	MOVWF	(_ep_bdt + 12), B
+000212   d003     bra     0x21a            	BRA	_00146_DS_
+                                           _00143_DS_:
+                                           ;	.line	315; main.c	EP_IN_BD(1).Stat.uc = 0b11001000;
+000214   0ec8     movlw   0xc8             	MOVLW	0xc8
+000216   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 12)
+000218   6f0c     movwf   0xc, 0x1         	MOVWF	(_ep_bdt + 12), B
+                                           ; ;multiply lit val:0x04 by variable r0x01 and store in r0x01
+                                           _00146_DS_:
+                                           ;	.line	319; main.c	EP_OUT_BD(end_point).Cnt = EP1_BUFFER_SIZE;
+00021a   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+00021c   0d04     mullw   0x4              	MULLW	0x04
+00021e   cff3     movff   0xff3, 0x1       	MOVFF	PRODL, r0x01
+000220   f001
+000222   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+000224   2401     addwf   0x1, 0, 0        	ADDWF	r0x01, W
+000226   6e00     movwf   0, 0             	MOVWF	r0x00
+000228   6a02     clrf    0x2, 0           	CLRF	r0x02
+00022a   be01     btfsc   0x1, 0x7, 0      	BTFSC	r0x01, 7
+00022c   6802     setf    0x2, 0           	SETF	r0x02
+00022e   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+000230   2202     addwfc  0x2, 0x1, 0      	ADDWFC	r0x02, F
+000232   4a00     infsnz  0, 0x1, 0        	INFSNZ	r0x00, F
+000234   2a02     incf    0x2, 0x1, 0      	INCF	r0x02, F
+000236   c000     movff   0, 0xfe9         	MOVFF	r0x00, FSR0L
+000238   ffe9
+00023a   c002     movff   0x2, 0xfea       	MOVFF	r0x02, FSR0H
+00023c   ffea
+00023e   0e40     movlw   0x40             	MOVLW	0x40
+000240   6eef     movwf   0xef, 0          	MOVWF	INDF0
+                                           ;	.line	321; main.c	EP_OUT_BD(end_point).Stat.uc = 0x80;
+000242   6a00     clrf    0, 0             	CLRF	r0x00
+000244   be01     btfsc   0x1, 0x7, 0      	BTFSC	r0x01, 7
+000246   6800     setf    0, 0             	SETF	r0x00
+000248   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+00024a   2601     addwf   0x1, 0x1, 0      	ADDWF	r0x01, F
+00024c   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00024e   2200     addwfc  0, 0x1, 0        	ADDWFC	r0x00, F
+000250   c001     movff   0x1, 0xfe9       	MOVFF	r0x01, FSR0L
+000252   ffe9
+000254   c000     movff   0, 0xfea         	MOVFF	r0x00, FSR0H
+000256   ffea
+000258   0e80     movlw   0x80             	MOVLW	0x80
+00025a   6eef     movwf   0xef, 0          	MOVWF	INDF0
+00025c   cfe4     movff   0xfe4, 0x4       	MOVFF	PREINC1, r0x04
+00025e   f004
+000260   cfe4     movff   0xfe4, 0x3       	MOVFF	PREINC1, r0x03
+000262   f003
+000264   cfe4     movff   0xfe4, 0x2       	MOVFF	PREINC1, r0x02
+000266   f002
+000268   cfe4     movff   0xfe4, 0x1       	MOVFF	PREINC1, r0x01
+00026a   f001
+00026c   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+00026e   f000
+000270   cfe4     movff   0xfe4, 0xfd9     	MOVFF	PREINC1, FSR2L
+000272   ffd9
+000274   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__usb_configure_endpoints	code
+                                           _usb_configure_endpoints:
+000aa6   010f     movlb   0xf              	BANKSEL	_UEP1bits
+                                           ;	.line	138; main.c	UEP1bits.EPHSHK   = 1;		// EP handshaking on
+000aa8   8927     bsf     0x27, 0x4, 0x1   	BSF	_UEP1bits, 4, B
+                                           ;	.line	139; main.c	UEP1bits.EPOUTEN  = 1;		// EP OUT enabled
+000aaa   8527     bsf     0x27, 0x2, 0x1   	BSF	_UEP1bits, 2, B
+                                           ;	.line	140; main.c	UEP1bits.EPINEN   = 1;		// EP IN enabled
+000aac   8327     bsf     0x27, 0x1, 0x1   	BSF	_UEP1bits, 1, B
+                                           ;	.line	141; main.c	UEP1bits.EPCONDIS = 1;		// control transfers off
+000aae   8727     bsf     0x27, 0x3, 0x1   	BSF	_UEP1bits, 3, B
+                                           ; #	MOVLW	0x40
+                                           ; #	MOVWF	(_ep_bdt + 12), B
+                                           ; #	MOVLW	0x40
+                                           ;	.line	145; main.c	EP_IN_BD(1).Stat.uc  = 0b01000000;
+000ab0   0e40     movlw   0x40             	MOVLW	0x40
+000ab2   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 12)
+                                           ;	.line	148; main.c	EP_OUT_BD(1).Cnt  = EP1_BUFFER_SIZE;
+000ab4   6f0c     movwf   0xc, 0x1         	MOVWF	(_ep_bdt + 12), B
+                                           ; removed redundant BANKSEL
+000ab6   6f09     movwf   0x9, 0x1         	MOVWF	(_ep_bdt + 9), B
+                                           ;	.line	149; main.c	EP_OUT_BD(1).ADDR = PTR16(&bootCmd);
+000ab8   0e80     movlw   0x80             	MOVLW	LOW(_bootCmd)
+                                           ; removed redundant BANKSEL
+000aba   6f0a     movwf   0xa, 0x1         	MOVWF	(_ep_bdt + 10), B
+000abc   0e04     movlw   0x4              	MOVLW	HIGH(_bootCmd)
+                                           ; removed redundant BANKSEL
+000abe   6f0b     movwf   0xb, 0x1         	MOVWF	(_ep_bdt + 11), B
+                                           ;	.line	151; main.c	EP_OUT_BD(1).Stat.uc = 0b10000000;
+000ac0   0e80     movlw   0x80             	MOVLW	0x80
+                                           ; removed redundant BANKSEL
+000ac2   6f08     movwf   0x8, 0x1         	MOVWF	(_ep_bdt + 8), B
+000ac4   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__disable_boot	code
+                                           _disable_boot:
+                                           ;	.line	121; main.c	void disable_boot()
+000a56   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+000a58   ffe5
+000a5a   c001     movff   0x1, 0xfe5       	MOVFF	r0x01, POSTDEC1
+000a5c   ffe5
+000a5e   6acd     clrf    0xcd, 0          	clrf _T1CON ; disable timer 1
+000a60   6a65     clrf    0x65, 0          	clrf _UCON ; disable USB
+000a62   8494     bsf     0x94, 0x2, 0     	bsf _TRISC, 2 ; led input
+000a64   948b     bcf     0x8b, 0x2, 0     	bcf _LATC, 2 ; led off
+                                           	
+                                           ;	.line	133; main.c	while (big_counter != 0) big_counter--;
+000a66   0eff     movlw   0xff             	MOVLW	0xff
+000a68   6e00     movwf   0, 0             	MOVWF	r0x00
+000a6a   6e01     movwf   0x1, 0           	MOVWF	r0x01
+                                           _00115_DS_:
+000a6c   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000a6e   1001     iorwf   0x1, 0, 0        	IORWF	r0x01, W
+000a70   e004     bz      0xa7a            	BZ	_00118_DS_
+000a72   0eff     movlw   0xff             	MOVLW	0xff
+000a74   2600     addwf   0, 0x1, 0        	ADDWF	r0x00, F
+000a76   2201     addwfc  0x1, 0x1, 0      	ADDWFC	r0x01, F
+000a78   d7f9     bra     0xa6c            	BRA	_00115_DS_
+                                           _00118_DS_:
+000a7a   cfe4     movff   0xfe4, 0x1       	MOVFF	PREINC1, r0x01
+000a7c   f001
+000a7e   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+000a80   f000
+000a82   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__set_boot_address	code
+                                           _set_boot_address:
+                                           ;	.line	116; main.c	TBLPTRU = bootCmd.addru;
+000b20   c484     movff   0x484, 0xff8     	MOVFF	(_bootCmd + 4), _TBLPTRU
+000b22   fff8
+                                           ;	.line	117; main.c	TBLPTRH = bootCmd.addrh;
+000b24   c483     movff   0x483, 0xff7     	MOVFF	(_bootCmd + 3), _TBLPTRH
+000b26   fff7
+                                           ;	.line	118; main.c	TBLPTRL = bootCmd.addrl;
+000b28   c482     movff   0x482, 0xff6     	MOVFF	(_bootCmd + 2), _TBLPTRL
+000b2a   fff6
+000b2c   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_main__start_write	code
+                                           _start_write:
+000b0c   84a6     bsf     0xa6, 0x2, 0     	bsf _EECON1, 2 ; EECON1bits.WREN = 1; allows write cycles to Flash program memory
+000b0e   9ef2     bcf     0xf2, 0x7, 0     	bcf _INTCON, 7 ; INTCONbits.GIE = 0 ; disable interrupts (activated in startup sequence)
+000b10   0e55     movlw   0x55             	movlw 0x55
+000b12   6ea7     movwf   0xa7, 0          	movwf _EECON2 ; EECON2 = 0x55;
+000b14   0eaa     movlw   0xaa             	movlw 0xAA
+000b16   6ea7     movwf   0xa7, 0          	movwf _EECON2 ; EECON2 = 0xAA;
+000b18   82a6     bsf     0xa6, 0x1, 0     	bsf _EECON1, 1 ; EECON1bits.WR = 1; start flash/eeprom writing
+000b1a   94a6     bcf     0xa6, 0x2, 0     	bcf _EECON1, 2 ; EECON1bits.WREN = 0; inhibits write cycles to Flash program memory
+000b1c   8ef2     bsf     0xf2, 0x7, 0     	bsf _INTCON, 7 ; INTCONbits.GIE = 1 ; re-enable interrupts
+                                           	
+000b1e   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           	CONFIG	WPDIS=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	WPFP=PAGE_1
+                                           ; ; Starting pCode block
+                                           	CONFIG	WPEND=PAGE_0
+                                           ; ; Starting pCode block
+                                           	CONFIG	WPCFG=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	IOL1WAY=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	MSSP7B_EN=MSK7
+                                           ; ; Starting pCode block
+                                           	CONFIG	DSWDTOSC=INTOSCREF
+                                           ; ; Starting pCode block
+                                           	CONFIG	RTCOSC=T1OSCREF
+                                           ; ; Starting pCode block
+                                           	CONFIG	DSBOREN=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	DSWDTEN=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	DSWDTPS=8192
+                                           ; ; Starting pCode block
+                                           	CONFIG	WDTPS=32768
+                                           ; ; Starting pCode block
+                                           	CONFIG	T1DIG=ON
+                                           ; ; Starting pCode block
+                                           	CONFIG	LPT1OSC=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	FCMEN=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	IESO=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	CP0=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	XINST=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	STVREN=ON
+                                           ; ; Starting pCode block
+                                           	CONFIG	WDTEN=OFF
+                                           ; ; Starting pCode block
+                                           	CONFIG	OSC=HSPLL
+                                           ; ; Starting pCode block
+                                           	CONFIG	CPUDIV=OSC1
+                                           ; ; Starting pCode block
+                                           	CONFIG	PLLDIV=2
+                                           ; ; Starting pCode block for Ival
+                                           	code
+                                           _device_descriptor:
+0009f2   0112     movlb   0x12             	DB	0x12, 0x01, 0x00, 0x02, 0x02, 0x00, 0x00, 0x40, 0xd8, 0x04, 0xaa, 0xfe
+0009f4   0200     mulwf   0, 0             
+0009f6   0002     dw      0x2              
+0009f8   4000     rrncf   0, 0, 0          
+0009fa   04d8     decf    0xd8, 0, 0       
+0009fc   feaa     dw      0xfeaa           
+0009fe   0001     dw      0x1              	DB	0x01, 0x00, 0x00, 0x00, 0x00, 0x01
+000a00   0000     nop                      
+000a02   0100     movlb   0                
+                                           ; ; Starting pCode block for Ival
+                                           _configuration_descriptor:
+000a04   0209     mulwf   0x9, 0           	DB	0x09, 0x02, 0x20, 0x00, 0x01, 0x01, 0x00, 0x03, 0x14, 0x09, 0x04, 0x00
+000a06   0020     dw      0x20             
+000a08   0101     movlb   0x1              
+000a0a   0300     mulwf   0, 0x1           
+000a0c   0914     iorlw   0x14             
+000a0e   0004     clrwdt                   
+000a10   0200     mulwf   0, 0             	DB	0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x07, 0x05, 0x01, 0x02, 0x40, 0x00
+000a12   0000     nop                      
+000a14   0000     nop                      
+000a16   0507     decf    0x7, 0, 0x1      
+000a18   0201     mulwf   0x1, 0           
+000a1a   0040     dw      0x40             
+000a1c   0700     decf    0, 0x1, 0x1      	DB	0x00, 0x07, 0x05, 0x81, 0x02, 0x40, 0x00, 0x00
+000a1e   8105     bsf     0x5, 0, 0x1      
+000a20   4002     rrncf   0x2, 0, 0        
+000a22   0000     nop                      
+                                           
+                                           
+                                           ; Statistics:
+                                           ; code size:	  942 (0x03ae) bytes ( 0.72%)
+                                           ;           	  471 (0x01d7) words
+                                           ; udata size:	  255 (0x00ff) bytes ( 7.24%)
+                                           ; access size:	    5 (0x0005) bytes
+                                           
+                                           
+                                           	end
+                                           ;--------------------------------------------------------
+                                           ; File Created by SDCC : free open source ANSI-C Compiler
+                                           ; Version 3.2.0 #8004 (Jul  4 2012) (Linux)
+                                           ; This file was generated Wed Jul  4 21:30:28 2012
+                                           ;--------------------------------------------------------
+                                           ; PIC16 port for the Microchip 16-bit core micros
+                                           ;--------------------------------------------------------
+                                           	list	p=18f26j50
+                                           
+                                           	radix dec
+                                           
+                                           ;--------------------------------------------------------
+                                           ; public variables in this module
+                                           ;--------------------------------------------------------
+                                           	global	_bootCmd
+                                           	global	_deviceAddress
+                                           	global	_selfPowered
+                                           	global	_EnableUSBModule
+                                           	global	_ProcessUSBTransactions
+                                           	global	_deviceState
+                                           	global	_currentConfiguration
+                                           	global	_ctrlTransferStage
+                                           	global	_requestHandled
+                                           	global	_outPtr
+                                           	global	_inPtr
+                                           	global	_wCount
+                                           	global	_ep_bdt
+                                           	global	_SetupPacket
+                                           	global	_controlTransferBuffer
+                                           	global	_ProcessStandardRequest
+                                           	global	_InDataStage
+                                           	global	_OutDataStage
+                                           	global	_SetupStage
+                                           	global	_WaitForSetupStage
+                                           	global	_ProcessControlTransfer
+                                           	global	_UnSuspend
+                                           	global	_BusReset
+                                           
+                                           ;--------------------------------------------------------
+                                           ; extern variables in this module
+                                           ;--------------------------------------------------------
+                                           	extern	__gptrget1
+                                           	extern	__gptrput1
+                                           	extern	_PPSCONbits
+                                           	extern	_UEP0bits
+                                           	extern	_UEP1bits
+                                           	extern	_UEP2bits
+                                           	extern	_UEP3bits
+                                           	extern	_UEP4bits
+                                           	extern	_UEP5bits
+                                           	extern	_UEP6bits
+                                           	extern	_UEP7bits
+                                           	extern	_UEP8bits
+                                           	extern	_UEP9bits
+                                           	extern	_UEP10bits
+                                           	extern	_UEP11bits
+                                           	extern	_UEP12bits
+                                           	extern	_UEP13bits
+                                           	extern	_UEP14bits
+                                           	extern	_UEP15bits
+                                           	extern	_UIEbits
+                                           	extern	_UEIEbits
+                                           	extern	_UADDRbits
+                                           	extern	_UCFGbits
+                                           	extern	_PADCFG1bits
+                                           	extern	_REFOCONbits
+                                           	extern	_RTCCALbits
+                                           	extern	_RTCCFGbits
+                                           	extern	_ODCON3bits
+                                           	extern	_ODCON2bits
+                                           	extern	_ODCON1bits
+                                           	extern	_ANCON0bits
+                                           	extern	_ANCON1bits
+                                           	extern	_DSWAKELbits
+                                           	extern	_DSWAKEHbits
+                                           	extern	_DSCONLbits
+                                           	extern	_DSCONHbits
+                                           	extern	_TCLKCONbits
+                                           	extern	_CVRCONbits
+                                           	extern	_PMSTATLbits
+                                           	extern	_PMSTATHbits
+                                           	extern	_PMELbits
+                                           	extern	_PMEHbits
+                                           	extern	_PMMODELbits
+                                           	extern	_PMMODEHbits
+                                           	extern	_PMCONLbits
+                                           	extern	_PMCONHbits
+                                           	extern	_UFRMLbits
+                                           	extern	_UFRMHbits
+                                           	extern	_UIRbits
+                                           	extern	_UEIRbits
+                                           	extern	_USTATbits
+                                           	extern	_UCONbits
+                                           	extern	_PMADDRHbits
+                                           	extern	_CMSTATbits
+                                           	extern	_CMSTATUSbits
+                                           	extern	_SSP2CON2bits
+                                           	extern	_SSP2CON1bits
+                                           	extern	_SSP2STATbits
+                                           	extern	_SSP2ADDbits
+                                           	extern	_T4CONbits
+                                           	extern	_T3CONbits
+                                           	extern	_BAUDCON2bits
+                                           	extern	_BAUDCONbits
+                                           	extern	_BAUDCON1bits
+                                           	extern	_BAUDCTLbits
+                                           	extern	_PORTAbits
+                                           	extern	_PORTBbits
+                                           	extern	_PORTCbits
+                                           	extern	_PORTDbits
+                                           	extern	_PORTEbits
+                                           	extern	_HLVDCONbits
+                                           	extern	_DMACON2bits
+                                           	extern	_DMACON1bits
+                                           	extern	_LATAbits
+                                           	extern	_LATBbits
+                                           	extern	_LATCbits
+                                           	extern	_LATDbits
+                                           	extern	_LATEbits
+                                           	extern	_ALRMRPTbits
+                                           	extern	_ALRMCFGbits
+                                           	extern	_TRISAbits
+                                           	extern	_TRISBbits
+                                           	extern	_TRISCbits
+                                           	extern	_TRISDbits
+                                           	extern	_TRISEbits
+                                           	extern	_T3GCONbits
+                                           	extern	_T1GCONbits
+                                           	extern	_OSCTUNEbits
+                                           	extern	_RCSTA2bits
+                                           	extern	_PIE1bits
+                                           	extern	_PIR1bits
+                                           	extern	_IPR1bits
+                                           	extern	_PIE2bits
+                                           	extern	_PIR2bits
+                                           	extern	_IPR2bits
+                                           	extern	_PIE3bits
+                                           	extern	_PIR3bits
+                                           	extern	_IPR3bits
+                                           	extern	_EECON1bits
+                                           	extern	_TXSTA2bits
+                                           	extern	_RCSTAbits
+                                           	extern	_RCSTA1bits
+                                           	extern	_TXSTAbits
+                                           	extern	_TXSTA1bits
+                                           	extern	_CTMUICONbits
+                                           	extern	_CTMUCONLbits
+                                           	extern	_CTMUCONHbits
+                                           	extern	_CCP2CONbits
+                                           	extern	_ECCP2CONbits
+                                           	extern	_ECCP2DELbits
+                                           	extern	_PWM2CONbits
+                                           	extern	_ECCP2ASbits
+                                           	extern	_PSTR2CONbits
+                                           	extern	_CCP1CONbits
+                                           	extern	_ECCP1CONbits
+                                           	extern	_ECCP1DELbits
+                                           	extern	_PWM1CONbits
+                                           	extern	_ECCP1ASbits
+                                           	extern	_PSTR1CONbits
+                                           	extern	_WDTCONbits
+                                           	extern	_ADCON1bits
+                                           	extern	_ADCON0bits
+                                           	extern	_SSP1CON2bits
+                                           	extern	_SSPCON2bits
+                                           	extern	_SSP1CON1bits
+                                           	extern	_SSPCON1bits
+                                           	extern	_SSP1STATbits
+                                           	extern	_SSPSTATbits
+                                           	extern	_SSP1ADDbits
+                                           	extern	_SSPADDbits
+                                           	extern	_T2CONbits
+                                           	extern	_T1CONbits
+                                           	extern	_RCONbits
+                                           	extern	_CM2CONbits
+                                           	extern	_CM2CON1bits
+                                           	extern	_CM1CONbits
+                                           	extern	_CM1CON1bits
+                                           	extern	_OSCCONbits
+                                           	extern	_T0CONbits
+                                           	extern	_STATUSbits
+                                           	extern	_INTCON3bits
+                                           	extern	_INTCON2bits
+                                           	extern	_INTCONbits
+                                           	extern	_STKPTRbits
+                                           	extern	_RPOR0
+                                           	extern	_RPOR1
+                                           	extern	_RPOR2
+                                           	extern	_RPOR3
+                                           	extern	_RPOR4
+                                           	extern	_RPOR5
+                                           	extern	_RPOR6
+                                           	extern	_RPOR7
+                                           	extern	_RPOR8
+                                           	extern	_RPOR9
+                                           	extern	_RPOR10
+                                           	extern	_RPOR11
+                                           	extern	_RPOR12
+                                           	extern	_RPOR13
+                                           	extern	_RPOR17
+                                           	extern	_RPOR18
+                                           	extern	_RPOR19
+                                           	extern	_RPOR20
+                                           	extern	_RPOR21
+                                           	extern	_RPOR22
+                                           	extern	_RPOR23
+                                           	extern	_RPOR24
+                                           	extern	_RPINR1
+                                           	extern	_RPINR2
+                                           	extern	_RPINR3
+                                           	extern	_RPINR4
+                                           	extern	_RPINR6
+                                           	extern	_RPINR7
+                                           	extern	_RPINR8
+                                           	extern	_RPINR12
+                                           	extern	_RPINR13
+                                           	extern	_RPINR16
+                                           	extern	_RPINR17
+                                           	extern	_RPINR21
+                                           	extern	_RPINR22
+                                           	extern	_RPINR23
+                                           	extern	_RPINR24
+                                           	extern	_PPSCON
+                                           	extern	_UEP0
+                                           	extern	_UEP1
+                                           	extern	_UEP2
+                                           	extern	_UEP3
+                                           	extern	_UEP4
+                                           	extern	_UEP5
+                                           	extern	_UEP6
+                                           	extern	_UEP7
+                                           	extern	_UEP8
+                                           	extern	_UEP9
+                                           	extern	_UEP10
+                                           	extern	_UEP11
+                                           	extern	_UEP12
+                                           	extern	_UEP13
+                                           	extern	_UEP14
+                                           	extern	_UEP15
+                                           	extern	_UIE
+                                           	extern	_UEIE
+                                           	extern	_UADDR
+                                           	extern	_UCFG
+                                           	extern	_PADCFG1
+                                           	extern	_REFOCON
+                                           	extern	_RTCCAL
+                                           	extern	_RTCCFG
+                                           	extern	_ODCON3
+                                           	extern	_ODCON2
+                                           	extern	_ODCON1
+                                           	extern	_ANCON0
+                                           	extern	_ANCON1
+                                           	extern	_DSWAKEL
+                                           	extern	_DSWAKEH
+                                           	extern	_DSCONL
+                                           	extern	_DSCONH
+                                           	extern	_DSGPR0
+                                           	extern	_DSGPR1
+                                           	extern	_TCLKCON
+                                           	extern	_CVRCON
+                                           	extern	_PMSTATL
+                                           	extern	_PMSTATH
+                                           	extern	_PMEL
+                                           	extern	_PMEH
+                                           	extern	_PMDIN2L
+                                           	extern	_PMDIN2H
+                                           	extern	_PMDOUT2L
+                                           	extern	_PMDOUT2H
+                                           	extern	_PMMODEL
+                                           	extern	_PMMODEH
+                                           	extern	_PMCONL
+                                           	extern	_PMCONH
+                                           	extern	_UFRM
+                                           	extern	_UFRML
+                                           	extern	_UFRMH
+                                           	extern	_UIR
+                                           	extern	_UEIR
+                                           	extern	_USTAT
+                                           	extern	_UCON
+                                           	extern	_DMABCH
+                                           	extern	_DMABCL
+                                           	extern	_RXADDRH
+                                           	extern	_RXADDRL
+                                           	extern	_TXADDRH
+                                           	extern	_TXADDRL
+                                           	extern	_PMDIN1L
+                                           	extern	_PMDIN1H
+                                           	extern	_PMADDRL
+                                           	extern	_PMDOUT1L
+                                           	extern	_PMADDRH
+                                           	extern	_PMDOUT1H
+                                           	extern	_CMSTAT
+                                           	extern	_CMSTATUS
+                                           	extern	_SSP2CON2
+                                           	extern	_SSP2CON1
+                                           	extern	_SSP2STAT
+                                           	extern	_SSP2ADD
+                                           	extern	_SSP2BUF
+                                           	extern	_T4CON
+                                           	extern	_PR4
+                                           	extern	_TMR4
+                                           	extern	_T3CON
+                                           	extern	_TMR3L
+                                           	extern	_TMR3H
+                                           	extern	_BAUDCON2
+                                           	extern	_SPBRGH2
+                                           	extern	_BAUDCON
+                                           	extern	_BAUDCON1
+                                           	extern	_BAUDCTL
+                                           	extern	_SPBRGH
+                                           	extern	_SPBRGH1
+                                           	extern	_PORTA
+                                           	extern	_PORTB
+                                           	extern	_PORTC
+                                           	extern	_PORTD
+                                           	extern	_PORTE
+                                           	extern	_HLVDCON
+                                           	extern	_DMACON2
+                                           	extern	_DMACON1
+                                           	extern	_LATA
+                                           	extern	_LATB
+                                           	extern	_LATC
+                                           	extern	_LATD
+                                           	extern	_LATE
+                                           	extern	_ALRMVALL
+                                           	extern	_ALRMVALH
+                                           	extern	_ALRMRPT
+                                           	extern	_ALRMCFG
+                                           	extern	_TRISA
+                                           	extern	_TRISB
+                                           	extern	_TRISC
+                                           	extern	_TRISD
+                                           	extern	_TRISE
+                                           	extern	_T3GCON
+                                           	extern	_RTCVALL
+                                           	extern	_RTCVALH
+                                           	extern	_T1GCON
+                                           	extern	_OSCTUNE
+                                           	extern	_RCSTA2
+                                           	extern	_PIE1
+                                           	extern	_PIR1
+                                           	extern	_IPR1
+                                           	extern	_PIE2
+                                           	extern	_PIR2
+                                           	extern	_IPR2
+                                           	extern	_PIE3
+                                           	extern	_PIR3
+                                           	extern	_IPR3
+                                           	extern	_EECON1
+                                           	extern	_EECON2
+                                           	extern	_TXSTA2
+                                           	extern	_TXREG2
+                                           	extern	_RCREG2
+                                           	extern	_SPBRG2
+                                           	extern	_RCSTA
+                                           	extern	_RCSTA1
+                                           	extern	_TXSTA
+                                           	extern	_TXSTA1
+                                           	extern	_TXREG
+                                           	extern	_TXREG1
+                                           	extern	_RCREG
+                                           	extern	_RCREG1
+                                           	extern	_SPBRG
+                                           	extern	_SPBRG1
+                                           	extern	_CTMUICON
+                                           	extern	_CTMUCONL
+                                           	extern	_CTMUCONH
+                                           	extern	_CCP2CON
+                                           	extern	_ECCP2CON
+                                           	extern	_CCPR2
+                                           	extern	_CCPR2L
+                                           	extern	_CCPR2H
+                                           	extern	_ECCP2DEL
+                                           	extern	_PWM2CON
+                                           	extern	_ECCP2AS
+                                           	extern	_PSTR2CON
+                                           	extern	_CCP1CON
+                                           	extern	_ECCP1CON
+                                           	extern	_CCPR1
+                                           	extern	_CCPR1L
+                                           	extern	_CCPR1H
+                                           	extern	_ECCP1DEL
+                                           	extern	_PWM1CON
+                                           	extern	_ECCP1AS
+                                           	extern	_PSTR1CON
+                                           	extern	_WDTCON
+                                           	extern	_ADCON1
+                                           	extern	_ADCON0
+                                           	extern	_ADRES
+                                           	extern	_ADRESL
+                                           	extern	_ADRESH
+                                           	extern	_SSP1CON2
+                                           	extern	_SSPCON2
+                                           	extern	_SSP1CON1
+                                           	extern	_SSPCON1
+                                           	extern	_SSP1STAT
+                                           	extern	_SSPSTAT
+                                           	extern	_SSP1ADD
+                                           	extern	_SSPADD
+                                           	extern	_SSP1BUF
+                                           	extern	_SSPBUF
+                                           	extern	_T2CON
+                                           	extern	_PR2
+                                           	extern	_TMR2
+                                           	extern	_T1CON
+                                           	extern	_TMR1L
+                                           	extern	_TMR1H
+                                           	extern	_RCON
+                                           	extern	_CM2CON
+                                           	extern	_CM2CON1
+                                           	extern	_CM1CON
+                                           	extern	_CM1CON1
+                                           	extern	_OSCCON
+                                           	extern	_T0CON
+                                           	extern	_TMR0L
+                                           	extern	_TMR0H
+                                           	extern	_STATUS
+                                           	extern	_FSR2L
+                                           	extern	_FSR2H
+                                           	extern	_PLUSW2
+                                           	extern	_PREINC2
+                                           	extern	_POSTDEC2
+                                           	extern	_POSTINC2
+                                           	extern	_INDF2
+                                           	extern	_BSR
+                                           	extern	_FSR1L
+                                           	extern	_FSR1H
+                                           	extern	_PLUSW1
+                                           	extern	_PREINC1
+                                           	extern	_POSTDEC1
+                                           	extern	_POSTINC1
+                                           	extern	_INDF1
+                                           	extern	_WREG
+                                           	extern	_FSR0L
+                                           	extern	_FSR0H
+                                           	extern	_PLUSW0
+                                           	extern	_PREINC0
+                                           	extern	_POSTDEC0
+                                           	extern	_POSTINC0
+                                           	extern	_INDF0
+                                           	extern	_INTCON3
+                                           	extern	_INTCON2
+                                           	extern	_INTCON
+                                           	extern	_PROD
+                                           	extern	_PRODL
+                                           	extern	_PRODH
+                                           	extern	_TABLAT
+                                           	extern	_TBLPTR
+                                           	extern	_TBLPTRL
+                                           	extern	_TBLPTRH
+                                           	extern	_TBLPTRU
+                                           	extern	_PC
+                                           	extern	_PCL
+                                           	extern	_PCLATH
+                                           	extern	_PCLATU
+                                           	extern	_STKPTR
+                                           	extern	_TOS
+                                           	extern	_TOSL
+                                           	extern	_TOSH
+                                           	extern	_TOSU
+                                           	extern	_usb_configure_endpoints
+                                           	extern	_usb_ep_data_out_callback
+                                           	extern	_device_descriptor
+                                           	extern	_configuration_descriptor
+                                           
+                                           ;--------------------------------------------------------
+                                           ;	Equates to used internal registers
+                                           ;--------------------------------------------------------
+                                           STATUS	equ	0xfd8
+                                           WREG	equ	0xfe8
+                                           TBLPTRL	equ	0xff6
+                                           TBLPTRH	equ	0xff7
+                                           TBLPTRU	equ	0xff8
+                                           TABLAT	equ	0xff5
+                                           FSR0L	equ	0xfe9
+                                           FSR0H	equ	0xfea
+                                           FSR1L	equ	0xfe1
+                                           FSR2L	equ	0xfd9
+                                           INDF0	equ	0xfef
+                                           POSTINC0	equ	0xfee
+                                           POSTINC1	equ	0xfe6
+                                           POSTDEC1	equ	0xfe5
+                                           PREINC1	equ	0xfe4
+                                           PLUSW2	equ	0xfdb
+                                           PRODL	equ	0xff3
+                                           
+                                           
+                                           ; Internal registers
+                                           .registers	udata_ovr	0x0000
+                                           r0x00	res	1
+                                           r0x01	res	1
+                                           r0x02	res	1
+                                           r0x03	res	1
+                                           r0x04	res	1
+                                           r0x05	res	1
+                                           r0x06	res	1
+                                           r0x07	res	1
+                                           r0x08	res	1
+                                           r0x09	res	1
+                                           
+                                           
+                                           usbram5	udata
+                                           _SetupPacket	res	64
+                                           _controlTransferBuffer	res	64
+                                           
+                                           udata_picUSB_0	udata
+                                           _selfPowered	res	1
+                                           
+                                           udata_picUSB_1	udata
+                                           _deviceAddress	res	1
+                                           
+                                           udata_picUSB_2	udata
+                                           _bootCmd	res	64
+                                           
+                                           udata_picUSB_3	udata
+                                           _requestHandled	res	1
+                                           
+                                           udata_picUSB_4	udata
+                                           _outPtr	res	3
+                                           
+                                           udata_picUSB_5	udata
+                                           _wCount	res	2
+                                           
+                                           udata_picUSB_6	udata
+                                           _deviceState	res	1
+                                           
+                                           udata_picUSB_7	udata
+                                           _currentConfiguration	res	1
+                                           
+                                           udata_picUSB_8	udata
+                                           _inPtr	res	3
+                                           
+                                           udata_picUSB_9	udata
+                                           _ctrlTransferStage	res	1
+                                           
+                                           
+                                           ustat_picUSB_00	udata	0X0400
+                                           _ep_bdt        	res	128
+                                           
+                                           ;--------------------------------------------------------
+                                           ; global & static initialisations
+                                           ;--------------------------------------------------------
+                                           ; I code from now on!
+                                           ; ; Starting pCode block
+                                           S_picUSB__ProcessUSBTransactions	code
+                                           _ProcessUSBTransactions:
+                                           ;	.line	511; picUSB.c	void ProcessUSBTransactions()
+000954   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+000956   ffe5
+                                           ; #	MOVF	_deviceState, W, B
+                                           ; #	BTFSS	STATUS, 2
+                                           ; #	GOTO	_00381_DS_
+                                           ; #	GOTO	_00398_DS_
+                                           ; #	BTFSS	_UIRbits, 2
+000958   0104     movlb   0x4              	BANKSEL	_deviceState
+                                           ;	.line	514; picUSB.c	if(deviceState == DETACHED)
+00095a   51cb     movf    0xcb, 0, 0x1     	MOVF	_deviceState, W, B
+                                           ;	.line	515; picUSB.c	return;
+00095c   e023     bz      0x9a4            	BZ	_00398_DS_
+                                           ;	.line	518; picUSB.c	if(UIRbits.ACTVIF && UIEbits.ACTVIE)
+00095e   a462     btfss   0x62, 0x2, 0     	BTFSS	_UIRbits, 2
+                                           ; #	GOTO	_00383_DS_
+                                           ; #	BTFSS	_UIEbits, 2, B
+                                           ; #	GOTO	_00383_DS_
+                                           ; #	CALL	_UnSuspend
+                                           ; #	CLRF	r0x00
+                                           ;	.line	519; picUSB.c	UnSuspend();
+000960   d004     bra     0x96a            	BRA	_00383_DS_
+000962   010f     movlb   0xf              	BANKSEL	_UIEbits
+                                           ;	.line	522; picUSB.c	if(UCONbits.SUSPND == 1)
+000964   b536     btfsc   0x36, 0x2, 0x1   	BTFSC	_UIEbits, 2, B
+000966   ec9e     call    0xb3c, 0         	CALL	_UnSuspend
+000968   f005
+                                           _00383_DS_:
+00096a   6a00     clrf    0, 0             	CLRF	r0x00
+00096c   b265     btfsc   0x65, 0x1, 0     	BTFSC	_UCONbits, 1
+00096e   2a00     incf    0, 0x1, 0        	INCF	r0x00, F
+000970   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000972   0a01     xorlw   0x1              	XORLW	0x01
+                                           ;	.line	523; picUSB.c	return;
+000974   e017     bz      0x9a4            	BZ	_00398_DS_
+                                           ;	.line	526; picUSB.c	if (UIRbits.URSTIF && UIEbits.URSTIE)
+000976   a062     btfss   0x62, 0, 0       	BTFSS	_UIRbits, 0
+                                           ; #	GOTO	_00388_DS_
+                                           ; #	BTFSS	_UIEbits, 0, B
+                                           ; #	GOTO	_00388_DS_
+                                           ; #	CALL	_BusReset
+                                           ; #	BTFSS	_UIRbits, 1
+                                           ;	.line	527; picUSB.c	BusReset();
+000978   d004     bra     0x982            	BRA	_00388_DS_
+00097a   010f     movlb   0xf              	BANKSEL	_UIEbits
+                                           ;	.line	543; picUSB.c	if (UIRbits.UERRIF && UIEbits.UERRIE)
+00097c   b136     btfsc   0x36, 0, 0x1     	BTFSC	_UIEbits, 0, B
+00097e   ecd5     call    0x9aa, 0         	CALL	_BusReset
+000980   f004
+                                           _00388_DS_:
+000982   a262     btfss   0x62, 0x1, 0     	BTFSS	_UIRbits, 1
+                                           ; #	GOTO	_00391_DS_
+                                           ; #	BTFSS	_UIEbits, 1, B
+                                           ; #	GOTO	_00391_DS_
+                                           ; #	BCF	_UIRbits, 1
+                                           ; #	MOVLW	0x03
+                                           ;	.line	544; picUSB.c	UIRbits.UERRIF = 0;// Clear errors
+000984   d003     bra     0x98c            	BRA	_00391_DS_
+000986   010f     movlb   0xf              	BANKSEL	_UIEbits
+                                           ;	.line	547; picUSB.c	if (deviceState < DEFAULT)
+000988   b336     btfsc   0x36, 0x1, 0x1   	BTFSC	_UIEbits, 1, B
+00098a   9262     bcf     0x62, 0x1, 0     	BCF	_UIRbits, 1
+                                           _00391_DS_:
+00098c   0e03     movlw   0x3              	MOVLW	0x03
+                                           ; #	SUBWF	_deviceState, W, B
+                                           ; #	BTFSC	STATUS, 0
+                                           ; #	GOTO	_00394_DS_
+                                           ; #	GOTO	_00398_DS_
+                                           ; #	BTFSS	_UIRbits, 3
+00098e   0104     movlb   0x4              	BANKSEL	_deviceState
+                                           ;	.line	548; picUSB.c	return;
+000990   5dcb     subwf   0xcb, 0, 0x1     	SUBWF	_deviceState, W, B
+                                           ;	.line	551; picUSB.c	if(UIRbits.TRNIF && UIEbits.TRNIE)
+000992   e308     bnc     0x9a4            	BNC	_00398_DS_
+000994   a662     btfss   0x62, 0x3, 0     	BTFSS	_UIRbits, 3
+000996   d006     bra     0x9a4            	BRA	_00398_DS_
+000998   010f     movlb   0xf              	BANKSEL	_UIEbits
+00099a   a736     btfss   0x36, 0x3, 0x1   	BTFSS	_UIEbits, 3, B
+00099c   d003     bra     0x9a4            	BRA	_00398_DS_
+                                           ;	.line	553; picUSB.c	ProcessControlTransfer();
+00099e   ecb4     call    0x568, 0         	CALL	_ProcessControlTransfer
+0009a0   f002
+                                           ;	.line	555; picUSB.c	UIRbits.TRNIF = 0;
+0009a2   9662     bcf     0x62, 0x3, 0     	BCF	_UIRbits, 3
+                                           _00398_DS_:
+0009a4   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+0009a6   f000
+0009a8   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__BusReset	code
+                                           _BusReset:
+                                           ;	.line	483; picUSB.c	void BusReset()
+0009aa   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+0009ac   ffe5
+                                           ;	.line	485; picUSB.c	UEIR  = 0x00;
+0009ae   6a63     clrf    0x63, 0          	CLRF	_UEIR
+                                           ;	.line	486; picUSB.c	UIR   = 0x00;
+0009b0   6a62     clrf    0x62, 0          	CLRF	_UIR
+                                           ;	.line	487; picUSB.c	UEIE  = 0x9f;
+0009b2   0e9f     movlw   0x9f             	MOVLW	0x9f
+0009b4   010f     movlb   0xf              	BANKSEL	_UEIE
+0009b6   6f37     movwf   0x37, 0x1        	MOVWF	_UEIE, B
+                                           ;	.line	488; picUSB.c	UIE   = 0x7b;
+0009b8   0e7b     movlw   0x7b             	MOVLW	0x7b
+0009ba   010f     movlb   0xf              	BANKSEL	_UIE
+0009bc   6f36     movwf   0x36, 0x1        	MOVWF	_UIE, B
+0009be   010f     movlb   0xf              	BANKSEL	_UADDR
+                                           ;	.line	489; picUSB.c	UADDR = 0x00;
+0009c0   6b38     clrf    0x38, 0x1        	CLRF	_UADDR, B
+                                           ;	.line	492; picUSB.c	UEP0 = EP_CTRL | HSHK_EN;
+0009c2   0e16     movlw   0x16             	MOVLW	0x16
+0009c4   010f     movlb   0xf              	BANKSEL	_UEP0
+0009c6   6f26     movwf   0x26, 0x1        	MOVWF	_UEP0, B
+                                           _00365_DS_:
+                                           ;	.line	495; picUSB.c	while (UIRbits.TRNIF == 1)
+0009c8   6a00     clrf    0, 0             	CLRF	r0x00
+0009ca   b662     btfsc   0x62, 0x3, 0     	BTFSC	_UIRbits, 3
+0009cc   2a00     incf    0, 0x1, 0        	INCF	r0x00, F
+0009ce   5000     movf    0, 0, 0          	MOVF	r0x00, W
+0009d0   0a01     xorlw   0x1              	XORLW	0x01
+0009d2   e102     bnz     0x9d8            	BNZ	_00367_DS_
+                                           ;	.line	496; picUSB.c	UIRbits.TRNIF = 0;
+0009d4   9662     bcf     0x62, 0x3, 0     	BCF	_UIRbits, 3
+0009d6   d7f8     bra     0x9c8            	BRA	_00365_DS_
+                                           _00367_DS_:
+                                           ;	.line	499; picUSB.c	UCONbits.PKTDIS = 0;
+0009d8   9865     bcf     0x65, 0x4, 0     	BCF	_UCONbits, 4
+                                           ;	.line	502; picUSB.c	WaitForSetupStage();
+0009da   ec63     call    0xac6, 0         	CALL	_WaitForSetupStage
+0009dc   f005
+0009de   0104     movlb   0x4              	BANKSEL	_selfPowered
+                                           ;	.line	505; picUSB.c	selfPowered = 0;                      // Self powered is off by default
+0009e0   6bc8     clrf    0xc8, 0x1        	CLRF	_selfPowered, B
+0009e2   0104     movlb   0x4              	BANKSEL	_currentConfiguration
+                                           ;	.line	506; picUSB.c	currentConfiguration = 0;             // Clear active configuration
+0009e4   6bcc     clrf    0xcc, 0x1        	CLRF	_currentConfiguration, B
+                                           ;	.line	507; picUSB.c	deviceState = DEFAULT;
+0009e6   0e03     movlw   0x3              	MOVLW	0x03
+0009e8   0104     movlb   0x4              	BANKSEL	_deviceState
+0009ea   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+0009ec   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+0009ee   f000
+0009f0   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__UnSuspend	code
+                                           _UnSuspend:
+                                           ;	.line	478; picUSB.c	UCONbits.SUSPND = 0;
+000b3c   9265     bcf     0x65, 0x1, 0     	BCF	_UCONbits, 1
+000b3e   010f     movlb   0xf              	BANKSEL	_UIEbits
+                                           ;	.line	479; picUSB.c	UIEbits.ACTVIE = 0;
+000b40   9536     bcf     0x36, 0x2, 0x1   	BCF	_UIEbits, 2, B
+                                           ;	.line	480; picUSB.c	UIRbits.ACTVIF = 0;
+000b42   9462     bcf     0x62, 0x2, 0     	BCF	_UIRbits, 2
+000b44   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__EnableUSBModule	code
+                                           _EnableUSBModule:
+                                           ;	.line	456; picUSB.c	if(UCONbits.USBEN == 0)
+000a24   b665     btfsc   0x65, 0x3, 0     	BTFSC	_UCONbits, 3
+000a26   d007     bra     0xa36            	BRA	_00342_DS_
+                                           ;	.line	458; picUSB.c	UCON = 0;
+000a28   6a65     clrf    0x65, 0          	CLRF	_UCON
+000a2a   010f     movlb   0xf              	BANKSEL	_UIE
+                                           ;	.line	459; picUSB.c	UIE = 0;
+000a2c   6b36     clrf    0x36, 0x1        	CLRF	_UIE, B
+                                           ;	.line	460; picUSB.c	UCONbits.USBEN = 1;
+000a2e   8665     bsf     0x65, 0x3, 0     	BSF	_UCONbits, 3
+                                           ;	.line	461; picUSB.c	deviceState = ATTACHED;
+000a30   0e01     movlw   0x1              	MOVLW	0x01
+000a32   0104     movlb   0x4              	BANKSEL	_deviceState
+000a34   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+                                           _00342_DS_:
+000a36   0104     movlb   0x4              	BANKSEL	_deviceState
+                                           ;	.line	465; picUSB.c	if ((deviceState == ATTACHED) && !UCONbits.SE0)
+000a38   51cb     movf    0xcb, 0, 0x1     	MOVF	_deviceState, W, B
+000a3a   0a01     xorlw   0x1              	XORLW	0x01
+000a3c   e10b     bnz     0xa54            	BNZ	_00346_DS_
+000a3e   ba65     btfsc   0x65, 0x5, 0     	BTFSC	_UCONbits, 5
+000a40   d009     bra     0xa54            	BRA	_00346_DS_
+                                           ;	.line	467; picUSB.c	UIR = 0;
+000a42   6a62     clrf    0x62, 0          	CLRF	_UIR
+000a44   010f     movlb   0xf              	BANKSEL	_UIE
+                                           ;	.line	468; picUSB.c	UIE = 0;
+000a46   6b36     clrf    0x36, 0x1        	CLRF	_UIE, B
+000a48   010f     movlb   0xf              	BANKSEL	_UIEbits
+                                           ;	.line	469; picUSB.c	UIEbits.URSTIE = 1;
+000a4a   8136     bsf     0x36, 0, 0x1     	BSF	_UIEbits, 0, B
+                                           ;	.line	470; picUSB.c	UIEbits.IDLEIE = 1;
+000a4c   8936     bsf     0x36, 0x4, 0x1   	BSF	_UIEbits, 4, B
+                                           ;	.line	471; picUSB.c	deviceState = POWERED;
+000a4e   0e02     movlw   0x2              	MOVLW	0x02
+000a50   0104     movlb   0x4              	BANKSEL	_deviceState
+000a52   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+                                           _00346_DS_:
+000a54   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__ProcessControlTransfer	code
+                                           _ProcessControlTransfer:
+                                           ;	.line	364; picUSB.c	void ProcessControlTransfer()
+000568   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+00056a   ffe5
+00056c   c001     movff   0x1, 0xfe5       	MOVFF	r0x01, POSTDEC1
+00056e   ffe5
+                                           ;	.line	368; picUSB.c	end_point = USTAT >> 3;
+000570   3864     swapf   0x64, 0, 0       	SWAPF	_USTAT, W
+000572   44e8     rlncf   0xe8, 0, 0       	RLNCF	WREG, W
+000574   0b1f     andlw   0x1f             	ANDLW	0x1f
+000576   6e00     movwf   0, 0             	MOVWF	r0x00
+                                           ;	.line	370; picUSB.c	if (end_point == 0)
+000578   5000     movf    0, 0, 0          	MOVF	r0x00, W
+00057a   a4d8     btfss   0xd8, 0x2, 0     	BTFSS	STATUS, 2
+00057c   d04f     bra     0x61c            	BRA	_00294_DS_
+                                           ;	.line	373; picUSB.c	if (USTATbits.DIR == OUT)
+00057e   b464     btfsc   0x64, 0x2, 0     	BTFSC	_USTATbits, 2
+000580   d022     bra     0x5c6            	BRA	_00287_DS_
+                                           ;	.line	377; picUSB.c	byte PID = (EP_OUT_BD(0).Stat.uc & 0x3C) >> 2;
+000582   0e3c     movlw   0x3c             	MOVLW	0x3c
+000584   0104     movlb   0x4              	BANKSEL	_ep_bdt
+000586   1500     andwf   0, 0, 0x1        	ANDWF	_ep_bdt, W, B
+000588   6e01     movwf   0x1, 0           	MOVWF	r0x01
+00058a   4001     rrncf   0x1, 0, 0        	RRNCF	r0x01, W
+00058c   40e8     rrncf   0xe8, 0, 0       	RRNCF	WREG, W
+00058e   0b3f     andlw   0x3f             	ANDLW	0x3f
+                                           ; #	MOVWF	r0x01
+                                           ; #	MOVF	r0x01, W
+                                           ;	.line	378; picUSB.c	if (PID == 0x0D)
+000590   0a0d     xorlw   0xd              	XORLW	0x0d
+000592   e103     bnz     0x59a            	BNZ	_00271_DS_
+                                           ;	.line	380; picUSB.c	SetupStage();
+000594   ec1d     call    0x63a, 0         	CALL	_SetupStage
+000596   f003
+000598   d04b     bra     0x630            	BRA	_00296_DS_
+                                           _00271_DS_:
+00059a   0104     movlb   0x4              	BANKSEL	_ctrlTransferStage
+                                           ;	.line	382; picUSB.c	else if (ctrlTransferStage == DATA_OUT_STAGE)
+00059c   51cd     movf    0xcd, 0, 0x1     	MOVF	_ctrlTransferStage, W, B
+00059e   0a01     xorlw   0x1              	XORLW	0x01
+0005a0   e10f     bnz     0x5c0            	BNZ	_00268_DS_
+                                           ;	.line	386; picUSB.c	OutDataStage(0);
+0005a2   0e00     movlw   0                	MOVLW	0x00
+0005a4   6ae5     clrf    0xe5, 0          	CLRF	POSTDEC1
+0005a6   ec1a     call    0x434, 0         	CALL	_OutDataStage
+0005a8   f002
+0005aa   52e6     movf    0xe6, 0x1, 0     	MOVF	POSTINC1, F
+0005ac   0104     movlb   0x4              	BANKSEL	_ep_bdt
+                                           ;	.line	389; picUSB.c	if(EP_OUT_BD(0).Stat.DTS)
+0005ae   ad00     btfss   0, 0x6, 0x1      	BTFSS	_ep_bdt, 6, B
+0005b0   d003     bra     0x5b8            	BRA	_00265_DS_
+                                           ;	.line	390; picUSB.c	EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTSEN;
+0005b2   0e88     movlw   0x88             	MOVLW	0x88
+                                           ; removed redundant BANKSEL
+0005b4   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+0005b6   d03c     bra     0x630            	BRA	_00296_DS_
+                                           _00265_DS_:
+                                           ;	.line	392; picUSB.c	EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
+0005b8   0ec8     movlw   0xc8             	MOVLW	0xc8
+0005ba   0104     movlb   0x4              	BANKSEL	_ep_bdt
+0005bc   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+0005be   d038     bra     0x630            	BRA	_00296_DS_
+                                           _00268_DS_:
+                                           ;	.line	398; picUSB.c	WaitForSetupStage();
+0005c0   ec63     call    0xac6, 0         	CALL	_WaitForSetupStage
+0005c2   f005
+0005c4   d035     bra     0x630            	BRA	_00296_DS_
+                                           _00287_DS_:
+                                           ;	.line	402; picUSB.c	else if(USTATbits.DIR == IN)
+0005c6   6a01     clrf    0x1, 0           	CLRF	r0x01
+0005c8   b464     btfsc   0x64, 0x2, 0     	BTFSC	_USTATbits, 2
+0005ca   2a01     incf    0x1, 0x1, 0      	INCF	r0x01, F
+0005cc   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+0005ce   0a01     xorlw   0x1              	XORLW	0x01
+0005d0   e12f     bnz     0x630            	BNZ	_00296_DS_
+                                           _00330_DS_:
+0005d2   010f     movlb   0xf              	BANKSEL	_UADDR
+                                           ;	.line	405; picUSB.c	if ((UADDR == 0) && (deviceState == ADDRESS))
+0005d4   5138     movf    0x38, 0, 0x1     	MOVF	_UADDR, W, B
+0005d6   e10c     bnz     0x5f0            	BNZ	_00276_DS_
+0005d8   0104     movlb   0x4              	BANKSEL	_deviceState
+0005da   51cb     movf    0xcb, 0, 0x1     	MOVF	_deviceState, W, B
+0005dc   0a04     xorlw   0x4              	XORLW	0x04
+0005de   e108     bnz     0x5f0            	BNZ	_00276_DS_
+                                           ;	.line	409; picUSB.c	UADDR = SetupPacket.wValue0;
+0005e0   c502     movff   0x502, 0xf38     	MOVFF	(_SetupPacket + 2), _UADDR
+0005e2   ff38
+0005e4   010f     movlb   0xf              	BANKSEL	_UADDR
+                                           ;	.line	410; picUSB.c	if(UADDR == 0)
+0005e6   5138     movf    0x38, 0, 0x1     	MOVF	_UADDR, W, B
+0005e8   e103     bnz     0x5f0            	BNZ	_00276_DS_
+                                           ;	.line	413; picUSB.c	deviceState = DEFAULT;
+0005ea   0e03     movlw   0x3              	MOVLW	0x03
+0005ec   0104     movlb   0x4              	BANKSEL	_deviceState
+0005ee   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+                                           _00276_DS_:
+0005f0   0104     movlb   0x4              	BANKSEL	_ctrlTransferStage
+                                           ;	.line	416; picUSB.c	if (ctrlTransferStage == DATA_IN_STAGE)
+0005f2   51cd     movf    0xcd, 0, 0x1     	MOVF	_ctrlTransferStage, W, B
+0005f4   0a02     xorlw   0x2              	XORLW	0x02
+0005f6   e10f     bnz     0x616            	BNZ	_00282_DS_
+                                           ;	.line	419; picUSB.c	InDataStage(0);
+0005f8   0e00     movlw   0                	MOVLW	0x00
+0005fa   6ae5     clrf    0xe5, 0          	CLRF	POSTDEC1
+0005fc   ec3b     call    0x276, 0         	CALL	_InDataStage
+0005fe   f001
+000600   52e6     movf    0xe6, 0x1, 0     	MOVF	POSTINC1, F
+000602   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 4)
+                                           ;	.line	422; picUSB.c	if(EP_IN_BD(0).Stat.DTS)
+000604   ad04     btfss   0x4, 0x6, 0x1    	BTFSS	(_ep_bdt + 4), 6, B
+000606   d003     bra     0x60e            	BRA	_00279_DS_
+                                           ;	.line	423; picUSB.c	EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_DTSEN;
+000608   0e88     movlw   0x88             	MOVLW	0x88
+                                           ; removed redundant BANKSEL
+00060a   6f04     movwf   0x4, 0x1         	MOVWF	(_ep_bdt + 4), B
+00060c   d011     bra     0x630            	BRA	_00296_DS_
+                                           _00279_DS_:
+                                           ;	.line	425; picUSB.c	EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
+00060e   0ec8     movlw   0xc8             	MOVLW	0xc8
+000610   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 4)
+000612   6f04     movwf   0x4, 0x1         	MOVWF	(_ep_bdt + 4), B
+000614   d00d     bra     0x630            	BRA	_00296_DS_
+                                           _00282_DS_:
+                                           ;	.line	431; picUSB.c	WaitForSetupStage();
+000616   ec63     call    0xac6, 0         	CALL	_WaitForSetupStage
+000618   f005
+00061a   d00a     bra     0x630            	BRA	_00296_DS_
+                                           _00294_DS_:
+                                           ;	.line	437; picUSB.c	else if (end_point == 1)
+00061c   5000     movf    0, 0, 0          	MOVF	r0x00, W
+00061e   0a01     xorlw   0x1              	XORLW	0x01
+000620   e107     bnz     0x630            	BNZ	_00296_DS_
+                                           ;	.line	440; picUSB.c	if (!USTATbits.DIR)
+000622   b464     btfsc   0x64, 0x2, 0     	BTFSC	_USTATbits, 2
+000624   d005     bra     0x630            	BRA	_00296_DS_
+                                           ;	.line	445; picUSB.c	usb_ep_data_out_callback(end_point);
+000626   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000628   6ee5     movwf   0xe5, 0          	MOVWF	POSTDEC1
+00062a   ec15     call    0x2a, 0          	CALL	_usb_ep_data_out_callback
+00062c   f000
+00062e   52e6     movf    0xe6, 0x1, 0     	MOVF	POSTINC1, F
+                                           _00296_DS_:
+000630   cfe4     movff   0xfe4, 0x1       	MOVFF	PREINC1, r0x01
+000632   f001
+000634   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+000636   f000
+000638   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__WaitForSetupStage	code
+                                           _WaitForSetupStage:
+000ac6   0104     movlb   0x4              	BANKSEL	_ctrlTransferStage
+                                           ;	.line	352; picUSB.c	ctrlTransferStage = SETUP_STAGE;
+000ac8   6bcd     clrf    0xcd, 0x1        	CLRF	_ctrlTransferStage, B
+                                           ;	.line	353; picUSB.c	EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
+000aca   0e40     movlw   0x40             	MOVLW	0x40
+000acc   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 1)
+000ace   6f01     movwf   0x1, 0x1         	MOVWF	(_ep_bdt + 1), B
+                                           ;	.line	354; picUSB.c	EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+000ad0   0e00     movlw   0                	MOVLW	LOW(_SetupPacket)
+                                           ; removed redundant BANKSEL
+000ad2   6f02     movwf   0x2, 0x1         	MOVWF	(_ep_bdt + 2), B
+000ad4   0e05     movlw   0x5              	MOVLW	HIGH(_SetupPacket)
+                                           ; removed redundant BANKSEL
+000ad6   6f03     movwf   0x3, 0x1         	MOVWF	(_ep_bdt + 3), B
+                                           ;	.line	356; picUSB.c	EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTSEN;
+000ad8   0e88     movlw   0x88             	MOVLW	0x88
+                                           ; removed redundant BANKSEL
+000ada   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+                                           ; removed redundant BANKSEL
+                                           ;	.line	357; picUSB.c	EP_IN_BD(0).Stat.uc = 0x00;           // Give control to CPU
+000adc   6b04     clrf    0x4, 0x1         	CLRF	(_ep_bdt + 4), B
+000ade   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__SetupStage	code
+                                           _SetupStage:
+                                           ;	.line	283; picUSB.c	void SetupStage()
+00063a   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+00063c   ffe5
+00063e   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 4)
+                                           ;	.line	287; picUSB.c	EP_IN_BD(0).Stat.uc &= ~BDS_UOWN;
+000640   5104     movf    0x4, 0, 0x1      	MOVF	(_ep_bdt + 4), W, B
+000642   6e00     movwf   0, 0             	MOVWF	r0x00
+000644   9e00     bcf     0, 0x7, 0        	BCF	r0x00, 7
+000646   5000     movf    0, 0, 0          	MOVF	r0x00, W
+                                           ; removed redundant BANKSEL
+000648   6f04     movwf   0x4, 0x1         	MOVWF	(_ep_bdt + 4), B
+                                           ; removed redundant BANKSEL
+                                           ;	.line	288; picUSB.c	EP_OUT_BD(0).Stat.uc &= ~BDS_UOWN;
+00064a   5100     movf    0, 0, 0x1        	MOVF	_ep_bdt, W, B
+00064c   6e00     movwf   0, 0             	MOVWF	r0x00
+00064e   9e00     bcf     0, 0x7, 0        	BCF	r0x00, 7
+000650   5000     movf    0, 0, 0          	MOVF	r0x00, W
+                                           ; removed redundant BANKSEL
+000652   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+000654   0104     movlb   0x4              	BANKSEL	_ctrlTransferStage
+                                           ;	.line	291; picUSB.c	ctrlTransferStage = SETUP_STAGE;
+000656   6bcd     clrf    0xcd, 0x1        	CLRF	_ctrlTransferStage, B
+000658   0104     movlb   0x4              	BANKSEL	_requestHandled
+                                           ;	.line	292; picUSB.c	requestHandled = 0;                   // Default is that request hasn't been handled
+00065a   6bca     clrf    0xca, 0x1        	CLRF	_requestHandled, B
+00065c   0104     movlb   0x4              	BANKSEL	_wCount
+                                           ;	.line	293; picUSB.c	wCount = 0;                           // No bytes transferred
+00065e   6bc6     clrf    0xc6, 0x1        	CLRF	_wCount, B
+                                           ; removed redundant BANKSEL
+000660   6bc7     clrf    0xc7, 0x1        	CLRF	(_wCount + 1), B
+                                           ;	.line	296; picUSB.c	ProcessStandardRequest();
+000662   ec7d     call    0x6fa, 0         	CALL	_ProcessStandardRequest
+000664   f003
+000666   0104     movlb   0x4              	BANKSEL	_requestHandled
+                                           ;	.line	299; picUSB.c	if (!requestHandled)
+000668   51ca     movf    0xca, 0, 0x1     	MOVF	_requestHandled, W, B
+00066a   e10b     bnz     0x682            	BNZ	_00241_DS_
+                                           ;	.line	302; picUSB.c	EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
+00066c   0e40     movlw   0x40             	MOVLW	0x40
+00066e   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 1)
+000670   6f01     movwf   0x1, 0x1         	MOVWF	(_ep_bdt + 1), B
+                                           ;	.line	303; picUSB.c	EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+000672   0e00     movlw   0                	MOVLW	LOW(_SetupPacket)
+                                           ; removed redundant BANKSEL
+000674   6f02     movwf   0x2, 0x1         	MOVWF	(_ep_bdt + 2), B
+000676   0e05     movlw   0x5              	MOVLW	HIGH(_SetupPacket)
+                                           ; removed redundant BANKSEL
+000678   6f03     movwf   0x3, 0x1         	MOVWF	(_ep_bdt + 3), B
+                                           ; #	MOVLW	0x84
+                                           ; #	MOVWF	_ep_bdt, B
+                                           ; #	MOVLW	0x84
+                                           ;	.line	304; picUSB.c	EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_BSTALL;
+00067a   0e84     movlw   0x84             	MOVLW	0x84
+                                           ; removed redundant BANKSEL
+                                           ;	.line	305; picUSB.c	EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_BSTALL;
+00067c   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+                                           ; removed redundant BANKSEL
+00067e   6f04     movwf   0x4, 0x1         	MOVWF	(_ep_bdt + 4), B
+000680   d038     bra     0x6f2            	BRA	_00242_DS_
+                                           _00241_DS_:
+000682   0105     movlb   0x5              	BANKSEL	_SetupPacket
+                                           ;	.line	308; picUSB.c	else if (SetupPacket.bmRequestType & 0x80)
+000684   af00     btfss   0, 0x7, 0x1      	BTFSS	_SetupPacket, 7, B
+000686   d026     bra     0x6d4            	BRA	_00238_DS_
+000688   0104     movlb   0x4              	BANKSEL	(_wCount + 1)
+                                           ;	.line	311; picUSB.c	if(SetupPacket.wLength < wCount)
+00068a   51c7     movf    0xc7, 0, 0x1     	MOVF	(_wCount + 1), W, B
+00068c   0105     movlb   0x5              	BANKSEL	(_SetupPacket + 7)
+00068e   5d07     subwf   0x7, 0, 0x1      	SUBWF	(_SetupPacket + 7), W, B
+000690   e104     bnz     0x69a            	BNZ	_00254_DS_
+000692   0104     movlb   0x4              	BANKSEL	_wCount
+000694   51c6     movf    0xc6, 0, 0x1     	MOVF	_wCount, W, B
+000696   0105     movlb   0x5              	BANKSEL	(_SetupPacket + 6)
+000698   5d06     subwf   0x6, 0, 0x1      	SUBWF	(_SetupPacket + 6), W, B
+                                           _00254_DS_:
+00069a   e204     bc      0x6a4            	BC	_00236_DS_
+                                           ;	.line	312; picUSB.c	wCount = SetupPacket.wLength;
+00069c   c506     movff   0x506, 0x4c6     	MOVFF	(_SetupPacket + 6), _wCount
+00069e   f4c6
+0006a0   c507     movff   0x507, 0x4c7     	MOVFF	(_SetupPacket + 7), (_wCount + 1)
+0006a2   f4c7
+                                           _00236_DS_:
+                                           ;	.line	314; picUSB.c	InDataStage(0);
+0006a4   0e00     movlw   0                	MOVLW	0x00
+0006a6   6ae5     clrf    0xe5, 0          	CLRF	POSTDEC1
+0006a8   ec3b     call    0x276, 0         	CALL	_InDataStage
+0006aa   f001
+0006ac   52e6     movf    0xe6, 0x1, 0     	MOVF	POSTINC1, F
+                                           ;	.line	315; picUSB.c	ctrlTransferStage = DATA_IN_STAGE;
+0006ae   0e02     movlw   0x2              	MOVLW	0x02
+0006b0   0104     movlb   0x4              	BANKSEL	_ctrlTransferStage
+0006b2   6fcd     movwf   0xcd, 0x1        	MOVWF	_ctrlTransferStage, B
+                                           ;	.line	317; picUSB.c	EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
+0006b4   0e40     movlw   0x40             	MOVLW	0x40
+0006b6   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 1)
+0006b8   6f01     movwf   0x1, 0x1         	MOVWF	(_ep_bdt + 1), B
+                                           ;	.line	318; picUSB.c	EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+0006ba   0e00     movlw   0                	MOVLW	LOW(_SetupPacket)
+                                           ; removed redundant BANKSEL
+0006bc   6f02     movwf   0x2, 0x1         	MOVWF	(_ep_bdt + 2), B
+0006be   0e05     movlw   0x5              	MOVLW	HIGH(_SetupPacket)
+                                           ; removed redundant BANKSEL
+0006c0   6f03     movwf   0x3, 0x1         	MOVWF	(_ep_bdt + 3), B
+                                           ;	.line	319; picUSB.c	EP_OUT_BD(0).Stat.uc = BDS_UOWN;
+0006c2   0e80     movlw   0x80             	MOVLW	0x80
+                                           ; removed redundant BANKSEL
+0006c4   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+                                           ;	.line	322; picUSB.c	EP_IN_BD(0).ADDR = PTR16(&controlTransferBuffer);
+0006c6   0e40     movlw   0x40             	MOVLW	LOW(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+0006c8   6f06     movwf   0x6, 0x1         	MOVWF	(_ep_bdt + 6), B
+0006ca   0e05     movlw   0x5              	MOVLW	HIGH(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+0006cc   6f07     movwf   0x7, 0x1         	MOVWF	(_ep_bdt + 7), B
+                                           ;	.line	324; picUSB.c	EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
+0006ce   0ec8     movlw   0xc8             	MOVLW	0xc8
+                                           ; removed redundant BANKSEL
+0006d0   6f04     movwf   0x4, 0x1         	MOVWF	(_ep_bdt + 4), B
+0006d2   d00f     bra     0x6f2            	BRA	_00242_DS_
+                                           _00238_DS_:
+                                           ;	.line	330; picUSB.c	ctrlTransferStage = DATA_OUT_STAGE;
+0006d4   0e01     movlw   0x1              	MOVLW	0x01
+0006d6   0104     movlb   0x4              	BANKSEL	_ctrlTransferStage
+0006d8   6fcd     movwf   0xcd, 0x1        	MOVWF	_ctrlTransferStage, B
+0006da   0104     movlb   0x4              	BANKSEL	(_ep_bdt + 5)
+                                           ;	.line	333; picUSB.c	EP_IN_BD(0).Cnt = 0;
+0006dc   6b05     clrf    0x5, 0x1         	CLRF	(_ep_bdt + 5), B
+                                           ;	.line	334; picUSB.c	EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
+0006de   0ec8     movlw   0xc8             	MOVLW	0xc8
+                                           ; removed redundant BANKSEL
+0006e0   6f04     movwf   0x4, 0x1         	MOVWF	(_ep_bdt + 4), B
+                                           ;	.line	337; picUSB.c	EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
+0006e2   0e40     movlw   0x40             	MOVLW	0x40
+                                           ; removed redundant BANKSEL
+0006e4   6f01     movwf   0x1, 0x1         	MOVWF	(_ep_bdt + 1), B
+                                           ;	.line	338; picUSB.c	EP_OUT_BD(0).ADDR = PTR16(&controlTransferBuffer);
+0006e6   0e40     movlw   0x40             	MOVLW	LOW(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+0006e8   6f02     movwf   0x2, 0x1         	MOVWF	(_ep_bdt + 2), B
+0006ea   0e05     movlw   0x5              	MOVLW	HIGH(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+0006ec   6f03     movwf   0x3, 0x1         	MOVWF	(_ep_bdt + 3), B
+                                           ;	.line	340; picUSB.c	EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
+0006ee   0ec8     movlw   0xc8             	MOVLW	0xc8
+                                           ; removed redundant BANKSEL
+0006f0   6f00     movwf   0, 0x1           	MOVWF	_ep_bdt, B
+                                           _00242_DS_:
+                                           ;	.line	344; picUSB.c	UCONbits.PKTDIS = 0;
+0006f2   9865     bcf     0x65, 0x4, 0     	BCF	_UCONbits, 4
+0006f4   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+0006f6   f000
+0006f8   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__OutDataStage	code
+                                           _OutDataStage:
+                                           ;	.line	260; picUSB.c	void OutDataStage(unsigned char ep)
+000434   cfd9     movff   0xfd9, 0xfe5     	MOVFF	FSR2L, POSTDEC1
+000436   ffe5
+000438   cfe1     movff   0xfe1, 0xfd9     	MOVFF	FSR1L, FSR2L
+00043a   ffd9
+00043c   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+00043e   ffe5
+000440   c001     movff   0x1, 0xfe5       	MOVFF	r0x01, POSTDEC1
+000442   ffe5
+000444   c002     movff   0x2, 0xfe5       	MOVFF	r0x02, POSTDEC1
+000446   ffe5
+000448   c003     movff   0x3, 0xfe5       	MOVFF	r0x03, POSTDEC1
+00044a   ffe5
+00044c   c004     movff   0x4, 0xfe5       	MOVFF	r0x04, POSTDEC1
+00044e   ffe5
+000450   c005     movff   0x5, 0xfe5       	MOVFF	r0x05, POSTDEC1
+000452   ffe5
+000454   c006     movff   0x6, 0xfe5       	MOVFF	r0x06, POSTDEC1
+000456   ffe5
+000458   c007     movff   0x7, 0xfe5       	MOVFF	r0x07, POSTDEC1
+00045a   ffe5
+00045c   c008     movff   0x8, 0xfe5       	MOVFF	r0x08, POSTDEC1
+00045e   ffe5
+000460   c009     movff   0x9, 0xfe5       	MOVFF	r0x09, POSTDEC1
+000462   ffe5
+000464   0e02     movlw   0x2              	MOVLW	0x02
+000466   cfdb     movff   0xfdb, 0         	MOVFF	PLUSW2, r0x00
+000468   f000
+                                           ;	.line	264; picUSB.c	bufferSize = ((0x03 & EP_OUT_BD(ep).Stat.uc) << 8) | EP_OUT_BD(ep).Cnt;
+00046a   4400     rlncf   0, 0, 0          	RLNCF	r0x00, W
+00046c   0bfe     andlw   0xfe             	ANDLW	0xfe
+                                           ; #	MOVWF	r0x01
+                                           ; #;;multiply lit val:0x04 by variable r0x01 and store in r0x00
+                                           ; #	MOVF	r0x01, W
+00046e   0d04     mullw   0x4              	MULLW	0x04
+000470   cff3     movff   0xff3, 0         	MOVFF	PRODL, r0x00
+000472   f000
+000474   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+000476   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+000478   6e01     movwf   0x1, 0           	MOVWF	r0x01
+00047a   6a02     clrf    0x2, 0           	CLRF	r0x02
+00047c   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00047e   2202     addwfc  0x2, 0x1, 0      	ADDWFC	r0x02, F
+000480   c001     movff   0x1, 0xfe9       	MOVFF	r0x01, FSR0L
+000482   ffe9
+000484   c002     movff   0x2, 0xfea       	MOVFF	r0x02, FSR0H
+000486   ffea
+000488   cfef     movff   0xfef, 0x1       	MOVFF	INDF0, r0x01
+00048a   f001
+00048c   0e03     movlw   0x3              	MOVLW	0x03
+00048e   1601     andwf   0x1, 0x1, 0      	ANDWF	r0x01, F
+000490   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+000492   6e04     movwf   0x4, 0           	MOVWF	r0x04
+000494   6a03     clrf    0x3, 0           	CLRF	r0x03
+000496   6a01     clrf    0x1, 0           	CLRF	r0x01
+000498   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+00049a   2600     addwf   0, 0x1, 0        	ADDWF	r0x00, F
+00049c   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00049e   2201     addwfc  0x1, 0x1, 0      	ADDWFC	r0x01, F
+0004a0   4a00     infsnz  0, 0x1, 0        	INFSNZ	r0x00, F
+0004a2   2a01     incf    0x1, 0x1, 0      	INCF	r0x01, F
+0004a4   c000     movff   0, 0xfe9         	MOVFF	r0x00, FSR0L
+0004a6   ffe9
+0004a8   c001     movff   0x1, 0xfea       	MOVFF	r0x01, FSR0H
+0004aa   ffea
+0004ac   cfef     movff   0xfef, 0         	MOVFF	INDF0, r0x00
+0004ae   f000
+0004b0   6a01     clrf    0x1, 0           	CLRF	r0x01
+0004b2   5003     movf    0x3, 0, 0        	MOVF	r0x03, W
+0004b4   1200     iorwf   0, 0x1, 0        	IORWF	r0x00, F
+0004b6   5004     movf    0x4, 0, 0        	MOVF	r0x04, W
+0004b8   1201     iorwf   0x1, 0x1, 0      	IORWF	r0x01, F
+                                           ;	.line	267; picUSB.c	wCount = wCount + bufferSize;
+0004ba   5000     movf    0, 0, 0          	MOVF	r0x00, W
+0004bc   0104     movlb   0x4              	BANKSEL	_wCount
+0004be   27c6     addwf   0xc6, 0x1, 0x1   	ADDWF	_wCount, F, B
+0004c0   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+                                           ; removed redundant BANKSEL
+0004c2   23c7     addwfc  0xc7, 0x1, 0x1   	ADDWFC	(_wCount + 1), F, B
+                                           ;	.line	269; picUSB.c	outPtr = (byte*)&controlTransferBuffer;
+0004c4   0e05     movlw   0x5              	MOVLW	HIGH(_controlTransferBuffer)
+0004c6   0104     movlb   0x4              	BANKSEL	(_outPtr + 1)
+0004c8   6fc1     movwf   0xc1, 0x1        	MOVWF	(_outPtr + 1), B
+0004ca   0e40     movlw   0x40             	MOVLW	LOW(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+0004cc   6fc0     movwf   0xc0, 0x1        	MOVWF	_outPtr, B
+0004ce   0e80     movlw   0x80             	MOVLW	0x80
+                                           ; removed redundant BANKSEL
+0004d0   6fc2     movwf   0xc2, 0x1        	MOVWF	(_outPtr + 2), B
+                                           ;	.line	271; picUSB.c	for (i=0;i<bufferSize;i++)
+0004d2   6a02     clrf    0x2, 0           	CLRF	r0x02
+0004d4   6a03     clrf    0x3, 0           	CLRF	r0x03
+                                           _00215_DS_:
+0004d6   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+0004d8   5c03     subwf   0x3, 0, 0        	SUBWF	r0x03, W
+0004da   e102     bnz     0x4e0            	BNZ	_00228_DS_
+0004dc   5000     movf    0, 0, 0          	MOVF	r0x00, W
+0004de   5c02     subwf   0x2, 0, 0        	SUBWF	r0x02, W
+                                           _00228_DS_:
+0004e0   e22c     bc      0x53a            	BC	_00219_DS_
+                                           ;	.line	272; picUSB.c	*inPtr++ = *outPtr++;
+0004e2   c4c3     movff   0x4c3, 0x4       	MOVFF	_inPtr, r0x04
+0004e4   f004
+0004e6   c4c4     movff   0x4c4, 0x5       	MOVFF	(_inPtr + 1), r0x05
+0004e8   f005
+0004ea   c4c5     movff   0x4c5, 0x6       	MOVFF	(_inPtr + 2), r0x06
+0004ec   f006
+0004ee   c4c0     movff   0x4c0, 0x7       	MOVFF	_outPtr, r0x07
+0004f0   f007
+0004f2   c4c1     movff   0x4c1, 0x8       	MOVFF	(_outPtr + 1), r0x08
+0004f4   f008
+0004f6   c4c2     movff   0x4c2, 0x9       	MOVFF	(_outPtr + 2), r0x09
+0004f8   f009
+0004fa   c007     movff   0x7, 0xfe9       	MOVFF	r0x07, FSR0L
+0004fc   ffe9
+0004fe   c008     movff   0x8, 0xff3       	MOVFF	r0x08, PRODL
+000500   fff3
+000502   5009     movf    0x9, 0, 0        	MOVF	r0x09, W
+000504   ec42     call    0xa84, 0         	CALL	__gptrget1
+000506   f005
+000508   6e07     movwf   0x7, 0           	MOVWF	r0x07
+00050a   0104     movlb   0x4              	BANKSEL	_outPtr
+00050c   2bc0     incf    0xc0, 0x1, 0x1   	INCF	_outPtr, F, B
+00050e   e303     bnc     0x516            	BNC	_00229_DS_
+                                           ; removed redundant BANKSEL
+000510   3fc1     incfsz  0xc1, 0x1, 0x1   	INCFSZ	(_outPtr + 1), F, B
+000512   d001     bra     0x516            	BRA	_10380_DS_
+                                           ; removed redundant BANKSEL
+000514   2bc2     incf    0xc2, 0x1, 0x1   	INCF	(_outPtr + 2), F, B
+                                           _10380_DS_:
+                                           _00229_DS_:
+000516   c007     movff   0x7, 0xfe5       	MOVFF	r0x07, POSTDEC1
+000518   ffe5
+00051a   c004     movff   0x4, 0xfe9       	MOVFF	r0x04, FSR0L
+00051c   ffe9
+00051e   c005     movff   0x5, 0xff3       	MOVFF	r0x05, PRODL
+000520   fff3
+000522   5006     movf    0x6, 0, 0        	MOVF	r0x06, W
+000524   ec7b     call    0xaf6, 0         	CALL	__gptrput1
+000526   f005
+000528   0104     movlb   0x4              	BANKSEL	_inPtr
+00052a   2bc3     incf    0xc3, 0x1, 0x1   	INCF	_inPtr, F, B
+00052c   e303     bnc     0x534            	BNC	_00230_DS_
+                                           ; removed redundant BANKSEL
+00052e   3fc4     incfsz  0xc4, 0x1, 0x1   	INCFSZ	(_inPtr + 1), F, B
+000530   d001     bra     0x534            	BRA	_20381_DS_
+                                           ; removed redundant BANKSEL
+000532   2bc5     incf    0xc5, 0x1, 0x1   	INCF	(_inPtr + 2), F, B
+                                           _20381_DS_:
+                                           _00230_DS_:
+                                           ;	.line	271; picUSB.c	for (i=0;i<bufferSize;i++)
+000534   4a02     infsnz  0x2, 0x1, 0      	INFSNZ	r0x02, F
+000536   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+000538   d7ce     bra     0x4d6            	BRA	_00215_DS_
+                                           _00219_DS_:
+00053a   cfe4     movff   0xfe4, 0x9       	MOVFF	PREINC1, r0x09
+00053c   f009
+00053e   cfe4     movff   0xfe4, 0x8       	MOVFF	PREINC1, r0x08
+000540   f008
+000542   cfe4     movff   0xfe4, 0x7       	MOVFF	PREINC1, r0x07
+000544   f007
+000546   cfe4     movff   0xfe4, 0x6       	MOVFF	PREINC1, r0x06
+000548   f006
+00054a   cfe4     movff   0xfe4, 0x5       	MOVFF	PREINC1, r0x05
+00054c   f005
+00054e   cfe4     movff   0xfe4, 0x4       	MOVFF	PREINC1, r0x04
+000550   f004
+000552   cfe4     movff   0xfe4, 0x3       	MOVFF	PREINC1, r0x03
+000554   f003
+000556   cfe4     movff   0xfe4, 0x2       	MOVFF	PREINC1, r0x02
+000558   f002
+00055a   cfe4     movff   0xfe4, 0x1       	MOVFF	PREINC1, r0x01
+00055c   f001
+00055e   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+000560   f000
+000562   cfe4     movff   0xfe4, 0xfd9     	MOVFF	PREINC1, FSR2L
+000564   ffd9
+000566   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__InDataStage	code
+                                           _InDataStage:
+                                           ;	.line	226; picUSB.c	void InDataStage(unsigned char ep)
+000276   cfd9     movff   0xfd9, 0xfe5     	MOVFF	FSR2L, POSTDEC1
+000278   ffe5
+00027a   cfe1     movff   0xfe1, 0xfd9     	MOVFF	FSR1L, FSR2L
+00027c   ffd9
+00027e   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+000280   ffe5
+000282   c001     movff   0x1, 0xfe5       	MOVFF	r0x01, POSTDEC1
+000284   ffe5
+000286   c002     movff   0x2, 0xfe5       	MOVFF	r0x02, POSTDEC1
+000288   ffe5
+00028a   c003     movff   0x3, 0xfe5       	MOVFF	r0x03, POSTDEC1
+00028c   ffe5
+00028e   c004     movff   0x4, 0xfe5       	MOVFF	r0x04, POSTDEC1
+000290   ffe5
+000292   c005     movff   0x5, 0xfe5       	MOVFF	r0x05, POSTDEC1
+000294   ffe5
+000296   c006     movff   0x6, 0xfe5       	MOVFF	r0x06, POSTDEC1
+000298   ffe5
+00029a   c007     movff   0x7, 0xfe5       	MOVFF	r0x07, POSTDEC1
+00029c   ffe5
+00029e   c008     movff   0x8, 0xfe5       	MOVFF	r0x08, POSTDEC1
+0002a0   ffe5
+0002a2   0e02     movlw   0x2              	MOVLW	0x02
+0002a4   cfdb     movff   0xfdb, 0         	MOVFF	PLUSW2, r0x00
+0002a6   f000
+                                           ;	.line	232; picUSB.c	if(wCount < EP0_BUFFER_SIZE)
+0002a8   0e00     movlw   0                	MOVLW	0x00
+0002aa   0104     movlb   0x4              	BANKSEL	(_wCount + 1)
+0002ac   5dc7     subwf   0xc7, 0, 0x1     	SUBWF	(_wCount + 1), W, B
+0002ae   e102     bnz     0x2b4            	BNZ	_00203_DS_
+0002b0   0e40     movlw   0x40             	MOVLW	0x40
+                                           ; removed redundant BANKSEL
+0002b2   5dc6     subwf   0xc6, 0, 0x1     	SUBWF	_wCount, W, B
+                                           _00203_DS_:
+0002b4   e205     bc      0x2c0            	BC	_00188_DS_
+                                           ;	.line	233; picUSB.c	bufferSize = wCount;
+0002b6   c4c6     movff   0x4c6, 0x1       	MOVFF	_wCount, r0x01
+0002b8   f001
+0002ba   c4c7     movff   0x4c7, 0x2       	MOVFF	(_wCount + 1), r0x02
+0002bc   f002
+0002be   d003     bra     0x2c6            	BRA	_00189_DS_
+                                           _00188_DS_:
+                                           ;	.line	235; picUSB.c	bufferSize = EP0_BUFFER_SIZE;
+0002c0   0e40     movlw   0x40             	MOVLW	0x40
+0002c2   6e01     movwf   0x1, 0           	MOVWF	r0x01
+0002c4   6a02     clrf    0x2, 0           	CLRF	r0x02
+                                           _00189_DS_:
+                                           ;	.line	239; picUSB.c	EP_IN_BD(ep).Stat.uc &= ~(BDS_BC8 | BDS_BC9);
+0002c6   4400     rlncf   0, 0, 0          	RLNCF	r0x00, W
+0002c8   0bfe     andlw   0xfe             	ANDLW	0xfe
+0002ca   6e03     movwf   0x3, 0           	MOVWF	r0x03
+0002cc   2803     incf    0x3, 0, 0        	INCF	r0x03, W
+                                           ; #	MOVWF	r0x00
+                                           ; #;;multiply lit val:0x04 by variable r0x00 and store in r0x00
+                                           ; #	MOVF	r0x00, W
+0002ce   0d04     mullw   0x4              	MULLW	0x04
+0002d0   cff3     movff   0xff3, 0         	MOVFF	PRODL, r0x00
+0002d2   f000
+0002d4   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+0002d6   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+0002d8   6e03     movwf   0x3, 0           	MOVWF	r0x03
+0002da   6a04     clrf    0x4, 0           	CLRF	r0x04
+0002dc   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+0002de   2204     addwfc  0x4, 0x1, 0      	ADDWFC	r0x04, F
+0002e0   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+0002e2   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+0002e4   6e05     movwf   0x5, 0           	MOVWF	r0x05
+0002e6   6a06     clrf    0x6, 0           	CLRF	r0x06
+0002e8   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+0002ea   2206     addwfc  0x6, 0x1, 0      	ADDWFC	r0x06, F
+0002ec   c005     movff   0x5, 0xfe9       	MOVFF	r0x05, FSR0L
+0002ee   ffe9
+0002f0   c006     movff   0x6, 0xfea       	MOVFF	r0x06, FSR0H
+0002f2   ffea
+0002f4   cfef     movff   0xfef, 0x5       	MOVFF	INDF0, r0x05
+0002f6   f005
+0002f8   0efc     movlw   0xfc             	MOVLW	0xfc
+0002fa   1605     andwf   0x5, 0x1, 0      	ANDWF	r0x05, F
+0002fc   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+0002fe   ffe9
+000300   c004     movff   0x4, 0xfea       	MOVFF	r0x04, FSR0H
+000302   ffea
+000304   c005     movff   0x5, 0xfef       	MOVFF	r0x05, INDF0
+000306   ffef
+                                           ;	.line	240; picUSB.c	EP_IN_BD(ep).Stat.uc |= (byte)((bufferSize & 0x0300) >> 8);
+000308   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+00030a   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+00030c   6e03     movwf   0x3, 0           	MOVWF	r0x03
+00030e   6a04     clrf    0x4, 0           	CLRF	r0x04
+000310   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+000312   2204     addwfc  0x4, 0x1, 0      	ADDWFC	r0x04, F
+000314   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+000316   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+000318   6e05     movwf   0x5, 0           	MOVWF	r0x05
+00031a   6a06     clrf    0x6, 0           	CLRF	r0x06
+00031c   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+00031e   2206     addwfc  0x6, 0x1, 0      	ADDWFC	r0x06, F
+000320   c005     movff   0x5, 0xfe9       	MOVFF	r0x05, FSR0L
+000322   ffe9
+000324   c006     movff   0x6, 0xfea       	MOVFF	r0x06, FSR0H
+000326   ffea
+000328   cfef     movff   0xfef, 0x5       	MOVFF	INDF0, r0x05
+00032a   f005
+00032c   0e03     movlw   0x3              	MOVLW	0x03
+00032e   1402     andwf   0x2, 0, 0        	ANDWF	r0x02, W
+                                           ; #	MOVWF	r0x07
+                                           ; #	MOVF	r0x07, W
+000330   1205     iorwf   0x5, 0x1, 0      	IORWF	r0x05, F
+000332   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+000334   ffe9
+000336   c004     movff   0x4, 0xfea       	MOVFF	r0x04, FSR0H
+000338   ffea
+00033a   c005     movff   0x5, 0xfef       	MOVFF	r0x05, INDF0
+00033c   ffef
+                                           ;	.line	241; picUSB.c	EP_IN_BD(ep).Cnt = (byte)(bufferSize & 0xFF);
+00033e   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+000340   2400     addwf   0, 0, 0          	ADDWF	r0x00, W
+000342   6e03     movwf   0x3, 0           	MOVWF	r0x03
+000344   6a04     clrf    0x4, 0           	CLRF	r0x04
+000346   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+000348   2204     addwfc  0x4, 0x1, 0      	ADDWFC	r0x04, F
+00034a   4a03     infsnz  0x3, 0x1, 0      	INFSNZ	r0x03, F
+00034c   2a04     incf    0x4, 0x1, 0      	INCF	r0x04, F
+00034e   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+000350   6e05     movwf   0x5, 0           	MOVWF	r0x05
+000352   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+000354   ffe9
+000356   c004     movff   0x4, 0xfea       	MOVFF	r0x04, FSR0H
+000358   ffea
+00035a   c005     movff   0x5, 0xfef       	MOVFF	r0x05, INDF0
+00035c   ffef
+                                           ;	.line	242; picUSB.c	EP_IN_BD(ep).ADDR = PTR16(&controlTransferBuffer);
+00035e   6a03     clrf    0x3, 0           	CLRF	r0x03
+000360   0e00     movlw   0                	MOVLW	LOW(_ep_bdt)
+000362   2600     addwf   0, 0x1, 0        	ADDWF	r0x00, F
+000364   0e04     movlw   0x4              	MOVLW	HIGH(_ep_bdt)
+000366   2203     addwfc  0x3, 0x1, 0      	ADDWFC	r0x03, F
+000368   0e02     movlw   0x2              	MOVLW	0x02
+00036a   2600     addwf   0, 0x1, 0        	ADDWF	r0x00, F
+00036c   b0d8     btfsc   0xd8, 0, 0       	BTFSC	STATUS, 0
+00036e   2a03     incf    0x3, 0x1, 0      	INCF	r0x03, F
+000370   0e40     movlw   0x40             	MOVLW	LOW(_controlTransferBuffer)
+000372   6e04     movwf   0x4, 0           	MOVWF	r0x04
+000374   0e05     movlw   0x5              	MOVLW	HIGH(_controlTransferBuffer)
+000376   6e05     movwf   0x5, 0           	MOVWF	r0x05
+000378   c000     movff   0, 0xfe9         	MOVFF	r0x00, FSR0L
+00037a   ffe9
+00037c   c003     movff   0x3, 0xfea       	MOVFF	r0x03, FSR0H
+00037e   ffea
+000380   c004     movff   0x4, 0xfee       	MOVFF	r0x04, POSTINC0
+000382   ffee
+000384   c005     movff   0x5, 0xfef       	MOVFF	r0x05, INDF0
+000386   ffef
+                                           ;	.line	247; picUSB.c	wCount = wCount - bufferSize;
+000388   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+00038a   0104     movlb   0x4              	BANKSEL	_wCount
+00038c   5fc6     subwf   0xc6, 0x1, 0x1   	SUBWF	_wCount, F, B
+00038e   5002     movf    0x2, 0, 0        	MOVF	r0x02, W
+                                           ; removed redundant BANKSEL
+000390   5bc7     subwfb  0xc7, 0x1, 0x1   	SUBWFB	(_wCount + 1), F, B
+                                           ;	.line	250; picUSB.c	inPtr = (byte *)&controlTransferBuffer;
+000392   0e05     movlw   0x5              	MOVLW	HIGH(_controlTransferBuffer)
+000394   0104     movlb   0x4              	BANKSEL	(_inPtr + 1)
+000396   6fc4     movwf   0xc4, 0x1        	MOVWF	(_inPtr + 1), B
+000398   0e40     movlw   0x40             	MOVLW	LOW(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+00039a   6fc3     movwf   0xc3, 0x1        	MOVWF	_inPtr, B
+00039c   0e80     movlw   0x80             	MOVLW	0x80
+                                           ; removed redundant BANKSEL
+00039e   6fc5     movwf   0xc5, 0x1        	MOVWF	(_inPtr + 2), B
+                                           ;	.line	252; picUSB.c	for (i=0;i<bufferSize;i++)
+0003a0   6a00     clrf    0, 0             	CLRF	r0x00
+                                           _00190_DS_:
+0003a2   c000     movff   0, 0x3           	MOVFF	r0x00, r0x03
+0003a4   f003
+0003a6   6a04     clrf    0x4, 0           	CLRF	r0x04
+0003a8   5002     movf    0x2, 0, 0        	MOVF	r0x02, W
+0003aa   5c04     subwf   0x4, 0, 0        	SUBWF	r0x04, W
+0003ac   e102     bnz     0x3b2            	BNZ	_00208_DS_
+0003ae   5001     movf    0x1, 0, 0        	MOVF	r0x01, W
+0003b0   5c03     subwf   0x3, 0, 0        	SUBWF	r0x03, W
+                                           _00208_DS_:
+0003b2   e22b     bc      0x40a            	BC	_00194_DS_
+                                           ;	.line	253; picUSB.c	*inPtr++ = *outPtr++;
+0003b4   c4c3     movff   0x4c3, 0x3       	MOVFF	_inPtr, r0x03
+0003b6   f003
+0003b8   c4c4     movff   0x4c4, 0x4       	MOVFF	(_inPtr + 1), r0x04
+0003ba   f004
+0003bc   c4c5     movff   0x4c5, 0x5       	MOVFF	(_inPtr + 2), r0x05
+0003be   f005
+0003c0   c4c0     movff   0x4c0, 0x6       	MOVFF	_outPtr, r0x06
+0003c2   f006
+0003c4   c4c1     movff   0x4c1, 0x7       	MOVFF	(_outPtr + 1), r0x07
+0003c6   f007
+0003c8   c4c2     movff   0x4c2, 0x8       	MOVFF	(_outPtr + 2), r0x08
+0003ca   f008
+0003cc   c006     movff   0x6, 0xfe9       	MOVFF	r0x06, FSR0L
+0003ce   ffe9
+0003d0   c007     movff   0x7, 0xff3       	MOVFF	r0x07, PRODL
+0003d2   fff3
+0003d4   5008     movf    0x8, 0, 0        	MOVF	r0x08, W
+0003d6   ec42     call    0xa84, 0         	CALL	__gptrget1
+0003d8   f005
+0003da   6e06     movwf   0x6, 0           	MOVWF	r0x06
+0003dc   0104     movlb   0x4              	BANKSEL	_outPtr
+0003de   2bc0     incf    0xc0, 0x1, 0x1   	INCF	_outPtr, F, B
+0003e0   e303     bnc     0x3e8            	BNC	_00209_DS_
+                                           ; removed redundant BANKSEL
+0003e2   3fc1     incfsz  0xc1, 0x1, 0x1   	INCFSZ	(_outPtr + 1), F, B
+0003e4   d001     bra     0x3e8            	BRA	_30382_DS_
+                                           ; removed redundant BANKSEL
+0003e6   2bc2     incf    0xc2, 0x1, 0x1   	INCF	(_outPtr + 2), F, B
+                                           _30382_DS_:
+                                           _00209_DS_:
+0003e8   c006     movff   0x6, 0xfe5       	MOVFF	r0x06, POSTDEC1
+0003ea   ffe5
+0003ec   c003     movff   0x3, 0xfe9       	MOVFF	r0x03, FSR0L
+0003ee   ffe9
+0003f0   c004     movff   0x4, 0xff3       	MOVFF	r0x04, PRODL
+0003f2   fff3
+0003f4   5005     movf    0x5, 0, 0        	MOVF	r0x05, W
+0003f6   ec7b     call    0xaf6, 0         	CALL	__gptrput1
+0003f8   f005
+0003fa   0104     movlb   0x4              	BANKSEL	_inPtr
+0003fc   2bc3     incf    0xc3, 0x1, 0x1   	INCF	_inPtr, F, B
+0003fe   e303     bnc     0x406            	BNC	_00210_DS_
+                                           ; removed redundant BANKSEL
+000400   3fc4     incfsz  0xc4, 0x1, 0x1   	INCFSZ	(_inPtr + 1), F, B
+000402   d001     bra     0x406            	BRA	_40383_DS_
+                                           ; removed redundant BANKSEL
+000404   2bc5     incf    0xc5, 0x1, 0x1   	INCF	(_inPtr + 2), F, B
+                                           _40383_DS_:
+                                           _00210_DS_:
+                                           ;	.line	252; picUSB.c	for (i=0;i<bufferSize;i++)
+000406   2a00     incf    0, 0x1, 0        	INCF	r0x00, F
+000408   d7cc     bra     0x3a2            	BRA	_00190_DS_
+                                           _00194_DS_:
+00040a   cfe4     movff   0xfe4, 0x8       	MOVFF	PREINC1, r0x08
+00040c   f008
+00040e   cfe4     movff   0xfe4, 0x7       	MOVFF	PREINC1, r0x07
+000410   f007
+000412   cfe4     movff   0xfe4, 0x6       	MOVFF	PREINC1, r0x06
+000414   f006
+000416   cfe4     movff   0xfe4, 0x5       	MOVFF	PREINC1, r0x05
+000418   f005
+00041a   cfe4     movff   0xfe4, 0x4       	MOVFF	PREINC1, r0x04
+00041c   f004
+00041e   cfe4     movff   0xfe4, 0x3       	MOVFF	PREINC1, r0x03
+000420   f003
+000422   cfe4     movff   0xfe4, 0x2       	MOVFF	PREINC1, r0x02
+000424   f002
+000426   cfe4     movff   0xfe4, 0x1       	MOVFF	PREINC1, r0x01
+000428   f001
+00042a   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+00042c   f000
+00042e   cfe4     movff   0xfe4, 0xfd9     	MOVFF	PREINC1, FSR2L
+000430   ffd9
+000432   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__ProcessStandardRequest	code
+                                           _ProcessStandardRequest:
+                                           ;	.line	131; picUSB.c	void ProcessStandardRequest()
+0006fa   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+0006fc   ffe5
+                                           ;	.line	133; picUSB.c	byte request = SetupPacket.bRequest;
+0006fe   c501     movff   0x501, 0         	MOVFF	(_SetupPacket + 1), r0x00
+000700   f000
+000702   0105     movlb   0x5              	BANKSEL	_SetupPacket
+                                           ;	.line	135; picUSB.c	if((SetupPacket.bmRequestType & 0x60) != 0x00)
+000704   5100     movf    0, 0, 0x1        	MOVF	_SetupPacket, W, B
+                                           ; #	ANDLW	0x60
+                                           ; #	BTFSC	STATUS, 2
+                                           ; #	GOTO	_00131_DS_
+                                           ; #	GOTO	_00152_DS_
+                                           ; #	MOVF	r0x00, W
+                                           ;	.line	138; picUSB.c	return;
+000706   0b60     andlw   0x60             	ANDLW	0x60
+                                           ;	.line	140; picUSB.c	if (request == SET_ADDRESS)
+000708   a4d8     btfss   0xd8, 0x2, 0     	BTFSS	STATUS, 2
+00070a   d053     bra     0x7b2            	BRA	_00152_DS_
+00070c   5000     movf    0, 0, 0          	MOVF	r0x00, W
+00070e   0a05     xorlw   0x5              	XORLW	0x05
+000710   e109     bnz     0x724            	BNZ	_00150_DS_
+                                           ;	.line	146; picUSB.c	requestHandled = 1;
+000712   0e01     movlw   0x1              	MOVLW	0x01
+000714   0104     movlb   0x4              	BANKSEL	_requestHandled
+000716   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+                                           ;	.line	147; picUSB.c	deviceState = ADDRESS;
+000718   0e04     movlw   0x4              	MOVLW	0x04
+00071a   0104     movlb   0x4              	BANKSEL	_deviceState
+00071c   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+                                           ;	.line	148; picUSB.c	deviceAddress = SetupPacket.wValue0;
+00071e   c502     movff   0x502, 0x4c9     	MOVFF	(_SetupPacket + 2), _deviceAddress
+000720   f4c9
+000722   d047     bra     0x7b2            	BRA	_00152_DS_
+                                           _00150_DS_:
+                                           ;	.line	151; picUSB.c	else if (request == GET_DESCRIPTOR)
+000724   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000726   0a06     xorlw   0x6              	XORLW	0x06
+000728   e103     bnz     0x730            	BNZ	_00147_DS_
+                                           ;	.line	153; picUSB.c	GetDescriptor();
+00072a   ec72     call    0x8e4, 0         	CALL	_GetDescriptor
+00072c   f004
+00072e   d041     bra     0x7b2            	BRA	_00152_DS_
+                                           _00147_DS_:
+                                           ;	.line	156; picUSB.c	else if (request == SET_CONFIGURATION)
+000730   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000732   0a09     xorlw   0x9              	XORLW	0x09
+000734   e112     bnz     0x75a            	BNZ	_00144_DS_
+                                           ;	.line	158; picUSB.c	requestHandled = 1;
+000736   0e01     movlw   0x1              	MOVLW	0x01
+000738   0104     movlb   0x4              	BANKSEL	_requestHandled
+00073a   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+                                           ;	.line	159; picUSB.c	usb_configure_endpoints();
+00073c   ec53     call    0xaa6, 0         	CALL	_usb_configure_endpoints
+00073e   f005
+                                           ;	.line	160; picUSB.c	currentConfiguration = SetupPacket.wValue0;
+000740   c502     movff   0x502, 0x4cc     	MOVFF	(_SetupPacket + 2), _currentConfiguration
+000742   f4cc
+000744   0104     movlb   0x4              	BANKSEL	_currentConfiguration
+                                           ;	.line	163; picUSB.c	if (currentConfiguration == 0)
+000746   51cc     movf    0xcc, 0, 0x1     	MOVF	_currentConfiguration, W, B
+000748   e104     bnz     0x752            	BNZ	_00133_DS_
+                                           ;	.line	166; picUSB.c	deviceState = ADDRESS;
+00074a   0e04     movlw   0x4              	MOVLW	0x04
+00074c   0104     movlb   0x4              	BANKSEL	_deviceState
+00074e   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+000750   d030     bra     0x7b2            	BRA	_00152_DS_
+                                           _00133_DS_:
+                                           ;	.line	169; picUSB.c	deviceState = CONFIGURED;
+000752   0e05     movlw   0x5              	MOVLW	0x05
+000754   0104     movlb   0x4              	BANKSEL	_deviceState
+000756   6fcb     movwf   0xcb, 0x1        	MOVWF	_deviceState, B
+000758   d02c     bra     0x7b2            	BRA	_00152_DS_
+                                           _00144_DS_:
+                                           ;	.line	176; picUSB.c	else if (request == GET_CONFIGURATION)
+00075a   5000     movf    0, 0, 0          	MOVF	r0x00, W
+00075c   0a08     xorlw   0x8              	XORLW	0x08
+00075e   e10f     bnz     0x77e            	BNZ	_00141_DS_
+                                           ;	.line	178; picUSB.c	requestHandled = 1;
+000760   0e01     movlw   0x1              	MOVLW	0x01
+000762   0104     movlb   0x4              	BANKSEL	_requestHandled
+000764   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+                                           ;	.line	179; picUSB.c	outPtr = (byte*)&currentConfiguration;
+000766   0e04     movlw   0x4              	MOVLW	HIGH(_currentConfiguration)
+000768   0104     movlb   0x4              	BANKSEL	(_outPtr + 1)
+00076a   6fc1     movwf   0xc1, 0x1        	MOVWF	(_outPtr + 1), B
+00076c   0ecc     movlw   0xcc             	MOVLW	LOW(_currentConfiguration)
+                                           ; removed redundant BANKSEL
+00076e   6fc0     movwf   0xc0, 0x1        	MOVWF	_outPtr, B
+000770   0e80     movlw   0x80             	MOVLW	0x80
+                                           ; removed redundant BANKSEL
+000772   6fc2     movwf   0xc2, 0x1        	MOVWF	(_outPtr + 2), B
+                                           ;	.line	180; picUSB.c	wCount = 1;
+000774   0e01     movlw   0x1              	MOVLW	0x01
+000776   0104     movlb   0x4              	BANKSEL	_wCount
+000778   6fc6     movwf   0xc6, 0x1        	MOVWF	_wCount, B
+                                           ; removed redundant BANKSEL
+00077a   6bc7     clrf    0xc7, 0x1        	CLRF	(_wCount + 1), B
+00077c   d01a     bra     0x7b2            	BRA	_00152_DS_
+                                           _00141_DS_:
+                                           ;	.line	195; picUSB.c	else if (request == GET_INTERFACE)
+00077e   5000     movf    0, 0, 0          	MOVF	r0x00, W
+000780   0a0a     xorlw   0xa              	XORLW	0x0a
+000782   e111     bnz     0x7a6            	BNZ	_00138_DS_
+                                           ;	.line	199; picUSB.c	requestHandled = 1;
+000784   0e01     movlw   0x1              	MOVLW	0x01
+000786   0104     movlb   0x4              	BANKSEL	_requestHandled
+000788   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+00078a   0105     movlb   0x5              	BANKSEL	_controlTransferBuffer
+                                           ;	.line	200; picUSB.c	controlTransferBuffer[0] = 0;
+00078c   6b40     clrf    0x40, 0x1        	CLRF	_controlTransferBuffer, B
+                                           ;	.line	201; picUSB.c	outPtr = (byte *)&controlTransferBuffer;
+00078e   0e05     movlw   0x5              	MOVLW	HIGH(_controlTransferBuffer)
+000790   0104     movlb   0x4              	BANKSEL	(_outPtr + 1)
+000792   6fc1     movwf   0xc1, 0x1        	MOVWF	(_outPtr + 1), B
+000794   0e40     movlw   0x40             	MOVLW	LOW(_controlTransferBuffer)
+                                           ; removed redundant BANKSEL
+000796   6fc0     movwf   0xc0, 0x1        	MOVWF	_outPtr, B
+000798   0e80     movlw   0x80             	MOVLW	0x80
+                                           ; removed redundant BANKSEL
+00079a   6fc2     movwf   0xc2, 0x1        	MOVWF	(_outPtr + 2), B
+                                           ;	.line	202; picUSB.c	wCount = 1;
+00079c   0e01     movlw   0x1              	MOVLW	0x01
+00079e   0104     movlb   0x4              	BANKSEL	_wCount
+0007a0   6fc6     movwf   0xc6, 0x1        	MOVWF	_wCount, B
+                                           ; removed redundant BANKSEL
+0007a2   6bc7     clrf    0xc7, 0x1        	CLRF	(_wCount + 1), B
+0007a4   d006     bra     0x7b2            	BRA	_00152_DS_
+                                           _00138_DS_:
+                                           ;	.line	205; picUSB.c	else if (request == SET_INTERFACE)
+0007a6   5000     movf    0, 0, 0          	MOVF	r0x00, W
+0007a8   0a0b     xorlw   0xb              	XORLW	0x0b
+0007aa   e103     bnz     0x7b2            	BNZ	_00152_DS_
+                                           ;	.line	208; picUSB.c	requestHandled = 1;
+0007ac   0e01     movlw   0x1              	MOVLW	0x01
+0007ae   0104     movlb   0x4              	BANKSEL	_requestHandled
+0007b0   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+                                           _00152_DS_:
+0007b2   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+0007b4   f000
+0007b6   0012     return  0                	RETURN	
+                                           
+                                           ; ; Starting pCode block
+                                           S_picUSB__GetDescriptor	code
+                                           _GetDescriptor:
+                                           ;	.line	90; picUSB.c	static void GetDescriptor()
+0008e4   c000     movff   0, 0xfe5         	MOVFF	r0x00, POSTDEC1
+0008e6   ffe5
+0008e8   0105     movlb   0x5              	BANKSEL	_SetupPacket
+                                           ;	.line	92; picUSB.c	if(SetupPacket.bmRequestType == 0x80)
+0008ea   5100     movf    0, 0, 0x1        	MOVF	_SetupPacket, W, B
+0008ec   0a80     xorlw   0x80             	XORLW	0x80
+0008ee   e12f     bnz     0x94e            	BNZ	_00112_DS_
+                                           ;	.line	94; picUSB.c	byte descriptorType  = SetupPacket.wValue1;
+0008f0   c503     movff   0x503, 0         	MOVFF	(_SetupPacket + 3), r0x00
+0008f2   f000
+                                           ; ;;!!! pic16_aopOp:1117 called for a spillLocation -- assigning WREG instead --- CHECK
+                                           ;	.line	95; picUSB.c	byte descriptorIndex = SetupPacket.wValue0;
+0008f4   c502     movff   0x502, 0xfe8     	MOVFF	(_SetupPacket + 2), WREG
+0008f6   ffe8
+                                           ;	.line	97; picUSB.c	if (descriptorType == DEVICE_DESCRIPTOR)
+0008f8   5000     movf    0, 0, 0          	MOVF	r0x00, W
+0008fa   0a01     xorlw   0x1              	XORLW	0x01
+0008fc   e10f     bnz     0x91c            	BNZ	_00108_DS_
+                                           ;	.line	99; picUSB.c	requestHandled = 1;
+0008fe   0e01     movlw   0x1              	MOVLW	0x01
+000900   0104     movlb   0x4              	BANKSEL	_requestHandled
+000902   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+                                           ;	.line	100; picUSB.c	outPtr = (byte *)&device_descriptor;
+000904   0e00     movlw   0                	MOVLW	UPPER(_device_descriptor)
+000906   0104     movlb   0x4              	BANKSEL	(_outPtr + 2)
+000908   6fc2     movwf   0xc2, 0x1        	MOVWF	(_outPtr + 2), B
+00090a   0e09     movlw   0x9              	MOVLW	HIGH(_device_descriptor)
+                                           ; removed redundant BANKSEL
+00090c   6fc1     movwf   0xc1, 0x1        	MOVWF	(_outPtr + 1), B
+00090e   0ef2     movlw   0xf2             	MOVLW	LOW(_device_descriptor)
+                                           ; removed redundant BANKSEL
+000910   6fc0     movwf   0xc0, 0x1        	MOVWF	_outPtr, B
+                                           ;	.line	101; picUSB.c	wCount = sizeof(USB_Device_Descriptor);
+000912   0e12     movlw   0x12             	MOVLW	0x12
+000914   0104     movlb   0x4              	BANKSEL	_wCount
+000916   6fc6     movwf   0xc6, 0x1        	MOVWF	_wCount, B
+                                           ; removed redundant BANKSEL
+000918   6bc7     clrf    0xc7, 0x1        	CLRF	(_wCount + 1), B
+00091a   d019     bra     0x94e            	BRA	_00112_DS_
+                                           _00108_DS_:
+                                           ;	.line	104; picUSB.c	else if (descriptorType == CONFIGURATION_DESCRIPTOR)
+00091c   5000     movf    0, 0, 0          	MOVF	r0x00, W
+00091e   0a02     xorlw   0x2              	XORLW	0x02
+000920   e116     bnz     0x94e            	BNZ	_00112_DS_
+                                           ;	.line	106; picUSB.c	requestHandled = 1;
+000922   0e01     movlw   0x1              	MOVLW	0x01
+000924   0104     movlb   0x4              	BANKSEL	_requestHandled
+000926   6fca     movwf   0xca, 0x1        	MOVWF	_requestHandled, B
+                                           ;	.line	107; picUSB.c	outPtr = (byte *)&configuration_descriptor;
+000928   0e00     movlw   0                	MOVLW	UPPER(_configuration_descriptor)
+00092a   0104     movlb   0x4              	BANKSEL	(_outPtr + 2)
+00092c   6fc2     movwf   0xc2, 0x1        	MOVWF	(_outPtr + 2), B
+00092e   0e0a     movlw   0xa              	MOVLW	HIGH(_configuration_descriptor)
+                                           ; removed redundant BANKSEL
+000930   6fc1     movwf   0xc1, 0x1        	MOVWF	(_outPtr + 1), B
+000932   0e04     movlw   0x4              	MOVLW	LOW(_configuration_descriptor)
+                                           ; removed redundant BANKSEL
+000934   6fc0     movwf   0xc0, 0x1        	MOVWF	_outPtr, B
+                                           ;	.line	108; picUSB.c	wCount = configuration_descriptor.Header.wTotalLength;
+000936   0e06     movlw   0x6              	MOVLW	LOW(_configuration_descriptor + 2)
+000938   6ef6     movwf   0xf6, 0          	MOVWF	TBLPTRL
+00093a   0e0a     movlw   0xa              	MOVLW	HIGH(_configuration_descriptor + 2)
+00093c   6ef7     movwf   0xf7, 0          	MOVWF	TBLPTRH
+00093e   0e00     movlw   0                	MOVLW	UPPER(_configuration_descriptor + 2)
+000940   6ef8     movwf   0xf8, 0          	MOVWF	TBLPTRU
+000942   0009     tblrd   *+               	TBLRD*+	
+000944   cff5     movff   0xff5, 0x4c6     	MOVFF	TABLAT, _wCount
+000946   f4c6
+000948   0009     tblrd   *+               	TBLRD*+	
+00094a   cff5     movff   0xff5, 0x4c7     	MOVFF	TABLAT, (_wCount + 1)
+00094c   f4c7
+                                           _00112_DS_:
+00094e   cfe4     movff   0xfe4, 0         	MOVFF	PREINC1, r0x00
+000950   f000
+000952   0012     return  0                	RETURN	
+                                           
+                                           
+                                           
+                                           ; Statistics:
+                                           ; code size:	 1702 (0x06a6) bytes ( 1.30%)
+                                           ;           	  851 (0x0353) words
+                                           ; udata size:	  334 (0x014e) bytes ( 9.49%)
+                                           ; access size:	   10 (0x000a) bytes
+                                           
+                                           
+                                           	end
+                                           ;--------------------------------------------------------
+                                           ; File Created by SDCC : free open source ANSI-C Compiler
+                                           ; Version 3.2.0 #8004 (Jul  4 2012) (Linux)
+                                           ; This file was generated Wed Jul  4 21:30:27 2012
+                                           ;--------------------------------------------------------
+                                           ; PIC16 port for the Microchip 16-bit core micros
+                                           ;--------------------------------------------------------
+                                           	list	p=18f26j50
+                                           
+                                           	radix dec
+                                           
+                                           ;--------------------------------------------------------
+                                           ; public variables in this module
+                                           ;--------------------------------------------------------
+                                           	global	___uflags
+                                           	global	__entry
+                                           	global	__startup
+                                           	global	__do_cinit
+                                           
+                                           ;--------------------------------------------------------
+                                           ; extern variables in this module
+                                           ;--------------------------------------------------------
+                                           	extern	_stack_end
+                                           	extern	_TBLPTRU
+                                           	extern	_TBLPTRH
+                                           	extern	_TBLPTRL
+                                           	extern	_FSR0L
+                                           	extern	_FSR0H
+                                           	extern	_TABLAT
+                                           	extern	_POSTINC0
+                                           	extern	_main
+                                           	extern	_cinit
+                                           
+                                           
+                                           	idata
+                                           ___uflags	db	0x00
+                                           
+                                           ;--------------------------------------------------------
+                                           ; global & static initialisations
+                                           ;--------------------------------------------------------
+                                           ; ; Starting pCode block
+                                           S_crt0iBoot4___entry	code	0X000000
+                                           __entry:
+000000   ef70     goto    0xae0            	goto __startup
+000002   f005
+                                           	
+                                           ; I code from now on!
+                                           ; ; Starting pCode block
+                                           S_crt0iBoot4___do_cinit	code
+                                           __do_cinit:
+                                           	; TBLPTR = &cinit
+0007b8   0e2e     movlw   0x2e             	movlw low(_cinit)
+0007ba   6ef6     movwf   0xf6, 0          	movwf _TBLPTRL, 0
+0007bc   0e0b     movlw   0xb              	movlw high(_cinit)
+0007be   6ef7     movwf   0xf7, 0          	movwf _TBLPTRH, 0
+0007c0   0e00     movlw   0                	movlw upper(_cinit)
+0007c2   6ef8     movwf   0xf8, 0          	movwf _TBLPTRU, 0
+                                           	; 0x05 = cinit.num_init
+0007c4   0009     tblrd   *+               	tblrd*+
+0007c6   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007c8   6e05     movwf   0x5, 0           	movwf 0x05, 0
+0007ca   0009     tblrd   *+               	tblrd*+
+0007cc   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007ce   6e06     movwf   0x6, 0           	movwf 0x05 + 1, 0
+                                           	; while (0x05)
+0007d0   5005     movf    0x5, 0, 0        	movf 0x05, w, 0
+                                           test:
+0007d2   e102     bnz     0x7d8            	bnz cont1
+0007d4   5006     movf    0x6, 0, 0        	movf 0x05 + 1, w, 0
+0007d6   e03b     bz      0x84e            	bz done
+                                           cont1:
+                                           	; Count down so we only have to look up the data in _cinit once.
+                                           	; At this point we know that TBLPTR points to the top of the current
+                                           	; entry in _cinit, so we can just start reading the from, to, and
+                                           	; size values.
+                                           	; read the source address low
+0007d8   0009     tblrd   *+               	tblrd*+
+0007da   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007dc   6e00     movwf   0, 0             	movwf 0x00, 0
+                                           	; source address high
+0007de   0009     tblrd   *+               	tblrd*+
+0007e0   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007e2   6e01     movwf   0x1, 0           	movwf 0x00 + 1, 0
+                                           	; source address upper
+0007e4   0009     tblrd   *+               	tblrd*+
+0007e6   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007e8   6e02     movwf   0x2, 0           	movwf 0x00 + 2, 0
+                                           	; skip 0 byte since it is stored as 0 32bit int
+0007ea   0009     tblrd   *+               	tblrd*+
+                                           	; read the destination address directly into FSR0
+                                           	; destination address low
+0007ec   0009     tblrd   *+               	tblrd*+
+0007ee   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007f0   6ee9     movwf   0xe9, 0          	movwf _FSR0L, 0
+                                           	; destination address high
+0007f2   0009     tblrd   *+               	tblrd*+
+0007f4   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+0007f6   6eea     movwf   0xea, 0          	movwf _FSR0H, 0
+                                           	; skip two bytes since it is stored as 0 32bit int
+0007f8   0009     tblrd   *+               	tblrd*+
+0007fa   0009     tblrd   *+               	tblrd*+
+                                           	; read the size of data to transfer to destination address
+0007fc   0009     tblrd   *+               	tblrd*+
+0007fe   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+000800   6e03     movwf   0x3, 0           	movwf 0x03, 0
+000802   0009     tblrd   *+               	tblrd*+
+000804   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+000806   6e04     movwf   0x4, 0           	movwf 0x03 + 1, 0
+                                           	; skip two bytes since it is stored as 0 32bit int
+000808   0009     tblrd   *+               	tblrd*+
+00080a   0009     tblrd   *+               	tblrd*+
+                                           	; 0x00 = 0x07 ->from;
+                                           	; FSR0 = 0x07 ->to;
+                                           	; 0x03 = (unsigned short) 0x07 ->size;
+                                           	; the table pointer now points to the next entry. Save it
+                                           	; off since we will be using the table pointer to do the copying
+                                           	; for the entry
+                                           	; 0x07 = TBLPTR
+00080c   cff6     movff   0xff6, 0x7       	movff _TBLPTRL, 0x07
+00080e   f007
+000810   cff7     movff   0xff7, 0x8       	movff _TBLPTRH, 0x07 + 1
+000812   f008
+000814   cff8     movff   0xff8, 0x9       	movff _TBLPTRU, 0x07 + 2
+000816   f009
+                                           	; now assign the source address to the table pointer
+                                           	; TBLPTR = 0x00
+000818   c000     movff   0, 0xff6         	movff 0x00, _TBLPTRL
+00081a   fff6
+00081c   c001     movff   0x1, 0xff7       	movff 0x00 + 1, _TBLPTRH
+00081e   fff7
+000820   c002     movff   0x2, 0xff8       	movff 0x00 + 2, _TBLPTRU
+000822   fff8
+                                           	; while (0x03)
+000824   5003     movf    0x3, 0, 0        	movf 0x03, w, 0
+                                           copy_loop:
+000826   e102     bnz     0x82c            	bnz copy_one_byte
+000828   5004     movf    0x4, 0, 0        	movf 0x03 + 1, w, 0
+00082a   e007     bz      0x83a            	bz done_copying
+                                           copy_one_byte:
+00082c   0009     tblrd   *+               	tblrd*+
+00082e   50f5     movf    0xf5, 0, 0       	movf _TABLAT, w, 0
+000830   6eee     movwf   0xee, 0          	movwf _POSTINC0, 0
+                                           	; decrement byte counter
+000832   0603     decf    0x3, 0x1, 0      	decf 0x03, f, 0
+000834   e2f8     bc      0x826            	bc copy_loop
+000836   0604     decf    0x4, 0x1, 0      	decf 0x03 + 1, f, 0
+000838   d7f9     bra     0x82c            	bra copy_one_byte
+                                           done_copying:
+                                           	; restore the table pointer for the next entry
+                                           	; TBLPTR = 0x07
+00083a   c007     movff   0x7, 0xff6       	movff 0x07, _TBLPTRL
+00083c   fff6
+00083e   c008     movff   0x8, 0xff7       	movff 0x07 + 1, _TBLPTRH
+000840   fff7
+000842   c009     movff   0x9, 0xff8       	movff 0x07 + 2, _TBLPTRU
+000844   fff8
+                                           	; decrement entry counter
+000846   0605     decf    0x5, 0x1, 0      	decf 0x05, f, 0
+000848   e2c4     bc      0x7d2            	bc test
+00084a   0606     decf    0x6, 0x1, 0      	decf 0x05 + 1, f, 0
+00084c   d7c5     bra     0x7d8            	bra cont1
+                                           	; emit done label
+                                           done:
+00084e   0012     return  0                	return
+                                           	
+                                           ; ; Starting pCode block
+                                           S_crt0iBoot4___startup	code
+                                           __startup:
+                                           	; Initialize the stack pointer
+000ae0   ee12     lfsr    0x1, 0x2fe       	lfsr 1, _stack_end
+000ae2   f0fe
+000ae4   ee22     lfsr    0x2, 0x2fe       	lfsr 2, _stack_end
+000ae6   f0fe
+                                           	; 1st silicon does not do this on POR
+000ae8   6af8     clrf    0xf8, 0          	clrf _TBLPTRU, 0
+                                           	; Initialize the flash memory access configuration.
+                                           	; This is harmless for non-flash devices, so we do it on all parts.
+000aea   8ea6     bsf     0xa6, 0x7, 0     	bsf 0xa6, 7, 0 ; EECON1.EEPGD = 1, TBLPTR accesses program memory
+000aec   9ca6     bcf     0xa6, 0x6, 0     	bcf 0xa6, 6, 0 ; EECON1.CFGS = 0, TBLPTR accesses program memory
+                                           	
+                                           ;	.line	88; crt0iBoot4.c	_do_cinit ();
+000aee   ecdc     call    0x7b8, 0         	CALL	__do_cinit
+000af0   f003
+                                           ;	.line	91; crt0iBoot4.c	main ();
+000af2   ec28     call    0x850, 0         	CALL	_main
+000af4   f004
+                                           
+                                           
+                                           ; Statistics:
+                                           ; code size:	  244 (0x00f4) bytes ( 0.19%)
+                                           ;           	  122 (0x007a) words
+                                           ; udata size:	    0 (0x0000) bytes ( 0.00%)
+                                           ; access size:	    0 (0x0000) bytes
+                                           
+                                           
+                                           	end
