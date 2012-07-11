@@ -49,17 +49,17 @@ class MySplashScreen(wx.SplashScreen):
 ########################################################################
 class MyApp(wx.App):
     def OnInit(self):
-		if sys.platform=='darwin':
-			setGui(True)
-			frame = Pinguino(None)
-			frame.__initPinguino__(None)
-			app.SetTopWindow(frame)
-			#app.cent
-			frame.Show()
-		else:			
-			splash = MySplashScreen()
-			splash.Show()
-		return True
+        if sys.platform=='darwin':
+            setGui(True)
+            frame = Pinguino(None)
+            frame.__initPinguino__(None)
+            app.SetTopWindow(frame)
+            #app.cent
+            frame.Show()
+        else:			
+            splash = MySplashScreen()
+            splash.Show()
+        return True
 
 
 #----------------------------------------------------------------------
