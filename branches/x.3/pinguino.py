@@ -2,7 +2,8 @@
 #-*- coding: utf-8 -*-
 
 import wx, os, sys
-from wxgui.pinguino import getOptions, getVersion, Pinguino, setGui
+#from wxgui.pinguino import getOptions, getVersion, Pinguino, setGui
+from wxgui.pinguino import *
 from wxgui._trad import _
 
 
@@ -93,7 +94,7 @@ if __name__ == "__main__":
         print "regis blanchot"
         sys.exit(1)
 
-    if options.board != False:
+    if options.board != False or options.board == 0:  # False = 0
         curBoard = boardlist[options.board]
 
         if options.filename == False:
@@ -105,7 +106,9 @@ if __name__ == "__main__":
             print "bad file extension, it should be .pde"
             sys.exit(1)
 
-        pobject=Pinguino(None, -1, "")
+        pobject=Pinguino(None)
+        pobject.setOSvariables()
+        
         print "board " + curBoard.name
         print "mcu   " + curBoard.proc
 
@@ -137,7 +140,7 @@ if __name__ == "__main__":
         print "compilation done"
         print pobject.getCodeSize(fname, curBoard)
         os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
-        os.remove(fname + ".c")	   
+        #os.remove(fname + ".c")	   
         sys.exit(0)
 
 
