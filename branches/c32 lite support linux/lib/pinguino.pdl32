@@ -1,7 +1,0 @@
-delay Delayms#include <delay.c>
-delayMicroseconds Delayus#include <delay.c>
-digitalWrite digitalwrite#include <digitalw.c>
-pinMode pinmode#include <digitalw.c>
-digitalRead digitalread#include <digitalw.c>
-toggle toggle#include <digitalw.c>
-sprintf sprintf#include <stdlib.c>
