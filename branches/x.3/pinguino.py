@@ -94,7 +94,7 @@ if __name__ == "__main__":
         print "regis blanchot"
         sys.exit(1)
 
-    if options.board != False or options.board == 0:  # False = 0
+    if options.board != False or type(options.board) == type(1):  # False = 0
         curBoard = boardlist[options.board]
 
         if options.filename == False:
