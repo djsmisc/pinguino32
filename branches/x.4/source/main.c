@@ -102,7 +102,7 @@ void pinguino_main(void)
 	analog_init();
 	#endif
 
-	#ifdef __MILLIS__           // Use Timer 0
+	#ifdef __MILLIS__          // Use Timer 0
 	millis_init();
 	#endif
 
