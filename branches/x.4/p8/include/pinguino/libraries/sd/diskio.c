@@ -69,7 +69,6 @@ static u16 CardType;
 u8 xmit_spi(unsigned char datax)
 {
     char clear;
-/*
 
     clear = SSP2BUF;        // clear BF
     PIR3bits.SSP2IF = 0;    // enable SPI2 interrupt
@@ -80,13 +79,14 @@ u8 xmit_spi(unsigned char datax)
     else
         while (!PIR3bits.SSP2IF);
     return(0);
-*/
+/*
     do {                        // IF SSP2BUF IS FULL IT IS READ BY DUMMY VARIABLE
         clear = SSP2BUF;        // BEFORE ANYTHING IS WRITTEN THIS WILL MAKE BF = 0
     } while(SSP2STATbits.BF);   // wait transfer complete 
 	SSP2BUF = datax;			// write to buffer for TX
 	while(!SSP2STATbits.BF);	// wait transfer complete
 	return SSP2BUF;				// read the received value
+*/
 }
 
 u8 rcvr_spi(void) {
@@ -179,6 +179,7 @@ static void power_off (void)
 	bit 7 = Always 0
 	*/
 
+/*
 u8 send_cmd(u8 c, u32 a)
 {
 	u8 i, r;
@@ -207,8 +208,8 @@ u8 send_cmd(u8 c, u32 a)
 	return (r);         
 	// NOTE CS is still low!
 }
+*/
 
-/*
 static u8 send_cmd (
 	u8 cmd,		// Command byte
 	u32 arg		// Argument
@@ -258,7 +259,6 @@ static u8 send_cmd (
 
 	return res;			// Return with the response value
 }
-*/
 
 void pin_init(void)
 {

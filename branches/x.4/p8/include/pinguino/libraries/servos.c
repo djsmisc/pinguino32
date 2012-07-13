@@ -37,6 +37,7 @@
 
 #define SERVOSLIBRARY 1
 
+#include <typedef.h>			// u8, u16, ...
 
 // Max and Min values allowed:
 #define SERVOMAX 250
@@ -44,15 +45,15 @@
 
 
 //library internal variables:
-uchar phase=0;
-uchar needreordering=0;
+u8 phase=0;
+u8 needreordering=0;
 //-----------------------------------------------------------------------------------------------------------------------------
 #ifdef PICUNO_EQUO
-uchar timingindex;
-uchar timedivision=0;
-uchar loopvar;
-uchar timings[6][30];  
-uchar activatedservos[5]={0x00,0x00,0x00,0x00,0x00};
+u8 timingindex;
+u8 timedivision=0;
+u8 loopvar;
+u8 timings[6][30];  
+u8 activatedservos[5]={0x00,0x00,0x00,0x00,0x00};
 // For referencing masks in the previous array.
 #define MaskPort_B  0
 #define MaskPort_C  1
@@ -61,12 +62,12 @@ uchar activatedservos[5]={0x00,0x00,0x00,0x00,0x00};
 #define MaskPort_D  4
 #define timevalue   5
 
-uchar servovalues[30]; // Entry table for values sets for every pin-servo.
+u8 servovalues[30]; // Entry table for values sets for every pin-servo.
 
 //Masks table:
-//uchar servomasks[8]={ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
+//u8 servomasks[8]={ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 // The following masks are in this order : PORTB (8 bits), PORTC (5bits) & PORTA (5bits)
-const uchar servomasks[30]={0X80,0x40,0x10,0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x01,0x02,0x04,0x01,0x02,0x04,0x08,0x20,0x01,0x02,0x04,0x01,0x02,0x04,0x08,0x80,0x40,0x20,0x10};
+const u8 servomasks[30]={0X80,0x40,0x10,0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x01,0x02,0x04,0x01,0x02,0x04,0x08,0x20,0x01,0x02,0x04,0x01,0x02,0x04,0x08,0x80,0x40,0x20,0x10};
 						// 	RC7	,RC6 ,RA4 ,RB0 ,RB1 ,RB2 ,RB3 ,RB4 ,RB5 ,RB6 ,RB7 ,RC0 ,RC1 ,RC2 ,RA0 ,RA1 ,RA2 ,RA3 ,RA5 ,RE0 ,RE1 ,RE2 ,RD0 ,RD1 ,RD2 ,RD3 ,RD7 ,RD6 ,RD5 ,RD4
  
 void servos_init()
@@ -132,8 +133,8 @@ static void SortServoTimings()
 // from smaller to bigger of all the values, asociating to each 
 // position of the table the servos that matches that timing.
 
-	uchar s,t,totalservos,numservos;
-	uchar mascaratotal[5]={0x00,0x00,0x00,0x00,0x00};
+	u8 s,t,totalservos,numservos;
+	u8 mascaratotal[5]={0x00,0x00,0x00,0x00,0x00};
 	
 	// inicializamos la tabla:
 	for(t=0;t<30;t++){
@@ -252,7 +253,7 @@ static void SortServoTimings()
 
 
 	
-void ServoAttach(uchar pin)
+void ServoAttach(u8 pin)
 {
 	if(pin>=30) return;
 
@@ -275,7 +276,7 @@ void ServoAttach(uchar pin)
 	
 }
 
-void ServoDetach(uchar pin)
+void ServoDetach(u8 pin)
 {
 	if(pin>=30) return;
 
@@ -293,7 +294,7 @@ void ServoDetach(uchar pin)
 	
 }
 
-void ServoWrite(uchar servo, uchar value)
+void ServoWrite(u8 servo, u8 value)
 {
 	if(servo>=30)        // test if numservo is valid
 		return;
@@ -308,7 +309,7 @@ void ServoWrite(uchar servo, uchar value)
 }
 
 
-unsigned char ServoRead(uchar servo)
+unsigned char ServoRead(u8 servo)
 {
 	if(servo>=30)        // test if numservo is valid
 		return 0;
@@ -316,7 +317,7 @@ unsigned char ServoRead(uchar servo)
 }
 
 
-void ServoMinimumPulse(uchar servo)
+void ServoMinimumPulse(u8 servo)
 {
 	if(servo>=30)        // test if numservo is valid
 		return;
@@ -327,7 +328,7 @@ void ServoMinimumPulse(uchar servo)
 }
 
 
-void ServoMaximumPulse(uchar servo)
+void ServoMaximumPulse(u8 servo)
 {
 	if(servo>=30)        // test if numservo is valid
 		return;
@@ -375,23 +376,23 @@ void servos_interrupt(void)
 }
 //----------------------------------------------------------------------------------------------------------------------------------
 #else
-uchar timingindex;
-uchar timedivision=0;
-uchar loopvar;
-uchar timings[4][18];  
-uchar activatedservos[3]={0x00,0x00,0x00};
+u8 timingindex;
+u8 timedivision=0;
+u8 loopvar;
+u8 timings[4][18];  
+u8 activatedservos[3]={0x00,0x00,0x00};
 // For referencing masks in the previous array.
 #define MaskPort_B  0
 #define MaskPort_C  1
 #define MaskPort_A  2
 #define timevalue   3
 
-uchar servovalues[18]; // Entry table for values sets for every pin-servo.
+u8 servovalues[18]; // Entry table for values sets for every pin-servo.
 
 //Masks table:
-//uchar servomasks[8]={ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
+//u8 servomasks[8]={ 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 // The following masks are in this order : PORTB (8 bits), PORTC (5bits) & PORTA (5bits)
-const uchar servomasks[18]={0X01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x40,0x80,0x01,0x02,0x04,0x01,0x02,0x04,0x08,0x20};
+const u8 servomasks[18]={0X01,0x02,0x04,0x08,0x10,0x20,0x40,0x80,0x40,0x80,0x01,0x02,0x04,0x01,0x02,0x04,0x08,0x20};
 
 
  
@@ -454,8 +455,8 @@ static void SortServoTimings()
 // from smaller to bigger of all the values, asociating to each 
 // position of the table the servos that matches that timing.
 
-	uchar s,t,totalservos,numservos;
-	uchar mascaratotal[3]={0x00,0x00,0x00};
+	u8 s,t,totalservos,numservos;
+	u8 mascaratotal[3]={0x00,0x00,0x00};
 	
 	// inicializamos la tabla:
 	for(t=0;t<18;t++){
@@ -532,7 +533,7 @@ static void SortServoTimings()
 
 
 	
-void ServoAttach(uchar pin)
+void ServoAttach(u8 pin)
 {
 	if(pin>=18) return;
 
@@ -549,7 +550,7 @@ void ServoAttach(uchar pin)
 	
 }
 
-void ServoDetach(uchar pin)
+void ServoDetach(u8 pin)
 {
 	if(pin>=18) return;
 
@@ -563,7 +564,7 @@ void ServoDetach(uchar pin)
 	
 }
 
-void ServoWrite(uchar servo, uchar value)
+void ServoWrite(u8 servo, u8 value)
 {
 	if(servo>=18)        // test if numservo is valid
 		return;
@@ -578,7 +579,7 @@ void ServoWrite(uchar servo, uchar value)
 }
 
 
-unsigned char ServoRead(uchar servo)
+unsigned char ServoRead(u8 servo)
 {
 	if(servo>=18)        // test if numservo is valid
 		return 0;
@@ -586,7 +587,7 @@ unsigned char ServoRead(uchar servo)
 }
 
 
-void ServoMinimumPulse(uchar servo)
+void ServoMinimumPulse(u8 servo)
 {
 	if(servo>=18)        // test if numservo is valid
 		return;
@@ -597,7 +598,7 @@ void ServoMinimumPulse(uchar servo)
 }
 
 
-void ServoMaximumPulse(uchar servo)
+void ServoMaximumPulse(u8 servo)
 {
 	if(servo>=18)        // test if numservo is valid
 		return;
