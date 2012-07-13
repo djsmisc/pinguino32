@@ -33,8 +33,8 @@ import time
 # !!! use True at your own risc as it could erase your bootloader !!!
 # ------------------------------------------------------------------------------
 
-#DEV = True
-DEV = False
+DEV = True
+#DEV = False
 
 HOME_DIR	= os.getcwd()
 fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
