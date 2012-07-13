@@ -42,7 +42,7 @@ class ResultEventRevision(wx.PyEvent):
 # current version
 # ------------------------------------------------------------------------------
 
-pinguino_version="x.3"
+pinguino_version="x.4"
 
 # ------------------------------------------------------------------------------
 # paths
