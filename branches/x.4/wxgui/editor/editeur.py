@@ -429,7 +429,7 @@ class editor:
             result=dlg.ShowModal()
             dlg.Destroy()
             if (result==wx.ID_CANCEL): return True
-            if (result==wx.ID_YES): self.Save("Pde File","pde")  
+            if (result==wx.ID_YES): self.Save("Pde files (*.pde)|*.pde|")  
         self.filename.remove(self.filename[pageIdx])
         self.onglet.remove(self.onglet[pageIdx])
         self.stcpage.remove(self.stcpage[pageIdx])
@@ -560,7 +560,7 @@ class editor:
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRING, "italic,face:%s,size:%d,fore:#7f0000" %(font.GetFaceName(), font.GetPointSize()))
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_CHARACTER, "face:%s,size:%d,fore:#cc0000" %(font.GetFaceName(), font.GetPointSize()))
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_WORD, "face:%s,size:%d,fore:#0C36F0" %(font.GetFaceName(), font.GetPointSize()))
-        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_OPERATOR, "face:%s,size:%d" %(font.GetFaceName(), font.GetPointSize()))
+        self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_OPERATOR, "face:%s,size:%d,bold" %(font.GetFaceName(), font.GetPointSize()-1))
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_IDENTIFIER, "face:%s,size:%d" %(font.GetFaceName(), font.GetPointSize()))
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_STRINGEOL, "fore:#000000,back:#E0C0E0,eol,size:%d" % font.GetPointSize())
         self.stcpage[self.notebookEditor.GetSelection()].StyleSetSpec(stc.STC_C_COMMENTDOC, "fore:#5e5ef1,size:%d" % font.GetPointSize())
