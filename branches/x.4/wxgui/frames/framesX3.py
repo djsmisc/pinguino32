@@ -8,8 +8,8 @@
 ###########################################################################
 
 import wx
-import wx.richtext
 import wx.aui
+import wx.richtext
 
 import gettext
 _ = gettext.gettext
@@ -153,13 +153,16 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuPinguino.AppendSubMenu( self.menuRevision, _("Revision") )
 		
-		self.menuPinguino.AppendSeparator()
+		self.menuItemViewStdout = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("View stdout")+ u"\t" + u"F8", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuPinguino.AppendItem( self.menuItemViewStdout )
 		
-		self.menuItemCompile = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("Compile")+ u"\t" + u"F5", wx.EmptyString, wx.ITEM_NORMAL )
-		self.menuPinguino.AppendItem( self.menuItemCompile )
+		self.menuPinguino.AppendSeparator()
 		
 		self.menuItemUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("Upload")+ u"\t" + u"F6", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemUpload )
+		
+		self.menuItemCompile = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("Compile")+ u"\t" + u"F5", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuPinguino.AppendItem( self.menuItemCompile )
 		
 		self.menuItemCompileUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("If Compile then Upload")+ u"\t" + u"F7", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemCompileUpload )
@@ -201,83 +204,6 @@ class menubarPinguino ( wx.MenuBar ):
 	
 	def __del__( self ):
 		pass
-	
-
-###########################################################################
-## Class frameKeyWords
-###########################################################################
-
-class frameKeyWords ( wx.Frame ):
-	
-	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Pinguino Functions"), pos = wx.DefaultPosition, size = wx.Size( 808,424 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino Functions" )
-		
-		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
-		
-		bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.m_splitter6 = wx.SplitterWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
-		self.m_splitter6.Bind( wx.EVT_IDLE, self.m_splitter6OnIdle )
-		
-		self.m_panel14 = wx.Panel( self.m_splitter6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer16 = wx.BoxSizer( wx.VERTICAL )
-		
-		checkListKeywordsChoices = [ _(" ") ];
-		self.checkListKeywords = wx.CheckListBox( self.m_panel14, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, checkListKeywordsChoices, 0 )
-		bSizer16.Add( self.checkListKeywords, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.m_panel14.SetSizer( bSizer16 )
-		self.m_panel14.Layout()
-		bSizer16.Fit( self.m_panel14 )
-		self.m_panel15 = wx.Panel( self.m_splitter6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer15 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.m_splitter8 = wx.SplitterWindow( self.m_panel15, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
-		self.m_splitter8.Bind( wx.EVT_IDLE, self.m_splitter8OnIdle )
-		
-		self.m_panel16 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer17 = wx.BoxSizer( wx.VERTICAL )
-		
-		listBoxKeywordsChoices = []
-		self.listBoxKeywords = wx.ListBox( self.m_panel16, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listBoxKeywordsChoices, 0 )
-		bSizer17.Add( self.listBoxKeywords, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.m_panel16.SetSizer( bSizer17 )
-		self.m_panel16.Layout()
-		bSizer17.Fit( self.m_panel16 )
-		self.m_panel17 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer18 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.richTextKeywords = wx.richtext.RichTextCtrl( self.m_panel17, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY|wx.ALWAYS_SHOW_SB|wx.HSCROLL|wx.VSCROLL|wx.WANTS_CHARS )
-		bSizer18.Add( self.richTextKeywords, 1, wx.EXPAND |wx.ALL, 5 )
-		
-		self.m_panel17.SetSizer( bSizer18 )
-		self.m_panel17.Layout()
-		bSizer18.Fit( self.m_panel17 )
-		self.m_splitter8.SplitVertically( self.m_panel16, self.m_panel17, 194 )
-		bSizer15.Add( self.m_splitter8, 1, wx.EXPAND, 5 )
-		
-		self.m_panel15.SetSizer( bSizer15 )
-		self.m_panel15.Layout()
-		bSizer15.Fit( self.m_panel15 )
-		self.m_splitter6.SplitVertically( self.m_panel14, self.m_panel15, 204 )
-		bSizer12.Add( self.m_splitter6, 1, wx.EXPAND, 5 )
-		
-		self.SetSizer( bSizer12 )
-		self.Layout()
-		
-		self.Centre( wx.BOTH )
-	
-	def __del__( self ):
-		pass
-	
-	def m_splitter6OnIdle( self, event ):
-		self.m_splitter6.SetSashPosition( 204 )
-		self.m_splitter6.Unbind( wx.EVT_IDLE )
-	
-	def m_splitter8OnIdle( self, event ):
-		self.m_splitter8.SetSashPosition( 194 )
-		self.m_splitter8.Unbind( wx.EVT_IDLE )
 	
 
 ###########################################################################
@@ -614,13 +540,90 @@ class framePreferences ( wx.Frame ):
 	
 
 ###########################################################################
+## Class frameKeyWords
+###########################################################################
+
+class frameKeyWords ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Pinguino Functions"), pos = wx.DefaultPosition, size = wx.Size( 808,424 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino Functions" )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer12 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_splitter6 = wx.SplitterWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.m_splitter6.Bind( wx.EVT_IDLE, self.m_splitter6OnIdle )
+		
+		self.m_panel14 = wx.Panel( self.m_splitter6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer16 = wx.BoxSizer( wx.VERTICAL )
+		
+		checkListKeywordsChoices = [ _(" ") ];
+		self.checkListKeywords = wx.CheckListBox( self.m_panel14, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, checkListKeywordsChoices, 0 )
+		bSizer16.Add( self.checkListKeywords, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.m_panel14.SetSizer( bSizer16 )
+		self.m_panel14.Layout()
+		bSizer16.Fit( self.m_panel14 )
+		self.m_panel15 = wx.Panel( self.m_splitter6, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer15 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_splitter8 = wx.SplitterWindow( self.m_panel15, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.m_splitter8.Bind( wx.EVT_IDLE, self.m_splitter8OnIdle )
+		
+		self.m_panel16 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer17 = wx.BoxSizer( wx.VERTICAL )
+		
+		listBoxKeywordsChoices = []
+		self.listBoxKeywords = wx.ListBox( self.m_panel16, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listBoxKeywordsChoices, 0 )
+		bSizer17.Add( self.listBoxKeywords, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.m_panel16.SetSizer( bSizer17 )
+		self.m_panel16.Layout()
+		bSizer17.Fit( self.m_panel16 )
+		self.m_panel17 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer18 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.richTextKeywords = wx.richtext.RichTextCtrl( self.m_panel17, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY|wx.ALWAYS_SHOW_SB|wx.HSCROLL|wx.VSCROLL|wx.WANTS_CHARS )
+		bSizer18.Add( self.richTextKeywords, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.m_panel17.SetSizer( bSizer18 )
+		self.m_panel17.Layout()
+		bSizer18.Fit( self.m_panel17 )
+		self.m_splitter8.SplitVertically( self.m_panel16, self.m_panel17, 194 )
+		bSizer15.Add( self.m_splitter8, 1, wx.EXPAND, 5 )
+		
+		self.m_panel15.SetSizer( bSizer15 )
+		self.m_panel15.Layout()
+		bSizer15.Fit( self.m_panel15 )
+		self.m_splitter6.SplitVertically( self.m_panel14, self.m_panel15, 204 )
+		bSizer12.Add( self.m_splitter6, 1, wx.EXPAND, 5 )
+		
+		self.SetSizer( bSizer12 )
+		self.Layout()
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
+	def m_splitter6OnIdle( self, event ):
+		self.m_splitter6.SetSashPosition( 204 )
+		self.m_splitter6.Unbind( wx.EVT_IDLE )
+	
+	def m_splitter8OnIdle( self, event ):
+		self.m_splitter8.SetSashPosition( 194 )
+		self.m_splitter8.Unbind( wx.EVT_IDLE )
+	
+
+###########################################################################
 ## Class framePinguinoX
 ###########################################################################
 
 class framePinguinoX ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Pinguino IDE x.3"), pos = wx.DefaultPosition, size = wx.Size( 711,370 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Pinguino IDE x.4"), pos = wx.DefaultPosition, size = wx.Size( 711,370 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -684,6 +687,7 @@ class panelOutput ( wx.Panel ):
 		bSizer30.Add( self.choicePort, 0, 0, 5 )
 		
 		self.logwindow = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		self.logwindow.SetFont( wx.Font( 10, 70, 90, 90, False, wx.EmptyString ) )
 		self.logwindow.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.logwindow.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
 		
@@ -695,6 +699,7 @@ class panelOutput ( wx.Panel ):
 		gbSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.debuggingLine = wx.TextCtrl( self, wx.ID_ANY, _(">>>"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.debuggingLine.SetFont( wx.Font( 10, 76, 90, 90, False, "Monospace" ) )
 		self.debuggingLine.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.debuggingLine.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
 		
@@ -967,6 +972,53 @@ class frameAutoCompleter ( wx.Frame ):
 		
 		self.listCtrlAutocompleter = wx.ListCtrl( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_NO_HEADER|wx.LC_REPORT|wx.NO_BORDER )
 		bSizer28.Add( self.listCtrlAutocompleter, 1, wx.ALL|wx.EXPAND, 0 )
+		
+		self.SetSizer( bSizer28 )
+		self.Layout()
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
+
+###########################################################################
+## Class frameStdout
+###########################################################################
+
+class frameStdout ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Stdout"), pos = wx.DefaultPosition, size = wx.Size( 694,337 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer28 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_panel30 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer30 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_richText2 = wx.richtext.RichTextCtrl( self.m_panel30, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY|wx.HSCROLL|wx.VSCROLL|wx.WANTS_CHARS )
+		bSizer30.Add( self.m_richText2, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.m_panel31 = wx.Panel( self.m_panel30, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer31 = wx.BoxSizer( wx.VERTICAL )
+		
+		m_sdbSizer1 = wx.StdDialogButtonSizer()
+		self.m_sdbSizer1OK = wx.Button( self.m_panel31, wx.ID_OK )
+		m_sdbSizer1.AddButton( self.m_sdbSizer1OK )
+		m_sdbSizer1.Realize();
+		bSizer31.Add( m_sdbSizer1, 0, wx.EXPAND, 5 )
+		
+		self.m_panel31.SetSizer( bSizer31 )
+		self.m_panel31.Layout()
+		bSizer31.Fit( self.m_panel31 )
+		bSizer30.Add( self.m_panel31, 0, wx.EXPAND |wx.ALL, 5 )
+		
+		self.m_panel30.SetSizer( bSizer30 )
+		self.m_panel30.Layout()
+		bSizer30.Fit( self.m_panel30 )
+		bSizer28.Add( self.m_panel30, 1, wx.EXPAND |wx.ALL, 0 )
 		
 		self.SetSizer( bSizer28 )
 		self.Layout()

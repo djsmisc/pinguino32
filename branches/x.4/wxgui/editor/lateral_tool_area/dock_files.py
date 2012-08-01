@@ -40,20 +40,25 @@ class File:
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToFunc, self.lateralFunc)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
-    
-        self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=-1)
-        self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Type"), width=-1)
-        self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=1000)
-    
-        self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=-1) 
-        self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Return"), width=-1) 
-        self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=40)
-        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Parameters"), width=1000)
         
-        self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Directive"), width=130) 
-        self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=130) 
-        self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=130) 
-        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=1000)
+
+        line = 50
+        s3 = (self.lat.GetSizeTuple()[0] - line) / 3
+
+        self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3)
+        self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Type"), width=s3)
+        self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("In function"), width=s3)
+        self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+    
+        self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
+        self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Return"), width=s3) 
+        self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Parameters"), width=s3)
+        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        
+        self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Directive"), width=s3) 
+        self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
+        self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=s3) 
+        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
         
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):
@@ -61,7 +66,7 @@ class File:
         textEdit.GotoLine(textEdit.LineCount)
         self.allVars.reverse()
         color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
-        self.highlightline(int(self.allVars[event.GetIndex()][2])-1, color)
+        self.highlightline(int(self.allVars[event.GetIndex()][3])-1, color)
         self.allVars.reverse()
         textEdit.SetFocus()
         
@@ -71,7 +76,7 @@ class File:
         textEdit.GotoLine(textEdit.LineCount)
         self.allFunc.reverse()
         color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
-        self.highlightline(int(self.allFunc[event.GetIndex()][2])-1, color)
+        self.highlightline(int(self.allFunc[event.GetIndex()][3])-1, color)
         self.allFunc.reverse()
         textEdit.SetFocus()
         
@@ -89,7 +94,8 @@ class File:
     def addVarInListCtrl(self, index, var):
         self.lateralVars.InsertStringItem(0, var[0])        
         self.lateralVars.SetStringItem(0, 1, var[1])         
-        self.lateralVars.SetStringItem(0, 2, var[2])    
+        self.lateralVars.SetStringItem(0, 2, var[2])        
+        self.lateralVars.SetStringItem(0, 3, var[3])    
         self.lateralVars.SetItemData(0, 1)
         
     #----------------------------------------------------------------------
@@ -107,9 +113,20 @@ class File:
         self.lateralDefi.SetStringItem(0, 2, var[2])        
         self.lateralDefi.SetStringItem(0, 3, var[3])         
         self.lateralDefi.SetItemData(0, 1)
-
+        
+    #----------------------------------------------------------------------
+    def updateWidthColums(self):
+        line = 60
+        s3 = (self.lateralDefi.GetSizeTuple()[0] - line) / 3
+        lct = [self.lateralVars, self.lateralDefi, self.lateralFunc]
+        for lc in lct:
+            for i in range(3): lc.SetColumnWidth(i, s3)
+            lc.SetColumnWidth(3, line)
+        
     #----------------------------------------------------------------------
     def update_dockFiles(self, event=None):
+        self.updateWidthColums()
+        
         if len(self.stcpage) < 1:
             self.lateralVars.DeleteAllItems()
             self.lateralFunc.DeleteAllItems()
@@ -132,16 +149,16 @@ class File:
         
         def updateRegex():
             
-            ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*[*]*[\s]*([*\w]*)[\s]*\(([\w ,*.]*)\)[\s]*"
+            ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*[*]*[\s]*([*\w]+)[\s]*\(([\w ,*.]*)\)[\s]*"
             
-            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*(.+);"
+            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([ \w\[\]=,]*);"
             ReStructs  = "[\s]*(struct|union|enum)[\s]*([*\w]*)[\s]*(.+);"
             
-            ReTypeDef  = "[\s]*(typedef)[ ]*([\w]*)[ ]*([\w]*)[\s]*([{,;])*"
+            ReTypeDef  = "[\s]*(typedef)[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([\w\[\]]*)[\s]*"#([\w]*)"
             
             ReTypeStru = "[\s]*}[\s]*([\w]+)[\s]*;"
             
-            ReDefines = "[\s]*#(define|ifndef|endif)[ ]+([\S]*)[ ]+([\S]*)"
+            ReDefines = "[\s]*#(define|ifndef|endif)[\s]+([\S]*)[\s]+([\S]*)"
             ReInclude = "[\s]*#include[ ]+<[\s]*([\S]*)[\s]*>"
         
             return ReFunction, ReVariable, ReStructs, ReTypeDef, ReDefines, ReInclude, ReTypeStru
@@ -151,7 +168,7 @@ class File:
         self.allFunc = []
         self.allDefi = []
         self.autoCompleteWords = []
-        #currentFunction = "None"
+        currentFunction = ""
         
         ReFunction, ReVariable, ReStructs, ReTypeDef, ReDefines, ReInclude, ReTypeStru = updateRegex()
         
@@ -185,11 +202,12 @@ class File:
             
             reg1 = re.match(ReFunction, linea)
             if reg1 != None:
-                self.allFunc.append([reg1.group(3),
-                                    reg1.group(2),
-                                    str(count),
-                                    reg1.group(4)])
-                
+                if not (linea.replace(" ", "").replace("\n", "").replace("\r", "").endswith(";")):
+                    self.allFunc.append([reg1.group(3),
+                                        reg1.group(2),
+                                        reg1.group(4),                                        
+                                        str(count)])
+                    currentFunction = reg1.group(3)
                                     
             reg2a = re.match(ReVariable, linea)
             reg2b = re.match(ReStructs, linea)
@@ -212,6 +230,8 @@ class File:
                 cont = cont.split(",")
                 self.allVars.extend([[getVar(var, tipo)[0],
                                     getVar(var, tipo)[1],
+                                    
+                                    currentFunction,                                    
                                     str(count)] for var in cont])
                 
                 
@@ -232,9 +252,10 @@ class File:
                 
             reg5 = re.match(ReTypeDef, linea)
             if reg5 != None:
-                self.tiposDatos += "|%s" %reg5.group(3)
-                self.autoCompleteWords.append(reg5.group(3))
-                ReFunction, ReVariable, ReStructs, ReTypeDef, ReDefines, ReInclude, ReTypeStru = updateRegex()
+                if reg5.group(5) != "":
+                    self.tiposDatos += "|%s" %reg5.group(5)
+                    self.autoCompleteWords.append(reg5.group(5))
+                    ReFunction, ReVariable, ReStructs, ReTypeDef, ReDefines, ReInclude, ReTypeStru = updateRegex()
                 
             reg6 = re.match(ReTypeStru, linea)
             if reg6 != None:

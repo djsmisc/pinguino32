@@ -273,6 +273,8 @@ class Menubar:
             i += 1
         if self.filename != []:
             name = self.filename[self.notebookEditor.GetSelection()]
+            try: name = unicode(name).encode("utf-8")
+            except: pass            
             self.setConfig("Last", "Last_Focus", name)
             
         
@@ -324,5 +326,7 @@ class Menubar:
         if self.menu.menuItemToolbar.IsChecked():
             self.DrawToolbar()
         else:
-            self.toolbar.Destroy()
+            self.toolbar.Destroy()	
         self.updateIDE()
+        
+        

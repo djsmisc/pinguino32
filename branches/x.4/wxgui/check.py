@@ -236,6 +236,15 @@ except:
     fichier.writelines('AutoCompleter failed\n')
     fichier.writelines('You should have autocompleter.py at the wxgui/editor/\n')
     fichier.close()
+    perror()
+    
+try:	
+    from editor import Stdout		
+    fichier.writelines('Stdout successfully loaded\n')
+except:
+    fichier.writelines('Stdout failed\n')
+    fichier.writelines('You should have stdout.py at the wxgui/editor/\n')
+    fichier.close()
     perror()      
 
 try:	

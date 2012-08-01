@@ -4,17 +4,6 @@
 
 """File to test features"""
 
-#from autoCompleter import autoCompleter
-##from keywords import functionsHelp
-#from debugger import Debugger
-#from lateral_dock import File, Documents, Search
-
-#import sys, os, re, wx
-
-#import  wx.lib.mixins.listctrl  as  listmix
-#from ConfigParser import RawConfigParser
-
-
 
 ########################################################################
 class Testing():
@@ -46,9 +35,7 @@ class Testing():
         word = self.wordUnderCursor(True)
         if word == " ": word = None
         self.AutoCompleter.ShowCompleter(word, -1)     
-        
-        
-        
+
 
    
     

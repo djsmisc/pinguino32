@@ -12,6 +12,7 @@ from general import General
 from preferences import Preferences
 from funtions_help import functionsHelp
 from autocompleter import AutoCompleter
+from stdout import Stdout
 
 import locale, sys
 
