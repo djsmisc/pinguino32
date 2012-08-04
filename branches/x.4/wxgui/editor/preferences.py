@@ -87,6 +87,9 @@ class Preferences():
         self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCodeNav, self.textCtrlCodeNav, "codenavigation"), self.colourPickerCodeNav)
         self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCurrentLine, self.textCtrlCurrentLine, "selection"), self.colourPickerCurrentLine)        
         
+        #Upgrade
+        #----------------------------------------------------------------------
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("IDE", "checkUpgradeAtStart", self.checkBoxUpgrade.Value), self.checkBoxUpgrade)  
         
         
     #----------------------------------------------------------------------
@@ -190,6 +193,9 @@ class Preferences():
         value = self.IDE.getColorConfig("Highligh", "selection", [241, 132, 88])
         self.colourPickerCurrentLine.SetColour(value)
         self.textCtrlCurrentLine.SetBackgroundColour(value)
+        
+        value = self.IDE.getElse("IDE", "checkupgradeatstart", "True") == "True"
+        self.checkBoxUpgrade.SetValue(value)        
         
         self.IDE.saveConfig()
         

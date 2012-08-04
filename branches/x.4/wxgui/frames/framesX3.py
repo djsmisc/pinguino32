@@ -143,18 +143,11 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuPinguino.AppendSubMenu( self.menuDebugMode, _("Debug mode") )
 		
-		self.menuRevision = wx.Menu()
-		self.menuItemCheckRev = wx.MenuItem( self.menuRevision, wx.ID_ANY, _("Check last revision"), wx.EmptyString, wx.ITEM_NORMAL )
-		self.menuRevision.AppendItem( self.menuItemCheckRev )
-		
-		self.menuItemUpgrade = wx.MenuItem( self.menuRevision, wx.ID_ANY, _("Upgrade"), wx.EmptyString, wx.ITEM_NORMAL )
-		self.menuRevision.AppendItem( self.menuItemUpgrade )
-		self.menuItemUpgrade.Enable( False )
-		
-		self.menuPinguino.AppendSubMenu( self.menuRevision, _("Revision") )
-		
 		self.menuItemViewStdout = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("View stdout")+ u"\t" + u"F8", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemViewStdout )
+		
+		self.menuItemCheckRev = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _("Check for Updates..."), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuPinguino.AppendItem( self.menuItemCheckRev )
 		
 		self.menuPinguino.AppendSeparator()
 		
@@ -225,7 +218,7 @@ class framePreferences ( wx.Frame ):
 		self.m_panel24 = wx.Panel( self.m_splitter9, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer20 = wx.BoxSizer( wx.VERTICAL )
 		
-		listBoxPreferencesChoices = [ _("Appearance"), _("Source Code Font/Size"), _("Auto-completion"), _("Auto-insert"), _("Open/Save files"), _("Highlight") ]
+		listBoxPreferencesChoices = [ _("Appearance"), _("Source Code Font/Size"), _("Auto-completion"), _("Auto-insert"), _("Open/Save files"), _("Highlight"), _("Upgrade") ]
 		self.listBoxPreferences = wx.ListBox( self.m_panel24, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listBoxPreferencesChoices, 0 )
 		bSizer20.Add( self.listBoxPreferences, 1, wx.ALL|wx.EXPAND, 5 )
 		
@@ -264,7 +257,7 @@ class framePreferences ( wx.Frame ):
 		self.appearance.SetSizer( fgSizer3 )
 		self.appearance.Layout()
 		fgSizer3.Fit( self.appearance )
-		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), False, wx.NullBitmap )
 		self.souce_code_font_size = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer4 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer4.AddGrowableCol( 1 )
@@ -459,7 +452,7 @@ class framePreferences ( wx.Frame ):
 		self.open_save_files.SetSizer( gSizer1 )
 		self.open_save_files.Layout()
 		gSizer1.Fit( self.open_save_files )
-		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), True, wx.NullBitmap )
 		self.highlight = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer7 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer7.AddGrowableCol( 0 )
@@ -494,6 +487,17 @@ class framePreferences ( wx.Frame ):
 		self.highlight.Layout()
 		fgSizer7.Fit( self.highlight )
 		self.auinotebookPreferences.AddPage( self.highlight, _("highligh"), False, wx.NullBitmap )
+		self.upgrade = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer33 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.checkBoxUpgrade = wx.CheckBox( self.upgrade, wx.ID_ANY, _("Check for updates at startup"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.checkBoxUpgrade.SetValue(True) 
+		bSizer33.Add( self.checkBoxUpgrade, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		self.upgrade.SetSizer( bSizer33 )
+		self.upgrade.Layout()
+		bSizer33.Fit( self.upgrade )
+		self.auinotebookPreferences.AddPage( self.upgrade, _("a page"), False, wx.NullBitmap )
 		
 		bSizer21.Add( self.auinotebookPreferences, 1, wx.EXPAND |wx.ALL, 5 )
 		
@@ -1021,6 +1025,66 @@ class frameStdout ( wx.Frame ):
 		bSizer28.Add( self.m_panel30, 1, wx.EXPAND |wx.ALL, 0 )
 		
 		self.SetSizer( bSizer28 )
+		self.Layout()
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
+
+###########################################################################
+## Class frameUpgrade
+###########################################################################
+
+class frameUpgrade ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _("Upgrade"), pos = wx.DefaultPosition, size = wx.Size( 446,200 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer31 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_panel31 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer32 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_gauge2 = wx.Gauge( self.m_panel31, wx.ID_ANY, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
+		self.m_gauge2.SetValue( 45 ) 
+		bSizer32.Add( self.m_gauge2, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		self.textCtrlUpgrade = wx.TextCtrl( self.m_panel31, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		self.textCtrlUpgrade.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.textCtrlUpgrade.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
+		
+		bSizer32.Add( self.textCtrlUpgrade, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		gbSizer2 = wx.GridBagSizer( 1, 3 )
+		gbSizer2.AddGrowableCol( 0 )
+		gbSizer2.SetFlexibleDirection( wx.BOTH )
+		gbSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		
+		self.buttonUpgrade = wx.Button( self.m_panel31, wx.ID_ANY, _("Upgrade"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.buttonUpgrade.Enable( False )
+		
+		gbSizer2.Add( self.buttonUpgrade, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.ALIGN_RIGHT|wx.ALL, 5 )
+		
+		self.buttonCancel = wx.Button( self.m_panel31, wx.ID_ANY, _("Cancel"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		gbSizer2.Add( self.buttonCancel, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
+		
+		self.buttonAccept = wx.Button( self.m_panel31, wx.ID_ANY, _("Ok"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.buttonAccept.Enable( False )
+		
+		gbSizer2.Add( self.buttonAccept, wx.GBPosition( 0, 2 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
+		
+		bSizer32.Add( gbSizer2, 0, wx.EXPAND, 5 )
+		
+		self.m_panel31.SetSizer( bSizer32 )
+		self.m_panel31.Layout()
+		bSizer32.Fit( self.m_panel31 )
+		bSizer31.Add( self.m_panel31, 1, wx.EXPAND |wx.ALL, 0 )
+		
+		self.SetSizer( bSizer31 )
 		self.Layout()
 		
 		self.Centre( wx.BOTH )

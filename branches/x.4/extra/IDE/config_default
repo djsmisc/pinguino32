@@ -10,6 +10,7 @@ board = Pinguino 2550
 maximized = False
 perspectiveoutput = 119
 perspectivelateral = 286
+checkupgradeatstart = False
 
 [Open/Save]
 autosavetime = 10

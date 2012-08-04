@@ -245,6 +245,15 @@ except:
     fichier.writelines('Stdout failed\n')
     fichier.writelines('You should have stdout.py at the wxgui/editor/\n')
     fichier.close()
+    perror()
+    
+try:	
+    from editor import Upgrade		
+    fichier.writelines('Upgrade successfully loaded\n')
+except:
+    fichier.writelines('Upgrade failed\n')
+    fichier.writelines('You should have upgrade.py at the wxgui/editor/\n')
+    fichier.close()
     perror()      
 
 try:	

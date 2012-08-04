@@ -13,6 +13,7 @@ from preferences import Preferences
 from funtions_help import functionsHelp
 from autocompleter import AutoCompleter
 from stdout import Stdout
+from upgrade import Upgrade
 
 import locale, sys
 

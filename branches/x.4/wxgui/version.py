@@ -72,7 +72,7 @@ class WorkingCopy(object):
 
 class SubversionWorkingCopy(WorkingCopy):
 	
-	def __init__(self, path=None):
+	def __init__(self, path=False):
 		WorkingCopy.__init__(self)
 		self.path = os.path.realpath(path or os.getcwd())
 		if os.path.exists(os.path.join(self.path, ".svn")):
@@ -142,7 +142,7 @@ class SubversionRepository(Repository):
 			self._client.checkout(self.url, path)
 		except pysvn._pysvn.ClientError: # assume this is an 'object of the same name already exists' error
 			repos_contents = self._client.ls(self.url)
-			os.mkdir(".backup")
+			if not os.path.isdir(".backup"): os.mkdir(".backup")
 			for entry in repos_contents:
 				filename = entry["name"][len(self.url)+1:]
 				if os.path.exists(filename):
