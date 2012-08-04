@@ -42,20 +42,21 @@ class ResultEventRevision(wx.PyEvent):
 # current version
 # ------------------------------------------------------------------------------
 
-pinguino_version="x.4"
+pinguino_version = "x.4"
 
 # ------------------------------------------------------------------------------
 # paths
 # ------------------------------------------------------------------------------
 
-HOME_DIR    = os.getcwd()
-THEME_DIR    = os.path.join(HOME_DIR, 'theme')
-SOURCE_DIR    = os.path.join(HOME_DIR, 'source')
-LOCALE_DIR    = os.path.join(HOME_DIR, 'locale')
-P32_DIR        = os.path.join(HOME_DIR, 'p32')
-P8_DIR        = os.path.join(HOME_DIR, 'p8')
-SVN_DIR        = 'http://pinguino32.googlecode.com/svn/branches/x.3/'
-APP_CONFIG    = os.path.join(HOME_DIR, '.config')
+HOME_DIR = os.getcwd()
+THEME_DIR = os.path.join(HOME_DIR, 'theme')
+SOURCE_DIR = os.path.join(HOME_DIR, 'source')
+LOCALE_DIR = os.path.join(HOME_DIR, 'locale')
+P32_DIR = os.path.join(HOME_DIR, 'p32')
+P8_DIR = os.path.join(HOME_DIR, 'p8')
+#SVN_DIR = 'http://pinguino32.googlecode.com/svn/branches/x.4/'
+SVN_DIR = "https://pinguino32.googlecode.com/svn/branches/x.4"
+APP_CONFIG = os.path.join(HOME_DIR, '.config')
 TEMP_DIR = os.path.join(HOME_DIR, '.temp')
 EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
 
@@ -81,23 +82,23 @@ class Pinguino(framePinguinoX, Editor):
     global lang
     global gui
 
-    osdir=""
-    sdcc=""
-    #gcc=""
-    debug_output=0
-    debug_handle=False
-    debug_thread=False
-    debug_flag=False
-    in_verify=0
+    osdir = ""
+    sdcc = ""
+    #gcc = ""
+    debug_output = 0
+    debug_handle = False
+    debug_thread = False
+    debug_flag = False
+    in_verify = 0
 
-    noname=0
-    keywordList=[]
-    reservedword=[]
-    libinstructions=[]
-    regobject=[]
-    rw=[]
-    THEME=[]
-    KEYWORD=[]
+    noname = 0
+    keywordList = []
+    reservedword = []
+    libinstructions = []
+    regobject = []
+    rw = []
+    THEME = []
+    KEYWORD = []
 
 
 # ------------------------------------------------------------------------------
@@ -113,7 +114,7 @@ class Pinguino(framePinguinoX, Editor):
         self.autoCompleteWords = []
         self.recentsFiles = []
         self.otherWords = []
-        self.GetTheme()
+        #self.GetTheme()
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
@@ -144,7 +145,6 @@ class Pinguino(framePinguinoX, Editor):
 
 
         self.__initIDE__()
-
         self.openLast()
 
         ########################################
@@ -251,7 +251,7 @@ class Pinguino(framePinguinoX, Editor):
         if DEV:
             #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
             self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
-            self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
+            #self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
         for b in range(len(boardlist)):
             self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
 
@@ -324,8 +324,7 @@ class Pinguino(framePinguinoX, Editor):
             self.menu.menuItemDebugNone.Enable(False)
             self.menu.menuItemUSBCDC.Enable(False)
             self.menu.menuItemUART1.Enable(False)
-            self.menu.menuItemCheckRev.Enable(False)
-            self.menu.menuItemUpgrade.Enable(False)	    
+            self.menu.menuItemCheckRev.Enable(False)	    
 
         self.SetMenuBar(self.menu)
 
@@ -439,6 +438,14 @@ class Pinguino(framePinguinoX, Editor):
         try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
         except: sw = _("unknown")
         wx.PostEvent(self, ResultEventRevision(sw))
+        
+        if self.getElse("IDE", "checkupgradeatstart", "False") == "True":
+            try:
+                svnRev = SubversionRepository(SVN_DIR)
+                self.lastRevision = svnRev.current_version()
+                #self.lastRevision = "<<TESTING>>" #To force a update at start
+                wx.PostEvent(self, ResultEventRevision([svnRev]))
+            except: self.lastRevision = False
 
 
 # ------------------------------------------------------------------------------
@@ -477,6 +484,10 @@ class Pinguino(framePinguinoX, Editor):
 # Event Threads
 # ------------------------------------------------------------------------------
     def setRevision(self, event):
+        if type(event.data) == type([]):
+            self.OnCheck(event=None, back=True, svn=event.data[0])
+            return
+        
         self.localRev = event.data
         if DEV == True: rev = 'rev. ' + self.localRev
         else: rev = ""
@@ -497,33 +508,20 @@ class Pinguino(framePinguinoX, Editor):
 # OnUpgrade
 # ------------------------------------------------------------------------------
 
-    def OnUpgrade(self, event):
-        self.displaymsg(_("Upgrading ...")+"\n", 0)
-        try:  self.sr.checkout(HOME_DIR)
-        except:
-            self.displaymsg(_("Local version is not under revision control.")+"\n", 0)
-            return
-        self.displaymsg(_("Done")+"\n", 0)
-        Pinguino.__init__(self, parent)
-
-# ------------------------------------------------------------------------------
-# OnCheck
-# ------------------------------------------------------------------------------
-
-    def OnCheck(self, event):
-        self.displaymsg(_("Checking repository revision number")+" ...\n", 0)
-        try:  self.sr = SubversionRepository(SVN_DIR)
-        except:
-            self.displaymsg(_("Server temporarily unavailable.")+"\n", 0)
-            return
-        self.svnRev = self.sr.current_version()
-        if self.svnRev == self.localRev:
-            self.menu.menuItemUpgrade.Enable(False)
-            self.displaymsg(_("You have the latest version.")+"\n", 0)
+    def OnCheck(self, event=None, back=False, svn=None):
+        try: self.upgrade.Cancel()
+        except: pass
+        self.upgrade = UpgradeIDE(self) 
+        self.upgrade.__initUpgrade__(self)
+        
+        if not back:
+            self.upgrade.checkUpgrade()
+            self.upgrade.Show()
         else:
-            self.menu.menuItemUpgrade.Enable(True)
-            self.displaymsg(_("Revision") +" "+ self.svnRev +" "+ _("is available.")+"\n", 0)
-
+            if not (self.lastRevision == self.localRev):
+                self.upgrade.Show()
+                self.upgrade.prepareUpgrade(svn)
+            else: self.upgrade.Cancel()
 
 # ------------------------------------------------------------------------------
 # OnFileHistory : open selected history file
@@ -546,10 +544,10 @@ class Pinguino(framePinguinoX, Editor):
 # GetTheme : get all the theme (directory) name
 # ------------------------------------------------------------------------------
 
-    def GetTheme(self):
-        self.themeList = [f for f in os.listdir(THEME_DIR)
-                          if os.path.isdir(os.path.join(THEME_DIR, f))]
-        self.themeNum = len(self.themeList)
+    #def GetTheme(self):
+        #self.themeList = [f for f in os.listdir(THEME_DIR)
+                          #if os.path.isdir(os.path.join(THEME_DIR, f))]
+        #self.themeNum = len(self.themeList)
 
 # ------------------------------------------------------------------------------
 # OnBoard : load boards specificities
@@ -1421,6 +1419,10 @@ class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
     
 ########################################################################
 class StdoutIDE(frameStdout, Stdout):
+    """"""
+    
+########################################################################
+class UpgradeIDE(frameUpgrade, Upgrade):
     """"""
 
 

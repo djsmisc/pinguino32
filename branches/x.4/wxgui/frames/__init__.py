@@ -4,4 +4,5 @@
 from framesX3 import framePinguinoX, frameKeyWords, \
                      framePreferences, panelLateral, \
                      menubarPinguino, frameAutoCompleter, \
-                     panelOutput, frameStdout
+                     panelOutput, frameStdout, \
+                     frameUpgrade

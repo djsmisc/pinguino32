@@ -235,6 +235,9 @@ class Menubar:
     def OnExit(self, event):
         self.stopTimers()
         self.closing = True  #Signal for Threads
+        
+        try: self.upgrade.Cancel()
+        except: pass        
 
         try:
             self.pinguino.close()
