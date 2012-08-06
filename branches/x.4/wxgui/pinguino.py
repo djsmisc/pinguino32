@@ -54,8 +54,8 @@ SOURCE_DIR = os.path.join(HOME_DIR, 'source')
 LOCALE_DIR = os.path.join(HOME_DIR, 'locale')
 P32_DIR = os.path.join(HOME_DIR, 'p32')
 P8_DIR = os.path.join(HOME_DIR, 'p8')
-#SVN_DIR = 'http://pinguino32.googlecode.com/svn/branches/x.4/'
-SVN_DIR = "https://pinguino32.googlecode.com/svn/branches/x.4"
+SVN_DIR = "http://pinguino32.googlecode.com/svn/branches/x.4/"
+#SVN_DIR = "https://pinguino32.googlecode.com/svn/branches/x.4"
 APP_CONFIG = os.path.join(HOME_DIR, '.config')
 TEMP_DIR = os.path.join(HOME_DIR, '.temp')
 EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
@@ -435,6 +435,7 @@ class Pinguino(framePinguinoX, Editor):
 # Thread Functions
 # ------------------------------------------------------------------------------
     def getRevision(self):
+        sw = SubversionWorkingCopy(HOME_DIR).current_version()
         try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
         except: sw = _("unknown")
         wx.PostEvent(self, ResultEventRevision(sw))
@@ -968,7 +969,7 @@ class Pinguino(framePinguinoX, Editor):
         if gui==True:
             if clearpanel==1:
                 self.logwindow.Clear()
-            self.logwindow.WriteText(message)
+            self.logwindow.WriteText(message.decode("utf-8", "replace"))
         else:
             if message!="":
                 print message
