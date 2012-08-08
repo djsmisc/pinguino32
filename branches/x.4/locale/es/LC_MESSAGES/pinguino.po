@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pinguino x.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-08-07 20:36-0400\n"
-"PO-Revision-Date: 2012-08-07 20:36-0400\n"
+"PO-Revision-Date: 2012-08-08 16:59-0400\n"
 "Last-Translator: Alexis A. Sánchez O. <aasanchez@gmail.com>\n"
 "Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
 "Language: \n"
@@ -622,7 +622,7 @@ msgstr "error de enlace"
 
 #: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:755
 msgid "compilation done"
-msgstr "compilación Completada"
+msgstr "Compilacion completada"
 
 #: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:757
 msgid "seconds process time"
