@@ -1426,9 +1426,10 @@ class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
 class StdoutIDE(frameStdout, Stdout):
     """"""
     
-########################################################################
-class UpgradeIDE(frameUpgrade, Upgrade):
-    """"""
+if DEV:
+    ########################################################################
+    class UpgradeIDE(frameUpgrade, Upgrade):
+        """"""
 
 
 # ------------------------------------------------------------------------------
