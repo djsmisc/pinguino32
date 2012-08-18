@@ -247,14 +247,6 @@ except:
     fichier.close()
     perror()
     
-try:	
-    from editor import Upgrade		
-    fichier.writelines('Upgrade successfully loaded\n')
-except:
-    fichier.writelines('Upgrade failed\n')
-    fichier.writelines('You should have upgrade.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()      
 
 try:	
     from editor import Preferences	
@@ -320,6 +312,17 @@ if DEV:
         fichier.writelines('You should have version.py at the wxgui/\n')
         fichier.close()
         perror()
+        
+    try:	
+        from editor import Upgrade		
+        fichier.writelines('Upgrade successfully loaded\n')
+    except:
+        fichier.writelines('Upgrade failed\n')
+        fichier.writelines('You should have upgrade.py at the wxgui/editor/\n')
+        fichier.close()
+        perror()      
+    
+        
 
 # ------------------------------------------------------------------------------
 # end of check 
