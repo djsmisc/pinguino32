@@ -136,13 +136,17 @@ class Pinguino(framePinguinoX, Editor):
         self.allDefi_back = []	
 
         #Threads
-        EVT_RESULT_REVISION(self, self.setRevision)
-        threadRevision = threading.Thread(target=self.getRevision, args=( ))
-        threadRevision.start()
+        if DEV:
+            EVT_RESULT_REVISION(self, self.setRevision)
+            threadRevision = threading.Thread(target=self.getRevision, args=( ))
+            threadRevision.start()
 
-        self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
-        self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 0)
-
+            self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
+            self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 0)
+        else:
+            self.SetTitle("Pinguino IDE")
+            self.displaymsg(_("Welcome to Pinguino IDE"), 0)            
+            
 
         self.__initIDE__()
         self.openLast()

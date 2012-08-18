@@ -147,7 +147,9 @@ class SubversionRepository(Repository):
 				filename = entry["name"][len(self.url)+1:]
 				if os.path.exists(filename):
 					os.rename(filename,os.path.join(".backup", filename))
-			self._client.checkout(self.url, path)
+			try: self._client.checkout(self.url, path)
+			except: self._client.checkout(self.url.replace("http", "https"), path)
+				
 
 	def get_working_copy(self, path=None):
 		return get_working_copy(path)
