@@ -4,7 +4,8 @@
 """-------------------------------------------------------------------------
 	Pinguino version control interface for Subversion
 
-	(c) 2011 Regis Blanchot <rblanchot@gmail.com> 
+	2011 - adapted from Sumatra _subversion.py (http://neuralensemble.org/trac/sumatra)
+    by Regis Blanchot <rblanchot@gmail.com> 
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
