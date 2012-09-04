@@ -973,7 +973,10 @@ class Pinguino(framePinguinoX, Editor):
         if gui==True:
             if clearpanel==1:
                 self.logwindow.Clear()
-            self.logwindow.WriteText(message.decode("utf-8", "replace"))
+            try:
+                self.logwindow.WriteText(message.decode("utf-8", "replace"))
+            except:
+                self.logwindow.WriteText(message)
         else:
             if message!="":
                 print message
