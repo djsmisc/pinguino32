@@ -305,6 +305,7 @@ class General:
                 icons[item] = icon
 
         varbls = []
+        allfunctions = []
 
         for i in self.allVars:
             icons[i[0][:].replace("*", "")] = i[1][:]
@@ -313,7 +314,7 @@ class General:
         for i in self.allFunc:
             icons[i[0][:].replace("*", "")] = "function"
             #varbls.append(i[0][:].replace("*", ""))
-            self.keywordList.append(i[0][:].replace("*", ""))
+            allfunctions.append(i[0][:].replace("*", ""))
 
         for i in self.allDefi:
             icons[i[1][:].replace("*", "")] = "directive"
@@ -322,7 +323,7 @@ class General:
         autoComp = []
         for key in Autocompleter.keys(): autoComp.extend(Autocompleter[key][:])
 
-        completer = self.keywordList + self.reservedword + Snippet.keys() + varbls[:] + autoComp + self.autoCompleteWords
+        completer = allfunctions + self.keywordList + self.reservedword + Snippet.keys() + varbls[:] + autoComp + self.autoCompleteWords
 
         completersFilter = []
         for i in completer:
@@ -333,7 +334,7 @@ class General:
             if i in self.keywordList: self.keywordList.remove(i)
 
         addInDict("snippet", Snippet.keys())
-        addInDict("function", self.keywordList)
+        addInDict("function", self.keywordList + allfunctions)
         addInDict("reserved", Autocompleter["reserved"])
         addInDict("directive", Autocompleter["directive"])
 
@@ -387,3 +388,27 @@ class General:
             #print pt
             #self.Refresh(False)
         evt.Skip()
+        
+        
+    #----------------------------------------------------------------------
+    def addArguments(self, funcionName):
+        for func in self.allFunc:
+            if func[0] in [funcionName, "*"+funcionName, "* "+funcionName]:
+                arg = func[2]
+                self.HideNextAutoComplete()
+                textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+                textEdit.InsertText(textEdit.CurrentPos, "("+arg+")")
+                textEdit.SetSelection(textEdit.CurrentPos+1, textEdit.CurrentPos+len(arg)+1)
+                return True
+                break
+        return False
+        
+    #----------------------------------------------------------------------
+    def HideNextAutoComplete(self):
+        self.autocompleteHide = True
+        
+    #----------------------------------------------------------------------
+    def OnShowCompleter(self, event=None):
+        word = self.wordUnderCursor(True)
+        if word == " ": word = None
+        self.AutoCompleter.ShowCompleter(word, -1)  

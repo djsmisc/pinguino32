@@ -131,14 +131,14 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuPinguino = wx.Menu()
 		self.menuDebugMode = wx.Menu()
-		self.menuItemDebugNone = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _("None"), wx.EmptyString, wx.ITEM_RADIO )
+		self.menuItemDebugNone = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _("None")+ u"\t" + u"CTRL+SHIFT+N", wx.EmptyString, wx.ITEM_RADIO )
 		self.menuDebugMode.AppendItem( self.menuItemDebugNone )
 		self.menuItemDebugNone.Check( True )
 		
-		self.menuItemUSBCDC = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _("USB CDC (serial emulation)"), wx.EmptyString, wx.ITEM_RADIO )
+		self.menuItemUSBCDC = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _("USB CDC (serial emulation)")+ u"\t" + u"CTRL+SHIFT+C", wx.EmptyString, wx.ITEM_RADIO )
 		self.menuDebugMode.AppendItem( self.menuItemUSBCDC )
 		
-		self.menuItemUART1 = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _("UART (serial)"), wx.EmptyString, wx.ITEM_RADIO )
+		self.menuItemUART1 = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _("UART (serial)")+ u"\t" + u"CTRL+SHIFT+U", wx.EmptyString, wx.ITEM_RADIO )
 		self.menuDebugMode.AppendItem( self.menuItemUART1 )
 		
 		self.menuPinguino.AppendSubMenu( self.menuDebugMode, _("Debug mode") )
@@ -257,12 +257,12 @@ class framePreferences ( wx.Frame ):
 		self.appearance.SetSizer( fgSizer3 )
 		self.appearance.Layout()
 		fgSizer3.Fit( self.appearance )
-		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.appearance, _("appearance"), True, wx.NullBitmap )
 		self.souce_code_font_size = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer4 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer4.AddGrowableCol( 1 )
 		fgSizer4.AddGrowableRow( 2 )
-		fgSizer4.AddGrowableRow( 4 )
+		fgSizer4.AddGrowableRow( 5 )
 		fgSizer4.SetFlexibleDirection( wx.BOTH )
 		fgSizer4.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
@@ -278,6 +278,12 @@ class framePreferences ( wx.Frame ):
 		self.fontPickerSource = wx.FontPickerCtrl( self.souce_code_font_size, wx.ID_ANY, wx.Font( 12, 70, 90, 90, False, "Ubuntu Mono" ), wx.DefaultPosition, wx.DefaultSize, wx.FNTP_DEFAULT_STYLE )
 		self.fontPickerSource.SetMaxPointSize( 100 ) 
 		fgSizer4.Add( self.fontPickerSource, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		self.checkBoxuseoutput = wx.CheckBox( self.souce_code_font_size, wx.ID_ANY, _("Also use in the output"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer4.Add( self.checkBoxuseoutput, 0, wx.ALL, 5 )
+		
+		
+		fgSizer4.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
 		
 		fgSizer4.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
@@ -336,7 +342,7 @@ class framePreferences ( wx.Frame ):
 		self.spinCtrlItemsCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 5, 30, 15 )
 		fgSizer5.Add( self.spinCtrlItemsCompleterCount, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.checkBoxInsertParenthesis = wx.CheckBox( self.auto_completion, wx.ID_ANY, _("Insert arguments with \"(\""), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.checkBoxInsertParenthesis = wx.CheckBox( self.auto_completion, wx.ID_ANY, _("Insert argumentets with \"(\""), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.checkBoxInsertParenthesis.SetValue(True) 
 		fgSizer5.Add( self.checkBoxInsertParenthesis, 0, wx.ALL, 5 )
 		
@@ -452,7 +458,7 @@ class framePreferences ( wx.Frame ):
 		self.open_save_files.SetSizer( gSizer1 )
 		self.open_save_files.Layout()
 		gSizer1.Fit( self.open_save_files )
-		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.open_save_files, _("open_save_files"), False, wx.NullBitmap )
 		self.highlight = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer7 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer7.AddGrowableCol( 0 )
@@ -522,7 +528,7 @@ class framePreferences ( wx.Frame ):
 		self.buttonApply = wx.Button( self.m_panel29, wx.ID_ANY, _("Apply"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer2.Add( self.buttonApply, 0, wx.ALL, 5 )
 		
-		self.buttonCancel = wx.Button( self.m_panel29, wx.ID_ANY, _("Cancel"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.buttonCancel = wx.Button( self.m_panel29, wx.ID_ANY, _("Ok"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer2.Add( self.buttonCancel, 0, wx.ALL, 5 )
 		
 		self.m_panel29.SetSizer( fgSizer2 )
@@ -802,7 +808,7 @@ class panelLateral ( wx.Panel ):
 		self.file.SetSizer( bSizer7 )
 		self.file.Layout()
 		bSizer7.Fit( self.file )
-		self.notebookLateral.AddPage( self.file, _("File"), False )
+		self.notebookLateral.AddPage( self.file, _("File"), True )
 		self.documents = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -938,7 +944,7 @@ class panelLateral ( wx.Panel ):
 		self.search.SetSizer( fgSizer1 )
 		self.search.Layout()
 		fgSizer1.Fit( self.search )
-		self.notebookLateral.AddPage( self.search, _("Search"), True )
+		self.notebookLateral.AddPage( self.search, _("Search"), False )
 		
 		bSizer3.Add( self.notebookLateral, 1, wx.EXPAND, 5 )
 		

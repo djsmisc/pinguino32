@@ -17,7 +17,7 @@ from stdout import Stdout
 try: from upgrade import Upgrade
 except: pass
 
-import locale, sys
+import locale, sys, os
 
 ########################################################################
 class Editor(Documents, Debugger, File, Search, editor, Menubar, General, Testing):
@@ -41,6 +41,14 @@ class Editor(Documents, Debugger, File, Search, editor, Menubar, General, Testin
             self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
         else: self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
         
+        self.openLast()
         self.saveConfig()
+        
+        if self.notebookEditor.PageCount == 0:
+            self._mgr.GetPane(self.panelOutput).Hide()
+            self._mgr.GetPane(self.lat).Hide()
+            self.updateIDE()
+          
+        
              
       

@@ -12,94 +12,9 @@ class Testing():
     #----------------------------------------------------------------------
     def __initTesting__(self):
         """"""
-    
-    #----------------------------------------------------------------------
-    def addArguments(self, funcionName):
-        for func in self.allFunc:
-            if func[0] in [funcionName, "*"+funcionName]:
-                arg = func[3]
-                self.HideNextAutoComplete()
-                textEdit = self.stcpage[self.notebookEditor.GetSelection()]
-                textEdit.InsertText(textEdit.CurrentPos, "("+arg+")")
-                textEdit.SetSelection(textEdit.CurrentPos+1, textEdit.CurrentPos+len(arg)+1)
-                return True
-                break
-        return False
-        
-    #----------------------------------------------------------------------
-    def HideNextAutoComplete(self):
-        self.autocompleteHide = True
-        
-    #----------------------------------------------------------------------
-    def OnShowCompleter(self, event=None):
-        word = self.wordUnderCursor(True)
-        if word == " ": word = None
-        self.AutoCompleter.ShowCompleter(word, -1)     
 
-
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-    #----------------------------------------------------------------------
-    def getPOT(self):
-        main = os.path.join(os.getcwd(), "wxgui")
-        PythonFiles = [os.path.join(os.getcwd(), "pinguino.py")]
-        exceptions = ["argparse.py"]
         
-        def getData(path):
-            yy = os.listdir(path)
-            for i in yy:
-                if os.path.isfile(os.path.join(path, i)) and (i.endswith(".py") or i.endswith(".pyw") and not i.startswith(".")) and not i in exceptions:
-                    PythonFiles.append(os.path.join(path, i))
-                elif os.path.isdir(os.path.join(path, i)):
-                    getData(os.path.join(path, i))
-        getData(main)
-        
-        path = os.getcwd()
-        files = " ".join(PythonFiles)
-        os.system("xgettext -k_ -kN_ -o pinguino.pot %s" %files)
-
-            
     
-        #elif evt.GetMargin() in [1, 2]:
-            #textEdit = self.stcpage[self.notebookEditor.GetSelection()]
-            #line = textEdit.LineFromPosition(evt.Position)
-            #if textEdit.MarkerGet(line) == 0:
-                ##textEdit.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
-                #textEdit.MarkerAdd(line, 2)
-            #if textEdit.MarkerGet(line) == 4:
-                ##textEdit.MarkerDefine (2, wx.stc.STC_MARK_SHORTARROW, "white", "white")
-                #textEdit.MarkerAdd(line, 0)    
-            
-            ##print margin
-            
-        
-        
-        
-        
         
         
         

@@ -33,8 +33,20 @@ import time
 # !!! use True at your own risc as it could erase your bootloader !!!
 # ------------------------------------------------------------------------------
 
+#----------------------------------------------------------------------
+def setDEV():
+    #To get DEV value from command line
+    args = sys.argv[1:]
+    for par in ["-d", "--dev"]:
+        if par in args:
+            cont = args[args.index(par) + 1]
+            if cont.lower() == "true": return True
+            else: return False
+    return False
+
+DEV = setDEV()
 #DEV = True
-DEV = False
+#DEV = False
 
 HOME_DIR	= os.getcwd()
 fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces

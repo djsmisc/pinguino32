@@ -37,6 +37,7 @@ class Stdout():
         self.IDE = parent
         self.loadStdout()
         self.m_sdbSizer1OK.SetDefault()
+        self.SetTitle("stdout: %s" %STDOUT_FILE)
         
         self.Bind(wx.EVT_BUTTON, lambda x:self.Close(), self.m_sdbSizer1OK)
         
