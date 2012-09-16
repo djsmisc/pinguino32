@@ -175,6 +175,8 @@ class AutoCompleter():
     #----------------------------------------------------------------------
     def activated(self, event=None):
         index = self.index
+        if index == None: index = ""
+            
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         for i in index: textEdit.DeleteBack()
         
@@ -253,3 +255,5 @@ class AutoCompleter():
         h = (h / 2) + 1   
         if count > self.MaxItemsCount: self.SetSizeWH(-1, self.MaxItemsCount*h)
         else: self.SetSizeWH(-1, count*h + scrollH)
+
+       

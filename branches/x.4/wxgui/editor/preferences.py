@@ -37,9 +37,10 @@ class Preferences():
         self.IDE = parent
 
         self.auinotebookPreferences.SetTabCtrlHeight(0)
+        self.auinotebookPreferences.SetSelection(0)
         self.listBoxPreferences.SetSelection(0)
         self.listBoxPreferences.SetFocus()
-
+        
         self.Bind(wx.EVT_LISTBOX, self.setPage, self.listBoxPreferences)
         self.Bind(wx.EVT_BUTTON, self.setDefaultConfig, self.buttonRestore)
         self.Bind(wx.EVT_BUTTON, self.writeConfig, self.buttonApply)
@@ -57,6 +58,8 @@ class Preferences():
         self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Source", "tabsize", self.spinCtrlSource.Value), self.spinCtrlSource)
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Source", "fontdefault", self.radioBtnSourcedefault.Value), self.radioBtnSourcedefault)
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Source", "fontdefault", self.radioBtnSourcedefault.Value), self.radioBtnSourceselected)
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Source", "userfontinoutput", self.checkBoxuseoutput.Value), self.checkBoxuseoutput)
+        
 
         #Auto-Completer
         #----------------------------------------------------------------------
@@ -195,7 +198,10 @@ class Preferences():
         self.textCtrlCurrentLine.SetBackgroundColour(value)
         
         value = self.IDE.getElse("IDE", "checkupgradeatstart", "True") == "True"
-        self.checkBoxUpgrade.SetValue(value)        
+        self.checkBoxUpgrade.SetValue(value)
+        
+        value = self.IDE.getElse("Source", "userfontinoutput", "False") == "True"
+        self.checkBoxuseoutput.SetValue(value)          
         
         self.IDE.saveConfig()
         

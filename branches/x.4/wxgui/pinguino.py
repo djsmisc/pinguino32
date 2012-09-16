@@ -114,19 +114,17 @@ class Pinguino(framePinguinoX, Editor):
         self.autoCompleteWords = []
         self.recentsFiles = []
         self.otherWords = []
-        #self.GetTheme()
+        self.autocompleteHide = False     
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
         self._mgr = wx.aui.AuiManager(self)
 
         self.setOSvariables()
-        self.buildOutput()
-        self.autocompleteHide = False
-        self.buildLateralPanel()	
-        self.buildEditor()
+        self.configPanes()
         self.buildMenu()
         self.loadSettings()
+        self.morePreferences()
         self.DrawToolbar()	
         self.ConnectAll()
         self.trees = []
@@ -149,7 +147,7 @@ class Pinguino(framePinguinoX, Editor):
             
 
         self.__initIDE__()
-        self.openLast()
+        
 
         ########################################
         #Auto-complete frame build 
@@ -159,7 +157,13 @@ class Pinguino(framePinguinoX, Editor):
         self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
         self.AutoCompleter.Hide()   	
 
-
+        
+    #----------------------------------------------------------------------
+    def configPanes(self):
+        self.buildOutput()
+        self.buildLateralPanel()	
+        self.buildEditor()
+        self.addPanes()
 
 # ------------------------------------------------------------------------------
 # Decorator to debug time
@@ -190,16 +194,35 @@ class Pinguino(framePinguinoX, Editor):
         self.background.CentreOnParent(wx.BOTH)
 
         self.notebookEditor.SetMinSize((50, 100))
+        
 
-        # ------------------------------------------------------------------------------
-        # add the panes to the manager
-        # ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# Output
+# ------------------------------------------------------------------------------
+    def buildOutput(self):
+        self.panelOutput = panelOutput(self)
+        self.debuggingLine = self.panelOutput.debuggingLine
+        self.buttonSendDebug = self.panelOutput.buttonSendDebug
+        self.logwindow = self.panelOutput.logwindow
+        
+        self.choicePort = self.panelOutput.choicePort
+        self.choicePort.Hide()
 
-        self._mgr.AddPane(self.panelOutput, self.PaneOutputInfo, '')
-        self.lat = panelLateral(self)
-        self._mgr.AddPane(self.lat, self.PaneLateral, '')
-        self._mgr.AddPane(self.panelEditor, wx.CENTER , '')
-        self._mgr.Update()
+        self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
+
+        self.debuggingLine.SetInsertionPoint(125)
+        self.debuggingLine.Hide()
+        self.buttonSendDebug.Hide()
+
+        self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
+        self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
+
+        # create a PaneInfo structure for output window
+        self.PaneOutputInfo=wx.aui.AuiPaneInfo()
+        self.PaneOutputInfo.CloseButton(False)
+        self.PaneOutputInfo.MaximizeButton(True)
+        self.PaneOutputInfo.MinimizeButton(True)
+        #self.PaneOutputInfo.Bottom()
 
 # ------------------------------------------------------------------------------
 # Lateral
@@ -208,8 +231,17 @@ class Pinguino(framePinguinoX, Editor):
         self.PaneLateral=wx.aui.AuiPaneInfo()
         self.PaneLateral.CloseButton(True)
         self.PaneLateral.MinimizeButton(True)
-        self.PaneLateral.Caption(_("Tools"))
         self.PaneLateral.Right()
+        
+# ------------------------------------------------------------------------------
+# add the panes to the manager
+# ------------------------------------------------------------------------------
+    def addPanes(self):
+        self.lat = panelLateral(self)
+        self._mgr.AddPane(self.panelOutput, wx.BOTTOM, _("Output"))          
+        self._mgr.AddPane(self.lat, wx.RIGHT, _("Tools"))      
+        self._mgr.AddPane(self.panelEditor, wx.CENTER)
+        self._mgr.Update()
 
 # ------------------------------------------------------------------------------
 # Event Management
@@ -288,34 +320,6 @@ class Pinguino(framePinguinoX, Editor):
         self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
 
 
-# ------------------------------------------------------------------------------
-# Output
-# ------------------------------------------------------------------------------
-    def buildOutput(self):
-        self.panelOutput = panelOutput(self)
-        self.debuggingLine = self.panelOutput.debuggingLine
-        self.buttonSendDebug = self.panelOutput.buttonSendDebug
-        self.logwindow = self.panelOutput.logwindow
-
-        self.choicePort = self.panelOutput.choicePort
-        self.choicePort.Hide()
-
-        self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
-
-        self.debuggingLine.SetInsertionPoint(125)
-        self.debuggingLine.Hide()
-        self.buttonSendDebug.Hide()
-
-        self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
-        self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
-
-        # create a PaneInfo structure for output window
-        self.PaneOutputInfo=wx.aui.AuiPaneInfo()
-        self.PaneOutputInfo.CloseButton(False)
-        self.PaneOutputInfo.MaximizeButton(True)
-        self.PaneOutputInfo.MinimizeButton(True)
-        self.PaneOutputInfo.Caption(_("Output"))
-        self.PaneOutputInfo.Bottom()
 
 
 # ----------------------------------------------------------------------
@@ -677,7 +681,8 @@ class Pinguino(framePinguinoX, Editor):
         icon.CopyFromBitmap(bmp)
         info.SetIcon(icon)
         info.SetName('Pinguino')
-        info.SetVersion("rev. " + self.localRev)
+        info.SetVersion(pinguino_version)
+        #info.SetVersion("rev. " + self.localRev)
         info.SetDescription(description)
         # LGPL compatibility ?
         #info.SetCopyright('2008, 2009, 2010, 2011 jean-pierre mandon')
@@ -728,9 +733,9 @@ class Pinguino(framePinguinoX, Editor):
             result=dlg.ShowModal()
             dlg.Destroy()
             return False
-        self.displaymsg(_("Board:")+"\t" + self.curBoard.name + "\n", 1)
-        self.displaymsg(_("Proc:")+"\t" + self.curBoard.proc + "\n", 0)
-        self.displaymsg(_("File:")+"\t" + self.GetPath() + "\n", 0)
+        self.displaymsg(_("Board:")+" " + self.curBoard.name + "\n", 1)
+        self.displaymsg(_("Proc:")+" " + self.curBoard.proc + "\n", 0)
+        self.displaymsg(_("File:")+" " + self.GetPath() + "\n", 0)
         self.OnSave()
         filename=self.GetPath()
         filename,extension=os.path.splitext(filename)
@@ -1353,6 +1358,7 @@ class Pinguino(framePinguinoX, Editor):
         frame_1 = PreferencesIDE(self)
         frame_1.__initPreferences__(self)
         #app.SetTopWindow(frame_1)
+        if not DEV: frame_1.upgrade.Disable()
         frame_1.CenterOnParent()
         frame_1.Show()
         #app.MainLoop()
@@ -1405,11 +1411,36 @@ class Pinguino(framePinguinoX, Editor):
         self.Hide()
         self.toolbar.Destroy()
         self.DrawToolbar()
-
+        
+        self.morePreferences()
+        
         self.OnSaveAll()
         self.OnCloseAll()
         self.openLast()
         self.Show()
+        
+        
+    #----------------------------------------------------------------------
+    def morePreferences(self):
+        self.loadConfig()
+        if self.getElse("Source", "userfontinoutput", "False") == "True":
+            if self.getConfig("Source", "fontdefault") == "False":
+                FaceNAme = self.getConfig("Source", "font")
+                PointSize = self.getConfig("Source", "size")
+                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                font.SetFaceName(FaceNAme)
+                font.SetPointSize(PointSize)
+                font.SetUnderlined(False)
+                self.logwindow.SetFont(font)
+            else:
+                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                font.SetUnderlined(False)
+                self.logwindow.SetFont(font) 
+        else:
+            font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+            font.SetUnderlined(False)
+            self.logwindow.SetFont(font)            
+        
 
 
 
@@ -1444,6 +1475,8 @@ def getOptions():
     parser.add_argument('-v', '--version', dest='version', action='store_true', default=False, help='show Pinguino IDE version and exit')
     parser.add_argument('-a', '--author', dest='author', action='store_true', default=False, help='show authors of this Pinguino IDE version and exit')
     parser.add_argument('-f', '--filename', dest='filename', nargs=1, default=False, help='filename to process')
+    parser.add_argument('-d', '--dev', dest='dev', nargs=1, default=False, help='set developer mode')
+    
     for b in range(len(boardlist)):
         parser.add_argument(    boardlist[b].shortarg,
                                 boardlist[b].longarg,

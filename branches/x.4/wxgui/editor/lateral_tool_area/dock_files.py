@@ -40,9 +40,8 @@ class File:
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToFunc, self.lateralFunc)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
-        
-
-        line = 50
+    
+        line = 60
         s3 = (self.lat.GetSizeTuple()[0] - line) / 3
 
         self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3)
@@ -117,15 +116,29 @@ class File:
     #----------------------------------------------------------------------
     def updateWidthColums(self):
         line = 60
-        s3 = (self.lateralDefi.GetSizeTuple()[0] - line) / 3
+        withAll = (self.lateralDefi.GetSizeTuple()[0])
         lct = [self.lateralVars, self.lateralDefi, self.lateralFunc]
         for lc in lct:
-            for i in range(3): lc.SetColumnWidth(i, s3)
+            withUse =  lc.GetColumnWidth(0) + lc.GetColumnWidth(1) + lc.GetColumnWidth(2) + lc.GetColumnWidth(3)
+            withExtra = withAll - withUse - 5
+            if withExtra != withUse:
+                lc.SetColumnWidth(0, lc.GetColumnWidth(0) + withExtra)                
             lc.SetColumnWidth(3, line)
         
     #----------------------------------------------------------------------
     def update_dockFiles(self, event=None):
         self.updateWidthColums()
+        
+        
+        
+        if self.notebookEditor.PageCount > 0:
+            self._mgr.GetPane(self.panelOutput).Show()
+            self._mgr.GetPane(self.lat).Show()
+            self.updateIDE()
+        else:
+            self._mgr.GetPane(self.panelOutput).Hide()
+            self._mgr.GetPane(self.lat).Hide()
+            self.updateIDE()
         
         if len(self.stcpage) < 1:
             self.lateralVars.DeleteAllItems()
@@ -151,7 +164,7 @@ class File:
             
             ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*[*]*[\s]*([*\w]+)[\s]*\(([\w ,*.]*)\)[\s]*"
             
-            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([ \w\[\]=,]*);"
+            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([ \w\[\]=,{}]*);"
             ReStructs  = "[\s]*(struct|union|enum)[\s]*([*\w]*)[\s]*(.+);"
             
             ReTypeDef  = "[\s]*(typedef)[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([\w\[\]]*)[\s]*"#([\w]*)"

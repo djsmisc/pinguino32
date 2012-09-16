@@ -84,7 +84,7 @@ class editor:
             font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
             self.setConfig("Source", "font", font.FaceName)
             self.setConfig("Source", "size", font.PointSize)
-            return font
+            return font      
 
         try:
             if self.getConfig("Source", "fontdefault") == "False":
@@ -103,7 +103,7 @@ class editor:
                 return font
         except:
             self.setConfig("Source", "fontdefault", True)
-            font = setDefault()
+            font = defoultFont()
             return font
 
 

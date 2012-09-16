@@ -31,7 +31,7 @@ from wxgui._trad import _
 
 Autocompleter = {
     
-"directive": ["define", "include", "ifndef", "endif",],
+"directive": ["define", "include", "ifndef", "endif",  "undef", "if", "elif", "else", "error", "warning"],
 "reserved" : ["TRUE", "FALSE", "HIGH", "LOW", "INPUT", "OUTPUT", "FOSC", "MIPS", "ON", "OFF",
               "LED1", "LED2", "LED3", "LED4", "REDLED", "GREENLED", "BLUELED", "WHITELED", "YELLOWLED",
               "PROGBUTTON", "USERBUTTON",
@@ -40,7 +40,7 @@ Autocompleter = {
               "void", "const", "bool", "BOOL", "char", "unsigned", "short", "int", "long", "float", "double", "byte", "word",
               "u8", "s8", "u16", "s16", "u32", "s32", "u64", "s64",
               "struct", "union", "typedef", "enum", "register",  "static", "extern", "volatile",
-              "loop", "setup",],
+              "loop", "setup", "INT_MILLISEC", "INT_MICROSEC", "INT_FALLING_EDGE"],
 }
 
 
@@ -54,6 +54,12 @@ Snippet["for (i=0;...{snippet}"] = [[1, 9], "for (i =  ;i< ;i++){\n\n\t}"]
 Snippet["if...else {snippet}"] = [[1, 4], "if (){\n\n\t}\nelse {\n\n\t}"]
 Snippet["if...else if...else {snippet}"] = [[1, 4], "if (){\n\n\t}\nelse if (){\n\n\t}\nelse {\n\n\t}"]
 Snippet["switch( ) {snippet}"] = [[1, 8], "switch (){\n\tcase:\n\n\t\tbreak;\n\tdefault:\n\n\t}"]
+
+Snippet["struct {snippet}"] = [[1, 7], "struct {\n\n};"]
+Snippet["typedef ... struct {snippet}"] = [[1, 15], "typedef struct {\n\n}TYPE;"]
+Snippet["union {snippet}"] = [[1, 6], "union {\n\n};"]
+Snippet["typedef ... union {snippet}"] = [[1, 14], "typedef union {\n\n}TYPE;"]
+
 Snippet[_("Bare Minimum")+" {snippet}"] = [[3, [1, 0]], "void setup() {\n\t//run once:\n\t\n\t}\n\nvoid loop() {\n\t//run repeatedly:\n\n\t}"]
 Snippet[_("Insert Info")+" {snippet}"] = [[2, 1 + len(_("Author:"))],
 """/*----------------------------------------------------- 
