@@ -313,9 +313,6 @@ class File:
                 count += 1
             self.allDefi_back = self.allDefi[:]
             
-            
-
-            
-                
-        #if event: event.Skip()       
+              
+        if event != None: event.Skip() #Update NoteBook   
     
