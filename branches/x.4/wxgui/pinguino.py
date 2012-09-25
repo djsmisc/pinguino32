@@ -571,11 +571,31 @@ class Pinguino(framePinguinoX, Editor):
         del self.reservedword[:]
         del self.libinstructions[:]
 
-        if event == None: self.curBoard = boardlist[0]
+        if event == None:
+            self.curBoard = boardlist[0]
         else:
             self.curBoard = boardlist[event.Int]
-            #self.setWaitCursor()
+            if self.curBoard == PinguinoNoBoot:
+                # get the list from all devices supported by sdcc
+                pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
+                                stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+                output = pipe.stdout.read()
+                proclist = output.split("p")
+                proclist.pop(0)
+                for i in range(len(proclist)):
+                    proclist[i] = proclist[i].strip()
+                #print proclist
 
+                #
+                # TODO : make a submenu from proclist and return proc
+                # 
+                proc = "18f2220"    # only for test purpose
+                
+                self.curBoard.proc = proc
+                self.curBoard.board = "PIC"+proc.upper()
+                print self.curBoard.board
+                
+        	#self.setWaitCursor()
         #self.readlib(self.curBoard) #So slow
         self.displaymsg(_("Changing board")+"...\n", 1)
         if sys.platform=='darwin':
@@ -1189,7 +1209,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
-                else:# if board.bldr == 'boot4'
+                elif board.bldr == 'boot4':
 #                                    "--opt-code-size",\
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                     "-mpic16",\
@@ -1198,6 +1218,25 @@ class Pinguino(framePinguinoX, Editor):
                                     "--optimize-df",\
                                     "--denable-peeps",\
                                     "--ivt-loc=" + str(board.memstart),\
+                                    "-p" + board.proc,\
+                                    "-D" + board.board,\
+                                    "-D" + board.bldr,\
+                                    "-I" + os.path.join(P8_DIR, 'include'),\
+                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                    "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+                                    "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+                                    "-I" + os.path.dirname(filename),\
+                                    "--compile-only",\
+                                    "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
+                                    os.path.join(SOURCE_DIR, 'main.c')],\
+                                   stdout=fichier, stderr=STDOUT)
+                elif board.bldr == 'noboot':
+                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+                                    "-mpic16",\
+                                    "--obanksel=9",\
+                                    "--optimize-cmp",\
+                                    "--optimize-df",\
+                                    "--denable-peeps",\
                                     "-p" + board.proc,\
                                     "-D" + board.board,\
                                     "-D" + board.bldr,\
@@ -1266,7 +1305,7 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
-                else:# if board.bldr == 'boot4'
+                elif board.bldr == 'boot4':
 #                                  "--opt-code-size",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
@@ -1277,6 +1316,28 @@ class Pinguino(framePinguinoX, Editor):
                                   "--denable-peeps",\
                                   "--ivt-loc=" + str(board.memstart),\
                                   "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
+                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
+                                  "-p" + board.proc,\
+                                  "-D" + board.bldr,\
+                                  "-I" + os.path.join(P8_DIR, 'include'),\
+                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib', 'pic16'),\
+                                  '-llibio' + board.proc + '.lib',\
+                                  '-llibc18f.lib',\
+                                  '-llibm18f.lib',\
+                                  '-llibsdcc.lib',\
+                                  os.path.join(SOURCE_DIR, 'main.o')],\
+                                 stdout=fichier, stderr=STDOUT)
+                elif board.bldr == 'noboot':
+                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+                                  "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                                  "-mpic16",\
+                                  "--obanksel=9",\
+                                  "--optimize-cmp",\
+                                  "--optimize-df",\
+                                  "--denable-peeps",\
                                   "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\

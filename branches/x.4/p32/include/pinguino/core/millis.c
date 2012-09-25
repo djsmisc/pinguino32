@@ -36,7 +36,7 @@
  * must be declared as "volatile" to prevent caching.
  */
 volatile u32 _millis;
-#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
+#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 volatile u32 _tmr2;
 #endif
 
@@ -47,7 +47,7 @@ void millis_init(void)
 	pf = GetPeripheralClock();
 	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 	T2CON=0;
-	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
+    #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	_tmr2 = pf / 1000 / 2;
 	TMR2 = 65535 - _tmr2;
 	IPC2bits.T2IP=1;
@@ -78,14 +78,14 @@ u32 millis()
 void Tmr2Interrupt()
 {
 	// is this an TMR2 interrupt ?
-	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
+    #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	TMR2 = _tmr2; // 0xD910;	// because PR2 don't work on PIC32MX220F032D
 	if (IFS0bits.T2IF)
 	#else
 	if (IntGetFlag(INT_TIMER2)) // TODO : add PIC32_PINGUINO_220 support
 	#endif
 	{
-		#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220​F032)
+        #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS0bits.T2IF=0;
 		#else
 		//IFS0CLR=0x00000100;

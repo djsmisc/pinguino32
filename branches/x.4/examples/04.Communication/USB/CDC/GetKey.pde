@@ -1,4 +1,4 @@
-//	Output GNU/Linux:	sudo minicom -o -D /dev/ttyACM0
+//	Input/Output on GNU/Linux:	sudo minicom -o -D /dev/ttyACM0
 
 u8 c=0;
 

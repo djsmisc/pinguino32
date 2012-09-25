@@ -86,7 +86,10 @@ class Uploader:
 
         parameters = (self.logwindow, filename + '.hex', self.curBoard)
 
-        if self.curBoard.bldr == 'boot2':
+        if self.curBoard.bldr == 'noboot':
+            # TODO : interface here something like PICpgm (http://www.members.aon.at/electronics/pic/picpgm/)
+            self.logwindow.WriteText("You choose a board without bootloader.\nYou should either change your board type\nor use a programmer to upload your application on your board")
+        elif self.curBoard.bldr == 'boot2':
             curUploader = self.uploaderVSC(*parameters)
         elif self.curBoard.bldr == 'boot3':
             curUploader = self.uploaderDLN(*parameters)
