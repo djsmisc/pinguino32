@@ -246,9 +246,11 @@ void pinmode(u8 pin,u8 state)
 	switch (portmask[pin])
 	{
 		#ifndef __32MX440F256H__
-		case pA: if (state) TRISASET=pinmask[pin];
-				else TRISACLR=pinmask[pin];
-				break;
+           #ifndef __32MX795F512H__
+            case pA: if (state) TRISASET=pinmask[pin];
+                    else TRISACLR=pinmask[pin];
+                    break;
+            #endif
 		#endif
 		case pB: if (state) TRISBSET=pinmask[pin];
 				else TRISBCLR=pinmask[pin];
@@ -288,9 +290,11 @@ u8 pinread(u8 pin)
 	switch (portmask[pin])
 	{
 		#ifndef __32MX440F256H__
-		case pA:
-			reg = TRISA;
-			break;
+           #ifndef __32MX795F512H__
+            case pA:
+                reg = TRISA;
+                break;
+            #endif
 		#endif
 		case pB:
 			reg = TRISB;
@@ -332,9 +336,11 @@ void digitalwrite(u8 pin,u8 state)
 	switch (portmask[pin])
 	{
 		#ifndef __32MX440F256H__
-		case pA: if (state) PORTASET=pinmask[pin];
-				else PORTACLR=pinmask[pin];
-				break;
+            #ifndef __32MX795F512H__
+            case pA: if (state) PORTASET=pinmask[pin];
+                    else PORTACLR=pinmask[pin];
+                    break;
+            #endif
 		#endif
 		case pB: if (state) PORTBSET=pinmask[pin];
 				else PORTBCLR=pinmask[pin];
@@ -372,8 +378,10 @@ u8 digitalread(u8 pin)
 	switch (portmask[pin])
 	{
 		#ifndef __32MX440F256H__
-		case pA: return((PORTA&pinmask[pin])!=0);
+            #ifndef __32MX795F512H__
+            case pA: return((PORTA&pinmask[pin])!=0);
 				break;
+            #endif
 		#endif
 		case pB: return((PORTB&pinmask[pin])!=0);
 				break;

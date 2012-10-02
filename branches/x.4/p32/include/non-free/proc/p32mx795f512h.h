@@ -6,7 +6,7 @@
 #ifndef __32MX795F512H_H
 #define __32MX795F512H_H
 
-#if defined (__LANGUAGE_C__)
+#if defined (__LANGUAGE_C__) || defined(__cplusplus)
 extern volatile unsigned int        WDTCON __attribute__((section("sfrs")));
 typedef union {
   struct {
