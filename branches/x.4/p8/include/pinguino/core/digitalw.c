@@ -1,15 +1,41 @@
-// Digital Library for Pinguino
-// jean-pierre MANDON 2008
-// modification 2009/08/08 18F4550
-// regis blanchot 2011/08/09 : FreeJALduino support
-// regis blanchot 2012/02/14 : Pinguino 26J50 support
+/*	--------------------------------------------------------------------
+	FILE:			digitalw.c
+	PROJECT:		pinguino
+	PURPOSE:		Digital IO management
+	PROGRAMER:		Jean-Pierre MANDON
+	FIRST RELEASE:	2008
+	LAST RELEASE:	26 Sep. 2012
+	----------------------------------------------------------------------------
+	TODO : 
+	----------------------------------------------------------------------------
+    CHANGELOG :
+        jean-pierre mandon : modification 2009/08/08 18F4550
+        regis blanchot 2011/08/09 : FreeJALduino support
+        regis blanchot 2012/02/14 : Pinguino 26J50 support
+        regis blanchot 2012/09/28 : complete rewrite
+	----------------------------------------------------------------------------
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Lesser General Public
+	License as published by the Free Software Foundation; either
+	version 2.1 of the License, or (at your option) any later version.
+
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with this library; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+	------------------------------------------------------------------*/
 
 #ifndef __DIGITALW__
 #define __DIGITALW__
 
-#include <pic18fregs.h>
+//#include <pic18fregs.h>
 #include <typedef.h>
 
+/*
 #define pB	0
 #define pC	1
 #define pA	2
@@ -17,43 +43,36 @@
 #define pE	4
 #define pF	5
 #define pG	6
+*/
 
-#define _0	1<<0	// 0x01
-#define _1	1<<1	// 0x02
-#define _2	1<<2	// 0x04
-#define _3	1<<3	// 0x08
-#define _4	1<<4	// 0x10
-#define _5	1<<5	// 0x20
-#define _6	1<<6	// 0x40
-#define _7	1<<7	// 0x80
+#define pA	0
+#define pB	1
+#define pC	2
+#define pD	3
+#define pE	4
+#define pF	5
+#define pG	6
 
-#ifdef PIC18F4550
-const u8 mask[29]={	_0,_1,_2,_3,_4,_5,_6,_7,		// PORTB
-					_6,_7,_0,_1,_2,					// PORTC
-					_0,_1,_2,_3,_5,					// PORTA
-					_0,_1,_2,						// PORTE
-					_0,_1,_2,_3,_4,_5,_6,_7};		// PORTD
+#define _0	0x01    // 1<<0
+#define _1	0x02    // 1<<1 
+#define _2	0x04    // 1<<2
+#define _3	0x08    // 1<<3 
+#define _4	0x10    // 1<<4 
+#define _5	0x20    // 1<<5 
+#define _6	0x40    // 1<<6 
+#define _7	0x80    // 1<<7 
 
-//const u8 port[29]={	0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,4,4,4,3,3,3,3,3,3,3,3};
+#ifdef PIC18F2550                                   // Pinguino pin number
+const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+					_6,_7,_0,_1,_2,                 // 8 - 12
+					_0,_1,_2,_3,_5,_4};             // 13 - 18
 
-const u8 port[29]={	pB, pB, pB, pB, pB, pB, pB, pB,
-					pC, pC, pC, pC, pC,
-					pA, pA, pA, pA, pA,
-					pE, pE, pE,
-					pD, pD, pD, pD, pD, pD, pD, pD};
+const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
+					pC, pC, pC, pC, pC,             // 8 - 12
+					pA, pA, pA, pA, pA, pA};        // 13 - 18
 #endif
 
-#ifdef PIC18F2550
-const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,
-					_6,_7,_0,_1,_2,
-					_0,_1,_2,_3,_5,_4};
-
-const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB,
-					pC, pC, pC, pC, pC,
-					pA, pA, pA, pA, pA, pA};
-#endif
-
-#ifdef PIC18F26J50
+#ifdef PIC18F26J50                                  // Pinguino pin number
 const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 					_6,_7,_0,_1,_2,                 // 8 - 12
 					_0,_1,_2,_3,_5};                // 13 -17
@@ -61,6 +80,20 @@ const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
 					pC, pC, pC, pC, pC,             // 8 - 12
 					pA, pA, pA, pA, pA};            // 13 - 17
+#endif
+
+#ifdef PIC18F4550                                   // Pinguino pin number
+const u8 mask[29]={	_0,_1,_2,_3,_4,_5,_6,_7,		// 0 - 7
+					_6,_7,_0,_1,_2,					// 8 - 12
+					_0,_1,_2,_3,_5,					// 13 - 17
+					_0,_1,_2,						// 18 - 20
+					_0,_1,_2,_3,_4,_5,_6,_7};		// 21 - 28
+
+const u8 port[29]={	pB, pB, pB, pB, pB, pB, pB, pB,
+					pC, pC, pC, pC, pC,
+					pA, pA, pA, pA, pA,
+					pE, pE, pE,
+					pD, pD, pD, pD, pD, pD, pD, pD};
 #endif
 
 #ifdef FREEJALDUINO
@@ -73,84 +106,121 @@ const u8 mask[14]={_7,_6,_2,_3,_0,_2,_1,_1,_2,_3,_4,_5,_6,_7};
 const u8 port[14]={1,1,0,0,3,1,1,3,3,3,3,3,3,3};
 #endif
 
-void digitalwrite(u8 output, u8 state)
+void digitalwrite(u8 pin, u8 state)
 {
-	switch (port[output])
+/*
+	switch (port[pin])
 	{
-		case pB: if (state) PORTB=PORTB | mask[output]; 
-				else PORTB=PORTB & (255-mask[output]);
+		case pB: if (state) PORTB=PORTB | mask[pin]; 
+				else PORTB=PORTB & (255-mask[pin]);
 				break;
-		case pC: if (state) PORTC=PORTC | mask[output];
-				else PORTC=PORTC & (255-mask[output]);
+		case pC: if (state) PORTC=PORTC | mask[pin];
+				else PORTC=PORTC & (255-mask[pin]);
 				break;
-		case pA: if (state) PORTA=PORTA | mask[output];
-				else PORTA=PORTA & (255-mask[output]);
+		case pA: if (state) PORTA=PORTA | mask[pin];
+				else PORTA=PORTA & (255-mask[pin]);
 				break;
 		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
-		case pD: if (state) PORTD=PORTD | mask[output]; 
-				else PORTD=PORTD & (255-mask[output]);
+		case pD: if (state) PORTD=PORTD | mask[pin]; 
+				else PORTD=PORTD & (255-mask[pin]);
 				break;
-		case pE: if (state) PORTE=PORTE | mask[output]; 
-				else PORTE=PORTE & (255-mask[output]);
+		case pE: if (state) PORTE=PORTE | mask[pin]; 
+				else PORTE=PORTE & (255-mask[pin]);
 				break;
 		#endif
 	}
+*/
+    u8  b = mask[pin];          // bit
+    u8* p = port[pin] + 0xF80;  // lat
+    if (state)
+        *p |= b;                // set bit
+    else
+        *p &= (255-b);          // clear bit
 }
 
-u8 digitalread(u8 input)
+u8 digitalread(u8 pin)
 {
-	switch (port[input])
+/*
+	switch (port[pin])
 	{
-		case pB: if ((PORTB & mask[input])!=0) return (1);
+		case pB: if ((PORTB & mask[pin])!=0) return (1);
 			else return (0);
 			break;
-		case pC: if ((PORTC & mask[input])!=0) return (1);
+		case pC: if ((PORTC & mask[pin])!=0) return (1);
 			else return (0);
 			break;
-		case pA: if ((PORTA & mask[input])!=0) return (1);
+		case pA: if ((PORTA & mask[pin])!=0) return (1);
 			else return (0);
 			break;
 		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
-		case pD: if ((PORTD & mask[input])!=0) return (1);
+		case pD: if ((PORTD & mask[pin])!=0) return (1);
 			else return (0);
 			break;
-		case pE: if ((PORTE & mask[input])!=0) return (1);
+		case pE: if ((PORTE & mask[pin])!=0) return (1);
 			else return (0);
 			break;
 		#endif	
 	}
 	return (0);
+*/
+    u8* p = port[pin] + 0xF80;  // lat
+    if ((*p & mask[pin]) == 0)
+        return 0;               // bit is not set
+    else
+        return 1;               // bit is set
 }
 
-void pinmode(u8 input, u8 state)
+void pinmode(u8 pin, u8 state)
 {
-	switch (port[input])
+/*
+	switch (port[pin])
 	{
-		case pB: if (state) TRISB=TRISB | mask[input];
-			else TRISB=TRISB & (255-mask[input]);
+		case pB: if (state) TRISB=TRISB | mask[pin];
+			else TRISB=TRISB & (255-mask[pin]);
 			break;
-		case pC: if (state) TRISC=TRISC | mask[input];
-			else TRISC=TRISC & (255-mask[input]);
+		case pC: if (state) TRISC=TRISC | mask[pin];
+			else TRISC=TRISC & (255-mask[pin]);
 			break;
-		case pA: if (state) TRISA=TRISA | mask[input];
-			else TRISA=TRISA & (255-mask[input]);
+		case pA: if (state) TRISA=TRISA | mask[pin];
+			else TRISA=TRISA & (255-mask[pin]);
 			break;
 		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
-		case pD: if (state) TRISD=TRISD | mask[input];
-			else TRISD=TRISD & (255-mask[input]);
+		case pD: if (state) TRISD=TRISD | mask[pin];
+			else TRISD=TRISD & (255-mask[pin]);
 			break;
-		case pE: if (state) TRISE=TRISE | mask[input];
-			else TRISE=TRISE & (255-mask[input]);
+		case pE: if (state) TRISE=TRISE | mask[pin];
+			else TRISE=TRISE & (255-mask[pin]);
 			break;
 		#endif	
 	}
+*/
+    u8  b = mask[pin];          // bit
+    u8* p = port[pin] + 0xF92;  // tris
+    if (state)                  // if 1
+        *p |= b;                // set bit (input)
+    else                        // if 0
+        *p &= (255-b);          // clear bit (output)
 }
 
 void toggle(u8 pin)
 {
+/*
 	u8 val;
 	val = digitalread(pin);
 	digitalwrite(pin, val^1);
+*/
+    u8  b = mask[pin];          // bit
+    u8* p = port[pin] + 0xF80;  // lat
+    if ((*p & b) == 0)          // bit is not set ?
+    {
+        p = port[pin] + 0xF80;
+        *p |= b;                // set bit
+    }
+    else                        // bit is set ?
+    {
+        p = port[pin] + 0xF80;
+        *p &= (255-b);          // clear bit
+    }
 }
 
 #endif

@@ -27,9 +27,11 @@ void analog_init(void)
 	ADCON2=0xBD;		//Right justified, 20TAD, FOSC/16
 #elif defined(PIC18F26J50)
 	TRISA=TRISA | 0x2F;	// 0b00101111 = RA0,1,2,3 and RA5 = AN0 to AN4 are INPUT
-	ANCON0=0x1F;        // 0b00011111 = AN0 to AN4 enabled, AN5 to AN7 disabled
-	ANCON1=0x0A;        // 0b00000000 = AN8 to AN12 disabled
-	ADCON0=0x00;        // 0b00000000 = VRef-=VSS, VRef+=VDD, CHS = AN0 to AN4 
+    //1 = Pin configured as a digital port
+    //0 = Pin configured as an analog channel – digital input is disabled and reads ‘0’
+	ANCON0=0xE0;//0x1F; // 0b11100000 = AN0 to AN4 enabled, AN5 to AN7 disabled
+	ANCON1|=0x1F;//0x0A;// 0b00111111 = AN8 to AN12 disabled (1=digital/0=analog)
+	ADCON0=0x00;        // 0b00000000 = VRef-=VSS, VRef+=VDD, No channel selected yet 
 	ADCON1=0xBD;		// 0b10111101 = Right justified, Calibration Normal, 20TAD, FOSC/16
 #else
 	TRISA=TRISA | 0x2F; // 0b00101111 = RA0,1,2,3 and RA5 = AN0 to AN4 are INPUT
@@ -68,14 +70,18 @@ u16 analogread(u8 channel)
 			ADCON0=(channel-14)*4;
 		else if(channel>=17 && channel<=19)
 			ADCON0=(channel-13)*4;
-	#else
-		ADCON0=(channel-13)*4;
+    #else
+		if(channel>=13 && channel<=17)
+            ADCON0=(channel-13)*4;              // A0 = 13, A1 = 14, ...
+		else if(channel<=5)
+            ADCON0 = channel * 4;              // A0 = 0, A1 = 1, ...
 	#endif
 	
-// ADCON2=0xBD;
+    //ADCON2=0xBD;
 	ADCON0bits.ADON=1;
-	for (result=1;result<10;result++) __asm NOP __endasm;
-		ADCON0bits.GO=1;
+	for (result=1;result<10;result++)
+        __asm NOP __endasm;
+    ADCON0bits.GO=1;
 	while (ADCON0bits.GO);
 	result=ADRESH<<8;
 	result+=ADRESL;

@@ -7,6 +7,7 @@
 #ifndef __MACRO_H
 	#define __MACRO_H
 
+    #include <typedef.h>
 	//#include <const.h>
 
 	/// ASM
@@ -26,10 +27,10 @@
 
 	/// BYTES
 
-	#define highByte(x)			    ((unsigned char) ((x) >> 8))
-	#define high8(x)				((unsigned char) ((x) >> 8))
-	#define lowByte(x)			    ((unsigned char) ((x) & 0xFF))
-	#define low8(x)				    ((unsigned char) ((x) & 0xFF))
+	#define highByte(x)			    ((u8) ((x) >> 8))
+	#define high8(x)				((u8) ((x) >> 8))
+	#define lowByte(x)			    ((u8) ((x) & 0xFF))
+	#define low8(x)				    ((u8) ((x) & 0xFF))
 	#define make16(low,high)	    (low | (high << 8))
 
 	/// MATH
@@ -52,7 +53,7 @@
 	/// BITWISE OPERATION
 
 	#define BIN_BIT(value, bit, dec) \
-		(((((unsigned long)(value##.0))/dec)&1 == 1)? (1<<bit) : 0)
+		(((((u32)(value##.0))/dec)&1 == 1)? (1<<bit) : 0)
 
 	#define Bin(value) \
 	(	BIN_BIT(value,  0, 1) | \
