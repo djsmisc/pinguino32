@@ -161,6 +161,20 @@ class PIC32_Pinguino_Micro:
 	shortarg='-M'
 	longarg='--olimex440Micro'
 
+class PIC32_Pinguino_T795:
+	name='PIC32 Pinguino T795'
+	id=wx.NewId()
+	arch=32
+	bldr='microchip'
+	proc='32MX795F512H'
+	board='PIC32_PINGUINO_T795'
+	vendor=MICROCHIP_ID
+	product=PIC32_ID
+	memstart=0x00000
+	memend=0x40000
+	shortarg='-T'
+	longarg='--olimexT795'
+
 class PIC32_Pinguino_220:
 	name='PIC32 Pinguino 220'
 	id=wx.NewId()
@@ -264,7 +278,7 @@ boardlist = [
                 Pinguino2550, Pinguino4550, Pinguino26J50, 
                 PICuno_Equo, FreeJALduino,
                 PIC32_Pinguino, PIC32_Pinguino_OTG,
-                PIC32_Pinguino_Micro, PIC32_Pinguino_220,
+                PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,
                 GENERIC32MX250F128, GENERIC32MX220F032,
                 Emperor_460, Emperor_795,
                 UBW32_460, UBW32_795
