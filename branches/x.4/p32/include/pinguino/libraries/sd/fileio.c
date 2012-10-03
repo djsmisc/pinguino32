@@ -30,6 +30,10 @@
 #include "ff.c"					// Fat Filesystem
 #include "diskio.c"				// card access functions
 
+#ifdef SD_DEBUG
+    #include <__cdc.c>          // USB CDC functions
+#endif
+
 /*	----------------------------------------------------------------------------
  mount
  initializes a MEDIA structure for FILEIO access
@@ -196,12 +200,15 @@ unsigned listDir(const char *path) {
 			s1++;
 			p1 += Finfo.fsize;
 		}
-		CDCprintf("%c%c%c%c%c ", (Finfo.fattrib & AM_DIR) ? 'D' : '-',
+/* what about other outputs ?
+		CDCprintf("%c%c%c%c%c ",
+                (Finfo.fattrib & AM_DIR) ? 'D' : '-',
 				(Finfo.fattrib & AM_RDO) ? 'R' : '-',
 				(Finfo.fattrib & AM_HID) ? 'H' : '-',
 				(Finfo.fattrib & AM_SYS) ? 'S' : '-',
 				(Finfo.fattrib & AM_ARC) ? 'A' : '-');
-		CDCprintf("%u/%02u/%02u %02u:%02u ", (Finfo.fdate >> 9) + 1980,
+		CDCprintf("%u/%02u/%02u %02u:%02u ",
+                (Finfo.fdate >> 9) + 1980,
 				(Finfo.fdate >> 5) & 15, Finfo.fdate & 31, (Finfo.ftime >> 11),
 				(Finfo.ftime >> 5) & 63);
 		CDCprintf(" %9u ", Finfo.fsize);
@@ -211,6 +218,7 @@ unsigned listDir(const char *path) {
 #else
 				"");
 #endif
+*/
 	}
 
 	return s1;
