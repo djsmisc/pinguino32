@@ -91,6 +91,23 @@ void IOsetRemap()
 	CFGCONbits.PMDLOCK=1;	
 	SystemLock();
 #endif
+
+// Thanks to danirobin
+#if defined(GENERIC32MX250F128) || defined(GENERIC32MX220F032)
+	SystemUnlock();
+	CFGCONbits.IOLOCK=0;			// unlock configuration
+	CFGCONbits.PMDLOCK=0;
+    #ifdef __PWM__
+        RPB4Rbits.RPB4R =0b0101;    // PWM0 = OC1 = RB4
+        RPA4Rbits.RPA4R =0b0110;    // PWM1 = OC4 = RA4
+        RPB5Rbits.RPB5R =0b0101;    // PWM2 = OC2 = RB5
+        RPB13Rbits.RPB13R=0b0101;   // PWM3 = OC5 = RB13
+        RPB14Rbits.RPB14R=0b0101;   // PWM4 = OC3 = RB14
+    #endif
+	CFGCONbits.IOLOCK=1;			// relock configuration
+	CFGCONbits.PMDLOCK=1;	
+	SystemLock();
+#endif
 }
 
 #endif /* __REMAP_C */
