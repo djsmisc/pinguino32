@@ -34,7 +34,7 @@ Autocompleter = {
 "directive": ["define", "include", "ifndef", "endif",  "undef", "if", "elif", "else", "error", "warning"],
 "reserved" : ["TRUE", "FALSE", "HIGH", "LOW", "INPUT", "OUTPUT", "FOSC", "MIPS", "ON", "OFF",
               "LED1", "LED2", "LED3", "LED4", "REDLED", "GREENLED", "BLUELED", "WHITELED", "YELLOWLED",
-              "PROGBUTTON", "USERBUTTON",
+              "PROGBUTTON", "USERBUTTON", "RUNLED",
               "PORTA", "PORTB", "PORTC", "PORTD", "PORTE", "PORTF", "PORTG",
               "if", "switch", "for", "while", "do", "continue", "break", "else", "return", "case", "default",
               "void", "const", "bool", "BOOL", "char", "unsigned", "short", "int", "long", "float", "double", "byte", "word",
@@ -50,7 +50,7 @@ Snippet["void {snippet}"] = [[1, 5], "void (){\n\n\t}"]
 Snippet["while( ) {snippet}"] = [[1, 7], "while (){\n\n\t}"]
 Snippet["do {...} while  {snippet}"] = [[3, 8], "do {\n\t\n} while();"]
 Snippet["for {snippet}"] = [[1, 5], "for (){\n\n\t}"]
-Snippet["for (i=0;...{snippet}"] = [[1, 9], "for (i =  ;i< ;i++){\n\n\t}"]
+Snippet["for (i=0;...{snippet}"] = [[1, 7], "for (i= ;i< ;i++){\n\n\t}"]
 Snippet["if...else {snippet}"] = [[1, 4], "if (){\n\n\t}\nelse {\n\n\t}"]
 Snippet["if...else if...else {snippet}"] = [[1, 4], "if (){\n\n\t}\nelse if (){\n\n\t}\nelse {\n\n\t}"]
 Snippet["switch( ) {snippet}"] = [[1, 8], "switch (){\n\tcase:\n\n\t\tbreak;\n\tdefault:\n\n\t}"]

@@ -123,9 +123,8 @@ class Pinguino(framePinguinoX, Editor):
         self.setOSvariables()
         self.configPanes()
         self.buildMenu()
-        self.loadSettings()
+        #self.loadSettings()
         self.morePreferences()
-        self.DrawToolbar()	
         self.ConnectAll()
         self.trees = []
 
@@ -146,6 +145,7 @@ class Pinguino(framePinguinoX, Editor):
             self.displaymsg(_("Welcome to Pinguino IDE"), 0)            
             
 
+	self.loadSettings()
         self.__initIDE__()
         
 
@@ -155,8 +155,28 @@ class Pinguino(framePinguinoX, Editor):
         MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
         self.AutoCompleter = AutocompleterIDE(self)
         self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
-        self.AutoCompleter.Hide()   	
-
+        self.AutoCompleter.Hide()
+	
+	#Select Device frame build
+        #CharsCount = self.getElse("Completer", "charscount", 1)
+        #MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
+        self.DeviceList = PicListIDE(self)
+	self.DeviceList.__init_list__(self)
+        self.DeviceList.Hide()
+	
+	#pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
+			#stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)	
+	
+	pipe = Popen([self.c8, "-mpic16", "-p"],\
+                        stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+	
+	output = pipe.stdout.read()
+	proclist = output.split("p")
+	proclist.pop(0)
+	for i in range(len(proclist)): proclist[i] = proclist[i].strip()
+	self.DeviceList.setItems(proclist)	
+	
+	self.DrawToolbar()		
         
     #----------------------------------------------------------------------
     def configPanes(self):
@@ -297,6 +317,7 @@ class Pinguino(framePinguinoX, Editor):
             self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.menu.menuItemDebugNone)
             
         self.Bind(wx.EVT_MENU, self.OnViewStdout, self.menu.menuItemViewStdout)
+        
 
         self.Bind(wx.EVT_MENU, self.OnVerify, self.menu.menuItemCompile)
         self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
@@ -383,10 +404,7 @@ class Pinguino(framePinguinoX, Editor):
         maxim = self.getElse("IDE", "Maximized", "False")
         if maxim == "True": self.Maximize()
 
-        self.theme = self.getElse("IDE", "theme", "PinguinoX")
-
-        boardName = self.getElse("IDE", "Board", "Pinguino 2550")
-        self.setBoard(boardName)
+        self.theme = self.getElse("IDE", "theme", "PinguinoX")   
 
         try:
             for i in range(self.getConfig("Recents", "Recents_count")):
@@ -562,55 +580,49 @@ class Pinguino(framePinguinoX, Editor):
 # OnBoard : load boards specificities
 # ------------------------------------------------------------------------------
 
-    def OnBoard(self, event):
-
+    def OnBoard(self, tipo):
         # clear all the lists before rebuild them
         del self.rw[:]
         del self.regobject[:]
         del self.keywordList[:]
         del self.reservedword[:]
         del self.libinstructions[:]
+	
+	sel = self.choiceMode.GetStringSelection()
+	
+	if sel == _("USB Bootloader"):
+	    self.choiceBoards.Show()
+	    self.textCtrlDevices.Hide()	
+	    name = self.getElse("IDE","Board", "Pinguino 2550")
+	    for board in boardlist:
+		if name == board.name:
+		    self.curBoard = board
+		    break	    
+	    self.setConfig("IDE","Board", self.curBoard.name)
+	    
+	    
+	elif sel == _("Serial Bootloader"):
+	    return
+	    
+	    
+	elif sel == _("No Bootloader"):
+	    self.choiceBoards.Hide()
+	    self.textCtrlDevices.Show()
+	    proc = self.textCtrlDevices.GetValue()
+	    #proc = "18f2220"    # only for test purpose
+	    self.curBoard = boardlist[0]
+	    self.curBoard.proc = proc
+	    self.curBoard.board = "PIC"+proc.upper()    
+	    
 
-        if event == None:
-            self.curBoard = boardlist[0]
-        else:
-            self.curBoard = boardlist[event.Int]
-            if self.curBoard == PinguinoNoBoot:
-                # get the list from all devices supported by sdcc
-                pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
-                                stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-                output = pipe.stdout.read()
-                proclist = output.split("p")
-                proclist.pop(0)
-                for i in range(len(proclist)):
-                    proclist[i] = proclist[i].strip()
-                #print proclist
-
-                #
-                # TODO : make a submenu from proclist and return proc
-                # 
-                proc = "18f2220"    # only for test purpose
-                
-                self.curBoard.proc = proc
-                self.curBoard.board = "PIC"+proc.upper()
-                print self.curBoard.board
-                
-        	#self.setWaitCursor()
         #self.readlib(self.curBoard) #So slow
-        self.displaymsg(_("Changing board")+"...\n", 1)
+        self.displaymsg(_("Changing board")+"...\n", 0)
         if sys.platform=='darwin':
             self.readlib(self.curBoard) #So slow
         else:
-            t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-            t.start()
+            self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+            self.Thread_curBoard.start()
 
-
-
-        #self.statusBarEditor.SetStatusText(number=3, text=self.curBoard.name)
-
-        if event != None:
-            event.Skip()
-            #self.setNormalCursor()
 
 
     #----------------------------------------------------------------------
@@ -627,9 +639,9 @@ class Pinguino(framePinguinoX, Editor):
                 self.curBoard = board
                 break
 
-        self.readlib(self.curBoard) #So slow	
-        #t = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-        #t.start()
+        #self.readlib(self.curBoard) #So slow	
+        self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+        self.Thread_curBoard.start()
 
 # ------------------------------------------------------------------------------
 # OnPaneClose: wx.aui managed window is about to be closed
@@ -839,7 +851,7 @@ class Pinguino(framePinguinoX, Editor):
 
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
-# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------	
 
     def DrawToolbar(self):
         try: self.toolbar.ClearTools()
@@ -852,21 +864,50 @@ class Pinguino(framePinguinoX, Editor):
         # Update Bitmap size to fit new icons (not sure that it works !)
         self.toolbar.SetToolBitmapSize(iconSize)
 
-        index = 0
-        for board in boardlist:
-            if self.curBoard.id == board.id:
-                self.curBoard = board
-                break	
-            index += 1
+	#index = 0
+	#for board in boardlist:
+	    #if self.curBoard.id == board.id:
+		#self.curBoard = board
+		#break	
+	    #index += 1
 
         boards = []
         for i in self.boardlist: boards.append(i.name)
-        self.choiceBoards = wx.Choice( self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
-        self.choiceBoards.SetSelection( index )
-        self.choiceBoards.Bind(wx.EVT_CHOICE, self.OnBoard)
+        #self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
+        self.choiceBoards = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), boards[1:], wx.TE_READONLY)
+        #self.choiceBoards.SetSelection(index-1)
+        self.choiceBoards.Bind(wx.EVT_COMBOBOX, lambda x:self.OnBoard("board"))
         self.choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
-
-
+	name = self.getElse("IDE", "board", "Pinguino 2550")
+	self.choiceBoards.SetValue(name)	
+	
+	
+	modes = [_("USB Bootloader"), _("Serial Bootloader"), _("No Bootloader")]
+	self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
+	#self.choiceMode = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), modes, 0 )
+	self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", 0))
+	self.choiceMode.Bind(wx.EVT_CHOICE, lambda x:self.OnBoard("mode"))
+	self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+	
+	self.textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
+	self.textCtrlDevices.Hide()
+	self.textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
+	name = self.getElse("IDE", "boardNoBoot", "18f1220")
+	self.textCtrlDevices.SetValue(name)	
+	
+	mode = self.getElse("IDE", "boardmode", "USB Bootloader")
+	if mode == "USB Bootloader":
+	    boardName = self.getElse("IDE", "Board", "Pinguino 2550")
+	    self.choiceBoards.Show()
+	    self.textCtrlDevices.Hide()
+	    self.setBoard(boardName)
+	elif mode == "No Bootloader":
+	    #boardName = self.getElse("IDE", "bard", "Pinguino (no Bootloader)")
+	    self.setBoard("Pinguino (no Bootloader)")	
+	    self.choiceBoards.Hide()
+	    self.textCtrlDevices.Show() 
+	
+	
         def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
             if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
                 id = wx.NewId()
@@ -896,7 +937,11 @@ class Pinguino(framePinguinoX, Editor):
         add2Toolbar("find", "Fin", self.OnFind, _("Search in File"))
         add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
         self.toolbar.AddSeparator()
-        self.toolbar.AddControl(self.choiceBoards)        
+	
+	self.toolbar.AddControl(self.choiceMode)	
+        self.toolbar.AddControl(self.choiceBoards) 
+        self.toolbar.AddControl(self.textCtrlDevices) 	
+	
         add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
         add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
         #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
@@ -975,6 +1020,7 @@ class Pinguino(framePinguinoX, Editor):
             self.reservedword.append(fixed_rw[i])
 
         self.displaymsg(_("Board config")+":\t"+board.name+"\n", 0)
+	
 
 # ------------------------------------------------------------------------------
 # ClearRedundancy:
@@ -1502,6 +1548,7 @@ class Pinguino(framePinguinoX, Editor):
             font.SetUnderlined(False)
             self.logwindow.SetFont(font)            
         
+        
 
 
 
@@ -1519,6 +1566,10 @@ class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
     
 ########################################################################
 class StdoutIDE(frameStdout, Stdout):
+    """"""
+       
+########################################################################
+class PicListIDE(FrameSelectDevice, PICpopup):
     """"""
     
 if DEV:
