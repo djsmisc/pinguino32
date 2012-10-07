@@ -112,19 +112,19 @@ class Debugger:
         if len(message) > 0:
             self.logwindow.SetInsertionPoint(len(self.logwindow.Value))
             if self.logwindow.GetLineText(self.logwindow.NumberOfLines) != "": self.logwindow.WriteText("\n")
-            self.logwindow.WriteText("   "+message)
+            self.logwindow.WriteText(message)
 
 
     #----------------------------------------------------------------------
     def sendLine(self, event=None):
         line = str(self.debuggingLine.Value)
-        if line.startswith(">>>"): line = line.replace(">>>", "")
+        #if line.startswith(">>>"): line = line.replace(">>>", "")
         self.debugOutMessage = line
         self.logwindow.SetInsertionPoint(len(self.logwindow.Value))
         if self.logwindow.GetLineText(self.logwindow.NumberOfLines) != "": self.logwindow.WriteText("\n")
-        self.logwindow.WriteText(">>>"+line)
+        self.logwindow.WriteText(line)
         self.debuggingLine.Clear()
-        self.debuggingLine.SetValue(">>>")
+        #self.debuggingLine.SetValue(">>>")
         self.debuggingLine.SetInsertionPoint(3)
         self.history.append(line)
         self.historyIndex = 0
@@ -139,14 +139,14 @@ class Debugger:
             self.historyIndex += 1
             if self.historyIndex > len(self.history): self.historyIndex = 0
             self.debuggingLine.Clear()
-            self.debuggingLine.SetValue(">>>"+self.history[-self.historyIndex])
+            self.debuggingLine.SetValue(self.history[-self.historyIndex])
             self.debuggingLine.SetInsertionPoint(len(self.debuggingLine.Value))            
 
         elif event.GetKeyCode() == wx.WXK_DOWN and len(self.history) > 0:
             self.historyIndex -= 1
             if self.historyIndex < 0: self.historyIndex = len(self.history)
             self.debuggingLine.Clear()
-            self.debuggingLine.SetValue(">>>"+self.history[-self.historyIndex])
+            self.debuggingLine.SetValue(self.history[-self.historyIndex])
             self.debuggingLine.SetInsertionPoint(len(self.debuggingLine.Value))
 
                 
@@ -160,7 +160,7 @@ class Debugger:
             self.pinguinoCDC = serial.Serial(port, timeout=1)
             self.logwindow.WriteText(_("Connected")+": "+port+"\n")
         except:
-            self.logwindow.WriteText(_("No device connected")+"!")
+            self.logwindow.WriteText(_("No device connected")+"!\n")
             
 
     #----------------------------------------------------------------------
@@ -184,7 +184,7 @@ class Debugger:
                 self.pinguinoCDC.write(self.debugOutMessage)
                 self.debugOutMessage = None
             else:
-                line = self.pinguinoCDC.readline()
+                line = self.pinguinoCDC.readall()
                 self.updateDebggingLog(line)
 
         except UnboundLocalError:
@@ -193,7 +193,7 @@ class Debugger:
             self.updateDebggingLog(None)      
 
         except serial.serialutil.SerialException:
-            self.logwindow.WriteText("\n"+_("device disconnected")+"!")
+            self.logwindow.WriteText("\n"+_("device disconnected")+"!\n")
             self.debugCDC()          
             return
         except:

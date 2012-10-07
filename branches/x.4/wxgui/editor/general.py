@@ -308,12 +308,11 @@ class General:
         allfunctions = []
 
         for i in self.allVars:
-            icons[i[0][:].replace("*", "")] = i[1][:]
+            icons[i[0][:].replace("*", "")] = i[1][:].split()[-1]
             varbls.append(i[0][:].replace("*", ""))
 
         for i in self.allFunc:
             icons[i[0][:].replace("*", "")] = "function"
-            #varbls.append(i[0][:].replace("*", ""))
             allfunctions.append(i[0][:].replace("*", ""))
 
         for i in self.allDefi:

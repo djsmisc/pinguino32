@@ -128,8 +128,8 @@ class SubversionRepository(Repository):
 		self._client = pysvn.Client()
 		# check that there is a valid Subversion repository at the URL, without doing a checkout.
 		try:
-			#self._client.ls(url)
-			self._client.list(url)
+			self._client.ls(url)
+			#self._client.list(url)
 		except pysvn._pysvn.ClientError, errmsg:
 			raise VersionControlError(errmsg)
 	
@@ -143,8 +143,8 @@ class SubversionRepository(Repository):
 		try:
 			self._client.checkout(self.url, path)
 		except pysvn._pysvn.ClientError: # assume this is an 'object of the same name already exists' error
-			#repos_contents = self._client.ls(self.url)
-			repos_contents = self._client.list(self.url)
+			repos_contents = self._client.ls(self.url)
+			#repos_contents = self._client.list(self.url)
 			if not os.path.isdir(".backup"): os.mkdir(".backup")
 			for entry in repos_contents:
 				filename = entry["name"][len(self.url)+1:]

@@ -118,7 +118,7 @@ else:
 # ------------------------------------------------------------------------------
 
 try:
-    import wx
+    import wx, wx.combo
     fichier.writelines('wx.python successfully loaded\n')
 except:
     fichier.writelines('wx.python failed\n')
@@ -259,7 +259,15 @@ except:
     fichier.close()
     perror()
     
-
+try:	
+    from editor import PICpopup		
+    fichier.writelines('PICpopup successfully loaded\n')
+except:
+    fichier.writelines('PICpopup failed\n')
+    fichier.writelines('You should have pic_popup.py at the wxgui/editor/\n')
+    fichier.close()
+    perror()    
+    
 try:	
     from editor import Preferences	
     fichier.writelines('Preferences successfully loaded\n')

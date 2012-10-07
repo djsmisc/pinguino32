@@ -3,6 +3,8 @@
 
 
 """File to test features"""
+import tarfile, wx, os
+from wxgui._trad import _
 
 
 ########################################################################
@@ -12,16 +14,79 @@ class Testing():
     #----------------------------------------------------------------------
     def __initTesting__(self):
         """"""
+        
 
+
+
+
+
+
+
+
+
+
+########################################################################
+##                     Install Library                                ##
+########################################################################
+    ##----------------------------------------------------------------------
+    #def installLibrary(self, *event):
         
-    
+        #def newFile(origen, destino):
+            #Pfile = open(os.path.join(os.getcwd(), destino), "w")
+            #Pfile.writelines(origen.readlines())
+            #Pfile.close()          
         
+        #wildcard = "tar.gz files (*.tar.gz)|*.tar.gz|"     \
+                   #"All files (*.*)|*.*"
+
+        #opendlg = wx.FileDialog(self,
+                                #message=_("Choose a file"),
+                                #defaultDir=os.getcwd(), 
+                                #defaultFile="",
+                                #wildcard=wildcard,
+                                #style=wx.OPEN)
         
+        #if opendlg.ShowModal() == wx.ID_OK:
+            #librerias = opendlg.GetPaths()
+        #else: return
+            
+        #self.displaymsg(_("Installing libraries...\n"), True)
         
-        
-        
-        
-        
+        #for libreria in librerias:
+            #tar = tarfile.open(libreria)
+            #members = tar.getmembers()
+            
+            #for i in members:
+                #print i.name
+            
+            
+            #self.displaymsg(_("Installing:")+" "+libreria+"\n", False)
+                
+            #for member in members:
+                #for dir1 in ["p8", "p32"]:
+                    #for dir2 in ["core", "libraries"]:
+                        #if member.name.startswith("%s/%s/" %(dir1, dir2)):
+                            #file = member.name.replace("%s/%s/" %(dir1, dir2), "")
+                            #fileObject = tar.extractfile(member)
+                            #path = "%s/include/pinguino/%s/%s" %(dir1, dir2, file)
+                            #newFile(fileObject, path)
+                            #if os.path.isfile(os.path.join(os.getcwd(), path)) or os.path.isdir(os.path.join(os.getcwd(), path)):
+                                #self.displaymsg(_("overwriting file"+"...\n  "), False)                            
+                            #self.displaymsg(_("Installed:")+" "+os.path.split(path)[-1]+" in "+path+"\n", False)
+                    
+                #if member.name.startswith("p32/pdl/"):
+                    #tar.extract(member)
+                    #if os.path.isfile(os.path.join(os.getcwd(), member.name)) or os.path.isdir(os.path.join(os.getcwd(), member.name)):
+                        #self.displaymsg(_("overwriting file"+"...\n  "), False)                    
+                    #self.displaymsg(_("Installed:")+" "+os.path.split(member.name)[-1]+" in "+member.name+"\n", False)
+                    
+                #if member.name.startswith("p8/pdl/"):
+                    #tar.extract(member)
+                    #if os.path.isfile(os.path.join(os.getcwd(), member.name)) or os.path.isdir(os.path.join(os.getcwd(), member.name)):
+                        #self.displaymsg(_("overwriting file"+"...\n  "), False)                     
+                    #self.displaymsg(_("Installed:")+" "+os.path.split(member.name)[-1]+" in "+member.name+"\n", False)
+            
+            
         
 #plug-ins ¿?
 ########################################################################

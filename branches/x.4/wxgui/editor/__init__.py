@@ -13,6 +13,7 @@ from preferences import Preferences
 from funtions_help import functionsHelp
 from autocompleter import AutoCompleter
 from stdout import Stdout
+from pic_popup import PICpopup
 
 try: from upgrade import Upgrade
 except: pass
