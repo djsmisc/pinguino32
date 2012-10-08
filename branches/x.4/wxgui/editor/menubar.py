@@ -285,6 +285,7 @@ class Menubar:
         
         
         #self.setConfig("IDE","Board", self.curBoard.name)
+        self.setConfig("IDE","Board", self.choiceBoards.Value)
         self.setConfig("IDE","BoardNoBoot", self.textCtrlDevices.Value)
         self.setConfig("IDE","BoardMode", self.choiceMode.GetStringSelection())
         

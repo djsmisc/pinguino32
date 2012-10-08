@@ -114,7 +114,8 @@ class Pinguino(framePinguinoX, Editor):
         self.autoCompleteWords = []
         self.recentsFiles = []
         self.otherWords = []
-        self.autocompleteHide = False     
+        self.autocompleteHide = False
+	self.extraName = ""
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
@@ -139,10 +140,10 @@ class Pinguino(framePinguinoX, Editor):
             threadRevision.start()
 
             self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
-            self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 0)
+            self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 1)
         else:
             self.SetTitle("Pinguino IDE")
-            self.displaymsg(_("Welcome to Pinguino IDE"), 0)            
+            self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
             
 
 	self.loadSettings()
@@ -163,12 +164,12 @@ class Pinguino(framePinguinoX, Editor):
         self.DeviceList = PicListIDE(self)
 	self.DeviceList.__init_list__(self)
         self.DeviceList.Hide()
-	
-	#pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
-			#stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)	
-	
-	pipe = Popen([self.c8, "-mpic16", "-p"],\
+
+	pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
                         stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+
+	#pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
+                        #stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
 	
 	output = pipe.stdout.read()
 	proclist = output.split("p")
@@ -565,17 +566,6 @@ class Pinguino(framePinguinoX, Editor):
         self.updatenotebook()
 
 
-
-
-# ------------------------------------------------------------------------------
-# GetTheme : get all the theme (directory) name
-# ------------------------------------------------------------------------------
-
-    #def GetTheme(self):
-        #self.themeList = [f for f in os.listdir(THEME_DIR)
-                          #if os.path.isdir(os.path.join(THEME_DIR, f))]
-        #self.themeNum = len(self.themeList)
-
 # ------------------------------------------------------------------------------
 # OnBoard : load boards specificities
 # ------------------------------------------------------------------------------
@@ -591,29 +581,32 @@ class Pinguino(framePinguinoX, Editor):
 	sel = self.choiceMode.GetStringSelection()
 	
 	if sel == _("USB Bootloader"):
+	    
 	    self.choiceBoards.Show()
-	    self.textCtrlDevices.Hide()	
-	    name = self.getElse("IDE","Board", "Pinguino 2550")
-	    for board in boardlist:
-		if name == board.name:
-		    self.curBoard = board
-		    break	    
-	    self.setConfig("IDE","Board", self.curBoard.name)
+	    self.textCtrlDevices.Hide()
+	    name = self.choiceBoards.GetValue()
+	    for i in self.boardlist:
+		if i.name == name:
+		    self.curBoard = i
+		    break
+	    self.extraName = ""
 	    
 	    
 	elif sel == _("Serial Bootloader"):
-	    return
-	    
+	    return 
 	    
 	elif sel == _("No Bootloader"):
+	    
 	    self.choiceBoards.Hide()
 	    self.textCtrlDevices.Show()
+	    
 	    proc = self.textCtrlDevices.GetValue()
 	    #proc = "18f2220"    # only for test purpose
 	    self.curBoard = boardlist[0]
 	    self.curBoard.proc = proc
-	    self.curBoard.board = "PIC"+proc.upper()    
-	    
+	    self.curBoard.board = "PIC"+proc.upper()
+	    self.extraName = " [" + self.curBoard.board + "]"
+
 
         #self.readlib(self.curBoard) #So slow
         self.displaymsg(_("Changing board")+"...\n", 0)
@@ -622,8 +615,7 @@ class Pinguino(framePinguinoX, Editor):
         else:
             self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
             self.Thread_curBoard.start()
-
-
+	    
 
     #----------------------------------------------------------------------
     def setBoard(self, name):
@@ -848,14 +840,52 @@ class Pinguino(framePinguinoX, Editor):
 
 
 
+    
+
 
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
-# ------------------------------------------------------------------------------	
+# ------------------------------------------------------------------------------
+	
+    #----------------------------------------------------------------------
+    def getChoiceBoards(self):
+	try: self.choiceBoards.Destroy()
+	except: pass
+	
+	icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+	iconSize = icon.GetSize()	
+	    
+        boards = []
+	for i in self.boardlist: boards.append(i.name)
+        #self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
+        choiceBoards = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), boards[1:], wx.TE_READONLY)
+        #self.choiceBoards.SetSelection(index-1)
+        choiceBoards.Bind(wx.EVT_COMBOBOX, lambda x:self.OnBoard("board"))
+        choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+	name = self.getElse("IDE", "board", "Pinguino 2550")
+	choiceBoards.SetValue(name)
+	self.choiceBoards = choiceBoards
+	
+	
+    #----------------------------------------------------------------------
+    def getTextCtrlDevices(self):
+	try: self.textCtrlDevices.Destroy()
+	except: pass
+	
+	textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
+	textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
+	name = self.getElse("IDE", "boardNoBoot", "18f1220")
+	textCtrlDevices.SetValue(name)
+	self.textCtrlDevices = textCtrlDevices
+    
 
     def DrawToolbar(self):
         try: self.toolbar.ClearTools()
-        except: self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
+        except:
+	    self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
+	    self.getChoiceBoards()
+	    self.getTextCtrlDevices()
+
 
         # Get size of new theme's icons
         icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
@@ -864,50 +894,25 @@ class Pinguino(framePinguinoX, Editor):
         # Update Bitmap size to fit new icons (not sure that it works !)
         self.toolbar.SetToolBitmapSize(iconSize)
 
-	#index = 0
-	#for board in boardlist:
-	    #if self.curBoard.id == board.id:
-		#self.curBoard = board
-		#break	
-	    #index += 1
-
-        boards = []
-        for i in self.boardlist: boards.append(i.name)
-        #self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
-        self.choiceBoards = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), boards[1:], wx.TE_READONLY)
-        #self.choiceBoards.SetSelection(index-1)
-        self.choiceBoards.Bind(wx.EVT_COMBOBOX, lambda x:self.OnBoard("board"))
-        self.choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
-	name = self.getElse("IDE", "board", "Pinguino 2550")
-	self.choiceBoards.SetValue(name)	
-	
-	
 	modes = [_("USB Bootloader"), _("Serial Bootloader"), _("No Bootloader")]
 	self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
-	#self.choiceMode = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), modes, 0 )
-	self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", 0))
-	self.choiceMode.Bind(wx.EVT_CHOICE, lambda x:self.OnBoard("mode"))
+	self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", _("USB Bootloader")))
+	self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
 	self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
-	
-	self.textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
-	self.textCtrlDevices.Hide()
-	self.textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
-	name = self.getElse("IDE", "boardNoBoot", "18f1220")
-	self.textCtrlDevices.SetValue(name)	
+
 	
 	mode = self.getElse("IDE", "boardmode", "USB Bootloader")
 	if mode == "USB Bootloader":
 	    boardName = self.getElse("IDE", "Board", "Pinguino 2550")
 	    self.choiceBoards.Show()
 	    self.textCtrlDevices.Hide()
-	    self.setBoard(boardName)
+	    self.setBoard(boardName)	    
+	    
 	elif mode == "No Bootloader":
-	    #boardName = self.getElse("IDE", "bard", "Pinguino (no Bootloader)")
-	    self.setBoard("Pinguino (no Bootloader)")	
+	    self.setBoard("Pinguino (no Bootloader)")
 	    self.choiceBoards.Hide()
-	    self.textCtrlDevices.Show() 
-	
-	
+	    self.textCtrlDevices.Show()   
+
         def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
             if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
                 id = wx.NewId()
@@ -939,8 +944,8 @@ class Pinguino(framePinguinoX, Editor):
         self.toolbar.AddSeparator()
 	
 	self.toolbar.AddControl(self.choiceMode)	
-        self.toolbar.AddControl(self.choiceBoards) 
-        self.toolbar.AddControl(self.textCtrlDevices) 	
+	self.toolbar.AddControl(self.choiceBoards) 	    
+	self.toolbar.AddControl(self.textCtrlDevices)
 	
         add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
         add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
@@ -1019,7 +1024,7 @@ class Pinguino(framePinguinoX, Editor):
         for i in range(len(fixed_rw)):
             self.reservedword.append(fixed_rw[i])
 
-        self.displaymsg(_("Board config")+":\t"+board.name+"\n", 0)
+        self.displaymsg(_("Board config")+":\t"+board.name+self.extraName+"\n", 0)
 	
 
 # ------------------------------------------------------------------------------
