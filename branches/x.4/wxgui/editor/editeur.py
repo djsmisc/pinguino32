@@ -103,7 +103,7 @@ class editor:
                 return font
         except:
             self.setConfig("Source", "fontdefault", True)
-            font = defoultFont()
+            font = setDefault()
             return font
 
 

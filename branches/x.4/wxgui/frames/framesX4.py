@@ -1060,9 +1060,6 @@ class frameUpgrade ( wx.Frame ):
 		bSizer32.Add( self.m_gauge2, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		self.textCtrlUpgrade = wx.TextCtrl( self.m_panel31, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		self.textCtrlUpgrade.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.textCtrlUpgrade.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
-		
 		bSizer32.Add( self.textCtrlUpgrade, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		gbSizer2 = wx.GridBagSizer( 1, 3 )

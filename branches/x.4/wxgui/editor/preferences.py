@@ -45,7 +45,9 @@ class Preferences():
         self.Bind(wx.EVT_BUTTON, self.setDefaultConfig, self.buttonRestore)
         self.Bind(wx.EVT_BUTTON, self.writeConfig, self.buttonApply)
         self.Bind(wx.EVT_BUTTON, lambda x:self.Close(), self.buttonCancel)
-
+        
+        if not os.path.isfile(".config"): self.setDefaultConfig()
+            
         self.loadPreferences()
 
         #Appearance

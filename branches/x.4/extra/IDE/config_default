@@ -1,16 +1,18 @@
 [IDE]
-window/width = 1000
-window/height = 500
-window/xpos = 97
-window/ypos = 16
-output/width = 998
-output/height = 84
+window/width = 1151
+window/height = 547
+window/xpos = 99
+window/ypos = 111
+output/width = 1149
+output/height = 140
 theme = PinguinoX
 board = Pinguino 2550
 maximized = False
-perspectiveoutput = 119
-perspectivelateral = 286
+perspectiveoutput = 159
+perspectivelateral = 374
 checkupgradeatstart = False
+boardnoboot = 18f1220
+boardmode = USB Bootloader
 
 [Open/Save]
 autosavetime = 10
