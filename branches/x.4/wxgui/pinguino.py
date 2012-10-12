@@ -115,7 +115,7 @@ class Pinguino(framePinguinoX, Editor):
         self.recentsFiles = []
         self.otherWords = []
         self.autocompleteHide = False
-	self.extraName = ""
+        self.extraName = ""
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
@@ -615,7 +615,7 @@ class Pinguino(framePinguinoX, Editor):
         else:
             self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
             self.Thread_curBoard.start()
-	    
+
 
     #----------------------------------------------------------------------
     def setBoard(self, name):
@@ -840,8 +840,6 @@ class Pinguino(framePinguinoX, Editor):
 
 
 
-    
-
 
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
@@ -943,9 +941,9 @@ class Pinguino(framePinguinoX, Editor):
         add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
         self.toolbar.AddSeparator()
 	
-	self.toolbar.AddControl(self.choiceMode)	
-	self.toolbar.AddControl(self.choiceBoards) 	    
-	self.toolbar.AddControl(self.textCtrlDevices)
+        self.toolbar.AddControl(self.choiceMode)	
+        self.toolbar.AddControl(self.choiceBoards) 	    
+        self.toolbar.AddControl(self.textCtrlDevices)
 	
         add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
         add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
@@ -1422,7 +1420,7 @@ class Pinguino(framePinguinoX, Editor):
                         self.displaymsg(ligne, 0)
             fichier.close()
             if sys.platform=='win32':
-                if board.board=='PIC32_PINGUINO_220':
+                if board.board in ['PIC32_PINGUINO_220', 'GENERIC32MX250F128', 'GENERIC32MX220F032']:
                     badrecord=":040000059D0040001A\n"
                 else:
                     badrecord=":040000059D006000FA\n"                

@@ -171,7 +171,7 @@ class PIC32_Pinguino_T795:
 	vendor=MICROCHIP_ID
 	product=PIC32_ID
 	memstart=0x00000
-	memend=0x40000
+	memend=0x80000
 	shortarg='-T'
 	longarg='--olimexT795'
 
