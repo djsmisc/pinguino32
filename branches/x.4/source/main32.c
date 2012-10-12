@@ -28,9 +28,11 @@
 #include <system.c>				// PIC32 System Core Functions
 #include "define.h"				// Pinguino Sketch Constants
 #include <io.c>					// Pinguino Boards Peripheral Remappage and IOs configurations
-#ifndef __32MX220F032D__
-	#include <newlib.c>
+
+#if !defined(__32MX220F032D__) && !defined(__32MX250F128B__) && !defined(__32MX220F032B__)
+#include <newlib.c>
 #endif	
+
 #include <cdc.h>
 
 #include "user.c"				// Pinguino User's Sketch
