@@ -74,9 +74,9 @@
 #define I2C_SLEW_ON		1
 
 // Speed definitions
-#define I2C_100KHZ		0
-#define I2C_400KHZ		1
-#define I2C_1MHZ		2
+#define I2C_100KHZ		100
+#define I2C_400KHZ		400
+#define I2C_1MHZ		1000
 
 //typedef void (*i2c_stdout) (void);	// type of :	void foo(int x)
 //i2c_stdout _i2c_onRequest_function;	// then : 		void pputchar(void)
