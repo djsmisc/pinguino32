@@ -148,7 +148,7 @@ class Pinguino(framePinguinoX, Editor):
 
 	self.loadSettings()
         self.__initIDE__()
-        
+        1
 
         ########################################
         #Auto-complete frame build 
@@ -165,17 +165,23 @@ class Pinguino(framePinguinoX, Editor):
 	self.DeviceList.__init_list__(self)
         self.DeviceList.Hide()
 
-	pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
-                        stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
 
-	#pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
-                        #stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-	
-	output = pipe.stdout.read()
-	proclist = output.split("p")
-	proclist.pop(0)
-	for i in range(len(proclist)): proclist[i] = proclist[i].strip()
-	self.DeviceList.setItems(proclist)	
+	if sys.platform != 'win32':
+	    pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
+		            stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    
+	    #pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
+			    #stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+	    
+	    output = pipe.stdout.read()
+	    proclist = output.split("p")
+	    proclist.pop(0)
+	    for i in range(len(proclist)): proclist[i] = proclist[i].strip()
+	    
+	    self.DeviceList.setItems(proclist)
+	    
+	else:
+	    self.DeviceList.setItems("No devices yet.".split(" "))
 	
 	self.DrawToolbar()		
         
