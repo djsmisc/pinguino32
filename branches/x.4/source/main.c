@@ -30,25 +30,26 @@
 #include <const.h>
 #include <macro.h>
 #include <system.c>
+#include <typedef.h>
 
 #ifdef boot2
 	#include <common_types.h>
 	#include <boot_iface.h>
-#else
-	#include <typedef.h>
 #endif
+
 /*
 #ifdef __USB__
 	#include <usb.h>
 	#include <usb.c>
 #endif
 */
+
 // only for compatibility with application_iface.o
 #ifdef boot2
 	#ifndef __USB__
-		void epap_in() { return; }
-		void epap_out() { return; }
-		void epapin_init() { return; }
+		void epap_in()      { return; }
+		void epap_out()     { return; }
+		void epapin_init()  { return; }
 		void epapout_init() { return; }
 	#endif
 #endif
@@ -72,7 +73,7 @@ void pinguino_main(void)
     // Enable the PLL and wait 2+ms until the PLL locks
     u16 pll_startup_counter = 600;
     OSCTUNEbits.PLLEN = 1;
-    while(pll_startup_counter--);
+    while (pll_startup_counter--);
 	#endif
 
 	PIE1 = 0;

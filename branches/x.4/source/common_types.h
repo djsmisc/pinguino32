@@ -23,23 +23,23 @@
 #ifndef VASCO_H_
 #define VASCO_H_
 
-#ifndef __TYPEDEF_H
-#define __TYPEDEF_H
-#endif
+//#ifndef __TYPEDEF_H
+//#define __TYPEDEF_H
+//#endif
 
 /* 8 bits */
-typedef unsigned char			u8;
-typedef char						s8;
+//typedef unsigned char			u8;                    // conflict with typedef.h
+//typedef char						s8;
 typedef unsigned char			uchar;
 typedef unsigned char			UCHAR;
-typedef unsigned char			byte;
-//typedef unsigned char 			BYTE;
-typedef unsigned char			BOOL;
+//typedef unsigned char			byte;
+typedef unsigned char 			BYTE;
+//typedef unsigned char			BOOL;
 //typedef unsigned char			bool;					// not compatible with c++
-typedef unsigned char			boolean;	
+//typedef unsigned char			boolean;	
 typedef signed char				schar;
 typedef signed char				CHAR;
-//typedef unsigned char 			uint8_t;
+//typedef unsigned char 			uint8_t;            // conflict with stdint.h
 //typedef signed char 				int8_t;
 typedef union
 {
@@ -59,18 +59,18 @@ typedef union
 } Char;
 
 /* 16 bits */
-typedef unsigned int				u16;
-typedef int							s16;
+//typedef unsigned int				u16;                    // conflict with typedef.h
+//typedef int							s16;
 typedef int							INT;
 typedef unsigned int				UINT;
 typedef unsigned int				uint;
 typedef signed int				sint;
-typedef unsigned int				word;
+//typedef unsigned int				word;
 typedef short						SHORT;
 typedef unsigned short			USHORT;
 typedef unsigned short			WORD;
 typedef unsigned short			WCHAR;
-//typedef int 						int16_t;
+//typedef int 						int16_t;            // conflict with stdint.h
 //typedef unsigned int 			uint16_t;
 typedef union
 {
@@ -81,15 +81,15 @@ typedef union
 
 
 /* 32 bits */
-typedef unsigned long			u32;
-typedef long						s32;
+//typedef unsigned long			u32;                    // conflict with typedef.h
+//typedef long						s32;
 typedef unsigned long			ulong;
 typedef signed long				slong;
-typedef unsigned long			dword; 
+//typedef unsigned long			dword; 
 typedef long						LONG;
 typedef unsigned long			ULONG;
 typedef unsigned long			DWORD;
-//typedef long 						int32_t;
+//typedef long 						int32_t;            // conflict with stdint.h
 //typedef unsigned long 			uint32_t;
 typedef union
 {
@@ -101,8 +101,17 @@ typedef union
 
 //#define TRUE 1
 //#define FALSE 0
-#define FALSE	0 
-#define TRUE	!FALSE
-#define NULL	0
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE !FALSE
+#endif
+
+#ifndef NULL
+#define NULL 0
+#endif
 
 #endif /*VASCO_H_*/
