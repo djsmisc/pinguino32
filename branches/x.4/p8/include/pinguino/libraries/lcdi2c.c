@@ -77,7 +77,7 @@
 //#include <pcf8574.h>
 #include <stdarg.h>
 #include <delay.c>
-#include <pinguinoi2c.c>
+#include <i2c.c>
 #include <stdio.c>
 
 /*	----------------------------------------------------------------------------
@@ -226,7 +226,7 @@
 
 	u8 numcolmax;			// from 0 to 15 = 16
 	u8 numlinemax;			// from 0 to 1 = 2
-	u8 Backlight = 0;		// memorise l'etat du backlight du LCD
+	u8 gBacklight = 0;		// memorise l'etat du backlight du LCD
 	u8 PCF8574_address;
 	_Byte_ PCF8574_data;
 
@@ -248,24 +248,28 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
 	LCD_EN = LOW;                   // x  x  x  x  0  0  0    0
 	LCD_RW = LCD_WRITE;				// x  x  x  x  0  0  0    0
 	LCD_RS = mode;					// x  x  x  x  0  0  0/1  0
-	LCD_BL = Backlight;				// x  x  x  x  0  0  0/1  0/1
+	LCD_BL = gBacklight;				// x  x  x  x  0  0  0/1  0/1
 
 	/// ---------- LCD Enable Cycle
 
-	I2C_start();
-    I2C_writechar(PCF8574_address | I2C_WRITE);
+    I2C_start();                    // send start condition
+
+    //I2C_writechar(PCF8574_address | I2C_WRITE);
+    I2C_send((PCF8574_address << 1) | I2C_WRITE);
 
 	LCD_EN = HIGH;
-	// I2C_send(PCF8574_address, PCF8574_data.val);
+	//I2C_send(PCF8574_address, PCF8574_data.val);
+    //I2C_writechar(PCF8574_data.val);
+    I2C_send(PCF8574_data.val);
 	// E Pulse Width > 300ns
-    I2C_writechar(PCF8574_data.val);
 
 	LCD_EN = LOW;
-	// I2C_send(PCF8574_address, PCF8574_data.val);
+	//I2C_send(PCF8574_address, PCF8574_data.val);
+    //I2C_writechar(PCF8574_data.val);
+    I2C_send(PCF8574_data.val);
 	// E Enable Cycle > (300 + 200) = 500ns
-    I2C_writechar(PCF8574_data.val);
 
-	I2C_stop();
+	I2C_stop();                     // send stop confition
 }
 
 /*	----------------------------------------------------------------------------
@@ -282,8 +286,8 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
 
 static void lcdi2c_send8(u8 octet, u8 mode)
 {
-	lcdi2c_send4(octet & LCD_MASK, mode);			// envoie les "Upper 4 bits"
-	lcdi2c_send4((octet << 4) & LCD_MASK, mode);	// envoie les "Lower 4 bits"
+	lcdi2c_send4(octet & LCD_MASK, mode);			// send upper 4 bits
+	lcdi2c_send4((octet << 4) & LCD_MASK, mode);	// send lower 4 bits
 	//Delayus(46);			 // Wait for instruction excution time (more than 46us)
 }
 
@@ -293,12 +297,14 @@ static void lcdi2c_send8(u8 octet, u8 mode)
 
 void lcdi2c_backlight()
 {
-	Backlight = ON;	// 0 = ON since PCF8574 is logical inverted
-	LCD_BL = Backlight;
+	gBacklight = ON;	// 0 = ON since PCF8574 is logical inverted
+	LCD_BL = gBacklight;
 	//I2C_send(PCF8574_address, PCF8574_data.val);
 	I2C_start();
-    I2C_writechar(PCF8574_address | I2C_WRITE);
-    I2C_writechar(PCF8574_data.val);
+    //I2C_writechar(PCF8574_address | I2C_WRITE);
+    //I2C_writechar(PCF8574_data.val);
+    I2C_send((PCF8574_address << 1) | I2C_WRITE);
+    I2C_send(PCF8574_data.val);
 	I2C_stop();
 }
 
@@ -308,12 +314,14 @@ void lcdi2c_backlight()
 
 void lcdi2c_noBacklight()
 {
-	Backlight = OFF;	// 1 = OFF since PCF8574 is logical inverted
-	LCD_BL = Backlight;
+	gBacklight = OFF;	// 1 = OFF since PCF8574 is logical inverted
+	LCD_BL = gBacklight;
 	//I2C_send(PCF8574_address, PCF8574_data.val);
 	I2C_start();
-    I2C_writechar(PCF8574_address | I2C_WRITE);
-    I2C_writechar(PCF8574_data.val);
+    //I2C_writechar(PCF8574_address | I2C_WRITE);
+    //I2C_writechar(PCF8574_data.val);
+    I2C_send((PCF8574_address << 1) | I2C_WRITE);
+    I2C_send(PCF8574_data.val);
 	I2C_stop();
 }
 
@@ -472,7 +480,7 @@ void lcdi2c_clearLine(u8 line)
 
 	lcdi2c_setCursor(0, line);
 	for (i = 0; i < numcolmax; i++)
-		lcdi2c_write(ESPACE);  // affiche des espaces
+		lcdi2c_write(SPACE);  // affiche des espaces
 }
 
 /*	----------------------------------------------------------------------------
@@ -563,7 +571,8 @@ void lcdi2c_init(u8 numcol, u8 numline, u8 i2c_address)
 {
 	numcolmax  = numcol - 1;
 	numlinemax = numline - 1;
-	PCF8574_address = 0b01001110 | i2c_address;
+	//PCF8574_address = 0b01001110 | i2c_address;
+	PCF8574_address = i2c_address;
 	PCF8574_data.val = 0;
 
 	I2C_init(I2C_MASTER_MODE, I2C_100KHZ);

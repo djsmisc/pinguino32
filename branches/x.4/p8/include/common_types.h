@@ -65,8 +65,16 @@ typedef union
     Char  c[4];
 } Long;
 
-#define TRUE 1
+#ifndef FALSE
 #define FALSE 0
+#endif
+
+#ifndef TRUE
+#define TRUE !FALSE
+#endif
+
+#ifndef NULL
 #define NULL 0
+#endif
 
 #endif /*VASCO_H_*/

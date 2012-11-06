@@ -4,7 +4,7 @@
 	--------------------------------------------------------------------------**/
 
 #ifndef __CONST_H
-#define __CONST_H
+    #define __CONST_H
 
 	// already defined in math.h
 	//#define PI				3.1415926535897932384626433832795

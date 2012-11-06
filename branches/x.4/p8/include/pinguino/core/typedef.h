@@ -11,9 +11,9 @@
  	--------------------------------------------------------------------------*/
 
 #ifndef __TYPEDEF_H
-#define __TYPEDEF_H
+    #define __TYPEDEF_H
 
-#include <stdint.h>
+    #include <stdint.h>
 
 /*	----------------------------------------------------------------------------
 	pinguino types

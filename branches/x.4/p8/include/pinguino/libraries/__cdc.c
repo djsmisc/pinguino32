@@ -17,15 +17,20 @@
 
 void CDC_init()
 {
+
 	INTCON=0;
-	INTCON2=0xC0;
+//	INTCON2=0xC0;                   // All PORTB pull-ups are disabled
+                                    // External Interrupt 0 on rising edge
 	UCON=0;
 	UCFG=0;
-	UEP0=0;UEP1=0;UEP2=0;UEP3=0;UEP4=0;UEP5=0;
-	UEP6=0;UEP7=0;UEP8=0;UEP9=0;UEP10=0;UEP11=0;
-	UEP12=0;UEP13=0;UEP14=0;UEP15=0;
-	// and wait 2 seconds
-	Delayms(2000);
+	UEP0=0;UEP1=0;UEP2=0;UEP3=0;
+    UEP4=0;UEP5=0;UEP6=0;UEP7=0;
+    UEP8=0;UEP9=0;UEP10=0;UEP11=0;
+    UEP12=0;UEP13=0;UEP14=0;UEP15=0;
+//    #if defined(PIC18F2550) || defined(PIC18F4550)
+	Delayms(2000);              // wait 2 seconds
+//    #endif
+
 	// Initialize USB for CDC
 	UCFG = 0x14; 				// Enable pullup resistors; full speed mode
 	deviceState = DETACHED;
@@ -44,7 +49,8 @@ void CDC_init()
 // CDC.write
 void CDCwrite(u8 c)
 {
-	CDCputs(c, 1);
+	//CDCputs(c, 1);
+	CDCputs(&c, 1);             // 2012-11-03 - fixed - RB
 }
 
 // CDC.printf
@@ -59,12 +65,12 @@ void CDCprintf(const u8 *fmt, ...)
 	//length = strlen(fmt);
 	//buffer = (char *) malloc(1 + length * sizeof(char));	
 	length = psprintf2(buffer, fmt, args);
-	CDCputs(buffer,length);
+	CDCputs(buffer, length);
 	va_end(args);
 }
 
 // CDC.print
-// last is a string (char *) or an integer
+// NB: last argument is a string (char *) or an integer
 
 void CDCprint(const u8 *fmt, ...)
 {
@@ -131,7 +137,7 @@ u8 * CDCgetstring(void)
 		c = CDCgetkey();
 		CDCprintf("%c", c);
 		buffer[i++] = c;
-	} while (c != '\r');
+	} while ((c != '\r') & (i < 80));
 	buffer[i] = '\0';
 	return buffer;
 }
