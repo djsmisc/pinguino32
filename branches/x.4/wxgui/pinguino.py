@@ -1256,7 +1256,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-D" + board.board,\
                                     "-D" + board.bldr,\
                                     "-I" + os.path.join(P8_DIR, 'include'),\
-                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                                     "-I" + os.path.dirname(filename),\
@@ -1277,7 +1277,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-D" + board.board,\
                                     "-D" + board.bldr,\
                                     "-I" + os.path.join(P8_DIR, 'include'),\
-                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                                     "-I" + os.path.dirname(filename),\
@@ -1296,7 +1296,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-D" + board.board,\
                                     "-D" + board.bldr,\
                                     "-I" + os.path.join(P8_DIR, 'include'),\
-                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                    "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                                     "-I" + os.path.dirname(filename),\
@@ -1346,10 +1346,11 @@ class Pinguino(framePinguinoX, Editor):
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib', 'pic16'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
                                   '-llibio' + board.proc + '.lib',\
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
@@ -1375,10 +1376,11 @@ class Pinguino(framePinguinoX, Editor):
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib', 'pic16'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
                                   '-llibio' + board.proc + '.lib',\
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
@@ -1397,10 +1399,11 @@ class Pinguino(framePinguinoX, Editor):
                                   "-p" + board.proc,\
                                   "-D" + board.bldr,\
                                   "-I" + os.path.join(P8_DIR, 'include'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free', 'pic16'),\
+                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
                                   "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib', 'pic16'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib'),\
+                                  "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
                                   '-llibio' + board.proc + '.lib',\
                                   '-llibc18f.lib',\
                                   '-llibm18f.lib',\
