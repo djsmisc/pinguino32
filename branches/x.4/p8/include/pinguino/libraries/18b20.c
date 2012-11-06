@@ -4,15 +4,16 @@
 	PURPOSE:		One wire driver to use with DS18B20 digital temperature sensor.
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	28 Sep 2010
-	LAST RELEASE:	26 Jun 2012
+	LAST RELEASE:	24 Oct 2012
 	----------------------------------------------------------------------------
 	02 Jun 2011	Jean-Pierre Mandon	fixed a bug in decimal part of the measure
 	17 Jan 2012	Mark Harper			update to deal correctly with negative temperatures
 	29 Jun 2012 Régis Blanchot		changed CRC calculation to save 8-bit Pinguino's RAM
+    24 Oct 2012 Régis Blanchot      renamed variable num to rom for better understanding
 	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
-	this file is based on Maxim AN162 and Microchip AN1199
+	NB: based on Maxim AN162 and Microchip AN1199
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -32,6 +33,7 @@
 #ifndef __DS18B20_C
 	#define __DS18B20_C
 
+    #include <const.h>          // false, true, ...
 	#include <macro.h>
 	#include <typedef.h>
 	#include <1wire.c>
@@ -114,12 +116,12 @@
 	----------------------------------------------------------------------------
 	* Description:	reads the ds18x20 device on the 1-wire bus and returns the temperature
 	* Arguments:	pin = pin number where one wire bus is connected.
-					num = index of the sensor or SKIPROM
+					rom = index of the sensor or SKIPROM
 					resolution = 9 to 12 bit resolution
 					t = temperature pointer
 	--------------------------------------------------------------------------*/
 
-	u8 DS18B20Read(u8 pin, u8 num, u8 resolution, DS18B20_Temperature * t)
+	u8 DS18B20Read(u8 pin, u8 rom, u8 resolution, DS18B20_Temperature * t)
 	{
 		u8 	res, busy = LOW;
 		u8 	temp_lsb, temp_msb;
@@ -135,11 +137,11 @@
 			/// NB: The power-up default of these bits is R0 = 1 and R1 = 1 (12-bit resolution)
 		}
 		
-		if (!DS18B20Configure(pin, num, 0, 0, res)) return false; // no alarm
+		if (!DS18B20Configure(pin, rom, 0, 0, res)) return false; // no alarm
 
 		if (OneWireReset(pin)) return false;
 
-		if (num == SKIPROM)
+		if (rom == SKIPROM)
 		{
 			// Skip ROM, address all devices
 			OneWireWrite(pin, SKIPROM);
@@ -147,7 +149,7 @@
 		else
 		{
 			// Talk to a particular device
-			if (!DS18B20MatchRom(pin, num)) return false;
+			if (!DS18B20MatchRom(pin, rom)) return false;
 		}
 
 		OneWireWrite(pin, CONVERT_T);		// Start temperature conversion
@@ -157,7 +159,7 @@
 
 		if (OneWireReset(pin)) return false;
 
-		if (num == SKIPROM)
+		if (rom == SKIPROM)
 		{
 			// Skip ROM, address all devices
 			OneWireWrite(pin, SKIPROM);
@@ -165,7 +167,7 @@
 		else
 		{
 			// Talk to a particular device
-			if (!DS18B20MatchRom(pin, num)) return false;
+			if (!DS18B20MatchRom(pin, rom)) return false;
 		}
 
 		OneWireWrite(pin, READ_SCRATCHPAD);// Read scratchpad
@@ -218,17 +220,17 @@
 	* Description: writes configuration data to the DS18x20 device
 	* Arguments:
 					pin = pin number where one wire bus is connected.
-					num = index of the sensor
+					rom = index of the sensor
 					TH = Alarm Trigger High
 					TL = Alarm Trigger Low
 					config = configuration
 	* Data must be transmitted least significant bit first
 	--------------------------------------------------------------------------*/
 
-	u8 DS18B20Configure(u8 pin, u8 num, u8 TH, u8 TL, u8 config)
+	u8 DS18B20Configure(u8 pin, u8 rom, u8 TH, u8 TL, u8 config)
 	{
 		if (OneWireReset(pin)) return false;
-		if (num == SKIPROM)
+		if (rom == SKIPROM)
 		{
 			// Skip ROM, address all devices
 			OneWireWrite(pin, SKIPROM);
@@ -236,7 +238,7 @@
 		else
 		{
 			// Talk to a particular device
-			DS18B20MatchRom(pin, num);
+			DS18B20MatchRom(pin, rom);
 		}
 		OneWireWrite(pin, WRITE_SCRATCHPAD);	// Allows the master to write 3 bytes of data to the scratchpad
 		OneWireWrite(pin, TH);				// The first data byte is written into the TH register (byte 2 of the scratchpad)
@@ -249,7 +251,7 @@
 	---------- Address a specific slave device on a multidrop or single-drop bus
 	----------------------------------------------------------------------------
 	* Arguments:	pin = pin number where one wire bus is connected.
-					num = index of the sensor
+					rom = index of the sensor
 	* Description:	reads and returns a byte of data from the device.
 	----------------------------------------------------------------------------
 	The match ROM command followed by a 64-bit ROM code sequence allows the bus
@@ -259,13 +261,13 @@
 	will wait for a reset pulse.
 	--------------------------------------------------------------------------*/
 
-	u8 DS18B20MatchRom(u8 pin, u8 num)
+	u8 DS18B20MatchRom(u8 pin, u8 rom)
 	{
 		u8 i;
 		if (OneWireReset(pin)) return false;
 		OneWireWrite(pin, MATCHROM);	// Match Rom
 		for (i = 0; i < 8; i++)			// Send the Address ROM Code.
-			OneWireWrite(pin, DS18B20Rom[num][i]);
+			OneWireWrite(pin, DS18B20Rom[rom][i]);
 		return true;
 	}
 

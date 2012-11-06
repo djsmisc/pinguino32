@@ -163,11 +163,11 @@ extern _Byte_ PCF8574_data;
 #define LCD_RIGHT				102
 #define LCD_LEFT				103
 
-#define DEGRE					0b11011111 	// Code ASCII pour le symbole degre
+#define DEGREE					0b11011111 	// Code ASCII pour le symbole degre
 #define SIGMA					0b11100101 	// Code ASCII pour le symbole sigma
 #define MICRO					0b11100100 	// Code ASCII pour le symbole micro
-#define INFINI					0b11110011 	// Code ASCII pour le symbole infini
-#define ESPACE					0x20		 	// Code ASCII pour un espace
+#define INFINITE				0b11110011 	// Code ASCII pour le symbole infini
+#define SPACE					0x20		// Code ASCII pour un espace
 
 #define HEXADECIMAL				16
 #define DECIMAL					10
@@ -195,7 +195,7 @@ extern _Byte_ PCF8574_data;
 
 /// VARIABLES GLOBALES
 
-extern u8 Backlight;
+extern u8 gBacklight;
 /*
 extern const u8 car0[8];
 extern const u8 car1[8];

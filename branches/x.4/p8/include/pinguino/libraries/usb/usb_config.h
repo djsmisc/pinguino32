@@ -62,7 +62,7 @@ typedef struct
 
 extern __code USB_Device_Descriptor libdevice_descriptor;
 extern __code USB_Configuration_Descriptor libconfiguration_descriptor;
-extern __code unsigned char libstring_descriptor[40][3];
+//extern __code unsigned char libstring_descriptor[40][3];
 
 #ifdef USB_USE_CDC
 /* Definitions for CDC */

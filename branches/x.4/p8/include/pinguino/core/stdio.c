@@ -7,7 +7,7 @@
 	FIRST RELEASE:	10 Nov 2010
 	LAST RELEASE:	16 Jan 2012
 	----------------------------------------------------------------------------
-	TODO : floating point support - work in progress
+	TODO : thousands separator
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public

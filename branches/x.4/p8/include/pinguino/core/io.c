@@ -79,32 +79,32 @@ void IOsetRemap()
 {
     #if defined(PIC18F26J50)
 
-	SystemUnlock();
-	PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
-	SystemLock();
+        SystemUnlock();
+        PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
+        SystemLock();
 
-	#ifdef __SERIAL__
-    RPINR16 = 4;                    // RP4 <- RX2
-    RPOR3 = 5;                      // RP3 -> TX2 (func. num. 5)
-    //RPINR17 = ;                     // EUSART2 Clock Input (CKR2)
-	#endif
+        #ifdef __SERIAL__
+        RPINR16 = 4;                    // RP4 <- RX2
+        RPOR3 = 5;                      // RP3 -> TX2 (func. num. 5)
+        //RPINR17 = ;                     // EUSART2 Clock Input (CKR2)
+        #endif
 
-	#ifdef __SPI2__
-    RPINR21 = 6;                    // RP6 (RB3) <- SDI2
-    RPOR5 = 10;                     // RP5 (RB2) -> SCK2
-    RPOR4 = 9;                      // RP4 (RB1) -> SDO2 (func. num. 9)
-    //RPOR3 = 12;                     // RP3 (RB0) -> SS2 (SPI DMA Slave Select)
-	#endif
+        #ifdef __SPI2__
+        RPINR21 = 6;                    // RP6 (RB3) <- SDI2
+        RPOR5 = 10;                     // RP5 (RB2) -> SCK2
+        RPOR4 = 9;                      // RP4 (RB1) -> SDO2 (func. num. 9)
+        //RPOR3 = 12;                     // RP3 (RB0) -> SS2 (SPI DMA Slave Select)
+        #endif
 
-	#ifdef __PWM__
-    // TODO
-    // RPINR24 = ;                     // PWM Fault Input (FLT0)
-    
-	#endif
+        #ifdef __PWM__
+        // TODO
+        // RPINR24 = ;                     // PWM Fault Input (FLT0)
+        
+        #endif
 
-	SystemUnlock();
-	PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
-	SystemLock();
+        SystemUnlock();
+        PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
+        SystemLock();
 
     #endif /* defined(PIC18F26J50) */
 }

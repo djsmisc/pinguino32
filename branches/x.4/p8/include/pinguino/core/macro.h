@@ -7,8 +7,9 @@
 #ifndef __MACRO_H
 	#define __MACRO_H
 
-    #include <typedef.h>
-	//#include <const.h>
+    #include <pic18fregs.h>         // PIC Registers definitions
+    #include <typedef.h>            // u8, u16, u32, ...
+	#include <const.h>              // DEG_TO_RAD, RAD_TO_DEG, ...
 
 	/// ASM
 
