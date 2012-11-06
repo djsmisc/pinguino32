@@ -35,9 +35,9 @@
 	GRND	VSS		-|	 |-		P4		LCD_D4
 
 	SYMBOL 	PIN		DESCRIPTION					NB
-	A0		1		address input 0				adress = 0 1 0 0 A2 A1 A0 0
+	A0		1		address input 0				
 	A1		2		address input 1				A0, A1 et A2 connected to +5V
-	A2		3		address input 2				then adress = 01001110 = 0x4E
+	A2		3		address input 2				
 	P0		4		quasi-bidirectional I/O 0	LCD_BL
 	P1		5		quasi-bidirectional I/O 1	LCD_RS
 	P2		6		quasi-bidirectional I/O 2	LCD_RW
@@ -51,7 +51,11 @@
 	SCL		14		serial clock line			To Pinguino SCL
 	SDA		15		serial data line			To Pinguino SDA
 	VDD		16		supply voltage
-	--------------------------------------------------------------------------*/
+
+  SDA is on pin 5 on Pinguino 26j50, pin 0 on Pinguino x550
+  SCL is on pin 4 on Pinguino 26j50, pin 1 on Pinguino x550
+  
+  --------------------------------------------------------------------------*/
 	
 /*	----------------------------------------------------------------------------
 	---------- LCD 2x16 (GDM1602A with build-in Samsung KS0066/S6A0069)
@@ -73,8 +77,9 @@ u16 i=0;
 
 void setup()
 {
-    // pcf8574 adress => A2=1 A1=1 A0=1 (depends on how you connect your device)
-    lcdi2c.init(16, 2, 0b01001110);     // display is 2x16, ic2 address is 01001110 (see above)
+    // PCF8574  : slave adress is 0 1 0 0 A2 A1 A0
+    // PCF8574A : slave adress is 0 1 1 1 A2 A1 A0
+    lcdi2c.init(16, 2, 0b0100111);       // display is 2x16, ic2 address is 0100111 (see above)
     lcdi2c.backlight();                 // turns backlight on
     lcdi2c.clear();                     // clear screen
     lcdi2c.home();                      // set cursor at (0,0)
@@ -88,7 +93,7 @@ void loop()
 }
 
 /*
-	functions available:
+	available functions :
 		void lcdi2c.init(u8, u8, u8);
 		void lcdi2c.backlight();
 		void lcdi2c.noBacklight();
