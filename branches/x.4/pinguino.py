@@ -17,7 +17,7 @@ class MySplashScreen(wx.SplashScreen):
         image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
         bmp = wx.BitmapFromImage(image)
         memDC = wx.MemoryDC()
-        memDC.SetFont(wx.Font(10, wx.SWISS, wx.BOLD, wx.NORMAL))
+        memDC.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False, u'Arial'))
         memDC.SetTextForeground(wx.BLACK)
         memDC.SelectObject(bmp)
         memDC.DrawText(getVersion(), 470, 10)
