@@ -1266,7 +1266,7 @@ class Pinguino(framePinguinoX, Editor):
                                    stdout=fichier, stderr=STDOUT)
                 elif board.bldr == 'boot4':
 #                                    "--opt-code-size",\
-                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                     "-mpic16",\
                                     "--obanksel=9",\
                                     "--optimize-cmp",\
@@ -1286,7 +1286,7 @@ class Pinguino(framePinguinoX, Editor):
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
                 elif board.bldr == 'noboot':
-                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                     "-mpic16",\
                                     "--obanksel=9",\
                                     "--optimize-cmp",\
@@ -1363,7 +1363,7 @@ class Pinguino(framePinguinoX, Editor):
                                  stdout=fichier, stderr=STDOUT)
                 elif board.bldr == 'boot4':
 #                                  "--opt-code-size",\
-                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "-mpic16",\
                                   "--obanksel=9",\
@@ -1388,7 +1388,7 @@ class Pinguino(framePinguinoX, Editor):
                                   os.path.join(SOURCE_DIR, 'main.o')],\
                                  stdout=fichier, stderr=STDOUT)
                 elif board.bldr == 'noboot':
-                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8),\
+                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                   "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                                   "-mpic16",\
                                   "--obanksel=9",\
