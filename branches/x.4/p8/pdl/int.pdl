@@ -26,3 +26,4 @@ OnLowVoltage OnLowVoltage#include <interrupt.c>#define HLVDINT
 OnBusCol OnBusCol#include <interrupt.c>#define BCLINT
 OnUSB OnUSB#include <interrupt.c>#define USBINT
 OnParallel OnParallel#include <interrupt.c>#define SSPINT
+UserInterrupt userinterrupt#define USERINT

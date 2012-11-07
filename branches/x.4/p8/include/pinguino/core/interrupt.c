@@ -993,7 +993,7 @@ void userhighinterrupt()
 }
 
 /*	----------------------------------------------------------------------------
-	---------- userinterrupt
+	---------- userlowinterrupt
 	----------------------------------------------------------------------------
 	@author		Regis Blanchot <rblanchot@gmail.com>
 	@descr		function called by low_priority_isr
