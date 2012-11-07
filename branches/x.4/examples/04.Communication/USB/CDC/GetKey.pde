@@ -9,6 +9,6 @@ void setup()
 void loop()
 {
     CDC.printf("Press a Key ...\r\n");
-    c = CDC.getKey();
+    c = CDC.getKey(); // Wait until a key is pressed
     CDC.printf("You pressed key [%c], code ASCII is \"%d\"\r\n", c, c);
 }

@@ -1,4 +1,7 @@
-u16 i=0;
+// Output on Linux : sudo cat /dev/ttyACM0
+// Outout on Windows : 
+
+float f=0; 
 
 void setup()
 {
@@ -6,5 +9,7 @@ void setup()
 
 void loop()
 {
-	CDC.printf("i=%d \r\n", i++);
+    CDC.printf("float=%.1f \r\n", f);  // 1 digit after decimal comma
+    f = f + 0.1;
+    delay(500);
 }
