@@ -1,0 +1,6 @@
+author  : rblanchot@gmail.com
+script  : build-sdcc-v2.sh
+host    : Linux (3.2.0-3-amd64)
+build   : 30-10-12
+version : SDCC : pic16/pic14 3.2.1 #8178 (Oct 30 2012) (Linux)
+          
