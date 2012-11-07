@@ -7,7 +7,6 @@ digitalRead digitalread#include <digitalw.c>
 toggle toggle#include <digitalw.c>
 analogRead analogread#include <analog.c>
 analogWrite PWM_set_dutycycle#include <pwm.c>
-UserInterrupt userinterrupt#define USERINT
 min min#include <macro.h>
 max max#include <macro.h>
 abs abs#include <macro.h>
