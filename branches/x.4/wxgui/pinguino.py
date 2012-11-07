@@ -167,7 +167,7 @@ class Pinguino(framePinguinoX, Editor):
 
 
 	if sys.platform != 'win32':
-	    pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin2', self.c8), "-mpic16", "-p"],\
+	    pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
 		            stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     
 	    #pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
