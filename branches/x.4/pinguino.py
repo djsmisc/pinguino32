@@ -13,15 +13,17 @@ class MySplashScreen(wx.SplashScreen):
     def __init__(self):
         """"""
         #bmp = wx.Image(os.path.join("theme", "logoX3.png")).ConvertToBitmap()
-        image = wx.Image(os.path.join("theme", "logoX3.png"), wx.BITMAP_TYPE_PNG)
+        image = wx.Image(os.path.join("theme", "logo3D.png"), wx.BITMAP_TYPE_PNG)
         image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
         bmp = wx.BitmapFromImage(image)
         memDC = wx.MemoryDC()
-        memDC.SetFont(wx.Font(10, wx.SWISS, wx.ITALIC, wx.NORMAL))
+        memDC.SetFont(wx.Font(10, wx.SWISS, wx.BOLD, wx.NORMAL))
         memDC.SetTextForeground(wx.BLACK)
         memDC.SelectObject(bmp)
+        memDC.DrawText(getVersion(), 470, 10)
         memDC.DrawText(_("loading..."), 10, 355)
         memDC.SelectObject(wx.NullBitmap)
+        
         # TODO : replace wx.BORDER_SIMPLE (windows only)		
         wx.SplashScreen.__init__(self, bmp,
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
