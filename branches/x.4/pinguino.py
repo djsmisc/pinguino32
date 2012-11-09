@@ -99,6 +99,9 @@ if __name__ == "__main__":
     if options.board != False or type(options.board) == type(1):  # False = 0
         curBoard = boardlist[options.board]
 
+        print "Board: " + curBoard.name
+        print "Proc.: " + curBoard.proc
+
         if options.filename == False:
             print "missing filename"
             sys.exit(1)
@@ -108,12 +111,12 @@ if __name__ == "__main__":
             print "bad file extension, it should be .pde"
             sys.exit(1)
 
+        print "File : " + filename
+
         pobject=Pinguino(None)
         pobject.setOSvariables()
+        pobject.readlib(curBoard)
         
-        print "board " + curBoard.name
-        print "mcu   " + curBoard.proc
-
         print "preprocessing ..."
         retour=pobject.preprocess(fname, curBoard)
         if retour == "error":
@@ -121,7 +124,7 @@ if __name__ == "__main__":
             sys.exit(1)
 
         print "compiling ..."
-        retour = pobject.compile(filename, curBoard)
+        retour = pobject.compile(fname, curBoard)
         if retour != 0:
             print "error while compiling file " + filename
             sys.exit(1)
@@ -141,6 +144,7 @@ if __name__ == "__main__":
         shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
         print "compilation done"
         print pobject.getCodeSize(fname, curBoard)
+        print "OK"
         os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
         #os.remove(fname + ".c")	   
         sys.exit(0)
