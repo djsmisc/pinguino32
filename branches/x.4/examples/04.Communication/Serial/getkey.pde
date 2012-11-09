@@ -15,6 +15,6 @@ void loop()
 	u8 c;
 	
 	Serial.printf("Please, press a key\n");
-	c = Serial.getkey();
+	c = Serial.getKey();
 	Serial.printf("You pressed key [%c]\n",c);
 }
