@@ -224,7 +224,7 @@ u8 I2C_send(u8 value)
     while (SSPCON1bits.WCOL)        // Send again if write collision occurred 
     {
         LATCbits.LATC2 = 1;
-        SSPCON1bits.WCOL = 0;       // Must e cleared by software
+        SSPCON1bits.WCOL = 0;       // Must be cleared by software
         SSPBUF = value;             // Write byte to SSPBUF (BF is set to 1)
     }
 */
