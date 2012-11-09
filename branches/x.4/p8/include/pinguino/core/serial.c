@@ -1,4 +1,4 @@
-// UART Library for PIC 18F2550
+// UART Library for 8-bit Pinguino
 // SDCC version / small device c compiler
 // written by Jean-Pierre MANDON 2008 jp.mandon@free.fr
 /*
@@ -30,7 +30,7 @@
 
 #include <pic18fregs.h>
 #include <typedef.h>
-#include <stdlib.h>
+//#include <stdlib.h>       // no more used (09-11-2012)
 #include <stdarg.h>
 #include <stdio.c>
 
@@ -60,19 +60,19 @@ void serial_begin(unsigned long baudrate)
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
 	SPBRG=lowbyte;   						// set UART speed SPBRGL
 	RCSTA=0x90;                             // set RCEN and SPEN
-	BAUDCONbits.RCIDL=1;			// set receive active
+	BAUDCONbits.RCIDL=1;			        // set receive active
 	PIE1bits.RCIE=1;                        // enable interrupt on RX
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 	TXSTAbits.TXEN=1;                       // enable TX
 #endif
 #ifdef PIC18F26J50
-	TXSTA1bits.BRGH=1;               	  	// set BRGH bit
-	BAUDCON1bits.BRG16=1;					// set 16 bits SPBRG
+	TXSTA1bits.BRGH=1;               	  	 // set BRGH bit
+	BAUDCON1bits.BRG16=1;					 // set 16 bits SPBRG
 	SPBRGH1=highbyte;                        // set UART speed SPBRGH
-	SPBRG1=lowbyte;   						// set UART speed SPBRGL
+	SPBRG1=lowbyte;   						 // set UART speed SPBRGL
 	RCSTA1=0x90;                             // set RCEN and SPEN
-	BAUDCON1bits.RCIDL=1;			// set receive active
-    PIR1bits.RC1IF = 0;		// Clear interrupt flag
+	BAUDCON1bits.RCIDL=1;			         // set receive active
+    PIR1bits.RC1IF = 0;		                 // Clear interrupt flag
 	PIE1bits.RC1IE=1;                        // enable interrupt on RX
 	IPR1bits.RC1IP=1;                        // define high priority for RX interrupt
 	TXSTA1bits.TXEN=1;                       // enable TX
@@ -83,7 +83,7 @@ void serial_begin(unsigned long baudrate)
 	rpointer=1;                             // initialize read pointer
 	INTCONbits.PEIE=1;                      // enable peripheral interrupts
 	INTCONbits.GIE=1;
-	RCONbits.IPEN = 1;       // enable interrupt priorities
+	RCONbits.IPEN = 1;                      // enable interrupt priorities
 }
 
 // new character receive ?
@@ -168,6 +168,65 @@ void serial_printf(char *fmt, ...)
 }
 
 /*	----------------------------------------------------------------------------
+	serial_print()
+	rblanchot@gmail.com
+	16-08-2011: fixed bug in print - Régis Blanchot & Tiew Weng Khai
+    11-09-2012: added FLOAT support - Régis Blanchot
+	--------------------------------------------------------------------------*/
+
+//void serial_print(char *fmt,...)
+void serial_print(const u8 *fmt,...)
+{
+    //u8 *s;
+	u8 s;
+	va_list args;							// a list of arguments
+	va_start(args, fmt);					// initialize the list
+	//s = va_start(args, fmt);
+	s = (u8) va_arg(args, u32);				// get the first variable arg.
+
+	//switch (*s)
+	switch (s)
+	{
+		case FLOAT:
+			serial_printf("%f", (u32)fmt);
+			break;
+		case DEC:
+			serial_printf("%d",fmt);
+			break;
+		case HEX:
+			serial_printf("%x",fmt);
+			break;
+		case BYTE:
+			serial_printf("%d",fmt);
+			break;
+		case OCT:
+			serial_printf("%o",fmt);
+			break;
+		case BIN:
+			serial_printf("%b",fmt);
+			break;
+		default:
+			serial_printf(fmt);
+			break;
+	}
+	va_end(args);
+}
+
+/*	----------------------------------------------------------------------------
+	serial_println()
+	rblanchot@gmail.com
+	Prints data to the serial port as human-readable ASCII text followed by
+	a carriage return character (ASCII 13, or '\r') and a newline character
+	(ASCII 10, or '\n').
+	--------------------------------------------------------------------------*/
+
+void serial_println(char *fmt,...)
+{
+	serial_print(fmt);
+	serial_printf("\n\r");
+}
+
+/*	----------------------------------------------------------------------------
 	serial_getkey()
 	rblanchot@gmail.com
 	--------------------------------------------------------------------------*/
@@ -200,84 +259,6 @@ u8 * serial_getstring()
 	} while (c != '\r');
 	buffer[i] = '\0';
 	return (buffer);
-}
-
-/*******************************************************************************
-	And For Compatibility Reasons ....
-	16-08-2011: fixed bug in print - Régis Blanchot & Tiew Weng Khai
-*******************************************************************************/
-
-void serial_print(char *fmt,...)
-{
-	va_list ap;
-	unsigned char *s;
-	//char chaine[8];
-
-	va_start(ap, fmt);
-	s = va_start(ap, fmt);
-
-	switch (*s)
-	{
-		case DEC:
-			serial_printf("%d",fmt);
-			break;
-		case HEX:
-			serial_printf("%x",fmt);
-			break;
-		case BYTE:
-			serial_printf("%d",fmt);
-			break;
-		case OCT:
-			serial_printf("%o",fmt);
-			break;
-		case BIN:
-			serial_printf("%b",fmt);
-			break;
-		default:
-			serial_printf(fmt);
-			break;
-	}
-
-/*
-	switch (*s)
-	{
-		case DEC:
-			serial_printf("%d",(int)fmt);
-			break;
-		case HEX:
-			serial_printf("%x",(int)fmt);
-			break;
-		case BYTE:
-			serial_printf("%d",(unsigned char)fmt);
-			break;
-		case OCT:
-			uitoa((int)fmt, chaine, 8);
-			serial_printf(chaine);
-			break;
-		case BIN:
-			uitoa((int)fmt, chaine, 2);
-			serial_printf(chaine);
-			break;
-		default:
-			serial_printf(fmt);
-			break;
-	}
-*/
-	va_end(ap);
-}
-
-/*	----------------------------------------------------------------------------
-	serial_println()
-	rblanchot@gmail.com
-	Prints data to the serial port as human-readable ASCII text followed by
-	a carriage return character (ASCII 13, or '\r') and a newline character
-	(ASCII 10, or '\n').
-	--------------------------------------------------------------------------*/
-
-void serial_println(char *fmt,...)
-{
-	serial_print(fmt);
-	serial_printf("\n\r");
 }
 
 #endif
