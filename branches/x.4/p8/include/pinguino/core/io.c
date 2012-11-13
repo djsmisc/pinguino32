@@ -4,7 +4,7 @@
 	PURPOSE:		Peripheral Remappage and IOs Configuration
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	20 jun. 2012
-	LAST RELEASE:	20 jun. 2012
+	LAST RELEASE:	13 nov. 2012
 	----------------------------------------------------------------------------
 	CHANGELOG:
 	[Date][Name][Description]
@@ -84,8 +84,8 @@ void IOsetRemap()
         SystemLock();
 
         #ifdef __SERIAL__
-        RPINR16 = 4;                    // RP4 <- RX2
-        RPOR3 = 5;                      // RP3 -> TX2 (func. num. 5)
+        RPINR16 = 4;                    // RP4 (RB1) <- RX2
+        RPOR3 = 5;                      // RP3 (RB0) -> TX2 (func. num. 5)
         //RPINR17 = ;                     // EUSART2 Clock Input (CKR2)
         #endif
 
@@ -97,7 +97,14 @@ void IOsetRemap()
         #endif
 
         #ifdef __PWM__
-        // TODO
+        RPOR11 = 14;                    // RP11 (RC0) <- CCP1
+                //P1B      - 15 - ECCP1 Enhanced PWM Output, Channel B
+                //P1C      - 16 - ECCP1 Enhanced PWM Output, Channel C
+                //P1D      - 17 - ECCP1 Enhanced PWM Output, Channel D
+        RPOR12 = 18;                    // RP12 (RC1) <- CCP2
+                //P2B      - 19 - ECCP2 Enhanced PWM Output, Channel B
+                //P2C      - 20 - ECCP2 Enhanced PWM Output, Channel C
+                //P2D     - 21 - ECCP2 Enhanced PWM Output, Channel D
         // RPINR24 = ;                     // PWM Fault Input (FLT0)
         
         #endif

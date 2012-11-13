@@ -186,6 +186,7 @@ void I2C_init(u8 mode, u16 sora)
     SSPCON2 = 0;
     PIR1bits.SSPIF = 0; // MSSP Interrupt Flag
     PIR2bits.BCLIF = 0; // Bus Collision Interrupt Flag
+    Delayms(1000);
 }
 
 /*	----------------------------------------------------------------------------
