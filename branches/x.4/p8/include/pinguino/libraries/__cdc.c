@@ -18,9 +18,17 @@
 void CDC_init()
 {
 
-	INTCON=0;
+//	INTCON=0;                       // Disable Interrupts
 //	INTCON2=0xC0;                   // All PORTB pull-ups are disabled
                                     // External Interrupt 0 on rising edge
+    // Stop interrupts
+    
+   	PIE2bits.USBIE  = 0;
+	INTCONbits.PEIE = 0;
+	INTCONbits.GIE  = 0;
+
+    // Reset USB registers 
+/*
 	UCON=0;
 	UCFG=0;
 	UEP0=0;UEP1=0;UEP2=0;UEP3=0;
@@ -30,18 +38,25 @@ void CDC_init()
 //    #if defined(PIC18F2550) || defined(PIC18F4550)
 	Delayms(2000);              // wait 2 seconds
 //    #endif
-
+*/
 	// Initialize USB for CDC
 	UCFG = 0x14; 				// Enable pullup resistors; full speed mode
 	deviceState = DETACHED;
 	remoteWakeup = 0x00;
 	currentConfiguration = 0x00;
-	// And enable USB module
+
+	// Enable USB module
 	while(deviceState != CONFIGURED)
 	{
 	  EnableUSBModule();
 	  ProcessUSBTransactions();
 	}
+    
+    // Start interrupts
+    
+   	PIE2bits.USBIE  = 1;
+	INTCONbits.PEIE = 1;
+	INTCONbits.GIE  = 1;
 }
 
 // added by regis blanchot 14/06/2011

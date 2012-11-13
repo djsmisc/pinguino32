@@ -4,7 +4,7 @@
 	PURPOSE:		new hardware PWM control functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 oct. 2010
-	LAST RELEASE:	24 dec. 2010
+	LAST RELEASE:	13 nov. 2012
 	----------------------------------------------------------------------------
 	freely adapted from JAL PWM Control Library.
 	----------------------------------------------------------------------------
@@ -23,8 +23,8 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
-#ifndef __PINGUINOPWM
-#define __PINGUINOPWM
+#ifndef __PWM__
+#define __PWM__
 
 #include <pic18fregs.h>
 #include <typedef.h>
@@ -38,6 +38,11 @@
 //	#define	CCP2_ALT	3	//Digital Pin 3 = RB3. 
 							//If the Configuration bit CCP2MX = 0, CCP2 is multiplexed with RB3.
 							//But this can only be done if user can change the Configuration bit in bootloader firmware.
+#endif
+
+#if defined(PIC18F26J50)
+	#define CCP1 		10
+	#define CCP2 		11
 #else
 	#define CCP1 		12
 	#define CCP2 		11

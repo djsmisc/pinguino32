@@ -142,7 +142,7 @@ u8 CDCgets(u8 *buffer)
 u8 CDCputs(u8 *buffer, u8 length)
 {
   u8 i=0;
-  u8 t=0x80;
+  u16 t=0xFFFF;//80;
 
   if (deviceState != CONFIGURED) return 0;
   if (!CONTROL_LINE) return 0;
