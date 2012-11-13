@@ -245,11 +245,13 @@ u8 I2C_send(u8 value)
     - 0 when SSPxBUF is empty (does not include the ACK and Stop bits)
 
     Datasheet, figure 19-24
+    
+    Fixed by Rolf Ziegler
 	--------------------------------------------------------------------------*/
 
 u8 I2C_read()
 {
-    u8 r;
+//rz    u8 r;
     
     I2C_idle();                 // Wait the MSSP module is inactive
     //PIR1bits.SSPIF = 0;         // Clear SSP interrupt flag
@@ -257,12 +259,18 @@ u8 I2C_read()
     //while (!PIR1bits.SSPIF);    // Wait the interrupt flag is set
 
     PIR1bits.SSPIF = 0;         // Clear SSP interrupt flag
-    r = SSPBUF;
+	
+//rz	r = SSPBUF;
+	
     while (!PIR1bits.SSPIF);    // Wait the interrupt flag is set
+    PIR1bits.SSPIF=0; // ROlf clear SSPIF
+//rz    r = SSPBUF;
+	PIR1bits.SSPIF=0; // ROlf clear SSPIF
     //while (!SSPSTATbits.BF);    // Wait until buffer is full
     //while (SSPCON2bits.RCEN);    // Wait until RCEN is cleared
 
-    return r;
+//rz    return r;
+	return SSPBUF;
 }
 
 /*	----------------------------------------------------------------------------
