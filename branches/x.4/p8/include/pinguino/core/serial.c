@@ -32,6 +32,7 @@
 #include <typedef.h>
 //#include <stdlib.h>       // no more used (09-11-2012)
 #include <stdarg.h>
+#include <delay.c>
 #include <stdio.c>
 
 //#define FLOAT 10
@@ -84,6 +85,8 @@ void serial_begin(unsigned long baudrate)
 	INTCONbits.PEIE=1;                      // enable peripheral interrupts
 	INTCONbits.GIE=1;
 	RCONbits.IPEN = 1;                      // enable interrupt priorities
+
+ 	Delayms(100);                           // AG : 12-11-2012
 }
 
 // new character receive ?
