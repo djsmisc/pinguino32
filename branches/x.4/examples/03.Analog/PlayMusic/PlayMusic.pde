@@ -10,8 +10,9 @@
 	just have a look at buzzer.jpg
 	--------------------------------------------------------------------------*/
 
-#define LINE_OUT 0			// Buzzer or speaker must be connected
-							// - if PIC18F : to pin 11 (RC1/CCP2) or 12 (RC2/CCP1)
+#define LINE_OUT 11			// Buzzer or speaker must be connected :
+							// - if PIC18Fx550 : to pin 11 (RC1/CCP2) or 12 (RC2/CCP1)
+							// - if PIC18F26j50 : to pin 11 (RC1/CCP2) or 10 (RC0/CCP1)
 							// - if PIC32 PINGUINO : to pin 0, 1, or 2 
 							// - if PIC32 PINGUINO OTG : to pin 0, 1, or 2 
 							// - if PIC32 PINGUINO 220: to pin 2, 3, 11, 12 or 13 

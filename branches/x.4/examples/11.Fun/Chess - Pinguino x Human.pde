@@ -159,9 +159,9 @@ void setup()
 	movecount   = 1;
 	kingcapture = FALSE;
 	movetype = NO_MOVE;      
-	init_board();
 	
 	// wait for a key to start
+	CDC.printf("Press a Key to start\r\n");
 	while (CDC.getKey() != '\r');
 
 	// title - author - usage
@@ -169,6 +169,8 @@ void setup()
 	CDC.println("Pinguino Chess v1.0");
 	CDC.println("2012 - Regis Blanchot");
 	CDC.println("usage : e2e4 <RETURN>");
+ 
+ 	init_board();
 }
  
 /**	----------------------------------------------------------------------------
