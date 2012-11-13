@@ -21,14 +21,18 @@
                                __
     (VSS or left floating) A0-|° |-VCC (+1.8 to 5.5V)
     (VSS or left floating) A1-|  |-WP  (VSS or left floating if not write protected)
-    (VSS or left floating) A2-|  |-SDA (to Pinguino SDA)
-                 (Ground) VSS-|__|-SCL (to Pinguino SCL)
+    (VSS or left floating) A2-|  |-SCL (to Pinguino SCL)
+                 (Ground) VSS-|__|-SDA (to Pinguino SDA)
 
     In that case, address = 1 0 1 0 0 0 0 = 0x50
 
     NB : SDA and SCL require a pullup resistor to VCC
     (typical 10 kΩ for 100 kHz, 2 kΩ for 400 kHz)
-
+    
+    Pinguino    x550    x6j50
+    SDA         DO      D5
+    SDL         D1      D4
+    
     The last bit of the control byte defines the operation to
     be performed. When set to a one a read operation is
     selected, and when set to a zero a write operation is
@@ -43,50 +47,46 @@
     - sudo cat /dev/ttyACM0
 */
 
-u8  i2cAddr=0x50;       // 0b1010000 i2c address of 24XX64 (see above)
-u16 MemoryAddr=0x1000;  // Memory address to write or read
+u8  i2cAddr=0x50;       // 0b1010000, i2c address of eeprom (see above)
+u16 MemoryAddr=0x0000;  // Memory address to write or read
     
 // Bytes to write in the device's memory
 u8 wBuffer[8]={'P','I','N','G','U','I','N','O'};
 
 void setup()
 {
-    //delay(1000);
-    //CDC.printf("\n\r\n\r*** 24xx64 Demo. ***\n\r\n\r");
+    u8 i;
+    
+    delay(1000);
+    CDC.printf("\n\r\n\r*** 24xx64 i2c Eeprom Demo. ***\n\r\n\r");
     pinMode(12, OUTPUT);                // Pinguino 26j50 build-in led is on pin 12
-    //I2C.master(I2C_100KHZ);             // Pinguino as Master on i2c bus (could be also I2C.master(100);)
-    I2C.master(I2C_400KHZ);             // or I2C.master(400);
-}
- 
-void loop()
-{
-    u8 i, c, ack;
+    // Define Pinguino as Master and Clock speed on i2c bus
+    I2C.master(I2C_100KHZ);             // or I2C.master(100);
+    //I2C.master(I2C_400KHZ);             // or I2C.master(400);
 
     ///
     ///     Write
     ///
-    
-    digitalWrite(12, LOW);                      // Switch build-in led off
-    CDC.printf("Writing ...\n\r");
 
+    CDC.printf("Writing ...\n\r");
     I2C.start();                                // All I2C commands must begin with a Start condition
-    ack = I2C.send((i2cAddr << 1) & 0xFE);      // write operation (bit 0 set to 0)
-    CDC.printf("Control Byte Ack=%d\r\n", ack);
-    ack = I2C.send(highByte(MemoryAddr));       // MSB first
-    CDC.printf("High Byte Ack=%d\r\n", ack);
-    ack = I2C.send(lowByte(MemoryAddr));        // LSB second
-    CDC.printf("Low Byte Ack=%d\r\n", ack);
+    I2C.send((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
+    I2C.send(highByte(MemoryAddr));             // MSB first
+    I2C.send(lowByte(MemoryAddr));              // LSB second
     for (i=0; i<8; i++)
     {
-        ack = I2C.send(wBuffer[i]);             // Page write (32 bytes max, auto. inc.)
-        CDC.printf("Write 0x%04X [%c], Ack=%d\r\n", MemoryAddr + i, wBuffer[i], ack);
-        //CDC.write(wBuffer[i]);
+        I2C.send(wBuffer[i]);                   // Page write (32 bytes max, auto. inc.)
+        CDC.write(wBuffer[i]);
     }
     CDC.printf("\n\r");
     I2C.stop();                                 // Terminate the write sequence
+}
+ 
+void loop()
+{
+    u8 i, c;
 
-    delay(1000);                                // Wait for 1 sec. (1000 ms)
-
+    
     ///
     ///     Read
     ///
@@ -96,25 +96,20 @@ void loop()
 
     // Send Memory Address
 
-    I2C.start();                                // start again
-    ack = I2C.send((i2cAddr << 1) & 0xFE);      // write operation (bit 0 set to 0)
-    CDC.printf("Control Byte Ack=%d\r\n", ack);
-    ack = I2C.send(highByte(MemoryAddr));       // MSB first
-    CDC.printf("High Byte Ack=%d\r\n", ack);
-    ack = I2C.send(lowByte(MemoryAddr));        // LSB second
-    CDC.printf("Low Byte Ack=%d\r\n", ack);
+    I2C.start();                                // All I2C commands must begin with a Start condition
+    I2C.send((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
+    I2C.send(highByte(MemoryAddr));             // MSB first
+    I2C.send(lowByte(MemoryAddr));              // LSB second
     
     // Starts reading
     
-    I2C.start();                                // All I2C commands must begin with a Start condition
-    ack = I2C.send((i2cAddr << 1) + 1);         // read operation (bit 0 to 1)
-    CDC.printf("Control Byte Ack=%d\r\n", ack);
-    for (i=0; i<9; i++)                         // Sequential read (auto. inc.)
+    I2C.start();                                // start again
+    I2C.send((i2cAddr << 1) + 1);               // read operation (bit 0 set to 1)
+    for (i=0; i<8; i++)                         // Sequential read (auto. inc.)
     {
-        c = I2C.read();                         // read 8 bytes from the slave
-        CDC.printf("Read 0x%04X [%c]\r\n", MemoryAddr + i, c);
-        //CDC.write(c);
-        if (i>=8)                               // Last byte is sent ?
+        c = I2C.read();                         // read a byte from the slave
+        CDC.write(c);
+        if (i>=7)                               // Last byte is sent ?
             I2C.sendNack();                     // Yes, send a No Ack to the slave (no more data to read)
         else
             I2C.sendAck();                      // No, send a Ack bit (more data has to be read)
@@ -122,5 +117,6 @@ void loop()
     CDC.printf("\n\r");
     I2C.stop();                                 // Terminate the read sequence
 
+    digitalWrite(12, LOW);                      // Switch build-in led off
     delay(1000);                                // Wait for 1 sec. (1000 ms)
 }

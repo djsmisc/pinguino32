@@ -25,39 +25,39 @@
 
 void setup()
 {
-  // initialize the library with the numbers of the interface pins
-  //lcd.pins(RS, E, D4, D5, D6, D7, 0, 0, 0, 0); //4bits
-  //lcd.pins(RS, E, D0, D1, D2, D3, D4, D5, D6, D7); //8bits
-  lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
-	
-  // set up the LCD's number of columns and rows: 
-  lcd.begin(16, 2);
-  // Print a message to the LCD.
-  lcd.print("Hello, World!");
+    pinMode(USERLED, OUTPUT);
+    // initialize the library with the numbers of the interface pins
+    //lcd.pins(RS, E, D4, D5, D6, D7, 0, 0, 0, 0); //4bits
+    //lcd.pins(RS, E, D0, D1, D2, D3, D4, D5, D6, D7); //8bits
+    lcd.pins(0, 1, 2, 3, 4, 5, 0, 0, 0, 0); // RS, E, D4 ~ D8	
+
+    // set up the LCD's number of columns and rows: 
+    lcd.begin(16, 2);
+    // Print a message to the LCD.
+    lcd.print("Hello, World!");
 }
 
 void loop()
 {
     u32 t,r;
     u8 d,h,m,s;
-  
-  t = millis() / 1000;  // time in sec.
 
-  d = t / 86400;        // days
-  r = t % 86400; 
+    digitalWrite(12, HIGH);// Switch build-in led on
+    
+    t = millis() / 1000;   // time in sec.
+    d = t / 86400;         // days
+    r = t % 86400; 
+    h = r / 3600;          // hours
+    r = t % 3600;
+    m = r / 60;            // minutes
+    s = t % 60;            // seconds
 
-  h = r / 3600;         // hours
-  r = t % 3600;
-  
-  m = r / 60;           // minutes
-  s = t % 60;           // seconds
+    // set the cursor to column 0, line 1
+    // (note: line 1 is the second row, since counting begins with 0):
+    lcd.setCursor(0, 1);
+    // print the number of seconds since reset:
+    lcd.printf("Uptime %02d:%02d:%02d", h,m,s);
 
-  // set the cursor to column 0, line 1
-  // (note: line 1 is the second row, since counting begins with 0):
-  lcd.setCursor(0, 1);
-  // print the number of seconds since reset:
-  lcd.printf("Uptime %02d:%02d:%02d", h,m,s);
-  
-  delay(100);
+    digitalWrite(12, LOW);// Switch build-in led off
+    delay(500);
 }
-

@@ -25,17 +25,17 @@
 	---------- PCF8574P
 	----------------------------------------------------------------------------
 
-							+5V		        A0		-|o |-		VDD	+5V
-							+5V		        A1		-|	 |-		SDA	pull-up 1K8 au +5V
-							+5V		        A2		-|	 |-		SCL 	pull-up 1K8 au +5V
+							      +5V		        A0		-|o |-		VDD	+5V
+							      +5V		        A1		-|	 |-		SDA	pull-up 1K8 au +5V
+							      +5V		        A2		-|	 |-		SCL 	pull-up 1K8 au +5V
 	+5V-----(+LED-)-----330R-----  P0		-|	 |-		INT
-							                P1		-|	 |-		P7		
-							                P2		-|	 |-		P6		
-							                P3		-|	 |-		P5		
-							GRND            VSS		-|	 |-		P4		
+							                    P1		-|	 |-		P7		
+							                    P2		-|	 |-		P6		
+							                    P3		-|	 |-		P5		
+				    			GRND            VSS		-|	 |-		P4		
 
 	SYMBOL  PIN     DESCRIPTION	                COMMENT
-	A0      1       address input 0             adress = 0 1 0 0 A2 A1 A0 0
+	A0      1       address input 0             address = 0 1 0 0 A2 A1 A0
 	A1      2       address input 1             A0, A1 et A2 connected to +5V
 	A2      3       address input 2             then adress is 01001110 = 0x4E
 	P0      4       quasi-bidirectional I/O     0
@@ -53,22 +53,27 @@
 	VDD     16      supply voltage
 	
 	--------------------------------------------------------------------------*/
+
+u8 i2cAddr = 0b0100111;    // PCF8574's I2C address
 void setup()
 {
-    PCF8574.init();                 // init. I2C bus
     pinMode(12, OUTPUT);
+    I2C.master(I2C_100KHZ);             // or I2C.master(100);
 }
 
 void loop()
 {
-    u8 PCF8574_address = 0b01001110;    // PCF8574's I2C address
-    u8 value;
-    
-    value = PCF8574.write(PCF8574_address, 0b00000000);
-    digitalWrite(12, value);
-    delay(500);
+    I2C.start();                                // All I2C commands must begin with a Start condition
 
-    value = PCF8574.write(PCF8574_address, 0b00000001);
-    digitalWrite(12, value);
-    delay(500);
+    I2C.send((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
+    
+    digitalWrite(USERLED, LOW);
+    I2C.send(0b00000000);                       // set all bits of PCF8574 register to 0
+    delay(500);                                 // wait for 500 ms
+    
+    digitalWrite(USERLED, HIGH);
+    I2C.send(0b00000001);                       // set bit 0 of PCF8574 register to 1
+    delay(500);                                 // wait for 500 ms
+
+    I2C.stop();                                 // Terminate the write sequence
 }
