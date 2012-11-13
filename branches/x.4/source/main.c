@@ -113,9 +113,11 @@ void pinguino_main(void)
 
 	#ifdef __USBCDC
 	CDC_init();
+/*  move to CDC_init()
 	PIE2bits.USBIE  = 1;
 	INTCONbits.PEIE = 1;
 	INTCONbits.GIE  = 1;
+*/
 	#endif    
 
 	#ifdef __USBBULK
@@ -166,7 +168,7 @@ void high_priority_isr(void) __interrupt 1
 
 #endif
 {
-#ifdef __USBCDC
+#if defined(__USBCDC) || defined(__USBBULK)
     if(PIR2bits.USBIF)
     {
         ProcessUSBTransactions();
@@ -174,17 +176,6 @@ void high_priority_isr(void) __interrupt 1
         UIRbits.URSTIF = 0;
         PIR2bits.USBIF = 0;
         UEIR = 0;
-    }
-#endif
-
-#ifdef __USBBULK
-    if(PIR2bits.USBIF)
-    {
-        ProcessUSBTransactions();
-        UIRbits.SOFIF = 0;
-        UIRbits.URSTIF = 0;
-        PIR2bits.USBIF = 0;
-        UEIR = 0;        
     }
 #endif
 
