@@ -102,14 +102,14 @@ static int pprints(u8 **out, const u8 *string, u8 width, u8 pad)
 	pprinti = pinguino print 32-bit signed or unsigned integer
  	i:			32-bit number to convert into string
  	base:		1 byte, 2 binary, 8 octal, 10 decimal, 16 hexadecimal
- 	sign:		0 positive, 1 negative
+ 	sign:		0 unsigned, 1 signed
  	width:		justify
  	pad:		PAD_RIGHT or PAD_ZERO
  	letterbase:	'a' or 'A' (lower or upper case)
 	return:		string's length
 	--------------------------------------------------------------------------*/
 
-static u8 pprinti(u8 **out, u32 i, u8 base, u8 sign, u8 width, u8 pad, u8 separator, u8 letterbase)
+static u8 pprinti(u8 **out, u32 i, u8 islong, u8 base, u8 sign, u8 width, u8 pad, u8 separator, u8 letterbase)
 {
 	u8 buffer[PRINT_BUF_LEN];
 	u8 *string;
@@ -124,12 +124,20 @@ static u8 pprinti(u8 **out, u32 i, u8 base, u8 sign, u8 width, u8 pad, u8 separa
 	}
 
 	// Do we have a negative decimal number ?
-	if ( (sign) && (base == 10) && ( (s32)i < 0 ) )
-	{
-		neg = 1;
-		uns32 = - (s32)i;
+    if  ( (sign) && (base == 10) )          // decimal signed number ?
+    {
+        if ( (islong) && ((s32)i < 0) )     // negative 32-bit ?
+        {
+            neg = 1;
+            uns32 = - (s32)i;
+        }
+        if ( (!islong) && ((s16)i < 0) )    // negative 16-bit ?
+        {
+            neg = 1;
+            uns32 = - (s16)i;
+        }
 	}
-
+    
 	// we start at the end
 	string = buffer + PRINT_BUF_LEN - 1;
 	*string = '\0';
@@ -297,16 +305,18 @@ static u8 pprintfl(u8 **out, float value, u8 width, u8 pad, u8 separator, u8 pre
 
 static u8 pprint(u8 **out, const u8 *format, va_list args)
 {
-	u32 val = 0;
-	u8 width, pad;
+	u32 val;
+	u8 width, pad, islong;
 	register u8 pc = 0;
 	u8 precision = 2; // default value is 2 digits fractional part
 	u8 separator = 0; // no thousands separator
 	u8 scr[2];
-	u8 islong = 0;
 
 	for (; *format != 0; ++format)
 	{
+        val = 0;
+        islong = 0;                 // default is 16-bit
+        
 		if (*format == '%')
 		{
 			width = pad = 0;		// default is left justify, no zero padded
@@ -347,12 +357,12 @@ static u8 pprint(u8 **out, const u8 *format, va_list args)
 			{
 				++format;
 				precision = 0;
-			}
-									// how many digits after point ?
-			for ( ; *format >= '0' && *format <= '9'; ++format)
-			{
-				precision *= 10;
-				precision += *format - '0';
+				// get number of digits after decimal point
+                for ( ; *format >= '0' && *format <= '9'; ++format)
+                {
+                    precision *= 10;
+                    precision += *format - '0';
+                }
 			}
 
 			if (*format == 'f') 	// float
@@ -367,57 +377,58 @@ static u8 pprint(u8 **out, const u8 *format, va_list args)
 				pc += pprints(out, s?s:"(null)", width, pad);
 				continue;
 			}
-
+            
 			if (*format == 'l')		// long support
 			{
 				++format;
 				islong = 1;
 			}
-			
-			if (islong)
-				val = va_arg(args, u32);
-			else
-				val = (u32)va_arg(args, u16);
-				
-			if (*format == 'u')		// unsigned integer
+            
+			if (*format == 'u')		// decimal (10) unsigned (0) integer
 			{
-				pc += pprinti(out, val, 10, 0, width, pad, separator, 'a');
+				val = (islong) ? va_arg(args, u32) : va_arg(args, u16);
+                pc += pprinti(out, val, islong, 10, 0, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'd' || *format == 'i')		// decimal signed integer
+			if (*format == 'd' || *format == 'i') // decimal (10) signed (1) integer
 			{
-				pc += pprinti(out, val, 10, 1, width, pad, separator, 'a');
+				val = (islong) ? va_arg(args, u32) : va_arg(args, u16);
+                pc += pprinti(out, val, islong, 10, 1, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'x' || *format == 'p')	// lower hexa or pointer
+			if (*format == 'x' || *format == 'p')	// unsigned (0) lower ('a') hexa (16) or pointer
 			{
-				pc += pprinti(out, val, 16, 0, width, pad, separator, 'a');
+				val = (islong) ? va_arg(args, u32) : va_arg(args, u16);
+                pc += pprinti(out, val, islong, 16, 0, width, pad, separator, 'a');
 				continue;
 			}
 
-			if (*format == 'X' || *format == 'P')	// upper hexa or pointer
+			if (*format == 'X' || *format == 'P')	// unsigned (0) upper ('A') hexa (16) or pointer
 			{
-				pc += pprinti(out, val, 16, 0, width, pad, separator, 'A');
+				val = (islong) ? va_arg(args, u32) : va_arg(args, u16);
+                pc += pprinti(out, val, islong, 16, 0, width, pad, separator, 'A');
 				continue;
 			}
 
 			if (*format == 'b')		// binary
 			{
-				pc += pprinti(out, val, 2, 0, width, pad, separator, 'a');
+				val = (islong) ? va_arg(args, u32) : va_arg(args, u16);
+                pc += pprinti(out, val, islong, 2, 0, width, pad, separator, 'a');
 				continue;
 			}
 
 			if (*format == 'o')		// octal
 			{
-				pc += pprinti(out, val, 8, 0, width, pad, separator, 'a');
+				val = (islong) ? va_arg(args, u32) : va_arg(args, u16);
+                pc += pprinti(out, val, islong, 8, 0, width, pad, separator, 'a');
 				continue;
 			}
 
 			if (*format == 'c') 	// ascii
 			{
-				scr[0] = val;
+				scr[0] = va_arg(args, u16);
 				scr[1] = '\0';
 				pc += pprints(out, scr, width, pad);
 				continue;
