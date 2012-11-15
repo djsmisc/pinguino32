@@ -113,11 +113,9 @@ void pinguino_main(void)
 
 	#ifdef __USBCDC
 	CDC_init();
-/*  move to CDC_init()
 	PIE2bits.USBIE  = 1;
 	INTCONbits.PEIE = 1;
 	INTCONbits.GIE  = 1;
-*/
 	#endif    
 
 	#ifdef __USBBULK
