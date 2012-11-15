@@ -142,7 +142,6 @@ u8 CDCgets(u8 *buffer)
 u8 CDCputs(u8 *buffer, u8 length)
 {
   u8 i=0;
-  u16 t=0xFFFF;//80;
 
   if (deviceState != CONFIGURED) return 0;
   if (!CONTROL_LINE) return 0;
@@ -155,7 +154,6 @@ u8 CDCputs(u8 *buffer, u8 length)
 #ifdef DEBUG_PRINT_CDC
       printf("%c",CDCTxBuffer[i]);
 #endif
-        while(t--); // added 2012/11/06 - RB
     }
 #ifdef DEBUG_PRINT_CDC
     printf("->");

@@ -134,7 +134,6 @@ static void GetDescriptor(void) {
       printf("Total config size: %d\r\n", wCount);
 #endif
     }
-/*
     else if (descriptorType == STRING_DESCRIPTOR) {
 #ifdef DEBUG_PRINT
       printf("STRING_DESCRIPTOR: %d\r\n", (word)descriptorIndex);
@@ -143,7 +142,6 @@ static void GetDescriptor(void) {
       outPtr = (u8 *)&libstring_descriptor[descriptorIndex];
       wCount = *outPtr;
     }
-*/
     else if (descriptorType == DEVICE_QUALIFIER_DESCRIPTOR) {
 #ifdef DEBUG_PRINT
       printf("DEVICE_QUALIFIER_DESCRIPTOR\r\n");
