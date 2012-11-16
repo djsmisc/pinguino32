@@ -140,7 +140,7 @@ class Pinguino(framePinguinoX, Editor):
             threadRevision.start()
 
             self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
-            self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])\n", 1)
+            self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])", 1)
         else:
             self.SetTitle("Pinguino IDE")
             self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
@@ -526,7 +526,7 @@ class Pinguino(framePinguinoX, Editor):
         if DEV == True: rev = 'rev. ' + self.localRev
         else: rev = ""
         self.SetTitle('Pinguino IDE ' + pinguino_version + " " + rev)
-        self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")\n", 1)
+        self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")", 1)
         self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
 
 
@@ -615,7 +615,7 @@ class Pinguino(framePinguinoX, Editor):
 
 
         #self.readlib(self.curBoard) #So slow
-        self.displaymsg(_("Changing board")+"...\n", 0)
+        self.displaymsg(_("Changing board")+"...", 0)
         if sys.platform=='darwin':
             self.readlib(self.curBoard) #So slow
         else:
@@ -763,9 +763,9 @@ class Pinguino(framePinguinoX, Editor):
             result=dlg.ShowModal()
             dlg.Destroy()
             return False
-        self.displaymsg(_("Board:")+" " + self.curBoard.name + "\n", 1)
-        self.displaymsg(_("Proc:")+" " + self.curBoard.proc + "\n", 0)
-        self.displaymsg(_("File:")+" " + self.GetPath() + "\n", 0)
+        self.displaymsg(_("Board:")+" " + self.curBoard.name, 1)
+        self.displaymsg(_("Proc:")+" " + self.curBoard.proc, 0)
+        self.displaymsg(_("File:")+" " + self.GetPath(), 0)
         self.OnSave()
         filename=self.GetPath()
         filename,extension=os.path.splitext(filename)
@@ -783,7 +783,8 @@ class Pinguino(framePinguinoX, Editor):
             MAIN_FILE="main32.hex"
         retour=self.compile(filename, self.curBoard)
         if retour!=0:
-            self.displaymsg(_("error while compiling file ")+filename,0)
+            self.displaymsg(_("error while compiling"),0)
+            self.displaymsg(_("check highlighted lines in your code"),0)
         else:
             retour=self.link(filename, self.curBoard)
             if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
@@ -791,9 +792,9 @@ class Pinguino(framePinguinoX, Editor):
                 return False
             else:
                 shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")
-                self.displaymsg(_("compilation done")+"\n",0)
-                self.displaymsg(self.getCodeSize(filename, self.curBoard)+"\n",0)
-                self.displaymsg(str(time.time() - t0) + " "+_("seconds process time")+"\n",0)
+                self.displaymsg(_("compilation done"),0)
+                self.displaymsg(self.getCodeSize(filename, self.curBoard),0)
+                self.displaymsg(str(time.time() - t0) + " "+_("seconds process time"),0)
                 os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
                 #os.remove(filename+".c")
                 return True
@@ -1029,7 +1030,7 @@ class Pinguino(framePinguinoX, Editor):
             self.reservedword.append(fixed_rw[i])
 
         if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
-            self.displaymsg(_("Board config")+":\t"+board.name+self.extraName+"\n", 0)
+            self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
 	
 
 # ------------------------------------------------------------------------------
@@ -1055,9 +1056,9 @@ class Pinguino(framePinguinoX, Editor):
             if clearpanel==1:
                 self.logwindow.Clear()
             try:
-                self.logwindow.WriteText(message.decode("utf-8", "replace"))
+                self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
             except:
-                self.logwindow.WriteText(message)
+                self.logwindow.WriteText(message+"\n")
         else:
             if message!="":
                 print message
@@ -1307,17 +1308,40 @@ class Pinguino(framePinguinoX, Editor):
                                    stdout=fichier, stderr=STDOUT)
                 sortie.communicate()
                 if sortie.poll()!=0:
+                    #
+                    # Error treatment (RB: fixed 2012-11-15
+                    #
+                    
+                    # set the file pointer to the beginning of stdout
                     fichier.seek(0)
+                    # read lines until 'error' or 'Error' is found
                     for ligne in fichier:
-                        if ligne.find('error')!=-1:
-                            self.displaymsg(ligne, 0)
-                fichier.seek(0)
-                line=fichier.readline()
-                if line.find("error")!=-1:
-                    number=line[line.find(":")+1:line.find("error")-2]
-                    #self.highlightline(int(number)-1,'pink')
-                    self.displaymsg("error line " + number + "\n", 1)
-                    self.displaymsg(line[line.find("error")+7:len(line)],0)
+
+                        # C errors
+                        error_pos = ligne.find('error')
+                        if (error_pos != -1):
+                            error_line_number = ligne[ ligne.find(":") + 1 : error_pos - 2]
+                            error_message = ligne[ error_pos + 9 : len(ligne)]
+                            error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
+                            # TODO : highlight more than one line / highlight must remain until line is changed
+                            self.highlightline(int(error_line_number)-1, error_color)
+                            self.displaymsg("error line " + error_line_number + " " + error_message, 0)
+                            
+                        # ASM errors
+                        error_pos = ligne.find('Error')
+                        if (error_pos != -1):
+                            # do not display error line number since they are from the ASM file
+                            # display error symbol instead
+                            error_symbol = ligne[ligne.find("(_") + 2 : ligne.find(").")]
+                            textEdit  = self.stcpage[self.notebookEditor.GetSelection()]
+                            textPlain = str(textEdit.GetTextUTF8())
+                            error_index = textPlain.find(error_symbol)
+                            textEdit.SetSelection(error_index, error_index + len(error_symbol))
+                            error_line_number = textEdit.LineFromPosition(error_index) + 1
+                            error_message = ligne[ error_pos + 13 : ligne.find("(_") - 1]
+                            error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
+                            self.highlightline(int(error_line_number)-1, error_color)
+                            self.displaymsg("error line " + str(error_line_number) + ": " + error_message.lower() + ": " + error_symbol, 0)
                 fichier.close()
                 return sortie.poll()
             else:
