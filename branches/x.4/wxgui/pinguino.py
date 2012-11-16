@@ -1320,8 +1320,10 @@ class Pinguino(framePinguinoX, Editor):
                         # C errors
                         error_pos = ligne.find('error')
                         if (error_pos != -1):
-                            error_line_number = ligne[ ligne.find(":") + 1 : error_pos - 2]
-                            error_message = ligne[ error_pos + 9 : len(ligne)]
+                            #error_line_number = ligne[ ligne.find(":") + 1 : error_pos - 2]
+                            error_line_number = ligne.split(":")[1]
+                            #error_message = ligne[ error_pos + 9 : len(ligne)]
+                            error_message = ligne.split(":")[-1]
                             error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
                             # TODO : highlight more than one line / highlight must remain until line is changed
                             self.highlightline(int(error_line_number)-1, error_color)
