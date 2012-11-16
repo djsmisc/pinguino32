@@ -91,6 +91,7 @@ class Preferences():
         self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerSearch, self.textCtrlSearch, "searchreplace"), self.colourPickerSearch)
         self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCodeNav, self.textCtrlCodeNav, "codenavigation"), self.colourPickerCodeNav)
         self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCurrentLine, self.textCtrlCurrentLine, "selection"), self.colourPickerCurrentLine)        
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerErrorLine, self.textCtrlErrorLine, "codeerror"), self.colourPickerErrorLine)        
         
         #Upgrade
         #----------------------------------------------------------------------
@@ -198,6 +199,10 @@ class Preferences():
         value = self.IDE.getColorConfig("Highligh", "selection", [241, 132, 88])
         self.colourPickerCurrentLine.SetColour(value)
         self.textCtrlCurrentLine.SetBackgroundColour(value)
+        
+        value = self.IDE.getColorConfig("Highligh", "codeerror", [241, 0, 0])
+        self.colourPickerErrorLine.SetColour(value)
+        self.textCtrlErrorLine.SetBackgroundColour(value)
         
         value = self.IDE.getElse("IDE", "checkupgradeatstart", "True") == "True"
         self.checkBoxUpgrade.SetValue(value)
