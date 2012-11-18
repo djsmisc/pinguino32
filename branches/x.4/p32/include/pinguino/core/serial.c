@@ -193,10 +193,10 @@ volatile long UART6wpointer, UART6rpointer;				// write and read pointer
 	@return		baudrate
 	----------------------------------------------------------------------------
 	BRGH: High Baud Rate Enable bit
-	if BRGH = 1 = High-Speed mode – 4x baud clock enabled
-		then UxBRG = ((FPB/Desired Baud Rate)/ 4) – 1
-	if BRGH 0 = Standard Speed mode – 16x baud clock enabled
-		then UxBRG = ((FPB/Desired Baud Rate)/16) – 1
+	if BRGH = 1 = High-Speed mode - 4x baud clock enabled
+		then UxBRG = ((FPB/Desired Baud Rate)/ 4) - 1
+	if BRGH 0 = Standard Speed mode - 16x baud clock enabled
+		then UxBRG = ((FPB/Desired Baud Rate)/16) - 1
 	--------------------------------------------------------------------------*/
 
 void SerialSetDataRate(u8 port, u32 baudrate)
@@ -350,6 +350,8 @@ u32 SerialGetDataRate(u8 port)
 				baudrate = pbclock / (16 * (U2BBRG + 1));
 			break;
 #endif
+		default:
+			baudrate = 0;
 	}
 	return baudrate;
 }
