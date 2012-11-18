@@ -285,7 +285,7 @@ void pinmode(u8 pin,u8 state)
 
 u8 pinread(u8 pin)
 {
-	u32 reg;
+	u32 reg = 0;
 
 	switch (portmask[pin])
 	{
