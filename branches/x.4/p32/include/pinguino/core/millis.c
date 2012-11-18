@@ -72,7 +72,7 @@ u32 millis()
 
 u32 micros()
 {
-    #ifdef PIC32_PINGUINO_220
+    #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
         // The code for the 220 has not been tested!
         return 1000*_millis + (1000*(65535-TMR2))/_tmr2;
     #else
