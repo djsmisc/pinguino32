@@ -250,7 +250,7 @@ DSTATUS disk_initialize(PF_BYTE drv /* Physical drive number (0) */
 ) {
 	PF_BYTE n, ty, cmd, buf[4];
 	UINT tmr;
-	DSTATUS s;
+	DSTATUS s = 0;
 
 	if (drv)
 		return STA_NOINIT; /* Supports only single drive */
