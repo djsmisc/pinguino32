@@ -70,6 +70,16 @@ u32 millis()
 	return(_millis);
 }
 
+u32 micros()
+{
+    #ifdef PIC32_PINGUINO_220
+        // The code for the 220 has not been tested!
+        return 1000*_millis + (1000*(65535-TMR2))/_tmr2;
+    #else
+        return 1000*_millis + (1000*TMR2)/PR2;
+    #endif
+}
+
 /*	----------------------------------------------------------------------------
 	TMR2 interrupt
 	--------------------------------------------------------------------------*/
