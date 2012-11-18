@@ -151,6 +151,9 @@
 		#define GREENLED		32	//PORTGbits.RG6	// led1
 		#define YELLOWLED		10	//PORTDbits.RD1	// led2
 
+		#define LED1			GREENLED
+		#define LED2			YELLOWLED
+
 	#elif defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
 		// Arduino's digital pins
 		#define D0		0
