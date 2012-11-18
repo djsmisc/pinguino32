@@ -537,7 +537,7 @@ void IntSetVectorPriority(u8 vector, u8 pri, u8 sub)
 
 unsigned int IntGetVectorPriority(u8 vector)
 {
-	unsigned int pri;
+	unsigned int pri = 0;
 
 	switch (vector)
 	{
@@ -685,7 +685,7 @@ unsigned int IntGetVectorPriority(u8 vector)
 
 unsigned int IntGetVectorSubPriority(u8 vector)
 {
-	unsigned int sub;
+	unsigned int sub = 0;
 
 	switch (vector)
 	{
