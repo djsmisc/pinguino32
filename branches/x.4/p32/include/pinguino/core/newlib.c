@@ -4,7 +4,7 @@
 	PURPOSE:			This is a set of system calls beetween newlib and pinguino32
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 	FIRST RELEASE:	15 may. 2011
-	LAST RELEASE:	18 may. 2011
+	LAST RELEASE:	18 nov. 2012
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -86,8 +86,11 @@ int close(int file)
 // return 0 if stream is available
 // failed return -1
 
+// NV: Changed the second param to a void* to get rid of a compiler warning.
+//     Change it back to struct stat * whenever this gets implemented.
 //int fstat(int file, stat *st) 
-int fstat(int file, struct stat *st) 
+//int fstat(int file, struct stat *st)
+int fstat(int file, void *st)
 {
 	return 0;
 }
