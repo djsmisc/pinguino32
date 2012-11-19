@@ -145,7 +145,7 @@ void SPI_mode(u8 mode)
 void SPI_clock(u32 speed)
 {
 	u32 Fpb;
-	u32 Fsck;
+	//u32 Fsck;
 	u16 clk;
 
 	Fpb = GetPeripheralClock();
