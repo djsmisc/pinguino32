@@ -23,12 +23,14 @@
 // standard C libraries used
 #include <ctype.h>      		// toupper...
 #include <string.h>     		// memcpy...
-#include <malloc.h>				// malloc, free?
+//#include <malloc.h>				// malloc, free?
 
 #include <sd/fileio.h>  	   	// file I/O routines
 #include <sd/sdmmc.c>   	   	// sd/mmc card interface
 #include "ff.c"					// Fat Filesystem
 #include "diskio.c"				// card access functions
+
+//#define SD_DEBUG
 
 #ifdef SD_DEBUG
     #include <__cdc.c>          // USB CDC functions
@@ -40,7 +42,7 @@
  will mount only the first partition on the disk/card
  --------------------------------------------------------------------------*/
 
-//#define SD_DEBUG
+static FATFS _Fat;
 
 char mount(unsigned char pin) {
 	int flag, i;
@@ -75,22 +77,11 @@ char mount(unsigned char pin) {
 #endif
 	initMedia();
 
-	// 3. allocate space for a FATFS structure
-#ifdef SD_DEBUG
-	CDCprintf("Allocating memory... ");
-#endif
-	Fat = (FATFS *) malloc(sizeof(FATFS));
-	if (Fat == NULL) // report an error
-	{
-#ifdef SD_DEBUG
-		CDCprintln("Failed!");
-#endif
-		FError = FE_MALLOC_FAILED;
-		return False;
-	}
-#ifdef SD_DEBUG
-	CDCprintln("OK");
-#endif
+	// We're skipping the old step 3 because there's no need for malloc
+	// This takes 6k off the code size if malloc is not used elsewhere.
+	// Instead, just point it to our _Fat var.
+	// The FATFS struct takes only 560 bytes of mem.
+	Fat = &_Fat;
 
 	// Mount media
 #ifdef SD_DEBUG
@@ -102,7 +93,7 @@ char mount(unsigned char pin) {
 #ifdef SD_DEBUG
 		CDCprintln("Failed!");
 #endif
-		free(Fat);
+		//free(Fat);
 		return False;
 	}
 #ifdef SD_DEBUG
@@ -136,7 +127,7 @@ char mount(unsigned char pin) {
 
 void unmount(void) {
 	f_mount(0, NULL);
-	free(Fat);
+	//free(Fat);
 	SPI2CONCLR = 0x8000; // SPI2 OFF
 } // unmount
 
