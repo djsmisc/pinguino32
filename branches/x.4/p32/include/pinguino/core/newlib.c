@@ -69,6 +69,8 @@ int open(const char *name, int flags, int mode)
 	
 // TODO LCD, SPI etc.....
 // TODO define a flag to know if the stream is opened
+	
+	return -1;
 }
 
 // close
@@ -143,6 +145,8 @@ int read(int file, char *ptr, int len)
 				return(-1);
 			break;
 	}
+
+	return -1;
 }
 
 // write
@@ -169,6 +173,8 @@ int write(char file, char *ptr, int len)
 			return(-1);
 			break;	
 	}
+	
+	return -1;
 }
 
 #endif	/* __NEWLIB__ */
