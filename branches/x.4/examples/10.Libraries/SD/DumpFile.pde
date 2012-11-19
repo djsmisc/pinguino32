@@ -90,7 +90,7 @@ void loop()
    put required value in SD.mount(#) 
    */
    if (SD.mount(8)) {  // i.e. PIC32 Pinguino & PIC32 Pinguino OTG
-// if (SD.mount(40)) {  // i.e. PIC32 Pinguino & PIC32 Pinguino OTG
+// if (SD.mount(40)) {  // i.e. PIC32 Pinguino Micro
       // open file
       error = SD.open(&file, filename, FA_OPEN_EXISTING | FA_READ);
       if (!error){
@@ -121,6 +121,7 @@ void loop()
       }
       else {
          CDC.println("file not found!");
+         SD.unmount();
          for (i=0;i<3;i++){
             digitalWrite(YELLOWLED,HIGH); // 3 short flashes of Yellow LED
             delay(200);                   // if file not found
