@@ -154,6 +154,41 @@
 		#define LED1			GREENLED
 		#define LED2			YELLOWLED
 
+	 	// P1_1 refers to CON1 pin 1, P1_2 CON1 pin 2, and so on
+		#define P1_1	31
+		#define P1_2	30
+		#define P1_3	29
+		#define P1_4	28
+		#define P1_5	27
+		#define P1_6	26
+		#define P1_7	25
+		#define P1_8	24
+		#define P1_9	23
+		#define P1_10	22
+		#define P1_11	21
+		#define P1_12	20
+		#define P1_13	19
+		#define P1_14	18
+		#define P1_15	17
+		#define P1_16	16
+		// CON2
+		#define P2_1	15
+		#define P2_2	14
+		#define P2_3	13
+		#define P2_4	12
+		#define P2_5	11
+		#define P2_6	10
+		#define P2_7	9
+		#define P2_8	8
+		#define P2_9	7
+		#define P2_10	6
+		#define P2_11	5
+		#define P2_12	4
+		#define P2_13	3
+		#define P2_14	2
+		#define P2_15	1
+		#define P2_16	0
+
 	#elif defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_OTG)
 		// Arduino's digital pins
 		#define D0		0
