@@ -129,6 +129,7 @@
 
 		#define WHITELED		63 //PORTEbits.RE2	// led1
 		#define GREENLED		59 //PORTEbits.RE3	// led2	
+		#define USERLED		59 //PORTEbits.RE3	// led2	
 		#define YELLOWLED		58 //PORTEbits.RE0	// led3
 		#define REDLED			64 //PORTEbits.RE1	// led4
 
@@ -142,12 +143,14 @@
 		#define LED2			48 //PORTEbits.RE3	// red led
 
 		#define BLUELED		    49 //pin49 PORTEbits.RE2	// led1
+		#define USERLED		    49 //pin49 PORTEbits.RE2	// led1
 		#define REDLED			48 //pin48 PORTEbits.RE3	// led2
 
 		// UBW32 build-in buttons
 		#define USERBUTTON	    43 //PORTEbits.RE7 = user button
 
 	#elif defined (PIC32_PINGUINO_MICRO)
+		#define USERLED		32	//PORTGbits.RG6	// led1
 		#define GREENLED		32	//PORTGbits.RG6	// led1
 		#define YELLOWLED		10	//PORTDbits.RD1	// led2
 
@@ -230,6 +233,7 @@
 		#define LED1			13	//PORTGbits.RG6	// green led
 		#define LED2			30	//PORTDbits.RD1	// yellow led
 
+		#define USERLED		13	//PORTGbits.RG6	// led1
 		#define GREENLED		13	//PORTGbits.RG6	// led1
 		#define YELLOWLED		30	//PORTDbits.RD1	// led2
 
