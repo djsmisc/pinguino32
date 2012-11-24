@@ -29,7 +29,7 @@
 #include <pic18fregs.h>
 #include <const.h>
 #include <macro.h>
-#include <system.c>
+//#include <system.c>
 #include <typedef.h>
 
 #ifdef boot2
@@ -69,7 +69,7 @@
 
 void pinguino_main(void)
 {
-   	#if defined(PIC18F26J50)
+   	#if defined(PIC18F26J50) || defined(PIC18F46J50)
     // Enable the PLL and wait 2+ms until the PLL locks
     u16 pll_startup_counter = 600;
     OSCTUNEbits.PLLEN = 1;
@@ -189,12 +189,15 @@ void high_priority_isr(void) __interrupt 1
 #endif
 
 #ifdef __SERIAL__
-	#if defined(PIC18F4550) || defined(PIC18F4455) || defined(PIC18F2550) || defined(PIC18F2455)
+    #if defined(PIC18F1220) || defined(PIC18F1320) || \
+        defined(PIC18F14K22) || defined(PIC18LF14K22) || \
+        defined(PIC18F2550) || defined(PIC18F4550) || \
+        defined(PIC18F2455) || defined(PIC18F4455)
 		if (PIR1bits.RCIF) 
-	#endif
-
-	#if defined(PIC18F26J50)
+	#elif defined(PIC18F26J50) || defined(PIC18F46J50)
 		if (PIR1bits.RC1IF) 
+    #else
+        #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
 	#endif
 		serial_interrupt();
 #endif
