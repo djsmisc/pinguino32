@@ -72,7 +72,6 @@ gui=False
 # ------------------------------------------------------------------------------
 from wxgui._trad import _
 
-
 # ------------------------------------------------------------------------------
 # Pinguino Class
 # ------------------------------------------------------------------------------
@@ -99,7 +98,6 @@ class Pinguino(framePinguinoX, Editor):
     rw = []
     THEME = []
     KEYWORD = []
-
 
 # ------------------------------------------------------------------------------
 # init
@@ -144,11 +142,10 @@ class Pinguino(framePinguinoX, Editor):
         else:
             self.SetTitle("Pinguino IDE")
             self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
-            
 
-	self.loadSettings()
+        self.loadSettings()
         self.__initIDE__()
-        1
+        #???
 
         ########################################
         #Auto-complete frame build 
@@ -157,38 +154,54 @@ class Pinguino(framePinguinoX, Editor):
         self.AutoCompleter = AutocompleterIDE(self)
         self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
         self.AutoCompleter.Hide()
-	
-	#Select Device frame build
-        #CharsCount = self.getElse("Completer", "charscount", 1)
-        #MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
-        self.DeviceList = PicListIDE(self)
-	self.DeviceList.__init_list__(self)
-        self.DeviceList.Hide()
 
-
-	if sys.platform != 'win32':
-	    pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
-		            stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-    
-	    #pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
-			    #stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-	    
-	    output = pipe.stdout.read()
-	    proclist = output.split("p")
-	    proclist.pop(0)
-	    for i in range(len(proclist)): proclist[i] = proclist[i].strip()
-	    
-	    self.DeviceList.setItems(proclist)
-	    
-	else:
-	    self.DeviceList.setItems("No devices yet.".split(" "))
-	
-	self.DrawToolbar()		
+        ########################################
+        #Select 8-bit Device frame build
         
-    #----------------------------------------------------------------------
+        # check if p8 directory exists (some users only have p32)
+        if os.path.exists(os.path.join(HOME_DIR, self.osdir, 'p8')):
+            #CharsCount = self.getElse("Completer", "charscount", 1)
+            #MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
+            self.DeviceList = PicListIDE(self)
+            self.DeviceList.__init_list__(self)
+            self.DeviceList.Hide()
+            
+            #if sys.platform != 'win32':
+            #    pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
+            #                stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+            #    output = pipe.stdout.read()
+            #    proclist = output.split("p")
+            #    proclist.pop(0)
+            #    for i in range(len(proclist)):
+            #        proclist[i] = proclist[i].strip()
+            #    self.DeviceList.setItems(proclist)
+            #else:
+            #    self.DeviceList.setItems("No devices yet.".split(" "))
+            
+            # get all PIC18F devices supported by SDCC
+            proclist = []
+            fichier=open(os.path.join(P8_DIR, 'include', 'pic16devices.txt'), 'r')
+            for line in fichier:
+                # if line begins with 'name'
+                if line.find('name') == 0:
+                    proclist.append(line[line.find('18f'):-1])
+                    #print line[line.find('18f'):-1]
+                for i in range(len(proclist)):
+                    proclist[i] = proclist[i].strip()
+            self.DeviceList.setItems(proclist)
+            fichier.close()
+
+        else:
+            print 'Warning : no p8 directory'
+            
+        self.DrawToolbar()
+        
+# ------------------------------------------------------------------------------
+# Configure Panes (???)
+# ------------------------------------------------------------------------------
     def configPanes(self):
         self.buildOutput()
-        self.buildLateralPanel()	
+        self.buildLateralPanel()
         self.buildEditor()
         self.addPanes()
 
@@ -206,7 +219,6 @@ class Pinguino(framePinguinoX, Editor):
         if DEBUG_TIME : return process
         else: return function
 
-
 # ------------------------------------------------------------------------------
 # Editor
 # ------------------------------------------------------------------------------
@@ -221,7 +233,6 @@ class Pinguino(framePinguinoX, Editor):
         self.background.CentreOnParent(wx.BOTH)
 
         self.notebookEditor.SetMinSize((50, 100))
-        
 
 # ------------------------------------------------------------------------------
 # Output
@@ -261,7 +272,7 @@ class Pinguino(framePinguinoX, Editor):
         self.PaneLateral.Right()
         
 # ------------------------------------------------------------------------------
-# add the panes to the manager
+# Add the panes to the manager
 # ------------------------------------------------------------------------------
     def addPanes(self):
         self.lat = panelLateral(self)
@@ -330,7 +341,6 @@ class Pinguino(framePinguinoX, Editor):
         self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
         self.Bind(wx.EVT_MENU, self.OnVerifyUpload, self.menu.menuItemCompileUpload)
 
-
         ##plugin
         #self.Bind(wx.EVT_TOOL, self.OnPlugIn, id=self.ID_PLUG_ON)
         #self.Bind(wx.EVT_TOOL, self.NoPlugIn, id=self.ID_PLUG_OFF)
@@ -346,9 +356,6 @@ class Pinguino(framePinguinoX, Editor):
         self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)
 
         self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
-
-
-
 
 # ----------------------------------------------------------------------
 # Menus
@@ -380,16 +387,14 @@ class Pinguino(framePinguinoX, Editor):
 
         self.menu.UpdateMenus()
 
-
     #----------------------------------------------------------------------
     def open_path(self,name):
         def path(event=None):
             self.Open(name)
         return path   
 
-
 # ----------------------------------------------------------------------
-# load settings from config file
+# Load settings from config file
 # ----------------------------------------------------------------------
     def loadSettings(self):
         self.loadConfig()
@@ -439,9 +444,8 @@ class Pinguino(framePinguinoX, Editor):
         if os.path.isdir(lateralPath):
             self.buildLateralDir(lateralPath)
 
-
 # ----------------------------------------------------------------------
-# get OS name and define some OS dependant variable
+# Get OS name and define some OS dependant variable
 # ----------------------------------------------------------------------
     def setOSvariables(self):
         if sys.platform == 'darwin':
@@ -454,15 +458,16 @@ class Pinguino(framePinguinoX, Editor):
             self.osdir = 'win32'
             self.debug_port = 15
             self.c8 = 'sdcc.exe'
+            self.p8 = 'picpgm.exe'
             self.u32 = 'mphidflash.exe'
             self.make = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'make.exe')
         else:
             self.osdir = 'linux'
             self.debug_port = '/dev/ttyACM0'
             self.c8 = 'sdcc'
+            self.p8 = 'picpgm'
             self.u32 = 'ubw32'
             self.make = 'make'
-
 
 # ------------------------------------------------------------------------------
 # Thread Functions
@@ -480,7 +485,6 @@ class Pinguino(framePinguinoX, Editor):
                 #self.lastRevision = "<<TESTING>>" #To force a update at start
                 wx.PostEvent(self, ResultEventRevision([svnRev]))
             except: self.lastRevision = False
-
 
 # ------------------------------------------------------------------------------
 # Timer Functions
@@ -529,14 +533,12 @@ class Pinguino(framePinguinoX, Editor):
         self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")", 1)
         self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
 
-
 # ------------------------------------------------------------------------------
 # Update
 # ------------------------------------------------------------------------------
     def updateIDE(self):
         self.lat.search.Fit()
         self._mgr.Update()
-
 
 # ------------------------------------------------------------------------------
 # OnUpgrade
@@ -571,7 +573,6 @@ class Pinguino(framePinguinoX, Editor):
         self.file_menu.UpdateUI()
         self.updatenotebook()
 
-
 # ------------------------------------------------------------------------------
 # OnBoard : load boards specificities
 # ------------------------------------------------------------------------------
@@ -583,45 +584,43 @@ class Pinguino(framePinguinoX, Editor):
         del self.keywordList[:]
         del self.reservedword[:]
         del self.libinstructions[:]
-	
-	sel = self.choiceMode.GetStringSelection()
-	
-	if sel == _("USB Bootloader"):
-	    
-	    self.choiceBoards.Show()
-	    self.textCtrlDevices.Hide()
-	    name = self.choiceBoards.GetValue()
-	    for i in self.boardlist:
-		if i.name == name:
-		    self.curBoard = i
-		    break
-	    self.extraName = ""
-	    
-	    
-	elif sel == _("Serial Bootloader"):
-	    return 
-	    
-	elif sel == _("No Bootloader"):
-	    
-	    self.choiceBoards.Hide()
-	    self.textCtrlDevices.Show()
-	    
-	    proc = self.textCtrlDevices.GetValue()
-	    #proc = "18f2220"    # only for test purpose
-	    self.curBoard = boardlist[0]
-	    self.curBoard.proc = proc
-	    self.curBoard.board = "PIC"+proc.upper()
-	    self.extraName = " [" + self.curBoard.board + "]"
 
+        sel = self.choiceMode.GetStringSelection()
 
-        #self.readlib(self.curBoard) #So slow
-        self.displaymsg(_("Changing board")+"...", 0)
-        if sys.platform=='darwin':
-            self.readlib(self.curBoard) #So slow
-        else:
-            self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-            self.Thread_curBoard.start()
+        if sel == _("USB Bootloader"):
 
+            self.choiceBoards.Show()
+            self.textCtrlDevices.Hide()
+            name = self.choiceBoards.GetValue()
+            for i in self.boardlist:
+                if i.name == name:
+                    self.curBoard = i
+                    break
+            self.extraName = ""
+            
+            
+        elif sel == _("Serial Bootloader"):
+            return 
+
+        elif sel == _("No Bootloader"):
+
+            self.choiceBoards.Hide()
+            self.textCtrlDevices.Show()
+            
+            proc = self.textCtrlDevices.GetValue()
+            #proc = "18f2220"    # only for test purpose
+            self.curBoard = boardlist[0]
+            self.curBoard.proc = proc
+            self.curBoard.board = "PIC"+proc.upper()
+            self.extraName = " [" + self.curBoard.board + "]"
+
+            #self.readlib(self.curBoard) #So slow
+            self.displaymsg(_("Changing board")+"...", 0)
+            if sys.platform=='darwin':
+                self.readlib(self.curBoard) #So slow
+            else:
+                self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+                self.Thread_curBoard.start()
 
     #----------------------------------------------------------------------
     def setBoard(self, name):
@@ -651,8 +650,6 @@ class Pinguino(framePinguinoX, Editor):
         caption = event.GetPane().caption
         if caption == _("Tools"):
             self.menu.menuItemTools.Check(False)
-
-
 
 # ------------------------------------------------------------------------------
 # OnResize:
@@ -800,7 +797,6 @@ class Pinguino(framePinguinoX, Editor):
                 return True
         self.in_verify=0
 
-
 # ------------------------------------------------------------------------------
 # OnUpload:
 # ------------------------------------------------------------------------------
@@ -845,52 +841,47 @@ class Pinguino(framePinguinoX, Editor):
     def OnVerifyUpload(self, even=None):
         if self.OnVerify(): self.OnUpload()
 
-
-
-
 # ------------------------------------------------------------------------------
 # Draw toolbar icons
 # ------------------------------------------------------------------------------
-	
+
     #----------------------------------------------------------------------
     def getChoiceBoards(self):
-	try: self.choiceBoards.Destroy()
-	except: pass
-	
-	icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-	iconSize = icon.GetSize()	
-	    
+        try: self.choiceBoards.Destroy()
+        except: pass
+    
+        icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+        iconSize = icon.GetSize()	
+        
         boards = []
-	for i in self.boardlist: boards.append(i.name)
+        for i in self.boardlist: boards.append(i.name)
         #self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
         choiceBoards = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), boards[1:], wx.TE_READONLY)
         #self.choiceBoards.SetSelection(index-1)
         choiceBoards.Bind(wx.EVT_COMBOBOX, lambda x:self.OnBoard("board"))
         choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
-	name = self.getElse("IDE", "board", "Pinguino 2550")
-	choiceBoards.SetValue(name)
-	self.choiceBoards = choiceBoards
-	
-	
+        name = self.getElse("IDE", "board", "Pinguino 2550")
+        choiceBoards.SetValue(name)
+        self.choiceBoards = choiceBoards
+
     #----------------------------------------------------------------------
     def getTextCtrlDevices(self):
-	try: self.textCtrlDevices.Destroy()
-	except: pass
-	
-	textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
-	textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
-	name = self.getElse("IDE", "boardNoBoot", "18f1220")
-	textCtrlDevices.SetValue(name)
-	self.textCtrlDevices = textCtrlDevices
-    
+        try: self.textCtrlDevices.Destroy()
+        except: pass
 
+        textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
+        textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
+        name = self.getElse("IDE", "boardNoBoot", "18f1220")
+        textCtrlDevices.SetValue(name)
+        self.textCtrlDevices = textCtrlDevices
+
+    #----------------------------------------------------------------------
     def DrawToolbar(self):
         try: self.toolbar.ClearTools()
         except:
-	    self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
-	    self.getChoiceBoards()
-	    self.getTextCtrlDevices()
-
+            self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
+            self.getChoiceBoards()
+            self.getTextCtrlDevices()
 
         # Get size of new theme's icons
         icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
@@ -899,25 +890,25 @@ class Pinguino(framePinguinoX, Editor):
         # Update Bitmap size to fit new icons (not sure that it works !)
         self.toolbar.SetToolBitmapSize(iconSize)
 
-	modes = [_("USB Bootloader"), _("Serial Bootloader"), _("No Bootloader")]
-	self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
-	self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", _("USB Bootloader")))
-	self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
-	self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+        modes = [_("USB Bootloader"), _("Serial Bootloader"), _("No Bootloader")]
+        self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
+        self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", _("USB Bootloader")))
+        self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
+        self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
 
-	
-	mode = self.getElse("IDE", "boardmode", "USB Bootloader")
-	if mode == "USB Bootloader":
-	    boardName = self.getElse("IDE", "Board", "Pinguino 2550")
-	    self.choiceBoards.Show()
-	    self.textCtrlDevices.Hide()
-	    self.setBoard(boardName)	    
-	    
-	elif mode == "No Bootloader":
-	    self.setBoard("Pinguino (no Bootloader)")
-	    self.choiceBoards.Hide()
-	    self.textCtrlDevices.Show()   
+        mode = self.getElse("IDE", "boardmode", "USB Bootloader")
+        if mode == "USB Bootloader":
+            boardName = self.getElse("IDE", "Board", "Pinguino 2550")
+            self.choiceBoards.Show()
+            self.textCtrlDevices.Hide()
+            self.setBoard(boardName)
+            
+        elif mode == "No Bootloader":
+            self.setBoard("Pinguino (no Bootloader)")
+            self.choiceBoards.Hide()
+            self.textCtrlDevices.Show()   
 
+        # add2Toolbar is part of DrawToolbar
         def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
             if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
                 id = wx.NewId()
@@ -928,8 +919,7 @@ class Pinguino(framePinguinoX, Editor):
                                           shdesc,
                                           lngdesc)
                 self.Bind(wx.EVT_TOOL, function, id=id)
-
-
+                    
         add2Toolbar("new", "New", self.OnNew, _("New File"))
         add2Toolbar("open", "Open", self.OnOpen, _("Open File"))
         add2Toolbar("save", "Save", self.OnSave, _("Save File"))
@@ -947,11 +937,11 @@ class Pinguino(framePinguinoX, Editor):
         add2Toolbar("find", "Fin", self.OnFind, _("Search in File"))
         add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
         self.toolbar.AddSeparator()
-	
+
         self.toolbar.AddControl(self.choiceMode)	
         self.toolbar.AddControl(self.choiceBoards) 	    
         self.toolbar.AddControl(self.textCtrlDevices)
-	
+
         add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
         add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
         #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
@@ -961,9 +951,8 @@ class Pinguino(framePinguinoX, Editor):
         self.toolbar.Realize()
         self.SetToolBar(self.toolbar)
 
-
 # ------------------------------------------------------------------------------
-# readlib:
+# Load .pdl or .pdl32 files (keywords and libraries)
 # ------------------------------------------------------------------------------
 
     def readlib(self, board):
@@ -1031,7 +1020,6 @@ class Pinguino(framePinguinoX, Editor):
 
         if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
             self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
-	
 
 # ------------------------------------------------------------------------------
 # ClearRedundancy:
@@ -1047,7 +1035,7 @@ class Pinguino(framePinguinoX, Editor):
         return out
 
 # ------------------------------------------------------------------------------
-# displaymsg
+# Display message
 # ------------------------------------------------------------------------------
 
     def displaymsg(self, message, clearpanel):
@@ -1065,7 +1053,7 @@ class Pinguino(framePinguinoX, Editor):
         return
 
 # ------------------------------------------------------------------------------
-# translate
+# Translate (useless ?)
 # ------------------------------------------------------------------------------
 
     def translate(self, message):
@@ -1078,7 +1066,7 @@ class Pinguino(framePinguinoX, Editor):
             return message
 
 # ------------------------------------------------------------------------------
-# preprocess
+# Read Pinguino File (.pde) and translate it into C language
 # ------------------------------------------------------------------------------
 
     def preprocess(self, filename, board):
@@ -1175,7 +1163,7 @@ class Pinguino(framePinguinoX, Editor):
         return
 
 # ------------------------------------------------------------------------------
-# adddefine
+# Add #define to define.h
 # ------------------------------------------------------------------------------
 
     def adddefine(self,chaine):
@@ -1185,7 +1173,7 @@ class Pinguino(framePinguinoX, Editor):
         fichier.close()
 
 # ------------------------------------------------------------------------------
-# notindefine
+# Check if #define exists in define.h 
 # ------------------------------------------------------------------------------
 
     def notindefine(self,chaine):
@@ -1200,7 +1188,7 @@ class Pinguino(framePinguinoX, Editor):
         return(1)
 
 # ------------------------------------------------------------------------------
-# replaceword
+# Convert Pinguino language into C language
 # ------------------------------------------------------------------------------
 
     def replaceword(self,line):
@@ -1216,7 +1204,7 @@ class Pinguino(framePinguinoX, Editor):
         return line+"\n"
 
 # ------------------------------------------------------------------------------
-# removecomment
+# Remove comments
 # ------------------------------------------------------------------------------
 
     def removecomments(self, text):
@@ -1237,15 +1225,18 @@ class Pinguino(framePinguinoX, Editor):
         return re.sub(pattern, replacer, text)
 
 # ------------------------------------------------------------------------------
-# compile
+# Compile
 # ------------------------------------------------------------------------------
 
     def compile(self, filename, board):
         if (self.debug_output == 1):
             print("compile " + board.proc)
         else:
+            
             if board.arch == 8:
+                
                 fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+                
                 if board.bldr == 'boot2':
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                     "-mpic16",\
@@ -1266,6 +1257,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
+                                   
                 elif board.bldr == 'boot4':
 #                                    "--opt-code-size",\
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
@@ -1287,6 +1279,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
+                                   
                 elif board.bldr == 'noboot':
                     sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                                     "-mpic16",\
@@ -1306,6 +1299,7 @@ class Pinguino(framePinguinoX, Editor):
                                     "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
                                     os.path.join(SOURCE_DIR, 'main.c')],\
                                    stdout=fichier, stderr=STDOUT)
+                                   
                 sortie.communicate()
                 if sortie.poll()!=0:
                     #
@@ -1350,7 +1344,7 @@ class Pinguino(framePinguinoX, Editor):
                 return 0
 
 # ------------------------------------------------------------------------------
-# link
+# Link
 # ------------------------------------------------------------------------------
 
     def link(self, filename, board):
@@ -1358,85 +1352,92 @@ class Pinguino(framePinguinoX, Editor):
             print("link " + board.proc)
         else:
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+            
             if board.arch == 8:
+                
                 if board.bldr == 'boot2':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
-                                  "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                                  "--denable-peeps",\
-                                  "--obanksel=9",\
-                                  "--opt-code-size",\
-                                  "--optimize-cmp",\
-                                  "--optimize-df",\
-                                  "--no-crt",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
-                                  "-mpic16",\
-                                  "-p" + board.proc,\
-                                  "-D" + board.bldr,\
-                                  "-I" + os.path.join(P8_DIR, 'include'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
-                                  '-llibio' + board.proc + '.lib',\
-                                  '-llibc18f.lib',\
-                                  '-llibm18f.lib',\
-                                  '-llibsdcc.lib',\
-                                  os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
-                                  os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
-                                  os.path.join(SOURCE_DIR, 'main.o')],\
-                                 stdout=fichier, stderr=STDOUT)
+                        "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                        "--denable-peeps",\
+                        "--obanksel=9",\
+                        "--opt-code-size",\
+                        "--optimize-cmp",\
+                        "--optimize-df",\
+                        "--no-crt",\
+                        "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
+                        "-mpic16",\
+                        "-p" + board.proc,\
+                        "-D" + board.bldr,\
+                        "-I" + os.path.join(P8_DIR, 'include'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+                        "-L" + os.path.join(P8_DIR, 'lib'),\
+                        "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
+                        '-llibio' + board.proc + '.lib',\
+                        '-llibc18f.lib',\
+                        '-llibm18f.lib',\
+                        '-llibsdcc.lib',\
+                        os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
+                        os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
+                        os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
+                        os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
+                        os.path.join(SOURCE_DIR, 'main.o')],\
+                        stdout=fichier, stderr=STDOUT)
+                        
                 elif board.bldr == 'boot4':
-#                                  "--opt-code-size",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
-                                  "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                                  "-mpic16",\
-                                  "--obanksel=9",\
-                                  "--optimize-cmp",\
-                                  "--optimize-df",\
-                                  "--denable-peeps",\
-                                  "--ivt-loc=" + str(board.memstart),\
-                                  "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
-                                  "-p" + board.proc,\
-                                  "-D" + board.bldr,\
-                                  "-I" + os.path.join(P8_DIR, 'include'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
-                                  '-llibio' + board.proc + '.lib',\
-                                  '-llibc18f.lib',\
-                                  '-llibm18f.lib',\
-                                  '-llibsdcc.lib',\
-                                  os.path.join(SOURCE_DIR, 'main.o')],\
-                                 stdout=fichier, stderr=STDOUT)
+                        "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                        "-mpic16",\
+                        "--obanksel=9",\
+                        "--optimize-cmp",\
+                        "--optimize-df",\
+                        "--denable-peeps",\
+                        "--ivt-loc=" + str(board.memstart),\
+                        "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
+                        "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
+                        "-p" + board.proc,\
+                        "-D" + board.bldr,\
+                        "-I" + os.path.join(P8_DIR, 'include'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+                        "-L" + os.path.join(P8_DIR, 'lib'),\
+                        "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
+                        '-llibio' + board.proc + '.lib',\
+                        '-llibc18f.lib',\
+                        '-llibm18f.lib',\
+                        '-llibsdcc.lib',\
+                        os.path.join(SOURCE_DIR, 'main.o')],\
+                        stdout=fichier, stderr=STDOUT)
+                        
                 elif board.bldr == 'noboot':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
-                                  "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                                  "-mpic16",\
-                                  "--obanksel=9",\
-                                  "--optimize-cmp",\
-                                  "--optimize-df",\
-                                  "--denable-peeps",\
-                                  "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
-                                  "-p" + board.proc,\
-                                  "-D" + board.bldr,\
-                                  "-I" + os.path.join(P8_DIR, 'include'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
-                                  "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib'),\
-                                  "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
-                                  '-llibio' + board.proc + '.lib',\
-                                  '-llibc18f.lib',\
-                                  '-llibm18f.lib',\
-                                  '-llibsdcc.lib',\
-                                  os.path.join(SOURCE_DIR, 'main.o')],\
-                                 stdout=fichier, stderr=STDOUT)
+                        "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                        "--verbose",\
+                        "-mpic16",\
+                        "--obanksel=9",\
+                        "--optimize-cmp",\
+                        "--optimize-df",\
+                        "--denable-peeps",\
+                        "--no-crt",\
+                        "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
+                        "-p" + board.proc,\
+                        "-D" + board.bldr,\
+                        "-I" + os.path.join(P8_DIR, 'include'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
+                        "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
+                        "-L" + os.path.join(P8_DIR, 'lib'),\
+                        "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
+                        '-llibio' + board.proc + '.lib',\
+                        '-llibc18f.lib',\
+                        '-llibm18f.lib',\
+                        '-llibsdcc.lib',\
+                        #os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
+                        os.path.join(SOURCE_DIR, 'main.o')],\
+                        stdout=fichier, stderr=STDOUT)
+                        
             else:#if board.arch == 32:
                 # "PDEDIR=" + os.path.dirname(self.GetPath()),\
                 # can't be used with Command Line version since editor isn't used
@@ -1447,6 +1448,7 @@ class Pinguino(framePinguinoX, Editor):
                               "PROC=" + board.proc,\
                               "BOARD=" + board.board],\
                              stdout=fichier, stderr=STDOUT)
+                             
             sortie.communicate()
             fichier.seek(0)
             # Check if child process has terminated
@@ -1472,7 +1474,7 @@ class Pinguino(framePinguinoX, Editor):
             return sortie.poll()
 
 # ------------------------------------------------------------------------------
-# getCodeSize
+# Get the Code Size
 # ------------------------------------------------------------------------------
 
     def getCodeSize(self, filename, board):
@@ -1586,9 +1588,6 @@ class Pinguino(framePinguinoX, Editor):
             font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
             font.SetUnderlined(False)
             self.logwindow.SetFont(font)            
-        
-        
-
 
 
 ########################################################################
@@ -1602,20 +1601,19 @@ class FunctionsIDE(frameKeyWords, functionsHelp):
 ########################################################################
 class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
     """"""
-    
+
 ########################################################################
 class StdoutIDE(frameStdout, Stdout):
     """"""
-       
+
 ########################################################################
 class PicListIDE(FrameSelectDevice, PICpopup):
     """"""
-    
+
 if DEV:
     ########################################################################
     class UpgradeIDE(frameUpgrade, Upgrade):
         """"""
-
 
 # ------------------------------------------------------------------------------
 # getOptions
