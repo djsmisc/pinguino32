@@ -79,7 +79,7 @@ void setup()
 {
     // PCF8574  : slave adress is 0 1 0 0 A2 A1 A0
     // PCF8574A : slave adress is 0 1 1 1 A2 A1 A0
-    lcdi2c.init(16, 2, 0b0100111);       // display is 2x16, ic2 address is 0100111 (see above)
+    lcdi2c.init(16, 2, 0x27);           // display is 2x16, ic2 address is 0100111 (see above)
     lcdi2c.backlight();                 // turns backlight on
     lcdi2c.clear();                     // clear screen
     lcdi2c.home();                      // set cursor at (0,0)
