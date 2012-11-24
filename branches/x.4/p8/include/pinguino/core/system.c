@@ -3,8 +3,11 @@
 	PROJECT:		pinguino
 	PURPOSE:		pinguino system functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	5 jan. 2011
-	LAST RELEASE:	5 jan. 2011
+	FIRST RELEASE:	5 Jan. 2011
+	LAST RELEASE:	21 Nov. 2012
+	----------------------------------------------------------------------------
+	CHANGELOG:
+	21-11-2012		regis blanchot		added PIC18F1220,1320,14k22 support
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -29,7 +32,13 @@
 #include <const.h>
 #include <macro.h>
 
-#define GetSystemClock()	    48000000
+#if defined(PIC18F1220) || defined(PIC18F1320)
+    #define GetSystemClock()	    40000000
+#elif defined(PIC18F14K22) || defined(PIC18LF14K22)
+    #define GetSystemClock()	    64000000
+#else
+    #define GetSystemClock()	    48000000
+#endif
 #define GetInstructionClock()	(GetSystemClock()/4)
 #define GetPeripheralClock()	GetInstructionClock()	
 
@@ -79,5 +88,5 @@ void SystemReset()
 	while(1);
 }
 
-#endif
+#endif /* __SYSTEM_C */
 

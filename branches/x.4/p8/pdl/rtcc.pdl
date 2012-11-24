@@ -86,5 +86,3 @@ RTCC.getHalfSecond RTCC_GetHalfSecond#include <rtcc.c>
 RTCC.setAlarmIntEnable RTCC_SetAlarmIntEnable#include <rtcc.c>
 RTCC.alarmIntEnable RTCC_AlarmIntEnable#include <rtcc.c>
 RTCC.alarmIntDisable RTCC_AlarmIntDisable#include <rtcc.c>
-
-OnRTCC OnRTCC#include <rtcc.c>

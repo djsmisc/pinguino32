@@ -4,7 +4,7 @@
 	PURPOSE:		Digital IO management
 	PROGRAMER:		Jean-Pierre MANDON
 	FIRST RELEASE:	2008
-	LAST RELEASE:	26 Sep. 2012
+	LAST RELEASE:	2012/11/19
 	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
@@ -13,6 +13,7 @@
         regis blanchot 2011/08/09 : FreeJALduino support
         regis blanchot 2012/02/14 : Pinguino 26J50 support
         regis blanchot 2012/09/28 : complete rewrite
+        regis blanchot 2012/11/19 : Pinguino 1220 and 1320 support
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -62,7 +63,20 @@
 #define _6	0x40    // 1<<6 
 #define _7	0x80    // 1<<7 
 
-#ifdef PIC18F2550                                   // Pinguino pin number
+/**********************************************************************/
+#if defined(PIC18F1220) || defined(PIC18F1320)
+/**********************************************************************/
+                                                    // Pinguino pin number
+const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+					_0,_1,_2,_3,_4,_5};             // 8 - 13
+
+const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
+					pA, pA, pA, pA, pA, pA};        // 8 - 13
+
+/**********************************************************************/
+#elif defined(PIC18F14K22) || defined(PIC18LF14K22)
+/**********************************************************************/
+                                                    // Pinguino pin number
 const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 					_6,_7,_0,_1,_2,                 // 8 - 12
 					_0,_1,_2,_3,_5,_4};             // 13 - 18
@@ -70,9 +84,23 @@ const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pC, pC, pC, pC, pC,             // 8 - 12
 					pA, pA, pA, pA, pA, pA};        // 13 - 18
-#endif
 
-#ifdef PIC18F26J50                                  // Pinguino pin number
+/**********************************************************************/
+#elif defined(PIC18F2550)
+/**********************************************************************/
+                                                    // Pinguino pin number
+const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+					_6,_7,_0,_1,_2,                 // 8 - 12
+					_0,_1,_2,_3,_5,_4};             // 13 - 18
+
+const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
+					pC, pC, pC, pC, pC,             // 8 - 12
+					pA, pA, pA, pA, pA, pA};        // 13 - 18
+
+/**********************************************************************/
+#elif defined(PIC18F26J50)
+/**********************************************************************/
+                                                    // Pinguino pin number
 const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 					_6,_7,_0,_1,_2,                 // 8 - 12
 					_0,_1,_2,_3,_5};                // 13 -17
@@ -80,9 +108,11 @@ const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
 					pC, pC, pC, pC, pC,             // 8 - 12
 					pA, pA, pA, pA, pA};            // 13 - 17
-#endif
 
-#ifdef PIC18F4550                                   // Pinguino pin number
+/**********************************************************************/
+#elif defined(PIC18F4550)
+/**********************************************************************/
+                                                    // Pinguino pin number
 const u8 mask[29]={	_0,_1,_2,_3,_4,_5,_6,_7,		// 0 - 7
 					_6,_7,_0,_1,_2,					// 8 - 12
 					_0,_1,_2,_3,_5,					// 13 - 17
@@ -94,16 +124,23 @@ const u8 port[29]={	pB, pB, pB, pB, pB, pB, pB, pB,
 					pA, pA, pA, pA, pA,
 					pE, pE, pE,
 					pD, pD, pD, pD, pD, pD, pD, pD};
-#endif
 
-#ifdef FREEJALDUINO
+/**********************************************************************/
+#elif defined(FREEJALDUINO)
+/**********************************************************************/
+
 const u8 mask[19]={_7,_6,_4,_0,_1,_2,_3,_4,_5,_6,_7,_0,_1,_2,_0,_1,_2,_3, _5};
 const u8 port[19]={1,1,2,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,2};
-#endif
 
-#ifdef PICUNO_EQUO
+/**********************************************************************/
+#elif defined(PICUNO_EQUO)
+/**********************************************************************/
+
 const u8 mask[14]={_7,_6,_2,_3,_0,_2,_1,_1,_2,_3,_4,_5,_6,_7};
 const u8 port[14]={1,1,0,0,3,1,1,3,3,3,3,3,3,3};
+
+#else
+    #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
 #endif
 
 void digitalwrite(u8 pin, u8 state)
@@ -130,8 +167,9 @@ void digitalwrite(u8 pin, u8 state)
 		#endif
 	}
 */
-    u8  b = mask[pin];          // bit
-    u8* p = port[pin] + 0xF80;  // lat
+    u8 b = mask[pin];           // bit
+    u8 *p = port[pin] + 0xF80;  // lat
+    
     if (state)
         *p |= b;                // set bit
     else
@@ -163,7 +201,8 @@ u8 digitalread(u8 pin)
 	}
 	return (0);
 */
-    u8* p = port[pin] + 0xF80;  // lat
+    u8 *p = port[pin] + 0xF80;  // lat
+    
     if ((*p & mask[pin]) == 0)
         return 0;               // bit is not set
     else
@@ -194,8 +233,9 @@ void pinmode(u8 pin, u8 state)
 		#endif	
 	}
 */
-    u8  b = mask[pin];          // bit
-    u8* p = port[pin] + 0xF92;  // tris
+    u8 b = mask[pin];           // bit
+    u8 *p = port[pin] + 0xF92;  // tris
+    
     if (state)                  // if 1
         *p |= b;                // set bit (input)
     else                        // if 0
@@ -209,8 +249,9 @@ void toggle(u8 pin)
 	val = digitalread(pin);
 	digitalwrite(pin, val^1);
 */
-    u8  b = mask[pin];          // bit
-    u8* p = port[pin] + 0xF80;  // lat
+    u8 b = mask[pin];           // bit
+    u8 *p = port[pin] + 0xF80;  // lat
+    
     if ((*p & b) == 0)          // bit is not set ?
     {
         p = port[pin] + 0xF80;
@@ -223,4 +264,4 @@ void toggle(u8 pin)
     }
 }
 
-#endif
+#endif /* __DIGITALW__ */

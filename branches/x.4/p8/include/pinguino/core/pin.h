@@ -215,7 +215,9 @@
 //	#define RA3 16
 	#define AN3 16
 
-    #if defined(PIC18F2550) || defined(PIC18F4550)
+    #if defined(PIC18F2550) || defined(PIC18F4550) || \
+        defined(PIC18F2455) || defined(PIC18F4455)
+    
 	// run led pin
 	#define A4 18
 	//#define RA4 18

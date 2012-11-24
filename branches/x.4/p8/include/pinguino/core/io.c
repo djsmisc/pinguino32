@@ -3,11 +3,11 @@
 	PROJECT:		pinguino
 	PURPOSE:		Peripheral Remappage and IOs Configuration
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	20 jun. 2012
-	LAST RELEASE:	13 nov. 2012
+	FIRST RELEASE:	20 Jun. 2012
+	LAST RELEASE:	23 Nov. 2012
 	----------------------------------------------------------------------------
 	CHANGELOG:
-	[Date][Name][Description]
+	[23-11-2012]	[regis blanchot][added PIC18F1220,1320,2455,4455,46j50 support]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -40,11 +40,13 @@ void IOsetSpecial()
 // All Analog Pins as Digital IOs
 void IOsetDigital()
 {
-	#if defined(PIC18F4550) || defined(PIC18F4455) || defined(PIC18F2550) || defined(PIC18F2455)
+    #if defined(PIC18F1220) || defined(PIC18F1320) || \
+        defined(PIC18F2550) || defined(PIC18F4550) || \
+        defined(PIC18F2455) || defined(PIC18F4455)
 	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 	#endif
 
-	#if defined(PIC18F26J50)
+	#if defined(PIC18F26J50) || defined(PIC18F46J50)
 	ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
 	ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
 	#endif
@@ -77,7 +79,7 @@ void IOsetDigital()
 
 void IOsetRemap()
 {
-    #if defined(PIC18F26J50)
+    #if defined(PIC18F26J50) || defined(PIC18F46J50)
 
         SystemUnlock();
         PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
@@ -113,7 +115,7 @@ void IOsetRemap()
         PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
         SystemLock();
 
-    #endif /* defined(PIC18F26J50) */
+    #endif /* defined(PIC18F26J50) || defined(PIC18F46J50) */
 }
 
 #endif /* __REMAP_C */

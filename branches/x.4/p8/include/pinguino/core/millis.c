@@ -2,6 +2,7 @@
 // Jean-Pierre MANDON 2009
 // added interrupt.c functions (regis blanchot 2011)
 // [14-05-12][jp.mandon changed long to u32 and Millis to millis / thanks mark harper]
+// [20-11-12][r.blanchot TODO use GetSystemClock()]
 
 #ifndef __MILLIS__
 #define __MILLIS__
@@ -9,6 +10,7 @@
 #include <pic18fregs.h>
 #include <typedef.h>
 #include <interrupt.c>
+#include <system.c>         // GetSystemClock()
 
 volatile u32 _millis;
 
@@ -25,4 +27,4 @@ u32 millis()
 	return(_millis);
 }
 
-#endif
+#endif /* __MILLIS__ */
