@@ -207,7 +207,10 @@ class AutoCompleter():
         if index == None: items = completers[:]
         else:
             for word in completers:
-                if word.lower().startswith(index.lower()): items.append(word)
+                try :
+                    if word.lower().startswith(index.lower()): items.append(word)
+                except UnicodeDecodeError:
+                    print "UnicodeDecodeError", "autocompleter.py", "setItems(self)"
 
         self.SetPosition(self.getPositionCompleter())
         self.listCtrlAutocompleter.DeleteAllItems()

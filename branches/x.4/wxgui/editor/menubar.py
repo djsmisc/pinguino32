@@ -289,13 +289,16 @@ class Menubar:
         self.setConfig("IDE","BoardNoBoot", self.textCtrlDevices.Value)
         self.setConfig("IDE","BoardMode", self.choiceMode.GetStringSelection())
         
-        panelOutput = "[\S]*dock_size\(3,0,0\)=([\d]*)[\S]*"
-        panelLateral = "[\S]*dock_size\(2,0,0\)=([\d]*)[\S]*"
+        panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
         perspectiva = self._mgr.SavePerspective()
-        try: self.setConfig("IDE", "PerspectiveOutput", re.match(panelOutput, perspectiva).group(1))
-        except: self.setConfig("IDE", "PerspectiveOutput", "119")
-        try: self.setConfig("IDE", "PerspectiveLateral", re.match(panelLateral, perspectiva).group(1))
-        except: self.setConfig("IDE", "PerspectiveLateral", "286")
+        
+        self.setConfig("IDE", "PerspectiveOutput", re.match(panelOutput, perspectiva).group(2))
+        self.setConfig("IDE", "PerspectiveOutputPos", re.match(panelOutput, perspectiva).group(1))
+        self.setConfig("IDE", "PerspectiveLateral", re.match(panelLateral, perspectiva).group(2))
+        self.setConfig("IDE", "PerspectiveLateralPos", re.match(panelLateral, perspectiva).group(1))
+
+        
         
         dir = unicode(self.parentDir).encode("utf-8")
         self.setConfig("IDE", "LateralPath", dir)
