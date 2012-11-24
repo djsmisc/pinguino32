@@ -30,7 +30,7 @@
 	#include <delay.c>
 	#include <digitalw.c>
 
-u8 Keyboard_get(u8 pin)					// with for example pin = PORTBbits.RB2
+u8 Keyboard_get(u8 pin)
 {
 
 	u8 etat1 = 0;

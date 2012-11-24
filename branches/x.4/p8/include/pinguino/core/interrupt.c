@@ -4,8 +4,10 @@
 	PURPOSE:		interrupt routines
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	24-12-2010
-	LAST RELEASE:	11-06-2012
+	LAST RELEASE:	23-11-2012
 	----------------------------------------------------------------------------
+	CHANGELOG :
+	23-11-2012		rblanchot	added PIC18F1220,1320,14k22,2455,4455,46j50 support
 	TODO :
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
@@ -35,7 +37,11 @@
 		#define ON_EVENT
 	#endif
 
-    #if !defined (PIC18F2550) && !defined (PIC18F4550) && !defined(PIC18F26J50)
+    #if !defined(PIC18F1220) && !defined(PIC18F1320) && \
+        !defined(PIC18F14K22) && !defined(PIC18LF14K22) && \
+        !defined (PIC18F2455) && !defined (PIC18F4455) && \
+        !defined (PIC18F2550) && !defined (PIC18F4550) && \
+        !defined(PIC18F26J50) && !defined(PIC18F46J50)
         #error "Error : this library is intended to be used only with 8-bit Pinguino" 
     #endif
     
@@ -96,9 +102,12 @@ void detachInterrupt(u8 inter)
 		case INT_RB:
 			INTCONbits.RBIE = INT_DISABLE;
 			break;
+		#if !defined(PIC18F1220) && !defined(PIC18F1320) && \
+            !defined(PIC18F14K22) && !defined(PIC18LF14K22)
 		case INT_USB:
 			PIE2bits.USBIE = INT_DISABLE;
 			break;
+        #endif
 		case INT_AD:
 			PIE1bits.ADIE = INT_DISABLE;
 			break;
@@ -111,9 +120,12 @@ void detachInterrupt(u8 inter)
 		case INT_CCP1:
 			PIE1bits.CCP1IE = INT_DISABLE;
 			break;
+		#if !defined(PIC18F1220) && !defined(PIC18F1320) && \
+            !defined(PIC18F14K22) && !defined(PIC18LF14K22)
 		case INT_CCP2:
 			PIE2bits.CCP2IE = INT_DISABLE;
 			break;
+        #endif
 		case INT_OSCF:
 			PIE2bits.OSCFIE = INT_DISABLE;
 			break;
@@ -373,6 +385,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 
 void OnRTCC(callback func, u16 delay)
 {
+#if defined(PIC18F2550) || defined(PIC18F4550)
 	u8 _t1con = 0;
 
 	if (intUsed[INT_TMR1] == INT_NOT_USED)
@@ -394,13 +407,8 @@ void OnRTCC(callback func, u16 delay)
 		// T1SYNC  = 0	When TMR1CS = 1, Synchronize external clock input
 		// TMR1CS  = 1	External clock from RC0/T1OSO/T13CKI pin (on the rising edge)
 		// TMR1ON  = 0	Stops Timer1
-        #if defined(PIC18F2550) || defined(PIC18F4550)
 		_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
-        #endif
-        #if defined(PIC18F26J50) || defined(PIC18F46J50)
-		_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
-        #endif
-		//_t1con = 0b10001110;
+		// 18F26J50 -> _t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
 
 		IPR1bits.TMR1IP = INT_LOW_PRIORITY;
 		PIE1bits.TMR1IE = INT_ENABLE;
@@ -415,6 +423,10 @@ void OnRTCC(callback func, u16 delay)
 		debug("Error : interrupt TIMER1 is already used !");
 	}
 	#endif
+#endif
+
+#if defined(PIC18F26J50) || defined(PIC18F46J50)
+#endif
 }
 
 #endif

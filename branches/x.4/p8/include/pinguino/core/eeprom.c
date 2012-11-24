@@ -91,7 +91,7 @@ void EEPROM_write8(u8 address, u8 mydata)
 	EECON1bits.WR = 1;		// start writing
 	while (EECON1bits.WR)
 	{
-		nop();
+		Nop();
 	}
 	if (EECON1bits.WRERR)
 	{

@@ -2,6 +2,9 @@
 // SDCC version / small device c compiler
 // written by Jean-Pierre MANDON 2008 jp.mandon@free.fr
 /*
+	CHANGELOG:
+	23-11-2012		regis blanchot		added PIC18F120,1320,14k22,2455,4455,46j50 support
+
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
    Free Software Foundation; either version 2, or (at your option) any
@@ -25,26 +28,37 @@
 
 // local definition UART.C
 
-#ifndef __PINGUINOSERIAL
-#define __PINGUINOSERIAL
+#ifndef __SERIAL__
+#define __SERIAL__
 
 #include <pic18fregs.h>
 #include <typedef.h>
 //#include <stdlib.h>       // no more used (09-11-2012)
-#include <stdarg.h>
 #include <delay.c>
-#include <stdio.c>
 
-//#define FLOAT 10
-
-#ifndef RXBUFFERLENGTH
-#define RXBUFFERLENGTH 128              // rx buffer length
+#if defined(__SERIAL_PRINTF__) || defined(__SERIAL_PRINT__) || \
+    defined(__SERIAL_PRINTLN__) || defined(__SERIAL_GETSTRING__)
+    #include <stdio.c>
+    #include <stdarg.h>
 #endif
 
-char rx[RXBUFFERLENGTH];                // this is the buffer
-unsigned char wpointer,rpointer;        // write and read pointer
+#if defined(__SERIAL_GETSTRING__) || defined(__SERIAL_PRINT__) || defined(__SERIAL_PRINTLN__)
+    #ifndef __SERIAL_PRINTF__
+        #define __SERIAL_PRINTF__
+    #endif
+#endif
 
-#define __SERIAL__
+// rx buffer length
+#ifndef RXBUFFERLENGTH
+    #if defined(PIC18F1220) || defined(PIC18F1320)
+        #define RXBUFFERLENGTH 64
+    #else
+        #define RXBUFFERLENGTH 128
+    #endif
+#endif
+
+char rx[RXBUFFERLENGTH];                // serial buffer
+unsigned char wpointer,rpointer;        // write and read pointer
 
 // setup PIC UART
 void serial_begin(unsigned long baudrate)
@@ -55,7 +69,18 @@ void serial_begin(unsigned long baudrate)
 	spbrg=(48000000/(4*baudrate))-1;
 	highbyte=spbrg/256;
 	lowbyte=spbrg%256;
-#if defined (PIC18F2550) || defined (PIC18F4550)
+#if defined(PIC18F1220) || defined(PIC18F1320) || \
+    defined(PIC18F14K22) || defined(PIC18LF14K22)
+	TXSTAbits.BRGH=1;               	  	// set BRGH bit
+	BAUDCTLbits.BRG16=1;					// set 16 bits SPBRG
+	SPBRGH=highbyte;                        // set UART speed SPBRGH
+	SPBRG=lowbyte;   						// set UART speed SPBRGL
+	RCSTA=0x90;                             // set RCEN and SPEN
+	BAUDCTLbits.RCIDL=1;			        // set receive active
+	PIE1bits.RCIE=1;                        // enable interrupt on RX
+	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
+	TXSTAbits.TXEN=1;                       // enable TX
+#elif defined(PIC18F2550) || defined(PIC18F4550)
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
 	BAUDCONbits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
@@ -65,8 +90,7 @@ void serial_begin(unsigned long baudrate)
 	PIE1bits.RCIE=1;                        // enable interrupt on RX
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 	TXSTAbits.TXEN=1;                       // enable TX
-#endif
-#ifdef PIC18F26J50
+#elif defined(PIC18F26J50) || defined(PIC18F46J50)
 	TXSTA1bits.BRGH=1;               	  	 // set BRGH bit
 	BAUDCON1bits.BRG16=1;					 // set 16 bits SPBRG
 	SPBRGH1=highbyte;                        // set UART speed SPBRGH
@@ -79,6 +103,8 @@ void serial_begin(unsigned long baudrate)
 	TXSTA1bits.TXEN=1;                       // enable TX
 	PIR1bits.TX1IF=0;
 	PIE1bits.TX1IE=0;
+#else
+    #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
 #endif
 	wpointer=1;                             // initialize write pointer
 	rpointer=1;                             // initialize read pointer
@@ -95,17 +121,11 @@ unsigned char serial_available()
 	return(wpointer!=rpointer);
 }
 
-// write char
-void serial_putchar(unsigned char caractere)
+// clear rx buffer
+void serial_flush(void)
 {
-#if defined (PIC18F2550) || defined (PIC18F4550)
-	while (!TXSTAbits.TRMT);
-	TXREG=caractere;		        // yes, send char
-#endif
-#ifdef PIC18F26J50
-	while (!TXSTA1bits.TRMT);
-	TXREG1=caractere;		        // yes, send char
-#endif
+	wpointer=1;
+	rpointer=1;
 }
 
 // serial_int is called by interruption service routine
@@ -114,13 +134,16 @@ void serial_interrupt(void)
 	char caractere;
 	unsigned char newwp;
 
-#if defined (PIC18F2550) || defined (PIC18F4550)
+#if defined(PIC18F1220) || defined(PIC18F1320) || \
+    defined(PIC18F14K22) || defined(PIC18LF14K22) || \
+    defined(PIC18F2550) || defined(PIC18F4550)
 	PIR1bits.RCIF=0;				// clear RX interrupt flag
 	caractere=RCREG;				// take received char
-#endif
-#ifdef PIC18F26J50
+#elif defined(PIC18F26J50) || defined(PIC18F46J50)
 	PIR1bits.RC1IF=0;				// clear RX interrupt flag
 	caractere=RCREG1;				// take received char
+#else
+    #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
 #endif
 	if (wpointer!=RXBUFFERLENGTH-1)	// if not last place in buffer
 		newwp=wpointer+1;			// place=place+1
@@ -132,6 +155,22 @@ void serial_interrupt(void)
 
 	if (wpointer==RXBUFFERLENGTH)	// if write pointer=length buffer
 		wpointer=1;					// write pointer = 1
+}
+
+// write char
+void serial_putchar(unsigned char caractere)
+{
+#if defined(PIC18F1220) || defined(PIC18F1320) || \
+    defined(PIC18F14K22) || defined(PIC18LF14K22) || \
+    defined(PIC18F2550) || defined(PIC18F4550)
+	while (!TXSTAbits.TRMT);
+	TXREG=caractere;		        // yes, send char
+#elif defined(PIC18F26J50) || defined(PIC18F46J50)
+	while (!TXSTA1bits.TRMT);
+	TXREG1=caractere;		        // yes, send char
+#else
+    #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
+#endif
 }
 
 // get char
@@ -148,19 +187,13 @@ unsigned char serial_read()
 	return(caractere);
 }
 
-// clear rx buffer
-void serial_flush(void)
-{
-	wpointer=1;
-	rpointer=1;
-}
-
 /*	----------------------------------------------------------------------------
 	serial_printf()
 	rblanchot@gmail.com
 	write formated string on the serial port
 	--------------------------------------------------------------------------*/
 
+#if defined(__SERIAL_PRINTF__)
 void serial_printf(char *fmt, ...)
 {
 	va_list args;
@@ -169,6 +202,7 @@ void serial_printf(char *fmt, ...)
 	pprintf(serial_putchar, fmt, args);
 	va_end(args);
 }
+#endif /* __SERIAL_PRINTF__ */
 
 /*	----------------------------------------------------------------------------
 	serial_print()
@@ -177,8 +211,9 @@ void serial_printf(char *fmt, ...)
     11-09-2012: added FLOAT support - Régis Blanchot
 	--------------------------------------------------------------------------*/
 
+#if defined(__SERIAL_PRINT__)
 //void serial_print(char *fmt,...)
-void serial_print(const u8 *fmt,...)
+void serial_print(const char *fmt,...)
 {
     //u8 *s;
 	u8 s;
@@ -214,6 +249,7 @@ void serial_print(const u8 *fmt,...)
 	}
 	va_end(args);
 }
+#endif /* __SERIAL_PRINT__ */
 
 /*	----------------------------------------------------------------------------
 	serial_println()
@@ -223,17 +259,20 @@ void serial_print(const u8 *fmt,...)
 	(ASCII 10, or '\n').
 	--------------------------------------------------------------------------*/
 
+#if defined(__SERIAL_PRINTLN__)
 void serial_println(char *fmt,...)
 {
 	serial_print(fmt);
 	serial_printf("\n\r");
 }
+#endif /* __SERIAL_PRINTLN__ */
 
 /*	----------------------------------------------------------------------------
 	serial_getkey()
 	rblanchot@gmail.com
 	--------------------------------------------------------------------------*/
 
+#if defined(__SERIAL_GETKEY__)
 u8 serial_getkey()
 {
 	u8 c;
@@ -242,12 +281,14 @@ u8 serial_getkey()
 	serial_flush();
 	return (c);
 }
+#endif /* __SERIAL_GETKEY__ */
 
 /*	----------------------------------------------------------------------------
 	serial_getstring()
 	rblanchot@gmail.com
 	--------------------------------------------------------------------------*/
 
+#if defined(__SERIAL_GETSTRING__)
 u8 * serial_getstring()
 {
 	u8 buffer[80];
@@ -263,5 +304,6 @@ u8 * serial_getstring()
 	buffer[i] = '\0';
 	return (buffer);
 }
+#endif /* __SERIAL_GETSTRING__ */
 
 #endif
