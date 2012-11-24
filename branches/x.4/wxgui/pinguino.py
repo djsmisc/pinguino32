@@ -72,6 +72,9 @@ gui=False
 # ------------------------------------------------------------------------------
 from wxgui._trad import _
 
+#Used for Python and Pic32 debug
+#os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
+
 # ------------------------------------------------------------------------------
 # Pinguino Class
 # ------------------------------------------------------------------------------
@@ -114,6 +117,7 @@ class Pinguino(framePinguinoX, Editor):
         self.otherWords = []
         self.autocompleteHide = False
         self.extraName = ""
+	self.changingBoard = False
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 
@@ -145,7 +149,6 @@ class Pinguino(framePinguinoX, Editor):
 
         self.loadSettings()
         self.__initIDE__()
-        #???
 
         ########################################
         #Auto-complete frame build 
@@ -425,16 +428,24 @@ class Pinguino(framePinguinoX, Editor):
                     self.addFile2Recent(file)
         except: pass
 
-        panelOutput = "[\S]*dock_size\(3,0,0\)=([\d]*)[\S]*"
-        panelLateral = "[\S]*dock_size\(2,0,0\)=([\d]*)[\S]*"
+        panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
         perspectiva = self._mgr.SavePerspective()
         nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
         nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
+        nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
+        nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
+	
+	#print nOutputPos
+	
         try:
-            oOutput = int(re.match(panelOutput, perspectiva).group(1))   
-            oLateral = int(re.match(panelLateral, perspectiva).group(1))
-            perspectiva = perspectiva.replace("dock_size(3,0,0)=%d" %oOutput, "dock_size(3,0,0)=%d" %nOutput)
-            perspectiva = perspectiva.replace("dock_size(2,0,0)=%d" %oLateral, "dock_size(2,0,0)=%d" %nLateral)
+            oOutput = int(re.match(panelOutput, perspectiva).group(2))   
+            oLateral = int(re.match(panelLateral, perspectiva).group(2))
+            oOutputPos = re.match(panelOutput, perspectiva).group(1) 
+            oLateralPos = re.match(panelLateral, perspectiva).group(1)
+	    
+            perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
+            perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
             self._mgr.LoadPerspective(perspectiva)
         except:
             print "No perspective"
@@ -578,6 +589,7 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnBoard(self, tipo):
+	self.changingBoard = True
         # clear all the lists before rebuild them
         del self.rw[:]
         del self.regobject[:]
@@ -587,8 +599,17 @@ class Pinguino(framePinguinoX, Editor):
 
         sel = self.choiceMode.GetStringSelection()
 
-        if sel == _("USB Bootloader"):
+        #self.readlib(self.curBoard) #So slow
+        self.displaymsg(_("Changing board")+"...", 0)
+        if sys.platform=='darwin':
+            self.readlib(self.curBoard) #So slow
+	    self.changingBoard = False
+        else:
+            self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+            self.Thread_curBoard.start()
 
+        if sel == "USB Bootloader":
+	    
             self.choiceBoards.Show()
             self.textCtrlDevices.Hide()
             name = self.choiceBoards.GetValue()
@@ -599,11 +620,11 @@ class Pinguino(framePinguinoX, Editor):
             self.extraName = ""
             
             
-        elif sel == _("Serial Bootloader"):
+        elif sel == "Serial Bootloader":
             return 
 
-        elif sel == _("No Bootloader"):
-
+        elif sel == "ICSP (no USB boot.)":
+	    
             self.choiceBoards.Hide()
             self.textCtrlDevices.Show()
             
@@ -634,7 +655,6 @@ class Pinguino(framePinguinoX, Editor):
         for board in boardlist:
             if name == board.name:
                 self.curBoard = board
-                break
 
         #self.readlib(self.curBoard) #So slow	
         self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
@@ -749,6 +769,10 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
 
     def OnVerify(self, event=None):
+	if self.changingBoard:
+	    self.displaymsg(_("Please wait a moment.")+"\n", 0)
+	    return
+	    
         global lang
         self.in_verify=1
         t0 = time.time()
@@ -807,7 +831,12 @@ class Pinguino(framePinguinoX, Editor):
             filename, extension = os.path.splitext(filename)
             if os.path.exists(filename + '.hex'):
                 if self.curBoard.arch == 8:
-                    u = Uploader(self.logwindow, filename, self.curBoard)
+		    try:
+			u = Uploader(self.logwindow, filename, self.curBoard)
+		    except usb.USBError:  #No device
+			self.displaymsg("No device",0)
+			return
+			
                 else:
                     fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.u32),
@@ -839,6 +868,9 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def OnVerifyUpload(self, even=None):
+	if self.changingBoard:
+	    self.displaymsg(_("Please wait a moment.")+"\n", 0)
+	    return
         if self.OnVerify(): self.OnUpload()
 
 # ------------------------------------------------------------------------------
@@ -890,9 +922,9 @@ class Pinguino(framePinguinoX, Editor):
         # Update Bitmap size to fit new icons (not sure that it works !)
         self.toolbar.SetToolBitmapSize(iconSize)
 
-        modes = [_("USB Bootloader"), _("Serial Bootloader"), _("No Bootloader")]
+        modes = ["USB Bootloader", "Serial Bootloader", "ICSP (no USB boot.)"]
         self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
-        self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", _("USB Bootloader")))
+        self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", "USB Bootloader"))
         self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
         self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
 
@@ -903,7 +935,7 @@ class Pinguino(framePinguinoX, Editor):
             self.textCtrlDevices.Hide()
             self.setBoard(boardName)
             
-        elif mode == "No Bootloader":
+        elif mode == "ICSP (no USB boot.)":
             self.setBoard("Pinguino (no Bootloader)")
             self.choiceBoards.Hide()
             self.textCtrlDevices.Show()   
@@ -1020,6 +1052,9 @@ class Pinguino(framePinguinoX, Editor):
 
         if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
             self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
+
+	self.changingBoard = False	
+	
 
 # ------------------------------------------------------------------------------
 # ClearRedundancy:

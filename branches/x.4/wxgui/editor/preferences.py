@@ -227,7 +227,7 @@ class Preferences():
 
     #----------------------------------------------------------------------
     def setDefaultConfig(self, event=None):
-        defaultConfig = os.path.join("extra", "IDE", "config_default")
+        defaultConfig = os.path.join(HOME_DIR, "extra", "IDE", "config_default")
         defaultConfig = open(defaultConfig, mode='r', buffering=1)
         lines = defaultConfig.readlines()
         defaultConfig.close()
