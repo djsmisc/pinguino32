@@ -325,6 +325,10 @@ class Pinguino(framePinguinoX, Editor):
         self.Bind(wx.EVT_MENU, self.OnViewToolbar, self.menu.menuItemToolbar)
 
         #pinguino menu
+	
+	
+	self.Bind(wx.EVT_MENU, self.OnViewSelectDevice, self.menu.menuItemSelectDevice)	
+	
         if DEV:
             #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
             self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
@@ -599,14 +603,14 @@ class Pinguino(framePinguinoX, Editor):
 
         sel = self.choiceMode.GetStringSelection()
 
-        #self.readlib(self.curBoard) #So slow
-        self.displaymsg(_("Changing board")+"...", 0)
-        if sys.platform=='darwin':
-            self.readlib(self.curBoard) #So slow
-	    self.changingBoard = False
-        else:
-            self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-            self.Thread_curBoard.start()
+        ##self.readlib(self.curBoard) #So slow
+        #self.displaymsg(_("Changing board")+"...", 0)
+        #if sys.platform=='darwin':
+            #self.readlib(self.curBoard) #So slow
+	    #self.changingBoard = False
+        #else:
+            #self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+            #self.Thread_curBoard.start()
 
         if sel == "USB Bootloader":
 	    
@@ -635,16 +639,17 @@ class Pinguino(framePinguinoX, Editor):
             self.curBoard.board = "PIC"+proc.upper()
             self.extraName = " [" + self.curBoard.board + "]"
 
-            #self.readlib(self.curBoard) #So slow
-            self.displaymsg(_("Changing board")+"...", 0)
-            if sys.platform=='darwin':
-                self.readlib(self.curBoard) #So slow
-            else:
-                self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-                self.Thread_curBoard.start()
+	#self.readlib(self.curBoard) #So slow
+	self.displaymsg(_("Changing board")+"...", 0)
+	if sys.platform=='darwin':
+	    self.readlib(self.curBoard) #So slow
+	else:
+	    self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+	    self.Thread_curBoard.start()
 
     #----------------------------------------------------------------------
     def setBoard(self, name):
+	#print "OK"
         # clear all the lists before rebuild them
         del self.rw[:]
         del self.regobject[:]
@@ -1574,6 +1579,23 @@ class Pinguino(framePinguinoX, Editor):
         self.stdout = StdoutIDE(self)
         self.stdout.__initStdout__(self)
         self.stdout.Show()
+	
+    #----------------------------------------------------------------------
+    def OnViewSelectDevice(self, event=None):
+        try: self.selectDevide.Hide()
+        except: pass
+        self.selectDevide = ConfigDevice(self)
+        #self.selectDevide.__init_devices__(self)
+        self.selectDevide.Show()	
+	
+    #----------------------------------------------------------------------
+    def OnViewSelectDevice(self, event=None):
+        try: self.selectDevide.Hide()
+        except: pass
+        self.selectDevide = ConfigDevice(self)
+        #self.selectDevide.__init_devices__(self)
+        self.selectDevide.Show()	
+	
 
     #----------------------------------------------------------------------
     def OnDrop(self, event):
@@ -1642,7 +1664,11 @@ class StdoutIDE(frameStdout, Stdout):
     """"""
 
 ########################################################################
-class PicListIDE(FrameSelectDevice, PICpopup):
+class PicListIDE(FrameSelectDevice_, PICpopup):
+    """"""
+
+########################################################################
+class ConfigDevice(FrameSelectDevice):
     """"""
 
 if DEV:
