@@ -1209,7 +1209,7 @@ class FrameSelectDevice_ ( wx.Frame ):
 class FrameSelectDevice ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Selector"), pos = wx.DefaultPosition, size = wx.Size( 537,280 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_TOOL_WINDOW|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Board Selector"), pos = wx.DefaultPosition, size = wx.Size( 673,344 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_TOOL_WINDOW|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -1221,27 +1221,27 @@ class FrameSelectDevice ( wx.Frame ):
 		self.m_panel38 = wx.Panel( self.m_panel37, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer41 = wx.BoxSizer( wx.VERTICAL )
 		
-		m_radioBox11Choices = [ _(u"8-bit"), _(u"32-bit") ]
-		self.m_radioBox11 = wx.RadioBox( self.m_panel38, wx.ID_ANY, _(u" Architecture"), wx.DefaultPosition, wx.DefaultSize, m_radioBox11Choices, 1, wx.RA_SPECIFY_COLS )
-		self.m_radioBox11.SetSelection( 0 )
-		bSizer41.Add( self.m_radioBox11, 0, wx.ALL|wx.EXPAND, 5 )
+		radioBox_archChoices = [ _(u"8-bit"), _(u"32-bit") ]
+		self.radioBox_arch = wx.RadioBox( self.m_panel38, wx.ID_ANY, _(u" Architecture"), wx.DefaultPosition, wx.DefaultSize, radioBox_archChoices, 1, wx.RA_SPECIFY_COLS )
+		self.radioBox_arch.SetSelection( 0 )
+		bSizer41.Add( self.radioBox_arch, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		m_radioBox12Choices = [ _(u"ICSP"), _(u"USB Bootloader") ]
-		self.m_radioBox12 = wx.RadioBox( self.m_panel38, wx.ID_ANY, _(u"Programming Mode"), wx.DefaultPosition, wx.DefaultSize, m_radioBox12Choices, 1, wx.RA_SPECIFY_COLS )
-		self.m_radioBox12.SetSelection( 1 )
-		bSizer41.Add( self.m_radioBox12, 0, wx.ALL|wx.EXPAND, 5 )
+		radioBox_modeChoices = [ _(u"ICSP"), _(u"USB Bootloader") ]
+		self.radioBox_mode = wx.RadioBox( self.m_panel38, wx.ID_ANY, _(u"Programming Mode"), wx.DefaultPosition, wx.DefaultSize, radioBox_modeChoices, 1, wx.RA_SPECIFY_COLS )
+		self.radioBox_mode.SetSelection( 0 )
+		bSizer41.Add( self.radioBox_mode, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
 		bSizer41.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		m_sdbSizer3 = wx.StdDialogButtonSizer()
-		self.m_sdbSizer3OK = wx.Button( self.m_panel38, wx.ID_OK )
-		m_sdbSizer3.AddButton( self.m_sdbSizer3OK )
-		self.m_sdbSizer3Cancel = wx.Button( self.m_panel38, wx.ID_CANCEL )
-		m_sdbSizer3.AddButton( self.m_sdbSizer3Cancel )
-		m_sdbSizer3.Realize();
+		buttonBox = wx.StdDialogButtonSizer()
+		self.buttonBoxOK = wx.Button( self.m_panel38, wx.ID_OK )
+		buttonBox.AddButton( self.buttonBoxOK )
+		self.buttonBoxCancel = wx.Button( self.m_panel38, wx.ID_CANCEL )
+		buttonBox.AddButton( self.buttonBoxCancel )
+		buttonBox.Realize();
 		
-		bSizer41.Add( m_sdbSizer3, 0, wx.ALL, 5 )
+		bSizer41.Add( buttonBox, 0, wx.ALL, 5 )
 		
 		
 		self.m_panel38.SetSizer( bSizer41 )
@@ -1249,20 +1249,30 @@ class FrameSelectDevice ( wx.Frame ):
 		bSizer41.Fit( self.m_panel38 )
 		bSizer40.Add( self.m_panel38, 0, wx.EXPAND |wx.ALL, 5 )
 		
-		bSizer43 = wx.BoxSizer( wx.VERTICAL )
+		self.sizer = wx.BoxSizer( wx.VERTICAL )
 		
-		m_radioBox14Choices = [ _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX") ]
-		self.m_radioBox14 = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Family"), wx.DefaultPosition, wx.DefaultSize, m_radioBox14Choices, 6, wx.RA_SPECIFY_COLS )
-		self.m_radioBox14.SetSelection( 0 )
-		bSizer43.Add( self.m_radioBox14, 0, wx.ALL|wx.EXPAND, 5 )
+		radioBox_famChoices = [ _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX") ]
+		self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Sort"), wx.DefaultPosition, wx.DefaultSize, radioBox_famChoices, 6, wx.RA_SPECIFY_COLS )
+		self.radioBox_fam.SetSelection( 3 )
+		self.sizer.Add( self.radioBox_fam, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		m_radioBox13Choices = [ _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device") ]
-		self.m_radioBox13 = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, m_radioBox13Choices, 2, wx.RA_SPECIFY_COLS|wx.RA_SPECIFY_ROWS )
-		self.m_radioBox13.SetSelection( 0 )
-		bSizer43.Add( self.m_radioBox13, 1, wx.ALL|wx.EXPAND, 5 )
+		self.m_scrolledWindow1 = wx.ScrolledWindow( self.m_panel37, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.m_scrolledWindow1.SetScrollRate( 5, 5 )
+		self.sizer2 = wx.BoxSizer( wx.VERTICAL )
+		
+		radioBox_devChoices = [ _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device") ]
+		self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, radioBox_devChoices, 2, wx.RA_SPECIFY_COLS|wx.RA_SPECIFY_ROWS )
+		self.radioBox_dev.SetSelection( 0 )
+		self.sizer2.Add( self.radioBox_dev, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		bSizer40.Add( bSizer43, 1, wx.EXPAND, 5 )
+		self.m_scrolledWindow1.SetSizer( self.sizer2 )
+		self.m_scrolledWindow1.Layout()
+		self.sizer2.Fit( self.m_scrolledWindow1 )
+		self.sizer.Add( self.m_scrolledWindow1, 1, wx.EXPAND |wx.ALL, 0 )
+		
+		
+		bSizer40.Add( self.sizer, 1, wx.EXPAND, 5 )
 		
 		
 		self.m_panel37.SetSizer( bSizer40 )
