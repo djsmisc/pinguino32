@@ -41,7 +41,7 @@ class MySplashScreen(wx.SplashScreen):
 
     #----------------------------------------------------------------------
     def ShowMain(self):
-        setGui(True)
+        #setGui(True)
         frame = Pinguino(None)
         frame.__initPinguino__(None)
         app.SetTopWindow(frame)
@@ -53,7 +53,7 @@ class MySplashScreen(wx.SplashScreen):
 class MyApp(wx.App):
     def OnInit(self):
         if sys.platform=='darwin':
-            setGui(True)
+            #setGui(True)
             frame = Pinguino(None)
             frame.__initPinguino__(None)
             app.SetTopWindow(frame)

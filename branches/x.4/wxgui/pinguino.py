@@ -41,24 +41,8 @@ class ResultEventRevision(wx.PyEvent):
 # ------------------------------------------------------------------------------
 # current version
 # ------------------------------------------------------------------------------
-
 pinguino_version = "x.4"
 
-# ------------------------------------------------------------------------------
-# paths
-# ------------------------------------------------------------------------------
-
-HOME_DIR = os.getcwd()
-THEME_DIR = os.path.join(HOME_DIR, 'theme')
-SOURCE_DIR = os.path.join(HOME_DIR, 'source')
-LOCALE_DIR = os.path.join(HOME_DIR, 'locale')
-P32_DIR = os.path.join(HOME_DIR, 'p32')
-P8_DIR = os.path.join(HOME_DIR, 'p8')
-SVN_DIR = "http://pinguino32.googlecode.com/svn/branches/x.4/"
-#SVN_DIR = "https://pinguino32.googlecode.com/svn/branches/x.4"
-APP_CONFIG = os.path.join(HOME_DIR, '.config')
-TEMP_DIR = os.path.join(HOME_DIR, '.temp')
-EXAMPLES_DIR = os.path.join(HOME_DIR, 'examples')
 
 # ------------------------------------------------------------------------------
 # default
@@ -168,296 +152,350 @@ class Pinguino(framePinguinoX, Editor):
             self.DeviceList = PicListIDE(self)
             self.DeviceList.__init_list__(self)
             self.DeviceList.Hide()
-            
-            #if sys.platform != 'win32':
-            #    pipe = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8), "-mpic16", "-p"],\
-            #                stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-            #    output = pipe.stdout.read()
-            #    proclist = output.split("p")
-            #    proclist.pop(0)
-            #    for i in range(len(proclist)):
-            #        proclist[i] = proclist[i].strip()
-            #    self.DeviceList.setItems(proclist)
-            #else:
-            #    self.DeviceList.setItems("No devices yet.".split(" "))
-            
-            # get all PIC18F devices supported by SDCC
-            proclist = []
-            fichier=open(os.path.join(P8_DIR, 'include', 'pic16devices.txt'), 'r')
-            for line in fichier:
-                # if line begins with 'name'
-                if line.find('name') == 0:
-                    proclist.append(line[line.find('18f'):-1])
-                    #print line[line.find('18f'):-1]
-                for i in range(len(proclist)):
-                    proclist[i] = proclist[i].strip()
-            self.DeviceList.setItems(proclist)
-            fichier.close()
+            proclist = self.getPIC18F()
+	    self.DeviceList.setItems(proclist)
 
         else:
             print 'Warning : no p8 directory'
             
         self.DrawToolbar()
-        
-# ------------------------------------------------------------------------------
-# Configure Panes (???)
-# ------------------------------------------------------------------------------
-    def configPanes(self):
-        self.buildOutput()
-        self.buildLateralPanel()
-        self.buildEditor()
-        self.addPanes()
-
-# ------------------------------------------------------------------------------
-# Decorator to debug time
-# ------------------------------------------------------------------------------
-    def debugTime(function):
-        DEBUG_TIME = True
-        def process(*args):
-            inicio = time.time()
-            retorno = function(*args)
-            fin = time.time()
-            print function.__name__ + "\tTime: %.7fs" %(fin - inicio)
-            return retorno
-        if DEBUG_TIME : return process
-        else: return function
-
-# ------------------------------------------------------------------------------
-# Editor
-# ------------------------------------------------------------------------------
-    def buildEditor(self):
-        self.EditorPanel = self.panelEditor
-        #background with pinguino.cc colour and pinguino logo
-        self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
-        self.imageBackground = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
-        if sys.platform == 'win32':
-            self.imageBackground.SetSize((5000,5000)) # :)
-        self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
-        self.background.CentreOnParent(wx.BOTH)
-
-        self.notebookEditor.SetMinSize((50, 100))
-
-# ------------------------------------------------------------------------------
-# Output
-# ------------------------------------------------------------------------------
-    def buildOutput(self):
-        self.panelOutput = panelOutput(self)
-        self.debuggingLine = self.panelOutput.debuggingLine
-        self.buttonSendDebug = self.panelOutput.buttonSendDebug
-        self.logwindow = self.panelOutput.logwindow
-        
-        self.choicePort = self.panelOutput.choicePort
-        self.choicePort.Hide()
-
-        self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
-
-        self.debuggingLine.SetInsertionPoint(125)
-        self.debuggingLine.Hide()
-        self.buttonSendDebug.Hide()
-
-        self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
-        self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
-
-        # create a PaneInfo structure for output window
-        self.PaneOutputInfo=wx.aui.AuiPaneInfo()
-        self.PaneOutputInfo.CloseButton(False)
-        self.PaneOutputInfo.MaximizeButton(True)
-        self.PaneOutputInfo.MinimizeButton(True)
-        #self.PaneOutputInfo.Bottom()
-
-# ------------------------------------------------------------------------------
-# Lateral
-# ------------------------------------------------------------------------------
-    def buildLateralPanel(self):
-        self.PaneLateral=wx.aui.AuiPaneInfo()
-        self.PaneLateral.CloseButton(True)
-        self.PaneLateral.MinimizeButton(True)
-        self.PaneLateral.Right()
-        
-# ------------------------------------------------------------------------------
-# Add the panes to the manager
-# ------------------------------------------------------------------------------
-    def addPanes(self):
-        self.lat = panelLateral(self)
-        self._mgr.AddPane(self.panelOutput, wx.BOTTOM, _("Output"))          
-        self._mgr.AddPane(self.lat, wx.RIGHT, _("Tools"))      
-        self._mgr.AddPane(self.panelEditor, wx.CENTER)
-        self._mgr.Update()
-
-# ------------------------------------------------------------------------------
-# Event Management
-# ------------------------------------------------------------------------------
-    def ConnectAll(self):
-        """"""
-        self.Bind(wx.EVT_CLOSE, self.OnExit)
-        self.Bind(wx.EVT_SIZE, self.OnResize)
-
-        #file menu
-        self.Bind(wx.EVT_MENU, self.OnNew, self.menu.menuItemNew)
-        self.Bind(wx.EVT_MENU, self.OnOpen, self.menu.menuItemOpen)
-        #self.Bind(wx.EVT_MENU_RANGE, self.menu.menuRecents, id=wx.ID_FILE1, id2=wx.ID_FILE9)
-        self.Bind(wx.EVT_MENU, self.OnSave, self.menu.menuItemSave)
-        self.Bind(wx.EVT_MENU, self.OnSaveAs, self.menu.menuItemSaveAs)
-        self.Bind(wx.EVT_MENU, self.OnClose, self.menu.menuItemClose)
-        self.Bind(wx.EVT_MENU, self.OnSaveAll, self.menu.menuItemSaveAll)
-        self.Bind(wx.EVT_MENU, self.OnCloseAll, self.menu.menuItemCloseAll)
-        self.Bind(wx.EVT_MENU, self.OnExit, self.menu.menuItemExit)
-
-        #edit menu
-        self.Bind(wx.EVT_MENU, self.OnCopy, self.menu.menuItemCopy)
-        self.Bind(wx.EVT_MENU, self.OnPaste, self.menu.menuItemPaste)
-        self.Bind(wx.EVT_MENU, self.OnCut, self.menu.menuItemCut)
-        self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
-        self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
-        self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
-        self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
-        self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
-        self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
-        self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
-        self.Bind(wx.EVT_MENU, self.OnIndent, self.menu.menuItemIndent)
-        self.Bind(wx.EVT_MENU, self.OnUnIndent, self.menu.menuItemUnIndent)
-        self.Bind(wx.EVT_MENU, self.OnPreferences, self.menu.menuItemPreferences)
-        self.Bind(wx.EVT_MENU, self.OnShowCompleter, self.menu.menuItemforzecompleter)
-
-        #view menu
-        self.Bind(wx.EVT_MENU, self.OnViewTools, self.menu.menuItemTools)
-        self.Bind(wx.EVT_MENU, self.OnViewOutput, self.menu.menuItemOutput)
-        self.Bind(wx.EVT_MENU, self.OnViewToolbar, self.menu.menuItemToolbar)
-
-        #pinguino menu
 	
 	
-	self.Bind(wx.EVT_MENU, self.OnViewSelectDevice, self.menu.menuItemSelectDevice)	
-	
-        if DEV:
-            #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
-            self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
-            #self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
-        for b in range(len(boardlist)):
-            self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
+    #----------------------------------------------------------------------    
+    def getPIC18F(self):
+	# get all PIC18F devices supported by SDCC
+	proclist = []
+	fichier=open(os.path.join(P8_DIR, 'include', 'pic16devices.txt'), 'r')
+	for line in fichier:
+	    # if line begins with 'name'
+	    if line.find('name') == 0:
+	        proclist.append(line[line.find('18f'):-1])
+	        #print line[line.find('18f'):-1]
+	    for i in range(len(proclist)):
+	        proclist[i] = proclist[i].strip()
+	fichier.close()
+	return proclist
 
-        #self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
-        if DEV:
-            self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.menu.menuItemUSBCDC)
-            self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.menu.menuItemDebugNone)
-            
-        self.Bind(wx.EVT_MENU, self.OnViewStdout, self.menu.menuItemViewStdout)
-        
 
-        self.Bind(wx.EVT_MENU, self.OnVerify, self.menu.menuItemCompile)
-        self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
-        self.Bind(wx.EVT_MENU, self.OnVerifyUpload, self.menu.menuItemCompileUpload)
-
-        ##plugin
-        #self.Bind(wx.EVT_TOOL, self.OnPlugIn, id=self.ID_PLUG_ON)
-        #self.Bind(wx.EVT_TOOL, self.NoPlugIn, id=self.ID_PLUG_OFF)
-
-        # help menu
-        self.Bind(wx.EVT_TOOL, self.OnKeyword, self.menu.menuItemKeywords)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://www.pinguino.cc"), self.menu.menuItemWebSite)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://blog.pinguino.cc"), self.menu.menuItemBlog)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://forum.pinguino.cc"), self.menu.menuItemForum)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)
-        self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)
-        self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)
-
-        self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
-
-# ----------------------------------------------------------------------
-# Menus
-# ----------------------------------------------------------------------
-    def buildMenu(self):
-        self.menu = menubarPinguino()
-
-        if not DEV:  #Can't disable submenu (wx.menu)
-            self.menu.menuItemDebugNone.Enable(False)
-            self.menu.menuItemUSBCDC.Enable(False)
-            self.menu.menuItemUART1.Enable(False)
-            self.menu.menuItemCheckRev.Enable(False)	    
-
-        self.SetMenuBar(self.menu)
 
     #----------------------------------------------------------------------
-    def addFile2Recent(self, file):
-        menu = self.menu.menuRecents
-        for item in menu.GetMenuItems():
-            menu.DeleteItem(item)
-
-        if file in self.recentsFiles: self.recentsFiles.remove(file)
-        self.recentsFiles.insert(0, file)
-        self.recentsFiles = self.recentsFiles[:10]
-        for file in range(len(self.recentsFiles)):
-            menu_r = wx.MenuItem(menu, wx.NewId(), self.recentsFiles[file], wx.EmptyString, wx.ITEM_NORMAL)
-            self.Bind(wx.EVT_MENU, self.open_path(self.recentsFiles[file]), menu_r)
-            menu.AppendItem(menu_r)
-
-        self.menu.UpdateMenus()
-
-    #----------------------------------------------------------------------
-    def open_path(self,name):
-        def path(event=None):
-            self.Open(name)
-        return path   
-
-# ----------------------------------------------------------------------
-# Load settings from config file
-# ----------------------------------------------------------------------
-    def loadSettings(self):
-        self.loadConfig()
-
-        w = self.getElse("IDE", "window/width", 1000)
-        h = self.getElse("IDE", "window/height", 500)
-        self.SetSize((w, h))
-
-        # TODO fix the bug on windows for negative frame position 	    
-        try:
-            x = self.getElse("IDE", "Window/Xpos", 100)
-            y = self.getElse("IDE", "Window/Ypos", 100)
-            self.SetPosition((x, y))
-        except:
-            self.setConfig("IDE", "Window/Xpos", 0)
-            self.setConfig("IDE", "Window/Ypos", 0)
-            self.SetPosition((0, 0))
-
-        maxim = self.getElse("IDE", "Maximized", "False")
-        if maxim == "True": self.Maximize()
-
-        self.theme = self.getElse("IDE", "theme", "PinguinoX")   
-
-        try:
-            for i in range(self.getConfig("Recents", "Recents_count")):
-                file = self.getConfig("Recents", "Recents_%d"%i)
-                if os.path.isfile(file):
-                    self.addFile2Recent(file)
-        except: pass
-
-        panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        perspectiva = self._mgr.SavePerspective()
-        nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
-        nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
-        nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
-        nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
+    def getfamilies(self, arch, mode):
+	#Return a list of available families.
 	
-	#print nOutputPos
-	
-        try:
-            oOutput = int(re.match(panelOutput, perspectiva).group(2))   
-            oLateral = int(re.match(panelLateral, perspectiva).group(2))
-            oOutputPos = re.match(panelOutput, perspectiva).group(1) 
-            oLateralPos = re.match(panelLateral, perspectiva).group(1)
+	if arch == 8:
+	    if mode == "ICSP":
+		return 4, ["18fxxx", "18fxxxx", "18fxxjxx", "18fxxkxx"]
 	    
-            perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
-            perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
-            self._mgr.LoadPerspective(perspectiva)
-        except:
-            print "No perspective"
+	    elif mode == "BOOT":
+		return 1, []  #No sort by families
+	
+	
+	elif arch == 32:
+	    if mode == "ICSP":
+		return 1, []
+	    
+	    if mode == "BOOT":
+		return 1, []  #No sort by families
+    
+    
+    #----------------------------------------------------------------------
+    def getDevices(self, arch, mode, family):
+	""""""
+	
+	if arch == 8:
+	    if mode == "ICSP":
+		devs = self.getPIC18F()
+		r_devs = []
+		family = family.replace( "x", "[0-9]")
+		for dev in devs:
+		    reg = re.match("("+family+")", dev)
+		    if reg != None:
+			if reg.group(1) == dev: r_devs.append(dev)
+		return 5, r_devs
+	    
+	    if mode == "BOOT":
+		devs = []
+		for board in boardlist:
+		    if board.bldr == "noboot": pass
+		    elif board.arch == 8: devs.append(board.name)
+		return 3, devs  #Columns, List
+	    
+	    
+	
+	elif arch == 32:
+	    if mode == "ICSP":
+		return 0, [] 
+	    
+	    if mode == "BOOT":
+		devs = []
+		for board in boardlist:
+		    if board.bldr == "noboot": pass
+		    elif board.arch == 32: devs.append(board.name)
+		return 2, devs
 
-        lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
-        self.__initDocuments__()
-        if os.path.isdir(lateralPath):
-            self.buildLateralDir(lateralPath)
+	
+    
+    
+        
+## ------------------------------------------------------------------------------
+## Configure Panes (???)
+## ------------------------------------------------------------------------------
+    #def configPanes(self):
+        #self.buildOutput()
+        #self.buildLateralPanel()
+        #self.buildEditor()
+        #self.addPanes()
+
+## ------------------------------------------------------------------------------
+## Decorator to debug time
+## ------------------------------------------------------------------------------
+    #def debugTime(function):
+        #DEBUG_TIME = True
+        #def process(*args):
+            #inicio = time.time()
+            #retorno = function(*args)
+            #fin = time.time()
+            #print function.__name__ + "\tTime: %.7fs" %(fin - inicio)
+            #return retorno
+        #if DEBUG_TIME : return process
+        #else: return function
+
+## ------------------------------------------------------------------------------
+## Editor
+## ------------------------------------------------------------------------------
+    #def buildEditor(self):
+        #self.EditorPanel = self.panelEditor
+        ##background with pinguino.cc colour and pinguino logo
+        #self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
+        #self.imageBackground = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
+        #if sys.platform == 'win32':
+            #self.imageBackground.SetSize((5000,5000)) # :)
+        #self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
+        #self.background.CentreOnParent(wx.BOTH)
+
+        #self.notebookEditor.SetMinSize((50, 100))
+
+## ------------------------------------------------------------------------------
+## Output
+## ------------------------------------------------------------------------------
+    #def buildOutput(self):
+        #self.panelOutput = panelOutput(self)
+        #self.debuggingLine = self.panelOutput.debuggingLine
+        #self.buttonSendDebug = self.panelOutput.buttonSendDebug
+        #self.logwindow = self.panelOutput.logwindow
+        
+        #self.choicePort = self.panelOutput.choicePort
+        #self.choicePort.Hide()
+
+        #self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
+
+        #self.debuggingLine.SetInsertionPoint(125)
+        #self.debuggingLine.Hide()
+        #self.buttonSendDebug.Hide()
+
+        #self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
+        #self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
+
+        ## create a PaneInfo structure for output window
+        #self.PaneOutputInfo=wx.aui.AuiPaneInfo()
+        #self.PaneOutputInfo.CloseButton(False)
+        #self.PaneOutputInfo.MaximizeButton(True)
+        #self.PaneOutputInfo.MinimizeButton(True)
+        ##self.PaneOutputInfo.Bottom()
+
+## ------------------------------------------------------------------------------
+## Lateral
+## ------------------------------------------------------------------------------
+    #def buildLateralPanel(self):
+        #self.PaneLateral=wx.aui.AuiPaneInfo()
+        #self.PaneLateral.CloseButton(True)
+        #self.PaneLateral.MinimizeButton(True)
+        #self.PaneLateral.Right()
+        
+## ------------------------------------------------------------------------------
+## Add the panes to the manager
+## ------------------------------------------------------------------------------
+    #def addPanes(self):
+        #self.lat = panelLateral(self)
+        #self._mgr.AddPane(self.panelOutput, wx.BOTTOM, _("Output"))          
+        #self._mgr.AddPane(self.lat, wx.RIGHT, _("Tools"))      
+        #self._mgr.AddPane(self.panelEditor, wx.CENTER)
+        #self._mgr.Update()
+
+## ------------------------------------------------------------------------------
+## Event Management
+## ------------------------------------------------------------------------------
+    #def ConnectAll(self):
+        #""""""
+        #self.Bind(wx.EVT_CLOSE, self.OnExit)
+        #self.Bind(wx.EVT_SIZE, self.OnResize)
+
+        ##file menu
+        #self.Bind(wx.EVT_MENU, self.OnNew, self.menu.menuItemNew)
+        #self.Bind(wx.EVT_MENU, self.OnOpen, self.menu.menuItemOpen)
+        ##self.Bind(wx.EVT_MENU_RANGE, self.menu.menuRecents, id=wx.ID_FILE1, id2=wx.ID_FILE9)
+        #self.Bind(wx.EVT_MENU, self.OnSave, self.menu.menuItemSave)
+        #self.Bind(wx.EVT_MENU, self.OnSaveAs, self.menu.menuItemSaveAs)
+        #self.Bind(wx.EVT_MENU, self.OnClose, self.menu.menuItemClose)
+        #self.Bind(wx.EVT_MENU, self.OnSaveAll, self.menu.menuItemSaveAll)
+        #self.Bind(wx.EVT_MENU, self.OnCloseAll, self.menu.menuItemCloseAll)
+        #self.Bind(wx.EVT_MENU, self.OnExit, self.menu.menuItemExit)
+
+        ##edit menu
+        #self.Bind(wx.EVT_MENU, self.OnCopy, self.menu.menuItemCopy)
+        #self.Bind(wx.EVT_MENU, self.OnPaste, self.menu.menuItemPaste)
+        #self.Bind(wx.EVT_MENU, self.OnCut, self.menu.menuItemCut)
+        #self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
+        #self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
+        #self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
+        #self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
+        #self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
+        #self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
+        #self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
+        #self.Bind(wx.EVT_MENU, self.OnIndent, self.menu.menuItemIndent)
+        #self.Bind(wx.EVT_MENU, self.OnUnIndent, self.menu.menuItemUnIndent)
+        #self.Bind(wx.EVT_MENU, self.OnPreferences, self.menu.menuItemPreferences)
+        #self.Bind(wx.EVT_MENU, self.OnShowCompleter, self.menu.menuItemforzecompleter)
+
+        ##view menu
+        #self.Bind(wx.EVT_MENU, self.OnViewTools, self.menu.menuItemTools)
+        #self.Bind(wx.EVT_MENU, self.OnViewOutput, self.menu.menuItemOutput)
+        #self.Bind(wx.EVT_MENU, self.OnViewToolbar, self.menu.menuItemToolbar)
+
+        ##pinguino menu
+	
+	
+	#self.Bind(wx.EVT_MENU, self.OnViewSelectDevice, self.menu.menuItemSelectDevice)	
+	
+        #if DEV:
+            ##self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
+            #self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
+            ##self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
+        #for b in range(len(boardlist)):
+            #self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
+
+        ##self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
+        #if DEV:
+            #self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode="CDC"), self.menu.menuItemUSBCDC)
+            #self.Bind(wx.EVT_MENU, lambda x:self.setDebugger(mode=None), self.menu.menuItemDebugNone)
+            
+        #self.Bind(wx.EVT_MENU, self.OnViewStdout, self.menu.menuItemViewStdout)
+        
+
+        #self.Bind(wx.EVT_MENU, self.OnVerify, self.menu.menuItemCompile)
+        #self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
+        #self.Bind(wx.EVT_MENU, self.OnVerifyUpload, self.menu.menuItemCompileUpload)
+
+        ###plugin
+        ##self.Bind(wx.EVT_TOOL, self.OnPlugIn, id=self.ID_PLUG_ON)
+        ##self.Bind(wx.EVT_TOOL, self.NoPlugIn, id=self.ID_PLUG_OFF)
+
+        ## help menu
+        #self.Bind(wx.EVT_TOOL, self.OnKeyword, self.menu.menuItemKeywords)
+        #self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://www.pinguino.cc"), self.menu.menuItemWebSite)
+        #self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://blog.pinguino.cc"), self.menu.menuItemBlog)
+        #self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://forum.pinguino.cc"), self.menu.menuItemForum)
+        #self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://groups.google.fr/group/pinguinocard?pli=1"), self.menu.menuItemGroup)
+        #self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://wiki.pinguino.cc"), self.menu.menuItemWiki)
+        #self.Bind(wx.EVT_TOOL, lambda x:webbrowser.open("http://shop.pinguino.cc"), self.menu.menuItemShop)
+        #self.Bind(wx.EVT_MENU, self.OnAbout, self.menu.menuItemAbout)
+
+        #self.Bind(wx.aui.EVT_AUI_PANE_CLOSE, self.OnPaneClose )
+
+## ----------------------------------------------------------------------
+## Menus
+## ----------------------------------------------------------------------
+    #def buildMenu(self):
+        #self.menu = menubarPinguino()
+
+        #if not DEV:  #Can't disable submenu (wx.menu)
+            #self.menu.menuItemDebugNone.Enable(False)
+            #self.menu.menuItemUSBCDC.Enable(False)
+            #self.menu.menuItemUART1.Enable(False)
+            #self.menu.menuItemCheckRev.Enable(False)	    
+
+        #self.SetMenuBar(self.menu)
+
+    ##----------------------------------------------------------------------
+    #def addFile2Recent(self, file):
+        #menu = self.menu.menuRecents
+        #for item in menu.GetMenuItems():
+            #menu.DeleteItem(item)
+
+        #if file in self.recentsFiles: self.recentsFiles.remove(file)
+        #self.recentsFiles.insert(0, file)
+        #self.recentsFiles = self.recentsFiles[:10]
+        #for file in range(len(self.recentsFiles)):
+            #menu_r = wx.MenuItem(menu, wx.NewId(), self.recentsFiles[file], wx.EmptyString, wx.ITEM_NORMAL)
+            #self.Bind(wx.EVT_MENU, self.open_path(self.recentsFiles[file]), menu_r)
+            #menu.AppendItem(menu_r)
+
+        #self.menu.UpdateMenus()
+
+    ##----------------------------------------------------------------------
+    #def open_path(self,name):
+        #def path(event=None):
+            #self.Open(name)
+        #return path   
+
+## ----------------------------------------------------------------------
+## Load settings from config file
+## ----------------------------------------------------------------------
+    #def loadSettings(self):
+        #self.loadConfig()
+
+        #w = self.getElse("IDE", "window/width", 1000)
+        #h = self.getElse("IDE", "window/height", 500)
+        #self.SetSize((w, h))
+
+        ## TODO fix the bug on windows for negative frame position 	    
+        #try:
+            #x = self.getElse("IDE", "Window/Xpos", 100)
+            #y = self.getElse("IDE", "Window/Ypos", 100)
+            #self.SetPosition((x, y))
+        #except:
+            #self.setConfig("IDE", "Window/Xpos", 0)
+            #self.setConfig("IDE", "Window/Ypos", 0)
+            #self.SetPosition((0, 0))
+
+        #maxim = self.getElse("IDE", "Maximized", "False")
+        #if maxim == "True": self.Maximize()
+
+        #self.theme = self.getElse("IDE", "theme", "PinguinoX")   
+
+        #try:
+            #for i in range(self.getConfig("Recents", "Recents_count")):
+                #file = self.getConfig("Recents", "Recents_%d"%i)
+                #if os.path.isfile(file):
+                    #self.addFile2Recent(file)
+        #except: pass
+
+        #panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        #panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        #perspectiva = self._mgr.SavePerspective()
+        #nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
+        #nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
+        #nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
+        #nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
+	
+	##print nOutputPos
+	
+        #try:
+            #oOutput = int(re.match(panelOutput, perspectiva).group(2))   
+            #oLateral = int(re.match(panelLateral, perspectiva).group(2))
+            #oOutputPos = re.match(panelOutput, perspectiva).group(1) 
+            #oLateralPos = re.match(panelLateral, perspectiva).group(1)
+	    
+            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
+            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
+            #self._mgr.LoadPerspective(perspectiva)
+        #except:
+            #print "No perspective"
+
+        #lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
+        #self.__initDocuments__()
+        #if os.path.isdir(lateralPath):
+            #self.buildLateralDir(lateralPath)
 
 # ----------------------------------------------------------------------
 # Get OS name and define some OS dependant variable
@@ -484,109 +522,109 @@ class Pinguino(framePinguinoX, Editor):
             self.u32 = 'ubw32'
             self.make = 'make'
 
-# ------------------------------------------------------------------------------
-# Thread Functions
-# ------------------------------------------------------------------------------
-    def getRevision(self):
-        sw = SubversionWorkingCopy(HOME_DIR).current_version()
-        try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
-        except: sw = _("unknown")
-        wx.PostEvent(self, ResultEventRevision(sw))
+## ------------------------------------------------------------------------------
+## Thread Functions
+## ------------------------------------------------------------------------------
+    #def getRevision(self):
+        #sw = SubversionWorkingCopy(HOME_DIR).current_version()
+        #try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
+        #except: sw = _("unknown")
+        #wx.PostEvent(self, ResultEventRevision(sw))
         
-        if self.getElse("IDE", "checkupgradeatstart", "False") == "True":
-            try:
-                svnRev = SubversionRepository(SVN_DIR)
-                self.lastRevision = svnRev.current_version()
-                #self.lastRevision = "<<TESTING>>" #To force a update at start
-                wx.PostEvent(self, ResultEventRevision([svnRev]))
-            except: self.lastRevision = False
+        #if self.getElse("IDE", "checkupgradeatstart", "False") == "True":
+            #try:
+                #svnRev = SubversionRepository(SVN_DIR)
+                #self.lastRevision = svnRev.current_version()
+                ##self.lastRevision = "<<TESTING>>" #To force a update at start
+                #wx.PostEvent(self, ResultEventRevision([svnRev]))
+            #except: self.lastRevision = False
 
-# ------------------------------------------------------------------------------
-# Timer Functions
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## Timer Functions
+## ------------------------------------------------------------------------------
 
-    #----------------------------------------------------------------------
-    def initTimers(self):
-        #Auto=save
-        save = self.getElse("Open/Save", "autosave", "False")
-        timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000
-        if save == "True":
-            self.timer_autosave = wx.CallLater(timeSave, self.autoSaveFiles)
-        #Updates
-        self.timer_updates = wx.CallLater(1000, self.updates)
+    ##----------------------------------------------------------------------
+    #def initTimers(self):
+        ##Auto=save
+        #save = self.getElse("Open/Save", "autosave", "False")
+        #timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000
+        #if save == "True":
+            #self.timer_autosave = wx.CallLater(timeSave, self.autoSaveFiles)
+        ##Updates
+        #self.timer_updates = wx.CallLater(1000, self.updates)
 
-    #----------------------------------------------------------------------
-    def stopTimers(self):
-        self.timer_updates.Stop()
+    ##----------------------------------------------------------------------
+    #def stopTimers(self):
+        #self.timer_updates.Stop()
 
-    #----------------------------------------------------------------------
-    def autoSaveFiles(self):
-        if self.getElse("Open/Save", "autosave", "False") == "True":
-            self.OnSaveAll()
-        timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000	
-        self.timer_autosave.Restart(timeSave)
+    ##----------------------------------------------------------------------
+    #def autoSaveFiles(self):
+        #if self.getElse("Open/Save", "autosave", "False") == "True":
+            #self.OnSaveAll()
+        #timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000	
+        #self.timer_autosave.Restart(timeSave)
 
-    #----------------------------------------------------------------------
-    def updates(self):
-        self.update_dockFiles()
-        self.updateStatusBar()
+    ##----------------------------------------------------------------------
+    #def updates(self):
+        #self.update_dockFiles()
+        #self.updateStatusBar()
 
-        self.timer_updates.Restart(1000)
+        #self.timer_updates.Restart(1000)
 
-# ------------------------------------------------------------------------------
-# Event Threads
-# ------------------------------------------------------------------------------
-    def setRevision(self, event):
-        if type(event.data) == type([]):
-            self.OnCheck(event=None, back=True, svn=event.data[0])
-            return
+## ------------------------------------------------------------------------------
+## Event Threads
+## ------------------------------------------------------------------------------
+    #def setRevision(self, event):
+        #if type(event.data) == type([]):
+            #self.OnCheck(event=None, back=True, svn=event.data[0])
+            #return
         
-        self.localRev = event.data
-        if DEV == True: rev = 'rev. ' + self.localRev
-        else: rev = ""
-        self.SetTitle('Pinguino IDE ' + pinguino_version + " " + rev)
-        self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")", 1)
-        self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
+        #self.localRev = event.data
+        #if DEV == True: rev = 'rev. ' + self.localRev
+        #else: rev = ""
+        #self.SetTitle('Pinguino IDE ' + pinguino_version + " " + rev)
+        #self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. " + self.localRev + ")", 1)
+        #self.statusBarEditor.SetStatusText(number=2, text="Rev. %s" %self.localRev)
 
-# ------------------------------------------------------------------------------
-# Update
-# ------------------------------------------------------------------------------
-    def updateIDE(self):
-        self.lat.search.Fit()
-        self._mgr.Update()
+## ------------------------------------------------------------------------------
+## Update
+## ------------------------------------------------------------------------------
+    #def updateIDE(self):
+        #self.lat.search.Fit()
+        #self._mgr.Update()
 
-# ------------------------------------------------------------------------------
-# OnUpgrade
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## OnUpgrade
+## ------------------------------------------------------------------------------
 
-    def OnCheck(self, event=None, back=False, svn=None):
-        try: self.upgrade.Cancel()
-        except: pass
-        self.upgrade = UpgradeIDE(self) 
-        self.upgrade.__initUpgrade__(self)
+    #def OnCheck(self, event=None, back=False, svn=None):
+        #try: self.upgrade.Cancel()
+        #except: pass
+        #self.upgrade = UpgradeIDE(self) 
+        #self.upgrade.__initUpgrade__(self)
         
-        if not back:
-            self.upgrade.checkUpgrade()
-            self.upgrade.Show()
-        else:
-            if not (self.lastRevision == self.localRev):
-                self.upgrade.Show()
-                self.upgrade.prepareUpgrade(svn)
-            else: self.upgrade.Cancel()
+        #if not back:
+            #self.upgrade.checkUpgrade()
+            #self.upgrade.Show()
+        #else:
+            #if not (self.lastRevision == self.localRev):
+                #self.upgrade.Show()
+                #self.upgrade.prepareUpgrade(svn)
+            #else: self.upgrade.Cancel()
 
-# ------------------------------------------------------------------------------
-# OnFileHistory : open selected history file
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## OnFileHistory : open selected history file
+## ------------------------------------------------------------------------------
 
-    def OnFileHistory(self, event):
-        self.background.Hide()
-        fileNum = event.GetId() - wx.ID_FILE1
-        path = self.filehistory.GetHistoryFile(fileNum)
-        self.filehistory.AddFileToHistory(path)                  # move up the list
-        self.Open(path,self.reservedword,self.rw, self.filehistory, self.config)
-        # refresh file menu (doesn't seem to work)
-        self.file_menu.UpdateUI()
-        self.updatenotebook()
+    #def OnFileHistory(self, event):
+        #self.background.Hide()
+        #fileNum = event.GetId() - wx.ID_FILE1
+        #path = self.filehistory.GetHistoryFile(fileNum)
+        #self.filehistory.AddFileToHistory(path)                  # move up the list
+        #self.Open(path,self.reservedword,self.rw, self.filehistory, self.config)
+        ## refresh file menu (doesn't seem to work)
+        #self.file_menu.UpdateUI()
+        #self.updatenotebook()
 
 # ------------------------------------------------------------------------------
 # OnBoard : load boards specificities
@@ -665,44 +703,44 @@ class Pinguino(framePinguinoX, Editor):
         self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
         self.Thread_curBoard.start()
 
-# ------------------------------------------------------------------------------
-# OnPaneClose: wx.aui managed window is about to be closed
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## OnPaneClose: wx.aui managed window is about to be closed
+## ------------------------------------------------------------------------------
 
-    def OnPaneClose(self,event):
-#        print "OnPaneClose", # dir(event)
-#        print event.GetPane() == self._mgr.GetPane(self.lat) # ???
-        caption = event.GetPane().caption
-        if caption == _("Tools"):
-            self.menu.menuItemTools.Check(False)
+    #def OnPaneClose(self,event):
+##        print "OnPaneClose", # dir(event)
+##        print event.GetPane() == self._mgr.GetPane(self.lat) # ???
+        #caption = event.GetPane().caption
+        #if caption == _("Tools"):
+            #self.menu.menuItemTools.Check(False)
 
-# ------------------------------------------------------------------------------
-# OnResize:
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## OnResize:
+## ------------------------------------------------------------------------------
 
-    def OnResize(self,event):
-        try: self.background.CentreOnParent(wx.BOTH)
-        except: pass
-        self._mgr.Update()
-        event.Skip()
+    #def OnResize(self,event):
+        #try: self.background.CentreOnParent(wx.BOTH)
+        #except: pass
+        #self._mgr.Update()
+        #event.Skip()
 
-    #----------------------------------------------------------------------
-    def openLast(self):
-        try:
-            for i in range(self.getConfig("Last", "Last_count")):
-                file = self.getConfig("Last", "Last_%d"%i)
-                if os.path.isfile(file):
-                    self.Open(file)
+    ##----------------------------------------------------------------------
+    #def openLast(self):
+        #try:
+            #for i in range(self.getConfig("Last", "Last_count")):
+                #file = self.getConfig("Last", "Last_%d"%i)
+                #if os.path.isfile(file):
+                    #self.Open(file)
 
-            name = self.getConfig("Last", "Last_Focus")
-            c = 0
-            for i in self.filename:
-                if i == name: break
-                c += 1
+            #name = self.getConfig("Last", "Last_Focus")
+            #c = 0
+            #for i in self.filename:
+                #if i == name: break
+                #c += 1
 
-            self.notebookEditor.SetSelection(c)
+            #self.notebookEditor.SetSelection(c)
 
-        except: pass
+        #except: pass
 
 # ------------------------------------------------------------------------------
 # OnAbout:
@@ -888,8 +926,8 @@ class Pinguino(framePinguinoX, Editor):
         except: pass
     
         icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-        iconSize = icon.GetSize()	
-        
+        iconSize = icon.GetSize()
+	
         boards = []
         for i in self.boardlist: boards.append(i.name)
         #self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
@@ -912,81 +950,81 @@ class Pinguino(framePinguinoX, Editor):
         textCtrlDevices.SetValue(name)
         self.textCtrlDevices = textCtrlDevices
 
-    #----------------------------------------------------------------------
-    def DrawToolbar(self):
-        try: self.toolbar.ClearTools()
-        except:
-            self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
-            self.getChoiceBoards()
-            self.getTextCtrlDevices()
+    ##----------------------------------------------------------------------
+    #def DrawToolbar(self):
+        #try: self.toolbar.ClearTools()
+        #except:
+            #self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
+            #self.getChoiceBoards()
+            #self.getTextCtrlDevices()
 
-        # Get size of new theme's icons
-        icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-        iconSize = icon.GetSize()
+        ## Get size of new theme's icons
+        #icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+        #iconSize = icon.GetSize()
 
-        # Update Bitmap size to fit new icons (not sure that it works !)
-        self.toolbar.SetToolBitmapSize(iconSize)
+        ## Update Bitmap size to fit new icons (not sure that it works !)
+        #self.toolbar.SetToolBitmapSize(iconSize)
 
-        modes = ["USB Bootloader", "Serial Bootloader", "ICSP (no USB boot.)"]
-        self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
-        self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", "USB Bootloader"))
-        self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
-        self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+        #modes = ["USB Bootloader", "Serial Bootloader", "ICSP (no USB boot.)"]
+        #self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
+        #self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", "USB Bootloader"))
+        #self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
+        #self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
 
-        mode = self.getElse("IDE", "boardmode", "USB Bootloader")
-        if mode == "USB Bootloader":
-            boardName = self.getElse("IDE", "Board", "Pinguino 2550")
-            self.choiceBoards.Show()
-            self.textCtrlDevices.Hide()
-            self.setBoard(boardName)
+        #mode = self.getElse("IDE", "boardmode", "USB Bootloader")
+        #if mode == "USB Bootloader":
+            #boardName = self.getElse("IDE", "Board", "Pinguino 2550")
+            #self.choiceBoards.Show()
+            #self.textCtrlDevices.Hide()
+            #self.setBoard(boardName)
             
-        elif mode == "ICSP (no USB boot.)":
-            self.setBoard("Pinguino (no Bootloader)")
-            self.choiceBoards.Hide()
-            self.textCtrlDevices.Show()   
+        #elif mode == "ICSP (no USB boot.)":
+            #self.setBoard("Pinguino (no Bootloader)")
+            #self.choiceBoards.Hide()
+            #self.textCtrlDevices.Show()   
 
-        # add2Toolbar is part of DrawToolbar
-        def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
-            if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
-                id = wx.NewId()
-                self.toolbar.AddLabelTool(id,
-                                          name,
-                                          wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
-                                          wx.NullBitmap, wx.ITEM_NORMAL,
-                                          shdesc,
-                                          lngdesc)
-                self.Bind(wx.EVT_TOOL, function, id=id)
+        ## add2Toolbar is part of DrawToolbar
+        #def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
+            #if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
+                #id = wx.NewId()
+                #self.toolbar.AddLabelTool(id,
+                                          #name,
+                                          #wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
+                                          #wx.NullBitmap, wx.ITEM_NORMAL,
+                                          #shdesc,
+                                          #lngdesc)
+                #self.Bind(wx.EVT_TOOL, function, id=id)
                     
-        add2Toolbar("new", "New", self.OnNew, _("New File"))
-        add2Toolbar("open", "Open", self.OnOpen, _("Open File"))
-        add2Toolbar("save", "Save", self.OnSave, _("Save File"))
-        add2Toolbar("stop", "Close", self.OnClose, _("Close File"))
-        self.toolbar.AddSeparator()
-        add2Toolbar("undo", "Undo", self.OnUndo, _("Undo"))
-        add2Toolbar("redo", "Redo", self.OnRedo, _("Redo"))
-        self.toolbar.AddSeparator()
-        add2Toolbar("cut", "Cut", self.OnCut, _("Cut"))
-        add2Toolbar("copy", "Copy", self.OnCopy, _("Copy"))
-        add2Toolbar("paste", "Paste", self.OnPaste, _("Paste"))
-        add2Toolbar("clear", "Clear", self.OnClear, _("Clear"))
-        add2Toolbar("select", "Select", self.OnSelectall, _("Select"))
-        self.toolbar.AddSeparator()
-        add2Toolbar("find", "Fin", self.OnFind, _("Search in File"))
-        add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
-        self.toolbar.AddSeparator()
+        #add2Toolbar("new", "New", self.OnNew, _("New File"))
+        #add2Toolbar("open", "Open", self.OnOpen, _("Open File"))
+        #add2Toolbar("save", "Save", self.OnSave, _("Save File"))
+        #add2Toolbar("stop", "Close", self.OnClose, _("Close File"))
+        #self.toolbar.AddSeparator()
+        #add2Toolbar("undo", "Undo", self.OnUndo, _("Undo"))
+        #add2Toolbar("redo", "Redo", self.OnRedo, _("Redo"))
+        #self.toolbar.AddSeparator()
+        #add2Toolbar("cut", "Cut", self.OnCut, _("Cut"))
+        #add2Toolbar("copy", "Copy", self.OnCopy, _("Copy"))
+        #add2Toolbar("paste", "Paste", self.OnPaste, _("Paste"))
+        #add2Toolbar("clear", "Clear", self.OnClear, _("Clear"))
+        #add2Toolbar("select", "Select", self.OnSelectall, _("Select"))
+        #self.toolbar.AddSeparator()
+        #add2Toolbar("find", "Fin", self.OnFind, _("Search in File"))
+        #add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
+        #self.toolbar.AddSeparator()
 
-        self.toolbar.AddControl(self.choiceMode)	
-        self.toolbar.AddControl(self.choiceBoards) 	    
-        self.toolbar.AddControl(self.textCtrlDevices)
+        #self.toolbar.AddControl(self.choiceMode)	
+        #self.toolbar.AddControl(self.choiceBoards) 	    
+        #self.toolbar.AddControl(self.textCtrlDevices)
 
-        add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
-        add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
-        #add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
-        add2Toolbar("preferences", "Preferences", self.OnPreferences, _("set preferences of Pinguino IDE"))
-        self.toolbar.AddSeparator()
-        add2Toolbar("exit", "Exit", self.OnExit, _("Exit Pinguino IDE"))
-        self.toolbar.Realize()
-        self.SetToolBar(self.toolbar)
+        #add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
+        #add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
+        ##add2Toolbar("debug", "&Debug On/Off", self.OnDebug, "USB Connexion with Pinguino")
+        #add2Toolbar("preferences", "Preferences", self.OnPreferences, _("set preferences of Pinguino IDE"))
+        #self.toolbar.AddSeparator()
+        #add2Toolbar("exit", "Exit", self.OnExit, _("Exit Pinguino IDE"))
+        #self.toolbar.Realize()
+        #self.SetToolBar(self.toolbar)
 
 # ------------------------------------------------------------------------------
 # Load .pdl or .pdl32 files (keywords and libraries)
@@ -1074,36 +1112,36 @@ class Pinguino(framePinguinoX, Editor):
                 out.append(item)
         return out
 
-# ------------------------------------------------------------------------------
-# Display message
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## Display message
+## ------------------------------------------------------------------------------
 
-    def displaymsg(self, message, clearpanel):
-        """ display message in the log window """
-        if gui==True:
-            if clearpanel==1:
-                self.logwindow.Clear()
-            try:
-                self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
-            except:
-                self.logwindow.WriteText(message+"\n")
-        else:
-            if message!="":
-                print message
-        return
+    #def displaymsg(self, message, clearpanel):
+        #""" display message in the log window """
+        #if gui==True:
+            #if clearpanel==1:
+                #self.logwindow.Clear()
+            #try:
+                #self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
+            #except:
+                #self.logwindow.WriteText(message+"\n")
+        #else:
+            #if message!="":
+                #print message
+        #return
 
-# ------------------------------------------------------------------------------
-# Translate (useless ?)
-# ------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------
+## Translate (useless ?)
+## ------------------------------------------------------------------------------
 
-    def translate(self, message):
-        """ translate message using gettext according current OS """
-            #Checking if the host platform is a mac
-        if sys.platform == 'darwin':
-            return message
-        else:
-            # assume it's a posix or win32 platform
-            return message
+    #def translate(self, message):
+        #""" translate message using gettext according current OS """
+            ##Checking if the host platform is a mac
+        #if sys.platform == 'darwin':
+            #return message
+        #else:
+            ## assume it's a posix or win32 platform
+            #return message
 
 # ------------------------------------------------------------------------------
 # Read Pinguino File (.pde) and translate it into C language
@@ -1539,137 +1577,137 @@ class Pinguino(framePinguinoX, Editor):
         fichier.close()
         return "code size: " + str(codesize) + " / " + str(memfree) + " bytes" + " (" + str(100*codesize/memfree) + "% used)"
 
-    #----------------------------------------------------------------------
-    def OnPreferences(self, event=None):
-        #app = wx.PySimpleApp(0)
-        wx.InitAllImageHandlers()
-        frame_1 = PreferencesIDE(self)
-        frame_1.__initPreferences__(self)
-        #app.SetTopWindow(frame_1)
-        if not DEV: frame_1.upgrade.Disable()
-        frame_1.CenterOnParent()
-        frame_1.Show()
-        #app.MainLoop()
+    ##----------------------------------------------------------------------
+    #def OnPreferences(self, event=None):
+        ##app = wx.PySimpleApp(0)
+        #wx.InitAllImageHandlers()
+        #frame_1 = PreferencesIDE(self)
+        #frame_1.__initPreferences__(self)
+        ##app.SetTopWindow(frame_1)
+        #if not DEV: frame_1.upgrade.Disable()
+        #frame_1.CenterOnParent()
+        #frame_1.Show()
+        ##app.MainLoop()
 
 
-    #----------------------------------------------------------------------
-    def OnKeyword(self, event=None, keyword=None):
-        #app = wx.PySimpleApp(0)
-        wx.InitAllImageHandlers()
-        frame_1 = FunctionsIDE(None)
-        frame_1.__initfunctionsHelp__(None, self.keywordList, keyword)
-        #app.SetTopWindow(frame_1)
-        frame_1.CenterOnParent()
-        frame_1.Show()
-        #app.MainLoop()
-        #self.setNormalCursor()
+    ##----------------------------------------------------------------------
+    #def OnKeyword(self, event=None, keyword=None):
+        ##app = wx.PySimpleApp(0)
+        #wx.InitAllImageHandlers()
+        #frame_1 = FunctionsIDE(None)
+        #frame_1.__initfunctionsHelp__(None, self.keywordList, keyword)
+        ##app.SetTopWindow(frame_1)
+        #frame_1.CenterOnParent()
+        #frame_1.Show()
+        ##app.MainLoop()
+        ##self.setNormalCursor()
 
-    #----------------------------------------------------------------------
-    def OnAutoCompleter(self):
-        CharsCount = self.getElse("Completer", "charscount", 1)
-        word = self.wordUnderCursor(True)
-        if  word == "": return
-        if len(self.wordUnderCursor(True)) > CharsCount:
-            self.AutoCompleter.ShowCompleter(word, CharsCount)
+    ##----------------------------------------------------------------------
+    #def OnAutoCompleter(self):
+        #CharsCount = self.getElse("Completer", "charscount", 1)
+        #word = self.wordUnderCursor(True)
+        #if  word == "": return
+        #if len(self.wordUnderCursor(True)) > CharsCount:
+            #self.AutoCompleter.ShowCompleter(word, CharsCount)
 
-    #----------------------------------------------------------------------
-    def OnViewStdout(self, event=None):
-        try: self.stdout.Hide()
-        except: pass
-        self.stdout = StdoutIDE(self)
-        self.stdout.__initStdout__(self)
-        self.stdout.Show()
+    ##----------------------------------------------------------------------
+    #def OnViewStdout(self, event=None):
+        #try: self.stdout.Hide()
+        #except: pass
+        #self.stdout = StdoutIDE(self)
+        #self.stdout.__initStdout__(self)
+        #self.stdout.Show()
 	
-    #----------------------------------------------------------------------
-    def OnViewSelectDevice(self, event=None):
-        try: self.selectDevide.Hide()
-        except: pass
-        self.selectDevide = ConfigDevice(self)
-        #self.selectDevide.__init_devices__(self)
-        self.selectDevide.Show()	
+    ##----------------------------------------------------------------------
+    #def OnViewSelectDevice(self, event=None):
+        #try: self.selectDevide.Hide()
+        #except: pass
+        #self.selectDevide = ConfigDevice(self)
+        ##self.selectDevide.__init_devices__(self)
+        #self.selectDevide.Show()	
 	
-    #----------------------------------------------------------------------
-    def OnViewSelectDevice(self, event=None):
-        try: self.selectDevide.Hide()
-        except: pass
-        self.selectDevide = ConfigDevice(self)
-        #self.selectDevide.__init_devices__(self)
-        self.selectDevide.Show()	
+    ##----------------------------------------------------------------------
+    #def OnViewSelectDevice(self, event=None):
+        #try: self.selectDevide.Hide()
+        #except: pass
+        #self.selectDevide = ConfigDevice(self)
+        ##self.selectDevide.__init_devices__(self)
+        #self.selectDevide.Show()	
 	
 
-    #----------------------------------------------------------------------
-    def OnDrop(self, event):
-        file = event.GetDragText().replace("file://", "").replace("%20", " ")
-        paths = file.split("\n")
-        for path in paths:
-            if os.path.isfile(path):
-                self.Open(path,
-                          self.reservedword,
-                          self.rw,
-                          self.filehistory,
-                          self.config)
-        event.SetDragText("")
+    ##----------------------------------------------------------------------
+    #def OnDrop(self, event):
+        #file = event.GetDragText().replace("file://", "").replace("%20", " ")
+        #paths = file.split("\n")
+        #for path in paths:
+            #if os.path.isfile(path):
+                #self.Open(path,
+                          #self.reservedword,
+                          #self.rw,
+                          #self.filehistory,
+                          #self.config)
+        #event.SetDragText("")
 
 
-    #----------------------------------------------------------------------
-    def applyPreferences(self):
-        self.Hide()
-        self.toolbar.Destroy()
-        self.DrawToolbar()
+    ##----------------------------------------------------------------------
+    #def applyPreferences(self):
+        #self.Hide()
+        #self.toolbar.Destroy()
+        #self.DrawToolbar()
         
-        self.morePreferences()
+        #self.morePreferences()
         
-        self.OnSaveAll()
-        self.OnCloseAll()
-        self.openLast()
-        self.Show()
+        #self.OnSaveAll()
+        #self.OnCloseAll()
+        #self.openLast()
+        #self.Show()
         
         
-    #----------------------------------------------------------------------
-    def morePreferences(self):
-        self.loadConfig()
-        if self.getElse("Source", "userfontinoutput", "False") == "True":
-            if self.getConfig("Source", "fontdefault") == "False":
-                FaceNAme = self.getConfig("Source", "font")
-                PointSize = self.getConfig("Source", "size")
-                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
-                font.SetFaceName(FaceNAme)
-                font.SetPointSize(PointSize)
-                font.SetUnderlined(False)
-                self.logwindow.SetFont(font)
-            else:
-                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
-                font.SetUnderlined(False)
-                self.logwindow.SetFont(font) 
-        else:
-            font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
-            font.SetUnderlined(False)
-            self.logwindow.SetFont(font)            
+    ##----------------------------------------------------------------------
+    #def morePreferences(self):
+        #self.loadConfig()
+        #if self.getElse("Source", "userfontinoutput", "False") == "True":
+            #if self.getConfig("Source", "fontdefault") == "False":
+                #FaceNAme = self.getConfig("Source", "font")
+                #PointSize = self.getConfig("Source", "size")
+                #font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                #font.SetFaceName(FaceNAme)
+                #font.SetPointSize(PointSize)
+                #font.SetUnderlined(False)
+                #self.logwindow.SetFont(font)
+            #else:
+                #font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                #font.SetUnderlined(False)
+                #self.logwindow.SetFont(font) 
+        #else:
+            #font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+            #font.SetUnderlined(False)
+            #self.logwindow.SetFont(font)            
 
 
-########################################################################
-class PreferencesIDE(framePreferences, Preferences):
-    """"""
+#########################################################################
+#class PreferencesIDE(framePreferences, Preferences):
+    #""""""
 
-########################################################################
-class FunctionsIDE(frameKeyWords, functionsHelp):
-    """"""
+#########################################################################
+#class FunctionsIDE(frameKeyWords, functionsHelp):
+    #""""""
 
 ########################################################################
 class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
     """"""
 
-########################################################################
-class StdoutIDE(frameStdout, Stdout):
-    """"""
+#########################################################################
+#class StdoutIDE(frameStdout, Stdout):
+    #""""""
 
 ########################################################################
 class PicListIDE(FrameSelectDevice_, PICpopup):
     """"""
 
-########################################################################
-class ConfigDevice(FrameSelectDevice):
-    """"""
+#########################################################################
+#class ConfigDevice(FrameSelectDevice):
+    #""""""
 
 if DEV:
     ########################################################################
@@ -1704,7 +1742,7 @@ def getOptions():
 def getVersion():
     return pinguino_version
 
-#----------------------------------------------------------------------
-def setGui(bool):
-    global gui
-    gui=bool
+##----------------------------------------------------------------------
+#def setGui(bool):
+    #global gui
+    #gui=bool

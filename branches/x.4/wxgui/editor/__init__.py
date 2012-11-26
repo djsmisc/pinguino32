@@ -2,6 +2,9 @@
 #-*- coding: utf-8 -*-
 
 #from autocompleter import AutoCompleter
+
+import frames, variables
+
 from debugger import Debugger
 from editeur import editor
 from lateral_tool_area import File, Documents, Search

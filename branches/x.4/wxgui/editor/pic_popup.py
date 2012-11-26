@@ -29,44 +29,44 @@ import wx, os
 ########################################################################
 class PICpopup:
     """"""
-    
+
     #----------------------------------------------------------------------
     def __init_list__(self, IDE):
         """"""
         self.IDE = IDE
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.setDevice, self.listCtrl_devices)
-        
+
 
     #----------------------------------------------------------------------
     def setItems(self, lista):
-	self.listCtrl_devices.ClearAll()
+        self.listCtrl_devices.ClearAll()
         for i in range(len(lista)):
             self.listCtrl_devices.InsertStringItem(i, lista[i])        
-        
-        
+
+
     #----------------------------------------------------------------------
     def activate(self, event=None):
         """"""
-	pos = self.IDE.textCtrlDevices.GetPosition() + self.IDE.GetPosition() + \
-	    wx.Point(0, self.IDE.textCtrlDevices.Size[1])
-	
-	if os.name == "posix":
-	    pos += wx.Point(0, self.IDE.MenuBar.Size[1])
-	    
-	    if not self.IDE.IsMaximized():
-		pos += wx.Point(0, 27)
-	    
-	self.Move(pos)
-	
-	if self.IsShown(): self.Hide()
-	else: self.Show()
-    
+        pos = self.IDE.textCtrlDevices.GetPosition() + self.IDE.GetPosition() + \
+            wx.Point(0, self.IDE.textCtrlDevices.Size[1])
+
+        if os.name == "posix":
+            pos += wx.Point(0, self.IDE.MenuBar.Size[1])
+
+            if not self.IDE.IsMaximized():
+                pos += wx.Point(0, 27)
+
+        self.Move(pos)
+
+        if self.IsShown(): self.Hide()
+        else: self.Show()
+
     #----------------------------------------------------------------------    
     def setDevice(self, event):
         selection = self.listCtrl_devices.GetItemText(event.GetIndex())
-	self.IDE.textCtrlDevices.SetValue(selection)
+        self.IDE.textCtrlDevices.SetValue(selection)
         self.Hide()
-	
-	#self.IDE.setConfig("IDE", "boardNoBoot", selection)
-	
-	self.IDE.OnBoard(event)
+
+        #self.IDE.setConfig("IDE", "boardNoBoot", selection)
+
+        self.IDE.OnBoard(event)

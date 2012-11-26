@@ -37,7 +37,7 @@ import time
 def setDEV():
     #To get DEV value from command line
     args = sys.argv[1:]
-    for par in ["-d", "--dev"]:
+    for par in ["--dev"]:
         if par in args:
             cont = args[args.index(par) + 1]
             if cont.lower() == "true": return True
@@ -221,9 +221,19 @@ except:
 # check pinguino modules
 # ------------------------------------------------------------------------------
 
-from frames import * 
+from editor.variables import * 
+
+try:
+    from editor.variables import * 
+    fichier.writelines('Frames successfully loaded\n')
+except:
+    fichier.writelines('Frames failed\n')
+    fichier.writelines('You should have framesX3.py at the wxgui/variables\n')
+    fichier.close()
+    perror()
+    
 try:	
-    from frames import * 		
+    from editor.frames import * 		
     fichier.writelines('Frames successfully loaded\n')
 except:
     fichier.writelines('Frames failed\n')
