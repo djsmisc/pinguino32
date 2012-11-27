@@ -422,13 +422,6 @@ class General:
         self.AutoCompleter.ShowCompleter(word, -1)
 
 
-#######################################################################################
-#######################################################################################
-#######################################################################################
-#######################################################################################
-
-
-
 # ------------------------------------------------------------------------------
 # Decorator to debug time
 # ------------------------------------------------------------------------------
@@ -566,8 +559,8 @@ class General:
             #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
             self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
             #self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
-        for b in range(len(boardlist)):
-            self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
+        #for b in range(len(boardlist)):
+            #self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
 
         #self.Bind(wx.EVT_MENU_RANGE, self.OnTheme, id=self.ID_THEME1, id2=self.ID_THEME1 + self.themeNum)
         if DEV:
@@ -853,32 +846,6 @@ class General:
         try: self.toolbar.ClearTools()
         except:
             self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, (wx.DefaultSize), wx.TB_FLAT | wx.TB_NODIVIDER)
-            #self.getChoiceBoards()
-            #self.getTextCtrlDevices()
-
-        # Get size of new theme's icons
-        #icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-        #iconSize = icon.GetSize()
-
-        #self.toolbar.SetToolBitmapSize((5, 5))
-
-        #modes = ["USB Bootloader", "Serial Bootloader", "ICSP (no USB boot.)"]
-        #self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
-        #self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", "USB Bootloader"))
-        #self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
-        #self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
-
-        #mode = self.getElse("IDE", "boardmode", "USB Bootloader")
-        #if mode == "USB Bootloader":
-            #boardName = self.getElse("IDE", "Board", "Pinguino 2550")
-            #self.choiceBoards.Show()
-            #self.textCtrlDevices.Hide()
-            ##self.setBoard(boardName)
-
-        #elif mode == "ICSP (no USB boot.)":
-            #self.setBoard("Pinguino (no Bootloader)")
-            #self.choiceBoards.Hide()
-            #self.textCtrlDevices.Show()   
 
         # add2Toolbar is part of DrawToolbar
         def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
@@ -911,9 +878,6 @@ class General:
         self.toolbar.AddSeparator()
 
         add2Toolbar("board", "Selector Board", self.OnViewSelectDevice, _("Select a board"))
-        #self.toolbar.AddControl(self.choiceMode)	
-        #self.toolbar.AddControl(self.choiceBoards) 	    
-        #self.toolbar.AddControl(self.textCtrlDevices)
 
         add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
         add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
