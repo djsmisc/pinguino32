@@ -142,21 +142,21 @@ class Pinguino(framePinguinoX, Editor):
         self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
         self.AutoCompleter.Hide()
 
-        ########################################
-        #Select 8-bit Device frame build
+        #########################################
+        ##Select 8-bit Device frame build
         
-        # check if p8 directory exists (some users only have p32)
-        if os.path.exists(os.path.join(HOME_DIR, self.osdir, 'p8')):
-            #CharsCount = self.getElse("Completer", "charscount", 1)
-            #MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
-            self.DeviceList = PicListIDE(self)
-            self.DeviceList.__init_list__(self)
-            self.DeviceList.Hide()
-            proclist = self.getPIC18F()
-	    self.DeviceList.setItems(proclist)
+        ## check if p8 directory exists (some users only have p32)
+        #if os.path.exists(os.path.join(HOME_DIR, self.osdir, 'p8')):
+            ##CharsCount = self.getElse("Completer", "charscount", 1)
+            ##MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
+            #self.DeviceList = PicListIDE(self)
+            #self.DeviceList.__init_list__(self)
+            #self.DeviceList.Hide()
+            #proclist = self.getPIC18F()
+	    #self.DeviceList.setItems(proclist)
 
-        else:
-            print 'Warning : no p8 directory'
+        #else:
+            #print 'Warning : no p8 directory'
             
         self.DrawToolbar()
 	
@@ -686,8 +686,7 @@ class Pinguino(framePinguinoX, Editor):
 	    self.Thread_curBoard.start()
 
     #----------------------------------------------------------------------
-    def setBoard(self, name):
-	#print "OK"
+    def setBoard(self, arch, mode, name):
         # clear all the lists before rebuild them
         del self.rw[:]
         del self.regobject[:]
@@ -695,13 +694,25 @@ class Pinguino(framePinguinoX, Editor):
         del self.reservedword[:]
         del self.libinstructions[:]
 
-        for board in boardlist:
-            if name == board.name:
-                self.curBoard = board
-
-        #self.readlib(self.curBoard) #So slow	
-        self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
-        self.Thread_curBoard.start()
+	if mode == "BOOT":
+	    for board in boardlist:
+		if name == board.name:
+		    self.curBoard = board
+	    self.extraName = ""
+		    
+	else:
+	    self.curBoard = boardlist[0]
+	    self.curBoard.proc = name
+	    self.curBoard.board = "PIC"+name.upper()
+	    self.extraName = " [" + self.curBoard.board + "]"
+	    
+	self.displaymsg(_("Changing board")+"...", 0)
+	self.statusBarEditor.SetStatusText(number=2, text=self.curBoard.name+self.extraName+" - "+mode)
+	if sys.platform=='darwin':
+	    self.readlib(self.curBoard) #So slow
+	else:
+	    self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+	    self.Thread_curBoard.start()
 
 ## ------------------------------------------------------------------------------
 ## OnPaneClose: wx.aui managed window is about to be closed
@@ -763,7 +774,7 @@ class Pinguino(framePinguinoX, Editor):
 
         info = wx.AboutDialogInfo()
         #bmp = wx.Icon(os.path.join(THEME_DIR, 'logoX3.png'), wx.BITMAP_TYPE_PNG)
-        image = wx.Image(os.path.join(THEME_DIR, 'logoX3.png'), wx.BITMAP_TYPE_PNG)
+        image = wx.Image(os.path.join(THEME_DIR, 'logo3D.png'), wx.BITMAP_TYPE_PNG)
         image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
         bmp = wx.BitmapFromImage(image)
         #bmp = image.ConvertToBitmap()
@@ -920,35 +931,35 @@ class Pinguino(framePinguinoX, Editor):
 # Draw toolbar icons
 # ------------------------------------------------------------------------------
 
-    #----------------------------------------------------------------------
-    def getChoiceBoards(self):
-        try: self.choiceBoards.Destroy()
-        except: pass
+    ##----------------------------------------------------------------------
+    #def getChoiceBoards(self):
+        #try: self.choiceBoards.Destroy()
+        #except: pass
     
-        icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-        iconSize = icon.GetSize()
+        #icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+        #iconSize = icon.GetSize()
 	
-        boards = []
-        for i in self.boardlist: boards.append(i.name)
-        #self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
-        choiceBoards = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), boards[1:], wx.TE_READONLY)
-        #self.choiceBoards.SetSelection(index-1)
-        choiceBoards.Bind(wx.EVT_COMBOBOX, lambda x:self.OnBoard("board"))
-        choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
-        name = self.getElse("IDE", "board", "Pinguino 2550")
-        choiceBoards.SetValue(name)
-        self.choiceBoards = choiceBoards
+        #boards = []
+        #for i in self.boardlist: boards.append(i.name)
+        ##self.choiceBoards = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), boards, 0 )
+        #choiceBoards = wx.ComboBox(self.toolbar, wx.ID_ANY, "", wx.DefaultPosition, (-1, iconSize.height), boards[1:], wx.TE_READONLY)
+        ##self.choiceBoards.SetSelection(index-1)
+        #choiceBoards.Bind(wx.EVT_COMBOBOX, lambda x:self.OnBoard("board"))
+        #choiceBoards.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+        #name = self.getElse("IDE", "board", "Pinguino 2550")
+        #choiceBoards.SetValue(name)
+        #self.choiceBoards = choiceBoards
 
-    #----------------------------------------------------------------------
-    def getTextCtrlDevices(self):
-        try: self.textCtrlDevices.Destroy()
-        except: pass
+    ##----------------------------------------------------------------------
+    #def getTextCtrlDevices(self):
+        #try: self.textCtrlDevices.Destroy()
+        #except: pass
 
-        textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
-        textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
-        name = self.getElse("IDE", "boardNoBoot", "18f1220")
-        textCtrlDevices.SetValue(name)
-        self.textCtrlDevices = textCtrlDevices
+        #textCtrlDevices = wx.TextCtrl(self.toolbar, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, self.choiceBoards.Size, wx.TE_READONLY)
+        #textCtrlDevices.Bind(wx.EVT_LEFT_DOWN, self.DeviceList.activate)
+        #name = self.getElse("IDE", "boardNoBoot", "18f1220")
+        #textCtrlDevices.SetValue(name)
+        #self.textCtrlDevices = textCtrlDevices
 
     ##----------------------------------------------------------------------
     #def DrawToolbar(self):
@@ -1093,8 +1104,8 @@ class Pinguino(framePinguinoX, Editor):
         for i in range(len(fixed_rw)):
             self.reservedword.append(fixed_rw[i])
 
-        if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
-            self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
+        #if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
+	self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
 
 	self.changingBoard = False	
 	
@@ -1701,9 +1712,9 @@ class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
 #class StdoutIDE(frameStdout, Stdout):
     #""""""
 
-########################################################################
-class PicListIDE(FrameSelectDevice_, PICpopup):
-    """"""
+#########################################################################
+#class PicListIDE(FrameSelectDevice_, PICpopup):
+    #""""""
 
 #########################################################################
 #class ConfigDevice(FrameSelectDevice):

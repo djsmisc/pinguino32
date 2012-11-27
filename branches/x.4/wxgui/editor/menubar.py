@@ -285,9 +285,9 @@ class Menubar:
         
         
         #self.setConfig("IDE","Board", self.curBoard.name)
-        self.setConfig("IDE","Board", self.choiceBoards.Value)
-        self.setConfig("IDE","BoardNoBoot", self.textCtrlDevices.Value)
-        self.setConfig("IDE","BoardMode", self.choiceMode.GetStringSelection())
+        #self.setConfig("IDE","Board", self.choiceBoards.Value)
+        #self.setConfig("IDE","BoardNoBoot", self.textCtrlDevices.Value)
+        #self.setConfig("IDE","BoardMode", self.choiceMode.GetStringSelection())
         
         panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
         panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"

@@ -49,4 +49,10 @@ last_count = 0
 searchreplace = [255, 250, 70]
 codenavigation = [120, 255, 152]
 selection = [241, 132, 88]
-codeerror = [255, 96, 96]
+codeerror = [241, 96, 96]
+
+[Board]
+architectute = 8
+mode = BOOT
+family = 18fxxx
+device = Pinguino 2550

@@ -131,7 +131,7 @@ class menubarPinguino ( wx.MenuBar ):
 		self.Append( self.menuView, _(u"View") ) 
 		
 		self.menuPinguino = wx.Menu()
-		self.menuItemSelectDevice = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Board Selector")+ u"\t" + u"F9", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemSelectDevice = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Selector Board")+ u"\t" + u"F9", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemSelectDevice )
 		
 		self.menuPinguino.AppendSeparator()
@@ -1168,48 +1168,13 @@ class frameUpgrade ( wx.Frame ):
 	
 
 ###########################################################################
-## Class FrameSelectDevice_
-###########################################################################
-
-class FrameSelectDevice_ ( wx.Frame ):
-	
-	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Select Device"), pos = wx.DefaultPosition, size = wx.Size( 508,419 ), style = wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
-		
-		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
-		
-		bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.m_panel33 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.listCtrl_devices = wx.ListCtrl( self.m_panel33, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_AUTOARRANGE|wx.LC_LIST )
-		bSizer35.Add( self.listCtrl_devices, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		
-		self.m_panel33.SetSizer( bSizer35 )
-		self.m_panel33.Layout()
-		bSizer35.Fit( self.m_panel33 )
-		bSizer34.Add( self.m_panel33, 1, wx.ALL|wx.EXPAND, 0 )
-		
-		
-		self.SetSizer( bSizer34 )
-		self.Layout()
-		
-		self.Centre( wx.BOTH )
-	
-	def __del__( self ):
-		pass
-	
-
-###########################################################################
 ## Class FrameSelectDevice
 ###########################################################################
 
 class FrameSelectDevice ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Board Selector"), pos = wx.DefaultPosition, size = wx.Size( 673,344 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_TOOL_WINDOW|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Selector Board"), pos = wx.DefaultPosition, size = wx.Size( 673,344 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_TOOL_WINDOW|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
