@@ -36,6 +36,7 @@ class BoarSelector:
         """"""
         self.IDE = IDE
 
+	self.buttonBoxOK.SetDefault()
 
         self.buttonBoxCancel.Bind(wx.EVT_BUTTON, self.b_cancel)
         self.buttonBoxOK.Bind(wx.EVT_BUTTON, self.b_acept)
@@ -45,6 +46,8 @@ class BoarSelector:
         self.IDE.loadConfig()
         self.ARCH = self.IDE.getElse("Board", "architectute", 8)
         self.MODE = self.IDE.getElse("Board", "mode", "BOOT")
+        self.FAMILY = self.IDE.getElse("Board", "family", "18fxxx")
+        self.DEVICE = self.IDE.getElse("Board", "device", "Pinguino 2550")
         
         if self.ARCH == 8: self.radioBox_arch.SetSelection(0)
         else: self.radioBox_arch.SetSelection(1)
@@ -53,17 +56,26 @@ class BoarSelector:
         else: self.radioBox_mode.SetSelection(0)        
 
         self.new_choices_fam()
-        self.new_choices_dev()
+	
+	if self.FAMILY in self.radioBox_famChoices:
+	    index = self.radioBox_famChoices.index(self.FAMILY)
+	    self.radioBox_fam.SetSelection(index)	
+	    
+	self.new_choices_dev()	
+
+	index = self.radioBox_devChoices.index(self.DEVICE)
+	self.radioBox_dev.SetSelection(index)
+	
 
 
     #----------------------------------------------------------------------
     def b_acept(self, event=None):
         self.IDE.setConfig("Board", "architectute", self.ARCH)
         self.IDE.setConfig("Board", "mode", self.MODE)
-        
-        
+	self.IDE.setConfig("Board", "device", self.DEVICE)
+	self.IDE.setConfig("Board", "family", self.FAMILY)
         self.IDE.saveConfig()
-        
+        self.IDE.setBoard(self.ARCH, self.MODE, self.DEVICE)  #To set board in wxgui/pinguino.py
         self.Close()
         
     #----------------------------------------------------------------------
@@ -79,6 +91,13 @@ class BoarSelector:
         elif board == 1: self.ARCH = 32
 
         self.new_choices_fam()
+	self.r_device()
+	
+    #----------------------------------------------------------------------
+    def r_device(self, event=None):
+        board = self.radioBox_dev.GetSelection()
+	if board == -1: return  #No list ICSP 32-bit
+        self.DEVICE = self.radioBox_devChoices[board]
 
     #----------------------------------------------------------------------
     def r_mode(self, event=None):
@@ -87,6 +106,7 @@ class BoarSelector:
         elif mode == 1: self.MODE = "BOOT"
 
         self.new_choices_fam()
+	self.r_device()
         
     #----------------------------------------------------------------------
     def r_fam(self, event=None):
@@ -101,14 +121,15 @@ class BoarSelector:
         except: pass 
         columns, self.radioBox_famChoices = self.IDE.getfamilies(self.ARCH, self.MODE)
         if len(self.radioBox_famChoices) == 0:
-            self.FAMILY = None
             self.new_choices_dev()
             return
 	self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Family"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_famChoices, columns, wx.RA_SPECIFY_COLS )
 	self.radioBox_fam.SetSelection( 0 )	
         self.buildChoicesFam()
-        self.r_fam()
         self.new_choices_dev()
+	if self.FAMILY in self.radioBox_famChoices:
+	    index = self.radioBox_famChoices.index(self.FAMILY)
+	    self.radioBox_fam.SetSelection(index)	
 
 
     #----------------------------------------------------------------------
@@ -125,6 +146,7 @@ class BoarSelector:
         
         self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_devChoices, columns, wx.RA_SPECIFY_COLS|wx.RA_SPECIFY_ROWS )
         self.radioBox_dev.SetSelection( 0 )
+	self.radioBox_dev.Bind(wx.EVT_RADIOBOX, self.r_device)
         
         self.buildChoicesDev()
         

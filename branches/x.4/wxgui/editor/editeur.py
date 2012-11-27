@@ -163,11 +163,11 @@ class editor:
 
         stc.SetMargins(2,2)
 
-        stc.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER)
+        stc.SetMarginType(1, wx.stc.STC_MARGIN_NUMBER) 
         stc.SetMarginWidth(1, 40)
         stc.SetMarginWidth(2, 10)
 
-        stc.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,"fore:#000000,back:#afc8e1ff,size:500")                
+        stc.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,"fore:#000000,back:#afc8e1ff,size:500")             
 
         stc.SetMarginSensitive(1, True)
         stc.SetMarginSensitive(2, True)
@@ -263,6 +263,7 @@ class editor:
             self.editeur.AppendText("\n\n")
             self.editeur.GotoLine(self.editeur.LineCount)
             self.insertSnippet("Bare Minimum {snippet}")
+            self.editeur.SetFocus()
         
         
         self.update_dockFiles()

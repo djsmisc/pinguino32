@@ -640,6 +640,13 @@ class General:
 # ----------------------------------------------------------------------
     def loadSettings(self):
         self.loadConfig()
+        
+        arch = self.getElse("Board", "architectute", 8)
+        mode = self.getElse("Board", "mode", "BOOT")
+        #family = self.IDE.getElse("Board", "family", "18fxxx")
+        device = self.getElse("Board", "device", "Pinguino 2550")
+        self.setBoard(arch, mode, device)
+        
 
         w = self.getElse("IDE", "window/width", 1000)
         h = self.getElse("IDE", "window/height", 500)
@@ -845,45 +852,44 @@ class General:
     def DrawToolbar(self):
         try: self.toolbar.ClearTools()
         except:
-            self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize, wx.TB_FLAT | wx.TB_NODIVIDER)
-            self.getChoiceBoards()
-            self.getTextCtrlDevices()
+            self.toolbar = wx.ToolBar(self, -1, wx.DefaultPosition, (wx.DefaultSize), wx.TB_FLAT | wx.TB_NODIVIDER)
+            #self.getChoiceBoards()
+            #self.getTextCtrlDevices()
 
         # Get size of new theme's icons
-        icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
-        iconSize = icon.GetSize()
+        #icon = wx.Bitmap(os.path.join(THEME_DIR, self.theme, "new.png"), wx.BITMAP_TYPE_ANY)
+        #iconSize = icon.GetSize()
 
-        # Update Bitmap size to fit new icons (not sure that it works !)
-        self.toolbar.SetToolBitmapSize(iconSize)
+        #self.toolbar.SetToolBitmapSize((5, 5))
 
-        modes = ["USB Bootloader", "Serial Bootloader", "ICSP (no USB boot.)"]
-        self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
-        self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", "USB Bootloader"))
-        self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
-        self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
+        #modes = ["USB Bootloader", "Serial Bootloader", "ICSP (no USB boot.)"]
+        #self.choiceMode = wx.Choice(self.toolbar, wx.ID_ANY, wx.DefaultPosition, (-1, iconSize.height), modes, 0)
+        #self.choiceMode.SetStringSelection(self.getElse("IDE", "BoardMode", "USB Bootloader"))
+        #self.choiceMode.Bind(wx.EVT_CHOICE,  lambda x:self.OnBoard("mode"))
+        #self.choiceMode.Bind(wx.EVT_MOUSEWHEEL, lambda x:None)
 
-        mode = self.getElse("IDE", "boardmode", "USB Bootloader")
-        if mode == "USB Bootloader":
-            boardName = self.getElse("IDE", "Board", "Pinguino 2550")
-            self.choiceBoards.Show()
-            self.textCtrlDevices.Hide()
-            self.setBoard(boardName)
+        #mode = self.getElse("IDE", "boardmode", "USB Bootloader")
+        #if mode == "USB Bootloader":
+            #boardName = self.getElse("IDE", "Board", "Pinguino 2550")
+            #self.choiceBoards.Show()
+            #self.textCtrlDevices.Hide()
+            ##self.setBoard(boardName)
 
-        elif mode == "ICSP (no USB boot.)":
-            self.setBoard("Pinguino (no Bootloader)")
-            self.choiceBoards.Hide()
-            self.textCtrlDevices.Show()   
+        #elif mode == "ICSP (no USB boot.)":
+            #self.setBoard("Pinguino (no Bootloader)")
+            #self.choiceBoards.Hide()
+            #self.textCtrlDevices.Show()   
 
         # add2Toolbar is part of DrawToolbar
         def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
             if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
                 id = wx.NewId()
                 self.toolbar.AddLabelTool(id,
-                                          name,
-                                          wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
-                                          wx.NullBitmap, wx.ITEM_NORMAL,
-                                          shdesc,
-                                          lngdesc)
+                    name,
+                    wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
+                    wx.NullBitmap, wx.ITEM_NORMAL,
+                    shdesc,
+                    lngdesc)
                 self.Bind(wx.EVT_TOOL, function, id=id)
 
         add2Toolbar("new", "New", self.OnNew, _("New File"))
@@ -904,9 +910,10 @@ class General:
         add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
         self.toolbar.AddSeparator()
 
-        self.toolbar.AddControl(self.choiceMode)	
-        self.toolbar.AddControl(self.choiceBoards) 	    
-        self.toolbar.AddControl(self.textCtrlDevices)
+        add2Toolbar("board", "Selector Board", self.OnViewSelectDevice, _("Select a board"))
+        #self.toolbar.AddControl(self.choiceMode)	
+        #self.toolbar.AddControl(self.choiceBoards) 	    
+        #self.toolbar.AddControl(self.textCtrlDevices)
 
         add2Toolbar("runw", "Verify", self.OnVerify, _("Compile"))
         add2Toolbar("dwn", "Upload", self.OnUpload, _("Upload to Pinguino Board"))
