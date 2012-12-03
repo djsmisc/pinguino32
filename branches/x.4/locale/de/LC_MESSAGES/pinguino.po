@@ -4,14 +4,14 @@
 # Alexis Sánchez <aasanchez@gmail.com>, 2012.
 #
 # Wiki page: http://wiki.pinguino.cc/index.php/Locale_for_Deutsch
-# Last ID: 4187
+# Last ID: 4375
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Pinguino x.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-07 20:34-0400\n"
-"PO-Revision-Date: 2012-08-07 20:35-0400\n"
+"POT-Creation-Date: 2012-12-03 15:12-0400\n"
+"PO-Revision-Date: 2012-12-03 15:16-0400\n"
 "Last-Translator: Alexis A. Sánchez O. <aasanchez@gmail.com>\n"
 "Language-Team: Pinguino <pinguinocard@googlegroups.com>\n"
 "Language: \n"
@@ -24,726 +24,796 @@ msgstr ""
 "X-Poedit-Country: Germany\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SearchPath-0: /home/alexis/Pinguino/IDE/x4/locale/sources\n"
+"X-Poedit-SearchPath-0: sources\n"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:27
+#: framesX4.py:28
 msgid "New"
 msgstr "Neu"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:30
+#: framesX4.py:31
 msgid "Open"
 msgstr "Öffnen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:33
+#: framesX4.py:34
 msgid "Save"
 msgstr "Speichern"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:36
+#: framesX4.py:37
 msgid "Save as"
 msgstr "Speichern als"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:39
+#: framesX4.py:40
 msgid "Close"
 msgstr "Schliessen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:44
+#: framesX4.py:45
 msgid "Save all"
 msgstr "Speichere alles"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:47
+#: framesX4.py:48
 msgid "Close all"
 msgstr "Alle schliessen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:53
+#: framesX4.py:54
 msgid "Recents"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:57
+#: framesX4.py:58
 msgid "Exit"
 msgstr "Ausgang"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:60
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:805
+#: framesX4.py:61
+#: framesX4.py:864
 msgid "File"
 msgstr "Datei"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:63
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:161
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:858
+#: framesX4.py:64
+#: general.py:171
+#: general.py:867
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:66
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:162
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:859
+#: framesX4.py:67
+#: general.py:172
+#: general.py:868
 msgid "Redo"
 msgstr "Wiederherstellen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:71
+#: framesX4.py:72
 #, fuzzy
 msgid "Show Auto-completer"
 msgstr "Automatische Vervollständigung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:76
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:155
+#: framesX4.py:77
+#: general.py:165
 msgid "Comment/Uncomment"
 msgstr "Kommentieren/Kommentar entfernen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:79
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:156
+#: framesX4.py:80
+#: general.py:166
 msgid "Increase Indent"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:82
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:157
+#: framesX4.py:83
+#: general.py:167
 msgid "Decrease Indent"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:87
+#: framesX4.py:88
 msgid "Find"
 msgstr "Suchen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:90
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:914
+#: framesX4.py:91
+#: framesX4.py:978
 msgid "Replace"
 msgstr "Ersetzen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:95
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:164
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:861
+#: framesX4.py:96
+#: general.py:174
+#: general.py:870
 msgid "Cut"
 msgstr "Ausschneiden"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:98
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:165
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:862
+#: framesX4.py:99
+#: general.py:175
+#: general.py:871
 msgid "Copy"
 msgstr "Kopieren"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:101
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:166
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:863
+#: framesX4.py:102
+#: general.py:176
+#: general.py:872
 msgid "Paste"
 msgstr "Einfügen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:104
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:167
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:864
+#: framesX4.py:105
+#: general.py:177
+#: general.py:873
 msgid "Clear"
 msgstr "Löschen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:107
+#: framesX4.py:108
 msgid "Select all"
 msgstr "Alles auswählen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:112
+#: framesX4.py:113
 msgid "Preferences..."
 msgstr "Voreinstellungen..."
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:115
+#: framesX4.py:116
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:118
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:207
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:614
+#: framesX4.py:119
+#: general.py:509
+#: general.py:811
 msgid "Tools"
 msgstr "Werkzeuge"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:122
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:313
+#: framesX4.py:123
+#: general.py:508
 msgid "Output"
 msgstr "Ausgabe"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:126
+#: framesX4.py:127
 msgid "Toolbar"
 msgstr "Werkzeugleiste"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:130
+#: framesX4.py:131
 msgid "View"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:134
+#: framesX4.py:134
+#: framesX4.py:1177
+#, fuzzy
+msgid "Selector Board"
+msgstr "Alles auswählen"
+
+#: framesX4.py:140
 msgid "None"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:138
+#: framesX4.py:144
 msgid "USB CDC (serial emulation)"
 msgstr "USB CDC (serielle emulation)"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:141
+#: framesX4.py:147
 msgid "UART (serial)"
 msgstr "UART (seriell)"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:144
+#: framesX4.py:150
 msgid "Debug mode"
 msgstr "Fehlersuchmodus"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:146
+#: framesX4.py:152
 msgid "View stdout"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:149
+#: framesX4.py:155
 msgid "Check for Updates..."
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:154
+#: framesX4.py:160
 msgid "Upload"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:157
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:871
+#: framesX4.py:163
+#: general.py:882
 msgid "Compile"
 msgstr "Übersetzen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:160
+#: framesX4.py:166
 msgid "If Compile then Upload"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:163
+#: framesX4.py:169
 msgid "Pinguino"
 msgstr "Pinguino"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:166
+#: framesX4.py:172
 msgid "Keywords"
 msgstr "Schlüsselwörter"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:170
+#: framesX4.py:176
 msgid "Website"
 msgstr "Internetseite Seite"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:173
+#: framesX4.py:179
 msgid "Wiki"
 msgstr "Wiki"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:176
+#: framesX4.py:182
 msgid "Forum"
 msgstr "Forum"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:179
+#: framesX4.py:185
 msgid "Blog"
 msgstr "Blog"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:182
+#: framesX4.py:188
 msgid "Group"
 msgstr "Gruppe"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:185
+#: framesX4.py:191
 msgid "Shop"
 msgstr "Shop"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:188
+#: framesX4.py:194
 msgid "Links"
 msgstr "Links"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:192
+#: framesX4.py:198
 msgid "About..."
 msgstr "Über ..."
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:195
+#: framesX4.py:201
 msgid "Help"
 msgstr "Hilfe"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:209
+#: framesX4.py:215
 msgid "Preferences"
 msgstr "Voreinstellungen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:231
+#: framesX4.py:227
+#: framesX4.py:238
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
+#: framesX4.py:227
 msgid "Source Code Font/Size"
 msgstr "Quellcode Schriftart/Schriftgröße"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
+#: framesX4.py:227
 msgid "Auto-completion"
 msgstr "Automatische Vervollständigung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
+#: framesX4.py:227
 msgid "Auto-insert"
 msgstr "Automatisches Einfügen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
+#: framesX4.py:227
 msgid "Open/Save files"
 msgstr "Öffne/Speichere Dateien"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
+#: framesX4.py:227
 msgid "Highlight"
 msgstr "Hervorhebung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:221
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:1043
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:1067
+#: framesX4.py:227
+#: framesX4.py:1115
+#: framesX4.py:1136
 msgid "Upgrade"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:245
+#: framesX4.py:252
 msgid "Theme"
 msgstr "Thema"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:260
+#: framesX4.py:268
 msgid "appearance"
 msgstr "Erscheinung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:269
+#: framesX4.py:277
 msgid "Use default"
 msgstr "Nutze Voreinstellungen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:275
+#: framesX4.py:283
 msgid "Use selected"
 msgstr "Benutze ausgewähltes"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:288
+#: framesX4.py:290
+msgid "Also use in the output"
+msgstr ""
+
+#: framesX4.py:302
 msgid "Tab size"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:304
+#: framesX4.py:319
 msgid "souce_code_font_size"
 msgstr "Quellcodeschriftgröße"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:311
+#: framesX4.py:326
 msgid "Source completion"
 msgstr "Quellcodevervollständigung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:320
+#: framesX4.py:335
 msgid "After characters"
 msgstr "Nach Zeichen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:326
+#: framesX4.py:341
 msgid "Disable auto-completer"
 msgstr "Schalte automatische Vervollständigung aus"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:332
+#: framesX4.py:347
 msgid "Items count"
 msgstr "Objektzähler"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:339
-msgid "Insert arguments with \"(\""
+#: framesX4.py:354
+msgid "Insert argumentets with \"(\""
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:346
+#: framesX4.py:362
 msgid "autocompletion"
 msgstr "automatische Vervollständigung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:353
+#: framesX4.py:369
 msgid "Auto-close"
 msgstr "Automatisches Schließen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:359
+#: framesX4.py:375
 msgid "Brackets: []"
 msgstr "Eckige Klammern: []"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:365
+#: framesX4.py:381
 msgid "Double quotes: \"\""
 msgstr "Doppelte Anführungszeichen \"\""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:371
+#: framesX4.py:387
 msgid "Keys: {}"
 msgstr "Geschweifte Klammern: {}"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:377
+#: framesX4.py:393
 msgid "Parentheses: ()"
 msgstr "Klammern: ()"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:383
+#: framesX4.py:399
 msgid "Single quotes: ''"
 msgstr "Apostroph: ''"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:389
+#: framesX4.py:406
 msgid "auto_insert"
 msgstr "automatisches Einfügen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:393
+#: framesX4.py:410
 msgid "New file"
 msgstr "Neue Datei"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:398
+#: framesX4.py:415
 msgid "With template"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:401
+#: framesX4.py:418
 msgid "Empty"
 msgstr "Leer"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:411
+#: framesX4.py:430
 msgid "Auto-save"
 msgstr "automatisches Speichern"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:418
+#: framesX4.py:437
 msgid "Each (sec)"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:424
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:442
+#: framesX4.py:443
+#: framesX4.py:463
 msgid "Never"
 msgstr "Nie"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:434
+#: framesX4.py:455
 msgid "Open last files"
 msgstr "Die letzte Datei öffnen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:439
+#: framesX4.py:460
 msgid "All existing files"
 msgstr "Alle vorhandenen Dateien"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:455
+#: framesX4.py:479
 msgid "open_save_files"
 msgstr "oeffne_gespeicherte_dateien"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:462
+#: framesX4.py:486
 msgid "Search and Replace"
 msgstr "Suchen und Ersetzen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:470
+#: framesX4.py:495
 msgid "Code Navigation"
 msgstr "Quelltext Navigation"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:478
+#: framesX4.py:504
 msgid "Selection"
 msgstr "Auswahl"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:489
+#: framesX4.py:513
+msgid "Error Line"
+msgstr ""
+
+#: framesX4.py:526
 msgid "highligh"
 msgstr "hervorheben"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:493
+#: framesX4.py:530
 msgid "Check for updates at startup"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:500
+#: framesX4.py:538
 msgid "a page"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:516
+#: framesX4.py:555
 msgid "Restore Defaults"
 msgstr "Voreinstellungen wiederherstellen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:522
+#: framesX4.py:561
 msgid "Apply"
 msgstr "wende an"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:525
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:1072
-msgid "Cancel"
-msgstr ""
+#: framesX4.py:564
+#: framesX4.py:1144
+msgid "Ok"
+msgstr "Ok"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:553
+#: framesX4.py:594
 msgid "Pinguino Functions"
 msgstr "Pinguino Funktionen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:565
+#: framesX4.py:606
 msgid " "
 msgstr " "
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:630
+#: framesX4.py:676
 msgid "Pinguino IDE x.4"
 msgstr "Pinguino IDE x.4"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:656
+#: framesX4.py:703
 msgid "Editor"
 msgstr "Editor"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:705
+#: framesX4.py:754
 msgid ">>>"
 msgstr ">>>"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:712
+#: framesX4.py:762
 msgid "Send"
 msgstr "Senden"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:745
+#: framesX4.py:799
 msgid "Functions"
 msgstr "Funktionen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:766
+#: framesX4.py:821
 msgid "Variables"
 msgstr "Variablen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:781
+#: framesX4.py:837
 msgid "Directives"
 msgstr "Anweisungen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:815
+#: framesX4.py:874
 msgid "Directories"
 msgstr "Verzeichnisse"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:821
+#: framesX4.py:880
 #, fuzzy
 msgid "Select a folder"
 msgstr "Alles auswählen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:833
+#: framesX4.py:893
 msgid "Files"
 msgstr "Dateien"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:842
+#: framesX4.py:902
 msgid "*.*"
 msgstr "*.*"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:842
+#: framesX4.py:902
 msgid "*.pde"
 msgstr "*.pde"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:842
+#: framesX4.py:902
 msgid "*.c"
 msgstr "*.c"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:842
+#: framesX4.py:902
 msgid "*.h"
 msgstr "*.h"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:856
+#: framesX4.py:918
 msgid "Documents"
 msgstr "Dokumente"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:863
+#: framesX4.py:925
 msgid "Search:"
 msgstr "Suche:"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:874
+#: framesX4.py:936
 msgid "Replace:"
 msgstr "Ersetze:"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:890
+#: framesX4.py:952
 msgid "Case sensitive"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:900
+#: framesX4.py:963
 msgid "Previous"
 msgstr "Vorherige"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:903
+#: framesX4.py:966
 msgid "Next"
 msgstr "Nächste"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:917
+#: framesX4.py:981
 msgid "Replace all"
 msgstr "Ersetze alle"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:941
+#: framesX4.py:1007
 msgid "Search"
 msgstr "Suche"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:971
+#: framesX4.py:1038
 msgid "Auto-completer"
 msgstr "Automatische Vervollständigung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:996
+#: framesX4.py:1064
 msgid "Stdout"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/framesX3.py:1075
-msgid "Ok"
-msgstr "Ok"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:149
-msgid "Open wiki page in the web browser"
-msgstr "Die Wiki Seite wird im Internetbrowser geöffnet."
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:150
-msgid "Read description"
-msgstr "Beschreibung lesen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/general.py:169
-msgid "Clear All"
-msgstr "Lösche alles"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:63
-msgid "No ports"
+#: framesX4.py:1141
+msgid "Cancel"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:76
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:161
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:172
-msgid "Connected"
-msgstr "verbunden"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:104
-msgid "Debugging!"
-msgstr "Fehlersuche"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:163
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:191
-msgid "No device connected"
-msgstr "kein Gerät angeschlossen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/debugger.py:196
-msgid "device disconnected"
-msgstr "Gerät entfernt"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:143
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:144
-msgid "loading..."
-msgstr "laden ..."
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:144
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:496
-msgid "Welcome to Pinguino IDE"
-msgstr "Willkommen in der Pinguino IDE"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:440
-msgid "unknown"
-msgstr "unbekannt"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:572
-msgid "Changing board"
+#: framesX4.py:1189
+msgid "8-bit"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:721
-msgid "Open file first !!"
-msgstr "Datei zuerst öffnen !!"
+#: framesX4.py:1189
+msgid "32-bit"
+msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:722
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:315
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:377
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:426
+#: framesX4.py:1190
+msgid " Architecture"
+msgstr ""
+
+#: framesX4.py:1194
+msgid "ICSP"
+msgstr ""
+
+#: framesX4.py:1194
+msgid "USB Bootloader"
+msgstr ""
+
+#: framesX4.py:1195
+msgid "Programming Mode"
+msgstr ""
+
+#: framesX4.py:1219
+msgid "XX"
+msgstr ""
+
+#: framesX4.py:1220
+msgid "Sort"
+msgstr ""
+
+#: framesX4.py:1228
+msgid "Device"
+msgstr ""
+
+#: framesX4.py:1229
+msgid "Devices"
+msgstr ""
+
+#: editeur.py:294
+msgid "Choose a file"
+msgstr "eine Datei auswählen"
+
+#: editeur.py:316
+msgid "File is already opened, reload it ?"
+msgstr "Dei Datei ist bereits geöffnet, erst neu laden?"
+
+#: editeur.py:316
+#: editeur.py:378
+#: editeur.py:427
+#: pinguino.py:361
 msgid "Warning"
 msgstr "Warnung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:727
+#: editeur.py:364
+msgid "Save file as"
+msgstr "die Datei sichern als "
+
+#: editeur.py:378
+msgid "File already exist, Overwrite it ?"
+msgstr "Die Datei existiert bereits, diese überschreiben?"
+
+#: editeur.py:427
+msgid "Save file ?"
+msgstr "Die Datei sichern?"
+
+#: debugger.py:63
+msgid "No ports"
+msgstr ""
+
+#: debugger.py:76
+#: debugger.py:161
+#: debugger.py:172
+msgid "Connected"
+msgstr "verbunden"
+
+#: debugger.py:104
+msgid "Debugging!"
+msgstr "Fehlersuche"
+
+#: debugger.py:163
+#: debugger.py:191
+msgid "No device connected"
+msgstr "kein Gerät angeschlossen"
+
+#: debugger.py:196
+msgid "device disconnected"
+msgstr "Gerät entfernt"
+
+#: pinguino.py:128
+#: pinguino.py:129
+msgid "loading..."
+msgstr "laden ..."
+
+#: pinguino.py:129
+#: pinguino.py:132
+#: general.py:759
+msgid "Welcome to Pinguino IDE"
+msgstr "Willkommen in der Pinguino IDE"
+
+#: pinguino.py:272
+msgid "Changing board"
+msgstr ""
+
+#: pinguino.py:352
+#: pinguino.py:451
+msgid "Please wait a moment."
+msgstr ""
+
+#: pinguino.py:360
+msgid "Open file first !!"
+msgstr "Datei zuerst öffnen !!"
+
+#: pinguino.py:366
 msgid "Board:"
 msgstr "Board:"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:728
+#: pinguino.py:367
 msgid "Proc:"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:729
+#: pinguino.py:368
 msgid "File:"
 msgstr "Datei:"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:747
-msgid "error while compiling file "
+#: pinguino.py:386
+#, fuzzy
+msgid "error while compiling"
 msgstr "Fehler bei der Übersetzung"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:751
+#: pinguino.py:387
+msgid "check highlighted lines in your code"
+msgstr ""
+
+#: pinguino.py:391
 msgid "error while linking"
 msgstr "Fehler beim Verknüpfen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:755
+#: pinguino.py:395
 msgid "compilation done"
 msgstr "Übersetzung abgeschlossen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:757
+#: pinguino.py:397
 msgid "seconds process time"
 msgstr "sekunden Rechenzeit"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:789
+#: pinguino.py:433
 msgid "File must be verified/compiled before upload"
 msgstr "Die Datei muß geändert/übersetzt werden, bevor diese hochgeladen werden kann."
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:790
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:797
+#: pinguino.py:434
+#: pinguino.py:441
 msgid "Warning!"
 msgstr "Warnung!"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:796
+#: pinguino.py:440
 msgid "File must be saved before upload"
 msgstr "Die Datei muß gespeichert werden, bevor sie hochgeladen werden kann"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:853
-msgid "New File"
-msgstr "Neue Datei"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:854
-msgid "Open File"
-msgstr "Datei öffnen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:855
-msgid "Save File"
-msgstr "Datei sichern"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:856
-msgid "Close File"
-msgstr "Datei schliessen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:865
-msgid "Select"
-msgstr "Auswählen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:867
-msgid "Search in File"
-msgstr "in der Datei suchen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:868
-msgid "Replace in File"
-msgstr "in der Datei ersetzen"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:872
-msgid "Upload to Pinguino Board"
-msgstr "hochladen zum Pinguino Board"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:874
-msgid "set preferences of Pinguino IDE"
-msgstr "setze Voreinstellungen des Pinguino IDE"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:876
-msgid "Exit Pinguino IDE"
-msgstr "Verlasse Pinguino IDE"
-
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/pinguino.py:948
+#: pinguino.py:524
 msgid "Board config"
 msgstr "Boardkonfiguration"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:48
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:53
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:59
+#: dock_files.py:47
+#: dock_files.py:52
+#: dock_files.py:58
 msgid "Name"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:49
+#: dock_files.py:48
 msgid "Type"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:50
+#: dock_files.py:49
 #, fuzzy
 msgid "In function"
 msgstr "Funktionen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:51
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:56
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:61
+#: dock_files.py:50
+#: dock_files.py:55
+#: dock_files.py:60
 msgid "Line"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:54
+#: dock_files.py:53
 msgid "Return"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:55
+#: dock_files.py:54
 msgid "Parameters"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:58
+#: dock_files.py:57
 #, fuzzy
 msgid "Directive"
 msgstr "Anweisungen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/dock_files.py:60
+#: dock_files.py:59
 msgid "Value"
 msgstr ""
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:293
-msgid "Choose a file"
-msgstr "eine Datei auswählen"
+#: general.py:159
+msgid "Open wiki page in the web browser"
+msgstr "Die Wiki Seite wird im Internetbrowser geöffnet."
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:315
-msgid "File is already opened, reload it ?"
-msgstr "Dei Datei ist bereits geöffnet, erst neu laden?"
+#: general.py:160
+msgid "Read description"
+msgstr "Beschreibung lesen"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:363
-msgid "Save file as"
-msgstr "die Datei sichern als "
+#: general.py:179
+msgid "Clear All"
+msgstr "Lösche alles"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:377
-msgid "File already exist, Overwrite it ?"
-msgstr "Die Datei existiert bereits, diese überschreiben?"
+#: general.py:704
+msgid "unknown"
+msgstr "unbekannt"
 
-#: /home/alexis/Pinguino/IDE/x4/locale/sources/editeur.py:426
-msgid "Save file ?"
-msgstr "Die Datei sichern?"
+#: general.py:862
+msgid "New File"
+msgstr "Neue Datei"
+
+#: general.py:863
+msgid "Open File"
+msgstr "Datei öffnen"
+
+#: general.py:864
+msgid "Save File"
+msgstr "Datei sichern"
+
+#: general.py:865
+msgid "Close File"
+msgstr "Datei schliessen"
+
+#: general.py:874
+msgid "Select"
+msgstr "Auswählen"
+
+#: general.py:876
+msgid "Search in File"
+msgstr "in der Datei suchen"
+
+#: general.py:877
+msgid "Replace in File"
+msgstr "in der Datei ersetzen"
+
+#: general.py:880
+#, fuzzy
+msgid "Select a board"
+msgstr "Alles auswählen"
+
+#: general.py:883
+msgid "Upload to Pinguino Board"
+msgstr "hochladen zum Pinguino Board"
+
+#: general.py:885
+msgid "set preferences of Pinguino IDE"
+msgstr "setze Voreinstellungen des Pinguino IDE"
+
+#: general.py:887
+msgid "Exit Pinguino IDE"
+msgstr "Verlasse Pinguino IDE"
 
 #~ msgid "Done"
 #~ msgstr "Erledigt"

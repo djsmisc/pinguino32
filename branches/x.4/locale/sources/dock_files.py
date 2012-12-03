@@ -40,9 +40,8 @@ class File:
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToFunc, self.lateralFunc)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
-        
 
-        line = 50
+        line = 60
         s3 = (self.lat.GetSizeTuple()[0] - line) / 3
 
         self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3)
@@ -59,7 +58,7 @@ class File:
         self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
         self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=s3) 
         self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
-        
+
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):
         textEdit = self.stcpage[self.notebookEditor.GetSelection()]
@@ -117,15 +116,27 @@ class File:
     #----------------------------------------------------------------------
     def updateWidthColums(self):
         line = 60
-        s3 = (self.lateralDefi.GetSizeTuple()[0] - line) / 3
+        withAll = (self.lateralDefi.GetSizeTuple()[0])
         lct = [self.lateralVars, self.lateralDefi, self.lateralFunc]
         for lc in lct:
-            for i in range(3): lc.SetColumnWidth(i, s3)
+            withUse =  lc.GetColumnWidth(0) + lc.GetColumnWidth(1) + lc.GetColumnWidth(2) + lc.GetColumnWidth(3)
+            withExtra = withAll - withUse - 5
+            if withExtra != withUse:
+                lc.SetColumnWidth(0, lc.GetColumnWidth(0) + withExtra)                
             lc.SetColumnWidth(3, line)
         
     #----------------------------------------------------------------------
     def update_dockFiles(self, event=None):
         self.updateWidthColums()
+        
+        if self.notebookEditor.PageCount > 0:
+            self._mgr.GetPane(self.panelOutput).Show()
+            self._mgr.GetPane(self.lat).Show()
+            self.updateIDE()
+        else:
+            self._mgr.GetPane(self.panelOutput).Hide()
+            self._mgr.GetPane(self.lat).Hide()
+            self.updateIDE()
         
         if len(self.stcpage) < 1:
             self.lateralVars.DeleteAllItems()
@@ -149,10 +160,10 @@ class File:
         
         def updateRegex():
             
-            ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*[*]*[\s]*([*\w]+)[\s]*\(([\w ,*.]*)\)[\s]*"
+            ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([*\w]+)[\s]*\(([\w ,*.\[\]]*)\)[\s]*"
             
-            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([ \w\[\]=,]*);"
-            ReStructs  = "[\s]*(struct|union|enum)[\s]*([*\w]*)[\s]*(.+);"
+            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([ \w\[\]=,{}]*);"
+            ReStructs  = "[\s]*(typedef)*[\s]*(struct|union|enum)[\s]*([*\w]*)[\s]*(.+)"
             
             ReTypeDef  = "[\s]*(typedef)[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([\w\[\]]*)[\s]*"#([\w]*)"
             
@@ -203,11 +214,20 @@ class File:
             reg1 = re.match(ReFunction, linea)
             if reg1 != None:
                 if not (linea.replace(" ", "").replace("\n", "").replace("\r", "").endswith(";")):
-                    self.allFunc.append([reg1.group(3),
-                                        reg1.group(2),
-                                        reg1.group(4),                                        
+                    
+                    if reg1.group(3) == "*":
+                        if reg1.group(1) != None: tipo = "pointer to " + " ".join(reg1.group(1)+reg1.group(2))
+                        else:tipo = "pointer to " + reg1.group(2)
+                    else:
+                        if reg1.group(1) != None: tipo = " ".join(reg1.group(1)+reg1.group(2))
+                        else: tipo = reg1.group(2)
+                    
+                    self.allFunc.append([reg1.group(4),
+                                         tipo, 
+                                        #reg1.group(2),
+                                        reg1.group(5),                                        
                                         str(count)])
-                    currentFunction = reg1.group(3)
+                    currentFunction = reg1.group(4)
                                     
             reg2a = re.match(ReVariable, linea)
             reg2b = re.match(ReStructs, linea)
@@ -215,14 +235,15 @@ class File:
             if reg2a != None or reg2b != None:                
                 if reg2b != None: #Struct
                     reg2 = reg2b
-                    tipo = reg2.group(1)
-                    cont = reg2.group(2)
+                    tipo = reg2.group(2)
+                    cont = reg2.group(3)
                 elif reg2a != None: #Variable
                     reg2 = reg2a
                     t = [reg2.group(1), reg2.group(2), reg2.group(3), reg2.group(4)]
                     for i in range(t.count(None)): t.remove(None)
-                    tipo = " ".join(t)
-                    cont = reg2.group(5)
+                    if reg2.group(5) == "*": tipo = "pointer to " + " ".join(t)
+                    else: tipo = " ".join(t)
+                    cont = reg2.group(6)
                     
                 cont = getOutTo("{", "}", cont)
                 if "=" in cont: cont = getOutTo("(", ")", cont)
@@ -300,9 +321,6 @@ class File:
                 count += 1
             self.allDefi_back = self.allDefi[:]
             
-            
 
-            
-                
-        #if event: event.Skip()       
-    
+        if event != None: event.Skip() #Update NoteBook   
+  
