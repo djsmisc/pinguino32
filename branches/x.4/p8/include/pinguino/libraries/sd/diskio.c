@@ -8,14 +8,22 @@
 #include <delay.c>
 //#include <serial.c>
 
-//#define SD_CS			PORTAbits.RA5		// SD chip select
-//#define SD_CS_TRIS		TRISAbits.TRISA5	// SD chip select TRIS
-#define SD_CS			PORTBbits.RB0		// SPI2 Chip Select
-#define SD_CS_TRIS		TRISBbits.TRISB0	// SPI2 Chip Select TRIS
-// adapted to work with PIC 18F46J50 family and remapping functionality
-#define SPI_SCK_TRIS	TRISBbits.TRISB2	// SPI2 Clock TRIS
-#define SPI_MISO_TRIS	TRISBbits.TRISB3	// SPI2 Master input/Slave output TRIS
-#define SPI_MOSI_TRIS	TRISBbits.TRISB1	// SPI2 Master output/Slave input TRIS
+// Pinguino 18F26J50 uses SPI2 (cf. io.c)
+// because SPI1 share same pins as UART1
+#if defined(PIC18F26J50)
+    #define SD_CS			PORTBbits.RB0		// SPI2 Chip Select
+    #define SD_CS_TRIS		TRISBbits.TRISB0	// SPI2 Chip Select TRIS
+    #define SPI_MISO_TRIS	TRISBbits.TRISB1	// SPI2 SDO Master input/Slave output TRIS
+    #define SPI_SCK_TRIS	TRISBbits.TRISB2	// SPI2 SCK Clock TRIS
+    #define SPI_MOSI_TRIS	TRISBbits.TRISB3	// SPI2 SDI Master output/Slave input TRIS
+    #define BUFFER          SSP2BUF
+    #define CONFIG          SSP2CON1
+    #define STATUS          SSP2STAT
+    //#define BF              SSP2STATbits.BF
+    #define WCOL            SSP2CON1bits.WCOL
+    #define FLAG            PIR3bits.SSP2IF
+    #define ENABLE          SSP2CON1bits.SSPEN
+#endif
 
 /* Definitions for MMC/SDC command */
 #define CMD0	(0x40+0)	/* GO_IDLE_STATE */
@@ -45,8 +53,8 @@
 #define SOCKWP	(1<<2)			/* Write protect switch (RD2) */
 #define SOCKINS	(1<<3)			/* Card detect switch (RD3) */
 
-#define	FCLK_SLOW()	(SSP2CON1 = 0x22)	/* Set slow clock (100k-400k) */
-#define	FCLK_FAST()	(SSP2CON1 = 0x21)	/* Set fast clock (depends on the CSD) */
+#define	FCLK_SLOW()	(CONFIG = 0x22)	/* Set slow clock (100k-400k) */
+#define	FCLK_FAST()	(CONFIG = 0x21)	/* Set fast clock (depends on the CSD) */
 
 #define DELAY_PRESCALER   (u8)      8
 #define DELAY_OVERHEAD    (u8)      5
@@ -70,32 +78,34 @@ u8 xmit_spi(unsigned char datax)
 {
     char clear;
 
-    clear = SSP2BUF;        // clear BF
-    PIR3bits.SSP2IF = 0;    // enable SPI2 interrupt
+    clear = BUFFER;        // clear BF
+    FLAG = 0;              // enable SPI2 interrupt
+    BUFFER = datax;        // send data
 
-    SSP2BUF = datax;        //send data
-    if ( SSP2CON1bits.WCOL )
+    if (WCOL)
         return (1);
     else
-        while (!PIR3bits.SSP2IF);
+        while (!FLAG);
+
     return(0);
 /*
-    do {                        // IF SSP2BUF IS FULL IT IS READ BY DUMMY VARIABLE
-        clear = SSP2BUF;        // BEFORE ANYTHING IS WRITTEN THIS WILL MAKE BF = 0
-    } while(SSP2STATbits.BF);   // wait transfer complete 
-	SSP2BUF = datax;			// write to buffer for TX
-	while(!SSP2STATbits.BF);	// wait transfer complete
-	return SSP2BUF;				// read the received value
+    do {                        // IF BUFFER IS FULL IT IS READ BY DUMMY VARIABLE
+        clear = BUFFER;        // BEFORE ANYTHING IS WRITTEN THIS WILL MAKE BF = 0
+    } while(BF);   // wait transfer complete 
+	BUFFER = datax;			// write to buffer for TX
+	while(!BF);	// wait transfer complete
+	return BUFFER;				// read the received value
 */
 }
 
-u8 rcvr_spi(void) {
-  char clear;
-  clear = SSP2BUF; //clear BF
-  PIR3bits.SSP2IF= 0;
-  SSP2BUF = 0xFF; // Initiate bus cycle
-  while (!PIR3bits.SSP2IF);
-  return(SSP2BUF);
+u8 rcvr_spi(void)
+{
+    char clear;
+    clear = BUFFER; //clear BF
+    FLAG = 0;
+    BUFFER = 0xFF; // Initiate bus cycle
+    while (!FLAG);
+    return(BUFFER);
 }
 
 /*-----------------------------------------------------------------------*/
@@ -138,10 +148,10 @@ static void release_spi (void)
 static void power_on (void)
 {
 	DESELECT();
-	SSP2CON1bits.SSPEN = 0; // Disable SPI2
-	SSP2STAT = 0x40;        //mode0,0  stat.CKE(6)=1
-	SSP2CON1 = 0x02;        //0x02=slow mode0,0 con1.CKP(4)=0
-	SSP2CON1bits.SSPEN = 1; // Enable SPI2 Master Mode
+	ENABLE = 0;         // Disable SPI2
+	STATUS = 0x40;      // mode0,0  stat.CKE(6)=1
+	CONFIG = 0x02;      // 0x02=slow mode0,0 con1.CKP(4)=0
+	ENABLE = 1;         // Enable SPI2 Master Mode
 	Delayms(30);
 	DESELECT();
 }
@@ -152,7 +162,7 @@ static void power_off (void)
 	wait_ready();
 	release_spi();
 
-	SSP2CON1bits.SSPEN = 0;				/* Disable SPI1 */
+	ENABLE = 0;				/* Disable SPI2 */
 
 	return;
 }
@@ -322,7 +332,6 @@ DSTATUS disk_initialize(void)
 				ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;	/* SDv2 */
 			}
 		}
-
 	}
 
     // SDSC or MMC
@@ -338,7 +347,6 @@ DSTATUS disk_initialize(void)
 
 		if (!tmr || send_cmd(CMD16, 512) != 0)			/* Set R/W block length to 512 */
 			ty = 0;
-
 	}
 
 	CardType = ty;
@@ -385,7 +393,8 @@ DRESULT disk_readp (
 		} while (rc == 0xFF && Tim1);
 	}
 
-	if(Tim1) {
+	if (Tim1)
+    {
 		if (rc == 0xFE) {				/* A data packet arrived */
 			bc = 514 - ofs - cnt;
 
@@ -435,7 +444,9 @@ DRESULT disk_writep (
 			wc--; bc--;
 		}
 		res = RES_OK;
-	} else {
+	}
+    else
+    {
 		if (sa) {	/* Initiate sector write process */
 			if (!(CardType & CT_BLOCK)) sa *= 512;	/* Convert to byte address if needed */
 			if (send_cmd(CMD24, sa) == 0) {			/* WRITE_SINGLE_BLOCK */

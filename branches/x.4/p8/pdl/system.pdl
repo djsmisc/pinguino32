@@ -1,0 +1,16 @@
+System.clock SystemClock#include <system.c>
+System.instructionClock GetInstructionClock#include <system.c>
+System.peripheralClock GetPeripheralClock#include <system.c>
+
+System.unlock SystemUnlock#include <system.c>
+System.lock SystemLock#include <system.c>
+System.reset SystemReset#include <system.c>
+System.watchdog SystemWatchdog#include <system.c>
+System.clearWatchdog SystemClearWatchdog#include <system.c>
+System.sleep SystemSleep#include <system.c>
+System.lowPower SystemSleep#include <system.c>
+System.deepSleep SystemDeepSleep#include <system.c>
+System.ultraLowPower SystemDeepSleep#include <system.c>
+System.intOsc SystemIntOsc#include <system.c>
+System.extOsc SystemExtOsc#include <system.c>
+System.timer1Osc SystemTimer1Osc#include <system.c>

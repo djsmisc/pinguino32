@@ -4,7 +4,7 @@
 	PURPOSE:		Digital IO management
 	PROGRAMER:		Jean-Pierre MANDON
 	FIRST RELEASE:	2008
-	LAST RELEASE:	2012/11/19
+	LAST RELEASE:	2012/12/07
 	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
@@ -14,6 +14,7 @@
         regis blanchot 2012/02/14 : Pinguino 26J50 support
         regis blanchot 2012/09/28 : complete rewrite
         regis blanchot 2012/11/19 : Pinguino 1220 and 1320 support
+        regis blanchot 2012/12/07 : Pinguino 25k50 and 45k50 support
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -86,7 +87,7 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 13 - 18
 
 /**********************************************************************/
-#elif defined(PIC18F2550)
+#elif defined(PIC18F2550) || defined(PIC18F25K50)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
@@ -110,7 +111,7 @@ const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
 					pA, pA, pA, pA, pA};            // 13 - 17
 
 /**********************************************************************/
-#elif defined(PIC18F4550)
+#elif defined(PIC18F4550) || defined(PIC18F45K50)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[29]={	_0,_1,_2,_3,_4,_5,_6,_7,		// 0 - 7

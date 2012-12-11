@@ -120,7 +120,7 @@
 	#define LED1	20
 	#define USERLED	20
 
-#else // Pinguino x550 or x6j50
+#else // Pinguino x550, x5k50 or x6j50
 
 	#define B0 0
 //	#define RB0 0
@@ -195,8 +195,8 @@
 	#define CCP1 12
 
     #if defined(PIC18F26J50) || defined(PIC18F46J50)
-	#define LED1	12
-	#define USERLED	12
+        #define LED1	12
+        #define USERLED	12
     #endif
 	
 	#define A0 13
@@ -215,17 +215,6 @@
 //	#define RA3 16
 	#define AN3 16
 
-    #if defined(PIC18F2550) || defined(PIC18F4550) || \
-        defined(PIC18F2455) || defined(PIC18F4455)
-    
-	// run led pin
-	#define A4 18
-	//#define RA4 18
-	#define RUNLED 18
-	#define LED1 18
-	#define USERLED 18
-    #endif
-    
 	#define A5 17
 //	#define RA5 17
 	#define AN4 17
@@ -233,6 +222,18 @@
 	#define HLVDIN 17
 	#define C2OU 17
 
+    #if defined(PIC18F2550) || defined(PIC18F4550) || \
+        defined(PIC18F25K50) || defined(PIC18F45K50) || \
+        defined(PIC18F2455) || defined(PIC18F4455)
+    
+        // run led pin
+        #define A4 18
+        //#define RA4 18
+        #define RUNLED 18
+        #define LED1 18
+        #define USERLED 18
+    #endif
+    
 #endif
 
 #endif /* __PIN_H */

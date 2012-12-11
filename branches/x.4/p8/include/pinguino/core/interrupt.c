@@ -41,6 +41,7 @@
         !defined(PIC18F14K22) && !defined(PIC18LF14K22) && \
         !defined (PIC18F2455) && !defined (PIC18F4455) && \
         !defined (PIC18F2550) && !defined (PIC18F4550) && \
+        !defined (PIC18F25K50) && !defined (PIC18F45K50) && \
         !defined(PIC18F26J50) && !defined(PIC18F46J50)
         #error "Error : this library is intended to be used only with 8-bit Pinguino" 
     #endif
@@ -100,12 +101,20 @@ void detachInterrupt(u8 inter)
 			break;
         #endif
 		case INT_RB:
+		#if defined(PIC18F25K50) || defined(PIC18F45K50)
+			INTCONbits.IOCIE = INT_DISABLE;
+        #else
 			INTCONbits.RBIE = INT_DISABLE;
+        #endif
 			break;
 		#if !defined(PIC18F1220) && !defined(PIC18F1320) && \
             !defined(PIC18F14K22) && !defined(PIC18LF14K22)
 		case INT_USB:
+		#if defined(PIC18F25K50) || defined(PIC18F45K50)
+			PIE3bits.USBIE = INT_DISABLE;
+        #else
 			PIE2bits.USBIE = INT_DISABLE;
+        #endif
 			break;
         #endif
 		case INT_AD:

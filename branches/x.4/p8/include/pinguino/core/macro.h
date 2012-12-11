@@ -13,14 +13,12 @@
 
 	/// ASM
 
-	#define nop()					{_asm nop _endasm;}
-	#define clrwdt()				{_asm clrwdt _endasm;}
-	#define reset()				    {_asm reset _endasm;}
-	#define sleep()				    {OSCCONbits.IDLEN = 0;\
-									_asm sleep _endasm;}
-
-	#define interrupts()			INTCONbits.GIE  = 1;
-	#define noInterrupts()		    INTCONbits.GIE  = 0;
+	#define nop()					{ __asm nop __endasm; }
+	#define clrwdt()				{ __asm clrwdt __endasm; }
+	#define reset()				    { __asm reset __endasm; }
+	#define sleep()				    { __asm sleep __endasm; }
+	#define interrupts()			{ INTCONbits.GIE  = 1; }
+	#define noInterrupts()		    { INTCONbits.GIE  = 0; }
 
 	/// C
 
