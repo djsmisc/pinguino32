@@ -36,10 +36,12 @@ LIBDIRS		=	-L$(OBJDIR)\usb
 # heap size / Regis Blanchot 2012
 # ------------------------------------------------------------------------------
 
+HEAP_SIZE = 16384
 ifeq ($(BOARD),PIC32_PINGUINO_220)
 	HEAP_SIZE = 512
-else
-	HEAP_SIZE = 16384
+endif
+ifeq ($(BOARD),GENERIC32MX220F032)
+	HEAP_SIZE = 512
 endif
 
 # ------------------------------------------------------------------------------
