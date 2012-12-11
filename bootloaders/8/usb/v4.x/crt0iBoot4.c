@@ -28,6 +28,7 @@
 
 /*
  * based on Microchip MPLAB-C18 startup files
+ * modified for pinguino by régis blanchot
  */
 
 extern stack_end;
@@ -80,8 +81,20 @@ _startup (void) __naked
 
     ; Initialize the flash memory access configuration.
     ; This is harmless for non-flash devices, so we do it on all parts.
-    bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
-    bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
+
+	#if defined(__18f2550)  || defined(__18f4550)  || \
+        defined(__18f25k50) || defined(__18f45k50)
+    
+    bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, Access Flash program or data EEPROM memory, not Configuration registers
+    bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, Access Flash program memory, not EEPROM memory
+	
+    #elif defined(__18f26j50) || defined(__18f46j50)
+
+    bsf     0xa6, 2, a      ; EECON1.WREN = 1; enable write to memory
+    bsf     0xa6, 1, a      ; EECON1.WR = 1; Initiates a program memory erase cycle or write cycle
+
+	#endif
+
   __endasm;
 
   /* Initialize global and/or static variables. */

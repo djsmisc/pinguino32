@@ -18,13 +18,16 @@
 /*******************************************************************************
 	boot blinking led
 *******************************************************************************/
-#if defined(__18f2550) || defined(__18f4550) || defined(__18f14k50)
+#if defined(__18f2455)  || defined(__18f4455)  || \
+    defined(__18f2550)  || defined(__18f4550)  || \
+    defined(__18f25k50) || defined(__18f45k50) || \
+    defined(__18f14k50)
 	#define LED_PIN							4
 	#define LED_PORT						_LATA
 	#define LED_TRIS						_TRISA
 #endif
 
-#if defined(__18f26j50)
+#if defined(__18f26j50) || defined(__18f46j50)
 	#define LED_PIN							2
 	#define LED_PORT						_LATC
 	#define LED_TRIS						_TRISC

@@ -47,7 +47,7 @@ if (len(sys.argv) > 1):
         if record_type == 0:
             codesize = codesize + byte_count
     fichier.close()
-    print "code size: %d bytes" % codesize
+    print "code size: %d bytes (0x%x)" % (codesize, codesize)
     print "possible vectors relocation : %s" % hex((int(max_address/1024)+1)*1024)
 else:
     print "No file to proceed"
