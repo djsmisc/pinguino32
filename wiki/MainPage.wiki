@@ -1,0 +1,3 @@
+#labels Featured
+For pinguino Wiki pages refer to:<br/>
+* [http://wiki.pinguino.cc/index.php/Main_Page wiki.pinguino.cc]
