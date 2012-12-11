@@ -8,7 +8,6 @@
 /* Status of Disk Functions */
 typedef u8	DSTATUS;
 
-
 /* Results of Disk Functions */
 typedef enum {
 	RES_OK = 0,		/* 0: Function succeeded */
@@ -16,7 +15,6 @@ typedef enum {
 	RES_NOTRDY,		/* 2: Not ready */
 	RES_PARERR		/* 3: Invalid parameter */
 } DRESULT;
-
 
 /*---------------------------------------*/
 /* Prototypes for disk control functions */

@@ -23,7 +23,8 @@
 #include <sd/diskio.c>	/* Declarations of low level disk I/O functions */
 //#include <string.h>
 //#include <serial.c>
-#include <stdio.c>
+#include <stdio.c>      /* printf */
+
 /*--------------------------------------------------------------------------
 
    Private Functions
@@ -37,14 +38,14 @@ static FATFS *FatFs;	/* Pointer to the file system object (logical drive) */
 /*-----------------------------------------------------------------------*/
 
 /* Fill memory */
-static void mem_set (void* dst, int val, int cnt)
+static void mem_set(void* dst, int val, int cnt)
 {
 	char *d = (char*)dst;
 	while (cnt--) *d++ = (char)val;
 }
 
 /* Compare memory to memory */
-static int mem_cmp (const void* dst, const void* src, int cnt)
+static int mem_cmp(const void* dst, const void* src, int cnt)
 {
 	const char *d = (const char *)dst, *s = (const char *)src;
 	int r = 0;
@@ -58,15 +59,13 @@ static int mem_cmp (const void* dst, const void* src, int cnt)
 	return r;
 }
 
+/*  --------------------------------------------------------------------
+    FAT access - Read value of a FAT entry
+	clst Cluster# to get the link information
+    return	1:IO error, Else:Cluster status
+    ------------------------------------------------------------------*/
 
-
-/*-----------------------------------------------------------------------*/
-/* FAT access - Read value of a FAT entry                                */
-/*-----------------------------------------------------------------------*/
-
-static CLUST get_fat (	/* 1:IO error, Else:Cluster status */
-	CLUST clst	/* Cluster# to get the link information */
-)
+static CLUST get_fat(CLUST clst)
 {
 	u16 wc, bc, ofs;
 	u8 buf[4];
@@ -75,34 +74,36 @@ static CLUST get_fat (	/* 1:IO error, Else:Cluster status */
 	if (clst < 2 || clst >= fs->max_clust)	/* Range check */
 		return 1;
 
-	switch (fs->fs_type) {
-	case FS_FAT12 :
-		bc = (u16)clst; bc += bc / 2;
-		ofs = bc % 512; bc /= 512;
-		if (ofs != 511) {
-			if (disk_readp(buf, fs->fatbase + bc, ofs, 2)) break;
-		} else {
-			if (disk_readp(buf, fs->fatbase + bc, 511, 1)) break;
-			if (disk_readp(buf+1, fs->fatbase + bc + 1, 0, 1)) break;
-		}
-		wc = LD_WORD(buf);
-		return (clst & 1) ? (wc >> 4) : (wc & 0xFFF);
+	switch (fs->fs_type)
+    {
+        case FS_FAT12 :
+            bc = (u16)clst; bc += bc / 2;
+            ofs = bc % 512; bc /= 512;
+            if (ofs != 511)
+            {
+                if (disk_readp(buf, fs->fatbase + bc, ofs, 2)) break;
+            }
+            else
+            {
+                if (disk_readp(buf, fs->fatbase + bc, 511, 1)) break;
+                if (disk_readp(buf+1, fs->fatbase + bc + 1, 0, 1)) break;
+            }
+            wc = LD_WORD(buf);
+            return (clst & 1) ? (wc >> 4) : (wc & 0xFFF);
 
-	case FS_FAT16 :
-		if (disk_readp(buf, fs->fatbase + clst / 256, (u16)(((u16)clst % 256) * 2), 2)) break;
-		return LD_WORD(buf);
-#if _FS_FAT32
-	case FS_FAT32 :
-		if (disk_readp(buf, fs->fatbase + clst / 128, (u16)(((u16)clst % 128) * 4), 4)) break;
-		return LD_DWORD(buf) & 0x0FFFFFFF;
-#endif
+        case FS_FAT16 :
+            if (disk_readp(buf, fs->fatbase + clst / 256, (u16)(((u16)clst % 256) * 2), 2)) break;
+            return LD_WORD(buf);
+
+        #if _FS_FAT32
+        case FS_FAT32 :
+            if (disk_readp(buf, fs->fatbase + clst / 128, (u16)(((u16)clst % 128) * 4), 4)) break;
+            return LD_DWORD(buf) & 0x0FFFFFFF;
+        #endif
 	}
 
 	return 1;	/* An error occured at the disk I/O layer */
 }
-
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Get sector# from cluster#                                             */
@@ -119,9 +120,6 @@ static u32 clust2sect (	/* !=0: Sector number, 0: Failed - invalid cluster# */
 	return (u32)clst * fs->csize + fs->database;
 }
 
-
-
-
 /*-----------------------------------------------------------------------*/
 /* Directory handling - Rewind directory index                           */
 /*-----------------------------------------------------------------------*/
@@ -137,18 +135,15 @@ static FRESULT dir_rewind (
 	clst = dj->sclust;
 	if (clst == 1 || clst >= fs->max_clust)	/* Check start cluster range */
 		return FR_DISK_ERR;
-#if _FS_FAT32
+    #if _FS_FAT32
 	if (!clst && fs->fs_type == FS_FAT32)	/* Replace cluster# 0 with root cluster# if in FAT32 */
 		clst = fs->dirbase;
-#endif
+    #endif
 	dj->clust = clst;						/* Current cluster */
 	dj->sect = clst ? clust2sect(clst) : fs->dirbase;	/* Current sector */
 
 	return FR_OK;	/* Seek succeeded */
 }
-
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Directory handling - Move directory index next                        */
@@ -190,9 +185,6 @@ static FRESULT dir_next (	/* FR_OK:Succeeded, FR_NO_FILE:End of table */
 	return FR_OK;
 }
 
-
-
-
 /*-----------------------------------------------------------------------*/
 /* Directory handling - Find an object in the directory                  */
 /*-----------------------------------------------------------------------*/
@@ -231,12 +223,10 @@ FRESULT dir_find (
 	return res;
 }
 
-
-
-
 /*-----------------------------------------------------------------------*/
 /* Read an object from the directory                                     */
 /*-----------------------------------------------------------------------*/
+
 #if _USE_DIR
 static
 FRESULT dir_read (
@@ -325,12 +315,10 @@ static FRESULT create_name (
 	return FR_OK;
 }
 
-
-
-
 /*-----------------------------------------------------------------------*/
 /* Get file information from directory entry                             */
 /*-----------------------------------------------------------------------*/
+
 #if _USE_DIR
 static void get_fileinfo (		/* No return code */
 	DIR *dj,			/* Pointer to the directory object */
@@ -366,8 +354,6 @@ static void get_fileinfo (		/* No return code */
 	*p = 0;
 }
 #endif /* _USE_DIR */
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Follow a file path                                                    */
@@ -420,9 +406,6 @@ static FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
 	return res;
 }
 
-
-
-
 /*-----------------------------------------------------------------------*/
 /* Check a sector if it is an FAT boot record                            */
 /*-----------------------------------------------------------------------*/
@@ -441,23 +424,18 @@ static u8 check_fs (	/* 0:The FAT boot record, 1:Valid boot record but not an FA
 
 	if (!disk_readp(buf, sect, BS_FilSysType, 2) && LD_WORD(buf) == 0x4146)	/* Check FAT12/16 */
 		return 0;
-#if _FS_FAT32
+    #if _FS_FAT32
 	if (!disk_readp(buf, sect, BS_FilSysType32, 2) && LD_WORD(buf) == 0x4146)	/* Check FAT32 */
 		return 0;
-#endif
+    #endif
 	return 1;
 }
-
-
-
 
 /*--------------------------------------------------------------------------
 
    Public Functions
 
 --------------------------------------------------------------------------*/
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Mount/Unmount a Locical Drive                                         */
@@ -606,12 +584,10 @@ FRESULT pf_open (
 	return FR_OK;
 }
 
-
-
-
 /*-----------------------------------------------------------------------*/
 /* Read File                                                             */
 /*-----------------------------------------------------------------------*/
+
 #if _USE_READ
 FRESULT pf_read (
 	void* buff,		/* Pointer to the read buffer (NULL:Forward data to the stream)*/
@@ -665,8 +641,6 @@ fr_abort:
 	return FR_DISK_ERR;
 }
 #endif
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Write File                                                            */
@@ -735,11 +709,10 @@ fw_abort:
 }
 #endif
 
-
-
 /*-----------------------------------------------------------------------*/
 /* Seek File R/W Pointer                                                 */
 /*-----------------------------------------------------------------------*/
+
 #if _USE_LSEEK
 
 FRESULT pf_lseek (
@@ -791,11 +764,10 @@ fe_abort:
 }
 #endif
 
-
-
 /*-----------------------------------------------------------------------*/
 /* Create a Directroy Object                                             */
 /*-----------------------------------------------------------------------*/
+
 #if _USE_DIR
 
 FRESULT pf_opendir (
@@ -834,9 +806,6 @@ FRESULT pf_opendir (
 
 	return res;
 }
-
-
-
 
 /*-----------------------------------------------------------------------*/
 /* Read Directory Entry in Sequense                                      */
@@ -905,17 +874,22 @@ FRESULT scan_files (char* path)
     int i;
 
     res = pf_opendir(&dir, path);
-    if (res == FR_OK) {
+    if (res == FR_OK)
+    {
         i = sizeof(path);
-        for (;;) {
+        for (;;)
+        {
             res = pf_readdir(&dir, &fno);
             if (res != FR_OK || fno.fname[0] == 0) break;
-            if (fno.fattrib & AM_DIR) {
+            if (fno.fattrib & AM_DIR)
+            {
                 psprintf(&path[i], "/%s", fno.fname);
                 res = scan_files(path);
                 if (res != FR_OK) break;
                 path[i] = 0;
-            } else {
+            }
+            else
+            {
                 //serial_printf("%s/", path);
                 //serial_printf("%s\r\n", fno.fname);
             }
@@ -924,5 +898,3 @@ FRESULT scan_files (char* path)
 
     return res;
 }
-
-

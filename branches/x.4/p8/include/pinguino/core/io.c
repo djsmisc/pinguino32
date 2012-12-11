@@ -4,10 +4,11 @@
 	PURPOSE:		Peripheral Remappage and IOs Configuration
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	20 Jun. 2012
-	LAST RELEASE:	23 Nov. 2012
+	LAST RELEASE:	07 Dec. 2012
 	----------------------------------------------------------------------------
 	CHANGELOG:
 	[23-11-2012]	[regis blanchot][added PIC18F1220,1320,2455,4455,46j50 support]
+	[07-12-2012]	[regis blanchot][added PIC18F25K50 and PIC18F45K50 support]
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -43,13 +44,21 @@ void IOsetDigital()
     #if defined(PIC18F1220) || defined(PIC18F1320) || \
         defined(PIC18F2550) || defined(PIC18F4550) || \
         defined(PIC18F2455) || defined(PIC18F4455)
-	ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
-	#endif
+        ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
 
-	#if defined(PIC18F26J50) || defined(PIC18F46J50)
-	ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
-	ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
-	#endif
+	#elif defined(PIC18F26J50) || defined(PIC18F46J50)
+        ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
+        ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
+
+    #elif defined(__18f25k50) || defined(__18f45k50)
+        ANSELA = 0;				    // all I/O to Digital mode
+        ANSELB = 0;				    // all I/O to Digital mode
+        ANSELC = 0;				    // all I/O to Digital mode
+        #if defined(__18f45k50)
+            ANSELD = 0;			    // all I/O to Digital mode
+            ANSELE = 0;			    // all I/O to Digital mode
+        #endif
+    #endif
 }
 
 /**

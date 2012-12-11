@@ -35,15 +35,6 @@ bit Bit#include <macro.h>
 lowByte low8#include <macro.h>
 highByte high8#include <macro.h>
 
-getSystemClock GetSystemClock#include <system.c>
-getInstructionClock GetInstructionClock#include <system.c>
-getPeripheralClock GetPeripheralClock#include <system.c>
-
-reset SystemReset#include <system.c>
-System.reset SystemReset#include <system.c>
-System.unlock#include <system.c>
-System.lock#include <system.c>
-
 Sprintf psprintf#include <stdio.c>
 Printf pprintf#include <stdio.c>
 KB.get Keyboard_get#include <misc.c>

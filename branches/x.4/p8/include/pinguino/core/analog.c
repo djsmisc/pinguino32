@@ -2,6 +2,7 @@
 // Jean-Pierre MANDON 2008
 // added 18F4550 support 2009/08/10
 // 2012-07-10 regis blanchot added 18F26J50 support
+// 2012-11-19 regis blanchot added 18F1220 and 18F1230 support
 
 #ifndef __ANALOG__
 #define __ANALOG__
@@ -15,7 +16,11 @@
 
 void analog_init(void)
 {
-#if defined(PIC18F4550)
+#if defined(PIC18F1220) || defined(PIC18F1320)                                   // Pinguino pin number
+	TRISA=TRISA | 0x1F; // 0b00011111 = RA0,1,2,3,4 = AN0 to AN4 are INPUT
+	ADCON1=0x1F;        // 0b00001000 = 0, 0, VRef-=VSS, VRef+=VDD, AN0 to AN4 enabled 
+	ADCON2=0xBD;        // 0b10111101 = Right justified, 0, 20 TAD, FOSC/16
+#elif defined(PIC18F4550)
 	TRISA=TRISA | 0x2F;
 	TRISE=TRISE | 0x07;	
 	ADCON1=0x07;
