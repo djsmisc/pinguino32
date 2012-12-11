@@ -52,31 +52,26 @@ byte *inPtr;                            // Data from the host
 word wCount;                            // Number of bytes of data
 
 
-  /** Buffer descriptors Table (see datasheet page 171)
-  RAM Bank 4 (0x400 though 0x4ff) is used specifically for endpoint buffer control in a structure known as Buffer Descriptor Table (BDTZ).<br>
-  TODO:
-  <ul>
-  <li>find something smarter to allocate the buffer, like in usbmmap.c of the microchip firmware. If not all endpoints are used the space in RAM is wasted.</li>
-  </ul>
-  **/
+/**
+    Buffer descriptors Table (see datasheet page 171)
+    RAM Bank 4 (0x400 though 0x4ff) is used specifically for
+    endpoint buffer control in a structure known as
+    Buffer Descriptor Table (BDTZ).
+    TODO: find something smarter to allocate the buffer,
+    like in usbmmap.c of the microchip firmware.
+    If not all endpoints are used the space in RAM is wasted.
+**/
 
 ///
-/// 2012-07-04 updated by André
+/// 2012-07-04 ep_bdt[4] -> ep_bdt[32] updated by André
 ///
 
 #if defined(__18f14k50)
-volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
-//volatile BufferDescriptorTable __at (0x200) ep_bdt[4];
-//volatile setupPacketStruct __at (0x210) SetupPacket;
-//volatile byte __at (0x250) controlTransferBuffer[EP0_BUFFER_SIZE];
-//volatile allcmd __at (0x290) bootCmd;
+    volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
 #else
-volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
-//volatile BufferDescriptorTable __at (0x400) ep_bdt[4];
-//volatile setupPacketStruct __at (0x410) SetupPacket;
-//volatile byte __at (0x450) controlTransferBuffer[EP0_BUFFER_SIZE];
-//volatile allcmd __at (0x490) bootCmd;
+    volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
 #endif
+
 #pragma udata usbram5 SetupPacket controlTransferBuffer
 volatile setupPacketStruct SetupPacket;
 volatile byte controlTransferBuffer[EP0_BUFFER_SIZE];
@@ -91,32 +86,32 @@ static void GetDescriptor()
 {
 	if(SetupPacket.bmRequestType == 0x80)
 	{
-		byte descriptorType  = SetupPacket.wValue1;
-		byte descriptorIndex = SetupPacket.wValue0;
+		//byte descriptorType  = SetupPacket.wValue1;
+		//byte descriptorIndex = SetupPacket.wValue0;
 
-		if (descriptorType == DEVICE_DESCRIPTOR)
+		if (SetupPacket.wValue1 == DEVICE_DESCRIPTOR)
 		{
 			requestHandled = 1;
 			outPtr = (byte *)&device_descriptor;
 			wCount = sizeof(USB_Device_Descriptor);
 		}
 
-		else if (descriptorType == CONFIGURATION_DESCRIPTOR)
+		else if (SetupPacket.wValue1 == CONFIGURATION_DESCRIPTOR)
 		{
 			requestHandled = 1;
 			outPtr = (byte *)&configuration_descriptor;
 			wCount = configuration_descriptor.Header.wTotalLength;
 		}
-/*
 
-		else if (descriptorType == STRING_DESCRIPTOR)
+		else if (SetupPacket.wValue1 == STRING_DESCRIPTOR)
 		{
 			requestHandled = 1;
-			outPtr = (byte *)&string_descriptor[descriptorIndex];
+			//outPtr = (byte *)&string_descriptor[SetupPacket.wValue0];
+			outPtr = string_descriptor[SetupPacket.wValue0];
 			wCount = *outPtr;
 		}
-
-		else if (descriptorType == DEVICE_QUALIFIER_DESCRIPTOR)
+/*
+		else if (SetupPacket.wValue1 == DEVICE_QUALIFIER_DESCRIPTOR)
 		{
 			requestHandled = 1;
 			// TODO: check if this is needed if not requestHandled is not set to 1 the device will
@@ -130,14 +125,14 @@ static void GetDescriptor()
 
 void ProcessStandardRequest()
 {
-	byte request = SetupPacket.bRequest;
+	//byte request = SetupPacket.bRequest;
 
 	if((SetupPacket.bmRequestType & 0x60) != 0x00)
 	// Not a standard request - don't process here.  Class or Vendor
 	// requests have to be handled seperately.
 	return;
 
-	if (request == SET_ADDRESS)
+	if (SetupPacket.bRequest == SET_ADDRESS)
 	{
 		// Set the address of the device.  All future requests
 		// will come to that address.  Can't actually set UADDR
@@ -148,12 +143,12 @@ void ProcessStandardRequest()
 		deviceAddress = SetupPacket.wValue0;
 	}
 
-	else if (request == GET_DESCRIPTOR)
+	else if (SetupPacket.bRequest == GET_DESCRIPTOR)
 	{
 		GetDescriptor();
 	}
 
-	else if (request == SET_CONFIGURATION)
+	else if (SetupPacket.bRequest == SET_CONFIGURATION)
 	{
 		requestHandled = 1;
 		usb_configure_endpoints();
@@ -173,7 +168,7 @@ void ProcessStandardRequest()
 		// interfaces beyond the one used for the HID
 	}
 
-	else if (request == GET_CONFIGURATION)
+	else if (SetupPacket.bRequest == GET_CONFIGURATION)
 	{
 		requestHandled = 1;
 		outPtr = (byte*)&currentConfiguration;
@@ -181,18 +176,18 @@ void ProcessStandardRequest()
 	}
 
 	/*
-	else if (request == GET_STATUS)
+	else if (SetupPacket.bRequest == GET_STATUS)
 	{
 	//    GetStatus();
 	}
 
-	else if ((request == CLEAR_FEATURE) || (request == SET_FEATURE))
+	else if ((SetupPacket.bRequest == CLEAR_FEATURE) || (request == SET_FEATURE))
 	{
 	//    SetFeature();
 	}
 	*/
 
-	else if (request == GET_INTERFACE)
+	else if (SetupPacket.bRequest == GET_INTERFACE)
 	{
 		// No support for alternate interfaces.  Send
 		// zero back to the host.
@@ -202,16 +197,16 @@ void ProcessStandardRequest()
 		wCount = 1;
 	}
 
-	else if (request == SET_INTERFACE)
+	else if (SetupPacket.bRequest == SET_INTERFACE)
 	{
 		// No support for alternate interfaces - just ignore.
 		requestHandled = 1;
 	}
 
 	/*
-	else if (request == SET_DESCRIPTOR) {
+	else if (SetupPacket.bRequest == SET_DESCRIPTOR) {
 	}
-	else if (request == SYNCH_FRAME) {
+	else if (SetupPacket.bRequest == SYNCH_FRAME) {
 	}
 	else {
 	}
@@ -363,18 +358,17 @@ void WaitForSetupStage()
 // Control messages that have a different destination will be discarded.
 void ProcessControlTransfer()
 {
-	byte end_point;//, bcnt;
-	//word addr;
-	end_point = USTAT >> 3;
+    // get encoded number of the last active Endpoint
+	byte PID, end_point = USTAT >> 3;
 
-	if (end_point == 0)
+	if (end_point == 0) // Endpoint 0
 	{
 
 		if (USTATbits.DIR == OUT)
 		{
 			// Endpoint 0:out
 			// Pull PID from middle of BD0STAT
-			byte PID = (EP_OUT_BD(0).Stat.uc & 0x3C) >> 2;
+			PID = (EP_OUT_BD(0).Stat.uc & 0x3C) >> 2;
 			if (PID == 0x0D)
 				// SETUP PID - a transaction is starting
 				SetupStage();
@@ -399,7 +393,7 @@ void ProcessControlTransfer()
 			}
 		}
 
-		else if(USTATbits.DIR == IN)
+		else // if(USTATbits.DIR == IN)
 		{
 			// Endpoint 0:in
 			if ((UADDR == 0) && (deviceState == ADDRESS))
@@ -434,19 +428,12 @@ void ProcessControlTransfer()
 		}
 	}
 
-	else if (end_point == 1)
+	else //if (end_point == 1) // EndPoint 1
 	{
 
-		if (!USTATbits.DIR)
-		{
-			//addr = EP_OUT_BD(end_point).ADRL+((word)EP_OUT_BD(end_point).ADRH<<8);
-			//bcnt = EP_OUT_BD(end_point).Cnt;
-			//usb_ep_data_out_callback(end_point, addr, bcnt );
+		if (!USTATbits.DIR) // If OUT
 			usb_ep_data_out_callback(end_point);
-		}
-
-	}	// enpoint == 1
-
+	}
 }
 
 void EnableUSBModule()
@@ -544,7 +531,7 @@ void ProcessUSBTransactions()
 		UIRbits.UERRIF = 0;// Clear errors
 
 	// Unless we have been reset by the host, no need to keep processing
-	if (deviceState < DEFAULT)
+	if (deviceState < DEFAULT)  // DETACHED, ATTACHED or POWERED
 		return;
 
 	// A transaction has finished.  Try default processing on endpoint 0.
