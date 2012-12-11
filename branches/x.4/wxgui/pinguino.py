@@ -410,12 +410,12 @@ class Pinguino(framePinguinoX, Editor):
             filename, extension = os.path.splitext(filename)
             if os.path.exists(filename + '.hex'):
                 if self.curBoard.arch == 8:
-		    try:
-			u = Uploader(self.logwindow, filename, self.curBoard)
-		    except usb.USBError:  #No device
-			self.displaymsg("No device",0)
-			return
-			
+                    #try:
+                    u = Uploader(self.logwindow, filename, self.curBoard)
+                    #except usb.USBError:  #No device
+                    #self.displaymsg("No device",0)
+                    #return
+                    
                 else:
                     fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', self.u32),
