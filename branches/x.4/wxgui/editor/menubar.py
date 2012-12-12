@@ -289,16 +289,20 @@ class Menubar:
         #self.setConfig("IDE","BoardNoBoot", self.textCtrlDevices.Value)
         #self.setConfig("IDE","BoardMode", self.choiceMode.GetStringSelection())
         
-        panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        #self._mgr.SavePerspective
+        
+        #panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        #panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
         perspectiva = self._mgr.SavePerspective()
         
-        self.setConfig("IDE", "PerspectiveOutput", re.match(panelOutput, perspectiva).group(2))
-        self.setConfig("IDE", "PerspectiveOutputPos", re.match(panelOutput, perspectiva).group(1))
-        self.setConfig("IDE", "PerspectiveLateral", re.match(panelLateral, perspectiva).group(2))
-        self.setConfig("IDE", "PerspectiveLateralPos", re.match(panelLateral, perspectiva).group(1))
-
+        self.setConfig("IDE", "perspective", perspectiva)        
         
+        #self.setConfig("IDE", "PerspectiveOutput", re.match(panelOutput, perspectiva).group(2))
+        #self.setConfig("IDE", "PerspectiveOutputPos", re.match(panelOutput, perspectiva).group(1))
+        #self.setConfig("IDE", "PerspectiveLateral", re.match(panelLateral, perspectiva).group(2))
+        #self.setConfig("IDE", "PerspectiveLateralPos", re.match(panelLateral, perspectiva).group(1))
+
+    
         
         dir = unicode(self.parentDir).encode("utf-8")
         self.setConfig("IDE", "LateralPath", dir)

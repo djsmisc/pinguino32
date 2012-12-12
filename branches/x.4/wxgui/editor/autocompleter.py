@@ -27,8 +27,11 @@
 import wx, sys, os
 from dic import Snippet
 
-ICONS_COMPLETER_DIR = os.path.join(os.getcwd(), "theme", "icons_autocompleter")
-AVAILABLE_ICONS = os.listdir(ICONS_COMPLETER_DIR)
+try:
+    ICONS_COMPLETER_DIR = os.path.join(os.getcwd(), "theme", "icons_autocompleter")
+    AVAILABLE_ICONS = os.listdir(ICONS_COMPLETER_DIR)
+except:  #No dir
+    pass
 
 ########################################################################
 class AutoCompleter():

@@ -91,6 +91,7 @@ class Pinguino(framePinguinoX, Editor):
 # ------------------------------------------------------------------------------
     def __initPinguino__(self, parent):
         sys.setrecursionlimit(1500)
+	
         self.notebookEditor.Hide()
         self.boardlist = boardlist
         self.debugOutMessage = None
@@ -249,7 +250,7 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def setBoard(self, arch, mode, name):
+    def setBoard(self, arch, mode, name, bootloader):
         # clear all the lists before rebuild them
         del self.rw[:]
         del self.regobject[:]
@@ -261,7 +262,17 @@ class Pinguino(framePinguinoX, Editor):
 	    for board in boardlist:
 		if name == board.name:
 		    self.curBoard = board
+		    if bootloader == "noboot":
+			self.curBoard.bldr = "noboot"
+			self.curBoard.memstart = 0x0000
+		    else:
+			self.curBoard.bldr = bootloader[0]
+			self.curBoard.memstart = int(bootloader[1])
+		
+
 	    self.extraName = ""
+	    
+	    
 		    
 	else:
 	    self.curBoard = boardlist[0]
@@ -303,9 +314,9 @@ class Pinguino(framePinguinoX, Editor):
         image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
         bmp = wx.BitmapFromImage(image)
         #bmp = image.ConvertToBitmap()
-        icon = wx.EmptyIcon()
-        icon.CopyFromBitmap(bmp)
-        info.SetIcon(icon)
+        ##icon = wx.EmptyIcon()
+        ##icon.CopyFromBitmap(bmp)
+        ##info.SetIcon(icon)
         info.SetName('Pinguino')
         info.SetVersion(pinguino_version)
         #info.SetVersion("rev. " + self.localRev)
@@ -404,9 +415,13 @@ class Pinguino(framePinguinoX, Editor):
 # OnUpload:
 # ------------------------------------------------------------------------------
 
-    def OnUpload(self, event=None):
-        if self.GetPath() != -1:
-            filename = self.GetPath()
+    def OnUpload(self, event=None, path=None):
+	
+	if path == None: path = self.GetPath()
+	#else: path = filename
+	
+        if  path != -1:
+            filename = path
             filename, extension = os.path.splitext(filename)
             if os.path.exists(filename + '.hex'):
                 if self.curBoard.arch == 8:
@@ -520,8 +535,10 @@ class Pinguino(framePinguinoX, Editor):
         for i in range(len(fixed_rw)):
             self.reservedword.append(fixed_rw[i])
 
-        #if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
-	self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
+        if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
+	    self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
+	else:
+	    self.displaymsg(_("Board config")+":\t"+board.name, 0)	    
 
 	self.changingBoard = False	
 	
@@ -994,7 +1011,8 @@ def getOptions():
     parser.add_argument('-v', '--version', dest='version', action='store_true', default=False, help='show Pinguino IDE version and exit')
     parser.add_argument('-a', '--author', dest='author', action='store_true', default=False, help='show authors of this Pinguino IDE version and exit')
     parser.add_argument('-f', '--filename', dest='filename', nargs=1, default=False, help='filename to process')
-    parser.add_argument('-d', '--dev', dest='dev', nargs=1, default=False, help='set developer mode')
+    parser.add_argument('-dv', '--dev', dest='dev', nargs=1, default=False, help='set developer mode')
+    parser.add_argument('-ul', '--upload', dest='upload', const=True, action='store_const', default=False, help='set developer mode')
     
     for b in range(len(boardlist)):
         parser.add_argument(    boardlist[b].shortarg,
@@ -1013,3 +1031,7 @@ def getOptions():
 def getVersion():
     return pinguino_version
 
+#----------------------------------------------------------------------
+def setGui(bool):
+    global gui
+    gui=bool

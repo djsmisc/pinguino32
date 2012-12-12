@@ -508,6 +508,11 @@ class General:
         self._mgr.AddPane(self.panelOutput, wx.BOTTOM, _("Output"))          
         self._mgr.AddPane(self.lat, wx.RIGHT, _("Tools"))      
         self._mgr.AddPane(self.panelEditor, wx.CENTER)
+        
+        #self.loadConfig()
+        #perspectiva = self.getElse("IDE", "perspective", "")
+        #self._mgr.LoadPerspective(perspectiva)        
+        
         self._mgr.Update()
 
 # ------------------------------------------------------------------------------
@@ -638,9 +643,13 @@ class General:
         mode = self.getElse("Board", "mode", "BOOT")
         #family = self.IDE.getElse("Board", "family", "18fxxx")
         device = self.getElse("Board", "device", "Pinguino 2550")
-        self.setBoard(arch, mode, device)
+        bootloader = self.getElse("Board", "bootloader", "[boot2, 0x2000]")
+        if bootloader != "noboot":
+            bootloader = bootloader[1:-1].split(",")
+            bootloader[0] = bootloader[0].replace("'", "")
+            bootloader[1] = eval(bootloader[1])
+        self.setBoard(arch, mode, device, bootloader)
         
-
         w = self.getElse("IDE", "window/width", 1000)
         h = self.getElse("IDE", "window/height", 500)
         self.SetSize((w, h))
@@ -667,27 +676,30 @@ class General:
                     self.addFile2Recent(file)
         except: pass
 
-        panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        perspectiva = self._mgr.SavePerspective()
-        nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
-        nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
-        nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
-        nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
+        #perspectiva = self.getElse("IDE", "perspective", "")
+        #self._mgr.LoadPerspective(perspectiva)
+
+        #panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        #panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        #perspectiva = self._mgr.SavePerspective()
+        #nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
+        #nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
+        #nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
+        #nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
 
         #print nOutputPos
 
-        try:
-            oOutput = int(re.match(panelOutput, perspectiva).group(2))   
-            oLateral = int(re.match(panelLateral, perspectiva).group(2))
-            oOutputPos = re.match(panelOutput, perspectiva).group(1) 
-            oLateralPos = re.match(panelLateral, perspectiva).group(1)
+        #try:
+            #oOutput = int(re.match(panelOutput, perspectiva).group(2))   
+            #oLateral = int(re.match(panelLateral, perspectiva).group(2))
+            #oOutputPos = re.match(panelOutput, perspectiva).group(1) 
+            #oLateralPos = re.match(panelLateral, perspectiva).group(1)
 
-            perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
-            perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
-            self._mgr.LoadPerspective(perspectiva)
-        except:
-            print "No perspective"
+            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
+            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
+            #self._mgr.LoadPerspective(perspectiva)
+        #except:
+            #print "No perspective"
 
         lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
         self.__initDocuments__()
@@ -895,13 +907,17 @@ class General:
 
     def displaymsg(self, message, clearpanel):
         """ display message in the log window """
+        
         #if gui==True:
-        if clearpanel==1:
-            self.logwindow.Clear()
         try:
-            self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
-        except:
-            self.logwindow.WriteText(message+"\n")
+            if clearpanel==1:
+                self.logwindow.Clear()
+            try:
+                self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
+            except:
+                self.logwindow.WriteText(message+"\n")
+        except:  #No GUI
+            print message
         #else:
             #if message!="":
                 #print message
