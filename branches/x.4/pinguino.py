@@ -3,6 +3,7 @@
 
 import wx, os, sys
 #from wxgui.pinguino import getOptions, getVersion, Pinguino, setGui
+from wxgui.pinguino import setGui
 from wxgui.pinguino import *
 from wxgui._trad import _
 
@@ -41,7 +42,7 @@ class MySplashScreen(wx.SplashScreen):
 
     #----------------------------------------------------------------------
     def ShowMain(self):
-        #setGui(True)
+        setGui(True)
         frame = Pinguino(None)
         frame.__initPinguino__(None)
         app.SetTopWindow(frame)
@@ -53,7 +54,7 @@ class MySplashScreen(wx.SplashScreen):
 class MyApp(wx.App):
     def OnInit(self):
         if sys.platform=='darwin':
-            #setGui(True)
+            setGui(True)
             frame = Pinguino(None)
             frame.__initPinguino__(None)
             app.SetTopWindow(frame)
@@ -144,9 +145,22 @@ if __name__ == "__main__":
         shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
         print "compilation done"
         print pobject.getCodeSize(fname, curBoard)
+        
+        if options.upload != False:
+            print "Uploading..."
+            #Very ugly method to upload code
+            #------------------------------------------
+            pobject.curBoard = curBoard
+            write = lambda var:None
+            pobject.logwindow = wx.TextCtrl(None)
+            pobject.logwindow.WriteText = write
+            pobject.OnUpload(path=filename)
+            #------------------------------------------
+        
         print "OK"
         os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
-        #os.remove(fname + ".c")	   
+        #os.remove(fname + ".c")
+        
         sys.exit(0)
 
 # ------------------------------------------------------------------------------

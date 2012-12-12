@@ -221,7 +221,7 @@ except:
 # check pinguino modules
 # ------------------------------------------------------------------------------
 
-from editor.variables import * 
+#from editor.variables import * 
 
 try:
     from editor.variables import * 

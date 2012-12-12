@@ -56,3 +56,4 @@ architectute = 8
 mode = BOOT
 family = 18fxxx
 device = Pinguino 2550
+bootloader = ['boot2', 8192]
