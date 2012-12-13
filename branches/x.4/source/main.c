@@ -69,27 +69,10 @@
 
 void pinguino_main(void)
 {
-    #if defined(PIC18F26J50) || defined(PIC18F46J50)
-
-        // Enable the PLL and wait 2+ms until the PLL locks
-        u16 pll_startup_counter = 600;
-        OSCTUNEbits.PLLEN = 1;
-        while (pll_startup_counter--);
-        // if user switch to INTOSC _31KHZ_ then
-        // select INTOSC/256 as a 31.25 KHz clock source
-        OSCTUNEbits.INTSRC = 1;
-
-    #elif defined(PIC18F25K50) || defined(PIC18F45K50)
-
-        OSCCON = 0x70;              // 0b01110000 : 111 = HFINTOSC (16 MHz)
-        while (!OSCCONbits.HFIOFS); // wait HFINTOSC frequency is stable (HFIOFS=1) 
-
-    #endif
-
     PIE1 = 0;
     PIE2 = 0;
 
-    //IOsetSpecial();
+    IOsetSpecial();
     IOsetDigital();
     IOsetRemap();
     
