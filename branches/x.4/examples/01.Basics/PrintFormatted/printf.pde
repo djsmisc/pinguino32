@@ -15,7 +15,7 @@ void loop()
 	u8		k, c = 65;
 	u16		i = -333;
 	u32		l = -115200;
-	float	f = -1234567.14159265;
+	float	f = -123.4567;
 
 	CDC.printf("\r\n");
 	CDC.println("**************************\r\n");
