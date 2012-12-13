@@ -89,6 +89,7 @@ class Pinguino4550:
 	shortarg='-P'
 	longarg='--pinguino4550'
 
+"""
 class Pinguino4550b4:
 	name='Pinguino 4550 (boot v4.x)'
 	id=wx.NewId()
@@ -102,6 +103,7 @@ class Pinguino4550b4:
 	memend=0x7fff
 	shortarg='-P4'
 	longarg='--pinguino4550b4'
+"""
 
 class Pinguino26J50:
 	name='Pinguino 26J50'
@@ -117,6 +119,7 @@ class Pinguino26J50:
 	shortarg='-j'
 	longarg='--pinguino26j50'
 
+"""
 class PICuno_Equo:
 	name='PICuno Equo'
 	id=wx.NewId()
@@ -146,6 +149,7 @@ class FreeJALduino:
 	config=0x300000
 	shortarg='-J'
 	longarg='--freejalduino'
+"""
 
 class PIC32_Pinguino:
 	name='PIC32 Pinguino'
@@ -303,10 +307,9 @@ class UBW32_795:
 
 boardlist = [   
                 PinguinoNoBoot,
-                Pinguino2550, Pinguino25k50,
-                Pinguino4550, Pinguino4550b4,
+                Pinguino2550,  Pinguino4550,
+                Pinguino25k50,
                 Pinguino26J50, 
-                PICuno_Equo, FreeJALduino,
                 PIC32_Pinguino, PIC32_Pinguino_OTG,
                 PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,
                 GENERIC32MX250F128, GENERIC32MX220F032,

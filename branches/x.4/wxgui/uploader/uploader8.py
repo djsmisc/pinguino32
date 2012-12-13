@@ -198,9 +198,8 @@ class uploader8(baseUploader):
         # command code
         usbBuf[self.BOOT_CMD] = self.RESET_CMD
         # write data packet
-        usbBuf = self.sendCMD(usbBuf)
-        # wait 1 second
-        #time.sleep(1)
+        #usbBuf = self.sendCMD(usbBuf)
+        usbBuf = self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
 # ------------------------------------------------------------------------------
     def getVersion(self):
 # ------------------------------------------------------------------------------
@@ -525,6 +524,7 @@ class uploader8(baseUploader):
         self.txtWrite("Writing User Application ...\n")
         status = self.hexWrite(self.filename, self.board)
         
+        status = self.hexWrite(self.filename, self.board)
         if status == self.ERR_HEX_RECORD:
             self.txtWrite("Record error\n")
             self.closeDevice()
@@ -545,8 +545,13 @@ class uploader8(baseUploader):
 
             #self.txtWrite("Resetting ...\n")
             self.txtWrite("Starting Application ...\n")
-            self.resetDevice()
-            self.closeDevice()
+            try:
+                self.resetDevice()
+            except:
+                pass
+            # Device has been reseted, it is no longer a USB device
+            # and therefore can not be closed
+            #self.closeDevice()
             return
         else:
             self.txtWrite("Unknown error\n")
