@@ -1,12 +1,13 @@
 /*  -------------------------------------------------------------------------
-    FILE:            main.c
+    FILE:           main.c
     PROJECT:        pinguino
     PURPOSE:        application main function
-    PROGRAMER:        (c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr>
-    FIRST RELEASE:    19 Sep 2008
-    LAST RELEASE:    01 Jul 2012
+    PROGRAMER:      Jean-pierre Mandon - Régis Blanchot
+    FIRST RELEASE:  19 Sep 2008
+    LAST RELEASE:   14 Dec. 2012
     ----------------------------------------------------------------------------
     CHANGELOG :
+    Originally based on a file by (c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr>
     19 Sep 2008 - Jean-pierre Mandon - adapted to Pinguino  
     21 Apr 2012 - Régis Blanchot - added bootloader v4.x support
     20 Jun 2012 - Régis Blanchot - added io.c support (remapping)
@@ -62,16 +63,15 @@
 // user's .pde file translated to C
 #include "user.c"
 
-/*  ----------------------------------------------------------------------------
-    beware : this is not a C main function,
-    but the application entry point called from the bootloader.
-    --------------------------------------------------------------------------*/
-
+#ifdef noboot
+void main(void)
+#else
+// Application entry point called from the bootloader
 void pinguino_main(void)
+#endif
 {
-    PIE1 = 0;
-    PIE2 = 0;
-
+    SystemWaitForStableOsc();
+    
     IOsetSpecial();
     IOsetDigital();
     IOsetRemap();
