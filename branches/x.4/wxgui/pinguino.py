@@ -904,6 +904,7 @@ class Pinguino(framePinguinoX, Editor):
                         stdout=fichier, stderr=STDOUT)
                         
                 elif board.bldr == 'noboot':
+#                        "--no-crt",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                         "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                         "--verbose",\
@@ -912,7 +913,6 @@ class Pinguino(framePinguinoX, Editor):
                         "--optimize-cmp",\
                         "--optimize-df",\
                         "--denable-peeps",\
-                        "--no-crt",\
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
