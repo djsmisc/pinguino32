@@ -34,46 +34,29 @@
 #include <macro.h>
 #include <system.c>
 
-void IOsetSpecial()
+void IOsetSpecial(void)
 {
-    #if defined(PIC18F26J50) || defined(PIC18F46J50)
-
-        // Enable the PLL and wait 2+ms until the PLL locks
-        u16 pll_startup_counter = 600;
-        OSCTUNEbits.PLLEN = 1;
-        while (pll_startup_counter--);
-        // if user switch to INTOSC _31KHZ_ then
-        // select INTOSC/256 as a 31.25 KHz clock source
-        OSCTUNEbits.INTSRC = 1;
-
-    #elif defined(PIC18F25K50) || defined(PIC18F45K50)
-
-        OSCCON = 0x70;              // 0b01110000 : 111 = HFINTOSC (16 MHz)
-        while (!OSCCONbits.HFIOFS); // wait HFINTOSC frequency is stable (HFIOFS=1) 
-
-    #else
-        nop();
-        
-    #endif
+    nop();
 }
 
 // All Analog Pins as Digital IOs
-void IOsetDigital()
+void IOsetDigital(void)
 {
     #if defined(PIC18F1220) || defined(PIC18F1320) || \
         defined(PIC18F2550) || defined(PIC18F4550) || \
         defined(PIC18F2455) || defined(PIC18F4455)
         ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
+        CMCON = 0x07;               // Comparators as Digital I/O
 
 	#elif defined(PIC18F26J50) || defined(PIC18F46J50)
         ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
         ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
 
-    #elif defined(__18f25k50) || defined(__18f45k50)
+    #elif defined(PIC18F25K50) || defined(PIC18F45K50)
         ANSELA = 0;				    // all I/O to Digital mode
         ANSELB = 0;				    // all I/O to Digital mode
         ANSELC = 0;				    // all I/O to Digital mode
-        #if defined(__18f45k50)
+        #if defined(PIC18F45K50)
             ANSELD = 0;			    // all I/O to Digital mode
             ANSELE = 0;			    // all I/O to Digital mode
         #endif
@@ -110,7 +93,7 @@ void IOsetDigital()
 // NB1 : the Configuration bit IOL1WAY is set to OFF in the bootloader
 // NB2 : pins must be explicitly reconfigured as digital I/O when used with a PPS
 
-void IOsetRemap()
+void IOsetRemap(void)
 {
     #if defined(PIC18F26J50) || defined(PIC18F46J50)
 
