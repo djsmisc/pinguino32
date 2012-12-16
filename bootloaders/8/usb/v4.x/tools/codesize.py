@@ -48,7 +48,7 @@ if (len(sys.argv) > 1):
             codesize = codesize + byte_count
     fichier.close()
     print "code size: %d bytes (0x%x)" % (codesize, codesize)
-    print "possible vectors relocation : %s" % hex((int(max_address/1024)+1)*1024)
+    #print "possible vectors relocation : %s" % hex((int(max_address/1024)+1)*1024)
 else:
     print "No file to proceed"
     print "usage: ./codesize.py filename (without .hex extension)"

@@ -8,6 +8,8 @@
 	Released under the LGPL license (http://www.gnu.org/licenses/lgpl.html)
 *******************************************************************************/
 
+#include <pic18fregs.h>
+
 /**********************************************************************/
 #if defined(__18f2550) || defined(__18f4550) || \
     defined(__18f2455) || defined(__18f4455)
@@ -155,17 +157,23 @@
 #elif defined(__18f25k50) || defined(__18f45k50)// Config. Words for Internal Crystal (16 MHz) use
 /**********************************************************************/
 
-    // CONFIG1L
-    #pragma config PLLSEL = PLL3X       // PLL Selection (3x clock multiplier) => 3 x 16 = 48 MHz
-    #pragma config CFGPLLEN = ON        // PLL Enable Configuration bit (PLL Enabled)
-    //#pragma config CPUDIV = CLKDIV3     // CPU uses system clock divided by 3 (could be 1,2,3,6)
-    #pragma config CPUDIV = NOCLKDIV    // 1:1 mode (for 48MHz CPU)
-
-    //#if (SPEED == LOW_SPEED)
-        #pragma config LS48MHZ = SYS24X4// USB Low-speed clock at 24 MHz, USB clock divider is set to 4
-    //#else
-    //    #pragma config LS48MHZ = SYS48X8// System clock at 48 MHz, USB clock divider is set to 8
-    //#endif
+    #if (CRYSTAL == INTOSC)             // Internal 16 MHz Osc.
+        // CONFIG1L
+        #pragma config PLLSEL = PLL3X       // PLL Selection (3x clock multiplier) => 3 x 16 = 48 MHz
+        #pragma config CFGPLLEN = ON        // PLL Enable Configuration bit (PLL Enabled)
+        //#pragma config CPUDIV = CLKDIV3     // CPU uses system clock divided by 3 (could be 1,2,3,6)
+        #pragma config CPUDIV = NOCLKDIV    // 1:1 mode (for 48MHz CPU)
+    #elif (CRYSTAL == 20)
+        #error "    ---------------------------------    "
+        #error "    Not yet supported.                   "
+        #error "    ---------------------------------    "
+    #elif (CRYSTAL == 8)
+        #error "    ---------------------------------    "
+        #error "    Not yet supported.                   "
+        #error "    ---------------------------------    "
+    #endif
+    
+    #pragma config LS48MHZ = SYS24X4// USB Low-speed clock at 24 MHz, USB clock divider is set to 4
 
     // CONFIG1H
     #pragma config FOSC = INTOSCIO      // Oscillator Selection (Internal oscillator)
@@ -194,6 +202,7 @@
     #pragma config STVREN = ON          // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
     #pragma config LVP = ON             // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled if MCLRE is also 1)
     #pragma config XINST = OFF          // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
+    #pragma config ICPRT = OFF			// ICP
 
     // CONFIG5L
     #pragma config CP0 = OFF            // Block 0 Code Protect (Block 0 is not code-protected)
