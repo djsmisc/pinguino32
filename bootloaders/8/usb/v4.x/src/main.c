@@ -10,9 +10,7 @@
 	Released under the LGPL license (http://www.gnu.org/licenses/lgpl.html)
 *******************************************************************************/
 
-//#pragma stack 0x200 255
-
-#include "pic18fregs.h"
+#include <pic18fregs.h>
 #include "types.h"
 #include "hardware.h"
 #include "picUSB.h"
@@ -85,7 +83,7 @@ const char * const string_descriptor[] = { lang, manu, prod};
 /*  --------------------------------------------------------------------
     ------------------------------------------------------------------*/
     
-void delay()
+void delay(void) __naked
 {
     __asm
         movlw	0xFF
@@ -103,7 +101,7 @@ void delay()
 /*  --------------------------------------------------------------------
     ------------------------------------------------------------------*/
     
-void start_write()
+void start_write(void) __naked
 {
 	__asm
     
@@ -143,7 +141,7 @@ void start_write()
 /*  --------------------------------------------------------------------
     ------------------------------------------------------------------*/
     
-void disable_boot()
+void disable_boot(void) __naked
 {
 	__asm
         clrf	_T1CON				; disable timer 1
@@ -183,22 +181,30 @@ void usb_ep_data_out_callback(char end_point)
 {
 	byte counter;
 
-    // Number of byte(s) to return
-	EP_IN_BD(end_point).Cnt = 0;
-
-    // load table pointer
-	//set_boot_address();
-	TBLPTRU = bootCmd.addru;
-	TBLPTRH = bootCmd.addrh;
-	TBLPTRL = bootCmd.addrl;
-
 	// whatever the command, keep LED high
 	__asm
 	bsf		LED_PORT, LED_PIN	; led on
 	__endasm;
  
+    // Number of byte(s) to return
+	EP_IN_BD(end_point).Cnt = 0;
+
+    // load table pointer
+    TBLPTRU = bootCmd.addru;
+    TBLPTRH = bootCmd.addrh;
+    TBLPTRL = bootCmd.addrl;
+
 /**********************************************************************/
-	if (bootCmd.cmd == READ_VERSION)
+	if (bootCmd.cmd ==  RESET)
+/**********************************************************************/
+	{
+		disable_boot();
+		__asm
+		goto	ENTRY		; start user app
+		__endasm;
+	}
+/**********************************************************************/
+	else if (bootCmd.cmd == READ_VERSION)
 /**********************************************************************/
 	{
 		bootCmd.buffer[2] = MINOR_VERSION;
@@ -336,16 +342,6 @@ void usb_ep_data_out_callback(char end_point)
 	}
 
 /**********************************************************************/
-	else if (bootCmd.cmd ==  RESET)
-/**********************************************************************/
-	{
-		disable_boot();
-		__asm
-		goto	ENTRY		; start user app
-		__endasm;
-	}
-
-/**********************************************************************/
     // Is there something to return ?
 	if (EP_IN_BD(end_point).Cnt > 0)
 	{
@@ -366,7 +362,7 @@ void usb_ep_data_out_callback(char end_point)
     Main loop
     ------------------------------------------------------------------*/
  
-void main()
+void main(void) __naked
 {
 	dword i = 0;
     byte t1_count = 0;
@@ -406,8 +402,10 @@ void main()
           defined(__18f2455)  || defined(__18f4455)  || \
           defined(__18f14k50)
 /**********************************************************************/
-        movlw	0x0F
-        movwf	_ADCON1				; all I/O to Digital mode
+;        movlw	0x0F
+;        movwf	_ADCON1				; all I/O to Digital mode
+;        movlw	0x07
+;        movwf	_CMCON				; all I/O to Digital mode
 /**********************************************************************/
     #else
 /**********************************************************************/
@@ -505,7 +503,16 @@ void main()
     3/ Never use --ivt-loc option as it will also move the Reset vector from 0 to ENTRY
 ***********************************************************************/
 
-//#pragma code high_priority_isr 0x0008
+// 0x0000
+void reset_isr(void) __naked __interrupt 0
+{
+    __asm
+    goto    _main
+    ;goto    _startup
+    __endasm;
+}
+
+// 0x0008
 void high_priority_isr(void) __naked __interrupt 1
 {
     __asm
@@ -513,10 +520,31 @@ void high_priority_isr(void) __naked __interrupt 1
     __endasm;
 }
 
-//#pragma code low_priority_isr 0x0018
+// 0x0018
 void low_priority_isr(void) __naked __interrupt 2
 {
     __asm
     goto	ENTRY + 0x18
     __endasm;
 }
+
+// C stack init.
+/*
+void startup(void) __naked
+{
+    __asm
+    ; Initialize the stack pointer
+    ;lfsr    1, _stack_end
+    ;lfsr    2, _stack_end
+
+    ; 1st silicon does not do this on POR
+    ;clrf    _TBLPTRU, 0
+
+    ; Initialize the flash memory access configuration.
+    ;bsf     0xa6, 7, 0      ; EECON1.EEPGD = 1, TBLPTR accesses program memory or eeprom
+    ;bcf     0xa6, 6, 0      ; EECON1.CFGS  = 0, TBLPTR accesses program memory not config. reg.
+
+    goto    _main
+    __endasm;
+}
+*/

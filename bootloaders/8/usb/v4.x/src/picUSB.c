@@ -110,6 +110,7 @@ static void GetDescriptor()
 			outPtr = string_descriptor[SetupPacket.wValue0];
 			wCount = *outPtr;
 		}
+
 /*
 		else if (SetupPacket.wValue1 == DEVICE_QUALIFIER_DESCRIPTOR)
 		{
