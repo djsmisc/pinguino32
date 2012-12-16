@@ -14,12 +14,16 @@
 ########################################################################
 #	Supported CPU's                                                    #
 ########################################################################
+#                                                                      #
 #   18f2455		18f2550		18f25k50	18f26j50                       #
 #	18f4455		18f4550		18f45k50	18f46j50                       #
+#                                                                      #
 ########################################################################
 #	Work in progress                                                   #
 ########################################################################
-#	16f1455		18f14k50                                               #
+#                                                                      #
+#	16f1455	18f14k50	                                               #
+#                                                                      #
 ########################################################################
 
 LOW_SPEED	= 1
@@ -29,7 +33,7 @@ HIGH_SPEED	= 0
 #	CONFIGURATION OPTIONS                                              #
 ########################################################################
 
-CPU			= 18f46j50
+CPU			= 18f4550
 
 # speed (MHz) of the external or internal crystal
 #CRYSTAL		= INTOSC
@@ -39,8 +43,10 @@ CRYSTAL		= 20
 # usb speed (HIGH_SPEED or LOW_SPEED)
 USBSPEED	= $(HIGH_SPEED)
 
-# sdcc's toolchain directory
+# SDCC's toolchain directory
 SDCCDIR		= /dvpt/sdcc
+# Pinguino directory
+PINGUINODIR = /home/regis/Hobbies/Electronique/Projets/Pinguino/local/branches/x.4
 
 ########################################################################
 #       DO NOT CHANGE FOLLOWINGS WITHOUT CARE                          #
@@ -57,7 +63,8 @@ ifeq ($(USBSPEED), $(LOW_SPEED))
 CRYSTAL	 = 8
 endif
 
-FAM			= $(shell echo $(CPU) | cut -c 1-3)
+#FAM			= $(shell echo $(CPU) | cut -c 1-3)
+FAM			= $(findstring 18f, $(CPU))
 
 ifeq ($(FAM), 18f)
 ARCH		= pic16
@@ -72,18 +79,18 @@ else
 PRJ		= Bootloader_v$(MAJ_VER).$(MIN_VER)_$(CPU)_X$(CRYSTAL)MHz
 endif
 
-# startup files in sdcc/sources/sdcc/device/lib/pic16/startup
 # crt0.o	minimal initialisation routine
 # crt0i.o	initialisation of variables
 # crt0iz.o	RAM cleanup and initialisation of variables
-CRTB		= crt0iBoot4
+
+#CRTB		= crt0iBoot4
 CRTP		= crt0iPinguino
-SRCS		= main.c picUSB.c
-OBJS		= $(SRCS:.c=.o)
+SRCS		= $(wildcard src/*.c)
+OBJS		= $(SRCS:src/%.c=obj/%.o)
 
 BINDIR		= $(SDCCDIR)/bin
-INCLUDEDIR	= $(SDCCDIR)/share/sdcc/include/$(ARCH)
-LIBDIR		= $(SDCCDIR)/share/sdcc/lib/$(ARCH)
+#INCLUDEDIR	= $(SDCCDIR)/share/sdcc/non-free/include/$(ARCH)
+#LIBDIR		= $(SDCCDIR)/share/sdcc/lib/$(ARCH)
 
 CC			= $(BINDIR)/sdcc
 
@@ -103,41 +110,47 @@ CFLAGS		= -m$(ARCH) \
 #		       --opt-code-size
 #		       --optimize-hard \
 
-LFLAGS		= -Wl,"--map -w -s Boot4_$(CPU).lkr" \
-		      --use-crt=$(CRTB).o
-#		       --no-crt
+# default startup is used if no other option is defined
+# startup files are in sdcc/sources/sdcc/device/lib/pic16/startup
+LDFLAGS		= -Wl,"--map -w -s lkr/boot4.$(CPU).lkr" --no-crt
 
 # Main target
-all: start clean $(CRTB).o $(CRTP).o $(PRJ).hex size
+all: start clean $(CRTP).o $(PRJ).hex size
 
+# Start message
 start:
 	@echo Building $(PRJ) ...
-
+	
 # Deleting all the debug files generated
 clean:
-	@rm -f *.o *.cod *.asm *.lst *.map *.err
+	@echo Cleaning ...
+	@rm -f obj/*.o  obj/*.asm obj/*.lst
+	@rm -f hex/*.cod hex/*.map hex/*.lst
 
-# make crt0Boot4.o
-$(CRTB).o:	%.o: %.c
+# make obj/crt0Boot4.o
+#$(CRTB).o:	%.o: %.c
+#	@$(CC) $(CFLAGS) -c $< -o obj/$@
+
+# make obj/crt0iPinguino.o
+$(CRTP).o:
+	@echo Compiling $(CRTP).o ...
+	@$(CC) $(CFLAGS) --ivt-loc=$(ENTRY) -c obj/$(CRTP).c -o obj/crt0i$(CPU).o
+	@cp obj/crt0i$(CPU).o $(PINGUINODIR)/p8/obj/
+
+# Compiling and assembling all the src/.c in obj/.o
+obj/%.o: src/%.c
+	@echo Compiling ...
 	@$(CC) $(CFLAGS) -c $< -o $@
-
-# make crt0iPinguino.o
-$(CRTP).o:	%.o: %.c
-	@$(CC) $(CFLAGS) --ivt-loc=$(ENTRY) -c $< -o crt0i$(CPU).o
 
 # Linking the modules all together
 $(PRJ).hex: $(OBJS)
-	@$(CC) $(CFLAGS) $(LFLAGS) -I $(INCLUDEDIR) -o $(PRJ).hex $(OBJS)
-	
-# Compiling and assembling all the modules
-%.o: %.c
-	@$(CC) -c $(CFLAGS) $<
-#-L $(LIBDIR) -I $(INCLUDEDIR) 
+	@echo Linking ...
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o hex/$@ $^
 
 # Calculating the whole code size
 size:
-	@./codesize.py $(PRJ)
+	@tools/codesize.py hex/$(PRJ)
 	
 # Programming the Chip
 burn:
-	./picpgm -pic PIC$(CPU) $(PRJ).hex
+	tools/picpgm -pic PIC$(CPU) hex/$(PRJ).hex
