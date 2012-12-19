@@ -1,12 +1,14 @@
 /*	----------------------------------------------------------------------------
-	FILE:				flash.c
-	PROJECT:			pinguino
-	PURPOSE:			flash memory functions
+	FILE:			flash.c
+	PROJECT:		pinguino
+	PURPOSE:		flash memory functions
 	PROGRAMER:		jean-pierre mandon <jpmandon@gmail.com>
 	FIRST RELEASE:	2008
 	LAST RELEASE:	Fixed for Beta 9 2010
 	----------------------------------------------------------------------------
-	TODO : 
+	TODO : PIC18Fx6j50 
+    * erase bloack must be 1024 bytes long not 64
+    * write block can 2- or 32-bytes long
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -28,6 +30,8 @@
 
 #include <pic18fregs.h>
 #include <typedef.h>
+
+#error "*** FLASH.C MUST BE UPDATED ! ***"
 
 void EraseFlash(u16 address)
 {

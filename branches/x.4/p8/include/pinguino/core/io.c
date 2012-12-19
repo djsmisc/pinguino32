@@ -48,15 +48,15 @@ void IOsetDigital(void)
         ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
         CMCON = 0x07;               // Comparators as Digital I/O
 
-	#elif defined(PIC18F26J50) || defined(PIC18F46J50)
+	#elif defined(PINGUINO26J50) || defined(PINGUINO46J50)
         ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
         ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
 
-    #elif defined(PIC18F25K50) || defined(PIC18F45K50)
+    #elif defined(PINGUINO25K50) || defined(PINGUINO45K50)
         ANSELA = 0;				    // all I/O to Digital mode
         ANSELB = 0;				    // all I/O to Digital mode
         ANSELC = 0;				    // all I/O to Digital mode
-        #if defined(PIC18F45K50)
+        #if defined(PINGUINO45K50)
             ANSELD = 0;			    // all I/O to Digital mode
             ANSELE = 0;			    // all I/O to Digital mode
         #endif
@@ -95,7 +95,7 @@ void IOsetDigital(void)
 
 void IOsetRemap(void)
 {
-    #if defined(PIC18F26J50) || defined(PIC18F46J50)
+    #if defined(PINGUINO26J50) || defined(PINGUINO46J50)
 
         SystemUnlock();
         PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
@@ -134,7 +134,7 @@ void IOsetRemap(void)
     #else
         nop();
 
-    #endif /* defined(PIC18F26J50) || defined(PIC18F46J50) */
+    #endif /* defined(PINGUINO26J50) || defined(PINGUINO46J50) */
 }
 
 #endif /* __REMAP_C */

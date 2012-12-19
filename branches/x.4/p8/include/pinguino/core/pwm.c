@@ -40,7 +40,7 @@
 							//But this can only be done if user can change the Configuration bit in bootloader firmware.
 #endif
 
-#if defined(PIC18F26J50)
+#if defined(PINGUINO26J50)
 	#define CCP1 		10
 	#define CCP2 		11
 #else

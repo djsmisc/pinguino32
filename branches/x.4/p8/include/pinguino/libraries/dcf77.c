@@ -345,10 +345,10 @@ void DCF77_start(u8 dcfPin)
         PIR2bits.TMR3IF = 0;
         TMR3H = TMR_PRELOADH;
         TMR3L = TMR_PRELOADL;
-        #if defined(PIC18F2550) || defined(PIC18F4550)
+        #if defined(__18f2550) || defined(__18f4550)
             T3CON = T3_ON | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;
         #endif
-        #if defined(PIC18F26J50)
+        #if defined(__18f26j50) || defined(__18f46j50)
             T3CON = T3_ON | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;// | T3_SOURCE_T1OFF;
         #endif
 //    }
@@ -363,9 +363,9 @@ void DCF77_start(u8 dcfPin)
         PIR1bits.TMR1IF = 0;
         TMR1H = high8(TMR_PRELOAD);
         TMR1L =  low8(TMR_PRELOAD);
-        #if defined(PIC18F2550) || defined(PIC18F4550)
+        #if defined(__18f2550) || defined(__18f4550)
             T1CON = T1_ON | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT | T1_RUN_FROM_ANOTHER;
-        #elif defined(PIC18F26J50) || defined(PIC18F46J50)
+        #elif defined(__18f26j50) || defined(__18f46j50)
             T1CON = T1_ON | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
         #endif
     }

@@ -3,7 +3,7 @@
 // written by Jean-Pierre MANDON 2008 jp.mandon@free.fr
 /*
 	CHANGELOG:
-	23-11-2012		regis blanchot		added PIC18F120,1320,14k22,2455,4455,46j50 support
+	23-11-2012		regis blanchot		added __18f120,1320,14k22,2455,4455,46j50 support
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -50,7 +50,7 @@
 
 // rx buffer length
 #ifndef RXBUFFERLENGTH
-    #if defined(PIC18F1220) || defined(PIC18F1320)
+    #if defined(__18f1220) || defined(__18f1320)
         #define RXBUFFERLENGTH 64
     #else
         #define RXBUFFERLENGTH 128
@@ -69,8 +69,8 @@ void serial_begin(unsigned long baudrate)
 	spbrg=(48000000/(4*baudrate))-1;
 	highbyte=spbrg/256;
 	lowbyte=spbrg%256;
-#if defined(PIC18F1220) || defined(PIC18F1320) || \
-    defined(PIC18F14K22) || defined(PIC18LF14K22)
+#if defined(__18f1220) || defined(__18f1320) || \
+    defined(__18f14k22) || defined(__18lf14k22)
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
 	BAUDCTLbits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
@@ -80,7 +80,7 @@ void serial_begin(unsigned long baudrate)
 	PIE1bits.RCIE=1;                        // enable interrupt on RX
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 	TXSTAbits.TXEN=1;                       // enable TX
-#elif defined(PIC18F2550) || defined(PIC18F4550)
+#elif defined(__18f2550) || defined(__18f4550)
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
 	BAUDCONbits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
@@ -90,7 +90,7 @@ void serial_begin(unsigned long baudrate)
 	PIE1bits.RCIE=1;                        // enable interrupt on RX
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 	TXSTAbits.TXEN=1;                       // enable TX
-#elif defined(PIC18F26J50) || defined(PIC18F46J50)
+#elif defined(__18f26j50) || defined(__18f46j50)
 	TXSTA1bits.BRGH=1;               	  	 // set BRGH bit
 	BAUDCON1bits.BRG16=1;					 // set 16 bits SPBRG
 	SPBRGH1=highbyte;                        // set UART speed SPBRGH
@@ -134,12 +134,12 @@ void serial_interrupt(void)
 	char caractere;
 	unsigned char newwp;
 
-#if defined(PIC18F1220) || defined(PIC18F1320) || \
-    defined(PIC18F14K22) || defined(PIC18LF14K22) || \
-    defined(PIC18F2550) || defined(PIC18F4550)
+#if defined(__18f1220) || defined(__18f1320) || \
+    defined(__18f14k22) || defined(__18lf14k22) || \
+    defined(__18f2550) || defined(__18f4550)
 	PIR1bits.RCIF=0;				// clear RX interrupt flag
 	caractere=RCREG;				// take received char
-#elif defined(PIC18F26J50) || defined(PIC18F46J50)
+#elif defined(__18f26j50) || defined(__18f46j50)
 	PIR1bits.RC1IF=0;				// clear RX interrupt flag
 	caractere=RCREG1;				// take received char
 #else
@@ -160,12 +160,12 @@ void serial_interrupt(void)
 // write char
 void serial_putchar(unsigned char caractere)
 {
-#if defined(PIC18F1220) || defined(PIC18F1320) || \
-    defined(PIC18F14K22) || defined(PIC18LF14K22) || \
-    defined(PIC18F2550) || defined(PIC18F4550)
+#if defined(__18f1220) || defined(__18f1320) || \
+    defined(__18f14k22) || defined(__18lf14k22) || \
+    defined(__18f2550) || defined(__18f4550)
 	while (!TXSTAbits.TRMT);
 	TXREG=caractere;		        // yes, send char
-#elif defined(PIC18F26J50) || defined(PIC18F46J50)
+#elif defined(__18f26j50) || defined(__18f46j50)
 	while (!TXSTA1bits.TRMT);
 	TXREG1=caractere;		        // yes, send char
 #else

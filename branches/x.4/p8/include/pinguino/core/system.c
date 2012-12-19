@@ -7,8 +7,8 @@
     LAST RELEASE:   7 Dec. 2012
     ----------------------------------------------------------------------------
     CHANGELOG:
-    21-11-2012        regis blanchot        added PIC18F1220,1320,14k22 support
-    07-12-2012        regis blanchot        added PIC18F25K50 and 45K50 support
+    21-11-2012        regis blanchot        added PINGUINO1220,1320,14k22 support
+    07-12-2012        regis blanchot        added PINGUINO25K50 and 45K50 support
                                             added low power functions
     ----------------------------------------------------------------------------
     This library is free software; you can redistribute it and/or
@@ -34,18 +34,18 @@
 #include <const.h>
 #include <macro.h>
 
-#if   defined(PIC18F1220)  || defined(PIC18F1320)
+#if   defined(PINGUINO1220)  || defined(PINGUINO1320)
     u32 _cpu_clock_ = 40000000;
 
-#elif defined(PIC18F2550)  || defined(PIC18F4550)  || \
-      defined(PIC18F25K50) || defined(PIC18F45K50) || \
-      defined(PIC18F2455)  || defined(PIC18F4455)
+#elif defined(PINGUINO2550)  || defined(PINGUINO4550)  || \
+      defined(PINGUINO25K50) || defined(PINGUINO45K50) || \
+      defined(PINGUINO2455)  || defined(PINGUINO4455)
     u32 _cpu_clock_ = 48000000;
 
-#elif defined(PIC18F14K22) || defined(PIC18LF14K22)
+#elif defined(PINGUINO14K22)
     u32 _cpu_clock_ = 64000000;
 
-#elif defined(PIC18f26j50) || defined(PIC18f46j50)
+#elif defined(PINGUINO26J50) || defined(PINGUINO46J50)
     u32 _cpu_clock_ = 48000000;
     #define _8MHZ_      0b111       // 7
     #define _4MHZ_      0b110       // 6
@@ -68,11 +68,16 @@
 
 #define SystemPeripheralClock() SystemInstructionClock()
 
+#define SystemDisablePeripheralInterrupt()  do { PIE1 = 0; PIE2 = 0;} while (0)
+
 // Software Reset
 #define SystemReset()           reset()
 
 // Enable watchdog timer
 #define SystemWatchdog()        do { WDTCONbits.SWDTEN = 1; } while (0)
+
+// Disable watchdog timer
+#define SystemNoWatchdog()        do { WDTCONbits.SWDTEN = 0; } while (0)
 
 // Clear watchdog timer
 #define SystemClearWatchdog()   clrwdt()
@@ -133,7 +138,7 @@ void WaitForStableVdd(void)
 
 void SystemWaitForStableOsc()
 {
-    #if defined(PIC18F26J50) || defined(PIC18F46J50)
+    #if defined(__18f26j50) || defined(__18f46j50)
 
         // Enable the PLL and wait 2+ms until the PLL locks
         u16 pll_startup_counter = 600;
@@ -143,7 +148,7 @@ void SystemWaitForStableOsc()
         // select INTOSC/256 as a 31.25 KHz clock source
         OSCTUNEbits.INTSRC = 1;
 
-    #elif defined(PIC18F25K50) || defined(PIC18F45K50)
+    #elif defined(__18f25k50) || defined(__18f45k50)
 
         OSCCON = 0x70;              // 0b01110000 : 111 = HFINTOSC (16 MHz)
         while (!OSCCONbits.HFIOFS); // wait HFINTOSC frequency is stable (HFIOFS=1) 

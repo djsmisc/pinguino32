@@ -16,11 +16,11 @@
 
 void analog_init(void)
 {
-#if defined(PIC18F1220) || defined(PIC18F1320)                                   // Pinguino pin number
+#if defined(PINGUINO1220) || defined(PINGUINO1320)                                   // Pinguino pin number
 	TRISA=TRISA | 0x1F; // 0b00011111 = RA0,1,2,3,4 = AN0 to AN4 are INPUT
 	ADCON1=0x1F;        // 0b00001000 = 0, 0, VRef-=VSS, VRef+=VDD, AN0 to AN4 enabled 
 	ADCON2=0xBD;        // 0b10111101 = Right justified, 0, 20 TAD, FOSC/16
-#elif defined(PIC18F4550)
+#elif defined(PINGUINO4550)
 	TRISA=TRISA | 0x2F;
 	TRISE=TRISE | 0x07;	
 	ADCON1=0x07;
@@ -30,7 +30,7 @@ void analog_init(void)
 	TRISE=TRISE | 0x03;	//RE0..1
 	ADCON1=0x08;		//AN0-AN6, Vref+ = VDD, RA4 as Digital o/p
 	ADCON2=0xBD;		//Right justified, 20TAD, FOSC/16
-#elif defined(PIC18F26J50)
+#elif defined(PINGUINO26J50)
 	TRISA=TRISA | 0x2F;	// 0b00101111 = RA0,1,2,3 and RA5 = AN0 to AN4 are INPUT
     //1 = Pin configured as a digital port
     //0 = Pin configured as an analog channel – digital input is disabled and reads ‘0’
@@ -48,7 +48,7 @@ void analog_init(void)
 
 void analogReference(u8 Type)
 {
-#if !defined(PIC18F26J50)
+#if !defined(PINGUINO26J50)
 	if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
 		ADCON1|=0x00;			//Vref+ = VDD
 	else if(Type == EXTERNAL)	//the voltage applied to the AREF pin (0 to 5V only) is used as the reference.
@@ -64,7 +64,7 @@ void analogReference(u8 Type)
 u16 analogread(u8 channel)
 {
 	u16 result=0;
-// #if defined(PIC18F4550) || defined(PICUNO_EQUO)
+// #if defined(PINGUINO4550) || defined(PICUNO_EQUO)
 // ADCON1=0x07;
 // #else
 // ADCON1=0x0A;

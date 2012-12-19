@@ -7,7 +7,7 @@
 	LAST RELEASE:	23-11-2012
 	----------------------------------------------------------------------------
 	CHANGELOG :
-	23-11-2012		rblanchot	added PIC18F1220,1320,14k22,2455,4455,46j50 support
+	23-11-2012		rblanchot	added __18f1220,1320,14k22,2455,4455,46j50 support
 	TODO :
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
@@ -37,12 +37,12 @@
 		#define ON_EVENT
 	#endif
 
-    #if !defined(PIC18F1220) && !defined(PIC18F1320) && \
-        !defined(PIC18F14K22) && !defined(PIC18LF14K22) && \
-        !defined (PIC18F2455) && !defined (PIC18F4455) && \
-        !defined (PIC18F2550) && !defined (PIC18F4550) && \
-        !defined (PIC18F25K50) && !defined (PIC18F45K50) && \
-        !defined(PIC18F26J50) && !defined(PIC18F46J50)
+    #if !defined(__18f1220) && !defined(__18f1320) && \
+        !defined(__18f14k22) && !defined(__18lf14k22) && \
+        !defined (__18f2455) && !defined (__18f4455) && \
+        !defined (__18f2550) && !defined (__18f4550) && \
+        !defined (__18f25k50) && !defined (__18f45k50) && \
+        !defined(__18f26j50) && !defined(__18f46j50)
         #error "Error : this library is intended to be used only with 8-bit Pinguino" 
     #endif
     
@@ -95,22 +95,22 @@ void detachInterrupt(u8 inter)
 		case INT_TMR3:
 			PIE2bits.TMR3IE = INT_DISABLE;
 			break;
-        #if defined(PIC18F26J50)
+        #if defined(__18f26j50) || defined(__18f46j50)
 		case INT_TMR4:
 			PIE3bits.TMR4IE = INT_DISABLE;
 			break;
         #endif
 		case INT_RB:
-		#if defined(PIC18F25K50) || defined(PIC18F45K50)
+		#if defined(__18f25k50) || defined(__18f45k50)
 			INTCONbits.IOCIE = INT_DISABLE;
         #else
 			INTCONbits.RBIE = INT_DISABLE;
         #endif
 			break;
-		#if !defined(PIC18F1220) && !defined(PIC18F1320) && \
-            !defined(PIC18F14K22) && !defined(PIC18LF14K22)
+		#if !defined(__18f1220) && !defined(__18f1320) && \
+            !defined(__18f14k22) && !defined(__18lf14k22)
 		case INT_USB:
-		#if defined(PIC18F25K50) || defined(PIC18F45K50)
+		#if defined(__18f25k50) || defined(__18f45k50)
 			PIE3bits.USBIE = INT_DISABLE;
         #else
 			PIE2bits.USBIE = INT_DISABLE;
@@ -129,8 +129,8 @@ void detachInterrupt(u8 inter)
 		case INT_CCP1:
 			PIE1bits.CCP1IE = INT_DISABLE;
 			break;
-		#if !defined(PIC18F1220) && !defined(PIC18F1320) && \
-            !defined(PIC18F14K22) && !defined(PIC18LF14K22)
+		#if !defined(__18f1220) && !defined(__18f1320) && \
+            !defined(__18f14k22) && !defined(__18lf14k22)
 		case INT_CCP2:
 			PIE2bits.CCP2IE = INT_DISABLE;
 			break;
@@ -139,35 +139,35 @@ void detachInterrupt(u8 inter)
 			PIE2bits.OSCFIE = INT_DISABLE;
 			break;
 		case INT_CM:
-		#if defined(PIC18F4550) || defined(PIC18F2550)
+		#if defined(__18f4550) || defined(__18f2550)
 			PIE2bits.CMIE = INT_DISABLE;
 		#endif
-		#ifdef PIC18F26J50
+		#if defined(__18f26j50) || defined(__18f46j50)
 			PIE2bits.CM1IE = INT_DISABLE;
 		#endif
 			break;
-		#if defined(PIC18F4550) || defined(PIC18F2550)
+		#if defined(__18f4550) || defined(__18f2550)
 		case INT_EE:
 			PIE2bits.EEIE = INT_DISABLE;
 			break;
 		#endif
 		case INT_BCL:
-		#if defined(PIC18F4550) || defined(PIC18F2550)
+		#if defined(__18f4550) || defined(__18f2550)
 			PIE2bits.BCLIE = INT_DISABLE;
 		#endif
-		#ifdef PIC18F26J50
+		#if defined(__18f26j50) || defined(__18f46j50)
 			PIE2bits.BCL1IE = INT_DISABLE;
 		#endif
 			break;
 		case INT_HLVD:
-		#if defined(PIC18F4550) || defined(PIC18F2550)
+		#if defined(__18f4550) || defined(__18f2550)
 			PIE2bits.HLVDIE = INT_DISABLE;
 		#endif
-		#ifdef PIC18F26J50
+		#if defined(__18f26j50) || defined(__18f46j50)
 			PIE2bits.LVDIE = INT_DISABLE;
 		#endif
 			break;
-		#ifdef PIC18F4550
+		#if defined(__18f4550)
 		case INT_SSP:
 			PIE1bits.SSPIE = INT_DISABLE;
 			break;
@@ -220,7 +220,7 @@ void int_start()
 	#endif
 
 	#ifdef TMR4INT
-    #if defined(PIC18F26J50)
+	#if defined(__18f26j50) || defined(__18f46j50)
 		T4CONbits.TMR4ON = ON;
 	#endif
 	#endif
@@ -252,7 +252,7 @@ void int_stop()
 	#endif
 
 	#ifdef TMR4INT
-    #if defined(PIC18F26J50)
+		#if defined(__18f26j50) || defined(__18f46j50)
 		T4CONbits.TMR4ON = OFF;
 	#endif
 	#endif
@@ -340,10 +340,10 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				// 1us = 1.000 ns = 12 cy
 				preloadH[INT_TMR1] = high8(0xFFFF - 12);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 12);
-                #if defined(PIC18F2550) || defined(PIC18F4550)
+                #if defined(__18f2550) || defined(__18f4550)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
-                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+                #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
 				break;
@@ -352,10 +352,10 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR1] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 1500);
-                #if defined(PIC18F2550) || defined(PIC18F4550)
+                #if defined(__18f2550) || defined(__18f4550)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
-                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+                #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
 				break;
@@ -366,10 +366,10 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				preloadH[INT_TMR1] = high8(0xFFFF - 60000);
 				preloadL[INT_TMR1] =  low8(0xFFFF - 60000);
 				intCountLimit[INT_TMR1] = delay * 25;
-                #if defined(PIC18F2550) || defined(PIC18F4550)
+                #if defined(__18f2550) || defined(__18f4550)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
-                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+                #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
 				break;
@@ -394,7 +394,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 
 void OnRTCC(callback func, u16 delay)
 {
-#if defined(PIC18F2550) || defined(PIC18F4550)
+#if defined(__18f2550) || defined(__18f4550)
 	u8 _t1con = 0;
 
 	if (intUsed[INT_TMR1] == INT_NOT_USED)
@@ -434,7 +434,8 @@ void OnRTCC(callback func, u16 delay)
 	#endif
 #endif
 
-#if defined(PIC18F26J50) || defined(PIC18F46J50)
+#if defined(__18f26j50) || defined(__18f46j50)
+// TODO
 #endif
 }
 
@@ -513,10 +514,10 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				// 1us = 1.000 ns = 12 cy
 				preloadH[INT_TMR3] = high8(0xFFFF - 12);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 12);
-                #if defined(PIC18F2550) || defined(PIC18F4550)
+                #if defined(__18f2550) || defined(__18f4550)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT;
                 #endif
-                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+                #if defined(__18f26j50) || defined(__18f46j50)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT | T3_SOURCE_T1OSC;
                 #endif
 				break;
@@ -525,10 +526,10 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				// 12.000 / 8 = 1.500
 				preloadH[INT_TMR3] = high8(0xFFFF - 1500);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 1500);
-                #if defined(PIC18F2550) || defined(PIC18F4550)
+                #if defined(__18f2550) || defined(__18f4550)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;
                 #endif
-                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+                #if defined(__18f26j50) || defined(__18f46j50)
 				//_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT | T3_SOURCE_T1OFF;
 				_t3con = 0b00110010;
                 #endif
@@ -540,10 +541,10 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				preloadH[INT_TMR3] = high8(0xFFFF - 60000);
 				preloadL[INT_TMR3] =  low8(0xFFFF - 60000);
 				intCountLimit[INT_TMR3] = delay * 25;
-                #if defined(PIC18F2550) || defined(PIC18F4550)
+                #if defined(__18f2550) || defined(__18f4550)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;
                 #endif
-                #if defined(PIC18F26J50) || defined(PIC18F46J50)
+                #if defined(__18f26j50) || defined(__18f46j50)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT | T3_SOURCE_T1OSC;
                 #endif
 				break;
@@ -568,7 +569,7 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 #endif
 
 #ifdef TMR4INT
-#if defined(PIC18F26J50)
+#if defined(__18f26j50) || defined(__18f46j50)
 u8 OnTimer4(callback func, u8 timediv, u16 delay)
 {
 	u8 _t4con = 0;
@@ -621,7 +622,7 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
 }
 #else
 #error "Your processor don't have any Timer4."
-#endif /* defined(PIC18F26J50) */
+#endif /* defined(__18f26j50) || defined(__18f46j50) */
 #endif /* TMR4INT */
 
 /*	----------------------------------------------------------------------------
@@ -940,7 +941,11 @@ void OnEvent(u8 inter, callback func)
 				PIR2bits.BCLIF = 0;
 				break;
 			case INT_USB:					// usb
+            #if defined(__18f25k50) || defined(__18f45k50)
+                PIR3bits.USBIF = 0;
+            #else
 				PIR2bits.USBIF = 0;
+            #endif
 				break;
 			case INT_SSP:
 				PIR1bits.SSPIF = 0;

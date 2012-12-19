@@ -194,7 +194,7 @@
 //	#define RC2 12
 	#define CCP1 12
 
-    #if defined(PIC18F26J50) || defined(PIC18F46J50)
+    #if defined(PINGUINO26J50) || defined(PINGUINO46J50)
         #define LED1	12
         #define USERLED	12
     #endif
@@ -222,9 +222,9 @@
 	#define HLVDIN 17
 	#define C2OU 17
 
-    #if defined(PIC18F2550) || defined(PIC18F4550) || \
-        defined(PIC18F25K50) || defined(PIC18F45K50) || \
-        defined(PIC18F2455) || defined(PIC18F4455)
+    #if defined(PINGUINO2550) || defined(PINGUINO4550) || \
+        defined(PINGUINO25K50) || defined(PINGUINO45K50) || \
+        defined(PINGUINO2455) || defined(PINGUINO4455)
     
         // run led pin
         #define A4 18
