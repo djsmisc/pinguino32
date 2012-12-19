@@ -133,7 +133,6 @@ typedef enum {
 /* Petit FatFs module application interface                     */
 
 FRESULT pf_mount (FATFS*);						/* Mount/Unmount a logical drive */
-FRESULT pf_unmount ();						/* Mount/Unmount a logical drive */
 FRESULT pf_open (const char*);					/* Open a file */
 FRESULT pf_read (void*, u16, u16*);			/* Read data from the open file */
 FRESULT pf_write (const void*, u16, u16*);	/* Write data to the open file */
