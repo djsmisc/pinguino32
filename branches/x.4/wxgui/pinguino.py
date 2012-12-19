@@ -860,6 +860,7 @@ class Pinguino(framePinguinoX, Editor):
                         "-mpic16",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
+                        "-D" + board.board,\
                         "-I" + os.path.join(P8_DIR, 'include'),\
                         "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                         "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
@@ -898,6 +899,7 @@ class Pinguino(framePinguinoX, Editor):
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
+                        "-D" + board.board,\
                         "-I" + os.path.join(P8_DIR, 'include'),\
                         "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                         "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
@@ -928,6 +930,7 @@ class Pinguino(framePinguinoX, Editor):
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
+                        "-D" + board.board,\
                         "-I" + os.path.join(P8_DIR, 'include'),\
                         "-I" + os.path.join(P8_DIR, 'include', 'non-free'),\
                         "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'core'),\
