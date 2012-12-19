@@ -8,6 +8,7 @@
 /* Status of Disk Functions */
 typedef u8	DSTATUS;
 
+
 /* Results of Disk Functions */
 typedef enum {
 	RES_OK = 0,		/* 0: Function succeeded */
@@ -16,13 +17,13 @@ typedef enum {
 	RES_PARERR		/* 3: Invalid parameter */
 } DRESULT;
 
+
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
 DSTATUS disk_initialize (void);
 DRESULT disk_readp (u8*, u32, u16, u16);
 DRESULT disk_writep (const u8*, u32);
-//void disk_timerproc (void);
 u16 decreasetim(u16);
 
 #define STA_NOINIT		0x01	/* Drive not initialized */

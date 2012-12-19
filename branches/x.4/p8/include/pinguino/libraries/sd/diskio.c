@@ -4,25 +4,25 @@
 #ifndef _DISKIOC
 #define _DISKIOC
 
-#include "diskio.h"
+#include <sd/diskio.h>
 #include <delay.c>
-//#include <serial.c>
 
 // Pinguino 18F26J50 uses SPI2 (cf. io.c)
 // because SPI1 share same pins as UART1
 #if defined(PINGUINO26J50)
     #define SD_CS			PORTBbits.RB0		// SPI2 Chip Select
     #define SD_CS_TRIS		TRISBbits.TRISB0	// SPI2 Chip Select TRIS
-    #define SPI_MISO_TRIS	TRISBbits.TRISB1	// SPI2 SDO Master input/Slave output TRIS
+    #define SPI_MISO_TRIS	TRISBbits.TRISB3	// SPI2 SDO Master input/Slave output TRIS
     #define SPI_SCK_TRIS	TRISBbits.TRISB2	// SPI2 SCK Clock TRIS
-    #define SPI_MOSI_TRIS	TRISBbits.TRISB3	// SPI2 SDI Master output/Slave input TRIS
+    #define SPI_MOSI_TRIS	TRISBbits.TRISB1	// SPI2 SDI Master output/Slave input TRIS
     #define BUFFER          SSP2BUF
     #define CONFIG          SSP2CON1
     #define STATUS          SSP2STAT
-    //#define BF              SSP2STATbits.BF
     #define WCOL            SSP2CON1bits.WCOL
     #define FLAG            PIR3bits.SSP2IF
     #define ENABLE          SSP2CON1bits.SSPEN
+#else
+    #error "This library is only for Pinguino x6j50"
 #endif
 
 /* Definitions for MMC/SDC command */
@@ -73,11 +73,9 @@ static u16 CardType;
 /*-----------------------------------------------------------------------*/
 /* Exchange a byte between PIC and MMC via SPI  (Platform dependent)     */
 /*-----------------------------------------------------------------------*/
-    
-u8 xmit_spi(unsigned char datax)
-{
-    char clear;
 
+u8 xmit_spi(unsigned char datax) {
+    char clear;
     clear = BUFFER;        // clear BF
     FLAG = 0;              // enable SPI2 interrupt
     BUFFER = datax;        // send data
@@ -86,20 +84,10 @@ u8 xmit_spi(unsigned char datax)
         return (1);
     else
         while (!FLAG);
-
     return(0);
-/*
-    do {                        // IF BUFFER IS FULL IT IS READ BY DUMMY VARIABLE
-        clear = BUFFER;        // BEFORE ANYTHING IS WRITTEN THIS WILL MAKE BF = 0
-    } while(BF);   // wait transfer complete 
-	BUFFER = datax;			// write to buffer for TX
-	while(!BF);	// wait transfer complete
-	return BUFFER;				// read the received value
-*/
 }
 
-u8 rcvr_spi(void)
-{
+u8 rcvr_spi(void) {
     char clear;
     clear = BUFFER; //clear BF
     FLAG = 0;
@@ -120,11 +108,8 @@ static u8 wait_ready (void)
 	Tim2 = 500;	/* Wait for ready in timeout of 500ms */
 	res=rcvr_spi();
 	do
-	{
 		res = rcvr_spi();
-		Tim2 = decreasetim(Tim2);
-	}
-	while ((res != 0xFF) && Tim2);
+	while ((res != 0xFF) && (Tim2--));
 
 	return res;
 }
@@ -170,86 +155,37 @@ static void power_off (void)
 /*-----------------------------------------------------------------------*/
 /* Send a command packet to MMC                                          */
 /*-----------------------------------------------------------------------*/
-//    TRISCbits.TRISC2 = OUTPUT;
-//    LATCbits.LATC2 = 1;
-
-	/* return response
-	FF - timeout 
-	00 - command accepted
-	01 - command received, card in idle state after RESET
-
-	other codes:
-	bit 0 = Idle state
-	bit 1 = Erase Reset
-	bit 2 = Illegal command
-	bit 3 = Communication CRC error
-	bit 4 = Erase sequence error
-	bit 5 = Address error
-	bit 6 = Parameter error
-	bit 7 = Always 0
-	*/
-
-/*
-u8 send_cmd(u8 c, u32 a)
-{
-	u8 i, r;
-
-	// enable SD card
-	// CS low
-	SELECT();
-
-	// send a comand packet (6 bytes)
-	xmit_spi(c | 0x40);    // send command 
-	xmit_spi(a>>24);       // msb of the address
-	xmit_spi(a>>16);       
-	xmit_spi(a>>8);
-	xmit_spi(a);           // lsb
-
-	xmit_spi(0x95);        // send CMD0 CRC 
-
-	// now wait for a response, allow for up to 8 bytes delay
-	for(i=0; i<8; i++) 
-	{
-		r = rcvr_spi();      
-		if (r != 0xFF) 
-			break;
-	}
-
-	return (r);         
-	// NOTE CS is still low!
-}
-*/
 
 static u8 send_cmd (
-	u8 cmd,		// Command byte
-	u32 arg		// Argument
+	u8 cmd,		/* Command byte */
+	u32 arg		/* Argument */
 )
 {
 	u8 n, res;
 	u32 longtimeout;
 
-	if (cmd & 0x80) {	// ACMD<n> is the command sequense of CMD55-CMD<n>
+	if (cmd & 0x80) {	/* ACMD<n> is the command sequense of CMD55-CMD<n> */
 		cmd &= 0x7F;
 		res = send_cmd(CMD55, 0);
 		if (res > 1) return res;
 	}
 
-	// Send command packet
+	/* Send command packet */
 	SELECT();
-	xmit_spi(cmd);						// Start + Command index
-	xmit_spi((u8)(arg >> 24));		// Argument[31..24]
-	xmit_spi((u8)(arg >> 16));		// Argument[23..16]
-	xmit_spi((u8)(arg >> 8));			// Argument[15..8]
-	xmit_spi((u8)arg);				// Argument[7..0]
-	n = 0x01;							// Dummy CRC + Stop
-	if (cmd == CMD0) n = 0x95;			// Valid CRC for CMD0(0)
-	if (cmd == CMD8) n = 0x87;			// Valid CRC for CMD8(0x1AA)
+	xmit_spi(cmd);						/* Start + Command index */
+	xmit_spi((u8)(arg >> 24));		/* Argument[31..24] */
+	xmit_spi((u8)(arg >> 16));		/* Argument[23..16] */
+	xmit_spi((u8)(arg >> 8));			/* Argument[15..8] */
+	xmit_spi((u8)arg);				/* Argument[7..0] */
+	n = 0x01;							/* Dummy CRC + Stop */
+	if (cmd == CMD0) n = 0x95;			/* Valid CRC for CMD0(0) */
+	if (cmd == CMD8) n = 0x87;			/* Valid CRC for CMD8(0x1AA) */
 	if (cmd == CMD12) n = 0xC3;
 	xmit_spi(n);
 
-	// Receive command response
-	if (cmd == CMD12) rcvr_spi();		// Skip a stuff byte when stop reading
-	n = NCR_TIMEOUT;								// Wait for a valid response in timeout of 10 attempts
+	/* Receive command response */
+	if (cmd == CMD12) rcvr_spi();		/* Skip a stuff byte when stop reading */
+	n = NCR_TIMEOUT;								/* Wait for a valid response in timeout of 10 attempts */
 	do
 		res = rcvr_spi();
 	while ((res == 0xFF) && (--n) );
@@ -267,7 +203,7 @@ static u8 send_cmd (
 	if((cmd != CMD9)&&(cmd != CMD10)&&(cmd != CMD17)&&(cmd != CMD18)&&(cmd != CMD24)&&(cmd != CMD25))
 		DESELECT();
 
-	return res;			// Return with the response value
+	return res;			/* Return with the response value */
 }
 
 void pin_init(void)
@@ -292,18 +228,15 @@ DSTATUS disk_initialize(void)
 	power_on();							/* Force socket power on */
 
 	for (n = 10; n; n--) xmit_spi(0xFF);	/* Dummy clocks */
-
 	ty = 0;
 	timeout=100;
-
-    // Trying to enter Idle state
+// Trying to enter Idle state
 	do {
 		DESELECT();
 		xmit_spi(0xFF);
 		SELECT();
 		rep = send_cmd(CMD0,0);
-	} while ((rep != 1) && (--timeout));
-
+	} while ((rep != 1) && (--timeout) );
     if(timeout == 0)
     {
 		DESELECT();
@@ -311,17 +244,12 @@ DSTATUS disk_initialize(void)
 		SELECT();
 		rep = send_cmd(CMD12,0);
 		rep = send_cmd(CMD0,0);
-		if (rep != 1)
-        {
-            return STA_NOINIT;
-        }
+		if (rep != 1) 	return STA_NOINIT;
 	}
 
 	rep = send_cmd(CMD8, 0x1AA);
 
-    // SDHC
-	if ( rep == 1)
-    {
+	if ( rep == 1) {	/* SDHC */
 		for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();		/* Get trailing return value of R7 resp */
 
 		if (ocr[2] == 0x01 && ocr[3] == 0xAA) {				/* The card can work at vdd range of 2.7-3.6V */
@@ -332,11 +260,9 @@ DSTATUS disk_initialize(void)
 				ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;	/* SDv2 */
 			}
 		}
-	}
 
-    // SDSC or MMC
-    else
-    {
+	} else {							/* SDSC or MMC */
+
 		if (send_cmd(ACMD41, 0) <= 1) 	{
 			ty = CT_SD1; cmd = ACMD41;	/* SDv1 */
 		} else {
@@ -347,21 +273,16 @@ DSTATUS disk_initialize(void)
 
 		if (!tmr || send_cmd(CMD16, 512) != 0)			/* Set R/W block length to 512 */
 			ty = 0;
+
 	}
 
 	CardType = ty;
 	release_spi();
 
-    // Initialization succeded
-	if (ty)
-    {
+	if (ty) {			/* Initialization succeded */
 		FCLK_FAST();
 		return RES_OK;
-	}
-
-    // Initialization failed
-    else
-    {
+	} else {			/* Initialization failed */
 		power_off();
 		return STA_NOINIT;
 	}
@@ -387,14 +308,13 @@ DRESULT disk_readp (
 	res = RES_ERROR;
 	if (send_cmd(CMD17, lba) == 0) {		/* READ_SINGLE_BLOCK */
 		Tim1 = 200;
-		do {							/* Wait for data packet in timeout of 200ms */
+		do							/* Wait for data packet in timeout of 200ms */
 			rc = rcvr_spi();
-			Tim1 = decreasetim(Tim1);
-		} while (rc == 0xFF && Tim1);
+//			Tim1 = decreasetim(Tim1);
+		while (rc == 0xFF && (Tim1--));
 	}
 
-	if (Tim1)
-    {
+	if(Tim1) {
 		if (rc == 0xFE) {				/* A data packet arrived */
 			bc = 514 - ofs - cnt;
 
@@ -444,9 +364,7 @@ DRESULT disk_writep (
 			wc--; bc--;
 		}
 		res = RES_OK;
-	}
-    else
-    {
+	} else {
 		if (sa) {	/* Initiate sector write process */
 			if (!(CardType & CT_BLOCK)) sa *= 512;	/* Convert to byte address if needed */
 			if (send_cmd(CMD24, sa) == 0) {			/* WRITE_SINGLE_BLOCK */
@@ -469,14 +387,12 @@ DRESULT disk_writep (
 }
 
 u16 decreasetim(u16 Tim)
-{
-    u16 i;
-
-    for (i=0; i<1000; i++);
-    if (Tim) Tim--;
-    return Tim;
+{ u16 i;
+  for (i=0; i<1; i++);
+  if (Tim) Tim--;
+  return Tim;
 }
-  
+
 /********************************************************************
  * Function:        void PrintSectorData( BYTE* data )
  *
@@ -492,34 +408,36 @@ u16 decreasetim(u16 Tim)
  *
  * Note:            None
  *******************************************************************/
+/*
 void disk_printp( u8* datx )
 {
 	u16 k, px;
 
 	for(k = 0; k < 512; k++)
 	{
-		//serial_printf("%2X ",datx[k]);
+		serial_printf("%2X ",datx[k]);
 
 		if( ((k + 1) % 16) == 0)
 		{
-			//serial_printf("  ");
+			serial_printf("  ");
 
 			for(px = (k - 15); px <= k; px++)
 			{
 				if( ((datx[px] > 33) && (datx[px] < 126)) || (datx[px] == 0x20) )
 				{
-					//serial_printf("%c ",datx[px]);
+					serial_printf("%c ",datx[px]);
 				}
 				else
 				{
-					//serial_printf(".");
+					serial_printf(".");
 				}
 			}
 
-			//serial_printf("\n\r");
+			serial_printf("\n\r");
 		}
 	}
 
 	return;
 }
+*/
 #endif
