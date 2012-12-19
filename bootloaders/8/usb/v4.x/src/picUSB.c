@@ -73,6 +73,7 @@ word wCount;                            // Number of bytes of data
 #endif
 
 #pragma udata usbram5 SetupPacket controlTransferBuffer
+///#pragma udata gpr5 SetupPacket controlTransferBuffer
 volatile setupPacketStruct SetupPacket;
 volatile byte controlTransferBuffer[EP0_BUFFER_SIZE];
 volatile allcmd bootCmd;
@@ -102,7 +103,7 @@ static void GetDescriptor()
 			outPtr = (byte *)&configuration_descriptor;
 			wCount = configuration_descriptor.Header.wTotalLength;
 		}
-
+#if (STRING == 1)
 		else if (SetupPacket.wValue1 == STRING_DESCRIPTOR)
 		{
 			requestHandled = 1;
@@ -110,7 +111,7 @@ static void GetDescriptor()
 			outPtr = string_descriptor[SetupPacket.wValue0];
 			wCount = *outPtr;
 		}
-
+#endif
 /*
 		else if (SetupPacket.wValue1 == DEVICE_QUALIFIER_DESCRIPTOR)
 		{

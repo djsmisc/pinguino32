@@ -61,7 +61,9 @@
         #pragma config CCP2MX = ON			// CCP2 Mux RC1
         #pragma config STVREN = ON			// Stack Overflow Reset
         #pragma config LVP = OFF			// Low Voltage Programming
-        //#pragma config ICPRT = OFF			// ICP
+        #if defined(__18f4550)
+        #pragma config ICPRT = OFF			// ICP
+        #endif
         #pragma config XINST = OFF			// Ext CPU Instruction Set
         #pragma config DEBUG = OFF			// Background Debugging
         #pragma config CP0 = OFF			// Code Protect
@@ -202,8 +204,10 @@
     #pragma config STVREN = ON          // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
     #pragma config LVP = ON             // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled if MCLRE is also 1)
     #pragma config XINST = OFF          // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
+    #if defined(__18f45k50)
     #pragma config ICPRT = OFF			// ICP
-
+    #endif
+    
     // CONFIG5L
     #pragma config CP0 = OFF            // Block 0 Code Protect (Block 0 is not code-protected)
     #pragma config CP1 = OFF            // Block 1 Code Protect (Block 1 is not code-protected)

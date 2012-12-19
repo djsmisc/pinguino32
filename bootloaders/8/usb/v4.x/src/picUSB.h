@@ -321,7 +321,9 @@ extern unsigned int wCount; // Total # of bytes to move
 // USB Descriptors
 extern __code USB_Device_Descriptor device_descriptor;
 extern __code USB_Configuration_Descriptor configuration_descriptor;
+#if (STRING == 1)
 extern const char * const string_descriptor[];
+#endif
 
 // Global variables
 extern byte deviceState;    // Visible device states (from USB 2.0, chap 9.1.1)

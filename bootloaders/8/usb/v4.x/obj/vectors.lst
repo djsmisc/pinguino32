@@ -1,0 +1,62 @@
+gpasm-0.14.2 #774 (Oct 23 2012) obj/vectors.a   12-18-2012  18:50:52        PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 3.2.1 #8163 (Oct 23 2012) (Linux)
+                      00004 ; This file was generated Tue Dec 18 18:50:52 2012
+                      00005 ;--------------------------------------------------------
+                      00006 ; PIC16 port for the Microchip 16-bit core micros
+                      00007 ;--------------------------------------------------------
+                      00008         list    p=18f25k50
+                      00009         radix   dec
+                      00010 
+                      00011 
+                      00012 ;--------------------------------------------------------
+                      00013 ; public variables in this module
+                      00014 ;--------------------------------------------------------
+                      00015         global  _high_priority_isr
+                      00016         global  _low_priority_isr
+                      00017 
+                      00018 ;--------------------------------------------------------
+                      00019 ; global & static initialisations
+                      00020 ;--------------------------------------------------------
+                      00021 ; ; Starting pCode block
+                      00022 S_vectors__high_priority_isr    code    0X000008
+000008                00023 _high_priority_isr:
+000008 EF04 F006      00024         goto 0x0C00 + 0x08
+                      00025         
+                      00026 ; ; Starting pCode block
+                      00027 S_vectors__low_priority_isr     code    0X000018
+000018                00028 _low_priority_isr:
+000018 EF0C F006      00029         goto 0x0C00 + 0x18
+                      00030         
+                      00031 ; I code from now on!
+                      00032 
+                      00033 
+                      00034 ; Statistics:
+                      00035 ; code size:        8 (0x0008) bytes ( 0.01%)
+                      00036 ;                   4 (0x0004) words
+                      00037 ; udata size:       0 (0x0000) bytes ( 0.00%)
+                      00038 ; access size:      0 (0x0000) bytes
+                      00039 
+                      00040 
+                      00041         end
+gpasm-0.14.2 #774 (Oct 23 2012) obj/vectors.a   12-18-2012  18:50:52        PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE
+
+__18F25K50                        00000001
+_high_priority_isr                00000008
+_low_priority_isr                 00000018
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
