@@ -10,11 +10,14 @@
 	Released under the LGPL license (http://www.gnu.org/licenses/lgpl.html)
 *******************************************************************************/
 
+//#pragma stack 0x300 255                         // Initializes stack of 255 bytes at RAM address 0x300
+
 #include <pic18fregs.h>
 #include "types.h"
 #include "hardware.h"
 #include "picUSB.h"
 #include "config.h"
+#include "vectors.h"
 
 __code USB_Device_Descriptor device_descriptor = 
 {
@@ -71,20 +74,26 @@ __code USB_Configuration_Descriptor configuration_descriptor =
     0x00}
 };
 
-const char lang[] = {sizeof(lang),  STRING_DESCRIPTOR, 0x09,0x04}; // english = 0x0409
-const char manu[] = {sizeof(manu),  STRING_DESCRIPTOR,
-    'R',0x00,'.',0x00,'B',0x00,'l',0x00,'a',0x00,'n',0x00,'c',0x00,'h',0x00,'o',0x00,'t',0x00};
-//  '/',0x00,
-//  'G',0x00,'e',0x00,'n',0x00,'t',0x00,'r',0x00,'i',0x00,'c',0x00,};
-const char prod[] = {sizeof(prod),  STRING_DESCRIPTOR,
-    'P',0x00,'i',0x00,'n',0x00,'g',0x00,'u',0x00,'i',0x00,'n',0x00,'o',0x00};
-const char * const string_descriptor[] = { lang, manu, prod};
+#if (STRING == 1)
+    const char lang[] = {sizeof(lang),  STRING_DESCRIPTOR,
+        0x09,0x04}; // english = 0x0409
+    const char manu[] = {sizeof(manu),  STRING_DESCRIPTOR,
+        'R',0x00,'.',0x00,'B',0x00,'l',0x00,'a',0x00,'n',0x00,'c',0x00,'h',0x00,'o',0x00,'t',0x00,
+        '/',0x00,
+        'A',0x00,'.',0x00,'G',0x00,'e',0x00,'n',0x00,'t',0x00,'r',0x00,'i',0x00,'c',0x00};
+    const char prod[] = {sizeof(prod),  STRING_DESCRIPTOR,
+        'P',0x00,'i',0x00,'n',0x00,'g',0x00,'u',0x00,'i',0x00,'n',0x00,'o',0x00};
+    const char * const string_descriptor[] = { lang, manu, prod};
+#endif
 
 /*  --------------------------------------------------------------------
     ------------------------------------------------------------------*/
     
-void delay(void) __naked
+void delay(void) //__naked
 {
+    word i;//=0xffff;
+    while(i--);
+/*
     __asm
         movlw	0xFF
         movwf	r0x00
@@ -96,12 +105,13 @@ void delay(void) __naked
         decfsz	r0x01, f
         bra 	startup_loop
     __endasm;
+*/
 }
 
 /*  --------------------------------------------------------------------
     ------------------------------------------------------------------*/
     
-void start_write(void) __naked
+void start_write(void) //__naked
 {
 	__asm
     
@@ -143,13 +153,16 @@ void start_write(void) __naked
     
 void disable_boot(void) __naked
 {
+    T1CON = 0x00;
+    UCON = 0x00;
 	__asm
-        clrf	_T1CON				; disable timer 1
-        clrf	_UCON				; disable USB
+        ;clrf	_T1CON				; disable timer 1
+        ;clrf	_UCON				; disable USB
         bsf		LED_TRIS, LED_PIN	; led input
         bcf		LED_PORT, LED_PIN	; led off
-        call    _delay              ; force timeout on USB
+        ;call    _delay              ; force timeout on USB
 	__endasm;
+    delay();
 }
 
 /*  --------------------------------------------------------------------
@@ -304,12 +317,17 @@ void usb_ep_data_out_callback(char end_point)
 		EECON1 = 0b10010100; // allows erase (WREN=1, FREE=1) in flash (EEPGD=1)
 		for (counter=0; counter < bootCmd.len; counter++)
 		{
+            EECON1bits.FREE = 1;    // allow a program memory erase operation
 			start_write();
+            EECON1bits.FREE = 0;    // inhibit program memory erase operation
+
+            // next block (TBLPTR = TBLPTR + 64)
 			__asm
-			movlw	0x40
-			addwf	_TBLPTRL			; TBLPTR += 64
-			movlw	0x00				; if (TBLPTRL == 0)
-			addwfc	_TBLPTRH			; TBLPTRH += 1
+			movlw	0x40                ; 0x40 + (TBLPTRL) -> TBLPTRL
+			addwf	_TBLPTRL, 1			;  (W) + (TBLPTRL) -> TBLPTRL
+                                        ;  (C) is affected
+			movlw	0x00				; 0x00 + (TBLPTRH) + (C) -> TBLPTRH
+			addwfc	_TBLPTRH, 1			;  (W) + (TBLPTRH) + (C) -> TBLPTRH
 			__endasm;
 		}
 		// TBLPTRU = 0
@@ -329,7 +347,7 @@ void usb_ep_data_out_callback(char end_point)
 			__asm
 			movlw	0x04                ; 0x04 + (TBLPTRH) -> TBLPTRH
 			addwf	_TBLPTRH, 1			;  (W) + (TBLPTRH) -> TBLPTRH
-                                        ; (C) is affected
+                                        ;  (C) is affected
 			movlw	0x00				; 0x00 + (TBLPTRU) + (C) -> TBLPTRU
 			addwfc	_TBLPTRU, 1			;  (W) + (TBLPTRU) + (C) -> TBLPTRU
 			__endasm;
@@ -362,7 +380,7 @@ void usb_ep_data_out_callback(char end_point)
     Main loop
     ------------------------------------------------------------------*/
  
-void main(void) __naked
+void main(void) //__naked
 {
 	dword i = 0;
     byte t1_count = 0;
@@ -376,8 +394,11 @@ void main(void) __naked
     #if defined(__18f26j50) || defined(__18f46j50)
 /**********************************************************************/
         bsf     _OSCTUNEbits, 6     ; Enable the PLL (PLLEN=bit6)
-        call    _delay              ; Wait 2+ms until the PLL locks
+        ;call    _delay              ; Wait 2+ms until the PLL locks
                                     ; before enabling USB module
+    __endasm;
+    delay();
+    __asm
         movlw	0xFF
         movwf	_ANCON0				; all I/O to Digital mode
         movlw	0x1F
@@ -402,10 +423,10 @@ void main(void) __naked
           defined(__18f2455)  || defined(__18f4455)  || \
           defined(__18f14k50)
 /**********************************************************************/
-;        movlw	0x0F
-;        movwf	_ADCON1				; all I/O to Digital mode
-;        movlw	0x07
-;        movwf	_CMCON				; all I/O to Digital mode
+        movlw	0x0F
+        movwf	_ADCON1				; all I/O to Digital mode
+        movlw	0x07
+        movwf	_CMCON				; all I/O to Digital mode
 /**********************************************************************/
     #else
 /**********************************************************************/
@@ -495,56 +516,3 @@ void main(void) __naked
 		}
 	}
 }
-
-/***********************************************************************
-    Jumps must be declared here so :
-    1/ we can simply use ENTRY (impossible in crt0Boot4.c #pragma)
-    2/ avoid extra file manipulation, just need to change ENTRY in Makefile
-    3/ Never use --ivt-loc option as it will also move the Reset vector from 0 to ENTRY
-***********************************************************************/
-
-// 0x0000
-void reset_isr(void) __naked __interrupt 0
-{
-    __asm
-    goto    _main
-    ;goto    _startup
-    __endasm;
-}
-
-// 0x0008
-void high_priority_isr(void) __naked __interrupt 1
-{
-    __asm
-    goto	ENTRY + 0x08
-    __endasm;
-}
-
-// 0x0018
-void low_priority_isr(void) __naked __interrupt 2
-{
-    __asm
-    goto	ENTRY + 0x18
-    __endasm;
-}
-
-// C stack init.
-/*
-void startup(void) __naked
-{
-    __asm
-    ; Initialize the stack pointer
-    ;lfsr    1, _stack_end
-    ;lfsr    2, _stack_end
-
-    ; 1st silicon does not do this on POR
-    ;clrf    _TBLPTRU, 0
-
-    ; Initialize the flash memory access configuration.
-    ;bsf     0xa6, 7, 0      ; EECON1.EEPGD = 1, TBLPTR accesses program memory or eeprom
-    ;bcf     0xa6, 6, 0      ; EECON1.CFGS  = 0, TBLPTR accesses program memory not config. reg.
-
-    goto    _main
-    __endasm;
-}
-*/
