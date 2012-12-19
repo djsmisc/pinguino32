@@ -131,7 +131,7 @@ void I2C_slave(u16 DeviceID)
 void I2C_init(u8 mode, u16 sora)
 {
     // In Slave mode, the SCL and SDA pins must be configured as inputs
-    #if defined(PIC18F26J50)
+    #if defined(__18f26j50)
     TRISBbits.TRISB5 = INPUT;			// SDA = INPUT
     TRISBbits.TRISB4 = INPUT;			// SCL = INPUT
     #else

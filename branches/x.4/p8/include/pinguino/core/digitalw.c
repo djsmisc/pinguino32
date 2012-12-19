@@ -65,7 +65,7 @@
 #define _7	0x80    // 1<<7 
 
 /**********************************************************************/
-#if defined(PIC18F1220) || defined(PIC18F1320)
+#if defined(PINGUINO1220) || defined(PINGUINO1320)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
@@ -75,7 +75,7 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 8 - 13
 
 /**********************************************************************/
-#elif defined(PIC18F14K22) || defined(PIC18LF14K22)
+#elif defined(PINGUINO14K22)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
@@ -87,7 +87,7 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 13 - 18
 
 /**********************************************************************/
-#elif defined(PIC18F2550) || defined(PIC18F25K50)
+#elif defined(PINGUINO2550) || defined(PINGUINO25K50) || defined(CHRP3)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
@@ -99,7 +99,7 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 13 - 18
 
 /**********************************************************************/
-#elif defined(PIC18F26J50)
+#elif defined(PINGUINO26J50)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
@@ -111,18 +111,18 @@ const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
 					pA, pA, pA, pA, pA};            // 13 - 17
 
 /**********************************************************************/
-#elif defined(PIC18F4550) || defined(PIC18F45K50)
+#elif defined(PINGUINO4550) || defined(PINGUINO45K50)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[29]={	_0,_1,_2,_3,_4,_5,_6,_7,		// 0 - 7
 					_6,_7,_0,_1,_2,					// 8 - 12
-					_0,_1,_2,_3,_5,					// 13 - 17
-					_0,_1,_2,						// 18 - 20
-					_0,_1,_2,_3,_4,_5,_6,_7};		// 21 - 28
+					_0,_1,_2,_3,_5,_4,				// 13 - 18
+					_0,_1,_2,						// 19 - 21
+					_0,_1,_2,_3,_4,_5,_6,_7};		// 22 - 29
 
 const u8 port[29]={	pB, pB, pB, pB, pB, pB, pB, pB,
 					pC, pC, pC, pC, pC,
-					pA, pA, pA, pA, pA,
+					pA, pA, pA, pA, pA, pA,
 					pE, pE, pE,
 					pD, pD, pD, pD, pD, pD, pD, pD};
 
@@ -158,7 +158,7 @@ void digitalwrite(u8 pin, u8 state)
 		case pA: if (state) PORTA=PORTA | mask[pin];
 				else PORTA=PORTA & (255-mask[pin]);
 				break;
-		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
+		#if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
 		case pD: if (state) PORTD=PORTD | mask[pin]; 
 				else PORTD=PORTD & (255-mask[pin]);
 				break;
@@ -191,7 +191,7 @@ u8 digitalread(u8 pin)
 		case pA: if ((PORTA & mask[pin])!=0) return (1);
 			else return (0);
 			break;
-		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
+		#if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
 		case pD: if ((PORTD & mask[pin])!=0) return (1);
 			else return (0);
 			break;
@@ -224,7 +224,7 @@ void pinmode(u8 pin, u8 state)
 		case pA: if (state) TRISA=TRISA | mask[pin];
 			else TRISA=TRISA & (255-mask[pin]);
 			break;
-		#if defined(PIC18F4550) || defined(PICUNO_EQUO) 
+		#if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
 		case pD: if (state) TRISD=TRISD | mask[pin];
 			else TRISD=TRISD & (255-mask[pin]);
 			break;

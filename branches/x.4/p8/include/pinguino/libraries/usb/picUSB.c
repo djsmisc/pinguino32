@@ -690,23 +690,65 @@ void Suspend(void) {
   UIRbits.IDLEIF = 0;
   UCONbits.SUSPND = 1;
 
+  #if defined(__18f25k50) || defined(__18f45k50)
+  PIR3bits.USBIF = 0;
+  #else
   PIR2bits.USBIF = 0;
+  #endif
+
+  #if defined(__18f25k50) || defined(__18f45k50)
+  INTCONbits.IOCIF = 0;
+  #else
   INTCONbits.RBIF = 0;
+  #endif
+
+  #if defined(__18f25k50) || defined(__18f45k50)
+  PIE3bits.USBIE = 1;
+  #else
   PIE2bits.USBIE = 1;
+  #endif
+
+  #if defined(__18f25k50) || defined(__18f45k50)
+  INTCONbits.IOCIE = 1;
+  #else
   INTCONbits.RBIE = 1;
+  #endif
 
   // disable the USART
+#ifdef DEBUG_PRINT
+  #if defined(__18f25k50) || defined(__18f45k50)
+  RCSTA1bits.CREN = 0;
+  TXSTA1bits.TXEN = 0;
+  #else
   RCSTAbits.CREN = 0;
   TXSTAbits.TXEN = 0;
+  #endif
+#endif
 
   Sleep();
 
   // enable the USART
+#ifdef DEBUG_PRINT
+  #if defined(__18f25k50) || defined(__18f45k50)
+  RCSTA1bits.CREN = 1;
+  TXSTA1bits.TXEN = 1;
+  #else
   RCSTAbits.CREN = 1;
   TXSTAbits.TXEN = 1;
+  #endif
+#endif
 
+  #if defined(__18f25k50) || defined(__18f45k50)
+  PIE3bits.USBIE = 0;
+  #else
   PIE2bits.USBIE = 0;
+  #endif
+
+  #if defined(__18f25k50) || defined(__18f45k50)
+  INTCONbits.IOCIE = 0;
+  #else
   INTCONbits.RBIE = 0;
+  #endif
 #endif
 }
 

@@ -118,7 +118,7 @@
 	/// T1CON: TIMER1 CONTROL REGISTER
 	///
 
-	#if defined(PIC18F2550) || defined(PIC18F4550)
+	#if defined(__18f2550) || defined(__18f4550)
 
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T1_16BIT			(1<<7)	// 16-bit mode
@@ -134,7 +134,7 @@
 
     #endif
 
-	#if defined(PIC18F26J50)
+    #if defined(__18f26j50) || defined(__18f46j50)
 
     // bit 7-6 TMR1CS<1:0>: Timer1 Clock Source Select bits
     #define T1_SOURCE_EXT       0b10000000  // Timer1 clock source is the T1OSC or T1CKI pin
@@ -195,7 +195,7 @@
 	/// T3CON: TIMER3 CONTROL REGISTER
 	///
 
-	#if defined(PIC18F2550) || defined(PIC18F4550)
+	#if defined(__18f2550) || defined(__18f4550)
 
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T3_16BIT			(1<<7)  // 1 = Enables register read/write of Timer3 in one 16-bit operation
@@ -222,7 +222,7 @@
 
     #endif
 
-	#if defined(PIC18F26J50)
+    #if defined(__18f26j50) || defined(__18f46j50)
 
     // bit 7-6 TMR3CS<1:0>: Timer1 Clock Source Select bits
     #define T3_SOURCE_EXT       (0b10<<6)   // Timer3 clock source is the T1OSC or T1CKI pin
@@ -253,7 +253,7 @@
 
     #endif
 
-	#if defined(PIC18F26J50)
+    #if defined(__18f26j50) || defined(__18f46j50)
 
     // bit 6-3  T4OUTPS<3:0>: Timer4 Output Postscale Select bits
 	#define T4_POST_1_1			(0<<3) // 1:1 Postscale

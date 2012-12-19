@@ -6,6 +6,7 @@ System.unlock SystemUnlock#include <system.c>
 System.lock SystemLock#include <system.c>
 System.reset SystemReset#include <system.c>
 System.watchdog SystemWatchdog#include <system.c>
+System.noWatchdog SystemNoWatchdog#include <system.c>
 System.clearWatchdog SystemClearWatchdog#include <system.c>
 System.sleep SystemSleep#include <system.c>
 System.lowPower SystemSleep#include <system.c>

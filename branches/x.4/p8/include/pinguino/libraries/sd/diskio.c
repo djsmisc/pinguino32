@@ -10,7 +10,7 @@
 
 // Pinguino 18F26J50 uses SPI2 (cf. io.c)
 // because SPI1 share same pins as UART1
-#if defined(PIC18F26J50)
+#if defined(PINGUINO26J50)
     #define SD_CS			PORTBbits.RB0		// SPI2 Chip Select
     #define SD_CS_TRIS		TRISBbits.TRISB0	// SPI2 Chip Select TRIS
     #define SPI_MISO_TRIS	TRISBbits.TRISB1	// SPI2 SDO Master input/Slave output TRIS
