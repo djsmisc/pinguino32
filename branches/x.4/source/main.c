@@ -87,7 +87,7 @@ void pinguino_main(void)
     #endif
 
     #ifdef __USB__
-		#if defined(__18f25K50) || defined(__18f45K50)
+		#if defined(__18f25k50) || defined(__18f45k50)
 			PIE3bits.USBIE = 1;
         #else
 			PIE2bits.USBIE = 1;
@@ -116,7 +116,7 @@ void pinguino_main(void)
 
     #ifdef __USBCDC
         CDC_init();
-		#if defined(__18f25K50) || defined(__18f45K50)
+		#if defined(__18f25k50) || defined(__18f45k50)
 			PIE3bits.USBIE = 1;
         #else
 			PIE2bits.USBIE = 1;
@@ -179,7 +179,7 @@ void pinguino_main(void)
 #endif
 {
 #if defined(__USBCDC) || defined(__USBBULK)
-    #if defined(__18f25K50) || defined(__18f45K50)
+    #if defined(__18f25k50) || defined(__18f45k50)
     if(PIR3bits.USBIF)
     #else
     if(PIR2bits.USBIF)
@@ -188,7 +188,7 @@ void pinguino_main(void)
         ProcessUSBTransactions();
         UIRbits.SOFIF = 0;
         UIRbits.URSTIF = 0;
-        #if defined(__18f25K50) || defined(__18f45K50)
+        #if defined(__18f25k50) || defined(__18f45k50)
         PIR3bits.USBIF = 0;
         #else
         PIR2bits.USBIF = 0;
@@ -198,7 +198,7 @@ void pinguino_main(void)
 #endif
 
 #ifdef __USB__
-    #if defined(__18f25K50) || defined(__18f45K50)
+    #if defined(__18f25k50) || defined(__18f45k50)
     if(PIR3bits.USBIF)
     #else
     if(PIR2bits.USBIF)
@@ -214,12 +214,12 @@ void pinguino_main(void)
 
 #ifdef __SERIAL__
     #if defined(__18f1220)  || defined(__18f1320)   || \
-        defined(__18f14K22) || defined(__18lf14K22) || \
+        defined(__18f14k22) || defined(__18lf14k22) || \
         defined(__18f2550)  || defined(__18f4550)   || \
-        defined(__18f25K50) || defined(__18f45K50)  || \
+        defined(__18f25k50) || defined(__18f45k50)  || \
         defined(__18f2455)  || defined(__18f4455)
         if (PIR1bits.RCIF) 
-    #elif defined(__18f26J50) || defined(__18f46J50)
+    #elif defined(__18f26j50) || defined(__18f46j50)
         if (PIR1bits.RC1IF) 
     #else
         #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
