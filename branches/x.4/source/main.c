@@ -30,12 +30,16 @@
 #include <pic18fregs.h>
 #include <const.h>
 #include <macro.h>
-//#include <system.c>
 #include <typedef.h>
 
 #ifdef boot2
     #include <common_types.h>
     #include <boot_iface.h>
+#endif
+
+#ifdef boot4
+    // runtime start code with variable initialisation
+    #include "crt0iPinguino.c"
 #endif
 
 /*
@@ -64,6 +68,7 @@
 #include "user.c"
 
 #ifdef noboot
+// in order to use default startup code
 void main(void)
 #else
 // Application entry point called from the bootloader
@@ -71,6 +76,7 @@ void pinguino_main(void)
 #endif
 {
     SystemWaitForStableOsc();
+    SystemDisablePeripheralInterrupt();
     
     IOsetSpecial();
     IOsetDigital();
@@ -81,9 +87,13 @@ void pinguino_main(void)
     #endif
 
     #ifdef __USB__
-    PIE2bits.USBIE  = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
+		#if defined(__18f25K50) || defined(__18f45K50)
+			PIE3bits.USBIE = 1;
+        #else
+			PIE2bits.USBIE = 1;
+        #endif
+        INTCONbits.PEIE = 1;
+        INTCONbits.GIE  = 1;
     #endif
 
     //setup();
@@ -105,17 +115,25 @@ void pinguino_main(void)
     #endif
 
     #ifdef __USBCDC
-    CDC_init();
-    PIE2bits.USBIE  = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
+        CDC_init();
+		#if defined(__18f25K50) || defined(__18f45K50)
+			PIE3bits.USBIE = 1;
+        #else
+			PIE2bits.USBIE = 1;
+        #endif
+        INTCONbits.PEIE = 1;
+        INTCONbits.GIE  = 1;
     #endif    
 
     #ifdef __USBBULK
-    bulk_init();
-    PIE2bits.USBIE  = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE  = 1;
+        bulk_init();
+		#if defined(__18f25K50) || defined(__18f45K50)
+			PIE3bits.USBIE = 1;
+        #else
+			PIE2bits.USBIE = 1;
+        #endif
+        INTCONbits.PEIE = 1;
+        INTCONbits.GIE  = 1;
     #endif
 
     #ifdef __PS2KEYB__
@@ -155,24 +173,36 @@ void pinguino_main(void)
 
 #else
 
-    //#pragma code high_priority_isr 0x0C08
+    // ENTRY + 0x08
     void high_priority_isr(void) __interrupt 1
 
 #endif
 {
 #if defined(__USBCDC) || defined(__USBBULK)
+    #if defined(__18f25K50) || defined(__18f45K50)
+    if(PIR3bits.USBIF)
+    #else
     if(PIR2bits.USBIF)
+    #endif
     {
         ProcessUSBTransactions();
         UIRbits.SOFIF = 0;
         UIRbits.URSTIF = 0;
+        #if defined(__18f25K50) || defined(__18f45K50)
+        PIR3bits.USBIF = 0;
+        #else
         PIR2bits.USBIF = 0;
+        #endif
         UEIR = 0;
     }
 #endif
 
 #ifdef __USB__
+    #if defined(__18f25K50) || defined(__18f45K50)
+    if(PIR3bits.USBIF)
+    #else
     if(PIR2bits.USBIF)
+    #endif
     {
         dispatch_usb_event();
         UIRbits.SOFIF = 0;
@@ -183,13 +213,13 @@ void pinguino_main(void)
 #endif
 
 #ifdef __SERIAL__
-    #if defined(PIC18F1220)  || defined(PIC18F1320)   || \
-        defined(PIC18F14K22) || defined(PIC18LF14K22) || \
-        defined(PIC18F2550)  || defined(PIC18F4550)   || \
-        defined(PIC18F25K50) || defined(PIC18F45K50)  || \
-        defined(PIC18F2455)  || defined(PIC18F4455)
+    #if defined(__18f1220)  || defined(__18f1320)   || \
+        defined(__18f14K22) || defined(__18lf14K22) || \
+        defined(__18f2550)  || defined(__18f4550)   || \
+        defined(__18f25K50) || defined(__18f45K50)  || \
+        defined(__18f2455)  || defined(__18f4455)
         if (PIR1bits.RCIF) 
-    #elif defined(PIC18F26J50) || defined(PIC18F46J50)
+    #elif defined(__18f26J50) || defined(__18f46J50)
         if (PIR1bits.RC1IF) 
     #else
         #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
@@ -239,7 +269,7 @@ void pinguino_main(void)
 
 #else
 
-    //#pragma code low_priority_isr 0x0C18
+    // ENTRY + 0x18
     void low_priority_isr(void) __interrupt 2
 
 #endif
