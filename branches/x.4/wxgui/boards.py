@@ -53,7 +53,7 @@ class Pinguino2550:
 	arch=8
 	bldr='boot2'
 	proc='18f2550'
-	board='PIC18F2550'
+	board='PINGUINO2550'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x2000       # bootloader offset
@@ -67,7 +67,7 @@ class Pinguino25k50:
 	arch=8
 	bldr='boot4'
 	proc='18f25k50'
-	board='PIC18F25K50'
+	board='PINGUINO25K50'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x0C00       # bootloader offset
@@ -75,13 +75,27 @@ class Pinguino25k50:
 	shortarg='-k'
 	longarg='--pinguino25k50'
 
+class CHRP3:
+	name='CHRP3.0'
+	id=wx.NewId()
+	arch=8
+	bldr='boot4'
+	proc='18f25k50'
+	board='CHRP3'
+	vendor=MICROCHIP_ID
+	product=PIC8_ID
+	memstart=0x0C00       # bootloader offset
+	memend=0x7fff
+	shortarg='-c'
+	longarg='--chrp3'
+
 class Pinguino4550:
 	name='Pinguino 4550'
 	id=wx.NewId()
 	arch=8
 	bldr='boot2'
 	proc='18f4550'
-	board='PIC18F4550'
+	board='PINGUINO4550'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x2000       # bootloader offset
@@ -89,29 +103,13 @@ class Pinguino4550:
 	shortarg='-P'
 	longarg='--pinguino4550'
 
-"""
-class Pinguino4550b4:
-	name='Pinguino 4550 (boot v4.x)'
-	id=wx.NewId()
-	arch=8
-	bldr='boot4'
-	proc='18f4550'
-	board='PIC18F4550'
-	vendor=MICROCHIP_ID
-	product=PIC8_ID
-	memstart=0x0C00       # bootloader offset
-	memend=0x7fff
-	shortarg='-P4'
-	longarg='--pinguino4550b4'
-"""
-
 class Pinguino26J50:
 	name='Pinguino 26J50'
 	id=wx.NewId()
 	arch=8
 	bldr='boot4'
 	proc='18f26j50'
-	board='PIC18F26J50'
+	board='PINGUINO26J50'
 	vendor=MICROCHIP_ID
 	product=PIC8_ID
 	memstart=0x0C00       # bootloader offset
@@ -119,7 +117,6 @@ class Pinguino26J50:
 	shortarg='-j'
 	longarg='--pinguino26j50'
 
-"""
 class PICuno_Equo:
 	name='PICuno Equo'
 	id=wx.NewId()
@@ -149,7 +146,6 @@ class FreeJALduino:
 	config=0x300000
 	shortarg='-J'
 	longarg='--freejalduino'
-"""
 
 class PIC32_Pinguino:
 	name='PIC32 Pinguino'
@@ -308,7 +304,7 @@ class UBW32_795:
 boardlist = [   
                 PinguinoNoBoot,
                 Pinguino2550,  Pinguino4550,
-                Pinguino25k50,
+                Pinguino25k50, CHRP3,
                 Pinguino26J50, 
                 PIC32_Pinguino, PIC32_Pinguino_OTG,
                 PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,

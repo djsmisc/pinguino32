@@ -212,7 +212,7 @@ class uploader8(baseUploader):
         if usbBuf == self.ERR_USB_WRITE:
             return self.ERR_USB_WRITE
         else:        
-            # major.minor.subminor
+            # major.minor
             return str(usbBuf[self.BOOT_VER_MAJOR]) + "." + \
                    str(usbBuf[self.BOOT_VER_MINOR])
 # ------------------------------------------------------------------------------
