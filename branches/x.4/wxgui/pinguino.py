@@ -768,8 +768,8 @@ class Pinguino(framePinguinoX, Editor):
                                     "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                                     "-I" + os.path.dirname(filename),\
                                     "--compile-only",\
-                                    "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
-                                    os.path.join(SOURCE_DIR, 'main.c')],\
+                                    os.path.join(SOURCE_DIR, 'main.c'),\
+                                    "-o" + os.path.join(SOURCE_DIR, 'main.o')],\
                                    stdout=fichier, stderr=STDOUT)
                                    
                 elif board.bldr == 'noboot':
@@ -866,10 +866,14 @@ class Pinguino(framePinguinoX, Editor):
                         "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                         "-L" + os.path.join(P8_DIR, 'lib'),\
                         "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
-                        '-llibio' + board.proc + '.lib',\
-                        '-llibc18f.lib',\
-                        '-llibm18f.lib',\
-                        '-llibsdcc.lib',\
+                        'libio' + board.proc + '.lib',\
+                        'libc18f.lib',\
+                        'libm18f.lib',\
+                        'libsdcc.lib',\
+                        #'-llibio' + board.proc + '.lib',\
+                        #'-llibc18f.lib',\
+                        #'-llibm18f.lib',\
+                        #'-llibsdcc.lib',\
                         os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
                         os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
                         os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
@@ -879,14 +883,18 @@ class Pinguino(framePinguinoX, Editor):
                         
                 elif board.bldr == 'boot4':
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                        "-V",\
                         "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                         "-mpic16",\
                         "--obanksel=9",\
                         "--optimize-cmp",\
                         "--optimize-df",\
                         "--denable-peeps",\
+                        # crt is included from main.c
+                        "--no-crt",\
+                        #"--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
+                        # move all int. vectors
                         "--ivt-loc=" + str(board.memstart),\
-                        "--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
@@ -896,15 +904,18 @@ class Pinguino(framePinguinoX, Editor):
                         "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                         "-L" + os.path.join(P8_DIR, 'lib'),\
                         "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
-                        '-llibio' + board.proc + '.lib',\
-                        '-llibc18f.lib',\
-                        '-llibm18f.lib',\
-                        '-llibsdcc.lib',\
+                        'libio' + board.proc + '.lib',\
+                        'libc18f.lib',\
+                        'libm18f.lib',\
+                        #'libsdcc.lib',\
+                        #'-llibio' + board.proc + '.lib',\
+                        #'-llibc18f.lib',\
+                        #'-llibm18f.lib',\
+                        #'-llibsdcc.lib',\
                         os.path.join(SOURCE_DIR, 'main.o')],\
                         stdout=fichier, stderr=STDOUT)
                         
                 elif board.bldr == 'noboot':
-#                        "--no-crt",\
                     sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
                         "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                         "--verbose",\
@@ -913,6 +924,7 @@ class Pinguino(framePinguinoX, Editor):
                         "--optimize-cmp",\
                         "--optimize-df",\
                         "--denable-peeps",\
+                        #"--no-crt",\ we use default crt
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
@@ -922,10 +934,14 @@ class Pinguino(framePinguinoX, Editor):
                         "-I" + os.path.join(P8_DIR, 'include', 'pinguino', 'libraries'),\
                         "-L" + os.path.join(P8_DIR, 'lib'),\
                         "-L" + os.path.join(P8_DIR, 'lib', 'non-free'),\
-                        '-llibio' + board.proc + '.lib',\
-                        '-llibc18f.lib',\
-                        '-llibm18f.lib',\
-                        '-llibsdcc.lib',\
+                        'libio' + board.proc + '.lib',\
+                        'libc18f.lib',\
+                        'libm18f.lib',\
+                        'libsdcc.lib',\
+                        #'-llibio' + board.proc + '.lib',\
+                        #'-llibc18f.lib',\
+                        #'-llibm18f.lib',\
+                        #'-llibsdcc.lib',\
                         #os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                         os.path.join(SOURCE_DIR, 'main.o')],\
                         stdout=fichier, stderr=STDOUT)
