@@ -802,6 +802,7 @@ class Pinguino(framePinguinoX, Editor):
                     fichier.seek(0)
                     # read lines until 'error' or 'Error' is found
                     for ligne in fichier:
+			if not "stcpage" in globals(): break
 
                         # C errors
                         error_pos = ligne.find('error')
@@ -820,16 +821,16 @@ class Pinguino(framePinguinoX, Editor):
                         if (error_pos != -1):
                             # do not display error line number since they are from the ASM file
                             # display error symbol instead
-                            error_symbol = ligne[ligne.find("(_") + 2 : ligne.find(").")]
-                            textEdit  = self.stcpage[self.notebookEditor.GetSelection()]
-                            textPlain = str(textEdit.GetTextUTF8())
-                            error_index = textPlain.find(error_symbol)
-                            textEdit.SetSelection(error_index, error_index + len(error_symbol))
-                            error_line_number = textEdit.LineFromPosition(error_index) + 1
-                            error_message = ligne[ error_pos + 13 : ligne.find("(_") - 1]
-                            error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
-                            self.highlightline(int(error_line_number)-1, error_color)
-                            self.displaymsg("error line " + str(error_line_number) + ": " + error_message.lower() + ": " + error_symbol, 0)
+			    error_symbol = ligne[ligne.find("(_") + 2 : ligne.find(").")]
+			    textEdit  = self.stcpage[self.notebookEditor.GetSelection()]
+			    textPlain = str(textEdit.GetTextUTF8())
+			    error_index = textPlain.find(error_symbol)
+			    textEdit.SetSelection(error_index, error_index + len(error_symbol))
+			    error_line_number = textEdit.LineFromPosition(error_index) + 1
+			    error_message = ligne[ error_pos + 13 : ligne.find("(_") - 1]
+			    error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
+			    self.highlightline(int(error_line_number)-1, error_color)
+			    self.displaymsg("error line " + str(error_line_number) + ": " + error_message.lower() + ": " + error_symbol, 0)
                 fichier.close()
                 return sortie.poll()
             else:
