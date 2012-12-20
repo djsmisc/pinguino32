@@ -92,6 +92,7 @@ class General:
 
     #----------------------------------------------------------------------
     def getColorConfig(self, section, option, default=[0, 0, 0, 0]):
+        self.loadConfig()
         try:
             value = self.configIDE.get(section,option)
             value = value[1:-1].split(",")

@@ -95,6 +95,7 @@ if __name__ == "__main__":
     if options.author == True:
         print "jean-pierre mandon"
         print "regis blanchot"
+        print "yeison cardona"
         sys.exit(1)
 
     if options.board != False or type(options.board) == type(1):  # False = 0
