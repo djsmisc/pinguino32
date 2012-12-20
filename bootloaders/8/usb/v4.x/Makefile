@@ -5,8 +5,8 @@
 #	Author:	Régis Blanchot <rblanchot@gmail.com>                       #
 #           André Gentric                                              #
 #                                                                      #
-#	Usage: 'make' or 'make all' (to compile the bootloader)            #
-#          'make burn' (to burn the bootloader on the chip)		       #
+#	Usage: make --makefile=Makefile PROC=18f2550 OSC=20 STRINGDESC=0   #
+#          to compile the bootloader                                   #
 #                                                                      #
 #	This file is part of Pinguino Project (http://www.pinguino.cc)     #
 #	Released under the LGPL license (www.gnu.org/licenses/lgpl.html)   #
@@ -33,12 +33,8 @@ HIGH_SPEED	= 0
 #	CONFIGURATION OPTIONS                                              #
 ########################################################################
 
-CPU			= 18f25k50
-
-# speed (MHz) of the external or internal crystal
-CRYSTAL		= INTOSC
-#CRYSTAL		= 8
-#CRYSTAL		= 20
+CPU			= $(PROC)
+CRYSTAL		= $(OSC)
 
 # usb speed (HIGH_SPEED or LOW_SPEED)
 USBSPEED	= $(HIGH_SPEED)
@@ -60,7 +56,7 @@ MIN_VER		= 7
 ENTRY		= 0x0C00
 
 # string descriptor flag
-STRING		= 0
+STRING		= $(STRINGDESC)
 
 ifeq ($(USBSPEED), $(LOW_SPEED))
 CRYSTAL	 = 8
@@ -132,7 +128,7 @@ all: start clean $(CRTB).o $(PRJ).hex size
 
 # Start message
 start:
-	@echo Building $(PRJ) ...
+	@echo $(PRJ) ...
 	
 # Deleting all the debug files generated
 clean:
