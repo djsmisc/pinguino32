@@ -95,7 +95,7 @@ class BoarSelector:
         
         
     #----------------------------------------------------------------------
-    def updateFrame(self):
+    def updateFrame(self, event=None):
         """"""
 	self.m_scrolledWindow1.SetSizer( self.sizer2 )
 	self.m_scrolledWindow1.Layout()
@@ -142,6 +142,7 @@ class BoarSelector:
             self.FAMILY = self.radioBox_famChoices[sel]
 
         self.new_choices_dev()
+	self.updateFrame()
 
     #----------------------------------------------------------------------
     def new_choices_fam(self):
@@ -155,7 +156,7 @@ class BoarSelector:
                 self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Bootloader"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_botChoices, majorDimension=2)
                 index = self.Boot.index(self.BOOTLOADER)
                 self.radioBox_fam.SetSelection( index-1 )	
-                self.buildChoicesFam()    
+		self.buildChoicesFam()    
             self.new_choices_dev()
             return
 	
@@ -179,12 +180,12 @@ class BoarSelector:
         self.m_scrolledWindow1 = wx.ScrolledWindow( self.m_panel37, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
         self.m_scrolledWindow1.SetScrollRate( 5, 5 )
         self.sizer2 = wx.BoxSizer( wx.VERTICAL )
+	
+	self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_devChoices, majorDimension=columns)
+	self.radioBox_dev.SetSelection( 0 )
+	self.radioBox_dev.Bind(wx.EVT_RADIOBOX, self.r_device)
 
-        self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_devChoices, majorDimension=columns)
-        self.radioBox_dev.SetSelection( 0 )
-        self.radioBox_dev.Bind(wx.EVT_RADIOBOX, self.r_device)
-
-        self.buildChoicesDev()
+	self.buildChoicesDev()
 
 
 
