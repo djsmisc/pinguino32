@@ -244,11 +244,11 @@ FRESULT dir_find (
 /* Read an object from the directory                                     */
 /* *dj : Pointer to the directory object to store read object name       */
 /*-----------------------------------------------------------------------*/
-#ifdef _USE_DIR
+#if _USE_DIR
 static FRESULT dir_read(DIR *dj)
 {
     FRESULT res;
-    u8 a,c,*dir;
+    u8 adir,c,*dir;
     
 	res = FR_NO_FILE;
 	dir = FatFs->buf;
@@ -258,8 +258,8 @@ static FRESULT dir_read(DIR *dj)
 		if (res != FR_OK) break;
 		c = dir[DIR_Name];
 		if (c == 0) { res = FR_NO_FILE; break; }	/* Reached to end of table */
-		a = dir[DIR_Attr] & AM_MASK;
-		if (c != 0xE5 && c != '.' && !(a & AM_VOL))	/* Is it a valid entry? */
+		adir = dir[DIR_Attr] & AM_MASK;
+		if (c != 0xE5 && c != '.' && !(adir & AM_VOL))	/* Is it a valid entry? */
 			break;
 		res = dir_next(dj);				/* Next entry */
 		if (res != FR_OK) break;

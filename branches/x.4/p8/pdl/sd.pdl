@@ -18,5 +18,5 @@ SD.open pf_open#include <sd/pff.c>
 SD.read pf_read#include <sd/pff.c>
 SD.write pf_write#include <sd/pff.c>
 SD.print pf_print#include <sd/pff.c>
-SD.lseek pf_seek#include <sd/pff.c>
+SD.lseek pf_lseek#include <sd/pff.c>
 SD.list scan_files#include <sd/pff.c>
