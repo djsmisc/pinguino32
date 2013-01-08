@@ -46,7 +46,7 @@ char __uflags = 0;
 #endif
 
 // Access bank selector
-#define a 0
+#define _bank_selector_ 0
 
 // external reference to the pinguino's main()
 extern void pinguino_main (void);
@@ -75,7 +75,7 @@ void _startup (void) __naked
     lfsr    2, _stack_end
 
     ; 1st silicon does not do this on POR
-    clrf    _TBLPTRU, a
+    clrf    _TBLPTRU, _bank_selector_
 
     ; Initialize the flash memory access configuration.
     ; This is harmless for non-flash devices, so we do it on all parts.
@@ -83,13 +83,13 @@ void _startup (void) __naked
 	;#if defined(__18f2550)  || defined(__18f4550)  || \
     ;    defined(__18f25k50) || defined(__18f45k50)
     
-    bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, Access Flash program memory, not EEPROM memory
-    bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, Access Flash program or data EEPROM memory, not Configuration registers
+    bsf     0xa6, 7, _bank_selector_      ; EECON1.EEPGD = 1, Access Flash program memory, not EEPROM memory
+    bcf     0xa6, 6, _bank_selector_      ; EECON1.CFGS  = 0, Access Flash program or data EEPROM memory, not Configuration registers
 	
     ;#elif defined(__18f26j50) || defined(__18f46j50)
 
-    ;bsf     0xa6, 2, a      ; EECON1.WREN = 1; enable write to memory
-    ;bsf     0xa6, 1, a      ; EECON1.WR = 1; Initiates a program memory erase cycle or write cycle
+    ;bsf     0xa6, 2, _bank_selector_      ; EECON1.WREN = 1; enable write to memory
+    ;bsf     0xa6, 1, _bank_selector_      ; EECON1.WR = 1; Initiates a program memory erase cycle or write cycle
 
 	;#endif
 
@@ -137,26 +137,26 @@ void _do_cinit (void) __naked
   __asm
     ; TBLPTR = &cinit
     movlw   low(_cinit)
-    movwf   _TBLPTRL, a
+    movwf   _TBLPTRL, _bank_selector_
     movlw   high(_cinit)
-    movwf   _TBLPTRH, a
+    movwf   _TBLPTRH, _bank_selector_
     movlw   upper(_cinit)
-    movwf   _TBLPTRU, a
+    movwf   _TBLPTRU, _bank_selector_
 
     ; curr_entry = cinit.num_init
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   curr_entry, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   curr_entry, _bank_selector_
 
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   curr_entry + 1, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   curr_entry + 1, _bank_selector_
 
     ; while (curr_entry)
-    movf    curr_entry, w, a
+    movf    curr_entry, w, _bank_selector_
 test:
     bnz     cont1
-    movf    curr_entry + 1, w, a
+    movf    curr_entry + 1, w, _bank_selector_
     bz      done
 
 cont1:
@@ -168,18 +168,18 @@ cont1:
 
     ; read the source address low
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   prom, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   prom, _bank_selector_
 
     ; source address high
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   prom + 1, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   prom + 1, _bank_selector_
 
     ; source address upper
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   prom + 2, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   prom + 2, _bank_selector_
 
     ; skip a byte since it is stored as a 32bit int
     TBLRDPOSTINC
@@ -187,13 +187,13 @@ cont1:
     ; read the destination address directly into FSR0
     ; destination address low
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   _FSR0L, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   _FSR0L, _bank_selector_
 
     ; destination address high
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   _FSR0H, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   _FSR0H, _bank_selector_
 
     ; skip two bytes since it is stored as a 32bit int
     TBLRDPOSTINC
@@ -201,12 +201,12 @@ cont1:
 
     ; read the size of data to transfer to destination address
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   curr_byte, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   curr_byte, _bank_selector_
 
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   curr_byte + 1, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   curr_byte + 1, _bank_selector_
 
     ; skip two bytes since it is stored as a 32bit int
     TBLRDPOSTINC
@@ -232,21 +232,21 @@ cont1:
     movff   prom + 2, _TBLPTRU
 
     ; while (curr_byte)
-    movf    curr_byte, w, a
+    movf    curr_byte, w, _bank_selector_
 copy_loop:
     bnz     copy_one_byte
-    movf    curr_byte + 1, w, a
+    movf    curr_byte + 1, w, _bank_selector_
     bz      done_copying
 
 copy_one_byte:
     TBLRDPOSTINC
-    movf    _TABLAT, w, a
-    movwf   _POSTINC0, a
+    movf    _TABLAT, w, _bank_selector_
+    movwf   _POSTINC0, _bank_selector_
 
     ; decrement byte counter
-    decf    curr_byte, f, a
+    decf    curr_byte, f, _bank_selector_
     bc      copy_loop
-    decf    curr_byte + 1, f, a
+    decf    curr_byte + 1, f, _bank_selector_
     bra     copy_one_byte
 
 done_copying:
@@ -257,9 +257,9 @@ done_copying:
     movff   data_ptr + 2, _TBLPTRU
 
     ; decrement entry counter
-    decf    curr_entry, f, a
+    decf    curr_entry, f, _bank_selector_
     bc      test
-    decf    curr_entry + 1, f, a
+    decf    curr_entry + 1, f, _bank_selector_
     bra     cont1
 
     ; emit done label
