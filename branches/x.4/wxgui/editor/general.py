@@ -25,6 +25,7 @@
 -------------------------------------------------------------------------"""
 
 import wx, re, os, sys, string
+import codecs
 import wx.stc as stc
 from ConfigParser import RawConfigParser
 from dic import Snippet, Autocompleter
@@ -61,9 +62,9 @@ class General:
     #----------------------------------------------------------------------
     def loadConfig(self):
         if not os.path.isfile(APP_CONFIG):
-            file = open(APP_CONFIG, mode="w")
+            file = codecs.open(APP_CONFIG, "w",encoding="utf-8")
             file.close()
-        config_file=open(APP_CONFIG,"r")
+        config_file=codecs.open(APP_CONFIG,"r",encoding="utf-8")
         self.configIDE=RawConfigParser()
         self.configIDE.readfp(config_file) 
         config_file.close()
@@ -76,8 +77,26 @@ class General:
 
     #----------------------------------------------------------------------
     def saveConfig(self):
-        config_file=open(APP_CONFIG,"w")
-        self.configIDE.write(config_file)
+        #config_file=open(APP_CONFIG,"w")
+        
+        config_file=codecs.open(APP_CONFIG,"w",encoding="utf-8")
+        for section in self.configIDE.sections():
+            config_file.write('['+section+']\n\r')
+            for option in self.configIDE.options(section):
+                config_file.write(option+' = ')
+                #print type(self.configIDE.get(section,option))
+                if type(self.configIDE.get(section,option)).__name__!='unicode':
+                    if type(self.configIDE.get(section,option)).__name__=='str':
+                        string_value=self.configIDE.get(section,option)
+                        string_value=unicode(string_value,'utf-8')
+                    else:
+                        string_value=str(self.configIDE.get(section,option))
+                else:
+                    string_value=self.configIDE.get(section,option)
+                config_file.write(string_value+'\r')
+            config_file.write('\n\r');
+
+        #self.configIDE.write(config_file)
         config_file.close()
 
     #----------------------------------------------------------------------
@@ -108,7 +127,8 @@ class General:
 
     #---------------------------------------------------------------------- 
     def getElse(self, section, option, default):
-        try: default = self.getConfig(section, option)
+        try:
+            default = self.getConfig(section, option)
         except: self.setConfig(section, option, default)
         return default
 
