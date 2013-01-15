@@ -301,25 +301,34 @@ try:
     fichier.writelines('Pinguino Boards List successfully loaded\n')
 except:
     fichier.writelines('Pinguino Boards List failed\n')
-    fichier.writelines('You should have boards.py at the wxgui/\n')
+    fichier.writelines('You should have boards.py in wxgui/\n')
     fichier.close()
     perror()
-    	
+
+try:
+    from picdevlist import * 
+    fichier.writelines('Pic List successfully loaded\n')
+except:
+    fichier.writelines('Pic List failed\n')
+    fichier.writelines('You should have picdevlist.py in wxgui/\n')
+    fichier.close()
+    perror()
+
 try:
     from editor import Editor
     fichier.writelines('Editor successfully loaded\n')
 except:
     fichier.writelines('Editor failed\n')
-    fichier.writelines('You should have __init__.py at the wxgui/editor/\n')
+    fichier.writelines('You should have __init__.py in wxgui/editor/\n')
     fichier.close()
-    perror()	
+    perror()
 
 try:
     from uploader import Uploader
     fichier.writelines('Pinguino Uploader successfully loaded\n')
 except:
     fichier.writelines('Pinguino Uploader failed\n')
-    fichier.writelines('You should have uploader.py at the wxgui/uploader/\n')
+    fichier.writelines('You should have uploader.py in wxgui/uploader/\n')
     fichier.close()
     perror()
 
@@ -339,7 +348,7 @@ if DEV:
         fichier.writelines('Pinguino Version Control successfully loaded\n')
     except:
         fichier.writelines('Pinguino Version Control failed\n')
-        fichier.writelines('You should have version.py at the wxgui/\n')
+        fichier.writelines('You should have version.py in wxgui/\n')
         fichier.close()
         perror()
         
@@ -348,7 +357,7 @@ if DEV:
         fichier.writelines('Upgrade successfully loaded\n')
     except:
         fichier.writelines('Upgrade failed\n')
-        fichier.writelines('You should have upgrade.py at the wxgui/editor/\n')
+        fichier.writelines('You should have upgrade.py in wxgui/editor/\n')
         fichier.close()
         perror()      
     
