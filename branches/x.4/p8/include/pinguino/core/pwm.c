@@ -4,9 +4,12 @@
 	PURPOSE:		new hardware PWM control functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 oct. 2010
-	LAST RELEASE:	13 nov. 2012
+	LAST RELEASE:	15 jan. 2013
 	----------------------------------------------------------------------------
 	freely adapted from JAL PWM Control Library.
+	----------------------------------------------------------------------------
+    changelog:
+    * 2013-01-15    changed GetSystemClock to SystemClock (cf. system.c)
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -72,7 +75,7 @@ then [(PR2) + 1] = FOSC / PWM Frequency / 4 / p
 void PWM_set_frequency(u32 freq)
 {
 	// PR2+1 calculation
-	_pr2_plus1 = GetSystemClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
+	_pr2_plus1 = SystemClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
 
 	// Timer2 prescaler calculation
 	// PR2 max value is 255, so PR2+1 max value is 256
@@ -145,7 +148,7 @@ void PWM_set_dutycycle(u8 pin, u16 duty)
 			break;
 		default:
 			#ifdef DEBUG
-				#error "Invalid Pin (must be CCP1=5 or CCP2=6)"
+				#error "Invalid Pin (must be CCP1 or CCP2)"
 			#endif
 	}
 
