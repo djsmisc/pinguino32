@@ -28,7 +28,8 @@ void loop()
 	char filename[] = "lorem.txt";
 	SD_File file;
 	char data[B_SIZE];
-	int i, j, br;
+	int i, j;
+    u16 br;
 	SD_Error error;
 	
 	// wait for RETURN key to start
