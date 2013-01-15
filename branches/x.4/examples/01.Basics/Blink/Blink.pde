@@ -4,12 +4,19 @@
 
 void setup()
 {                
-	// initialize the digital pin 13 as an output.
-	pinMode(13, OUTPUT);     
+    // initialize the digital pin USERLED as an output.
+    pinMode(USERLED, OUTPUT);     
 }
 
 void loop()
 {
-	toggle(13);			// alternate ON and OFF
-	delay(1000);		// wait for a second
+    toggle(USERLED);			// alternate ON and OFF
+    delay(50);		// wait for a second
+
+/*	Or ...
+    digitalWrite(USERLED, HIGH);
+    delay(50);		// wait for a second
+    digitalWrite(USERLED, LOW);
+    delay(50);		// wait for a second
+*/
 }
