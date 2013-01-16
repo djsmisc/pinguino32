@@ -1,6 +1,7 @@
 System.clock SystemClock#include <system.c>
-System.instructionClock GetInstructionClock#include <system.c>
-System.peripheralClock GetPeripheralClock#include <system.c>
+System.instructionClock SystemInstructionClock#include <system.c>
+System.peripheralClock SystemPeripheralClock#include <system.c>
+System.disablePeripheralInterrupt SystemDisablePeripheralInterrupt#include <system.c>
 
 System.unlock SystemUnlock#include <system.c>
 System.lock SystemLock#include <system.c>
