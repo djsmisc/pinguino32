@@ -757,8 +757,8 @@ class Pinguino(framePinguinoX, Editor):
                         "--obanksel=9",\
                         "--optimize-cmp",\
                         "--optimize-df",\
-                        #only at link stage
-                        #"--ivt-loc=" + str(board.memstart),\
+                        # Do not remove --ivt-loc option
+                        "--ivt-loc=" + str(board.memstart),\
                         "-p" + board.proc,\
                         "-D" + board.board,\
                         "-D" + board.bldr,\
