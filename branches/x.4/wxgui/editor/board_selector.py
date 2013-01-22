@@ -50,7 +50,6 @@ class BoarSelector:
         self.FAMILY = self.IDE.getElse("Board", "family", "18fxxx")
         self.DEVICE = self.IDE.getElse("Board", "device", "Pinguino 2550")
         self.BOOTLOADER = self.IDE.getElse("Board", "bootloader", "[boot2, 0x2000]")
-        
         self.BOOTLOADER = self.BOOTLOADER[1:-1].split(",")
         self.BOOTLOADER[0] = self.BOOTLOADER[0].replace("'", "")
         self.BOOTLOADER[1] = eval(self.BOOTLOADER[1])
@@ -136,7 +135,8 @@ class BoarSelector:
             if self.MODE == "BOOT": self.BOOTLOADER = self.Boot[sel+1]
             if self.MODE == "ICSP": self.BOOTLOADER = self.Boot[0]
         #else:
-        self.FAMILY = self.radioBox_famChoices[sel]
+        if self.radioBox_famChoices:  #families have not been generated.
+            self.FAMILY = self.radioBox_famChoices[sel]
 
         self.new_choices_dev()
         self.updateFrame()
