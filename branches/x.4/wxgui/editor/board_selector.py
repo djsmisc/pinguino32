@@ -34,7 +34,7 @@ class BoarSelector:
     #----------------------------------------------------------------------
     def __init_selector__(self, IDE):
         """"""
-        self.Boot =["noboot", ["boot2", 0x2000], ["boot4", 0x0C00]]
+        self.Boot =[["noboot", 0], ["boot2", 0x2000], ["boot4", 0x0C00]]
         self.IDE = IDE
 
         self.buttonBoxOK.SetDefault()
@@ -49,11 +49,11 @@ class BoarSelector:
         self.MODE = self.IDE.getElse("Board", "mode", "BOOT")
         self.FAMILY = self.IDE.getElse("Board", "family", "18fxxx")
         self.DEVICE = self.IDE.getElse("Board", "device", "Pinguino 2550")
-        self.BOOTLOADER = self.IDE.getElse("Board", "bootloader", "[boot2, 0x2000]")
+        self.BOOTLOADER = self.IDE.getElse("Board", "bootloader", "['boot2', 0x2000]")
         self.BOOTLOADER = self.BOOTLOADER[1:-1].split(",")
         self.BOOTLOADER[0] = self.BOOTLOADER[0].replace("'", "")
         self.BOOTLOADER[1] = eval(self.BOOTLOADER[1])
-
+    
         if self.ARCH == 8: self.radioBox_arch.SetSelection(0)
         else: self.radioBox_arch.SetSelection(1)
 
