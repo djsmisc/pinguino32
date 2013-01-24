@@ -225,10 +225,10 @@ except:
 
 try:
     from editor.variables import * 
-    fichier.writelines('Frames successfully loaded\n')
+    fichier.writelines('Variables successfully loaded\n')
 except:
-    fichier.writelines('Frames failed\n')
-    fichier.writelines('You should have framesX3.py at the wxgui/variables\n')
+    fichier.writelines('Variables failed\n')
+    fichier.writelines('You should have variables.py at the wxgui/editor/\n')
     fichier.close()
     perror()
     
@@ -237,7 +237,7 @@ try:
     fichier.writelines('Frames successfully loaded\n')
 except:
     fichier.writelines('Frames failed\n')
-    fichier.writelines('You should have framesX3.py at the wxgui/frames\n')
+    fichier.writelines('You should have framesX3.py at the wxgui/editor/frames/\n')
     fichier.close()
     perror()
     
