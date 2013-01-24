@@ -40,6 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define _BV(bit) (1 << (bit))
 #define  LSBFIRST   0
 #define  MSBFIRST   1
+#define  abs(x) (x>=0)?x:-x
 
 uint8_t is_reversed = 0;
 int8_t sid, sclk, a0, rst, cs;
@@ -307,7 +308,7 @@ const unsigned char font[1275] = {
 
 // Now the memory buffer for the LCD.
 // For PICs with databank divided in blocks of 256 bytes, you have to modify the lkr (linker) script 
-// in a way like this: (example with 18F2550 & bootloader 2.x)
+// in a way like this: (example with 18F2550)
 //
 // Before: 
 // ACCESSBANK	NAME=accessram  START=0x0            END=0x5F          PROTECTED
@@ -461,17 +462,6 @@ void drawstring(uint8_t x, uint8_t line, unsigned char *c)
 	{
 		x = 0;    // ran out of this line
       	line++;
-		c++;
-	}
-	else if((c[0]>255))
-	{
-		drawchar(x, line, c[0]-256);
-    	x += 6; // 6 pixels wide
-    	if (x + 6 >= LCDWIDTH)
-		{
-			x = 0;    // ran out of this line
-			line++;
-    	}
 		c++;
 	}
 	else if((c[0]>127)&&(c[1]>127))
