@@ -68,8 +68,10 @@ class BoarSelector:
 
         self.new_choices_dev()
 
-        index = self.radioBox_devChoices.index(self.DEVICE)
-        self.radioBox_dev.SetSelection(index)
+        if self.DEVICE in self.radioBox_devChoices:
+            index = self.radioBox_devChoices.index(self.DEVICE)
+            self.radioBox_dev.SetSelection(index)
+        
         self.updateFrame()
 
 
