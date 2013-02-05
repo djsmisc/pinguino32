@@ -9,7 +9,7 @@
 //   |     | 
 //   +-----+
 
-uchar position=1;
+u8 position=1;
 
 void setup(void)
 {

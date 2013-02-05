@@ -48,10 +48,13 @@
 	P6      11      quasi-bidirectional I/O     6
 	P7      12      quasi-bidirectional I/O     7
 	INT     13      interrupt output (active LOW)
-	SCL     14      serial clock line           Pinguino SCL (pin 1 or RB1)
-	SDA     15      serial data line            Pinguino SDA (pin 0 or RB0)
+	SCL     14      serial clock line           Pinguino SCL
+	SDA     15      serial data line            Pinguino SDA
 	VDD     16      supply voltage
 	
+  Pinguino  SCL             SDA
+  2550      pin 1 (RB1)     pin 0 (RB0)
+  26j50     pin 4 (RB4)     pin 5 (RB5)
 	--------------------------------------------------------------------------*/
 
 u8 i2cAddr = 0b0100111;    // PCF8574's I2C address

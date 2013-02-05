@@ -9,12 +9,9 @@
 
 // This example code is in the public domain.
 
-
-#include <Wire.h>
-
 void setup()
 {
-  Wire.begin();        // join i2c bus (address optional for master)
+  Wire.master(100);    // join i2c bus (speed is 100KHz)
   Serial.begin(9600);  // start serial for output
 }
 

@@ -32,9 +32,9 @@ void setup()
 	lcd.begin(16, 2); // cols, lines, [dotsize]
 
 	lcd.home(); // 0, 0
-	lcd.printf("Sys.Clock: %02uMHz", getSystemClock()/1000000);
+	lcd.printf("Sys.Clock: %02uMHz", System.getCpuFrequency()/1000000);
 	lcd.setCursor(0, 1);
-	lcd.printf("Per.Clock: %02uMHz", getPeripheralClock()/1000000);
+	lcd.printf("Per.Clock: %02uMHz", System.getPeripheralFrequency()/1000000);
 }
  
 void loop()

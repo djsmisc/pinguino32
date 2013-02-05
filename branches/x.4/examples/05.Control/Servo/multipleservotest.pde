@@ -9,7 +9,7 @@
 //   |     | 
 //   +-----+
 
-uchar position=1;
+u8 position=1;
 
 void setup(void)
 {
@@ -46,6 +46,7 @@ servo.write(11,position);
 servo.write(12,position);
 servo.write(16,position);
 servo.write(17,position);
+
 if(position>100){
     servo.setMaximumPulse(3);
     servo.setMaximumPulse(4);

@@ -12,7 +12,7 @@
 
 void setup()
 {
-  Wire.begin(I2C_MASTER_MODE, I2C_400KHZ); // join i2c bus (address optional for master)
+  Wire.begin(400);            // join i2c bus as a master and at 400KHz
   Serial.begin(9600);          // start serial communication at 9600bps
 }
 
