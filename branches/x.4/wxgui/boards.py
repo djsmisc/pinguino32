@@ -75,6 +75,20 @@ class Pinguino25k50:
     shortarg='-k'
     longarg='--pinguino25k50'
 
+class Pinguino45k50:
+	name='Pinguino 45k50'
+	id=wx.NewId()
+	arch=8
+	bldr='boot4'
+	proc='18f45k50'
+	board='PINGUINO45K50'
+	vendor=MICROCHIP_ID
+	product=PIC8_ID
+	memstart=0x0C00       # bootloader offset
+	memend=0x7fff
+	shortarg='-l'
+	longarg='--pinguino45k50'
+
 class CHRP3:
     name='CHRP3.0'
     id=wx.NewId()
@@ -318,7 +332,7 @@ class UBW32_795:
 boardlist = [   
                 PinguinoNoBoot,
                 Pinguino2550,  Pinguino4550,
-                Pinguino25k50, CHRP3,
+                Pinguino25k50, CHRP3, Pinguino45k50,
                 Pinguino26J50,
                 Pinguino27J53, 
                 PIC32_Pinguino, PIC32_Pinguino_OTG,

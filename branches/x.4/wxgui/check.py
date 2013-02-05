@@ -25,6 +25,7 @@
 import sys
 import os
 import time
+import platform
 
 """ check pinguino dependencies """
 
