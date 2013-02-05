@@ -226,12 +226,18 @@ class Pinguino(framePinguinoX, Editor):
 # Get OS name and define some OS dependant variable
 # ----------------------------------------------------------------------
     def setOSvariables(self):
+
+        pa = platform.architecture()
+        if pa[0]=='64bit': OSarch="64"
+        else: OSarch="32"
+
         if sys.platform == 'darwin':
             self.osdir = 'macosx'
             self.debug_port = '/dev/tty.usbmodem1912'
             self.c8 = 'sdcc'
             self.u32 = 'mphidflash'
             self.make = 'make'
+
         elif sys.platform == 'win32':
             self.osdir = 'win32'
             self.debug_port = 15
@@ -239,6 +245,7 @@ class Pinguino(framePinguinoX, Editor):
             self.p8 = 'picpgm.exe'
             self.u32 = 'mphidflash.exe'
             self.make = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin', 'make.exe')
+
         else:
             self.osdir = 'linux'
             self.debug_port = '/dev/ttyACM0'
@@ -247,6 +254,10 @@ class Pinguino(framePinguinoX, Editor):
             self.u32 = 'ubw32'
             self.make = 'make'
 
+        #self.P8_BIN_DIR = os.path.join(HOME_DIR, self.osdir, 'p8', 'bin' + OSarch)
+        #self.P32_BIN_DIR = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin' + OSarch)
+        self.P8_BIN_DIR = os.path.join(HOME_DIR, self.osdir, 'p8', 'bin')
+        self.P32_BIN_DIR = os.path.join(HOME_DIR, self.osdir, 'p32', 'bin')
 
     #----------------------------------------------------------------------
     def setBoard(self, arch, mode, name, bootloader):
@@ -274,6 +285,8 @@ class Pinguino(framePinguinoX, Editor):
             self.curBoard = boardlist[0]
             self.curBoard.proc = name
             self.curBoard.board = "PIC"+name.upper()
+            self.curBoard.memstart = 0x0000
+            self.curBoard.memend = devlist[self.curBoard.proc][1]*1024
             self.extraName = " [" + self.curBoard.board + "]"
 
         self.displaymsg(_("Changing board")+"...", 0)
@@ -727,7 +740,7 @@ class Pinguino(framePinguinoX, Editor):
                 fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
                 
                 if board.bldr == 'boot2':
-                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                         "--verbose",\
                         "-mpic16",\
                         "--denable-peeps",\
@@ -750,7 +763,7 @@ class Pinguino(framePinguinoX, Editor):
                 elif board.bldr == 'boot4':
                     #"--nostdinc",\
                     #"--nostdlib",\
-                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                         "--verbose",\
                         "-mpic16",\
                         "--denable-peeps",\
@@ -773,7 +786,7 @@ class Pinguino(framePinguinoX, Editor):
                         stdout=fichier, stderr=STDOUT)
                                    
                 elif board.bldr == 'noboot':
-                    sortie = Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                         "--verbose",\
                         "-mpic16",\
                         "--denable-peeps",\
@@ -801,10 +814,13 @@ class Pinguino(framePinguinoX, Editor):
                     
                     # set the file pointer to the beginning of stdout
                     fichier.seek(0)
+
                     # read lines until 'error' or 'Error' is found
                     for ligne in fichier:
                         # ???
-                        if not "stcpage" in globals():
+                        #if not "stcpage" in globals():
+                        #    break
+                        if (gui == 0):
                             break
 
                         # C errors
@@ -856,7 +872,7 @@ class Pinguino(framePinguinoX, Editor):
             if board.arch == 8:
                 
                 if board.bldr == 'boot2':
-                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                         "--verbose",\
                         "-mpic16",\
                         "--denable-peeps",\
@@ -891,7 +907,7 @@ class Pinguino(framePinguinoX, Editor):
                         stdout=fichier, stderr=STDOUT)
                         
                 elif board.bldr == 'boot4':
-                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                         "--verbose",\
                         "-mpic16",\
                         "--denable-peeps",\
@@ -926,7 +942,7 @@ class Pinguino(framePinguinoX, Editor):
                         stdout=fichier, stderr=STDOUT)
                         
                 elif board.bldr == 'noboot':
-                    sortie=Popen([os.path.join(HOME_DIR, self.osdir, 'p8', 'bin', self.c8),\
+                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                         "--verbose",\
                         "-mpic16",\
                         "--denable-peeps",\
@@ -952,7 +968,6 @@ class Pinguino(framePinguinoX, Editor):
                         #'-llibc18f.lib',\
                         #'-llibm18f.lib',\
                         #'-llibsdcc.lib',\
-                        #os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
                         "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                         os.path.join(SOURCE_DIR, 'main.o')],\
                         stdout=fichier, stderr=STDOUT)
