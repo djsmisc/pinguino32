@@ -1,6 +1,6 @@
 author  : rblanchot@gmail.com
 script  : build-sdcc-v3.sh
 host    : Linux (3.2.0-4-amd64)
-build   : 14-01-13
-version : SDCC : pic16 3.2.1 #8386 (Jan 14 2013) (Linux)
-          
+build   : 21-01-13
+version : 
+          SDCC : pic16 3.2.1 #8392 (Jan 21 2013) (Linux)
