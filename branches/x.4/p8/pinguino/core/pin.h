@@ -197,6 +197,7 @@
     #if defined(PINGUINO26J50) || defined(PINGUINO46J50)
         #define LED1	12
         #define USERLED	12
+        #define RTCC    1
     #endif
 	
 	#define A0 13

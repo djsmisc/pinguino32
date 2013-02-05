@@ -1,7 +1,7 @@
 delay Delayms#include <delay.c>
 delayMicroseconds Delayus#include <delay.c>
 
-millis millis#include <millis.c>
+millis millis#include <millis.c>#define __MILLIS__
 
 digitalWrite digitalwrite#include <digitalw.c>
 pinMode pinmode#include <digitalw.c>
@@ -13,7 +13,7 @@ analogWrite PWM_set_dutycycle#include <pwm.c>
 
 min min#include <macro.h>
 max max#include <macro.h>
-abs abs#include <macro.h>
+abs abs#include <stdlib.h>
 constrain constrain#include <macro.h>
 map map#include <mathlib.c>
 powf powf#include <math.h>

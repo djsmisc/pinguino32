@@ -31,8 +31,6 @@
 #include <pic18fregs.h>
 #include <typedef.h>
 
-#error "*** FLASH.C MUST BE UPDATED ! ***"
-
 void EraseFlash(u16 address)
 {
 	TBLPTRU=0;

@@ -4,7 +4,7 @@
 	PURPOSE:		Digital IO management
 	PROGRAMER:		Jean-Pierre MANDON
 	FIRST RELEASE:	2008
-	LAST RELEASE:	2012/12/07
+	LAST RELEASE:	2013/01/05
 	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
@@ -15,6 +15,7 @@
         regis blanchot 2012/09/28 : complete rewrite
         regis blanchot 2012/11/19 : Pinguino 1220 and 1320 support
         regis blanchot 2012/12/07 : Pinguino 25k50 and 45k50 support
+        regis blanchot 2013/01/05 : fixed warnings about pointers in RAM
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -75,16 +76,14 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 8 - 13
 
 /**********************************************************************/
-#elif defined(PINGUINO14K22)
+#elif defined(__18f14k22)
 /**********************************************************************/
                                                     // Pinguino pin number
-const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
-					_6,_7,_0,_1,_2,                 // 8 - 12
-					_0,_1,_2,_3,_5,_4};             // 13 - 18
+const u8 mask[19]={	_5,_4,_3,_5,_4,_3,_6,_7,_7,     // 0 - 8
+					_0,_1,_2,_0,_1,_2,_4,_5,_6};    // 9 - 17
 
-const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
-					pC, pC, pC, pC, pC,             // 8 - 12
-					pA, pA, pA, pA, pA, pA};        // 13 - 18
+const u8 port[19]={	pA, pA, pA, pC, pC, pC, pC, pC, pB, // 0 - 8
+					pA, pA, pA, pC, pC, pC, pB, pB, pB }; // 9 - 17
 
 /**********************************************************************/
 #elif defined(PINGUINO2550) || defined(PINGUINO25K50) || defined(CHRP3)
@@ -99,7 +98,7 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 13 - 18
 
 /**********************************************************************/
-#elif defined(PINGUINO26J50)
+#elif defined(__18f26j50) //PINGUINO26J50)
 /**********************************************************************/
                                                     // Pinguino pin number
 const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
@@ -168,15 +167,15 @@ void digitalwrite(u8 pin, u8 state)
 		#endif
 	}
 */
-    u8 b = mask[pin];           // bit
-    u8 *p;
-
-    p = port[pin] + 0xF80;      // lat
+    u8  b = mask[pin];          // 1<<bit
+    __data u8 * pPORT;          // pointer in RAM space
+    
+    pPORT = (__data u8*) (port[pin] + 0x0F80); // PORTx
     
     if (state)
-        *p |= b;                // set bit
+        *pPORT |= b;            // set bit
     else
-        *p &= (255-b);          // clear bit
+        *pPORT &= (255-b);      // clear bit
 }
 
 u8 digitalread(u8 pin)
@@ -204,14 +203,15 @@ u8 digitalread(u8 pin)
 	}
 	return (0);
 */
-    u8 *p;
-
-    p = port[pin] + 0xF80;      // lat
+    u8  b = mask[pin];          // 1<<bit
+    __data u8 * pPORT;          // pointer in RAM space
     
-    if ((*p & mask[pin]) == 0)
-        return 0;               // bit is not set
-    else
+    pPORT = (__data u8*) (port[pin] + 0x0F80); // PORTx
+    
+    if ( *pPORT & b )
         return 1;               // bit is set
+    else
+        return 0;               // bit is not set
 }
 
 void pinmode(u8 pin, u8 state)
@@ -238,33 +238,36 @@ void pinmode(u8 pin, u8 state)
 		#endif	
 	}
 */
-    u8 b = mask[pin];           // bit
-    u8 *p;
+    u8  b = mask[pin];          // 1<<bit
+    __data u8* pTRIS;           // pointer in RAM space
     
-    p = port[pin] + 0xF92;      // tris
+    pTRIS = (__data u8*) (port[pin] + 0x0F92); // TRISx
     
     if (state)                  // if 1
-        *p |= b;                // set bit (input)
+        *pTRIS |= b;            // set bit (input)
     else                        // if 0
-        *p &= (255-b);          // clear bit (output)
+        *pTRIS &= (255-b);      // clear bit (output)
 }
 
+//  pPORT = address of PORTx
+// *pPORT = content of PORTx
 void toggle(u8 pin)
 {
-/*
-	u8 val;
-	val = digitalread(pin);
-	digitalwrite(pin, val^1);
-*/
-    u8 b = mask[pin];           // bit
-    u8 *p;
+    /*
+    u8 val;
+    val = digitalread(pin);
+    digitalwrite(pin, val^1);
+    */
+
+    u8  b = mask[pin];          // 1<<bit
+    __data u8* pPORT;           // pointer in RAM space
+
+    pPORT = (__data u8*) (port[pin] + 0x0F80); // PORTx
     
-    p = port[pin] + 0xF80;      // lat
-    
-    if ((*p & b) == 0)          // bit is not set ?
-        *p |= b;                // set bit
-    else                        // bit is set ?
-        *p &= (255-b);          // clear bit
+    if ( *pPORT & b )           // bit is set ?
+        *pPORT &= (255-b);      // clear bit
+    else                        // bit is not set ?
+        *pPORT |= b;            // set bit
 }
 
 #endif /* __DIGITALW__ */

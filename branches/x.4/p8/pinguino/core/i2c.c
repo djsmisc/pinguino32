@@ -56,10 +56,10 @@
 #include <typedef.h>
 #include <macro.h>
 #include <const.h>
-#include <delay.c>
+//#include <delay.c>
 //#include <interrupt.c>
-//#include <stdio.c>
-//#include <stdarg.h>
+#include <stdio.c>
+#include <stdarg.h>
 
 // Modules
 #define I2C1            1
@@ -78,28 +78,60 @@
 #define I2C_400KHZ		400
 #define I2C_1MHZ		1000
 
-//typedef void (*i2c_stdout) (void);	// type of :	void foo(int x)
-//i2c_stdout _i2c_onRequest_function;	// then : 		void pputchar(void)
-//i2c_stdout _i2c_onReceive_function;	// then : 		void pputchar(void)
+#define I2C_idle() while (((SSPCON2 & 0x1F) > 0) | (SSPSTATbits.R_W))
+
+#ifdef I2CINT
+typedef void (*i2c_stdout) (void);          // type : void foo(void)
+static i2c_stdout _i2c_onRequest_function;  // then : void _i2c_onRequest_function(void)
+static i2c_stdout _i2c_onReceive_function;  // then : void _i2c_onReceive_function(void)
+#endif
+
+// i2c buffer length
+#ifndef _I2CBUFFERLENGTH_
+#define _I2CBUFFERLENGTH_ 32
+#endif
+
+u8 _i2c_rxBuffer[_I2CBUFFERLENGTH_];              // i2c rx buffer
+u8 _i2c_rxBufferIndex = 0;
+u8 _i2c_rxBufferLength = 0;
+
+u8 _i2c_txAddress = 0;
+u8 _i2c_txBuffer[_I2CBUFFERLENGTH_];              // i2c tx buffer
+u8 _i2c_txBufferIndex = 0;
+u8 _i2c_txBufferLength = 0;
+
+u8 wpointer,rpointer;        // write and read pointer
 
 /// PROTOTYPES
 
 void I2C_master(u16);   
 void I2C_slave(u16);   
 void I2C_init(u8, u16);
-u8 I2C_send(u8);
+u8 I2C_write(u8);
+void I2C_putchar(u8);
+void I2C_printf(char *, ...);
 u8 I2C_read();
 void I2C_wait();
-void I2C_idle();
+//void I2C_idle();
 //u8 I2C_waitAck();
 void I2C_start();
 void I2C_stop();
 void I2C_restart();
 void I2C_sendNack();
 void I2C_sendAck();
-//void I2C_interrupt();
-//void I2C_OnRequest(void (*)(void));       // TODO : move to interrupt.c ?
-//void IC2_OnReceive(void (*)(void));
+// Arduino's functions
+u8 I2C_requestFrom(u8, u8);
+void _I2C_beginTransmission(u8);
+u8 I2C_endTransmission();
+void I2C_send(u8*, u8);
+u8 I2C_receive();
+u8 I2C_available();
+//
+#ifdef I2CINT
+void I2C_interrupt();
+void I2C_OnRequest(i2c_stdout);       // TODO : move to interrupt.c ?
+void IC2_OnReceive(i2c_stdout);
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- Initialisation Functions for Master and Slave
@@ -186,7 +218,13 @@ void I2C_init(u8 mode, u16 sora)
     SSPCON2 = 0;
     PIR1bits.SSPIF = 0; // MSSP Interrupt Flag
     PIR2bits.BCLIF = 0; // Bus Collision Interrupt Flag
-    Delayms(1000);
+    //Delayms(1000);
+    
+    _i2c_rxBufferIndex = 0;
+    _i2c_rxBufferLength = 0;
+
+    _i2c_txBufferIndex = 0;
+    _i2c_txBufferLength = 0;
 }
 
 /*	----------------------------------------------------------------------------
@@ -216,7 +254,7 @@ void I2C_init(u8 mode, u16 sora)
     Datasheet, figure 19-23
     --------------------------------------------------------------------------*/
 
-u8 I2C_send(u8 value)
+u8 I2C_write(u8 value)
 {
     I2C_idle();                     // Wait the MSSP module is inactive
     SSPBUF = value;                 // Write byte to SSPBUF (BF is set to 1)
@@ -232,6 +270,27 @@ u8 I2C_send(u8 value)
 //    while (SSPSTATbits.BF);         // Wait until buffer is empty (BF set to 0)
     // ACKSTAT can be returned now because it was loaded before BF was cleared
     return (!SSPCON2bits.ACKSTAT);  // 1 if Ack, 0 if NAck
+}
+
+void I2C_putchar(u8 c)
+{
+    I2C_idle();                     // Wait the MSSP module is inactive
+    SSPBUF = c;                 // Write byte to SSPBUF (BF is set to 1)
+    I2C_idle();                     // Wait the MSSP module is inactive
+}
+
+/*	----------------------------------------------------------------------------
+	I2C_printf()
+	write formated string on the i2c bus
+	--------------------------------------------------------------------------*/
+
+void I2C_printf(char *fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+    pprintf(I2C_putchar, fmt, args);
+    va_end(args);
 }
 
 /*	----------------------------------------------------------------------------
@@ -310,11 +369,12 @@ void I2C_wait()
     Source = Datasheet : ORing R_W bit with SEN, RSEN, PEN, RCEN or ACKEN
     will indicate if the MSSP is in Active mode
 	--------------------------------------------------------------------------*/
-
+/*
 void I2C_idle()
 {
     while (((SSPCON2 & 0x1F) > 0) | (SSPSTATbits.R_W));
 }
+*/
 
 /*	----------------------------------------------------------------------------
 	---------- Wait for Acknowledge (Ack) from the slave
@@ -419,40 +479,204 @@ void I2C_sendNack()
     while (!PIR1bits.SSPIF);        // Wait the interrupt flag is set
 }
 
-#endif
+/*	----------------------------------------------------------------------------
+	---------- requestFrom
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+/*
+u8 I2C_requestFrom(u8 address, u8 quantity)
+{
+    u8 read;
 
+    // clamp to buffer length
+    if (quantity > _I2CBUFFERLENGTH_)
+        quantity = _I2CBUFFERLENGTH_;
 
-//
-//  TODO: move the following to interrupt.c ?
-//
+    // perform blocking read into buffer
+    read = I2C_readFrom(address, _i2c_rxBuffer, quantity);
 
+    // set rx buffer iterator vars
+    _i2c_rxBufferIndex = 0;
+    _i2c_rxBufferLength = read;
 
+    return read;
+}
+*/
+/*	----------------------------------------------------------------------------
+	---------- beginTransmission
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+/*
+void _I2C_beginTransmission(u8 address)
+{
+    // indicate that we are transmitting
+    _i2c_transmitting = 1;
+    // set address of targeted slave
+    _i2c_txAddress = address;
+    // reset tx buffer iterator vars
+    _i2c_txBufferIndex = 0;
+    _i2c_txBufferLength = 0;
+}
+*/
+/*	----------------------------------------------------------------------------
+	---------- endTransmission
+	----------------------------------------------------------------------------
+	--------------------------------------------------------------------------*/
+/*
+u8 I2C_endTransmission()
+{
+    // transmit buffer (blocking)
+    u8 ret = I2C_writeTo(_i2c_txAddress, _i2c_txBuffer, _i2c_txBufferLength, 1);
+    // reset tx buffer iterator vars
+    _i2c_txBufferIndex = 0;
+    _i2c_txBufferLength = 0;
+    // indicate that we are done transmitting
+    _i2c_transmitting = 0;
 
+    return ret;
+}
+*/
+/*	----------------------------------------------------------------------------
+	---------- send
+	----------------------------------------------------------------------------
+    must be called in:
+    slave tx event callback
+    or after beginTransmission(address)
+	--------------------------------------------------------------------------*/
+/*
+void I2C_send(u8* data, u8 quantity)
+{
+    u8 i;
+    
+    if (_i2c_transmitting)
+    {
+        // in master transmitter mode
+        for(i = 0; i < quantity; ++i)
+        {
+          I2C_write(data[i]);
+        }
+    }
+    else
+    {
+        // in slave send mode
+        // reply to master
+        twi_transmit(data, quantity);
+    }
+}
+*/
+/*	----------------------------------------------------------------------------
+	---------- available
+	----------------------------------------------------------------------------
+    must be called in:
+    slave rx event callback
+    or after requestFrom(address, numBytes)
+	--------------------------------------------------------------------------*/
+/*
+u8 I2C_receive()
+{
+    // default to returning null char
+    // for people using with char strings
+    u8 value = '\0';
+
+    // get each successive byte on each call
+    if (_i2c_rxBufferIndex < _i2c_rxBufferLength)
+    {
+        value = _i2c_rxBuffer[_i2c_rxBufferIndex];
+        ++_i2c_rxBufferIndex;
+    }
+
+    return value;
+}
+*/
+/*	----------------------------------------------------------------------------
+	---------- available
+	----------------------------------------------------------------------------
+    must be called in:
+    slave rx event callback
+    or after requestFrom(address, numBytes)
+	--------------------------------------------------------------------------*/
+/*
+u8 I2C_available()
+{
+    return _i2c_rxBufferLength - _i2c_rxBufferIndex;
+}
+*/
 /*	----------------------------------------------------------------------------
 	---------- OnRequest
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-/*
+
+#ifdef I2CINT
 void I2C_OnRequest(i2c_stdout func)
 {
-	_i2c_onRequest_function = func;
+    // don't bother if user hasn't registered a callback
+    /*
+    if (!_i2c_user_onRequest)
+    {
+        return;
+    }
+    */
+    // reset tx buffer iterator vars
+    // !!! this will kill any pending pre-master sendTo() activity
+    _i2c_txBufferIndex = 0;
+    _i2c_txBufferLength = 0;
+
+    // alert user program
+    _i2c_onRequest_function = func;
+
+    PIR1bits.SSPIF = 0;
 }
-*/
+#endif
+
 /*	----------------------------------------------------------------------------
 	---------- OnReceive
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-/*
+
+#ifdef I2CINT
 void I2C_OnReceive(i2c_stdout func)
 {
-	_i2c_onReceive_function = func;
+    /*
+    u8 i;
+    
+    // don't bother if user hasn't registered a callback
+    if (!_i2c_user_onReceive)
+    {
+        return;
+    }
+    
+    // don't bother if rx buffer is in use by a master requestFrom() op
+    // i know this drops data, but it allows for slight stupidity
+    // meaning, they may not have read all the master requestFrom() data yet
+    if (_i2c_rxBufferIndex < _i2c_rxBufferLength)
+    {
+        return;
+    }
+    
+    // copy twi rx buffer into local read buffer
+    // this enables new reads to happen in parallel
+    for(i = 0; i < numBytes; ++i)
+    {
+        _i2c_rxBuffer[i] = inBytes[i];    
+    }
+    */
+    // set rx iterator vars
+    _i2c_rxBufferIndex = 0;
+    _i2c_rxBufferLength = numBytes;
+
+    // alert user program
+    _i2c_onReceive_function = func;
+
+    PIR1bits.SSPIF = 0;
 }
-*/
+#endif
+
 /*	----------------------------------------------------------------------------
 	---------- Interrupt handler for I2C slave
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
-/*
+
+#ifdef I2CINT
 void I2C_interrupt()
 {
 	if (PIR1bits.SSPIF)
@@ -464,4 +688,6 @@ void I2C_interrupt()
 			_i2c_onReceive_function();
 	}
 }
-*/
+#endif
+
+#endif /* __PINGUINO_I2C_C */

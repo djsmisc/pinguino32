@@ -73,6 +73,7 @@
 #define __LCDI2C_H
 
 #include <typedef.h>
+#include <delay.c>
 
 typedef union
 {
@@ -221,26 +222,81 @@ static void lcdi2c_send8(u8, u8);
 void lcdi2c_init(u8, u8, u8);
 void lcdi2c_backlight();
 void lcdi2c_noBacklight();
-void lcdi2c_clear();
+//void lcdi2c_clear();
 void lcdi2c_clearLine(u8);
-void lcdi2c_home();
-void lcdi2c_noAutoscroll();
-void lcdi2c_autoscroll();
-void lcdi2c_rightToLeft();
-void lcdi2c_leftToRight();
-void lcdi2c_scrollDisplayRight();
-void lcdi2c_scrollDisplayLeft();
-void lcdi2c_blink();
-void lcdi2c_noBlink();
-void lcdi2c_cursor();
-void lcdi2c_noCursor();
-void lcdi2c_display();
-void lcdi2c_noDisplay();
+//void lcdi2c_home();
+//void lcdi2c_noAutoscroll();
+//void lcdi2c_autoscroll();
+//void lcdi2c_rightToLeft();
+//void lcdi2c_leftToRight();
+//void lcdi2c_scrollDisplayRight();
+//void lcdi2c_scrollDisplayLeft();
+//void lcdi2c_blink();
+//void lcdi2c_noBlink();
+//void lcdi2c_cursor();
+//void lcdi2c_noCursor();
+//void lcdi2c_display();
+//void lcdi2c_noDisplay();
 void lcdi2c_setCursor(u8, u8);
 void lcdi2c_write(u8);
 void lcdi2c_printf(char*, ...);
 void lcdi2c_newchar(const u8 *, u8);
 //void lcdi2c_newpattern();
 
+#if defined(LCDI2CCLEAR)
+#define lcdi2c_clear()              do { lcdi2c_send8(LCD_DISPLAY_CLEAR, LCD_CMD); Delayms(2); } while(0)
 #endif
 
+#if defined(LCDI2CHOME)
+#define lcdi2c_home()               do { lcdi2c_send8(LCD_CURSOR_HOME, LCD_CMD); Delayms(2); } while(0)
+#endif
+
+#if defined(LCDI2CNOAUTOSCROLL)
+#define lcdi2c_noAutoscroll()       lcdi2c_send8(LCD_ENTRYSHIFTDECREMENT, LCD_CMD)
+#endif
+
+#if defined(LCDI2CAUTOSCROLL)
+#define lcdi2c_autoscroll()         lcdi2c_send8(LCD_ENTRYSHIFTINCREMENT, LCD_CMD)
+#endif
+
+#if defined(LCDI2CRIGHTTOLEFT)
+#define lcdi2c_rightToLeft()        lcdi2c_send8(LCD_ENTRYRIGHT, LCD_CMD)
+#endif
+
+#if defined(LCDI2CLEFTTORIGHT)
+#define lcdi2c_leftToRight()        lcdi2c_send8(LCD_ENTRYLEFT, LCD_CMD)
+#endif
+
+#if defined(LCDI2CSCROLLDISPLAYRIGHT)
+#define lcdi2c_scrollDisplayRight() lcdi2c_send8(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT, LCD_CMD)
+#endif
+
+#if defined(LCDI2CSCROLLDISPLAYLEFT)
+#define lcdi2c_scrollDisplayLeft()  lcdi2c_send8(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT, LCD_CMD)
+#endif
+
+#if defined(LCDI2CBLINK)
+#define lcdi2c_blink()              lcdi2c_send8(LCD_BLINKON, LCD_CMD)
+#endif
+
+#if defined(LCDI2CNOBLINK)
+#define lcdi2c_noBlink()            lcdi2c_send8(LCD_BLINKOFF, LCD_CMD)
+#endif
+
+#if defined(LCDI2CCURSOR)
+#define lcdi2c_cursor()             lcdi2c_send8(LCD_CURSORON, LCD_CMD)
+#endif
+
+#if defined(LCDI2CNOCURSOR)
+#define lcdi2c_noCursor()           lcdi2c_send8(LCD_CURSOROFF, LCD_CMD)
+#endif
+
+#if defined(LCDI2CDISPLAY)
+#define lcdi2c_display()            lcdi2c_send8(LCD_DISPLAYON, LCD_CMD)
+#endif
+
+#if defined(LCDI2CNODISPLAY)
+#define lcdi2c_noDisplay()          lcdi2c_send8(LCD_DISPLAYOFF, LCD_CMD)
+#endif
+
+#endif

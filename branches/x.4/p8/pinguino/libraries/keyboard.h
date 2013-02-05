@@ -11,7 +11,7 @@ Samuele Paganoni.
 
 /*Renamed definitions.*/
 #define keyboard_init() ps2_init()
-#define keyboard_irr() ps2_irr()
+#define keyboard_interrupt() ps2_isr()
 #define keyboard_send(x) ps2_write(x)
 
 /*With this definition the buffer will be empty before reading a char.*/

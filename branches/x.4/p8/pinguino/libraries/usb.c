@@ -7,6 +7,7 @@
 #ifndef __PINGUINOUSB
 #define __PINGUINOUSB
 
+#include <pic18fregs.h>
 #include <typedef.h>
 #include <usb.h>
 
@@ -31,6 +32,23 @@ u8 usbwp,usbrp;		// pointer for USB buffer pinguino
 static u8 last_send_was_null;
 u16 ep2_num_bytes_to_send;
 u8 *ep2_source_data;
+
+// RB 05-02-2013
+void usb_init(void)
+{
+    // Enable Interrupt
+    #if defined(__18f25k50) || defined(__18f45k50)
+        PIR3bits.USBIF = 0;     // clear usb interrupt flag
+        PIE3bits.USBIE = 1;     // enable usb interrupt
+        IPR3bits.USBIP = 1;     // high priority interrupt
+    #else
+        PIR2bits.USBIF = 0;     // clear usb interrupt flag
+        PIE2bits.USBIE = 1;     // enable usb interrupt
+        IPR2bits.USBIP = 1;     // high priority interrupt
+    #endif
+    INTCONbits.GIEH = 1;   // Enable global HP interrupts
+    INTCONbits.GIEL = 1;   // Enable global LP interrupts
+}
 
 u8 usbavailable(void)
 {
@@ -61,7 +79,7 @@ void prepare_ep2_in(void)
     }
 }
 
-void usbsend(u8 *txpointer,u16 length)
+void usbsend(u8 *txpointer, u8 length)
 {
     ep2_source_data=txpointer;
     ep2_num_bytes_to_send=length;
@@ -72,9 +90,9 @@ void usbsend(u8 *txpointer,u16 length)
 /*
 void usbsendint(int valeur)
 {
-ep2_source_data=&valeur;
-ep2_num_bytes_to_send=2;
-prepare_ep2_in();
+    ep2_source_data=&valeur;
+    ep2_num_bytes_to_send=2;
+    prepare_ep2_in();
 }
 */
 
@@ -86,7 +104,10 @@ void epap_in(void)
     }
     last_send_was_null = (ep2_num_bytes_to_send < EP2_BUFFER_SIZE);
     EP_IN_BD(2).Cnt = ep2_num_bytes_to_send;
+    
+    /* import this from bootloader v2.12 ? */ 
     fill_in_buffer(2, &ep2_source_data, EP2_BUFFER_SIZE, &ep2_num_bytes_to_send);
+    
     if(EP_IN_BD(2).Stat.DTS == 0)
 	{
         EP_IN_BD(2).Stat.uc = BDS_USIE | BDS_DAT1 | BDS_DTSEN;
@@ -154,6 +175,22 @@ void epapout_init(void)
     UEP1 = EPHSHK_EN | EPOUTEN_EN | EPCONDIS_EN;       	// Init EPAPPLI as an OUT EP
     usbwp=1;						// init pointer for rx buffer pinguino
     usbrp=1;
+}
+
+void usb_interrupt(void)
+{
+    #if defined(__18f25k50) || defined(__18f45k50)
+    if(PIR3bits.USBIF)
+    #else
+    if(PIR2bits.USBIF)
+    #endif
+    {
+        dispatch_usb_event();
+        UIRbits.SOFIF = 0;
+        UIRbits.URSTIF = 0;
+        PIR2bits.USBIF = 0;
+        UEIR = 0;
+    }
 }
 
 #endif

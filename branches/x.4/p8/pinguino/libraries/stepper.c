@@ -171,7 +171,9 @@ void Stepper_setSpeed(long whatSpeed)
 
 void Stepper_step(int steps_to_move)
 {  
-	int steps_left = abs(steps_to_move);  // how many steps to take
+	int steps_left;
+    
+    steps_left = steps_to_move > 0 ? steps_to_move : -steps_to_move;  // how many steps to take
 
 	// determine direction based on whether steps_to_mode is + or -:
 	if (steps_to_move > 0) {this_direction = 1;}

@@ -28,8 +28,8 @@ __code USB_Device_Descriptor libdevice_descriptor =
     0x04D8,                             // Vendor ID, microchip=0x04D8
     0xFEAB,                             // Product ID 0xFEAA Pinguino
     0x0000,                             // Device release number in BCD format
-    0,                                  // Manufacturer string index
-    1,                                  // Product string index
+    1,//0,                                  // Manufacturer string index
+    2,//1,                                  // Product string index
     0,                                  // Device serial number string index
     1                                   // Number of possible configurations
 };
@@ -64,8 +64,8 @@ __code USB_Configuration_Descriptor libconfiguration_descriptor = {
     2,                                          // Number of interfaces in this configuration
     1,                                          // Index value of this configuration
     0,                                          // Configuration string index
-    DEFAULT | POWERED,                          // Attributes
-    20},                                         // Maximum Power Consumption in 2mA units
+    192,//DEFAULT | POWERED,                    // Attributes (rb 25-01-2013)
+    20},                                        // Maximum Power Consumption in 2mA units
     //------------------------------------------------------------------------------------
     // call management Descriptor with IN EP
     {sizeof(USB_Interface_Descriptor),          // Size of this descriptor in bytes
@@ -172,9 +172,19 @@ __code USB_Configuration_Descriptor libconfiguration_descriptor = {
 };
 #endif
 
-/* String descriptors for the USB device */
-__code u8 libstring_descriptor[40][3] = {
+/* String descriptors for the USB device (rb 25-01-2013) */
+const char lang[] = {sizeof(lang),  STRING_DESCRIPTOR,
+    0x09,0x04}; // english = 0x0409
+const char manu[] = {sizeof(manu),  STRING_DESCRIPTOR,
+    'J',0x00,'P',0x00,' ',0x00,'M',0x00,'A',0x00,'N',0x00,'D',0x00,'O',0x00,'N',0x00,' ',0x00};
+const char prod[] = {sizeof(prod),  STRING_DESCRIPTOR,
+    'P',0x00,'i',0x00,'n',0x00,'g',0x00,'u',0x00,'i',0x00,'n',0x00,'o',0x00};
+const char * const libstring_descriptor[] = { lang, manu, prod};
+
+/*
+__code u8 libstring_descriptor[40][1] = {
     {40,STRING_DESCRIPTOR,'P',0x00,'i',0x00,'n',0x00,'g',0x00,'u',0x00,'i',0x00,'n',0x00,'o',0x00,' ',0x00,'J',0x00,'P',0x00,' ',0x00,'M',0x00,'A',0x00,'N',0x00,'D',0x00,'O',0x00,'N',0x00,' ',0x00},
     {12, STRING_DESCRIPTOR, 'P',0x00,'o',0x00,'r',0x00,'n',0x00,'0',0x00},
     {12, STRING_DESCRIPTOR, 'P',0x00,'o',0x00,'r',0x00,'n',0x00,'0',0x00}
 };
+*/

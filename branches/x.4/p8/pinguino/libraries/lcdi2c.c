@@ -255,18 +255,14 @@ static void lcdi2c_send4(u8 quartet, u8 mode)
     I2C_start();                    // send start condition
 
     //I2C_writechar(PCF8574_address | I2C_WRITE);
-    I2C_send((PCF8574_address << 1) | I2C_WRITE);
+    I2C_write((PCF8574_address << 1) | I2C_WRITE);
 
 	LCD_EN = HIGH;
-	//I2C_send(PCF8574_address, PCF8574_data.val);
-    //I2C_writechar(PCF8574_data.val);
-    I2C_send(PCF8574_data.val);
+    I2C_write(PCF8574_data.val);
 	// E Pulse Width > 300ns
 
 	LCD_EN = LOW;
-	//I2C_send(PCF8574_address, PCF8574_data.val);
-    //I2C_writechar(PCF8574_data.val);
-    I2C_send(PCF8574_data.val);
+    I2C_write(PCF8574_data.val);
 	// E Enable Cycle > (300 + 200) = 500ns
 
 	I2C_stop();                     // send stop confition
@@ -295,163 +291,33 @@ static void lcdi2c_send8(u8 octet, u8 mode)
 	---------- backlight
 	--------------------------------------------------------------------------*/
 
+#if defined(LCDI2CBACKLIGHT)
 void lcdi2c_backlight()
 {
 	gBacklight = ON;	// 0 = ON since PCF8574 is logical inverted
 	LCD_BL = gBacklight;
-	//I2C_send(PCF8574_address, PCF8574_data.val);
 	I2C_start();
-    //I2C_writechar(PCF8574_address | I2C_WRITE);
-    //I2C_writechar(PCF8574_data.val);
-    I2C_send((PCF8574_address << 1) | I2C_WRITE);
-    I2C_send(PCF8574_data.val);
+    I2C_write((PCF8574_address << 1) | I2C_WRITE);
+    I2C_write(PCF8574_data.val);
 	I2C_stop();
 }
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- noBacklight
 	--------------------------------------------------------------------------*/
 
+#if defined (LCDI2CNOBACKLIGHT)
 void lcdi2c_noBacklight()
 {
 	gBacklight = OFF;	// 1 = OFF since PCF8574 is logical inverted
 	LCD_BL = gBacklight;
-	//I2C_send(PCF8574_address, PCF8574_data.val);
 	I2C_start();
-    //I2C_writechar(PCF8574_address | I2C_WRITE);
-    //I2C_writechar(PCF8574_data.val);
-    I2C_send((PCF8574_address << 1) | I2C_WRITE);
-    I2C_send(PCF8574_data.val);
+    I2C_write((PCF8574_address << 1) | I2C_WRITE);
+    I2C_write(PCF8574_data.val);
 	I2C_stop();
 }
-
-/*	----------------------------------------------------------------------------
-	---------- Efface l'ecran
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_clear()
-{
-	lcdi2c_send8(LCD_DISPLAY_CLEAR, LCD_CMD);
-	Delayms(2);	// Wait for more than 1.64ms
-}
-
-/*	----------------------------------------------------------------------------
-	---------- Retourne a la position [1,1]
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_home()
-{
-	lcdi2c_send8(LCD_CURSOR_HOME, LCD_CMD);
-	Delayms(2);	// Wait for more than 1.64ms
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_noAutoscroll()
-{
-	lcdi2c_send8(LCD_ENTRYSHIFTDECREMENT, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_autoscroll()
-{
-	lcdi2c_send8(LCD_ENTRYSHIFTINCREMENT, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_rightToLeft()
-{
-	lcdi2c_send8(LCD_ENTRYRIGHT, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_leftToRight()
-{
-	lcdi2c_send8(LCD_ENTRYLEFT, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_scrollDisplayRight()
-{
-	lcdi2c_send8(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_scrollDisplayLeft()
-{
-	lcdi2c_send8(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_blink()
-{
-	lcdi2c_send8(LCD_BLINKON, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_noBlink()
-{
-	lcdi2c_send8(LCD_BLINKOFF, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_cursor()
-{
-	lcdi2c_send8(LCD_CURSORON, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_noCursor()
-{
-	lcdi2c_send8(LCD_CURSOROFF, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_display()
-{
-	lcdi2c_send8(LCD_DISPLAYON, LCD_CMD);
-}
-
-/*	----------------------------------------------------------------------------
-	---------- 
-	--------------------------------------------------------------------------*/
-
-void lcdi2c_noDisplay()
-{
-	lcdi2c_send8(LCD_DISPLAYOFF, LCD_CMD);
-}
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- Positionne le curseur sur le LCD
@@ -459,6 +325,7 @@ void lcdi2c_noDisplay()
 	from (0,0) to (15,1)
 	--------------------------------------------------------------------------*/
 
+#if defined(LCDI2CSETCURSOR)
 void lcdi2c_setCursor(u8 col, u8 line)
 {
 	int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
@@ -469,11 +336,13 @@ void lcdi2c_setCursor(u8 col, u8 line)
 		col = numcolmax - 1;    // we count rows starting w/0
 	lcdi2c_send8(LCD_SETDDRAMADDR | (col + row_offsets[line]), LCD_CMD);
 }
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- Efface une ligne
 	--------------------------------------------------------------------------*/
 
+#if defined(LCDI2CCLEARLINE)
 void lcdi2c_clearLine(u8 line)
 {
 	u8 i;
@@ -482,6 +351,7 @@ void lcdi2c_clearLine(u8 line)
 	for (i = 0; i < numcolmax; i++)
 		lcdi2c_write(SPACE);  // affiche des espaces
 }
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- Affiche un caractere ASCII a la position courante du curseur
@@ -499,6 +369,7 @@ void lcdi2c_write(u8 c)
 	----------------------------------------------------------------------------
 	--------------------------------------------------------------------------*/
 
+#if defined(LCDI2CPRINTF)
 void lcdi2c_printf(char *fmt, ...)
 {
 	va_list args;
@@ -507,6 +378,7 @@ void lcdi2c_printf(char *fmt, ...)
 	pprintf(lcdi2c_write, fmt, args);
 	va_end(args);
 }
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- Définit un caractère personnalisé de 8x8 points.
@@ -517,6 +389,7 @@ void lcdi2c_printf(char *fmt, ...)
 	lcdi2c_newchar(car8, 1); Définit le caractère 'è' à l'adresse 1.
 	--------------------------------------------------------------------------*/
 
+#if defined(LCDI2CNEWCHAR)
 void lcdi2c_newchar(const u8 *c, u8 char_code)
 {
 	u8 i, a;
@@ -530,6 +403,7 @@ void lcdi2c_newchar(const u8 *c, u8 char_code)
 		a++;
 	};
 }
+#endif
 
 /*	----------------------------------------------------------------------------
 	---------- Définition de 8 nouveaux caractères

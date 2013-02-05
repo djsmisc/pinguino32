@@ -29,7 +29,7 @@
 #include <pic18fregs.h>
 #include <typedef.h>
 #include <digitalw.c>
-#include <system.c>
+#include <oscillator.c>
 #include <interrupt.c>
 
 #ifdef PICUNO_EQUO
@@ -72,7 +72,7 @@ then [(PR2) + 1] = FOSC / PWM Frequency / 4 / p
 void PWM_set_frequency(u32 freq)
 {
 	// PR2+1 calculation
-	_pr2_plus1 = GetSystemClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
+	_pr2_plus1 = SystemGetClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
 
 	// Timer2 prescaler calculation
 	// PR2 max value is 255, so PR2+1 max value is 256

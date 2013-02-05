@@ -18,11 +18,13 @@
 	#define FALSE			0
     #endif
 	#define false			0 
+	#define False			0 
     
     #ifndef TRUE
 	#define TRUE			!FALSE
     #endif
 	#define true			!false
+	#define True			!false
 
 	#define INPUT			1
 	#define OUTPUT			0
