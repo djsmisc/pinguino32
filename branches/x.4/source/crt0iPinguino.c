@@ -80,18 +80,19 @@ void _startup (void) __naked
     ; Initialize the flash memory access configuration.
     ; This is harmless for non-flash devices, so we do it on all parts.
 
-	;#if defined(__18f2550)  || defined(__18f4550)  || \
+    ;#if defined(__18f2455)  || defined(__18f4455)  || \
+    ;    defined(__18f2550)  || defined(__18f4550)  || \
     ;    defined(__18f25k50) || defined(__18f45k50)
     
     bsf     0xa6, 7, _bank_selector_      ; EECON1.EEPGD = 1, Access Flash program memory, not EEPROM memory
     bcf     0xa6, 6, _bank_selector_      ; EECON1.CFGS  = 0, Access Flash program or data EEPROM memory, not Configuration registers
-	
+
     ;#elif defined(__18f26j50) || defined(__18f46j50)
 
     ;bsf     0xa6, 2, _bank_selector_      ; EECON1.WREN = 1; enable write to memory
     ;bsf     0xa6, 1, _bank_selector_      ; EECON1.WR = 1; Initiates a program memory erase cycle or write cycle
 
-	;#endif
+    ;#endif
 
     __endasm;
 
