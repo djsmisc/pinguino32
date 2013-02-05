@@ -4,6 +4,7 @@
 /*
 	CHANGELOG:
 	23-11-2012		regis blanchot		added __18f120,1320,14k22,2455,4455,46j50 support
+	19-01-2013		regis blanchot		support of all clock frequency
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -35,6 +36,7 @@
 #include <typedef.h>
 //#include <stdlib.h>       // no more used (09-11-2012)
 #include <delay.c>
+#include <oscillator.c>
 
 #if defined(__SERIAL_PRINTF__) || defined(__SERIAL_PRINT__) || \
     defined(__SERIAL_PRINTLN__) || defined(__SERIAL_GETSTRING__)
@@ -50,7 +52,7 @@
 
 // rx buffer length
 #ifndef RXBUFFERLENGTH
-    #if defined(__18f1220) || defined(__18f1320)
+    #if defined(__18f1220) || defined(__18f1320) || defined(__18f14k22)
         #define RXBUFFERLENGTH 64
     #else
         #define RXBUFFERLENGTH 128
@@ -66,7 +68,9 @@ void serial_begin(unsigned long baudrate)
 	unsigned long spbrg;
 	unsigned char highbyte,lowbyte;
 
-	spbrg=(48000000/(4*baudrate))-1;
+    //spbrg=(48000000/(4*baudrate))-1;
+    spbrg=(SystemGetClock()/(4*baudrate))-1;
+
 	highbyte=spbrg/256;
 	lowbyte=spbrg%256;
 #if defined(__18f1220) || defined(__18f1320) || \
@@ -80,39 +84,50 @@ void serial_begin(unsigned long baudrate)
 	PIE1bits.RCIE=1;                        // enable interrupt on RX
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 	TXSTAbits.TXEN=1;                       // enable TX
-#elif defined(__18f2550) || defined(__18f4550)
+
+#elif defined(__18f2550) || defined(__18f4550) || \
+      defined(__18f25k50) || defined(__18f45k50)
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
 	BAUDCONbits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
 	SPBRG=lowbyte;   						// set UART speed SPBRGL
 	RCSTA=0x90;                             // set RCEN and SPEN
 	BAUDCONbits.RCIDL=1;			        // set receive active
-	PIE1bits.RCIE=1;                        // enable interrupt on RX
-	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
-	TXSTAbits.TXEN=1;                       // enable TX
+    TXSTAbits.TXEN=1;                       // enable TX
+
+    PIR1bits.RC1IF = 0;                     // Clear interrupt flag
+    PIE1bits.RCIE=1;                        // enable interrupt on RX
+    IPR1bits.RCIP=1;                        // define high priority for RX interrupt
+
 #elif defined(__18f26j50) || defined(__18f46j50)
-	TXSTA1bits.BRGH=1;               	  	 // set BRGH bit
-	BAUDCON1bits.BRG16=1;					 // set 16 bits SPBRG
-	SPBRGH1=highbyte;                        // set UART speed SPBRGH
-	SPBRG1=lowbyte;   						 // set UART speed SPBRGL
-	RCSTA1=0x90;                             // set RCEN and SPEN
-	BAUDCON1bits.RCIDL=1;			         // set receive active
-    PIR1bits.RC1IF = 0;		                 // Clear interrupt flag
-	PIE1bits.RC1IE=1;                        // enable interrupt on RX
-	IPR1bits.RC1IP=1;                        // define high priority for RX interrupt
-	TXSTA1bits.TXEN=1;                       // enable TX
-	PIR1bits.TX1IF=0;
-	PIE1bits.TX1IE=0;
+	TXSTA1bits.BRGH=1;               	  	// set BRGH bit
+	BAUDCON1bits.BRG16=1;					// set 16 bits SPBRG
+	SPBRGH1=highbyte;                       // set UART speed SPBRGH
+	SPBRG1=lowbyte;   						// set UART speed SPBRGL
+	RCSTA1=0x90;                            // set RCEN and SPEN
+	BAUDCON1bits.RCIDL=1;			        // set receive active
+    TXSTA1bits.TXEN=1;                      // enable TX
+
+    PIR1bits.RC1IF = 0;                     // Clear interrupt flag
+    PIE1bits.RC1IE=1;                       // enable interrupt on RX
+    IPR1bits.RC1IP=1;                       // define high priority for RX interrupt
+
+    //PIR1bits.TX1IF=0;
+    //PIE1bits.TX1IE=0;
+
 #else
     #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
-#endif
-	wpointer=1;                             // initialize write pointer
-	rpointer=1;                             // initialize read pointer
-	INTCONbits.PEIE=1;                      // enable peripheral interrupts
-	INTCONbits.GIE=1;
-	RCONbits.IPEN = 1;                      // enable interrupt priorities
 
- 	Delayms(100);                           // AG : 12-11-2012
+#endif
+
+    wpointer=1;                             // initialize write pointer
+    rpointer=1;                             // initialize read pointer
+
+    //RCONbits.IPEN = 1;                      // enable interrupt priorities
+    INTCONbits.GIEH = 1;                    // Enable global HP interrupts
+    INTCONbits.GIEL = 1;                    // Enable global LP interrupts
+
+    //Delayms(100);                           // AG : 12-11-2012
 }
 
 // new character receive ?
@@ -134,27 +149,41 @@ void serial_interrupt(void)
 	char caractere;
 	unsigned char newwp;
 
-#if defined(__18f1220) || defined(__18f1320) || \
-    defined(__18f14k22) || defined(__18lf14k22) || \
-    defined(__18f2550) || defined(__18f4550)
-	PIR1bits.RCIF=0;				// clear RX interrupt flag
-	caractere=RCREG;				// take received char
-#elif defined(__18f26j50) || defined(__18f46j50)
-	PIR1bits.RC1IF=0;				// clear RX interrupt flag
-	caractere=RCREG1;				// take received char
-#else
-    #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
-#endif
-	if (wpointer!=RXBUFFERLENGTH-1)	// if not last place in buffer
-		newwp=wpointer+1;			// place=place+1
-	else
-		newwp=1;					// else place=1
+    #if defined(__18f1220)  || defined(__18f1320)   || \
+        defined(__18f14k22) || defined(__18lf14k22) || \
+        defined(__18f2550)  || defined(__18f4550)   || \
+        defined(__18f25k50) || defined(__18f45k50)  || \
+        defined(__18f2455)  || defined(__18f4455)
 
-	if (rpointer!=newwp)			// if read pointer!=write pointer
-		rx[wpointer++]=caractere;	// store received char
+    if (PIR1bits.RCIF)
+    { 
+        PIR1bits.RCIF=0;				// clear RX interrupt flag
+        caractere=RCREG;				// take received char
 
-	if (wpointer==RXBUFFERLENGTH)	// if write pointer=length buffer
-		wpointer=1;					// write pointer = 1
+    #elif defined(__18f26j50) || defined(__18f46j50)
+
+    if (PIR1bits.RC1IF) 
+    {
+        PIR1bits.RC1IF=0;				// clear RX interrupt flag
+        caractere=RCREG1;				// take received char
+
+    #else
+
+        #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
+
+    #endif
+
+        if (wpointer!=RXBUFFERLENGTH-1)	// if not last place in buffer
+            newwp=wpointer+1;			// place=place+1
+        else
+            newwp=1;					// else place=1
+
+        if (rpointer!=newwp)			// if read pointer!=write pointer
+            rx[wpointer++]=caractere;	// store received char
+
+        if (wpointer==RXBUFFERLENGTH)	// if write pointer=length buffer
+            wpointer=1;					// write pointer = 1
+    }
 }
 
 // write char
@@ -162,7 +191,8 @@ void serial_putchar(unsigned char caractere)
 {
 #if defined(__18f1220) || defined(__18f1320) || \
     defined(__18f14k22) || defined(__18lf14k22) || \
-    defined(__18f2550) || defined(__18f4550)
+    defined(__18f2550) || defined(__18f4550) || \
+	defined(__18f25k50) || defined(__18f45k50)
 	while (!TXSTAbits.TRMT);
 	TXREG=caractere;		        // yes, send char
 #elif defined(__18f26j50) || defined(__18f46j50)
@@ -193,7 +223,8 @@ unsigned char serial_read()
 	write formated string on the serial port
 	--------------------------------------------------------------------------*/
 
-#if defined(__SERIAL_PRINTF__)
+#if defined(__SERIAL_PRINTF__)  || defined(__SERIAL_PRINT__) || \
+    defined(__SERIAL_PRINTLN__) || defined(__SERIAL_GETSTRING__)
 void serial_printf(char *fmt, ...)
 {
 	va_list args;
@@ -211,7 +242,7 @@ void serial_printf(char *fmt, ...)
     11-09-2012: added FLOAT support - Régis Blanchot
 	--------------------------------------------------------------------------*/
 
-#if defined(__SERIAL_PRINT__)
+#if defined(__SERIAL_PRINT__) || defined(__SERIAL_PRINTLN__)
 //void serial_print(char *fmt,...)
 void serial_print(const char *fmt,...)
 {

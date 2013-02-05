@@ -65,7 +65,9 @@ void SPI_init()
 			break;
 	}
 
-	SSPCON1 = (SSPCON1 & 0xF7) | this_mode;
+	// 2013-01-20 Bug fixed by fbforos
+	//SSPCON1 = (SSPCON1 & 0xF7) | this_mode;
+	SSPCON1 = (SSPCON1 & 0xF7) | this_clock;
 
 	if (this_clock <= SPI_CLOCK_TIMER2)
 		pinmode(SCKPIN, OUTPUT);

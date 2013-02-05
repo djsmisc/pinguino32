@@ -1,29 +1,42 @@
 /*	----------------------------------------------------------------------------
-	FILE:			interrupt.c
-	PROJECT:		pinguino
-	PURPOSE:		interrupt routines
-	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
-	FIRST RELEASE:	24-12-2010
-	LAST RELEASE:	23-11-2012
-	----------------------------------------------------------------------------
-	CHANGELOG :
-	23-11-2012		rblanchot	added __18f1220,1320,14k22,2455,4455,46j50 support
-	TODO :
-	----------------------------------------------------------------------------
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Lesser General Public
-	License as published by the Free Software Foundation; either
-	version 2.1 of the License, or (at your option) any later version.
+    FILE:			interrupt.c
+    PROJECT:		pinguino
+    PURPOSE:		interrupt routines
+    PROGRAMER:		regis blanchot <rblanchot@gmail.com>
+    FIRST RELEASE:	24-12-2010
+    LAST RELEASE:	24-01-2013
+    ----------------------------------------------------------------------------
+    CHANGELOG :
+    23-11-2012		rblanchot	added __18f1220,1320,14k22,2455,4455,46j50 support
+    24-01-2013		rblanchot	added IntEnable and IntDisable functions
+                                added partial support to RTCC interrupt
+    ----------------------------------------------------------------------------
+    TODO :
+    * x7j53 family support
+    * INT3
+    * INTEDG0, INTEDG1, INTEDG2, INTEDG3
+    * BCL1, BCL2
+    * CM1, CM2
+    * RX1, RX2
+    * TX1, TX2
+    * SSP1, SSP2
+    * CTMU
+    * RTCC
+    ----------------------------------------------------------------------------
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Lesser General Public License for more details.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-	You should have received a copy of the GNU Lesser General Public
-	License along with this library; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-	--------------------------------------------------------------------------*/
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    --------------------------------------------------------------------------*/
 
 #ifndef __INTERRUPT_C
 	#define __INTERRUPT_C
@@ -50,6 +63,7 @@
 	#include <typedef.h>
 	#include <interrupt.h>
 	#include <macro.h>
+    #include <oscillator.c>
 
 	typedef void (*callback) (void);				// type of: void callback()
 
@@ -61,115 +75,251 @@
 	volatile u8 preloadL[4];
 
 /*	----------------------------------------------------------------------------
-	---------- detachInterrupt
+	---------- Attach / Detach Interrupt
 	----------------------------------------------------------------------------
 	@author		Regis Blanchot <rblanchot@gmail.com>
-	@descr		Disable the interrupt
+	@descr		Enable / Disable the interrupt
 	@param		inter:		interrupt number
 	--------------------------------------------------------------------------*/
 
-void detachInterrupt(u8 inter)
+void IntSetEnable(u8 inter, u8 enable)
 {
-	intUsed[inter] = INT_NOT_USED;	// This interrupt is no longer used
-
-	switch(inter)
+    if (enable == INT_DISABLE)
+        intUsed[inter] = INT_NOT_USED;	// This interrupt is no longer used
+    else
+        intUsed[inter] = INT_USED;	    // This interrupt is used
+        
+    switch(inter)
 	{
 		case INT_INT0:
-			INTCONbits.INT0IE = INT_DISABLE;
+			INTCONbits.INT0IE = enable;
 			break;
 		case INT_INT1:
-			INTCON3bits.INT1IE = INT_DISABLE;
+			INTCON3bits.INT1IE = enable;
 			break;
 		case INT_INT2:
-			INTCON3bits.INT2IE = INT_DISABLE;
+			INTCON3bits.INT2IE = enable;
 			break;
 		case INT_TMR0:
-			INTCONbits.TMR0IE = INT_DISABLE;
+			INTCONbits.TMR0IE = enable;
 			break;
 		case INT_TMR1:
-			PIE1bits.TMR1IE = INT_DISABLE;
+			PIE1bits.TMR1IE = enable;
 			break;
 		case INT_TMR2:
-			PIE1bits.TMR2IE = INT_DISABLE;
+			PIE1bits.TMR2IE = enable;
 			break;
 		case INT_TMR3:
-			PIE2bits.TMR3IE = INT_DISABLE;
+			PIE2bits.TMR3IE = enable;
 			break;
         #if defined(__18f26j50) || defined(__18f46j50)
 		case INT_TMR4:
-			PIE3bits.TMR4IE = INT_DISABLE;
+			PIE3bits.TMR4IE = enable;
 			break;
         #endif
 		case INT_RB:
 		#if defined(__18f25k50) || defined(__18f45k50)
-			INTCONbits.IOCIE = INT_DISABLE;
+			INTCONbits.IOCIE = enable;
         #else
-			INTCONbits.RBIE = INT_DISABLE;
+			INTCONbits.RBIE = enable;
         #endif
 			break;
 		#if !defined(__18f1220) && !defined(__18f1320) && \
             !defined(__18f14k22) && !defined(__18lf14k22)
 		case INT_USB:
 		#if defined(__18f25k50) || defined(__18f45k50)
-			PIE3bits.USBIE = INT_DISABLE;
+			PIE3bits.USBIE = enable;
         #else
-			PIE2bits.USBIE = INT_DISABLE;
+			PIE2bits.USBIE = enable;
         #endif
 			break;
         #endif
 		case INT_AD:
-			PIE1bits.ADIE = INT_DISABLE;
+			PIE1bits.ADIE = enable;
 			break;
 		case INT_RC:
-			PIE1bits.RCIE = INT_DISABLE;
+			PIE1bits.RCIE = enable;
 			break;
 		case INT_TX:
-			PIE1bits.TXIE = INT_DISABLE;
+			PIE1bits.TXIE = enable;
 			break;
 		case INT_CCP1:
-			PIE1bits.CCP1IE = INT_DISABLE;
+			PIE1bits.CCP1IE = enable;
 			break;
 		#if !defined(__18f1220) && !defined(__18f1320) && \
             !defined(__18f14k22) && !defined(__18lf14k22)
 		case INT_CCP2:
-			PIE2bits.CCP2IE = INT_DISABLE;
+			PIE2bits.CCP2IE = enable;
 			break;
         #endif
 		case INT_OSCF:
-			PIE2bits.OSCFIE = INT_DISABLE;
+			PIE2bits.OSCFIE = enable;
 			break;
 		case INT_CM:
 		#if defined(__18f4550) || defined(__18f2550)
-			PIE2bits.CMIE = INT_DISABLE;
+			PIE2bits.CMIE = enable;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
-			PIE2bits.CM1IE = INT_DISABLE;
+			PIE2bits.CM1IE = enable;
 		#endif
 			break;
 		#if defined(__18f4550) || defined(__18f2550)
 		case INT_EE:
-			PIE2bits.EEIE = INT_DISABLE;
+			PIE2bits.EEIE = enable;
 			break;
 		#endif
 		case INT_BCL:
 		#if defined(__18f4550) || defined(__18f2550)
-			PIE2bits.BCLIE = INT_DISABLE;
+			PIE2bits.BCLIE = enable;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
-			PIE2bits.BCL1IE = INT_DISABLE;
+			PIE2bits.BCL1IE = enable;
 		#endif
 			break;
 		case INT_HLVD:
 		#if defined(__18f4550) || defined(__18f2550)
-			PIE2bits.HLVDIE = INT_DISABLE;
+			PIE2bits.HLVDIE = enable;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
-			PIE2bits.LVDIE = INT_DISABLE;
+			PIE2bits.LVDIE = enable;
 		#endif
 			break;
 		#if defined(__18f4550)
 		case INT_SSP:
-			PIE1bits.SSPIE = INT_DISABLE;
+			PIE1bits.SSPIE = enable;
+			break;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+		case INT_RTCC:
+			PIE3bits.RTCCIE = enable;
+			break;
+		#endif
+	}
+}
+
+void IntDisable(u8 inter)
+{
+    IntSetEnable(inter, INT_DISABLE);
+}
+
+void IntEnable(u8 inter)
+{
+    IntSetEnable(inter, INT_ENABLE);
+}
+
+/*	----------------------------------------------------------------------------
+	---------- IntClearFlag
+	----------------------------------------------------------------------------
+	@author		Regis Blanchot <rblanchot@gmail.com>
+	@descr		Clear interrupt flag to allow interrupt again
+	@param		inter:		interrupt number
+	--------------------------------------------------------------------------*/
+
+void IntClearFlag(u8 inter)
+{
+	switch(inter)
+	{
+		case INT_INT0:
+			INTCONbits.INT0IF = 0;
+			break;
+		case INT_INT1:
+			INTCON3bits.INT1IF = 0;
+			break;
+		case INT_INT2:
+			INTCON3bits.INT2IF = 0;
+			break;
+		case INT_TMR0:
+			INTCONbits.TMR0IF = 0;
+			break;
+		case INT_TMR1:
+			PIR1bits.TMR1IF = 0;
+			break;
+		case INT_TMR2:
+			PIR1bits.TMR2IF = 0;
+			break;
+		case INT_TMR3:
+			PIR2bits.TMR3IF = 0;
+			break;
+        #if defined(__18f26j50) || defined(__18f46j50)
+		case INT_TMR4:
+			PIR3bits.TMR4IF = 0;
+			break;
+        #endif
+		case INT_RB:
+		#if defined(__18f25k50) || defined(__18f45k50)
+			INTCONbits.IOCIF = 0;
+        #else
+			INTCONbits.RBIF = 0;
+        #endif
+			break;
+		#if !defined(__18f1220) && !defined(__18f1320) && \
+            !defined(__18f14k22) && !defined(__18lf14k22)
+		case INT_USB:
+		#if defined(__18f25k50) || defined(__18f45k50)
+			PIR3bits.USBIF = 0;
+        #else
+			PIR2bits.USBIF = 0;
+        #endif
+			break;
+        #endif
+		case INT_AD:
+			PIR1bits.ADIF = 0;
+			break;
+		case INT_RC:
+			PIR1bits.RCIF = 0;
+			break;
+		case INT_TX:
+			PIR1bits.TXIF = 0;
+			break;
+		case INT_CCP1:
+			PIR1bits.CCP1IF = 0;
+			break;
+		#if !defined(__18f1220) && !defined(__18f1320) && \
+            !defined(__18f14k22) && !defined(__18lf14k22)
+		case INT_CCP2:
+			PIR2bits.CCP2IF = 0;
+			break;
+        #endif
+		case INT_OSCF:
+			PIR2bits.OSCFIF = 0;
+			break;
+		case INT_CM:
+		#if defined(__18f4550) || defined(__18f2550)
+			PIR2bits.CMIF = 0;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+			PIR2bits.CM1IF = 0;
+		#endif
+			break;
+		#if defined(__18f4550) || defined(__18f2550)
+		case INT_EE:
+			PIR2bits.EEIF = 0;
+			break;
+		#endif
+		case INT_BCL:
+		#if defined(__18f4550) || defined(__18f2550)
+			PIR2bits.BCLIF = 0;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+			PIR2bits.BCL1IF = 0;
+		#endif
+			break;
+		case INT_HLVD:
+		#if defined(__18f4550) || defined(__18f2550)
+			PIR2bits.HLVDIF = 0;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+			PIR2bits.LVDIF = 0;
+		#endif
+			break;
+		#if defined(__18f4550)
+		case INT_SSP:
+			PIR1bits.SSPIF = 0;
+			break;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+		case INT_RTCC:
+			PIR3bits.RTCCIF = 0;
 			break;
 		#endif
 	}
@@ -182,16 +332,20 @@ void detachInterrupt(u8 inter)
 	@descr		Disable all the interrupt
 	--------------------------------------------------------------------------*/
 
-void int_init()
+void IntInit()
 {
 	u8 i;
 
 	RCONbits.IPEN = 1;					// Enable HP/LP interrupts
-	INTCONbits.GIEH = 1;				// Enable HP interrupts
-	INTCONbits.GIEL = 1;				// Enable LP interrupts
+
+    INTCONbits.GIEH = 0;                // Disable global HP interrupts
+    INTCONbits.GIEL = 0;                // Disable global LP interrupts
 
 	for (i = 0; i < INT_NUM; i++)		// Disable all interrupts
-		detachInterrupt(i);
+		IntSetEnable(i, INT_DISABLE);
+
+	INTCONbits.GIEH = 1;				// Enable HP interrupts
+	INTCONbits.GIEL = 1;				// Enable LP interrupts
 }
 
 /*	----------------------------------------------------------------------------
@@ -201,7 +355,7 @@ void int_init()
 	@descr		Start all timers together
 	--------------------------------------------------------------------------*/
 
-void int_start()
+void IntTimerStart()
 {
 	#ifdef TMR0INT
 		T0CONbits.TMR0ON = ON;
@@ -233,7 +387,7 @@ void int_start()
 	@descr		Stop all timers together
 	--------------------------------------------------------------------------*/
 
-void int_stop()
+void IntTimerStop()
 {
 	#ifdef TMR0INT
 		T0CONbits.TMR0ON = OFF;
@@ -254,7 +408,7 @@ void int_stop()
 	#ifdef TMR4INT
 		#if defined(__18f26j50) || defined(__18f46j50)
 		T4CONbits.TMR4ON = OFF;
-	#endif
+        #endif
 	#endif
 }
 
@@ -265,14 +419,15 @@ void int_stop()
 	@descr		Configure timers to execute function func every delay ms, us or sec
 	@param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
 				func:		function called when interrupt occures
-				delay:		delay before overload (us)
+				delay:		delay before overload
 	--------------------------------------------------------------------------*/
 
 #ifdef TMR0INT
 u8 OnTimer0(callback func, u8 timediv, u16 delay)
 {
 	u8 _t0con = 0;
-
+    u16 _cycles_;
+    
 	if (intUsed[INT_TMR0] == INT_NOT_USED)
 	{
 		intUsed[INT_TMR0] = INT_USED;
@@ -284,23 +439,25 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1 us = 1.000 ns = 12 cy
-				preloadH[INT_TMR0] = high8(0xFFFF - 12);
-				preloadL[INT_TMR0] =  low8(0xFFFF - 12);
-				_t0con = T0_OFF & T0_16BIT & T0_SOURCE_INT & T0_PS_OFF;
+                _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
-				// 12.000 / 8 = 1.500
-				preloadH[INT_TMR0] = high8(0xFFFF - 1500);
-				preloadL[INT_TMR0] =  low8(0xFFFF - 1500);
-				_t0con = T0_OFF & T0_16BIT & T0_SOURCE_INT & T0_PS_ON & T0_PS_1_8;
+                _cycles_ = SystemGetInstructionClock() / 1000 / 2;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
 				// 12.000.000 / 256 = 46875
-				preloadH[INT_TMR0] = high8(0xFFFF - 46875);
-				preloadL[INT_TMR0] =  low8(0xFFFF - 46875);
-				_t0con = T0_OFF & T0_16BIT & T0_SOURCE_INT & T0_PS_ON & T0_PS_1_256;
+                _cycles_ = SystemGetInstructionClock() >> 8;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_ON | T0_PS_1_256;
 				break;
 		}
 
@@ -326,6 +483,7 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 u8 OnTimer1(callback func, u8 timediv, u16 delay)
 {
 	u8 _t1con = 0;
+    u16 _cycles_;
 
 	if (intUsed[INT_TMR1] == INT_NOT_USED)
 	{
@@ -338,39 +496,38 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1us = 1.000 ns = 12 cy
-				preloadH[INT_TMR1] = high8(0xFFFF - 12);
-				preloadL[INT_TMR1] =  low8(0xFFFF - 12);
-                #if defined(__18f2550) || defined(__18f4550)
-				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
-                #endif
+                _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
+                #else
+				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
 				break;
 			case INT_MILLISEC:
 				// 1ms = 1.000.000ns = 12.000 cy
-				// 12.000 / 8 = 1.500
-				preloadH[INT_TMR1] = high8(0xFFFF - 1500);
-				preloadL[INT_TMR1] =  low8(0xFFFF - 1500);
-                #if defined(__18f2550) || defined(__18f4550)
-				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
-                #endif
+                _cycles_ = SystemGetInstructionClock() / 1000;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
-				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
+				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
+                #else
+				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #endif
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
 				// 12.000.000 / 8 = 1.500.000
 				// 1.500.000 / 25 = 60000
-				preloadH[INT_TMR1] = high8(0xFFFF - 60000);
-				preloadL[INT_TMR1] =  low8(0xFFFF - 60000);
+                _cycles_ = SystemGetInstructionClock() / 8 / 25;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				intCountLimit[INT_TMR1] = delay * 25;
-                #if defined(__18f2550) || defined(__18f4550)
-				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
-                #endif
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
+                #else
+				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_RUN_FROM_ANOTHER | T1_OSC_OFF | T1_SOURCE_INT;
                 #endif
 				break;
 		}
@@ -459,19 +616,19 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1us = 12 cy
-				_pr2 = 12;
+				_pr2 = SystemGetInstructionClock() / 1000 / 1000;
 				_t2con = T2_OFF | T2_PS_1_1 | T2_POST_1_1;
 				break;
 			case INT_MILLISEC:
 				// 1ms = 12.000 cy
 				// 12.000 / 15 / 16 = 50
-				_pr2 = 50;
+				_pr2 = SystemGetInstructionClock() / 1000 / 240;
 				_t2con = T2_OFF | T2_POST_1_15 | T2_PS_1_16;
 				break;
 			case INT_SEC:
 				// 1sec = 12.000.000 cy
-				// 12.000.000 / 15 / 16 = 50.000 = 200 * 25
-				_pr2 = 250;
+				// 12.000.000 / 15 / 16 = 50.000 = 200 * 250
+				_pr2 = SystemGetInstructionClock() / 240 / 200;
 				intCountLimit[INT_TMR2] = delay * 200;
 				_t2con = T2_OFF | T2_POST_1_15 | T2_PS_1_16;
 				break;
@@ -498,6 +655,7 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 u8 OnTimer3(callback func, u8 timediv, u16 delay)
 {
 	u8 _t3con = 0;
+    u16 _cycles_;
 
 	if (intUsed[INT_TMR3] == INT_NOT_USED)
 	{
@@ -512,40 +670,36 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
             // 1 cy = 1/(Fosc/4)=4/Fosc=4/48MHz=83ns
 			case INT_MICROSEC:
 				// 1us = 1.000 ns = 12 cy
-				preloadH[INT_TMR3] = high8(0xFFFF - 12);
-				preloadL[INT_TMR3] =  low8(0xFFFF - 12);
-                #if defined(__18f2550) || defined(__18f4550)
-				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT;
-                #endif
+                _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
+				preloadH[INT_TMR3] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR3] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT | T3_SOURCE_T1OSC;
+                #else
+				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT;
                 #endif
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy at Fosc/4
-				// 12.000 / 8 = 1.500
-				preloadH[INT_TMR3] = high8(0xFFFF - 1500);
-				preloadL[INT_TMR3] =  low8(0xFFFF - 1500);
-                #if defined(__18f2550) || defined(__18f4550)
-				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;
-                #endif
+                _cycles_ = SystemGetInstructionClock() / 1000;
+				preloadH[INT_TMR3] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR3] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
-				//_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT | T3_SOURCE_T1OFF;
-				_t3con = 0b00110010;
+				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT | T3_SOURCE_T1OSC;
+                #else
+				_t3con = T3_OFF | T3_16BIT | T3_PS_1_1 | T3_SOURCE_INT;
                 #endif
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
-				// 12.000.000 / 8 = 1.500.000
-				// 1.500.000 / 25 = 60000
-				preloadH[INT_TMR3] = high8(0xFFFF - 60000);
-				preloadL[INT_TMR3] =  low8(0xFFFF - 60000);
+                _cycles_ = SystemGetInstructionClock() / 8 / 25;
+				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				intCountLimit[INT_TMR3] = delay * 25;
-                #if defined(__18f2550) || defined(__18f4550)
-				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;
-                #endif
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT | T3_SOURCE_T1OSC;
+                #else
+				_t3con = T3_OFF | T3_16BIT | T3_PS_1_8 | T3_SOURCE_INT;
                 #endif
 				break;
 		}
@@ -587,19 +741,19 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1us = 12 cy
-				_pr4 = 12;
+				_pr4 = SystemGetInstructionClock() / 1000 / 1000;
 				_t4con = T4_OFF | T4_PS_1_1 | T4_POST_1_1;
 				break;
 			case INT_MILLISEC:
 				// 1ms = 12.000 cy
 				// 12.000 / 15 / 16 = 50
-				_pr4 = 50;
+				_pr4 = SystemGetInstructionClock() / 1000 / 240;
 				_t4con = T4_OFF | T4_POST_1_15 | T4_PS_1_16;
 				break;
 			case INT_SEC:
 				// 1sec = 12.000.000 cy
 				// 12.000.000 / 15 / 16 = 50.000 = 200 * 25
-				_pr4 = 250;
+				_pr4 = SystemGetInstructionClock() / 240 / 200;
 				intCountLimit[INT_TMR4] = delay * 200;
 				_t4con = T4_OFF | T4_POST_1_15 | T4_PS_1_16;
 				break;
@@ -1202,7 +1356,7 @@ void userlowinterrupt()
 	}
 	#endif
 
-	int_start();
+	//int_start();
 }
 
 #endif /* __INTERRUPT_C */

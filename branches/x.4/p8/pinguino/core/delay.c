@@ -4,13 +4,12 @@
 	PURPOSE:		pinguino delays functions
 	PROGRAMER:		jean-pierre mandon
 	FIRST RELEASE:	2008
-	LAST RELEASE:	
+	LAST RELEASE:	2013-01-17
 	----------------------------------------------------------------------------
 	CHANGELOG:
-    *
+    * 2017-01-17    rblanchot - delays are now based on SystemGetClock()
     TODO:
     * check rountines are interuptible
-    * get SystemClock() to calculate right delays
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -30,48 +29,66 @@
 #ifndef __DELAY_C__
 #define __DELAY_C__
 
-//#ifndef __DELAY_H__
-#include <delay.h>
-//#endif
-
 #include <typedef.h>
 //#include <macro.h>
 //#include <system.c>
-
-// ex.
-// Clock = 48MHz -> SystemInstructionClock = 12MHz = 12.000.000 Hz
-// 12.000.000 Instructions per second
-// 12.000     Instructions per millisecond
-// 12         Instructions per microsecond
-//#define _cycles_per_second_         (SystemInstructionClock())
-//#define _cycles_per_millisecond_    (SystemInstructionClock() / 1000)
-//#define _cycles_per_microsecond_    (_cycles_per_millisecond_ / 1000)
+#include <delay.h>
 
 /*
-void DelayCy(u16 p)
-{
-    while (p--) nop();
-}
+    the delayNNtcy family of functions performs a delay of NN cycles.
+    Possible values for NN are:
+    10      10*n cycles delay
+    100     100*n cycles delay
+    1k      1000*n cycles delay
+    10k     10000*n cycles delay
+    100k    100000*n cycles delay
+    1m      1000000*n cycles delay
 */
 
+/*
+    3100 Hz < Clock < 64MHz
+    7750 < Cycles per second = Clock / 4 < 16.000.000
+    8 < Cycles per millisecond < 16.000
+    0 < Cycles per microsecond < 16
+*/
+/*
+void Delayms(u16 p)
+{
+    u16 _cycles_per_millisecond_ = SystemGetInstructionClock() / 1000;
+
+    if (_cycles_per_millisecond_ <= 2550)
+    {
+        while(p--) delay10tcy(_cycles_per_millisecond_ >> 4);
+        return;
+    }
+    if (_cycles_per_millisecond_ <= 25500)
+    {
+        while(p--) delay100tcy(_cycles_per_millisecond_ >> 7);
+        return;
+    }
+}
+
+void Delayus(u16 p)
+{
+    //u16 _cycles_per_microsecond_ = SystemGetInstructionClock() / 1000 / 1000;
+    while (p--);
+}
+*/
 void Delayms(u16 milliseconds)
 {
-//    DelayCy(milliseconds * _cycles_per_millisecond_);
-
     u16 i;
     
-    for (i=0;i<milliseconds;i++) delay10ktcy(1);
-
+    for (i=0;i<milliseconds;i++)
+    {
+        delay10ktcy(1);
+        delay1ktcy(2);
+    }
 }
 
 void Delayus(u16 microseconds)
 {
-//    DelayCy(microseconds * _cycles_per_microsecond_);
-
     u16 i;
-
     for (i=0;i<microseconds;i++);
-
 }
 
 #endif /* __DELAY_C__ */

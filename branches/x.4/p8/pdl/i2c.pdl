@@ -1,17 +1,28 @@
 I2C.master I2C_master#include <i2c.c>
 I2C.slave I2C_slave#include <i2c.c>  
 I2C.init I2C_init#include <i2c.c>
-I2C.send I2C_send#include <i2c.c>
+I2C.write I2C_write#include <i2c.c>
 I2C.read I2C_read#include <i2c.c>
+I2C.send I2C_printf#include <i2c.c>
+I2C.printf I2C_printf#include <i2c.c>
 I2C.wait I2C_wait#include <i2c.c>
 I2C.start I2C_start#include <i2c.c>
 I2C.stop I2C_stop#include <i2c.c>
 I2C.restart I2C_restart#include <i2c.c>
 I2C.sendNack I2C_sendNack#include <i2c.c>
 I2C.sendAck I2C_sendAck#include <i2c.c>
+I2C.onRequest I2C_OnRequest#include <i2c.c>#define I2CINT
+I2C.onReceive I2C_OnReceive#include <i2c.c>#define I2CINT
 
-wire.begin I2C_init#include <i2c.c>
-wire.send I2C_send#include <i2c.c>
-wire.receive I2C_read#include <i2c.c>
-wire.beginTransmission I2C_start#include <i2c.c>
-wire.endTransmission I2C_stop#include <i2c.c>
+Wire.master I2C_master#include <i2c.c>
+Wire.slave I2C_slave#include <i2c.c>  
+Wire.begin I2C_master#include <i2c.c>
+Wire.write I2C_write#include <i2c.c>
+Wire.send I2C_write#include <i2c.c>
+Wire.printf I2C_printf#include <i2c.c>
+Wire.read I2C_read#include <i2c.c>
+Wire.receive I2C_read#include <i2c.c>
+Wire.beginTransmission I2C_start#include <i2c.c>
+Wire.endTransmission I2C_stop#include <i2c.c>
+Wire.onRequest I2C_OnRequest#include <i2c.c>#define I2CINT
+Wire.onReceive I2C_OnReceive#include <i2c.c>#define I2CINT

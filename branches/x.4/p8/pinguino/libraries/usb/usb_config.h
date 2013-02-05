@@ -62,25 +62,26 @@ typedef struct
 
 extern __code USB_Device_Descriptor libdevice_descriptor;
 extern __code USB_Configuration_Descriptor libconfiguration_descriptor;
-extern __code unsigned char libstring_descriptor[40][3];
+//extern __code unsigned char libstring_descriptor[40][3];
+extern const char * const libstring_descriptor[]; // rb 25-01-2013
 
 #ifdef USB_USE_CDC
-/* Definitions for CDC */
-#define USB_CDC_COMM_INTERFACE  0   /* in which interface are the communication EPs */
-#define USB_CDC_DATA_INTERFACE	1	/* in which interface are the data EPs */
-#define USB_COMM_EP_NUM		2		/* Numm for Comm EP */
-#define USB_COMM_EP_UEP		UEP2	/* corresponding UEP for Data EP */
-#define CDC_DATA_EP_NUM	3			/* Num of Data EP */
-#define CDC_DATA_EP_UEP	UEP3		/* corresponding UEP for Data EP */
-#define USB_CDC_BAUD_RATE	115200
-#define USB_CDC_STOP_BITS	0x00	/* 1 Stop Bit */
-#define USB_CDC_PARITY		0x00	/* no parity */
-#define USB_CDC_DATA_BITS	0x08
+    /* Definitions for CDC */
+    #define USB_CDC_COMM_INTERFACE  0   /* in which interface are the communication EPs */
+    #define USB_CDC_DATA_INTERFACE	1	/* in which interface are the data EPs */
+    #define USB_COMM_EP_NUM		2		/* Numm for Comm EP */
+    #define USB_COMM_EP_UEP		UEP2	/* corresponding UEP for Data EP */
+    #define CDC_DATA_EP_NUM	3			/* Num of Data EP */
+    #define CDC_DATA_EP_UEP	UEP3		/* corresponding UEP for Data EP */
+    #define USB_CDC_BAUD_RATE	115200
+    #define USB_CDC_STOP_BITS	0x00	/* 1 Stop Bit */
+    #define USB_CDC_PARITY		0x00	/* no parity */
+    #define USB_CDC_DATA_BITS	0x08
 #endif
 
 #ifdef USB_USE_BULK
-#define BULK_DATA_EP_NUM 1
-#define BULK_DATA_EP_UEP UEP1
+    #define BULK_DATA_EP_NUM 1
+    #define BULK_DATA_EP_UEP UEP1
 #endif
 
 #endif /* USBCONFIG_H_ */

@@ -48,26 +48,50 @@
 	#define INT_TMR3			3
 	#define INT_TMR4			4
 
-	#define INT_INT0			5
-	#define INT_INT1			6
-	#define INT_INT2			7
-	#define INT_RB				8
+	#define INT_INTEDG0			5
+	#define INT_INTEDG1			6
+	#define INT_INTEDG2			7
+	#define INT_INTEDG3			8
 
-	#define INT_CCP1			9
-	#define INT_CCP2			10
-	#define INT_CM				11
+	#define INT_INT0			9
+	#define INT_INT1			10
+	#define INT_INT2			11
+	#define INT_INT3			12
 
-	#define INT_RC				12
-	#define INT_TX				13
-	#define INT_AD				14
-	#define INT_OSCF			15
-	#define INT_EE				16
-	#define INT_HLVD			17
-	#define INT_BCL				18
-	#define INT_USB				19
-	#define INT_SSP				20
+	#define INT_RB				13
 
-	#define INT_NUM				21
+	#define INT_CCP1			14
+	#define INT_CCP2			15
+
+	#define INT_CM				16
+	#define INT_CM1				16
+	#define INT_CM2				17
+
+	#define INT_RC				18
+	#define INT_TX				19
+	#define INT_RC1				18
+	#define INT_TX1				19
+	#define INT_RC2				20
+	#define INT_TX2				21
+
+	#define INT_AD				22
+	#define INT_OSCF			23
+	#define INT_EE				24
+	#define INT_HLVD			25
+
+	#define INT_BCL				26
+	#define INT_BCL1			26
+	#define INT_BCL2			27
+
+	#define INT_USB				28
+
+	#define INT_SSP				29
+	#define INT_SSP1			29
+	#define INT_SSP2			30
+
+    #define INT_CTMU            31
+    #define INT_RTCC            32
+	#define INT_NUM				33
 
 	///
 	/// CCPxCON: STANDARD CCPx CONTROL REGISTER
@@ -118,7 +142,7 @@
 	/// T1CON: TIMER1 CONTROL REGISTER
 	///
 
-	#if defined(__18f2550) || defined(__18f4550)
+	#if defined(__18f2550) || defined(__18f4550) || defined(__18f14k22)
 
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T1_16BIT			(1<<7)	// 16-bit mode
@@ -132,9 +156,9 @@
 	#define T1_SOURCE_EXT		(1<<1)  // 1 = External clock from RC0/T13CKI
 	#define T1_SOURCE_INT		(0)     // 0 = Internal clock source (FOSC/4)
 
-    #endif
+    #else
 
-    #if defined(__18f26j50) || defined(__18f46j50)
+    //#if defined(__18f26j50) || defined(__18f46j50)
 
     // bit 7-6 TMR1CS<1:0>: Timer1 Clock Source Select bits
     #define T1_SOURCE_EXT       0b10000000  // Timer1 clock source is the T1OSC or T1CKI pin
@@ -220,9 +244,31 @@
 	#define T3_ON				(1<<0)      // 1 = Enables Timer3
 	#define T3_OFF				(0)         // 0 = Stops Timer3
 
-    #endif
-
-    #if defined(__18f26j50) || defined(__18f46j50)
+    #elif defined(__18f14k22)
+	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
+	#define T3_16BIT			(1<<7)  // 1 = Enables register read/write of Timer3 in one 16-bit operation
+	#define T3_8BIT				(0)     // 0 = Enables register read/write of Timer3 in two 8-bit operations
+    // bit 6 -
+	// bit 5-4 T3CKPS1:T3CKPS0: Timer3 Input Clock Prescale Select bits
+	#define T3_PS_1_8			(0b11<<4)   // 1:8 Prescale value
+	#define T3_PS_1_4			(0b10<<4)   // 1:4 Prescale value
+	#define T3_PS_1_2			(0b01<<4)   // 1:2 Prescale value
+	#define T3_PS_1_1			(0b00<<4)   // 1:1 Prescale value
+	// bit 3 T3CCP2:T3CCP1: Timer3 and Timer1 to CCPx Enable bits
+	#define T3_CPP1     		0b00001000 // 1 = Timer3 is the capture/compare clock source CCP1 module
+	#define T1_CCP1     		0b00000000 // 0 = Timer1 is the capture/compare clock source CCP1 module
+	// bit 2 T3SYNC: Timer3 External Clock Input Synchronization Control bit
+	// When TMR3CS = T3_SOURCE_EXT:
+	#define T3_NOT_SYNC			(1<<2)      // 1 = Do not synchronize external clock input
+	#define T3_SYNC				(0)         // 0 = Synchronize external clock input
+	// bit 1 TMR3CS: Timer3 Clock Source Select bit
+	#define T3_SOURCE_EXT		(1<<1)      // 1 = External clock input from Timer1 oscillator or T13CKI (on the rising edge after the first falling edge)
+	#define T3_SOURCE_INT		(0)         // 0 = Internal clock (FOSC/4)
+	// bit 0 TMR3ON: Timer3 On bit
+	#define T3_ON				(1<<0)      // 1 = Enables Timer3
+	#define T3_OFF				(0)         // 0 = Stops Timer3
+    
+    #elif defined(__18f26j50) || defined(__18f46j50)
 
     // bit 7-6 TMR3CS<1:0>: Timer1 Clock Source Select bits
     #define T3_SOURCE_EXT       (0b10<<6)   // Timer3 clock source is the T1OSC or T1CKI pin

@@ -76,11 +76,10 @@ u8 hidProtocol;                       // [0] Boot Protocol [1] Report Protocol
 u8 hidRxLen;                          // # of bytes put into buffer
 
   /** Buffer descriptors Table (see datasheet page 171)
-  RAM Bank 4 (0x400 though 0x4ff) is used spcifically for endpoint buffer control in a structure known as Buffer Descriptor Table (BDTZ).<br>
-  TODO:
-  <ul>
-  <li>find something smarter to allocate the buffer, like in usbmmap.c of the microchip firmware. If not all endpoints are used the space in RAM is wasted.</li>
-  </ul>
+  RAM Bank 4 (0x400 though 0x4ff) is used spEcifically for endpoint buffer control
+  in a structure known as Buffer Descriptor Table (BDTZ).
+  TODO: find something smarter to allocate the buffer, like in usbmmap.c
+  of the microchip firmware. If not all endpoints are used the space in RAM is wasted.
   **/
 volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
 
@@ -95,69 +94,87 @@ volatile u8 controlTransferBuffer[EP0_BUFFER_SIZE];
   //
 
   // Process GET_DESCRIPTOR
-static void GetDescriptor(void) {
-#ifdef DEBUG_PRINT
-  printf("GetDescriptor\r\n");
-#endif
-  if(SetupPacket.bmRequestType == 0x80) {
-    u8 descriptorType  = SetupPacket.wValue1;
-    u8 descriptorIndex = SetupPacket.wValue0;
+static void GetDescriptor(void)
+{
+    #ifdef DEBUG_PRINT
+    printf("GetDescriptor\r\n");
+    #endif
 
-    if (descriptorType == DEVICE_DESCRIPTOR) {
-#ifdef DEBUG_PRINT
-      printf("DEVICE_DESCRIPTOR (0x%ux)\r\n",(word)descriptorType);
-#endif
-      requestHandled = 1;
-      outPtr = (u8 *)&libdevice_descriptor;
-      wCount = sizeof(USB_Device_Descriptor);
+    if(SetupPacket.bmRequestType == 0x80)
+    {
+        u8 descriptorType  = SetupPacket.wValue1;
+        u8 descriptorIndex = SetupPacket.wValue0;
+
+        if (descriptorType == DEVICE_DESCRIPTOR)
+        {
+        #ifdef DEBUG_PRINT
+        printf("DEVICE_DESCRIPTOR (0x%ux)\r\n",(word)descriptorType);
+        #endif
+          requestHandled = 1;
+          outPtr = (u8 *)&libdevice_descriptor;
+          wCount = sizeof(USB_Device_Descriptor);
+        }
+
+        else if (descriptorType == CONFIGURATION_DESCRIPTOR)
+        {
+            #ifdef DEBUG_PRINT
+            printf("CONFIGURATION_DESCRIPTOR (0x%ux): %d\r\n", (word)descriptorType, descriptorIndex);
+            #endif
+
+            requestHandled = 1;
+
+            #if 0
+            outPtr = (u8 *)&libconfiguration_descriptor;
+            // wCount = *(outPtr + 2);
+            wCount = CFSZ;
+            #else
+            // SDCC 2.5 makes bad code with the following two lines.  The
+            // unusual thing is that it is the first of the two lines that
+            // is compiled incorrectly (outPtr gets the contents of
+            // libconfiguration_descriptor rather than the address), even though it
+            // is the second line that changes from above.
+            outPtr = (u8 *)&libconfiguration_descriptor;
+            //wCount = libconfiguration_descriptor.configHeader[2]; // Note: SDCC makes bad code with this
+            wCount = libconfiguration_descriptor.Header.wTotalLength;
+            #endif
+
+            #ifdef DEBUG_PRINT
+            printf("Total config size: %d\r\n", wCount);
+            #endif
+        }
+
+        else if (descriptorType == STRING_DESCRIPTOR)
+        {
+            #ifdef DEBUG_PRINT
+            printf("STRING_DESCRIPTOR: %d\r\n", (word)descriptorIndex);
+            #endif
+
+            requestHandled = 1;
+            //outPtr = (u8 *)&libstring_descriptor[descriptorIndex];
+            outPtr = libstring_descriptor[descriptorIndex];
+            wCount = *outPtr;
+        }
+
+        else if (descriptorType == DEVICE_QUALIFIER_DESCRIPTOR)
+        {
+            #ifdef DEBUG_PRINT
+            printf("DEVICE_QUALIFIER_DESCRIPTOR\r\n");
+            #endif
+
+            requestHandled = 1;
+            // TODO: check if this is needed if not requestHandled is not set to 1 the device will
+            // stall later when the linux kernel requests this descriptor
+            //outPtr = (u8 *)&libconfiguration_descriptor;
+            //wCount = sizeof();
+        }
+
+        else
+        {
+            #ifdef DEBUG_PRINT
+            printf("Unknown Descriptor: 0x%ux\r\n", (word)descriptorType);
+            #endif
+        }
     }
-    else if (descriptorType == CONFIGURATION_DESCRIPTOR) {
-#ifdef DEBUG_PRINT
-      printf("CONFIGURATION_DESCRIPTOR (0x%ux): %d\r\n", (word)descriptorType, descriptorIndex);
-#endif
-      requestHandled = 1;
-#if 0
-      outPtr = (u8 *)&libconfiguration_descriptor;
-  // wCount = *(outPtr + 2);
-      wCount = CFSZ;
-#else
-  // SDCC 2.5 makes bad code with the following two lines.  The
-  // unusual thing is that it is the first of the two lines that
-  // is compiled incorrectly (outPtr gets the contents of
-  // libconfiguration_descriptor rather than the address), even though it
-  // is the second line that changes from above.
-      outPtr = (u8 *)&libconfiguration_descriptor;
-  //wCount = libconfiguration_descriptor.configHeader[2]; // Note: SDCC makes bad code with this
-      wCount = libconfiguration_descriptor.Header.wTotalLength;
-#endif
-#ifdef DEBUG_PRINT
-      printf("Total config size: %d\r\n", wCount);
-#endif
-    }
-    else if (descriptorType == STRING_DESCRIPTOR) {
-#ifdef DEBUG_PRINT
-      printf("STRING_DESCRIPTOR: %d\r\n", (word)descriptorIndex);
-#endif
-      requestHandled = 1;
-      outPtr = (u8 *)&libstring_descriptor[descriptorIndex];
-      wCount = *outPtr;
-    }
-    else if (descriptorType == DEVICE_QUALIFIER_DESCRIPTOR) {
-#ifdef DEBUG_PRINT
-      printf("DEVICE_QUALIFIER_DESCRIPTOR\r\n");
-#endif
-      requestHandled = 1;
-  // TODO: check if this is needed if not requestHandled is not set to 1 the device will
-  // stall later when the linux kernel requests this descriptor
-  //outPtr = (u8 *)&libconfiguration_descriptor;
-  //wCount = sizeof();
-    }
-    else {
-#ifdef DEBUG_PRINT
-      printf("Unknown Descriptor: 0x%ux\r\n", (word)descriptorType);
-#endif
-    }
-  }
 }
 
 
@@ -619,69 +636,77 @@ void ProcessControlTransfer(void) {
 
 
 
-void EnableUSBModule(void) {
-  // TBD: Check for voltage coming from the USB cable and use that
-  // as an indication we are attached.
-  if(UCONbits.USBEN == 0) {
-#ifdef DEBUG_PRINT
-    printf("Enable the module\r\n");
-#endif
-    UCON = 0;
-    UIE = 0;
-    UCONbits.USBEN = 1;
-    deviceState = ATTACHED;
-  }
-  // If we are attached and no single-ended zero is detected, then
-  // we can move to the Powered state.
-  if ((deviceState == ATTACHED) && !UCONbits.SE0) {
-    UIR = 0;
-    UIE = 0;
-    UIEbits.URSTIE = 1;
-    UIEbits.IDLEIE = 1;
-    deviceState = POWERED;
-#ifdef DEBUG_PRINT
-    printf("Device powered\r\n");
-#endif
-  }
+void EnableUSBModule(void)
+{
+    // TBD: Check for voltage coming from the USB cable and use that
+    // as an indication we are attached.
+    if(UCONbits.USBEN == 0)
+    {
+        #ifdef DEBUG_PRINT
+        printf("Enable the module\r\n");
+        #endif
+        UCON = 0;
+        UIE = 0;
+        UCONbits.USBEN = 1;
+        deviceState = ATTACHED;
+    }
+
+    // If we are attached and no single-ended zero is detected, then
+    // we can move to the Powered state.
+    if ((deviceState == ATTACHED) && !UCONbits.SE0)
+    {
+        UIR = 0;
+        UIE = 0;
+        UIEbits.URSTIE = 1;
+        UIEbits.IDLEIE = 1;
+        deviceState = POWERED;
+        #ifdef DEBUG_PRINT
+        printf("Device powered\r\n");
+        #endif
+    }
 }
 
 
   // Unsuspend the device
-void UnSuspend(void) {
-#ifdef DEBUG_PRINT
-  printf("UnSuspend\r\n");
-#endif
+void UnSuspend(void)
+{
+    #ifdef DEBUG_PRINT
+    printf("UnSuspend\r\n");
+    #endif
 
-  UCONbits.SUSPND = 0;
-  UIEbits.ACTVIE = 0;
-  UIRbits.ACTVIF = 0;
+    UCONbits.SUSPND = 0;
+    UIEbits.ACTVIE = 0;
+    UIRbits.ACTVIF = 0;
 }
 
 
   // Full speed devices get a Start Of Frame (SOF) packet every 1 millisecond.
   // Nothing is currently done with this interrupt (it is simply masked out).
-void StartOfFrame(void) {
-  // TBD: Add a callback routine to do something
-  UIRbits.SOFIF = 0;
+void StartOfFrame(void)
+{
+      // TBD: Add a callback routine to do something
+      UIRbits.SOFIF = 0;
 }
 
-
   // This routine is called in response to the code stalling an endpoint.
-void Stall(void) {
-#ifdef DEBUG_PRINT
-  printf("Stall\r\n");
-#endif
-  if(UEP0bits.EPSTALL == 1) {
-  // Prepare for the Setup stage of a control transfer
-    WaitForSetupStage();
-    UEP0bits.EPSTALL = 0;
-  }
-  UIRbits.STALLIF = 0;
+void Stall(void)
+{
+    #ifdef DEBUG_PRINT
+    printf("Stall\r\n");
+    #endif
+    if(UEP0bits.EPSTALL == 1)
+    {
+        // Prepare for the Setup stage of a control transfer
+        WaitForSetupStage();
+        UEP0bits.EPSTALL = 0;
+    }
+    UIRbits.STALLIF = 0;
 }
 
 
   // Suspend all processing until we detect activity on the USB bus
-void Suspend(void) {
+void Suspend(void)
+{
 #ifdef ALLOW_SUSPEND
 #ifdef DEBUG_PRINT
   printf("Suspend\r\n");
@@ -781,7 +806,8 @@ void BusReset() {
 
 
   // Main entry point for USB tasks.  Checks interrupts, then checks for transactions.
-void ProcessUSBTransactions(void) {
+void ProcessUSBTransactions(void)
+{
   // See if the device is connected yet.
   if(deviceState == DETACHED)
     return;

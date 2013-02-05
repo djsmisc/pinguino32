@@ -120,7 +120,7 @@ unsigned char ps2_read()
 }
 
 /*Interrupt routine, called from UserInterrupt.*/
-void ps2_irr()
+void ps2_isr()
 {
 	if(INTCONbits.INT0IF)
 	{
