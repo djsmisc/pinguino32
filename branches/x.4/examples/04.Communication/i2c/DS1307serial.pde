@@ -24,14 +24,14 @@ u8 DS1307_send_receive(u8 address, u8 *wbuffer, u8 wlength, u8 *rbuffer, u8 rlen
 // case of reading :  wbuffer[0] = first register address to read --- wlength = 1 (address byte to specify)
 //                   rlength = n (data bytes to receive)
     I2C.start();
-    if(!I2C.send(address))
+    if(!I2C.write(address))
     {
         I2C.stop;
         return(0);
     }
     for (i=0; i<wlength; i++)
     {
-        if(!I2C.send(wbuffer[i]))
+        if(!I2C.write(wbuffer[i]))
         {
             I2C.stop;
             break;
@@ -42,7 +42,7 @@ u8 DS1307_send_receive(u8 address, u8 *wbuffer, u8 wlength, u8 *rbuffer, u8 rlen
     {
         temp = address | 0x01;
         I2C.restart();                 // start again
-        if(!I2C.send(temp))             // read operation (bit 0 set to 1)
+        if(!I2C.write(temp))             // read operation (bit 0 set to 1)
         {
             I2C.stop;
             return(0);
@@ -142,9 +142,9 @@ void loop()
     if(carrec=='t') // time and date to display
 	  {
 	    getDateDs1307();
-  	   Serial.printf("\n\rh: %d",hourG);
+  	  Serial.printf("\n\rh: %d",hourG);
       delay(200);
-	     Serial.printf(" m: %d",minuteG);
+	    Serial.printf(" m: %d",minuteG);
       delay(200);
 	    Serial.printf(" s: %d",secondG);//....
       delay(200);

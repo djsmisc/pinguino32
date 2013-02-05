@@ -19,7 +19,7 @@ int	LoopDelay		= 500;	// Used to slow down loop so that can see
 										// 500 corresponds to two lines of output per second
 void blink1()
 {
-	toggle(LED1);
+	toggle(USERLED);
 }
 
 void setup()
@@ -39,8 +39,8 @@ void setup()
 /**	-----------------------------------------------------------------------------
 	alarm will toggle the built-in led
 	---------------------------------------------------------------------------*/
-	pinMode(LED1, OUTPUT);
-	digitalWrite(LED1, OFF);	// we start with led off
+	pinMode(USERLED, OUTPUT);
+	digitalWrite(USERLED, OFF);	// we start with led off
 	
 /**	-----------------------------------------------------------------------------
 	set date, time and calibration
@@ -78,27 +78,27 @@ void setup()
 */
 	/// 2nd option
 	RTCC.chimeDisable();					   // disable indefinite repeats
-	RTCC.setAlarmRepeatCount(10);			// repeat alarm 10 times = 10 interrupt events
+	RTCC.setAlarmRepeat(10);			// repeat alarm 10 times = 10 interrupt events
 													// after this number of repeats the RTCC pin and hence LED1
 													// stops changing.  The time it takes to reach this condition
 													// depends on the alarmRepeat used (see below).
 	//// Alternative 1 for 2nd Option
-	RTCC.alarmRepeatEveryTenSeconds();	// set repeat every 10 secs (only compare the seconds last digit)
+	RTCC.alarmEveryTenSeconds();	// set repeat every 10 secs (only compare the seconds last digit)
 													// with this statement enabled the first change in the alarm
 													// output will occurr within 10 seconds of the clock starting
 													// and then the output will change every 10 seconds later.
 	//// Alternative 2 for 2nd Option
-//	RTCC.alarmRepeatEveryMinute();		// set repeat every minute  (only compare the seconds)
+//	RTCC.alarmEveryMinute();		// set repeat every minute  (only compare the seconds)
 													// with this statement enabled the first change in the alarm
 													// output will occurr within 1 minute of the clock starting
 													// and then the output will change every minute later.
 	//// Alternative 3 for 2nd Option
-//	RTCC.alarmRepeatEveryTenMinutes();	// set repeat every 10 mins (only compare minutes last digit and seconds)
+//	RTCC.alarmEveryTenMinutes();	// set repeat every 10 mins (only compare minutes last digit and seconds)
 													// with this statement enabled the first change in the alarm
 													// output will occurr within 10 minutess of the clock starting
 													// and then the output will change every 10 minutes later.
 	//// Alternative 4 for 2nd Option
-//	RTCC.alarmRepeatEveryHour();			// set repeat every hour (only compare minutes and seconds)
+//	RTCC.alarmEveryHour();			// set repeat every hour (only compare minutes and seconds)
 													// with this statement enabled the first change in the alarm
 													// output will occurr within 1 hour of the clock starting
 													// and then the output will change every hour later.
@@ -107,7 +107,8 @@ void setup()
 	1st method: set alarm output
 	---------------------------------------------------------------------------*/
 	RTCC.alarmPulseOutput();			   // select the alarm pulse as the function of the RTCC output pin
-	RTCC.alarmInitialPulseLow();		   // start Low 
+// Only available with 32-bit Pinguino
+//	RTCC.alarmInitialPulseLow();		   // start Low 
 //	RTCC.alarmInitialPulseHigh();			// start High
 	RTCC.outputEnable();					   // enable the Output pin of the RTCC
 	
@@ -144,44 +145,45 @@ void loop()
 
 	// 2nd option
 /*
-	cT = RTCC.getTime();
-	cD = RTCC.getDate();
+	RTCC.getTime(&cT);
+	RTCC.getDate(&cD);
 */
 /**	-----------------------------------------------------------------------------
 	get alarm time and date
 	---------------------------------------------------------------------------*/
 	// 1st option
-/*
 	RTCC.getAlarmTimeDate(&aT, &aD);
+
+ 	// 2nd option
+/*
+	RTCC.getAlarmTime(&aT);
+	RTCC.getAlarmDate(&aD);
 */
-	// 2nd option
-	aT = RTCC.getAlarmTime();
-	aD = RTCC.getAlarmDate();
-	
+
 /**	-----------------------------------------------------------------------------
 	convert time and date from bcd to decimal format
 	---------------------------------------------------------------------------*/
-	curTime = RTCC.convertTime(&cT);
-	curDate = RTCC.convertDate(&cD);
+	//curTime = RTCC.convertTime(&cT);
+	//curDate = RTCC.convertDate(&cD);
 /**	-----------------------------------------------------------------------------
 	convert alarm time and date
 	---------------------------------------------------------------------------*/
-	alTime  = RTCC.convertTime(&aT);
-	alDate  = RTCC.convertDate(&aD);
+	//alTime  = RTCC.convertTime(&aT);
+	//alDate  = RTCC.convertDate(&aD);
 /**	-----------------------------------------------------------------------------
 	display time  and date
 	see the result with cat /dev/ttyACM0
 	---------------------------------------------------------------------------*/
 	CDC.printf("RTC now is ");
-	CDC.printf("%03s, %02d %03s %04d, ", Day[curDate.wday], curDate.mday, Month[curDate.mon], curDate.year+2000);
-	CDC.printf("%02d:%02d:%02d  ", curTime.hour, curTime.min, curTime.sec);
+	CDC.printf("%03s, %02d %03s %04d, ", Day[curDate.dayofweek], curDate.dayofmonth, Month[curDate.month], curDate.year+2000);
+	CDC.printf("%02d:%02d:%02d  ", curTime.hours, curTime.minutes, curTime.seconds);
 /**	-----------------------------------------------------------------------------
 	display alarm time and alarm date
 	see the result with cat /dev/ttyACM0 
 	---------------------------------------------------------------------------*/
 	CDC.printf("Alarm is ");
-	CDC.printf("%03s, %02d %03s, ", Day[alDate.wday], alDate.mday, Month[alDate.mon]);
-	CDC.printf("%02d:%02d:%02d  ", alTime.hour, alTime.min, alTime.sec);
+	CDC.printf("%03s, %02d %03s, ", Day[alDate.dayofweek], alDate.dayofmonth, Month[alDate.month]);
+	CDC.printf("%02d:%02d:%02d  ", alTime.hours, alTime.minutes, alTime.seconds);
 /**	-----------------------------------------------------------------------------
 	alarm output management
 	---------------------------------------------------------------------------*/

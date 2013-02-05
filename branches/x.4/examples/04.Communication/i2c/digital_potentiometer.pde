@@ -14,17 +14,18 @@
 
 void setup()
 {
-  Wire.begin(); // join i2c bus (address optional for master)
+  Wire.master(100); // join i2c bus, speed is 100KHz
 }
 
 byte val = 0;
 
 void loop()
 {
-  Wire.beginTransmission(44); // transmit to device #44 (0x2c)
+  Wire.beginTransmission();
+  Wire.write((44 << 1) & 0xFE);// transmit to device #44 (0x2c)
                               // device address is specified in datasheet
-  Wire.send(0x00);            // sends instruction byte  
-  Wire.send(val);             // sends potentiometer value byte  
+  Wire.write(0x00);           // sends instruction byte  
+  Wire.write(val);            // sends potentiometer value byte  
   Wire.endTransmission();     // stop transmitting
 
   val++;        // increment value

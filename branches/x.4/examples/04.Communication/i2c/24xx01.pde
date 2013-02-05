@@ -75,12 +75,12 @@ void loop()
     CDC.printf("Writing ...\n\r");
 
     I2C.start();                                // All I2C commands must begin with a Start condition
-    I2C.send((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
-    I2C.send(MemoryAddr);
+    I2C.write((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
+    I2C.write(MemoryAddr);
 
     for (i=0; i<8; i++)
     {
-        I2C.send(wBuffer[i]);                   // Page write with auto. inc.
+        I2C.write(wBuffer[i]);                   // Page write with auto. inc.
         CDC.write(wBuffer[i]);
     }
     CDC.printf("\n\r");
@@ -98,13 +98,13 @@ void loop()
     // Send Memory Address
 
     I2C.start();                                // All I2C commands must begin with a Start condition
-    I2C.send((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
-    I2C.send(MemoryAddr);
+    I2C.write((i2cAddr << 1) & 0xFE);            // write operation (bit 0 set to 0)
+    I2C.write(MemoryAddr);
 
     // Starts reading
     
     I2C.start();                                // start again
-    I2C.send((i2cAddr << 1) + 1);               // read operation (bit 0 set to 1)
+    I2C.write((i2cAddr << 1) + 1);               // read operation (bit 0 set to 1)
     for (i=0; i<8; i++)                         // Sequential read (auto. inc.)
     {
         c = I2C.read();                         // read a byte from the slave

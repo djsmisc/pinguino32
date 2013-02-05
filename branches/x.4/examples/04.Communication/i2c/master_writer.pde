@@ -14,7 +14,7 @@
 
 void setup()
 {
-  Wire.begin(); // join i2c bus (address optional for master)
+  Wire.begin(100); // join i2c bus as a master at 100 KHz
 }
 
 byte x = 0;

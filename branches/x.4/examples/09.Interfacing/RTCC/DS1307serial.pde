@@ -22,18 +22,18 @@ u8 DS1307_send_receive(u8 address, u8 *wbuffer, u8 wlength, u8 *rbuffer, u8 rlen
     u8 i;
     u8 temp;
 	I2C.start();
-	if(!I2C.send(address))
+	if(!I2C.write(address))
 	{do {I2C.restart;}
-	while(!I2C.send(address)); }
+	while(!I2C.write(address)); }
     for (i=0; i<wlength; i++)
     {
-        while(!I2C.send(wbuffer[i]));
+        while(!I2C.write(wbuffer[i]));
     }
 	if( rlength > 0)
 	{
     temp = address | 0x01;
 		do {I2C.restart();}                 // start again
-		while(!I2C.send(temp));             // read operation (bit 0 set to 1)
+		while(!I2C.write(temp));             // read operation (bit 0 set to 1)
 		for (i=0; i<rlength; i++)           // Sequential read (auto. inc.)
 		{
 			rbuffer[i] = I2C_read();

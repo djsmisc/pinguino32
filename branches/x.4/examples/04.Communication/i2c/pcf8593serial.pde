@@ -29,14 +29,14 @@ u8 I2C_send_receive(u8 address, u8 *wbuffer, u8 wlength, u8 *rbuffer, u8 rlength
 //                   rlength = n (data bytes to receive)
 
     I2C.start();
-    if(!I2C.send(address))
+    if(!I2C.write(address))
     {
         I2C.stop();
         return(0);
     }
     for (i=0; i<wlength; i++)
     {
-        if(!I2C.send(wbuffer[i]))
+        if(!I2C.write(wbuffer[i]))
         {
             I2C.stop();
             break;
@@ -47,7 +47,7 @@ u8 I2C_send_receive(u8 address, u8 *wbuffer, u8 wlength, u8 *rbuffer, u8 rlength
     {
         temp = address | 0x01;
         I2C.restart();
-        if(!I2C.send(temp))
+        if(!I2C.write(temp))
         {
             I2C.stop();
             return(0);
