@@ -50,6 +50,7 @@ void millis_init(void)
     #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	_tmr2 = pf / 1000 / 2;
 	TMR2 = 65535 - _tmr2;
+   _tmr2 = TMR2;   // 26-02-2013 : correction : we will need to refresh in the interrupt with 65535 - _tmr2 to give the 1mS in the next interrupts
 	IPC2bits.T2IP=1;
 	IPC2bits.T2IS=1;
 	IFS0bits.T2IF=0;
