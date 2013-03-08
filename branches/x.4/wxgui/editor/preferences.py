@@ -28,6 +28,7 @@ import wx
 import sys, os
 
 HOME_DIR = os.getcwd()
+from wxgui._trad import _
 THEME_DIR = os.path.join(HOME_DIR, 'theme')
 
 ########################################################################
@@ -128,8 +129,8 @@ class Preferences():
         self.themeList = [f for f in os.listdir(THEME_DIR)
                           if os.path.isdir(os.path.join(THEME_DIR, f))
                           and not f.startswith(".")
-                          and f != "icons_autocompleter"]   
-
+                          and f != "icons_autocompleter"]
+        
         self.choiceTheme.AppendItems(self.themeList)
         self.choiceTheme.SetStringSelection(self.IDE.theme)
 

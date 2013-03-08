@@ -152,9 +152,6 @@ class menubarPinguino ( wx.MenuBar ):
 		self.menuItemViewStdout = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"View stdout")+ u"\t" + u"F8", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemViewStdout )
 		
-		self.menuItemCheckRev = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Check for Updates..."), wx.EmptyString, wx.ITEM_NORMAL )
-		self.menuPinguino.AppendItem( self.menuItemCheckRev )
-		
 		self.menuPinguino.AppendSeparator()
 		
 		self.menuItemUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Upload")+ u"\t" + u"F6", wx.EmptyString, wx.ITEM_NORMAL )

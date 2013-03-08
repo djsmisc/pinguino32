@@ -27,16 +27,16 @@
 
 from check import *
 
-EVT_RESULT_REVISION_ID = wx.NewId()
+#EVT_RESULT_REVISION_ID = wx.NewId()
 
-def EVT_RESULT_REVISION(win, func):
-    win.Connect(-1, -1, EVT_RESULT_REVISION_ID, func)
+#def EVT_RESULT_REVISION(win, func):
+    #win.Connect(-1, -1, EVT_RESULT_REVISION_ID, func)
 
-class ResultEventRevision(wx.PyEvent):
-    def __init__(self, data):
-        wx.PyEvent.__init__(self)
-        self.SetEventType(EVT_RESULT_REVISION_ID)
-        self.data = data
+#class ResultEventRevision(wx.PyEvent):
+    #def __init__(self, data):
+        #wx.PyEvent.__init__(self)
+        #self.SetEventType(EVT_RESULT_REVISION_ID)
+        #self.data = data
 
 # ------------------------------------------------------------------------------
 # current version
@@ -57,7 +57,7 @@ gui=False
 from wxgui._trad import _
 
 #Used for Python and Pic32 debug
-#os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
+os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
 
 # ------------------------------------------------------------------------------
 # Pinguino Class
@@ -121,16 +121,16 @@ class Pinguino(framePinguinoX, Editor):
         self.allDefi_back = []	
 
         #Threads
-        if DEV:
-            EVT_RESULT_REVISION(self, self.setRevision)
-            threadRevision = threading.Thread(target=self.getRevision, args=( ))
-            threadRevision.start()
+        #if DEV:
+            #EVT_RESULT_REVISION(self, self.setRevision)
+            #threadRevision = threading.Thread(target=self.getRevision, args=( ))
+            #threadRevision.start()
 
-            self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
-            self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])", 1)
-        else:
-            self.SetTitle("Pinguino IDE")
-            self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
+            #self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
+            #self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])", 1)
+        #else:
+        self.SetTitle("Pinguino IDE")
+        self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
 
         self.loadSettings()
         self.__initIDE__()
@@ -1039,10 +1039,10 @@ class Pinguino(framePinguinoX, Editor):
 class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
     """"""
 
-if DEV:
-    ########################################################################
-    class UpgradeIDE(frameUpgrade, Upgrade):
-        """"""
+#if DEV:
+    #########################################################################
+    #class UpgradeIDE(frameUpgrade, Upgrade):
+        #""""""
 
 # ------------------------------------------------------------------------------
 # getOptions

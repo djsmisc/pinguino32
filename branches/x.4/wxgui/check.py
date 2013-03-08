@@ -222,7 +222,7 @@ except:
 # check pinguino modules
 # ------------------------------------------------------------------------------
 
-#from editor.variables import * 
+from editor.variables import * 
 
 try:
     from editor.variables import * 
@@ -333,34 +333,34 @@ except:
     fichier.close()
     perror()
 
-if DEV:
-    try:
-        import pysvn
-        fichier.writelines('pySVN successfully loaded\n')
-    except:
-        fichier.writelines('pySVN failed, try to install pySVN\n')
-        if sys.platform == 'linux2':
-            fichier.writelines('You will need to install an SVN Client on your distro.\n')
-        fichier.writelines('Enable to check new version of Pinguino IDE\n')
-        perror()
+#if DEV:
+    #try:
+        #import pysvn
+        #fichier.writelines('pySVN successfully loaded\n')
+    #except:
+        #fichier.writelines('pySVN failed, try to install pySVN\n')
+        #if sys.platform == 'linux2':
+            #fichier.writelines('You will need to install an SVN Client on your distro.\n')
+        #fichier.writelines('Enable to check new version of Pinguino IDE\n')
+        #perror()
 
-    try:
-        from version import SubversionWorkingCopy, SubversionRepository
-        fichier.writelines('Pinguino Version Control successfully loaded\n')
-    except:
-        fichier.writelines('Pinguino Version Control failed\n')
-        fichier.writelines('You should have version.py in wxgui/\n')
-        fichier.close()
-        perror()
+    #try:
+        #from version import SubversionWorkingCopy, SubversionRepository
+        #fichier.writelines('Pinguino Version Control successfully loaded\n')
+    #except:
+        #fichier.writelines('Pinguino Version Control failed\n')
+        #fichier.writelines('You should have version.py in wxgui/\n')
+        #fichier.close()
+        #perror()
         
-    try:	
-        from editor import Upgrade		
-        fichier.writelines('Upgrade successfully loaded\n')
-    except:
-        fichier.writelines('Upgrade failed\n')
-        fichier.writelines('You should have upgrade.py in wxgui/editor/\n')
-        fichier.close()
-        perror()      
+    #try:	
+        #from editor import Upgrade		
+        #fichier.writelines('Upgrade successfully loaded\n')
+    #except:
+        #fichier.writelines('Upgrade failed\n')
+        #fichier.writelines('You should have upgrade.py in wxgui/editor/\n')
+        #fichier.close()
+        #perror()      
     
         
 
