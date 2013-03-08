@@ -72,7 +72,7 @@ class Debugger:
     #----------------------------------------------------------------------
     def setCDCPort(self,name):
         def connect(event=None):
-            self.pinguinoCDC = serial.Serial(name, timeout=1)
+            self.pinguinoCDC = serial.Serial(name, timeout=0.1)
             self.logwindow.WriteText(_("Connected")+": "+name+"\n")
         return connect    
 
@@ -157,7 +157,7 @@ class Debugger:
         try: self.pinguinoCDC.close()
         except: pass
         try:
-            self.pinguinoCDC = serial.Serial(port, timeout=1)
+            self.pinguinoCDC = serial.Serial(port, timeout=0.1)
             self.logwindow.WriteText(_("Connected")+": "+port+"\n")
         except:
             self.logwindow.WriteText(_("No device connected")+"!\n")
@@ -168,7 +168,7 @@ class Debugger:
         ports = self.updateCDCPorts()
         
         if len(ports) > 0:
-            self.pinguinoCDC = serial.Serial(ports[0], timeout=0.01)
+            self.pinguinoCDC = serial.Serial(ports[0], timeout=0.1)
             self.updateDebggingLog(_("Connected")+": "+ports[0]+"\n")
 
         if len(ports) > 0:

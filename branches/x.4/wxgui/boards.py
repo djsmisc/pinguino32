@@ -2,26 +2,26 @@
 # -*- coding: iso-8859-15 -*-
 
 """-------------------------------------------------------------------------
-	Pinguino Boards List
+    Pinguino Boards List
 
-	author:			Regis Blanchot
-	contact:		rblanchot@gmail.com 
-	first release:	2011-10-23
-	last release:	2012-05-04
-	
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Lesser General Public
-	License as published by the Free Software Foundation; either
-	version 2.1 of the License, or (at your option) any later version.
+    author:			Regis Blanchot
+    contact:		rblanchot@gmail.com 
+    first release:	2011-10-23
+    last release:	2012-05-04
 
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-	Lesser General Public License for more details.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
-	You should have received a copy of the GNU Lesser General Public
-	License along with this library; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
 import wx	# wx.NewId()
@@ -76,18 +76,18 @@ class Pinguino25k50:
     longarg='--pinguino25k50'
 
 class Pinguino45k50:
-	name='Pinguino 45k50'
-	id=wx.NewId()
-	arch=8
-	bldr='boot4'
-	proc='18f45k50'
-	board='PINGUINO45K50'
-	vendor=MICROCHIP_ID
-	product=PIC8_ID
-	memstart=0x0C00       # bootloader offset
-	memend=0x7fff
-	shortarg='-l'
-	longarg='--pinguino45k50'
+    name='Pinguino 45k50'
+    id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f45k50'
+    board='PINGUINO45K50'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0x7fff
+    shortarg='-l'
+    longarg='--pinguino45k50'
 
 class CHRP3:
     name='CHRP3.0'
@@ -330,15 +330,14 @@ class UBW32_795:
     longarg='--ubw795'
 
 boardlist = [   
-                PinguinoNoBoot,
-                Pinguino2550,  Pinguino4550,
-                Pinguino25k50, CHRP3, Pinguino45k50,
-                Pinguino26J50,
-                Pinguino27J53, 
-                PIC32_Pinguino, PIC32_Pinguino_OTG,
-                PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,
-                GENERIC32MX250F128, GENERIC32MX220F032,
-                Emperor_460, Emperor_795,
-                UBW32_460, UBW32_795
-            ]
-
+    PinguinoNoBoot,
+    Pinguino2550,  Pinguino4550,
+    Pinguino25k50, CHRP3, Pinguino45k50,
+    Pinguino26J50,
+    Pinguino27J53, 
+    PIC32_Pinguino, PIC32_Pinguino_OTG,
+    PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,
+    GENERIC32MX250F128, GENERIC32MX220F032,
+    Emperor_460, Emperor_795,
+    UBW32_460, UBW32_795
+]

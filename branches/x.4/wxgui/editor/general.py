@@ -583,9 +583,9 @@ class General:
 
         self.Bind(wx.EVT_MENU, self.OnViewSelectDevice, self.menu.menuItemSelectDevice)	
 
-        if DEV:
+        #if DEV:
             #self.Bind(wx.EVT_MENU, self.OnDebug, self.menu.menuDebugMode)
-            self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
+            #self.Bind(wx.EVT_MENU, self.OnCheck, self.menu.menuItemCheckRev)
             #self.Bind(wx.EVT_MENU, self.OnUpgrade, self.menu.menuItemUpgrade)
         #for b in range(len(boardlist)):
             #self.Bind(wx.EVT_MENU, self.OnBoard, id = boardlist[b].id)
@@ -733,19 +733,19 @@ class General:
 # ------------------------------------------------------------------------------
 # Thread Functions
 # ------------------------------------------------------------------------------
-    def getRevision(self):
-        sw = SubversionWorkingCopy(HOME_DIR).current_version()
-        try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
-        except: sw = _("unknown")
-        wx.PostEvent(self, ResultEventRevision(sw))
+    #def getRevision(self):
+        #sw = SubversionWorkingCopy(HOME_DIR).current_version()
+        #try: sw = SubversionWorkingCopy(HOME_DIR).current_version()
+        #except: sw = _("unknown")
+        #wx.PostEvent(self, ResultEventRevision(sw))
 
-        if self.getElse("IDE", "checkupgradeatstart", "False") == "True":
-            try:
-                svnRev = SubversionRepository(SVN_DIR)
-                self.lastRevision = svnRev.current_version()
-                #self.lastRevision = "<<TESTING>>" #To force a update at start
-                wx.PostEvent(self, ResultEventRevision([svnRev]))
-            except: self.lastRevision = False
+        #if self.getElse("IDE", "checkupgradeatstart", "False") == "True":
+            #try:
+                #svnRev = SubversionRepository(SVN_DIR)
+                #self.lastRevision = svnRev.current_version()
+                ##self.lastRevision = "<<TESTING>>" #To force a update at start
+                #wx.PostEvent(self, ResultEventRevision([svnRev]))
+            #except: self.lastRevision = False
 
 # ------------------------------------------------------------------------------
 # Timer Functions
@@ -805,20 +805,20 @@ class General:
 # OnUpgrade
 # ------------------------------------------------------------------------------
 
-    def OnCheck(self, event=None, back=False, svn=None):
-        try: self.upgrade.Cancel()
-        except: pass
-        self.upgrade = UpgradeIDE(self) 
-        self.upgrade.__initUpgrade__(self)
+    #def OnCheck(self, event=None, back=False, svn=None):
+        #try: self.upgrade.Cancel()
+        #except: pass
+        #self.upgrade = UpgradeIDE(self) 
+        #self.upgrade.__initUpgrade__(self)
 
-        if not back:
-            self.upgrade.checkUpgrade()
-            self.upgrade.Show()
-        else:
-            if not (self.lastRevision == self.localRev):
-                self.upgrade.Show()
-                self.upgrade.prepareUpgrade(svn)
-            else: self.upgrade.Cancel()
+        #if not back:
+            #self.upgrade.checkUpgrade()
+            #self.upgrade.Show()
+        #else:
+            #if not (self.lastRevision == self.localRev):
+                #self.upgrade.Show()
+                #self.upgrade.prepareUpgrade(svn)
+            #else: self.upgrade.Cancel()
 
 # ------------------------------------------------------------------------------
 # OnFileHistory : open selected history file
@@ -884,15 +884,20 @@ class General:
 
         # add2Toolbar is part of DrawToolbar
         def add2Toolbar(icon, name, function, shdesc="", lngdesc=""):
-            if (os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png"))!=False):
+            if os.path.exists(os.path.join(THEME_DIR, self.theme, icon+".png")):
+                BitMap = wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY)
+            else: BitMap = None
+                
+            if BitMap:
                 id = wx.NewId()
                 self.toolbar.AddLabelTool(id,
                     name,
-                    wx.Bitmap(os.path.join(THEME_DIR, self.theme, icon+".png"), wx.BITMAP_TYPE_ANY),
+                    BitMap, 
                     wx.NullBitmap, wx.ITEM_NORMAL,
                     shdesc,
                     lngdesc)
                 self.Bind(wx.EVT_TOOL, function, id=id)
+
 
         add2Toolbar("new", "New", self.OnNew, _("New File"))
         add2Toolbar("open", "Open", self.OnOpen, _("Open File"))
