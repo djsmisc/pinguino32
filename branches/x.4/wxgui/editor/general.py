@@ -629,12 +629,10 @@ class General(ReadConfig, LoadFeatures):
 # ----------------------------------------------------------------------
     def buildMenu(self):
         self.menu = menubarPinguino()
-
-        if not DEV:  #Can't disable submenu (wx.menu)
-            self.menu.menuItemDebugNone.Enable(False)
-            self.menu.menuItemUSBCDC.Enable(False)
-            self.menu.menuItemUART1.Enable(False)
-            #self.menu.menuItemCheckRev.Enable(False)	    
+        
+        if os.name != "posix":
+            self.menu.menuPinguino.Remove(self.menu.menuItemUSBCDC.GetId())
+   
 
         self.SetMenuBar(self.menu)
 

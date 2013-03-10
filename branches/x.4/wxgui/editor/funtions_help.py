@@ -68,7 +68,12 @@ class functionsHelp():
         self.lang = locale.getdefaultlocale()[0][:2]
         #self.lang = "en"
         
-        if self.lang == "es":
+        from wxgui.editor.get_config import ReadConfig
+        config = ReadConfig()
+        config.loadConfig()
+        source = config.getElse("IDE", "sourcedoc", "official")
+        
+        if source == "pinguinove":
             self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
             self.wikiEdit = lambda keyword:"http://www.pinguino.org.ve/wiki/index.php?title="+keyword+"&action=edit"
             self.inicio = '<h2> <span class="mw-headline" id="Descripcion"> Descripcion </span></h2>\n'
@@ -78,7 +83,7 @@ class functionsHelp():
             self.see = "Ver Tambien"
             self.example = "Ejemplo"
 
-        else:
+        elif source == "official":
             self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
             self.wikiEdit = lambda keyword:"http://wiki.pinguino.cc/index.php?title="+keyword+"&action=edit"
             self.inicio = '<a name="Name" id="Name"></a><h2> <span class="mw-headline"> Name </span></h2>\n'
@@ -180,16 +185,16 @@ class functionsHelp():
             self.rtc.EndStyle()
             self.rtc.EndBold()
             
-            if self.lang == "es":
-                self.rtc.Newline()
-                self.rtc.BeginBold()
-                self.rtc.WriteText("Leer directamente desde pinguino.org.ve ")
-                self.rtc.BeginStyle(self.urlStyle)
-                self.rtc.BeginURL(self.wikiDoc+keyword)
-                self.rtc.WriteText(keyword)
-                self.rtc.EndURL()            
-                self.rtc.EndStyle()
-                self.rtc.EndBold()
+            #if self.lang == "es":
+                #self.rtc.Newline()
+                #self.rtc.BeginBold()
+                #self.rtc.WriteText("Leer directamente desde pinguino.org.ve ")
+                #self.rtc.BeginStyle(self.urlStyle)
+                #self.rtc.BeginURL(self.wikiDoc+keyword)
+                #self.rtc.WriteText(keyword)
+                #self.rtc.EndURL()            
+                #self.rtc.EndStyle()
+                #self.rtc.EndBold()
             
             self.rtc.Newline()
             self.rtc.Newline()
