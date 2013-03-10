@@ -38,14 +38,16 @@ from wxgui.boards import boardlist
 
 from wxgui.editor.preferences import Preferences
 from wxgui.editor.funtions_help import functionsHelp
-from wxgui.editor.autocompleter import AutoCompleter
+#from wxgui.editor.autocompleter import AutoCompleterIDE
 from wxgui.editor.stdout import Stdout
 from wxgui.editor.pic_popup import PICpopup
 from wxgui.editor.board_selector import BoarSelector
 
+from get_config import ReadConfig
+from wxgui.load_features import LoadFeatures
 
 ########################################################################
-class General:
+class General(ReadConfig, LoadFeatures):
 
     #----------------------------------------------------------------------
     def updateStatusBar(self, event=None):
@@ -59,80 +61,80 @@ class General:
                 event.Skip()
 
 
-    #----------------------------------------------------------------------
-    def loadConfig(self):
-        if not os.path.isfile(APP_CONFIG):
-            file = open(APP_CONFIG, mode="w")
-            #file = codecs.open(APP_CONFIG, "w",encoding="utf-8")
-            file.close()
-        config_file=open(APP_CONFIG,"r")
-        #config_file=codecs.open(APP_CONFIG,"r",encoding="utf-8")
-        self.configIDE=RawConfigParser()
-        self.configIDE.readfp(config_file) 
-        config_file.close()
+    ##----------------------------------------------------------------------
+    #def loadConfig(self):
+        #if not os.path.isfile(APP_CONFIG):
+            #file = open(APP_CONFIG, mode="w")
+            ##file = codecs.open(APP_CONFIG, "w",encoding="utf-8")
+            #file.close()
+        #config_file=open(APP_CONFIG,"r")
+        ##config_file=codecs.open(APP_CONFIG,"r",encoding="utf-8")
+        #self.configIDE=RawConfigParser()
+        #self.configIDE.readfp(config_file) 
+        #config_file.close()
 
-    #----------------------------------------------------------------------
-    def setConfig(self,section,opcion,valor):
-        if not section in self.configIDE.sections():
-            self.configIDE.add_section(section)
-        self.configIDE.set(section,opcion,valor)
+    ##----------------------------------------------------------------------
+    #def setConfig(self,section,opcion,valor):
+        #if not section in self.configIDE.sections():
+            #self.configIDE.add_section(section)
+        #self.configIDE.set(section,opcion,valor)
 
-    #----------------------------------------------------------------------
-    def saveConfig(self):
-        config_file=open(APP_CONFIG,"w")
-        self.configIDE.write(config_file)
-        config_file.close()
-        """
-        config_file=codecs.open(APP_CONFIG,"w",encoding="utf-8")
-        for section in self.configIDE.sections():
-            config_file.write('['+section+']\n\r')
-            for option in self.configIDE.options(section):
-                config_file.write(option+' = ')
-                #print type(self.configIDE.get(section,option))
-                if type(self.configIDE.get(section,option)).__name__!='unicode':
-                    if type(self.configIDE.get(section,option)).__name__=='str':
-                        string_value=self.configIDE.get(section,option)
-                        string_value=unicode(string_value,'utf-8')
-                    else:
-                        string_value=str(self.configIDE.get(section,option))
-                else:
-                    string_value=self.configIDE.get(section,option)
-                config_file.write(string_value+'\r')
-            config_file.write('\n\r');
-        config_file.close()
-        """
+    ##----------------------------------------------------------------------
+    #def saveConfig(self):
+        #config_file=open(APP_CONFIG,"w")
+        #self.configIDE.write(config_file)
+        #config_file.close()
+        #"""
+        #config_file=codecs.open(APP_CONFIG,"w",encoding="utf-8")
+        #for section in self.configIDE.sections():
+            #config_file.write('['+section+']\n\r')
+            #for option in self.configIDE.options(section):
+                #config_file.write(option+' = ')
+                ##print type(self.configIDE.get(section,option))
+                #if type(self.configIDE.get(section,option)).__name__!='unicode':
+                    #if type(self.configIDE.get(section,option)).__name__=='str':
+                        #string_value=self.configIDE.get(section,option)
+                        #string_value=unicode(string_value,'utf-8')
+                    #else:
+                        #string_value=str(self.configIDE.get(section,option))
+                #else:
+                    #string_value=self.configIDE.get(section,option)
+                #config_file.write(string_value+'\r')
+            #config_file.write('\n\r');
+        #config_file.close()
+        #"""
 
-    #----------------------------------------------------------------------
-    def getConfig(self, section, option):
-        value = self.configIDE.get(section,option)
-        try:
-            if value.isdigit(): return int(value)
-            elif value.isalpha(): return value
-            else: return value
-        except:
-            return value
+    ##----------------------------------------------------------------------
+    #def getConfig(self, section, option):
+        #value = self.configIDE.get(section,option)
+        #try:
+            #if value.isdigit(): return int(value)
+            #elif value.isalpha(): return value
+            #else: return value
+        #except:
+            #return value
 
-    #----------------------------------------------------------------------
-    def getColorConfig(self, section, option, default=[0, 0, 0, 0]):
-        self.loadConfig()
-        try:
-            value = self.configIDE.get(section,option)
-            value = value[1:-1].split(",")
-            value = map(lambda x:int(x), value)
-            color = wx.Color()
-            color.Set(*value)
-            return color
-        except:
-            color = wx.Color()
-            color.Set(*default)
-            self.setConfig(section, option, default)
-            return color
+    ##----------------------------------------------------------------------
+    #def getColorConfig(self, section, option, default=[0, 0, 0, 0]):
+        #self.loadConfig()
+        #try:
+            #value = self.configIDE.get(section,option)
+            #value = value[1:-1].split(",")
+            #value = map(lambda x:int(x), value)
+            #color = wx.Color()
+            #color.Set(*value)
+            #return color
+        #except:
+            #color = wx.Color()
+            #color.Set(*default)
+            #self.setConfig(section, option, default)
+            #return color
 
-    #---------------------------------------------------------------------- 
-    def getElse(self, section, option, default):
-        try: default = self.getConfig(section, option)
-        except: self.setConfig(section, option, default)
-        return default
+    ##---------------------------------------------------------------------- 
+    #def getElse(self, section, option, default):
+        #try: default = self.getConfig(section, option)
+        #except: self.setConfig(section, option, default)
+        #return default
 
     #----------------------------------------------------------------------
     def _initIDs_(self,textEdit):
@@ -285,7 +287,7 @@ class General:
 
         if not self.autocompleteHide:
             enable = self.getElse("Completer", "Enable", "True")
-            if enable == "True":
+            if enable:
                 self.OnAutoCompleter()
                 self.recent = False
             self.autocompleteHide = False
@@ -297,7 +299,7 @@ class General:
         except: key = None
 
         enable = self.getElse("Completer", "insertParentheses", "False")     
-        if key == "(" and enable == "True":
+        if key == "(" and enable:
             word = self.wordUnderCursor(True)
             textEdit = self.stcpage[self.notebookEditor.GetSelection()]
             if self.addArguments(word): return
@@ -307,15 +309,15 @@ class General:
             cadena = textEdit.GetSelectedText()
             if len(cadena) > 0: textEdit.Clear()              
 
-            if key == "[" and self.getElse("Insert", "brackets", "False") == "True":
+            if key == "[" and self.getElse("Insert", "brackets", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "["+cadena+"]")
-            elif key == '"' and self.getElse("Insert", "doublecuotation", "False") == "True":
+            elif key == '"' and self.getElse("Insert", "doublecuotation", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, '"'+cadena+'"')
-            elif key == "'" and self.getElse("Insert", "singlecuotation", "False") == "True":
+            elif key == "'" and self.getElse("Insert", "singlecuotation", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "'"+cadena+"'")
-            elif key == "{" and self.getElse("Insert", "keys", "False") == "True":
+            elif key == "{" and self.getElse("Insert", "keys", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "{"+cadena+"}")
-            elif key == "(" and self.getElse("Insert", "parentheses", "False") == "True":
+            elif key == "(" and self.getElse("Insert", "parentheses", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "("+cadena+")")
             else:
                 textEdit.InsertText(textEdit.CurrentPos, key)
@@ -339,18 +341,20 @@ class General:
 
         varbls = []
         allfunctions = []
+        
+        if self.getElse("Main", "Tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+        
+            for i in self.Files.allVars:
+                icons[i[0][:].replace("*", "")] = i[1][:].split()[-1]
+                varbls.append(i[0][:].replace("*", ""))
 
-        for i in self.allVars:
-            icons[i[0][:].replace("*", "")] = i[1][:].split()[-1]
-            varbls.append(i[0][:].replace("*", ""))
+            for i in self.Files.allFunc:
+                icons[i[0][:].replace("*", "")] = "function"
+                allfunctions.append(i[0][:].replace("*", ""))
 
-        for i in self.allFunc:
-            icons[i[0][:].replace("*", "")] = "function"
-            allfunctions.append(i[0][:].replace("*", ""))
-
-        for i in self.allDefi:
-            icons[i[1][:].replace("*", "")] = "directive"
-            varbls.append(i[1][:].replace("*", ""))
+            for i in self.Files.allDefi:
+                icons[i[1][:].replace("*", "")] = "directive"
+                varbls.append(i[1][:].replace("*", ""))
 
         autoComp = []
         for key in Autocompleter.keys(): autoComp.extend(Autocompleter[key][:])
@@ -480,7 +484,7 @@ class General:
 # ------------------------------------------------------------------------------
     def configPanes(self):
         self.buildOutput()
-        self.buildLateralPanel()
+        #self.buildLateralPanel()
         self.buildEditor()
         self.addPanes()
 
@@ -496,7 +500,8 @@ class General:
 
         self.choicePort = self.panelOutput.choicePort
         self.choicePort.Hide()
-
+        
+        
         self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
 
         self.debuggingLine.SetInsertionPoint(125)
@@ -508,28 +513,28 @@ class General:
 
         # create a PaneInfo structure for output window
         self.PaneOutputInfo=wx.aui.AuiPaneInfo()
-        self.PaneOutputInfo.CloseButton(False)
-        self.PaneOutputInfo.MaximizeButton(True)
-        self.PaneOutputInfo.MinimizeButton(True)
+        #self.PaneOutputInfo.CloseButton(False)
+        #self.PaneOutputInfo.MaximizeButton(True)
+        #self.PaneOutputInfo.MinimizeButton(True)
         #self.PaneOutputInfo.Bottom()
 
-# ------------------------------------------------------------------------------
-# Lateral
-# ------------------------------------------------------------------------------
-    def buildLateralPanel(self):
-        self.PaneLateral=wx.aui.AuiPaneInfo()
-        self.PaneLateral.CloseButton(True)
-        self.PaneLateral.MinimizeButton(True)
-        self.PaneLateral.Right()
+## ------------------------------------------------------------------------------
+## Lateral
+## ------------------------------------------------------------------------------
+    #def buildLateralPanel(self):
+        ##self.PaneLateral=wx.aui.AuiPaneInfo().CloseButton(False).MaximizeButton(False)
+        ##self.PaneLateral.Right()
+        
+        
 
 
 # ------------------------------------------------------------------------------
 # Add the panes to the manager
 # ------------------------------------------------------------------------------
     def addPanes(self):
-        self.lat = panelLateral(self)
-        self._mgr.AddPane(self.panelOutput, wx.BOTTOM, _("Output"))          
-        self._mgr.AddPane(self.lat, wx.RIGHT, _("Tools"))      
+        self._mgr.AddPane(self.panelOutput,
+                              wx.aui.AuiPaneInfo().Caption(_("Tools")).
+                              Bottom().CloseButton(False).CaptionVisible(False))
         self._mgr.AddPane(self.panelEditor, wx.CENTER)
         
         #self.loadConfig()
@@ -564,9 +569,9 @@ class General:
         self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
         self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
         self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
-        self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
-        self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
-        self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
+        #self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
+        #self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
+        #self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
         self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
         self.Bind(wx.EVT_MENU, self.OnIndent, self.menu.menuItemIndent)
         self.Bind(wx.EVT_MENU, self.OnUnIndent, self.menu.menuItemUnIndent)
@@ -629,7 +634,7 @@ class General:
             self.menu.menuItemDebugNone.Enable(False)
             self.menu.menuItemUSBCDC.Enable(False)
             self.menu.menuItemUART1.Enable(False)
-            self.menu.menuItemCheckRev.Enable(False)	    
+            #self.menu.menuItemCheckRev.Enable(False)	    
 
         self.SetMenuBar(self.menu)
 
@@ -656,78 +661,78 @@ class General:
         return path   
 
 
-# ----------------------------------------------------------------------
-# Load settings from config file
-# ----------------------------------------------------------------------
-    def loadSettings(self):
-        self.loadConfig()
+## ----------------------------------------------------------------------
+## Load settings from config file
+## ----------------------------------------------------------------------
+    #def loadSettings(self):
+        #self.loadConfig()
         
-        arch = self.getElse("Board", "architecture", 8)
-        mode = self.getElse("Board", "mode", "BOOT")
-        #family = self.IDE.getElse("Board", "family", "18fxxx")
-        device = self.getElse("Board", "device", "Pinguino 2550")
-        bootloader = self.getElse("Board", "bootloader", "[boot2, 0x2000]")
-        if bootloader != "noboot":
-            bootloader = bootloader[1:-1].split(",")
-            bootloader[0] = bootloader[0].replace("'", "")
-            bootloader[1] = eval(bootloader[1])
-        self.setBoard(arch, mode, device, bootloader)
+        #arch = self.getElse("Board", "architecture", 8)
+        #mode = self.getElse("Board", "mode", "BOOT")
+        ##family = self.IDE.getElse("Board", "family", "18fxxx")
+        #device = self.getElse("Board", "device", "Pinguino 2550")
+        #bootloader = self.getElse("Board", "bootloader", "[boot2, 0x2000]")
+        #if bootloader != "noboot":
+            #bootloader = bootloader[1:-1].split(",")
+            #bootloader[0] = bootloader[0].replace("'", "")
+            #bootloader[1] = eval(bootloader[1])
+        #self.setBoard(arch, mode, device, bootloader)
         
-        w = self.getElse("IDE", "window/width", 1000)
-        h = self.getElse("IDE", "window/height", 500)
-        self.SetSize((w, h))
+        #w = self.getElse("IDE", "window/width", 1000)
+        #h = self.getElse("IDE", "window/height", 500)
+        #self.SetSize((w, h))
 
-        # TODO fix the bug on windows for negative frame position 	    
-        try:
-            x = self.getElse("IDE", "Window/Xpos", 100)
-            y = self.getElse("IDE", "Window/Ypos", 100)
-            self.SetPosition((x, y))
-        except:
-            self.setConfig("IDE", "Window/Xpos", 0)
-            self.setConfig("IDE", "Window/Ypos", 0)
-            self.SetPosition((0, 0))
+        ## TODO fix the bug on windows for negative frame position 	    
+        #try:
+            #x = self.getElse("IDE", "Window/Xpos", 100)
+            #y = self.getElse("IDE", "Window/Ypos", 100)
+            #self.SetPosition((x, y))
+        #except:
+            #self.setConfig("IDE", "Window/Xpos", 0)
+            #self.setConfig("IDE", "Window/Ypos", 0)
+            #self.SetPosition((0, 0))
 
-        maxim = self.getElse("IDE", "Maximized", "False")
-        if maxim == "True": self.Maximize()
+        #maxim = self.getElse("IDE", "Maximized", "False")
+        #if maxim == "True": self.Maximize()
 
-        self.theme = self.getElse("IDE", "theme", "PinguinoX")   
-
-        try:
-            for i in range(self.getConfig("Recents", "Recents_count")):
-                file = self.getConfig("Recents", "Recents_%d"%i)
-                if os.path.isfile(file):
-                    self.addFile2Recent(file)
-        except: pass
-
-        #perspectiva = self.getElse("IDE", "perspective", "")
-        #self._mgr.LoadPerspective(perspectiva)
-
-        #panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        #panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        #perspectiva = self._mgr.SavePerspective()
-        #nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
-        #nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
-        #nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
-        #nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
-
-        #print nOutputPos
+        #self.theme = self.getElse("IDE", "theme", "PinguinoX")   
 
         #try:
-            #oOutput = int(re.match(panelOutput, perspectiva).group(2))   
-            #oLateral = int(re.match(panelLateral, perspectiva).group(2))
-            #oOutputPos = re.match(panelOutput, perspectiva).group(1) 
-            #oLateralPos = re.match(panelLateral, perspectiva).group(1)
+            #for i in range(self.getConfig("Recents", "Recents_count")):
+                #file = self.getConfig("Recents", "Recents_%d"%i)
+                #if os.path.isfile(file):
+                    #self.addFile2Recent(file)
+        #except: pass
 
-            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
-            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
-            #self._mgr.LoadPerspective(perspectiva)
-        #except:
-            #print "No perspective"
+        ##perspectiva = self.getElse("IDE", "perspective", "")
+        ##self._mgr.LoadPerspective(perspectiva)
 
-        lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
-        self.__initDocuments__()
-        if os.path.isdir(lateralPath):
-            self.buildLateralDir(lateralPath)
+        ##panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        ##panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
+        ##perspectiva = self._mgr.SavePerspective()
+        ##nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
+        ##nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
+        ##nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
+        ##nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
+
+        ##print nOutputPos
+
+        ##try:
+            ##oOutput = int(re.match(panelOutput, perspectiva).group(2))   
+            ##oLateral = int(re.match(panelLateral, perspectiva).group(2))
+            ##oOutputPos = re.match(panelOutput, perspectiva).group(1) 
+            ##oLateralPos = re.match(panelLateral, perspectiva).group(1)
+
+            ##perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
+            ##perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
+            ##self._mgr.LoadPerspective(perspectiva)
+        ##except:
+            ##print "No perspective"
+
+        #lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
+        #self.__initDocuments__()
+        #if os.path.isdir(lateralPath):
+            #self.buildLateralDir(lateralPath)
 
 
 # ------------------------------------------------------------------------------
@@ -754,29 +759,29 @@ class General:
     #----------------------------------------------------------------------
     def initTimers(self):
         #Auto=save
-        save = self.getElse("Open/Save", "autosave", "False")
-        timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000
-        if save == "True":
+        if self.getElse("Main", "tools", "True") and self.getElse("Open/Save", "autosave", "False") and not self.needRestart():
+            timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000
             self.timer_autosave = wx.CallLater(timeSave, self.autoSaveFiles)
-        #Updates
-        self.timer_updates = wx.CallLater(1000, self.updates)
+            self.timer_updates = wx.CallLater(1000, self.updates)
 
     #----------------------------------------------------------------------
     def stopTimers(self):
-        self.timer_updates.Stop()
+        if self.getElse("Main", "tools", "True") and self.getElse("Open/Save", "autosave", "False") and not self.needRestart():
+            self.timer_updates.Stop()
 
     #----------------------------------------------------------------------
     def autoSaveFiles(self):
-        if self.getElse("Open/Save", "autosave", "False") == "True":
+        if self.getElse("Main", "open-save", "True") and self.getElse("Open/Save", "autosave", "False"):
             self.OnSaveAll()
-        timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000	
-        self.timer_autosave.Restart(timeSave)
+            timeSave = self.getElse("Open/Save", "autosavetime", 10) * 1000	
+            self.timer_autosave.Restart(timeSave)
 
     #----------------------------------------------------------------------
     def updates(self):
-        self.update_dockFiles()
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+            self.Files.update_dockFiles()
+            
         self.updateStatusBar()
-
         self.timer_updates.Restart(1000)
 
 # ------------------------------------------------------------------------------
@@ -798,7 +803,7 @@ class General:
 # Update
 # ------------------------------------------------------------------------------
     def updateIDE(self):
-        self.lat.search.Fit()
+        #self.lat.search.Fit()
         self._mgr.Update()
 
 # ------------------------------------------------------------------------------
@@ -913,9 +918,11 @@ class General:
         add2Toolbar("clear", "Clear", self.OnClear, _("Clear"))
         add2Toolbar("select", "Select", self.OnSelectall, _("Select"))
         self.toolbar.AddSeparator()
-        add2Toolbar("find", "Fin", self.OnFind, _("Search in File"))
-        add2Toolbar("replace", "Replace", self.OnReplace, _("Replace in File"))
-        self.toolbar.AddSeparator()
+        
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "search", "True") and not self.needRestart():
+            add2Toolbar("find", "Fin", self.Search.OnFind, _("Search in File"))
+            add2Toolbar("replace", "Replace", self.Search.OnReplace, _("Replace in File"))
+            self.toolbar.AddSeparator()
 
         add2Toolbar("board", "Selector Board", self.OnViewSelectDevice, _("Select a board"))
 
@@ -959,7 +966,6 @@ class General:
         frame_1 = PreferencesIDE(self)
         frame_1.__initPreferences__(self)
         #app.SetTopWindow(frame_1)
-        if not DEV: frame_1.upgrade.Disable()
         frame_1.CenterOnParent()
         frame_1.Show()
         #app.MainLoop()
@@ -984,6 +990,7 @@ class General:
         if  word == "": return
         if len(self.wordUnderCursor(True)) > CharsCount:
             self.AutoCompleter.ShowCompleter(word, CharsCount)
+
 
     #----------------------------------------------------------------------
     def OnViewStdout(self, event=None):
@@ -1038,26 +1045,26 @@ class General:
         self.Show()
 
 
-    #----------------------------------------------------------------------
-    def morePreferences(self):
-        self.loadConfig()
-        if self.getElse("Source", "userfontinoutput", "False") == "True":
-            if self.getConfig("Source", "fontdefault") == "False":
-                FaceNAme = self.getConfig("Source", "font")
-                PointSize = self.getConfig("Source", "size")
-                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
-                font.SetFaceName(FaceNAme)
-                font.SetPointSize(PointSize)
-                font.SetUnderlined(False)
-                self.logwindow.SetFont(font)
-            else:
-                font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
-                font.SetUnderlined(False)
-                self.logwindow.SetFont(font) 
-        else:
-            font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
-            font.SetUnderlined(False)
-            self.logwindow.SetFont(font)            
+    ##----------------------------------------------------------------------
+    #def morePreferences(self):
+        #self.loadConfig()
+        #if self.getElse("Source", "userfontinoutput", "False") == "True":
+            #if self.getConfig("Source", "fontdefault") == "False":
+                #FaceNAme = self.getConfig("Source", "font")
+                #PointSize = self.getConfig("Source", "size")
+                #font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                #font.SetFaceName(FaceNAme)
+                #font.SetPointSize(PointSize)
+                #font.SetUnderlined(False)
+                #self.logwindow.SetFont(font)
+            #else:
+                #font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+                #font.SetUnderlined(False)
+                #self.logwindow.SetFont(font) 
+        #else:
+            #font = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL, True)
+            #font.SetUnderlined(False)
+            #self.logwindow.SetFont(font)            
 
 
 ########################################################################

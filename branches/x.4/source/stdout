@@ -1,0 +1,10 @@
+ERROR: ld.so: object '/usr/lib/valgrind/vgpreload_core-amd64-linux.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/lib/valgrind/vgpreload_core-amd64-linux.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so' from LD_PRELOAD cannot be preloaded: ignored.
+/home/yeison/Documentos/python/apps/pinguinoIDE/x.4/source/main.c:38:30: error: common_types.h: No such file or directory
+/home/yeison/Documentos/python/apps/pinguinoIDE/x.4/source/main.c:39:28: error: boot_iface.h: No such file or directory
+Processor: 18f2550
+sdcc: Calling preprocessor...
+sdcc: Generating code...
+/home/yeison/Documentos/python/apps/pinguinoIDE/x.4/source/user.c:9: syntax error: token -> 'setup' ; column 10

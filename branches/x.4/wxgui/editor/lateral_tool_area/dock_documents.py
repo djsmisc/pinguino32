@@ -30,12 +30,13 @@ import sys, os
 ########################################################################
 class Documents():
     #----------------------------------------------------------------------
-    def __initDocuments__(self):
-        self.lateralDir = self.lat.listCtrlDir
-        self.lateralFiles = self.lat.listCtrlFiles
+    def __initDocuments__(self, IDE):
+        self.IDE = IDE
+        self.lateralDir = self.IDE.lat.listCtrlDir
+        self.lateralFiles = self.IDE.lat.listCtrlFiles
         self.recentPathsDir = []
         #self.currentLateralDir = os.path.join(os.getcwd(),"examples")
-        self.parentDir = self.currentLateralDir
+        self.parentDir = self.IDE.currentLateralDir
         #print self.parentDir
         
         self.lateralDir.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Columns0', width=-1)  
@@ -45,11 +46,11 @@ class Documents():
         
         #self.buildLateralDir(self.currentLateralDir)
         
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnSelChanged, self.lateralDir)
-        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnDirSelected, self.lateralDir)
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnOpenFile, self.lateralFiles)
-        self.Bind(wx.EVT_DIRPICKER_CHANGED, self.setDirPicker, self.lat.dirPicker)
-        self.Bind(wx.EVT_CHOICE, lambda x:self.buildLateralFiles(self.parentDir), self.lat.choiceFile)
+        self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnSelChanged, self.lateralDir)
+        self.IDE.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnDirSelected, self.lateralDir)
+        self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnOpenFile, self.lateralFiles)
+        self.IDE.Bind(wx.EVT_DIRPICKER_CHANGED, self.setDirPicker, self.IDE.lat.dirPicker)
+        self.IDE.Bind(wx.EVT_CHOICE, lambda x:self.buildLateralFiles(self.parentDir), self.IDE.lat.choiceFile)
 
         
     #----------------------------------------------------------------------
@@ -64,13 +65,13 @@ class Documents():
         
     #----------------------------------------------------------------------
     def fixSizeDock(self):
-        self.lateralDir.SetColumnWidth(0, self.lat.m_panel5.Size[0])
-        self.lateralFiles.SetColumnWidth(0, self.lat.m_panel6.Size[0])
+        self.lateralDir.SetColumnWidth(0, self.IDE.lat.m_panel5.Size[0])
+        self.lateralFiles.SetColumnWidth(0, self.IDE.lat.m_panel6.Size[0])
         
     #----------------------------------------------------------------------
     def buildLateralDir(self, path):
         self.fixSizeDock()
-        self.lat.dirPicker.SetPath(path)
+        self.IDE.lat.dirPicker.SetPath(path)
         dirs = os.listdir(path)
         dirs.sort()
         self.lateralDir.DeleteAllItems()
@@ -97,8 +98,8 @@ class Documents():
         self.fixSizeDock()
         files = os.listdir(path)
         files.sort()
-        pattern = self.lat.choiceFile.GetString(self.lat.choiceFile.GetSelection()).replace("*", "")
-        if self.lat.choiceFile.GetString(self.lat.choiceFile.GetSelection()) == "*.*": pattern = ""
+        pattern = self.IDE.lat.choiceFile.GetString(self.IDE.lat.choiceFile.GetSelection()).replace("*", "")
+        if self.IDE.lat.choiceFile.GetString(self.IDE.lat.choiceFile.GetSelection()) == "*.*": pattern = ""
         self.lateralFiles.DeleteAllItems()
         for file in files:
             if os.path.isfile(os.path.join(path, file)) and not file.startswith(".") and file.endswith(pattern):
@@ -107,7 +108,7 @@ class Documents():
     #--------------------------------------------------------------------------
     def OnSelChanged(self, event):
         self.fixSizeDock()
-        path = self.lat.dirPicker.GetPath()
+        path = self.IDE.lat.dirPicker.GetPath()
         sel = event.GetLabel()
         if sel == "..":
             self.currentLateralDir = os.path.split(path)[0]
@@ -124,7 +125,7 @@ class Documents():
     #----------------------------------------------------------------------
     def OnDirSelected(self, event):
         self.fixSizeDock()
-        path = self.lat.dirPicker.GetPath()
+        path = self.IDE.lat.dirPicker.GetPath()
         sel = event.GetLabel()
         if sel == "..": self.buildLateralFiles(path)
         else: self.buildLateralFiles(os.path.join(path, sel))
@@ -135,7 +136,7 @@ class Documents():
         path = os.path.join(self.currentLateralDir, self.parentDir, sel)
         try: self.background.Hide()
         except: pass  #self.background not exist
-        self.Open(path)
+        self.IDE.Open(path)
         event.Skip()
         
         

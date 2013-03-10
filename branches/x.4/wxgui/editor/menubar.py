@@ -62,7 +62,7 @@ class Menubar:
                    "All files (*.*)|*.*"
         self.OpenDialog(wildcard)
         self.updatenotebook()
-        self.update_dockFiles()
+        self.Files.update_dockFiles()
 
 
     #----------------------------------------------------------------------
@@ -122,13 +122,15 @@ class Menubar:
     def OnClose(self, event):
         self.CloseTab()
         self.updatenotebook()
-        self.update_dockFiles()
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+            self.Files.update_dockFiles()
         
     #----------------------------------------------------------------------
     def OnCloseAll(self, event=None):
         while self.CloseTab():
             self.updatenotebook()
-            self.update_dockFiles()
+            if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+                self.Files.update_dockFiles()
 
     #----------------------------------------------------------------------
     def OnCopy(self, event):
@@ -304,8 +306,8 @@ class Menubar:
 
     
         
-        dir = unicode(self.parentDir).encode("utf-8")
-        self.setConfig("IDE", "LateralPath", dir)
+        #dir = unicode(self.parentDir).encode("utf-8")
+        #self.setConfig("IDE", "LateralPath", dir)
             
         self.saveConfig()
 

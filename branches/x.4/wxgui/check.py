@@ -49,13 +49,17 @@ DEV = setDEV()
 #DEV = True
 #DEV = False
 
-HOME_DIR	= os.getcwd()
+#from initialize import InitializeIDE
+from editor.general import General
+
+HOME_DIR = os.getcwd()
 fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
 fichier.writelines('Pinguino started at ' + str(time.asctime(time.localtime(time.time())) + '\n\n' ))
 
 def perror():
     print "fatal error, see pinguino.log for more details\n"
     sys.exit()
+
 
 # ------------------------------------------------------------------------------
 # check python's version 
@@ -71,6 +75,7 @@ else:
 # ------------------------------------------------------------------------------
 # check OS and compilers
 # ------------------------------------------------------------------------------
+
 
 if sys.platform == 'darwin':
     fichier.writelines('System host is Mac OS X\n')
@@ -252,14 +257,14 @@ except:
     fichier.close()
     perror()
 
-try:	
-    from editor import AutoCompleter		
-    fichier.writelines('AutoCompleter successfully loaded\n')
-except:
-    fichier.writelines('AutoCompleter failed\n')
-    fichier.writelines('You should have autocompleter.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()
+#try:	
+    #from editor import AutoCompleter	
+    #fichier.writelines('AutoCompleter successfully loaded\n')
+#except:
+    #fichier.writelines('AutoCompleter failed\n')
+    #fichier.writelines('You should have autocompleter.py at the wxgui/editor/\n')
+    #fichier.close()
+    #perror()
     
 try:	
     from editor import Stdout		
@@ -270,14 +275,14 @@ except:
     fichier.close()
     perror()
     
-try:	
-    from editor import PICpopup		
-    fichier.writelines('PICpopup successfully loaded\n')
-except:
-    fichier.writelines('PICpopup failed\n')
-    fichier.writelines('You should have pic_popup.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()    
+#try:	
+    #from editor import PICpopup		
+    #fichier.writelines('PICpopup successfully loaded\n')
+#except:
+    #fichier.writelines('PICpopup failed\n')
+    #fichier.writelines('You should have pic_popup.py at the wxgui/editor/\n')
+    #fichier.close()
+    #perror()    
     
 try:	
     from editor import Preferences	
@@ -298,7 +303,7 @@ except:
     perror()
 
 try:
-    from boards import * 
+    from boards import boardlist, Pinguino2550
     fichier.writelines('Pinguino Boards List successfully loaded\n')
 except:
     fichier.writelines('Pinguino Boards List failed\n')
@@ -333,35 +338,7 @@ except:
     fichier.close()
     perror()
 
-#if DEV:
-    #try:
-        #import pysvn
-        #fichier.writelines('pySVN successfully loaded\n')
-    #except:
-        #fichier.writelines('pySVN failed, try to install pySVN\n')
-        #if sys.platform == 'linux2':
-            #fichier.writelines('You will need to install an SVN Client on your distro.\n')
-        #fichier.writelines('Enable to check new version of Pinguino IDE\n')
-        #perror()
 
-    #try:
-        #from version import SubversionWorkingCopy, SubversionRepository
-        #fichier.writelines('Pinguino Version Control successfully loaded\n')
-    #except:
-        #fichier.writelines('Pinguino Version Control failed\n')
-        #fichier.writelines('You should have version.py in wxgui/\n')
-        #fichier.close()
-        #perror()
-        
-    #try:	
-        #from editor import Upgrade		
-        #fichier.writelines('Upgrade successfully loaded\n')
-    #except:
-        #fichier.writelines('Upgrade failed\n')
-        #fichier.writelines('You should have upgrade.py in wxgui/editor/\n')
-        #fichier.close()
-        #perror()      
-    
         
 
 # ------------------------------------------------------------------------------

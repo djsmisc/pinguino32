@@ -33,8 +33,10 @@ try:
 except:  #No dir
     pass
 
+from frames import frameAutoCompleter
+
 ########################################################################
-class AutoCompleter():
+class AutoCompleterIDE(frameAutoCompleter):
 
     #----------------------------------------------------------------------
     def __initCompleter__(self, parent, CharsCount, MaxItemsCount):
