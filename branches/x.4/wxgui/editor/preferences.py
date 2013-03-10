@@ -36,13 +36,22 @@ class Preferences():
     #----------------------------------------------------------------------
     def __initPreferences__(self, parent):
         self.IDE = parent
+        
+        self.GlobalSet = ["auto-complete", "open-save", "tools"]
+        
+        self.labelNotice.Hide()
 
         self.auinotebookPreferences.SetTabCtrlHeight(0)
         self.auinotebookPreferences.SetSelection(0)
         self.listBoxPreferences.SetSelection(0)
+        self.checkListPreferences.SetSelection(0)
         self.listBoxPreferences.SetFocus()
+        self.checkListPreferences.SetSelection(-1)        
         
-        self.Bind(wx.EVT_LISTBOX, self.setPage, self.listBoxPreferences)
+        self.Bind(wx.EVT_CHECKLISTBOX, lambda event:
+                  self.setPage_enable(event, self.listBoxPreferences.Count), self.checkListPreferences)
+        self.Bind(wx.EVT_LISTBOX, lambda event: self.setPage(event, 0), self.listBoxPreferences)
+        self.Bind(wx.EVT_LISTBOX, lambda event: self.setPage(event, self.listBoxPreferences.Count), self.checkListPreferences)
         self.Bind(wx.EVT_BUTTON, self.setDefaultConfig, self.buttonRestore)
         self.Bind(wx.EVT_BUTTON, self.writeConfig, self.buttonApply)
         self.Bind(wx.EVT_BUTTON, lambda x:self.Close(), self.buttonCancel)
@@ -50,6 +59,8 @@ class Preferences():
         if not os.path.isfile(".config"): self.setDefaultConfig()
             
         self.loadPreferences()
+        
+        
 
         #Appearance
         #----------------------------------------------------------------------
@@ -85,19 +96,16 @@ class Preferences():
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "template", self.radioBtnFileTemplate.Value), self.radioBtnFileTemplate)  
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "autosave", self.radioBtnSaveEach.Value), self.radioBtnSaveEach)  
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "autosave", self.radioBtnSaveEach.Value), self.radioBtnSaveNever)
-        self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Open/Save", "autosavetime", self.spinCtrlSaveTime.Value), self.spinCtrlSaveTime)        
+        self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Open/Save", "autosavetime", self.spinCtrlSaveTime.Value), self.spinCtrlSaveTime)  
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "openlast", self.radioBtnOpenAll.Value), self.radioBtnOpenAll)    
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "openlast", self.radioBtnOpenAll.Value), self.radioBtnOpenNever)       
 
-        #Highligh
+        #Tools
         #----------------------------------------------------------------------
-        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerSearch, self.textCtrlSearch, "searchreplace"), self.colourPickerSearch)
-        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCodeNav, self.textCtrlCodeNav, "codenavigation"), self.colourPickerCodeNav)
-        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerCurrentLine, self.textCtrlCurrentLine, "selection"), self.colourPickerCurrentLine)        
-        self.Bind(wx.EVT_COLOURPICKER_CHANGED, lambda x:self.setColor(self.colourPickerErrorLine, self.textCtrlErrorLine, "codeerror"), self.colourPickerErrorLine)        
-        
-        #Upgrade
-        #----------------------------------------------------------------------
-        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("IDE", "checkUpgradeAtStart", self.checkBoxUpgrade.Value), self.checkBoxUpgrade)  
-        
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "files", self.checkBoxFiles.Value), self.checkBoxFiles)  
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "documents", self.checkBoxDocuments.Value), self.checkBoxDocuments)  
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "search", self.checkBoxSearch.Value), self.checkBoxSearch)  
+
         
     #----------------------------------------------------------------------
     def setColor(self, selColor, TextCtrl, option):
@@ -143,7 +151,7 @@ class Preferences():
         font.SetPointSize(PointSize)	
         self.fontPickerSource.SetSelectedFont(font)
 
-        value = self.IDE.getElse("Source", "fontdefault", "True") == "True"
+        value = self.IDE.getElse("Source", "fontdefault", "True")
         self.radioBtnSourcedefault.SetValue(value)
         self.radioBtnSourceselected.SetValue(not value)
 
@@ -156,38 +164,43 @@ class Preferences():
         value = self.IDE.getElse("Completer", "MaxItemsCount", 14)
         self.spinCtrlItemsCompleterCount.SetValue(value)
 
-        value = self.IDE.getElse("Completer", "enable", "True") == "True"
+        value = self.IDE.getElse("Completer", "enable", "True")
         self.radioBtnCompleterEn.SetValue(value)
         self.radioBtnCompleterDis.SetValue(not value)
 
-        value = self.IDE.getElse("Completer", "insertParentheses", "True") == "True"
+        value = self.IDE.getElse("Completer", "insertParentheses", "True")
         self.checkBoxInsertParenthesis.SetValue(value)
         
-        value = self.IDE.getElse("Insert", "brackets", "False") == "True"
+        value = self.IDE.getElse("Insert", "brackets", "False")
         self.checkBoxBrackets.SetValue(value)
         
-        value = self.IDE.getElse("Insert", "doublecuotation", "False") == "True"
+        value = self.IDE.getElse("Insert", "doublecuotation", "False")
         self.checkBoxDoubleCuotes.SetValue(value)
         
-        value = self.IDE.getElse("Insert", "singlecuotation", "False") == "True"
+        value = self.IDE.getElse("Insert", "singlecuotation", "False")
         self.checkBoxSingleCuotes.SetValue(value)
         
-        value = self.IDE.getElse("Insert", "keys", "False") == "True"
+        value = self.IDE.getElse("Insert", "keys", "False")
         self.checkBoxKeys.SetValue(value)
         
-        value = self.IDE.getElse("Insert", "parentheses", "False") == "True"
+        value = self.IDE.getElse("Insert", "parentheses", "False")
         self.checkBoxParentheses.SetValue(value)
         
-        value = self.IDE.getElse("Open/Save", "template", "True") == "True"
+        value = self.IDE.getElse("OpenSave", "template", "True")
         self.radioBtnFileTemplate.SetValue(value)
         self.radioBtnFileEmpty.SetValue(not value)
         
-        value = self.IDE.getElse("Open/Save", "autosave", "False") == "True"
+        value = self.IDE.getElse("Open/Save", "openlast", "False")
+        self.radioBtnOpenAll.SetValue(value)
+        self.radioBtnOpenNever.SetValue(not value)
+        
+        value = self.IDE.getElse("Open/Save", "autosave", "False")
         self.radioBtnSaveEach.SetValue(value)
         self.radioBtnSaveNever.SetValue(not value)
         
         value = self.IDE.getElse("Open/Save", "autosavetime", 10)
         self.spinCtrlSaveTime.SetValue(value)
+        
         
         value = self.IDE.getColorConfig("Highligh", "searchreplace", [255, 250, 70])
         self.colourPickerSearch.SetColour(value)
@@ -205,21 +218,60 @@ class Preferences():
         self.colourPickerErrorLine.SetColour(value)
         self.textCtrlErrorLine.SetBackgroundColour(value)
         
-        value = self.IDE.getElse("IDE", "checkupgradeatstart", "True") == "True"
-        self.checkBoxUpgrade.SetValue(value)
+        #value = self.IDE.getElse("IDE", "checkupgradeatstart", "True")
+        #self.checkBoxUpgrade.SetValue(value)
         
-        value = self.IDE.getElse("Source", "userfontinoutput", "False") == "True"
-        self.checkBoxuseoutput.SetValue(value)          
+        value = self.IDE.getElse("Source", "userfontinoutput", "False")
+        self.checkBoxuseoutput.SetValue(value)
+        
+        value = self.IDE.getElse("Tools", "files", "False")
+        self.checkBoxFiles.SetValue(value)
+        
+        value = self.IDE.getElse("Tools", "documents", "False")
+        self.checkBoxDocuments.SetValue(value)
+        
+        value = self.IDE.getElse("Tools", "search", "False")
+        self.checkBoxSearch.SetValue(value)        
+        
+        checks = []
+        for item in self.GlobalSet:
+            value = self.IDE.getElse("Main", item, "True")
+            if value: checks.append(self.GlobalSet.index(item))
+        self.checkListPreferences.SetChecked(checks)
         
         self.IDE.saveConfig()
         
     #----------------------------------------------------------------------
-    def setPage(self, event):
+    def setPage(self, event, esc=0):
         if type(event) == type(""): string = event
         else: string = event.GetString()
-        self.auinotebookPreferences.SetSelection(event.GetSelection())
+        
+        if esc: self.listBoxPreferences.SetSelection(-1)
+        else: self.checkListPreferences.SetSelection(-1)
+        
+        self.auinotebookPreferences.SetSelection(event.GetSelection()+esc)
         self.staticTextPage.SetLabel(string)
-
+        self.auinotebookPreferences.Enable(self.checkListPreferences.IsChecked(event.GetSelection()))
+        
+        
+    #----------------------------------------------------------------------
+    def setPage_enable(self, event, esc):
+        if type(event) == type(""): string = event
+        else: string = event.GetString()
+        self.auinotebookPreferences.SetSelection(event.GetSelection()+esc)
+        #self.staticTextPage.SetLabel(string)
+        self.auinotebookPreferences.Enable(self.checkListPreferences.IsChecked(event.GetSelection()))
+        
+        self.IDE.setConfig("Main",
+                           self.GlobalSet[event.GetSelection()],
+                           self.checkListPreferences.IsChecked(event.GetSelection()))
+        
+        if not self.labelNotice.IsShown():
+            self.labelNotice.Show()
+            self.fgSizer2.Layout()
+            self.SetSize(self.Size+wx.Size(0, self.labelNotice.Size[1]))
+            self.IDE.setConfig("Main", "needRestart", "True")
+        
     #----------------------------------------------------------------------
     def writeConfig(self, event=None):
         self.IDE.saveConfig()

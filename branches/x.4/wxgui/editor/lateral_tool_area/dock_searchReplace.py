@@ -32,20 +32,21 @@ from wxgui._trad import _
 ########################################################################
 class Search():
     #----------------------------------------------------------------------
-    def __initSearch__(self):
-        self.FindText = self.lat.searchCtrlSearch
-        self.ReplaceText = self.lat.searchCtrlReplace
+    def __initSearch__(self, IDE):
+        self.IDE = IDE
+        self.FindText = self.IDE.lat.searchCtrlSearch
+        self.ReplaceText = self.IDE.lat.searchCtrlReplace
         self.ReplaceText.SetDescriptiveText("Replace")
         self.findIndex = -1
-        self.OnFind()
+        #self.OnFind()
         
-        self.Bind(wx.EVT_BUTTON, self.findnext, self.lat.buttonNext)  
-        self.Bind(wx.EVT_BUTTON, self.findprev, self.lat.buttonPrev)
-        self.Bind(wx.EVT_BUTTON, self.findnext, self.lat.buttonNext)  
-        self.Bind(wx.EVT_BUTTON, self.findprev, self.lat.buttonPrev)
-        self.Bind(wx.EVT_BUTTON, self.replacetext, self.lat.buttonReplace)  
-        self.Bind(wx.EVT_BUTTON, self.replacealltext, self.lat.buttonReplaceAll)   
-        self.Bind(wx.EVT_TEXT, self.updateFinds, self.FindText)
+        self.IDE.Bind(wx.EVT_BUTTON, self.findnext, self.IDE.lat.buttonNext)  
+        self.IDE.Bind(wx.EVT_BUTTON, self.findprev, self.IDE.lat.buttonPrev)
+        self.IDE.Bind(wx.EVT_BUTTON, self.findnext, self.IDE.lat.buttonNext)  
+        self.IDE.Bind(wx.EVT_BUTTON, self.findprev, self.IDE.lat.buttonPrev)
+        self.IDE.Bind(wx.EVT_BUTTON, self.replacetext, self.IDE.lat.buttonReplace)  
+        self.IDE.Bind(wx.EVT_BUTTON, self.replacealltext, self.IDE.lat.buttonReplaceAll)   
+        self.IDE.Bind(wx.EVT_TEXT, self.updateFinds, self.FindText)
         
     #----------------------------------------------------------------------
     def updateFinds(self, event):
@@ -55,17 +56,17 @@ class Search():
         
     #---------------------------------------------------------------------- 
     def OnFind(self,event=None):
-        if len(self.stcpage) > 0:
-            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        if len(self.IDE.stcpage) > 0:
+            textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
             sel = textEdit.GetSelectedText()
             if len(sel) > 0: self.FindText.SetValue(sel)
                 
-        self.lat.notebookLateral.SetSelection(2)
-        self.lat.panelReplace.Hide()
-        self.lat.m_staticText4.Hide()
-        self.lat.searchCtrlReplace.Hide()			   
+        self.IDE.lat.notebookLateral.SetSelection(2)
+        self.IDE.lat.panelReplace.Hide()
+        self.IDE.lat.m_staticText4.Hide()
+        self.IDE.lat.searchCtrlReplace.Hide()			   
         self.FindText.SetFocus()
-        self.updateIDE()		
+        self.IDE.updateIDE()		
 
     #----------------------------------------------------------------------
     def findprev(self,event):
@@ -74,13 +75,13 @@ class Search():
         
         if word == "" or result["count"] == 0: return False
         
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         self.findIndex -= 1
         if self.findIndex < 0: self.findIndex = result["count"] - 1
         self.highLine(word, self.findIndex)
         
-        self.lat.buttonReplace.Enable()
-        self.lat.buttonReplaceAll.Enable()
+        self.IDE.lat.buttonReplace.Enable()
+        self.IDE.lat.buttonReplaceAll.Enable()
         
         return True
 		
@@ -92,29 +93,29 @@ class Search():
         
         if word == "" or result["count"] == 0: return False
         
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         self.findIndex += 1
         if self.findIndex >= result["count"]: self.findIndex = -1
         self.highLine(word, self.findIndex)
         
-        self.lat.buttonReplace.Enable()
-        self.lat.buttonReplaceAll.Enable()
+        self.IDE.lat.buttonReplace.Enable()
+        self.IDE.lat.buttonReplaceAll.Enable()
         
         return True
 
     #----------------------------------------------------------------------
     def OnReplace(self,event):
-        if len(self.stcpage) > 0:
-            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        if len(self.IDE.stcpage) > 0:
+            textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
             sel = textEdit.GetSelectedText()
             if len(sel) > 0: self.FindText.SetValue(sel)
-        self.lat.notebookLateral.SetSelection(2)        
-        self.lat.panelReplace.Show()
-        self.lat.m_staticText4.Show()
-        self.lat.searchCtrlReplace.Show()        
+        self.IDE.lat.notebookLateral.SetSelection(2)        
+        self.IDE.lat.panelReplace.Show()
+        self.IDE.lat.m_staticText4.Show()
+        self.IDE.lat.searchCtrlReplace.Show()        
         self.FindText.SetFocus()
-        self.lat.buttonReplace.Disable()
-        self.lat.buttonReplaceAll.Disable()
+        self.IDE.lat.buttonReplace.Disable()
+        self.IDE.lat.buttonReplaceAll.Disable()
         self.updateIDE()
 
     #----------------------------------------------------------------------
@@ -122,20 +123,20 @@ class Search():
         word = str(self.FindText.GetValue())
         wordReplace = str(self.ReplaceText.GetValue())
         if word == "": return False
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         textEdit.Clear()
         textEdit.InsertText(textEdit.CurrentPos, wordReplace)
         #self.findIndex -= 1
         self.findnext(event)
         if not self.findnext(event):
-            self.lat.buttonReplace.Disable()
-            self.lat.buttonReplaceAll.Disable()
+            self.IDE.lat.buttonReplace.Disable()
+            self.IDE.lat.buttonReplaceAll.Disable()
             return False
         return True
 
     #----------------------------------------------------------------------
     def replacealltext(self, event):
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         word = str(self.FindText.GetValue())
         wordReplace = str(self.ReplaceText.GetValue())
         result = self.findWord(word)
@@ -150,15 +151,15 @@ class Search():
         textEdit.AddText(plain)
         textEdit.GotoPos(pos)
         
-        self.lat.searchReplaceInfo.SetLabel(_("Replaced %d matches in the file.") %count)
+        self.IDE.lat.searchReplaceInfo.SetLabel(_("Replaced %d matches in the file.") %count)
 
 
     #----------------------------------------------------------------------
     def findWord(self, word):
         if word == "": return 
         
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
-        if self.lat.checkBox_sensitive.IsChecked():
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
+        if self.IDE.lat.checkBox_sensitive.IsChecked():
             plain = str(textEdit.GetTextUTF8())
             word = str(word)
         else:
@@ -175,18 +176,18 @@ class Search():
                   "count": len(finds),
                   "finds": finds,}
         
-        self.lat.searchReplaceInfo.SetLabel(_("Finded %d matches in the file.") %len(finds))
+        self.IDE.lat.searchReplaceInfo.SetLabel(_("Finded %d matches in the file.") %len(finds))
         
         return result
     
     
     #----------------------------------------------------------------------
     def highLine(self, word, findIndex, focus=True):
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         result = self.findWord(word)
         if result["count"] > 0:
             line = textEdit.LineFromPosition(result["finds"][findIndex])
-            color = self.getColorConfig("Highligh", "searchreplace", [255, 250, 70])   
-            self.highlightline(line, color)
-            if focus: self.focus()
+            color = self.IDE.getColorConfig("Highligh", "searchreplace", [255, 250, 70])   
+            self.IDE.highlightline(line, color)
+            if focus: self.IDE.focus()
             textEdit.SetSelection(result["finds"][findIndex], result["finds"][findIndex]+len(word))

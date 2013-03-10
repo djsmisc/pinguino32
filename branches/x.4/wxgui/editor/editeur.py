@@ -74,7 +74,8 @@ class editor:
         self.choiceFunctions = []
         self.line=-1
         self.inhibitChangeEvents = False
-        self.notebookEditor.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.update_dockFiles)
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+            self.notebookEditor.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.Files.update_dockFiles)
 
     #----------------------------------------------------------------------
     def getFontPreferences(self):	
@@ -232,7 +233,10 @@ class editor:
         #self.stcpage[self.notebookEditor.GetSelection()].SetSize((x,y-20))
         self.editeur=self.stcpage[newIdx]
         self.editeur.Bind(wx.EVT_CONTEXT_MENU, self.contexMenuTools)
-        self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
+        
+        if self.getElse("main", "auto-complete", "True") and self.getElse("Completer", "enable", "True"):
+            self.editeur.Bind(wx.EVT_KEY_UP, self.keyEvent)
+        
         #self.editeur.Bind(wx.stc.EVT_STC_CHARADDED, self.InsertChar)
         self.editeur.Bind(wx.EVT_CHAR, self.InsertChar)
         self.editeur.Bind(stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
@@ -257,7 +261,7 @@ class editor:
         self.editeur.SetSelBackground(True, color)
 
         
-        if self.getElse("Open/Save", "template", "True") == "True":
+        if self.getElse("Main", "open-save", "True") and self.getElse("Open/Save", "template", "True"):
             self.insertSnippet("Insert Info {snippet}")
             self.editeur.GotoLine(self.editeur.LineCount)
             self.editeur.AppendText("\n\n")
@@ -266,7 +270,8 @@ class editor:
             self.editeur.SetFocus()
         
         
-        self.update_dockFiles()
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+            self.Files.update_dockFiles()
 
         dt = MyFileDropTarget(self.Open)
         self.editeur.SetDropTarget(dt)        
@@ -340,7 +345,7 @@ class editor:
         fichier.close()
         self.notebookEditor.SetPageText(pageIdx,file.replace(extension,""))
         self.gotostart()
-        self.update_dockFiles()
+        self.Files.update_dockFiles()
         #self.notebookEditor.Update()
         self.stcpage[pageIdx].EmptyUndoBuffer()
         #self.stcpage[pageIdx].SetSavePoint()

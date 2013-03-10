@@ -27,17 +27,6 @@
 
 from check import *
 
-#EVT_RESULT_REVISION_ID = wx.NewId()
-
-#def EVT_RESULT_REVISION(win, func):
-    #win.Connect(-1, -1, EVT_RESULT_REVISION_ID, func)
-
-#class ResultEventRevision(wx.PyEvent):
-    #def __init__(self, data):
-        #wx.PyEvent.__init__(self)
-        #self.SetEventType(EVT_RESULT_REVISION_ID)
-        #self.data = data
-
 # ------------------------------------------------------------------------------
 # current version
 # ------------------------------------------------------------------------------
@@ -56,8 +45,8 @@ gui=False
 # ------------------------------------------------------------------------------
 from wxgui._trad import _
 
-#Used for Python and Pic32 debug
-os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
+#Used for Python and Pic32 debug,
+#os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
 
 # ------------------------------------------------------------------------------
 # Pinguino Class
@@ -90,7 +79,11 @@ class Pinguino(framePinguinoX, Editor):
 # init
 # ------------------------------------------------------------------------------
     def __initPinguino__(self, parent):
-        sys.setrecursionlimit(1500)
+        #sys.setrecursionlimit(1500)
+        
+        self.loadConfig()
+        self.setConfig("Main", "needRestart", "False")
+        self.saveConfig()
 
         self.notebookEditor.Hide()
         self.boardlist = boardlist
@@ -111,8 +104,11 @@ class Pinguino(framePinguinoX, Editor):
         self.setOSvariables()
         self.configPanes()
         self.buildMenu()
-        #self.loadSettings()
+        
+
+        self.loadConfigBoard()
         self.morePreferences()
+        
         self.ConnectAll()
         self.trees = []
 
@@ -132,21 +128,28 @@ class Pinguino(framePinguinoX, Editor):
         self.SetTitle("Pinguino IDE")
         self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
 
-        self.loadSettings()
-        self.__initIDE__()
+        #self.loadSettings()
 
         ########################################
-        #Auto-complete frame build 
-        CharsCount = self.getElse("Completer", "charscount", 1)
-        MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
-        self.AutoCompleter = AutocompleterIDE(self)
-        self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
-        self.AutoCompleter.Hide()
+        #Auto-complete frame build
+        
+        #from editor.autocompleter import AutoCompleterIDE
+        #CharsCount = self.getElse("Completer", "charscount", 1)
+        #MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
+        #self.AutoCompleter = AutoCompleterIDE(self)
+        #self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
+        #self.AutoCompleter.Hide()
+        
+        self.AutoCompleter = self.LF_Autocompleter()
+        self.LF_Tools()
 
         #########################################
 
             
         self.DrawToolbar()
+        
+        
+        self.__initIDE__()        
 
 
     #----------------------------------------------------------------------    
@@ -1033,11 +1036,6 @@ class Pinguino(framePinguinoX, Editor):
         fichier.close()
         return "code size: " + str(codesize) + " / " + str(memfree) + " bytes" + " (" + str(100*codesize/memfree) + "% used)"
 
-
-
-########################################################################
-class AutocompleterIDE(frameAutoCompleter, AutoCompleter):
-    """"""
 
 #if DEV:
     #########################################################################
