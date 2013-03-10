@@ -136,18 +136,8 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuPinguino.AppendSeparator()
 		
-		self.menuDebugMode = wx.Menu()
-		self.menuItemDebugNone = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _(u"None")+ u"\t" + u"CTRL+SHIFT+N", wx.EmptyString, wx.ITEM_RADIO )
-		self.menuDebugMode.AppendItem( self.menuItemDebugNone )
-		self.menuItemDebugNone.Check( True )
-		
-		self.menuItemUSBCDC = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _(u"USB CDC (serial emulation)")+ u"\t" + u"CTRL+SHIFT+C", wx.EmptyString, wx.ITEM_RADIO )
-		self.menuDebugMode.AppendItem( self.menuItemUSBCDC )
-		
-		self.menuItemUART1 = wx.MenuItem( self.menuDebugMode, wx.ID_ANY, _(u"UART (serial)")+ u"\t" + u"CTRL+SHIFT+U", wx.EmptyString, wx.ITEM_RADIO )
-		self.menuDebugMode.AppendItem( self.menuItemUART1 )
-		
-		self.menuPinguino.AppendSubMenu( self.menuDebugMode, _(u"Debug mode") )
+		self.menuItemUSBCDC = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"USB CDC (serial emulation)")+ u"\t" + u"CTRL+SHIFT+C", wx.EmptyString, wx.ITEM_CHECK )
+		self.menuPinguino.AppendItem( self.menuItemUSBCDC )
 		
 		self.menuItemViewStdout = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"View stdout")+ u"\t" + u"F8", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemViewStdout )
@@ -266,7 +256,7 @@ class framePreferences ( wx.Frame ):
 		self.appearance.SetSizer( fgSizer3 )
 		self.appearance.Layout()
 		fgSizer3.Fit( self.appearance )
-		self.auinotebookPreferences.AddPage( self.appearance, _(u"appearance"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.appearance, _(u"appearance"), True, wx.NullBitmap )
 		self.souce_code_font_size = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer4 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer4.AddGrowableCol( 1 )
@@ -366,7 +356,23 @@ class framePreferences ( wx.Frame ):
 		fgSizer7.Fit( self.highlight )
 		self.auinotebookPreferences.AddPage( self.highlight, _(u"highligh"), False, wx.NullBitmap )
 		self.others = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		self.auinotebookPreferences.AddPage( self.others, _(u"a page"), False, wx.NullBitmap )
+		fgSizer10 = wx.FlexGridSizer( 0, 2, 0, 0 )
+		fgSizer10.SetFlexibleDirection( wx.BOTH )
+		fgSizer10.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		
+		self.m_staticText17 = wx.StaticText( self.others, wx.ID_ANY, _(u"Source online doc:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText17.Wrap( -1 )
+		fgSizer10.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		comboBoxSourcedocChoices = [ _(u"Pinguino wiki official"), _(u"PinguinoVE wiki") ]
+		self.comboBoxSourcedoc = wx.ComboBox( self.others, wx.ID_ANY, _(u"Pinguino wiki official"), wx.DefaultPosition, wx.DefaultSize, comboBoxSourcedocChoices, 0 )
+		fgSizer10.Add( self.comboBoxSourcedoc, 0, wx.ALL, 5 )
+		
+		
+		self.others.SetSizer( fgSizer10 )
+		self.others.Layout()
+		fgSizer10.Fit( self.others )
+		self.auinotebookPreferences.AddPage( self.others, _(u"others"), False, wx.NullBitmap )
 		self.auto_completion = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer39 = wx.BoxSizer( wx.HORIZONTAL )
 		

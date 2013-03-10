@@ -196,15 +196,18 @@ class Pinguino(framePinguinoX, Editor):
 
         if arch == 8:
             if mode == "ICSP":
-                devs = self.getPIC18F()
-                r_devs = []
-                #print family
-                family = family.replace( "x", "[0-9]")
-                for dev in devs:
-                    reg = re.match( "(" + family + ")", dev)
-                    if reg != None:
-                        if reg.group(1) == dev:
-                            r_devs.append(dev)
+                
+                #devs = self.getPIC18F()
+                #r_devs = []
+                ##print family
+                #family = family.replace( "x", "[0-9]")
+                #for dev in devs:
+                    #reg = re.match( "(" + family + ")", dev)
+                    #if reg != None:
+                        #if reg.group(1) == dev:
+                            #r_devs.append(dev)
+                            
+                            
                 return 5, r_devs
 
             if mode == "BOOT":
@@ -213,6 +216,8 @@ class Pinguino(framePinguinoX, Editor):
                     if board.bldr == "noboot": pass
                     elif board.arch == 8: devs.append(board.name)
                 return 3, devs  #Columns, List
+            
+            
 
         elif arch == 32:
             if mode == "ICSP":
@@ -322,12 +327,14 @@ class Pinguino(framePinguinoX, Editor):
         info = wx.AboutDialogInfo()
         #bmp = wx.Icon(os.path.join(THEME_DIR, 'logoX3.png'), wx.BITMAP_TYPE_PNG)
         image = wx.Image(os.path.join(THEME_DIR, 'logo3D.png'), wx.BITMAP_TYPE_PNG)
-        image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
+        image = image.Scale(400, 300, wx.IMAGE_QUALITY_HIGH)
         bmp = wx.BitmapFromImage(image)
         #bmp = image.ConvertToBitmap()
-        ##icon = wx.EmptyIcon()
-        ##icon.CopyFromBitmap(bmp)
-        ##info.SetIcon(icon)
+        
+        icon = wx.EmptyIcon()
+        icon.CopyFromBitmap(bmp)
+        info.SetIcon(icon)
+        
         info.SetName('Pinguino')
         info.SetVersion(pinguino_version)
         #info.SetVersion("rev. " + self.localRev)

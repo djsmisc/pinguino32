@@ -48,8 +48,7 @@ class Preferences():
         self.listBoxPreferences.SetFocus()
         self.checkListPreferences.SetSelection(-1)        
         
-        self.Bind(wx.EVT_CHECKLISTBOX, lambda event:
-                  self.setPage_enable(event, self.listBoxPreferences.Count), self.checkListPreferences)
+        self.Bind(wx.EVT_CHECKLISTBOX, lambda event: self.setPage_enable(event, self.listBoxPreferences.Count), self.checkListPreferences)
         self.Bind(wx.EVT_LISTBOX, lambda event: self.setPage(event, 0), self.listBoxPreferences)
         self.Bind(wx.EVT_LISTBOX, lambda event: self.setPage(event, self.listBoxPreferences.Count), self.checkListPreferences)
         self.Bind(wx.EVT_BUTTON, self.setDefaultConfig, self.buttonRestore)
@@ -105,6 +104,10 @@ class Preferences():
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "files", self.checkBoxFiles.Value), self.checkBoxFiles)  
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "documents", self.checkBoxDocuments.Value), self.checkBoxDocuments)  
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "search", self.checkBoxSearch.Value), self.checkBoxSearch)  
+
+        #Others
+        #----------------------------------------------------------------------
+        self.Bind(wx.EVT_COMBOBOX, lambda x:self.IDE.setConfig("IDE", "sourcedoc", ["official", "pinguinove"][self.comboBoxSourcedoc.Items.index(self.comboBoxSourcedoc.Value)]), self.comboBoxSourcedoc)
 
         
     #----------------------------------------------------------------------
@@ -231,7 +234,12 @@ class Preferences():
         self.checkBoxDocuments.SetValue(value)
         
         value = self.IDE.getElse("Tools", "search", "False")
-        self.checkBoxSearch.SetValue(value)        
+        self.checkBoxSearch.SetValue(value)
+        
+        
+        value = ["official", "pinguinove"].index(self.IDE.getElse("IDE", "sourcedoc", "official"))
+        self.comboBoxSourcedoc.SetSelection(value)
+        
         
         checks = []
         for item in self.GlobalSet:
@@ -251,7 +259,7 @@ class Preferences():
         
         self.auinotebookPreferences.SetSelection(event.GetSelection()+esc)
         self.staticTextPage.SetLabel(string)
-        self.auinotebookPreferences.Enable(self.checkListPreferences.IsChecked(event.GetSelection()))
+        if esc > 0: self.auinotebookPreferences.Enable(self.checkListPreferences.IsChecked(event.GetSelection()))
         
         
     #----------------------------------------------------------------------
