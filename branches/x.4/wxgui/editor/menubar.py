@@ -62,7 +62,8 @@ class Menubar:
                    "All files (*.*)|*.*"
         self.OpenDialog(wildcard)
         self.updatenotebook()
-        self.Files.update_dockFiles()
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+            self.Files.update_dockFiles()
 
 
     #----------------------------------------------------------------------

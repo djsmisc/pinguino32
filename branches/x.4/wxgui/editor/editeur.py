@@ -345,7 +345,10 @@ class editor:
         fichier.close()
         self.notebookEditor.SetPageText(pageIdx,file.replace(extension,""))
         self.gotostart()
-        self.Files.update_dockFiles()
+        
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
+            self.Files.update_dockFiles()
+        
         #self.notebookEditor.Update()
         self.stcpage[pageIdx].EmptyUndoBuffer()
         #self.stcpage[pageIdx].SetSavePoint()

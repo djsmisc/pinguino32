@@ -197,15 +197,15 @@ class Pinguino(framePinguinoX, Editor):
         if arch == 8:
             if mode == "ICSP":
                 
-                #devs = self.getPIC18F()
-                #r_devs = []
-                ##print family
-                #family = family.replace( "x", "[0-9]")
-                #for dev in devs:
-                    #reg = re.match( "(" + family + ")", dev)
-                    #if reg != None:
-                        #if reg.group(1) == dev:
-                            #r_devs.append(dev)
+                devs = self.getPIC18F()
+                r_devs = []
+                #print family
+                family = family.replace( "x", "[0-9]")
+                for dev in devs:
+                    reg = re.match( "(" + family + ")", dev)
+                    if reg != None:
+                        if reg.group(1) == dev:
+                            r_devs.append(dev)
                             
                             
                 return 5, r_devs
