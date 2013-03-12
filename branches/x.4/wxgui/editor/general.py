@@ -776,6 +776,7 @@ class General(ReadConfig, LoadFeatures):
 
     #----------------------------------------------------------------------
     def updates(self):
+        #if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
         if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
             self.Files.update_dockFiles()
             

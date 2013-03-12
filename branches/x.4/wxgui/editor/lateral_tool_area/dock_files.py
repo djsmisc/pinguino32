@@ -133,6 +133,7 @@ class File:
     #----------------------------------------------------------------------
     def update_dockFiles(self, event=None):
         #if not self.ENABLE: return
+
         
         self.updateWidthColums()
         
