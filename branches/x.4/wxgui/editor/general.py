@@ -40,7 +40,6 @@ from wxgui.editor.preferences import Preferences
 from wxgui.editor.funtions_help import functionsHelp
 #from wxgui.editor.autocompleter import AutoCompleterIDE
 from wxgui.editor.stdout import Stdout
-from wxgui.editor.pic_popup import PICpopup
 from wxgui.editor.board_selector import BoarSelector
 
 from get_config import ReadConfig
