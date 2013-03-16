@@ -37,6 +37,7 @@ class LoadFeatures:
         config = ReadConfig()
         config.loadConfig()
         if config.getElse("main", "auto-complete", "True") and config.getElse("Completer", "Enable", "True"):
+            
             from editor.autocompleter import AutoCompleterIDE
             CharsCount = config.getElse("Completer", "charscount", 1)
             MaxItemsCount = config.getElse("Completer", "MaxItemsCount", 10)

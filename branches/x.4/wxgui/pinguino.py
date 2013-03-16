@@ -371,6 +371,7 @@ class Pinguino(framePinguinoX, Editor):
         info.AddTranslator('Moreno Manzini ')
 
         wx.AboutBox(info)
+        
 
 # ------------------------------------------------------------------------------
 # OnVerify:
@@ -380,8 +381,9 @@ class Pinguino(framePinguinoX, Editor):
         if self.changingBoard:
             self.displaymsg(_("Please wait a moment.")+"\n", 0)
             return
-            
-        global lang
+        
+        self.displaymsg("", 1)
+        
         self.in_verify=1
         t0 = time.time()
         if self.GetPath()==-1:
@@ -392,9 +394,11 @@ class Pinguino(framePinguinoX, Editor):
             result=dlg.ShowModal()
             dlg.Destroy()
             return False
-        self.displaymsg(_("Board:")+" " + self.curBoard.name, 1)
-        self.displaymsg(_("Proc:")+" " + self.curBoard.proc, 0)
-        self.displaymsg(_("File:")+" " + self.GetPath(), 0)
+        self.displaymsg(_("Board:\t")+" " + self.curBoard.name, 1)
+        self.displaymsg(_("Proc:\t")+" " + self.curBoard.proc, 0)
+        self.displaymsg(_("File:\t")+" " + self.GetPath(), 0)
+        self.displaymsg(_("compiling")+("..."), 0)
+        
         self.OnSave()
         filename=self.GetPath()
         filename,extension=os.path.splitext(filename)
@@ -414,10 +418,12 @@ class Pinguino(framePinguinoX, Editor):
         if retour!=0:
             self.displaymsg(_("error while compiling"),0)
             self.displaymsg(_("check highlighted lines in your code"),0)
+            self.displaymsg(_("You can review the file stdout (F8) for more information."),0)
         else:
             retour=self.link(filename, self.curBoard)
             if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
                 self.displaymsg(_("error while linking")+" "+filename+".o",0)
+                self.displaymsg(_("You can review the file stdout (F8) for more information."),0)
                 return False
             else:
                 shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")

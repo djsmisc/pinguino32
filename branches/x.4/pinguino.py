@@ -6,7 +6,7 @@ import wx, os, sys
 from wxgui.pinguino import setGui
 from wxgui.pinguino import *
 from wxgui._trad import _
-
+os.remove("pinguinoPanic")
 
 ########################################################################
 class MySplashScreen(wx.SplashScreen):
@@ -48,13 +48,16 @@ class MySplashScreen(wx.SplashScreen):
         setGui(True)
         frame = Pinguino(None)
         frame.__initPinguino__(None)
-        app.SetTopWindow(frame)
+        #app.SMyAppetTopWindow(frame)
         #app.cent
         frame.Show()
         if self.fc.IsRunning(): self.Raise()
 
 ########################################################################
 class MyApp(wx.App):
+    def __init__(self):
+        wx.App.__init__(self, redirect=True, filename="pinguinoPanic")
+        
     def OnInit(self):
         if sys.platform=='darwin':
             setGui(True)
@@ -69,11 +72,22 @@ class MyApp(wx.App):
         return True
 
 
+
+def show_error():
+    message = ''.join(traceback.format_exception(*sys.exc_info()))
+    dialog = wx.MessageDialog(None, message, 'Error!', wx.OK|wx.ICON_ERROR)
+    dialog.ShowModal()
+    
+
 #----------------------------------------------------------------------
 def main():
-    app = MyApp(False)
+    app = MyApp()
+    #app = App()
+
+    
     #app.SetTopWindow(frame)
     app.MainLoop()
+    
 
 
 
