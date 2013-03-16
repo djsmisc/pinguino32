@@ -6,6 +6,8 @@ import wx, os, sys
 from wxgui.pinguino import setGui
 from wxgui.pinguino import *
 from wxgui._trad import _
+
+#if os.path.isfile("pinguinoPanic"):
 os.remove("pinguinoPanic")
 
 ########################################################################

@@ -5,12 +5,12 @@
 void setup()
 {                
     // initialize the digital pin USERLED as an output.
-    pinMode(USERLED, OUTPUT);     
+    pinMode(10, OUTPUT);     
 }
 
 void loop()
 {
-    toggle(USERLED);			// alternate ON and OFF
+    toggle(10);			// alternate ON and OFF
     delay(50);		        // wait for 50ms
 
 /*	Or ...
