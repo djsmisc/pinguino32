@@ -603,6 +603,7 @@ class General(ReadConfig, LoadFeatures):
 
 
         self.Bind(wx.EVT_MENU, self.OnVerify, self.menu.menuItemCompile)
+        
         self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
         self.Bind(wx.EVT_MENU, self.OnVerifyUpload, self.menu.menuItemCompileUpload)
 
@@ -941,7 +942,6 @@ class General(ReadConfig, LoadFeatures):
     def displaymsg(self, message, clearpanel):
         """ display message in the log window """
         
-        #if gui==True:
         try:
             if clearpanel==1:
                 self.logwindow.Clear()
@@ -949,13 +949,10 @@ class General(ReadConfig, LoadFeatures):
                 self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
             except:
                 self.logwindow.WriteText(message+"\n")
-        except:  #No GUI
+        except:  
             print message
-        #else:
-            #if message!="":
-                #print message
-        #return
-
+            
+        self.logwindow.Update()
 
     #----------------------------------------------------------------------
     def OnPreferences(self, event=None):
