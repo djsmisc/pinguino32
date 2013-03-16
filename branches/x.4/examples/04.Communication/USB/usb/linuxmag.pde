@@ -2,7 +2,7 @@
 // Jean-Pierre MANDON 2008
 
 int i;
-uchar caractere, caractere1;
+uchar caractere,caractere1;
 
 void setup() 
 {

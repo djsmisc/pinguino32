@@ -7,8 +7,7 @@ from wxgui.pinguino import setGui
 from wxgui.pinguino import *
 from wxgui._trad import _
 
-#if os.path.isfile("pinguinoPanic"):
-os.remove("pinguinoPanic")
+if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
 
 ########################################################################
 class MySplashScreen(wx.SplashScreen):
