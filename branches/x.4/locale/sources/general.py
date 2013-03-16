@@ -569,7 +569,8 @@ class General:
 
         self.Bind(wx.EVT_MENU, self.OnViewStdout, self.menu.menuItemViewStdout)
 
-
+        self.displaymsg(_("Please wait a moment.")+"\n", 0)
+        
         self.Bind(wx.EVT_MENU, self.OnVerify, self.menu.menuItemCompile)
         self.Bind(wx.EVT_MENU, self.OnUpload, self.menu.menuItemUpload)
         self.Bind(wx.EVT_MENU, self.OnVerifyUpload, self.menu.menuItemCompileUpload)
