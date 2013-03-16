@@ -10,10 +10,8 @@ void setup()
 
 void loop()
 {
-    CDC.print(45);  // 1 digit after decimal comma
-    
-    //f = f + 0.1;
-    f++;
+    CDC.printf("float=%.1f \r\n", f);  // 1 digit after decimal comma
+    f = f + 0.1;
     toggle(USERLED);
     delay(500);
 }
