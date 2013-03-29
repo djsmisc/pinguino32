@@ -36,7 +36,7 @@
 #define __DIGITALW__
 
 //#include <pic18fregs.h>
-#include <typedef.h>
+//#include <typedef.h>
 
 /*
 #define pB	0
@@ -69,31 +69,37 @@
 #if defined(PINGUINO1220) || defined(PINGUINO1320)
 /**********************************************************************/
                                                     // Pinguino pin number
-const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+const unsigned char mask[19]={
+                    _0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 					_0,_1,_2,_3,_4,_5};             // 8 - 13
 
-const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
+const unsigned char port[19]={
+                    pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pA, pA, pA, pA, pA, pA};        // 8 - 13
 
 /**********************************************************************/
 #elif defined(__18f14k22)
 /**********************************************************************/
                                                     // Pinguino pin number
-const u8 mask[19]={	_5,_4,_3,_5,_4,_3,_6,_7,_7,     // 0 - 8
+const unsigned char mask[19]={
+                    _5,_4,_3,_5,_4,_3,_6,_7,_7,     // 0 - 8
 					_0,_1,_2,_0,_1,_2,_4,_5,_6};    // 9 - 17
 
-const u8 port[19]={	pA, pA, pA, pC, pC, pC, pC, pC, pB, // 0 - 8
+const unsigned char port[19]={
+                    pA, pA, pA, pC, pC, pC, pC, pC, pB, // 0 - 8
 					pA, pA, pA, pC, pC, pC, pB, pB, pB }; // 9 - 17
 
 /**********************************************************************/
 #elif defined(PINGUINO2550) || defined(PINGUINO25K50) || defined(CHRP3)
 /**********************************************************************/
                                                     // Pinguino pin number
-const u8 mask[19]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+const unsigned char mask[19]={
+                    _0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 					_6,_7,_0,_1,_2,                 // 8 - 12
 					_0,_1,_2,_3,_5,_4};             // 13 - 18
 
-const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
+const unsigned char port[19]={
+                    pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 					pC, pC, pC, pC, pC,             // 8 - 12
 					pA, pA, pA, pA, pA, pA};        // 13 - 18
 
@@ -101,11 +107,13 @@ const u8 port[19]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 - 7
 #elif defined(__18f26j50) //PINGUINO26J50)
 /**********************************************************************/
                                                     // Pinguino pin number
-const u8 mask[18]={	_0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
+const unsigned char mask[18]={
+                    _0,_1,_2,_3,_4,_5,_6,_7,        // 0 - 7
 					_6,_7,_0,_1,_2,                 // 8 - 12
 					_0,_1,_2,_3,_5};                // 13 -17
 
-const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
+const unsigned char port[18]={
+                    pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
 					pC, pC, pC, pC, pC,             // 8 - 12
 					pA, pA, pA, pA, pA};            // 13 - 17
 
@@ -113,37 +121,46 @@ const u8 port[18]={	pB, pB, pB, pB, pB, pB, pB, pB, // 0 -7
 #elif defined(PINGUINO4550) || defined(PINGUINO45K50)
 /**********************************************************************/
                                                     // Pinguino pin number
-const u8 mask[29]={	_0,_1,_2,_3,_4,_5,_6,_7,		// 0 - 7
+                                                    // Pinguino pin number
+const unsigned char mask[30]={	_0,_1,_2,_3,_4,_5,_6,_7,		// 0 - 7
 					_6,_7,_0,_1,_2,					// 8 - 12
-					_0,_1,_2,_3,_5,_4,				// 13 - 18
-					_0,_1,_2,						// 19 - 21
-					_0,_1,_2,_3,_4,_5,_6,_7};		// 22 - 29
-
-const u8 port[29]={	pB, pB, pB, pB, pB, pB, pB, pB,
+					_0,_1,_2,_3,_5,				    // 13 - 17
+					_0,_1,_2,						// 18 - 20
+					_0,_1,_2,_3,_4,_5,_6,_7,  		// 21 - 28
+                    _4                              // 29
+					};
+const unsigned char port[30]={	pB, pB, pB, pB, pB, pB, pB, pB,
 					pC, pC, pC, pC, pC,
-					pA, pA, pA, pA, pA, pA,
+					pA, pA, pA, pA, pA,
 					pE, pE, pE,
-					pD, pD, pD, pD, pD, pD, pD, pD};
+					pD, pD, pD, pD, pD, pD, pD, pD,
+					pA};
 
 /**********************************************************************/
 #elif defined(FREEJALDUINO)
 /**********************************************************************/
 
-const u8 mask[19]={_7,_6,_4,_0,_1,_2,_3,_4,_5,_6,_7,_0,_1,_2,_0,_1,_2,_3, _5};
-const u8 port[19]={1,1,2,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,2};
+const unsigned char mask[19]={
+                    _7,_6,_4,_0,_1,_2,_3,_4,_5,_6,_7,_0,_1,_2,_0,_1,_2,_3, _5};
+
+const unsigned char port[19]={
+                    1,1,2,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,2};
 
 /**********************************************************************/
 #elif defined(PICUNO_EQUO)
 /**********************************************************************/
 
-const u8 mask[14]={_7,_6,_2,_3,_0,_2,_1,_1,_2,_3,_4,_5,_6,_7};
-const u8 port[14]={1,1,0,0,3,1,1,3,3,3,3,3,3,3};
+const unsigned char mask[14]={
+                    _7,_6,_2,_3,_0,_2,_1,_1,_2,_3,_4,_5,_6,_7};
+                    
+const unsigned char port[14]={
+                    1,1,0,0,3,1,1,3,3,3,3,3,3,3};
 
 #else
     #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
 #endif
 
-void digitalwrite(u8 pin, u8 state)
+void digitalwrite(unsigned char pin, unsigned char state)
 {
 /*
 	switch (port[pin])
@@ -167,10 +184,15 @@ void digitalwrite(u8 pin, u8 state)
 		#endif
 	}
 */
-    u8  b = mask[pin];          // 1<<bit
-    __data u8 * pPORT;          // pointer in RAM space
+    unsigned char  b = mask[pin];          // 1<<bit
+
+    // A variable should be declared volatile
+    // whenever its value could change unexpectedly.
+    // For ex. with Memory-mapped peripheral registers.
     
-    pPORT = (__data u8*) (port[pin] + 0x0F80); // PORTx
+    __data unsigned char volatile * pPORT; // pointer in RAM space
+    
+    pPORT = (__data unsigned char volatile *) (port[pin] + 0x0F80); // PORTx
     
     if (state)
         *pPORT |= b;            // set bit
@@ -178,7 +200,7 @@ void digitalwrite(u8 pin, u8 state)
         *pPORT &= (255-b);      // clear bit
 }
 
-u8 digitalread(u8 pin)
+unsigned char digitalread(unsigned char pin)
 {
 /*
 	switch (port[pin])
@@ -203,10 +225,15 @@ u8 digitalread(u8 pin)
 	}
 	return (0);
 */
-    u8  b = mask[pin];          // 1<<bit
-    __data u8 * pPORT;          // pointer in RAM space
+    unsigned char  b = mask[pin];          // 1<<bit
+
+    // A variable should be declared volatile
+    // whenever its value could change unexpectedly.
+    // For ex. with Memory-mapped peripheral registers.
     
-    pPORT = (__data u8*) (port[pin] + 0x0F80); // PORTx
+    __data unsigned char volatile * pPORT; // pointer in RAM space
+    
+    pPORT = (__data unsigned char volatile *) (port[pin] + 0x0F80); // PORTx
     
     if ( *pPORT & b )
         return 1;               // bit is set
@@ -214,7 +241,7 @@ u8 digitalread(u8 pin)
         return 0;               // bit is not set
 }
 
-void pinmode(u8 pin, u8 state)
+void pinmode(unsigned char pin, unsigned char state)
 {
 /*
 	switch (port[pin])
@@ -238,10 +265,15 @@ void pinmode(u8 pin, u8 state)
 		#endif	
 	}
 */
-    u8  b = mask[pin];          // 1<<bit
-    __data u8* pTRIS;           // pointer in RAM space
+    unsigned char  b = mask[pin];          // 1<<bit
+
+    // A variable should be declared volatile
+    // whenever its value could change unexpectedly.
+    // For ex. with Memory-mapped peripheral registers.
     
-    pTRIS = (__data u8*) (port[pin] + 0x0F92); // TRISx
+    __data unsigned char volatile * pTRIS; // pointer in RAM space
+    
+    pTRIS = (__data unsigned char volatile *) (port[pin] + 0x0F92); // TRISx
     
     if (state)                  // if 1
         *pTRIS |= b;            // set bit (input)
@@ -251,18 +283,23 @@ void pinmode(u8 pin, u8 state)
 
 //  pPORT = address of PORTx
 // *pPORT = content of PORTx
-void toggle(u8 pin)
+void toggle(unsigned char pin)
 {
     /*
-    u8 val;
+    unsigned char val;
     val = digitalread(pin);
     digitalwrite(pin, val^1);
     */
 
-    u8  b = mask[pin];          // 1<<bit
-    __data u8* pPORT;           // pointer in RAM space
+    unsigned char  b = mask[pin];          // 1<<bit
 
-    pPORT = (__data u8*) (port[pin] + 0x0F80); // PORTx
+    // A variable should be declared volatile
+    // whenever its value could change unexpectedly.
+    // For ex. with Memory-mapped peripheral registers.
+    
+    __data unsigned char volatile * pPORT; // pointer in RAM space
+
+    pPORT = (__data unsigned char volatile *) (port[pin] + 0x0F80); // PORTx
     
     if ( *pPORT & b )           // bit is set ?
         *pPORT &= (255-b);      // clear bit
