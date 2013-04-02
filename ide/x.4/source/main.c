@@ -4,14 +4,17 @@
     PURPOSE:        application main function
     PROGRAMER:      Jean-pierre Mandon - Régis Blanchot
     FIRST RELEASE:  19 Sep 2008
-    LAST RELEASE:   05 Jan 2013
+    LAST RELEASE:   28 Feb 2013
     ----------------------------------------------------------------------------
     CHANGELOG :
     Originally based on a file by (c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr>
     19 Sep 2008 - Jean-pierre Mandon - adapted to Pinguino  
     21 Apr 2012 - Régis Blanchot - added bootloader v4.x support
     20 Jun 2012 - Régis Blanchot - added io.c support (remapping)
-    05 Fev 2013 - Régis Blanchot - added interrupt init
+    05 Feb 2013 - Régis Blanchot - added interrupt init
+    11 Feb 2013 - Régis Blanchot - removed call to crt0iPinguino.c
+                                   added reset_isr() instead
+    28 Feb 2013 - Régis Blanchot - added stack pointer initialization
     ----------------------------------------------------------------------------
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -33,80 +36,122 @@
 #include <const.h>
 #include <macro.h>
 
+////////////////////////////////////////////////////////////////////////
+#include "define.h"
+////////////////////////////////////////////////////////////////////////
+
+#include <pin.h>    // needs define.h to be included first
+#include <io.c>     // needs define.h to be included first
+
+////////////////////////////////////////////////////////////////////////
+#include "user.c"   // user's .pde file translated to C
+////////////////////////////////////////////////////////////////////////
 
 #ifdef boot2
+
     #include <common_types.h>
     #include <boot_iface.h>
-#endif
-
-#ifdef boot4
-    // runtime start code with variables initialisation
-    #include "crt0iPinguino.c"
-    /*
-    #ifdef __USB__
-        #include <usb.h>
-        #include <usb.c>
-    #endif
-    */
-#endif
-
-// only for compatibility with application_iface.o
-#ifdef boot2
+    // only for compatibility with application_iface.o
     #ifndef __USB__
         void epap_in()      { return; }
         void epap_out()     { return; }
         void epapin_init()  { return; }
         void epapout_init() { return; }
     #endif
+
+    // Application entry point called from bootloader v2.12
+    void pinguino_main(void)
+
+#elif defined (noboot) || defined(boot4)
+
+    void main(void);
+    void reset_isr(void) __naked __interrupt 0;
+
+    // Application entry point called from bootloader v4.x
+    void main(void)
+
 #endif
 
-#include "define.h"
-// files that need define.h to be included first
-#include <pin.h>
-#include <io.c>
-// user's .pde file translated to C
-#include "user.c"
-
-#ifdef noboot
-// in order to use default startup code
-void main(void)
-#else
-// Application entry point called from the bootloader
-void pinguino_main(void)
-#endif
 {
-    // Perform a loop for some processors until their frequency is stable
-
     #if defined(__18f26j50) || defined(__18f46j50)
+        u16 pll_startup_counter = 600;
+    #endif
+    
+    /// ----------------------------------------------------------------
+    /// Perform a loop for some processors until their frequency is stable
+    /// ----------------------------------------------------------------
+    
+    #if defined(__18f2455) || defined(__18f4455) || \
+        defined(__18f2550) || defined(__18f4550)
+    
+        // If Internal Oscillator is used
+        if (OSCCONbits.SCS > 0x02)
+            // wait INTOSC frequency is stable (IOFS=1) 
+            while (!OSCCONbits.IOFS);
+
+    #elif defined(__18f25k50) || defined(__18f45k50)
+    
+        // If Internal Oscillator is used
+        if (OSCCONbits.SCS > 0x02)
+            // wait HFINTOSC frequency is stable (HFIOFS=1) 
+            while (!OSCCONbits.HFIOFS);
+
+    #elif defined(__18f26j50) || defined(__18f46j50)
 
         // Enable the PLL and wait 2+ms until the PLL locks
-        u16 pll_startup_counter = 600;
         OSCTUNEbits.PLLEN = 1;
         while (pll_startup_counter--);
 
-    #elif defined(CHRP3)
-    
-        // wait HFINTOSC frequency is stable (HFIOFS=1) 
-        while (!OSCCONbits.HFIOFS);
-
     #endif
 
-    // Interrupt init
+    /// ----------------------------------------------------------------
+    /// Init. all flag/interrupt (with low priority)
+    /// ----------------------------------------------------------------
 
-    RCON   = 0x80;                // Enable priority levels on interrupts
-/*
-    INTCON = 0;     INTCON2 = 0;    INTCON3 = 0;
-    PIR1   = 0;     PIR2    = 0;  // Flag
-    PIE1   = 0;     PIE2    = 0;  // Enable
-    IPR1   = 1;     IPR2    = 1;  // Priority
-    #if defined(__18f26j50) || defined(__18f46j50)
-    PIR3    = 0;    PIE3    = 0;    IPR3    = 1;
+/*    
+    RCON = 0x80;                // Enable priority levels on interrupts
+    INTCON = 0;
+    INTCON2 = 0;
+    INTCON3 = 0;
+    // All peripheral interrupt disabled
+    PIE1 = 0;
+    PIE2 = 0;
+    #if defined(__18f25k50) || defined(__18f45k50) || \
+        defined(__18f26j50) || defined(__18f46j50)
+    PIE3 = 0;
+    #endif
+    // All interrupts with low priority
+    INTCON2bits.TMR0IP = 0;
+    IPR1bits.TMR1IP = 0;
+    IPR1bits.TMR2IP = 0;
+    IPR1 = 0;
+    IPR2 = 0;
+    #if defined(__18f25k50) || defined(__18f45k50) || \
+        defined(__18f26j50) || defined(__18f46j50)
+    IPR3 = 0;
+    #endif
+    // All peripheral interrupts flags cleared
+    PIR1 = 0;
+    PIR2 = 0;
+    #if defined(__18f25k50) || defined(__18f45k50) || \
+        defined(__18f26j50) || defined(__18f46j50)
+    PIR3 = 0;
     #endif
 */
-    // I/O init 
 
-    IOsetDigital();
-    IOsetRemap();
+    /// ----------------------------------------------------------------
+    /// I/O init 
+    /// ----------------------------------------------------------------
+
+    IO_init();
+    IO_digital();
+    #if defined(__18f26j50) || defined(__18f46j50)
+    IO_remap();
+    #endif
+
+    /// ----------------------------------------------------------------
+    /// Various Init.
+    /// ----------------------------------------------------------------
     
     #ifdef ON_EVENT
     IntInit();
@@ -147,10 +192,11 @@ void pinguino_main(void)
     #if defined(TMR0INT) || defined(TMR1INT) || \
         defined(TMR2INT) || defined(TMR3INT) || \
         defined(TMR4INT)
-    IntTimerStart();                // Enable all defined timers interrupts
+    IntTimerStart();            // Enable all defined timers interrupts
     #endif
 
-    while (1) {
+    while (1)
+    {
 ////////////////////////////////////////////////////////////////////////
         loop();
 ////////////////////////////////////////////////////////////////////////
@@ -160,6 +206,11 @@ void pinguino_main(void)
 /*  ----------------------------------------------------------------------------
     High Interrupt Vector
     --------------------------------------------------------------------------*/
+
+# if defined(__USBCDC) || defined(__USBBULK) || defined(__USB__) || \
+     defined(__SERIAL__) || defined(__MILLIS__) || defined(I2CINT) || \
+     defined(SERVOSLIBRARY) || defined(INT0INT) || defined(__PS2KEYB__) || \
+     defined(__DCF77__) || defined(RTCCALARMINTENABLE)
 
 #ifdef boot2
 
@@ -174,7 +225,7 @@ void high_priority_isr(void) __interrupt 1 //__naked
 
 #endif
 {
-    #ifdef __USBCDC 
+    #ifdef __USBCDC
     CDC_interrupt();
     #endif
     
@@ -219,9 +270,13 @@ void high_priority_isr(void) __interrupt 1 //__naked
     #endif
 }
 
+#endif
+
 /*  ----------------------------------------------------------------------------
     Low Interrupt Vector
     --------------------------------------------------------------------------*/
+
+#if defined(USERINT) || defined(ON_EVENT)
 
 #ifdef boot2
 
@@ -245,3 +300,21 @@ void low_priority_isr(void) __interrupt 2 //__naked
     userlowinterrupt();
     #endif
 }
+
+#endif
+
+/*  ----------------------------------------------------------------------------
+    Reset Interrupt Vector
+    --------------------------------------------------------------------------*/
+
+#if defined (noboot) || defined(boot4)
+
+// boot4 : ENTRY + 0x00
+// noboot: 0x00
+void reset_isr(void) __naked __interrupt 0
+{
+    // Call the Pinguino main routine.
+    main();
+}
+
+#endif
