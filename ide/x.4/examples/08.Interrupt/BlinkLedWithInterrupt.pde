@@ -1,26 +1,25 @@
 /*	----------------------------------------------------------------------------
-	blink led with help from interrupt library
+	blink built-in led with help from interrupt library
 	----------------------------------------------------------------------------
 	author:			Régis Blanchot
 	first release:	19/12/2010
 	last update:	24/12/2010
 	pinguino ide:	9.5
  	boards:			8-bit ONLY
-	wiring:			leds on pin 0 (RB0)
-					RB0 --- 470 Ohms ---<|--- GND
 	--------------------------------------------------------------------------*/
 
-#define LED0	0
-
-void blink0()
+void myBlink()
 {
-	toggle(LED0);
+    u8 val;
+    val = digitalRead(USERLED);
+    digitalWrite(USERLED, val^1);
+    //	toggle(USERLED);
 }
 
 void setup()
 {
-	pinMode(LED0, OUTPUT);
-	OnTimer0(blink0, INT_MILLISEC, 500);	// Use Timer0 to toggle pin 0 every 500 ms
+	pinMode(USERLED, OUTPUT);
+	OnTimer0(myBlink, INT_MILLISEC, 100);	// Use Timer0 to toggle pin 0 every 100 ms
 }
 
 void loop()
