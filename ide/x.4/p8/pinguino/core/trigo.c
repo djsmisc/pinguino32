@@ -2,13 +2,14 @@
 	FILE:			trigo.c
 	PROJECT:		pinguino
 	PURPOSE:		optimized trigonometric calculation
+                    http://www.dattalo.com/technical/theory/sinewave.html
 	PROGRAMER:		Regis Blanchot
 	FIRST RELEASE:	07 Apr. 2012
-	LAST RELEASE:	07 Apr. 2012
+	LAST RELEASE:	08 Feb. 2013
 	----------------------------------------------------------------------------
 	CHANGELOG : 
-
-	Apr  07 2012  - initial release, sin and cos
+	Apr 07 2012 - initial release, sin and cos
+    Feb 08 2013 - added some comments for better understanding
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -32,11 +33,16 @@
 #include <macro.h>
 
 /*  --------------------------------------------------------------------
-    precomputed sinus table * 256
-    0 < angle in degree < 89
+    First 90 values (1/4's of the circle) of precomputed sinus table * 256
+    To obtain the other 3/4's of the circle, we use the symmetry of sine wave.
+    Each quadrant is obtained as follows:
+      0 <= x < 90      y =  sine[ x ];
+     90 <= x < 180     y =  sine[ 180 - x ];
+    180 <= x < 270     y = -sine[ x - 180 ];
+    270 <= x < 360     y = -sine[ 360 - x ];
     ------------------------------------------------------------------*/
 
-const u8 tsin[90]= {
+const u8 sine[90]= {
 	0,4,8,13,17,22,26,31,35,40,44,48,53,57,61,66,
 	70,74,79,83,87,91,95,100,104,108,112,116,120,124,
 	128,131,135,139,143,146,150,154,157,161,164,167,
@@ -47,11 +53,9 @@ const u8 tsin[90]= {
 };
 
 /*  --------------------------------------------------------------------
-    sinus
-    based on sin( a + 180) = - sin(a)
-    and sin(180 - a) = sin(a)
+    sinus function
     alpha:  angle in degree
-    return: cosinus x 256
+    return: sinus x 256
     ------------------------------------------------------------------*/
 
 s32 sinr(s16 alpha)
@@ -77,16 +81,18 @@ s32 sinr(s16 alpha)
 		alpha = 180 - alpha;
 
 	// use the table to approximate the angle
-	//return (sign * tsin[alpha]);
-	if (sign) return -tsin[alpha];
-    else return tsin[alpha];
+	//return (sign * sine[alpha]);
+	if (sign)
+        return -sine[alpha];
+    else
+        return  sine[alpha];
 }
 
 /*  --------------------------------------------------------------------
-    cosinus
+    cosinus function
     based on cos(a) = sin (a + 90)
     alpha:  angle in degree
-    return: sinus x 256
+    return: cosinus x 256
     ------------------------------------------------------------------*/
 
 s32 cosr(s16 alpha)

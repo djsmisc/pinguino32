@@ -133,12 +133,12 @@ void SystemDeepSleep()
     // Time-critical section must be in ASM  
 
     __asm
-        ;enterdeepsleep:
-            movlb   0x0F
-            bsf     _DSCONH, 7, 1
-            nop
-            sleep
-         ;   goto    enterdeepsleep
+    enterdeepsleep:
+        movlb   0x0F                ; banked
+        bsf     _DSCONH, 7, 1       ; deep sleep mode
+        nop
+        sleep
+        goto    enterdeepsleep      ; should never be reached unless deep sleep fails
     __endasm;
 
     /// Device is now in deep sleep mode.           ///

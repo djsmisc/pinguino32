@@ -95,7 +95,7 @@ void serial_begin(unsigned long baudrate)
 	BAUDCONbits.RCIDL=1;			        // set receive active
     TXSTAbits.TXEN=1;                       // enable TX
 
-    PIR1bits.RC1IF = 0;                     // Clear interrupt flag
+    PIR1bits.RCIF = 0;                      // Clear interrupt flag
     PIE1bits.RCIE=1;                        // enable interrupt on RX
     IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 

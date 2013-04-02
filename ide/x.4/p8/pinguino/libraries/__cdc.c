@@ -17,7 +17,6 @@
 #include <stdarg.h>
 
 // CDC buffer length
-// TBD: replace with buffers used in usb_cdc.c ?
 #ifndef _CDCBUFFERLENGTH_
 #define _CDCBUFFERLENGTH_ 64
 #endif
@@ -27,14 +26,18 @@ u8 _cdc_buffer[_CDCBUFFERLENGTH_];  // usb buffer
 void CDC_init(void)
 {
     // Init
-    INTCON=0;                   // Disable global HP interrupts
+    //INTCON=0;                   // Disable global HP interrupts
+    INTCONbits.GIEH = 0;
+    INTCONbits.GIEL = 0;
     //INTCON2=0xC0;               // set RBPU and INTEDG0 ???
+
     UCON=0;
     UCFG=0;
+
     UEP0=0;UEP1=0;UEP2=0;UEP3=0;UEP4=0;UEP5=0;
     UEP6=0;UEP7=0;UEP8=0;UEP9=0;UEP10=0;UEP11=0;
     UEP12=0;UEP13=0;UEP14=0;UEP15=0;
-
+    
     // and wait 2 seconds
     Delayms(2000);
 
@@ -82,8 +85,6 @@ void CDCprintf(const u8 *fmt, ...)
     va_list	args;
 
     va_start(args, fmt);
-    //length = strlen(fmt);
-    //buffer = (char *) malloc(1 + length * sizeof(char));	
     length = psprintf2(_cdc_buffer, fmt, args);
     CDCputs(_cdc_buffer,length);
     va_end(args);

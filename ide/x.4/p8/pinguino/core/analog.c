@@ -45,8 +45,8 @@ void analog_init(void)
 #endif
 }
 
-
-void analogReference(u8 Type)
+#ifdef ANALOGREFERENCE
+void analogreference(u8 Type)
 {
 #if !defined(PINGUINO26J50)
 	if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
@@ -60,7 +60,9 @@ void analogReference(u8 Type)
 		ADCON0|=0x40;			//Vref+ = External source
 #endif
 }
+#endif /* ANALOGREFERENCE */
 
+#ifdef ANALOGREAD
 u16 analogread(u8 channel)
 {
 	u16 result=0;
@@ -93,5 +95,6 @@ u16 analogread(u8 channel)
 	ADCON0bits.ADON=0;
 	return(result);
 }
+#endif /* ANALOGREAD */
 
-#endif
+#endif /* __ANALOG__ */

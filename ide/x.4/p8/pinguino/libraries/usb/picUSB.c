@@ -822,37 +822,34 @@ void ProcessUSBTransactions(void)
     return;
 
   // Process a bus reset
-  if (UIRbits.URSTIF && UIEbits.URSTIE) {
+  if (UIRbits.URSTIF && UIEbits.URSTIE)
     BusReset();
-  }
 
-  if (UIRbits.IDLEIF && UIEbits.IDLEIE) {
   // No bus activity for a while - suspend the firmware
+  if (UIRbits.IDLEIF && UIEbits.IDLEIE)
     Suspend();
-  }
-  if (UIRbits.SOFIF && UIEbits.SOFIE) {
+
+  
+  if (UIRbits.SOFIF && UIEbits.SOFIE)
     StartOfFrame();
-  }
-  if (UIRbits.STALLIF && UIEbits.STALLIE) {
+  
+  if (UIRbits.STALLIF && UIEbits.STALLIE)
     Stall();
-  }
 
-  if (UIRbits.UERRIF && UIEbits.UERRIE) {
   // TBD: See where the error came from.
-
   // Clear errors
+  if (UIRbits.UERRIF && UIEbits.UERRIE)
     UIRbits.UERRIF = 0;
-  }
 
   // Unless we have been reset by the host, no need to keep processing
   if (deviceState < DEFAULT)
     return;
 
   // A transaction has finished.  Try default processing on endpoint 0.
-  if(UIRbits.TRNIF && UIEbits.TRNIE) {
+  if(UIRbits.TRNIF && UIEbits.TRNIE)
+  {
     ProcessControlTransfer();
-
-  // Turn off interrupt
+    // Turn off interrupt
     UIRbits.TRNIF = 0;
   }
 }

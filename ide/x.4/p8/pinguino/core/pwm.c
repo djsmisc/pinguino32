@@ -4,9 +4,12 @@
 	PURPOSE:		new hardware PWM control functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 oct. 2010
-	LAST RELEASE:	13 nov. 2012
+	LAST RELEASE:	12 feb. 2013
 	----------------------------------------------------------------------------
 	freely adapted from JAL PWM Control Library.
+	----------------------------------------------------------------------------
+    Changelog :
+    * 12 Feb. 2013  regis blanchot - replaced duty cycle calculation
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -30,7 +33,7 @@
 #include <typedef.h>
 #include <digitalw.c>
 #include <oscillator.c>
-#include <interrupt.c>
+//#include <interrupt.c>    // to save memory space
 
 #ifdef PICUNO_EQUO
 	#define CCP1 		5
@@ -38,10 +41,8 @@
 //	#define	CCP2_ALT	3	//Digital Pin 3 = RB3. 
 							//If the Configuration bit CCP2MX = 0, CCP2 is multiplexed with RB3.
 							//But this can only be done if user can change the Configuration bit in bootloader firmware.
-#endif
-
-#if defined(PINGUINO26J50)
-	#define CCP1 		10
+#elif defined(PINGUINO26J50)
+	#define CCP1 		10  // cf. io.c
 	#define CCP2 		11
 #else
 	#define CCP1 		12
@@ -82,17 +83,17 @@ void PWM_set_frequency(u32 freq)
 	{
 		if (_pr2_plus1 <= 256)				// no needs of any prescaler
 		{
-			_t2con = 0b00;					// prescaler is 1
+			_t2con = 0b00000000;			// prescaler is 1
 		}
 		else if (_pr2_plus1 <= 1024)		// needs prescaler 1:4
 		{
 			_pr2_plus1 = _pr2_plus1 >> 2;	// divided by 4
-			_t2con = 0b01;					// prescaler is 4
+			_t2con = 0b00000001;			// prescaler is 4
 		}
 		else								// needs prescaler 1:6
 		{
 			_pr2_plus1 = _pr2_plus1 >> 4;	// divided by 16
-			_t2con = 0b10;					// prescaler is 16
+			_t2con = 0b00000010;			// prescaler is 16
 		}
 	}
 }
@@ -114,49 +115,63 @@ PWM Duty Cycle = (CCPRxL:CCPxCON<5:4>) * Tosc * TMR2 prescaler
 
 void PWM_set_dutycycle(u8 pin, u16 duty)
 {
-	u8 temp;
+    u8 temp;
 
-	if (duty > 1023) duty = 1023;		// upper limit (10-bit)
+    if (duty > 1023) duty = 1023;		// upper limit (10-bit)
 
-	// PWM pin as INPUT
-	pinmode(pin, INPUT);				// PWM pin as INPUT
-	// PWM period
-	PR2 = _pr2_plus1 - 1;				// set PR2
+    pinmode(pin, INPUT);				// PWM pin as INPUT
+    PR2 = _pr2_plus1 - 1;				// set PWM period
 
-	switch (pin)
-	{
-		case CCP1:
-			// PWM mode	
-			CCP1CON = 0b00001111;
-			// PWM duty cycle (10-bit)
-			temp = duty & 0b00000011;		// extract 2 LSbits of the duty
-			temp <<= 4;						// shift left 4 bits
-			CCP1CON |= temp;				// put in CCP2CON 4:5
-			CCPR1L = duty >> 2;				// 8 MSbits of the duty
-			break;
-		case CCP2:
-			// PWM mode	
-			CCP2CON = 0b00001111;			// reset also 2 LSbits of duty cycle
-			// PWM duty cycle (10-bit)
-			temp = duty & 0b00000011;		// extract 2 LSbits of duty
-			temp <<= 4;						// shift left 4 bits
-			CCP2CON |= temp;				// put in CCP2CON 4:5  (DCBx1 and DCBx0)
-			CCPR2L = duty >> 2;				// 8 MSbits of duty
-			break;
-		default:
-			#ifdef DEBUG
-				#error "Invalid Pin (must be CCP1=5 or CCP2=6)"
-			#endif
-	}
+    switch (pin)
+    {
+        case CCP1:
 
-	// TMR2 configuration
-	intUsed[INT_TMR2] = INT_USED;		// tell interrupt.c we use TMR2
-	//PIR1bits.TMR2IF = 0;				// reset this flag for the next test
-	T2CON = _t2con;						// Timer2 prescaler
-	T2CONbits.TMR2ON = ON;				// enable Timer2
-	// PWM pin as OUTPUT
-	while (PIR1bits.TMR2IF == 0);		// Wait until TMR2 overflows
-	pinmode(pin, OUTPUT);				// PWM pin as OUTPUT
+            // PWM mode	
+            CCP1CON = 0b00001111;			// <7:6> single output
+                                            // <5:4> reset 2 LSbits of duty cycle
+                                            // <3:0> PWM mode
+
+            // PWM duty cycle has 10-bit resolution
+            CCPR1L = duty;                  // 8 LSB
+            CCP1CON |= (duty >> 8) << 4;    // 2 MSB
+/*
+            temp = duty & 0b00000011;		// extract 2 LSbits of the duty
+            temp <<= 4;						// shift left 4 bits
+            CCP1CON |= temp;				// put in CCP1CON 4:5
+            CCPR1L = duty >> 2;				// 8 MSbits of the duty
+*/
+            break;
+
+        case CCP2:
+
+            // PWM mode	
+            CCP2CON = 0b00001111;			// reset also 2 LSbits of duty cycle
+
+            // PWM duty cycle (10-bit)
+            CCPR2L = duty;                  // 8 LSB
+            CCP2CON |= (duty >> 8) << 4;    // 2 MSB
+/*
+            temp = duty & 0b00000011;		// extract 2 LSbits of duty
+            temp <<= 4;						// shift left 4 bits
+            CCP2CON |= temp;				// put in CCP2CON 4:5  (DCBx1 and DCBx0)
+            CCPR2L = duty >> 2;				// 8 MSbits of duty
+*/
+            break;
+
+        default:
+            #ifdef DEBUG
+                #error "Invalid CCPx Pin"
+            #endif
+    }
+
+    // TMR2 configuration
+    //intUsed[INT_TMR2] = INT_USED;		// tell interrupt.c we use TMR2
+    //PIR1bits.TMR2IF = 0;				// reset this flag for the next test
+    T2CON = _t2con;						// Timer2 prescaler
+    T2CONbits.TMR2ON = ON;				// enable Timer2
+    // PWM pin as OUTPUT
+    while (PIR1bits.TMR2IF == 0);		// Wait until TMR2 overflows
+    pinmode(pin, OUTPUT);				// PWM pin as OUTPUT
 }
 
 /*----------------------------------------------------------------------------
@@ -180,12 +195,15 @@ void PWM_set_percent_dutycycle(u8 pin, u8 percent)
 	else if (percent >= 100)
 	{
 		duty = _pr2_plus1 - 1;
+		//duty = 1023;
 	}
 	else
 	{
 		duty = percent * (_pr2_plus1 / 4) / 25;	// (factor PR2/100)
+		//duty = 256 * percent / 25;
 	}
 	PWM_set_dutycycle(pin, duty << 2);
+	//PWM_set_dutycycle(pin, duty);
 }
 
-#endif
+#endif /* __PWM__ */
