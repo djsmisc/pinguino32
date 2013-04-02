@@ -1,28 +1,29 @@
-INT_TMR0 INT_TMR0#define INT_TMR0
-INT_TMR1 INT_TMR1#define INT_TMR1
-INT_TMR2 INT_TMR2#define INT_TMR2
-INT_TMR3 INT_TMR3#define INT_TMR3
-INT_TMR4 INT_TMR4#define INT_TMR4
-INT_INT0 INT_INT0#define INT_INT0
-INT_INT1 INT_INT1#define INT_INT1
-INT_INT2 INT_INT2#define INT_INT2
-INT_RB INT_RB#define INT_RB
-INT_CCP1 INT_CCP1#define INT_CCP1
-INT_CCP2 INT_CCP2#define INT_CCP2
-INT_CM INT_CM#define INT_CM
-INT_RC INT_RC#define INT_RC
-INT_TX INT_TX#define INT_TX
-INT_AD INT_AD#define INT_AD
-INT_OSCF INT_OSCF#define INT_OSCF
-INT_EE INT_EE#define INT_EE
-INT_HLVD INT_HLVD#define INT_HLVD
-INT_BCL INT_BCL#define INT_BCL
-INT_USB INT_USB#define INT_USB
-INT_SSP INT_SSP#define INT_SSP
+INT_TMR0 INT_TMR0
+INT_TMR1 INT_TMR1
+INT_TMR2 INT_TMR2
+INT_TMR3 INT_TMR3
+INT_TMR4 INT_TMR4
+INT_INT0 INT_INT0
+INT_INT1 INT_INT1
+INT_INT2 INT_INT2
+INT_RB INT_RB
+INT_CCP1 INT_CCP1
+INT_CCP2 INT_CCP2
+INT_CM INT_CM
+INT_RC INT_RC
+INT_TX INT_TX
+INT_AD INT_AD
+INT_OSCF INT_OSCF
+INT_EE INT_EE
+INT_HLVD INT_HLVD
+INT_BCL INT_BCL
+INT_USB INT_USB
+INT_SSP INT_SSP
 Int.detach IntDisable#include <interrupt.c>
 Int.disable IntDisable#include <interrupt.c>
 Int.enable IntEnable#include <interrupt.c>
 Int.clearFlag IntClearFlag#include <interrupt.c>
+Int.isFlagSet IntIsFlagSet#include <interrupt.c>
 OnTimer0 OnTimer0#include <interrupt.c>#define TMR0INT
 OnTimer1 OnTimer1#include <interrupt.c>#define TMR1INT
 OnTimer2 OnTimer2#include <interrupt.c>#define TMR2INT
@@ -49,4 +50,4 @@ OnLowVoltage OnLowVoltage#include <interrupt.c>#define HLVDINT
 OnBusCol OnBusCol#include <interrupt.c>#define BCLINT
 OnUSB OnUSB#include <interrupt.c>#define USBINT
 OnParallel OnParallel#include <interrupt.c>#define SSPINT
-UserInterrupt userinterrupt#define USERINT
+interrupt userinterrupt#define USERINT

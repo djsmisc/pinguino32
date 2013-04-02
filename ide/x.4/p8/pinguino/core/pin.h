@@ -187,12 +187,12 @@
 	#define C1 11
 //	#define RC1 11
 	#define T1OSI 11
-	#define CCP2 11
+//	#define CCP2 11
 	#define UOE 11
 
 	#define C2 12
 //	#define RC2 12
-	#define CCP1 12
+//	#define CCP1 12
 
     #if defined(PINGUINO26J50) || defined(PINGUINO46J50)
         #define LED1	12

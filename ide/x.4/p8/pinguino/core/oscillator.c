@@ -26,8 +26,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     --------------------------------------------------------------------------*/
 
-#ifndef __SYSTEM_C
-#define __SYSTEM_C
+#ifndef __OSCILLATOR_C
+#define __OSCILLATOR_C
 
 #include <pic18fregs.h>
 #include <typedef.h>
@@ -316,5 +316,5 @@ void SystemSetPeripheralFrequency(u8 speed)
 
 #endif /* defined(__18f14k22) ... */
 
-#endif /* __SYSTEM_C */
+#endif /* __OSCILLATOR_C */
 

@@ -40,11 +40,6 @@
 
 #ifndef __INTERRUPT_C
 	#define __INTERRUPT_C
-/*
-	#ifndef USERINT
-		#define USERINT
-	#endif
-*/
 
 	#ifndef ON_EVENT
 		#define ON_EVENT
@@ -205,6 +200,8 @@ void IntDisable(u8 inter)
 void IntEnable(u8 inter)
 {
     IntSetEnable(inter, INT_ENABLE);
+    INTCONbits.GIEH = 1;   // Enable global HP interrupts
+    INTCONbits.GIEL = 1;   // Enable global LP interrupts
 }
 
 /*	----------------------------------------------------------------------------
@@ -323,6 +320,87 @@ void IntClearFlag(u8 inter)
 			break;
 		#endif
 	}
+}
+
+/*	----------------------------------------------------------------------------
+	---------- IntIsFlagSet
+	----------------------------------------------------------------------------
+	@author		Regis Blanchot <rblanchot@gmail.com>
+	@descr		Read if interrupt flag is set
+	@param		inter:		interrupt number
+    @return     1 if set, 0 if not set
+	--------------------------------------------------------------------------*/
+
+u8 IntIsFlagSet(u8 inter)
+{
+	switch(inter)
+	{
+		case INT_INT0:  return INTCONbits.INT0IF;
+		case INT_INT1:	return INTCON3bits.INT1IF;
+		case INT_INT2:	return INTCON3bits.INT2IF;
+		case INT_TMR0:	return INTCONbits.TMR0IF;
+		case INT_TMR1:	return PIR1bits.TMR1IF;
+		case INT_TMR2:	return PIR1bits.TMR2IF;
+		case INT_TMR3:	return PIR2bits.TMR3IF;
+        #if defined(__18f26j50) || defined(__18f46j50)
+		case INT_TMR4:	return PIR3bits.TMR4IF;
+        #endif
+		case INT_RB:
+		#if defined(__18f25k50) || defined(__18f45k50)
+        	return INTCONbits.IOCIF;
+        #else
+			return INTCONbits.RBIF;
+        #endif
+    #if !defined(__18f1220) && !defined(__18f1320) && \
+        !defined(__18f14k22) && !defined(__18lf14k22)
+		case INT_USB:
+		#if defined(__18f25k50) || defined(__18f45k50)
+			return  PIR3bits.USBIF;
+        #else
+			return  PIR2bits.USBIF;
+        #endif
+    #endif
+		case INT_AD:	return PIR1bits.ADIF;
+		case INT_RC:	return PIR1bits.RCIF;
+		case INT_TX:	return PIR1bits.TXIF;
+		case INT_CCP1:	return PIR1bits.CCP1IF;
+    #if !defined(__18f1220) && !defined(__18f1320) && \
+        !defined(__18f14k22) && !defined(__18lf14k22)
+		case INT_CCP2:	return PIR2bits.CCP2IF;
+    #endif
+		case INT_OSCF:	return PIR2bits.OSCFIF;
+		case INT_CM:
+		#if defined(__18f4550) || defined(__18f2550)
+        	return PIR2bits.CMIF;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+        	return PIR2bits.CM1IF;
+		#endif
+		#if defined(__18f4550) || defined(__18f2550)
+		case INT_EE:	return PIR2bits.EEIF;
+		#endif
+		case INT_BCL:
+		#if defined(__18f4550) || defined(__18f2550)
+        	return PIR2bits.BCLIF;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+        	return PIR2bits.BCL1IF;
+		#endif
+		case INT_HLVD:
+		#if defined(__18f4550) || defined(__18f2550)
+        	return PIR2bits.HLVDIF;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+        	return PIR2bits.LVDIF;
+		#endif
+		#if defined(__18f4550)
+		case INT_SSP:	return PIR1bits.SSPIF;
+		#endif
+		#if defined(__18f26j50) || defined(__18f46j50)
+		case INT_RTCC:	return PIR3bits.RTCCIF;
+		#endif
+	}
+    return 0;
 }
 
 /*	----------------------------------------------------------------------------

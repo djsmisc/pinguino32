@@ -74,21 +74,20 @@ void Delayus(u16 p)
     while (p--);
 }
 */
-void Delayms(u16 milliseconds)
+
+void Delayms(unsigned int milliseconds)
 {
-    u16 i;
+    unsigned int i;
     
     for (i=0;i<milliseconds;i++)
-    {
-        delay10ktcy(1);
-        delay1ktcy(2);
-    }
+        delay1ktcy(12);
 }
 
-void Delayus(u16 microseconds)
+void Delayus(unsigned int microseconds)
 {
-    u16 i;
-    for (i=0;i<microseconds;i++);
+    unsigned int i;
+    for (i=0;i<microseconds;i++)
+        ;
 }
 
 #endif /* __DELAY_C__ */

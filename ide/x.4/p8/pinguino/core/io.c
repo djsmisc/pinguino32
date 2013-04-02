@@ -4,13 +4,15 @@
 	PURPOSE:		Peripheral Remappage and IOs Configuration
 	PROGRAMER:		Régis Blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	20 Jun. 2012
-	LAST RELEASE:	05 Jan. 2013
+	LAST RELEASE:	28 Feb 2013
 	----------------------------------------------------------------------------
 	CHANGELOG:
-	[23-11-2012]	[regis blanchot][added PIC18F1220,1320,2455,4455,46j50 support]
-	[07-12-2012]	[regis blanchot][added PIC18F25K50 and PIC18F45K50 support]
-    [05-10-2013]    [regis blanchot][replaced SystemUnlock/SystemLock
-                    with EECON2 = 0x55; EECON2 = 0xAA;]
+	23 Nov 2012 - Régis Blanchot - added PIC18F1220,1320,2455,4455,46j50 support
+	07 Dec 2012 - Régis Blanchot - added PIC18F25K50 and PIC18F45K50 support
+    05 Oct 2013 - Régis Blanchot - replaced SystemUnlock/SystemLock
+                                   with EECON2 = 0x55; EECON2 = 0xAA;]
+    28 Feb 2013 - Régis Blanchot - renamed functions
+                                   added IO_init()
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -27,8 +29,8 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	--------------------------------------------------------------------------*/
 
-#ifndef __REMAP_C
-#define __REMAP_C
+#ifndef __IO_C
+#define __IO_C
 
 #include <pic18fregs.h>
 #include <typedef.h>
@@ -36,32 +38,60 @@
 #include <macro.h>
 //#include <system.c>
 
-// All Analog Pins as Digital IOs
-void IOsetDigital(void)
+void IO_init(void)
 {
-    #if defined(__18f1220) || defined(__18f1320) || \
-        defined(__18f2550) || defined(__18f4550) || \
-        defined(__18f2455) || defined(__18f4455)
+    // Initialize everything as an output
+    TRISA = 0x00;
+    TRISB = 0x00;
+    TRISC = 0x00;
+    #if defined(__18f4455)  || defined(__18f4550)  || \
+        defined(__18f45k50) || defined(__18f46j50) || \
+        defined(__18f47j53)
+    TRISD = 0x00; 
+    TRISE = 0x00; 
+    #endif
+
+    // Set everything low
+    LATA  = 0x00;
+    LATB  = 0x00;
+    LATC  = 0x00;
+    #if defined(__18f4455)  || defined(__18f4550)  || \
+        defined(__18f45k50) || defined(__18f46j50) || \
+        defined(__18f47j53)
+    LATD  = 0x00; 
+    LATE  = 0x00; 
+    #endif
+
+    // Set everything low
+    PORTA  = 0x00;
+    PORTB  = 0x00;
+    PORTC  = 0x00;
+    #if defined(__18f4455)  || defined(__18f4550)  || \
+        defined(__18f45k50) || defined(__18f46j50) || \
+        defined(__18f47j53)
+    PORTD  = 0x00; 
+    PORTE  = 0x00; 
+    #endif
+}
+
+// All Analog Pins as Digital IOs
+void IO_digital(void)
+{
+    #if defined(__18f2455) || defined(__18f4455) || \
+        defined(__18f2550) || defined(__18f4550)
 
         ADCON1 = 0x0F;				// AN0 to AN12 Digital I/O
         CMCON = 0x07;               // Comparators as Digital I/O
 
-        // Initialize everything as an output
-        TRISA = 0x00;
-        TRISB = 0x00;
-        TRISC = 0x00;
-        #if defined(__18f4550) || defined(__18f4455)
-        TRISD = 0x00; 
-        TRISE = 0x00; 
-        #endif
+    #elif defined(__18f25k50) || defined(__18f45k50)
 
-        // Set everything low
-        LATA  = 0x00;
-        LATB  = 0x00;
-        LATC  = 0x00;
-        #if defined(__18f4550) || defined(__18f4455)
-        LATD  = 0x00; 
-        LATE  = 0x00; 
+        // Initialize all Analog pins as Digital I/O
+        ANSELA = 0;
+        ANSELB = 0;
+        ANSELC = 0;
+        #if defined(__18f45k50)
+        ANSELD = 0;
+        ANSELE = 0;
         #endif
 
     #elif defined(__18f26j50) || defined(__18f46j50)
@@ -75,56 +105,6 @@ void IOsetDigital(void)
         CM2CON = 0x00; 
         CVRCON = 0x00;
 
-        // Initialize everything as an output
-        TRISA = 0x00;
-        TRISB = 0x00;
-        TRISC = 0x00;
-        #if defined(__18f46j50)
-        TRISD = 0x00; 
-        TRISE = 0x00; 
-        #endif
-
-        // Set everything low
-        LATA  = 0x00;
-        LATB  = 0x00;
-        LATC  = 0x00;
-        #if defined(__18f46j50)
-        LATD  = 0x00; 
-        LATE  = 0x00; 
-        #endif
-
-    #elif defined(__18f25k50) || defined(__18f45k50)
-
-        // Initialize all Analog pins as Digital I/O
-        ANSELA = 0;
-        ANSELB = 0;
-        ANSELC = 0;
-        #if defined(__18f45k50)
-        ANSELD = 0;
-        ANSELE = 0;
-        #endif
-
-        // Initialize everything as an output
-        TRISA = 0x00;
-        TRISB = 0x00;
-        TRISC = 0x00;
-        #if defined(__18f45k50)
-        TRISD = 0x00; 
-        TRISE = 0x00; 
-        #endif
-
-        // Set everything low
-        LATA  = 0x00;
-        LATB  = 0x00;
-        LATC  = 0x00;
-        #if defined(__18f45k50)
-        LATD  = 0x00; 
-        LATE  = 0x00; 
-        #endif
-
-    #else
-        nop();
-        
     #endif
 }
 
@@ -154,9 +134,10 @@ void IOsetDigital(void)
 // NB1 : the Configuration bit IOL1WAY is set to OFF in the bootloader
 // NB2 : pins must be explicitly reconfigured as digital I/O when used with a PPS
 
-void IOsetRemap(void)
+#if defined(__18f26j50) || defined(__18f46j50)
+void IO_remap(void)
 {
-    #if defined(PINGUINO26J50) || defined(PINGUINO46J50)
+    #if defined(__18f26j50) || defined(__18f46j50)
 
         //SystemUnlock();
         EECON2 = 0x55;
@@ -164,20 +145,20 @@ void IOsetRemap(void)
         PPSCONbits.IOLOCK = 0;			// Turn off PPS Write Protect
         //SystemLock();
 
-        #ifdef __SERIAL2__
+        //#ifdef __SERIAL2__
         RPINR16 = 4;                    // RP4 (RB1) <- RX2
         RPOR3 = 5;                      // RP3 (RB0) -> TX2 (func. num. 5)
         //RPINR17 = ;                     // EUSART2 Clock Input (CKR2)
-        #endif
+        //#endif
 
-        #ifdef __SPI2__
+        //#ifdef __SPI2__
         RPINR21 = 6;                    // RP6 (RB3) <- SDI2
         RPOR5 = 10;                     // RP5 (RB2) -> SCK2
         RPOR4 = 9;                      // RP4 (RB1) -> SDO2 (func. num. 9)
         //RPOR3 = 12;                     // RP3 (RB0) -> SS2 (SPI DMA Slave Select)
-        #endif
+        //#endif
 
-        #ifdef __PWM__
+        //#ifdef __PWM__
         RPOR11 = 14;                    // RP11 (RC0) <- CCP1
                 //P1B      - 15 - ECCP1 Enhanced PWM Output, Channel B
                 //P1C      - 16 - ECCP1 Enhanced PWM Output, Channel C
@@ -188,7 +169,7 @@ void IOsetRemap(void)
                 //P2D     - 21 - ECCP2 Enhanced PWM Output, Channel D
         // RPINR24 = ;                     // PWM Fault Input (FLT0)
         
-        #endif
+        //#endif
 
         //SystemUnlock();
         EECON2 = 0x55;
@@ -196,10 +177,8 @@ void IOsetRemap(void)
         PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
         //SystemLock();
 
-    #else
-        nop();
-
     #endif /* defined(PINGUINO26J50) || defined(PINGUINO46J50) */
 }
+#endif /* defined(__18f26j50) || defined(__18f46j50) */
 
-#endif /* __REMAP_C */
+#endif /* __IO_C */

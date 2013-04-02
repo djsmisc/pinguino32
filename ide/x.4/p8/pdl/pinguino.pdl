@@ -8,7 +8,8 @@ pinMode pinmode#include <digitalw.c>
 digitalRead digitalread#include <digitalw.c>
 toggle toggle#include <digitalw.c>
 
-analogRead analogread#include <analog.c>
+analogRead analogread#include <analog.c>#define ANALOGREAD
+analogReference analogreference#include <analog.c>#define ANALOGREFERENCE
 analogWrite PWM_set_dutycycle#include <pwm.c>
 
 min min#include <macro.h>
@@ -22,8 +23,8 @@ absf fabsf#include <math.h>
 sinf sinf#include <math.h>
 cosf cosf#include <math.h>
 tanf tanf#include <math.h>
-sinr sinr#include <trigo.h>
-cosr cosr#include <trigo.h>
+sinr sinr#include <trigo.c>
+cosr cosr#include <trigo.c>
 
 randomSeed srand#include <stdlib.h>
 pulseIn pulseIn#include <pulse.c>
