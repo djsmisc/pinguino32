@@ -43,7 +43,7 @@ void IR_emitterOn(u8 pin)
 
 void IR_emitterOff(u8 pin)
 {
-	PWM.setPercentDutyCycle(pin, 0);// duty cycle = 25%
+	PWM.setPercentDutyCycle(pin, 0);// duty cycle = 0%
 }
 
 // Send burst on every timer interrupt.
