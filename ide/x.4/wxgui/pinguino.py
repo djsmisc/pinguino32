@@ -907,6 +907,7 @@ class Pinguino(framePinguinoX, Editor):
                         "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
                         "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
                         'libio' + board.proc + '.lib',\
+                        'libdev' + board.proc + '.lib',\
                         'libc18f.lib',\
                         'libm18f.lib',\
                         'libsdcc.lib',\
@@ -924,17 +925,16 @@ class Pinguino(framePinguinoX, Editor):
                         
                 elif board.bldr == 'boot4':
                     sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose",\
+                        "--verbose", "-V",\
                         "-mpic16",\
+                        # optimization
                         "--denable-peeps",\
                         "--obanksel=9",\
                         "--optimize-cmp",\
                         "--optimize-df",\
-                        # crt is included from main.c, don't link the default run-time module
-                        "--no-crt",\
-                        #"--use-crt=" + os.path.join(P8_DIR, 'obj', 'crt0i' + board.proc + '.o'),\
-                        # move all int. vectors
+                        # move all int. vectors after bootloader code
                         "--ivt-loc=" + str(board.memstart),\
+                        # link memory map
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
@@ -945,16 +945,19 @@ class Pinguino(framePinguinoX, Editor):
                         "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
                         "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
                         "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
+                        os.path.join(SOURCE_DIR, 'main.o'),\
                         'libio' + board.proc + '.lib',\
+                        'libdev' + board.proc + '.lib',\
                         'libc18f.lib',\
                         'libm18f.lib',\
+                        # link the default run-time module (crt0i.o)
                         'libsdcc.lib',\
                         #'-llibio' + board.proc + '.lib',\
                         #'-llibc18f.lib',\
                         #'-llibm18f.lib',\
                         #'-llibsdcc.lib',\
                         "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                        os.path.join(SOURCE_DIR, 'main.o')],\
+                        ],\
                         stdout=fichier, stderr=STDOUT)
                         
                 elif board.bldr == 'noboot':
@@ -965,7 +968,7 @@ class Pinguino(framePinguinoX, Editor):
                         "--obanksel=9",\
                         "--optimize-cmp",\
                         "--optimize-df",\
-                        #"--no-crt",\ we use default crt
+                        #"--no-crt",\ we use default run-time module inside libsdcc.lib
                         "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
                         "-p" + board.proc,\
                         "-D" + board.bldr,\
@@ -977,8 +980,10 @@ class Pinguino(framePinguinoX, Editor):
                         "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
                         "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
                         'libio' + board.proc + '.lib',\
+                        'libdev' + board.proc + '.lib',\
                         'libc18f.lib',\
                         'libm18f.lib',\
+                        # link the default run-time module
                         'libsdcc.lib',\
                         #'-llibio' + board.proc + '.lib',\
                         #'-llibc18f.lib',\
