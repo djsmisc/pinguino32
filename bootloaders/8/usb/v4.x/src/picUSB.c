@@ -54,7 +54,7 @@ word wCount;                            // Number of bytes of data
 
 /**
     Buffer descriptors Table (see datasheet page 171)
-    RAM Bank 4 (0x400 though 0x4ff) is used specifically for
+    A RAM Bank (2, 4 or 13 depending on MCU) is used specifically for
     endpoint buffer control in a structure known as
     Buffer Descriptor Table (BDTZ).
     TODO: find something smarter to allocate the buffer,
@@ -66,16 +66,19 @@ word wCount;                            // Number of bytes of data
 /// 2012-07-04 ep_bdt[4] -> ep_bdt[32] updated by André
 ///
 
-#if defined(__18f14k50)
+#if   defined(__18f14k50) || defined(__18f14k50)  // Bank 2
     volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
-#else
+#elif defined(__18f26j53) || defined(__18f46j53) || \
+      defined(__18f27j53) || defined(__18f47j53)  // Bank 13
+    volatile BufferDescriptorTable __at (0xD00) ep_bdt[32];
+#else                                             // Bank 4
     volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
 #endif
 
 #pragma udata usbram5 SetupPacket controlTransferBuffer
-///#pragma udata gpr5 SetupPacket controlTransferBuffer
 volatile setupPacketStruct SetupPacket;
 volatile byte controlTransferBuffer[EP0_BUFFER_SIZE];
+
 volatile allcmd bootCmd;
 
 //
@@ -444,9 +447,9 @@ void EnableUSBModule()
 	// as an indication we are attached.
 	if(UCONbits.USBEN == 0)
 	{
-		UCON = 0;
-		UIE = 0;
-		UCONbits.USBEN = 1;
+		UCON = 0;               // USB Control Register
+		UIE = 0;                // Disable USB Interrupt Register
+		UCONbits.USBEN = 1;     // Enable USB module
 		deviceState = ATTACHED;
 	}
 	// If we are attached and no single-ended zero is detected, then
@@ -454,46 +457,11 @@ void EnableUSBModule()
 	if ((deviceState == ATTACHED) && !UCONbits.SE0)
 	{
 		UIR = 0;
-		UIE = 0;
-		UIEbits.URSTIE = 1;
-		UIEbits.IDLEIE = 1;
+		UIE = 0;                // Disable USB Interrupt Register
+		UIEbits.URSTIE = 1;     // Enable USB Reset Interrupt
+		UIEbits.IDLEIE = 1;     // Enable IDle Detect USB Interrupt
 		deviceState = POWERED;
 	}
-}
-
-// Unsuspend the device
-void UnSuspend()
-{
-  UCONbits.SUSPND = 0;
-  UIEbits.ACTVIE = 0;
-  UIRbits.ACTVIF = 0;
-}
-
-void BusReset()
-{
-	UEIR  = 0x00;
-	UIR   = 0x00;
-	UEIE  = 0x9f;
-	UIE   = 0x7b;
-	UADDR = 0x00;
-
-	// Set endpoint 0 as a control pipe
-	UEP0 = EP_CTRL | HSHK_EN;
-
-	// Flush any pending transactions
-	while (UIRbits.TRNIF == 1)
-		UIRbits.TRNIF = 0;
-
-	// Enable packet processing
-	UCONbits.PKTDIS = 0;
-
-	// Prepare for the Setup stage of a control transfer
-	WaitForSetupStage();
-
-//	remoteWakeup = 0;                     // Remote wakeup is off by default
-	selfPowered = 0;                      // Self powered is off by default
-	currentConfiguration = 0;             // Clear active configuration
-	deviceState = DEFAULT;
 }
 
 // Main entry point for USB tasks.  Checks interrupts, then checks for transactions.
@@ -505,7 +473,12 @@ void ProcessUSBTransactions()
 
 	// If the USB became active then wake up from suspend
 	if(UIRbits.ACTVIF && UIEbits.ACTVIE)
-		UnSuspend();
+    {
+		// UnSuspend
+        UCONbits.SUSPND = 0;
+        UIEbits.ACTVIE = 0;
+        UIRbits.ACTVIF = 0;
+    }
 
 	// If we are supposed to be suspended, then don't try performing any processing.
 	if(UCONbits.SUSPND == 1)
@@ -513,7 +486,31 @@ void ProcessUSBTransactions()
 
 	// Process a bus reset
 	if (UIRbits.URSTIF && UIEbits.URSTIE)
-		BusReset();
+    {
+        UEIR  = 0x00;
+        UIR   = 0x00;
+        UEIE  = 0x9f;
+        UIE   = 0x7b;
+        UADDR = 0x00;
+
+        // Set endpoint 0 as a control pipe
+        UEP0 = EP_CTRL | HSHK_EN;
+
+        // Flush any pending transactions
+        while (UIRbits.TRNIF == 1)
+            UIRbits.TRNIF = 0;
+
+        // Enable packet processing
+        UCONbits.PKTDIS = 0;
+
+        // Prepare for the Setup stage of a control transfer
+        WaitForSetupStage();
+
+        //	remoteWakeup = 0;                 // Remote wakeup is off by default
+        selfPowered = 0;                      // Self powered is off by default
+        currentConfiguration = 0;             // Clear active configuration
+        deviceState = DEFAULT;
+    }
 
 	/*
 	if (UIRbits.IDLEIF && UIEbits.IDLEIE) {
@@ -544,4 +541,3 @@ void ProcessUSBTransactions()
 		UIRbits.TRNIF = 0;
 	}
 }
-

@@ -5,7 +5,7 @@
 #	Author:	Régis Blanchot <rblanchot@gmail.com>                       #
 #           André Gentric                                              #
 #                                                                      #
-#	Usage: make --makefile=Makefile PROC=18f2550 OSC=20 STRINGDESC=0   #
+#	Usage: make --makefile=Makefile PROC=18f26j50 OSC=20 STRINGDESC=0 LVP=0
 #          to compile the bootloader                                   #
 #                                                                      #
 #	This file is part of Pinguino Project (http://www.pinguino.cc)     #
@@ -15,19 +15,25 @@
 #	Supported CPU's                                                    #
 ########################################################################
 #                                                                      #
-#   18f2455		18f2550		18f25k50	18f26j50                       #
-#	18f4455		18f4550		18f45k50	18f46j50                       #
+#   18f2455		18f4455                                                #
+#	18f2550		18f4550                                                #
+#	18f25k50	18f45k50                                               #
+#	18f26j50	18f46j50                                               #
+#	18F26J53	18F46J53                                               #
+#	18F27J53	18F47J53                                               #
 #                                                                      #
 ########################################################################
 #	Work in progress                                                   #
 ########################################################################
 #                                                                      #
-#	16f1455	18f14k50	                                               #
+#	16f1455                                                            #
+#	18f13k50	18f14k50                                               #
 #                                                                      #
 ########################################################################
 
 LOW_SPEED	= 1
 HIGH_SPEED	= 0
+LVP			= 0
 
 ########################################################################
 #	CONFIGURATION OPTIONS                                              #
@@ -40,7 +46,7 @@ CRYSTAL		= $(OSC)
 USBSPEED	= $(HIGH_SPEED)
 
 # SDCC's toolchain directory
-SDCCDIR		= /dvpt/sdcc
+SDCCDIR		= /dvpt/sdcc/linux64
 # Pinguino directory
 #PINGUINODIR = /dvpt/pinguino/local/branches/x.4
 
@@ -50,7 +56,7 @@ SDCCDIR		= /dvpt/sdcc
 
 # bootloader version (cf. changelog.txt)
 MAJ_VER		= 4
-MIN_VER		= 7
+MIN_VER		= 8
 
 # end of bootloader / start of pinguino application
 ENTRY		= 0x0C00
@@ -58,9 +64,9 @@ ENTRY		= 0x0C00
 # string descriptor flag
 STRING		= $(STRINGDESC)
 
-ifeq ($(USBSPEED), $(LOW_SPEED))
-CRYSTAL	 = 8
-endif
+#ifeq ($(USBSPEED), $(LOW_SPEED))
+#CRYSTAL	 = 8
+#endif
 
 #FAM			= $(shell echo $(CPU) | cut -c 1-3)
 FAM			= $(findstring 18f, $(CPU))
@@ -106,6 +112,7 @@ CFLAGS		= -V \
 		      -D STRING=$(STRING) \
 		      -D SPEED=$(USBSPEED) \
 		      -D CRYSTAL=$(CRYSTAL) \
+		      -D LVP=$(LVP) \
 		      -D MAJOR_VERSION=$(MAJ_VER) \
 		      -D MINOR_VERSION=$(MIN_VER)
 

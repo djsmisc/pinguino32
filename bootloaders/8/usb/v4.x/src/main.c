@@ -79,8 +79,9 @@ __code USB_Configuration_Descriptor configuration_descriptor =
         0x09,0x04}; // english = 0x0409
     const char manu[] = {sizeof(manu),  STRING_DESCRIPTOR,
         'R',0x00,'.',0x00,'B',0x00,'l',0x00,'a',0x00,'n',0x00,'c',0x00,'h',0x00,'o',0x00,'t',0x00,
-        '/',0x00,
-        'A',0x00,'.',0x00,'G',0x00,'e',0x00,'n',0x00,'t',0x00,'r',0x00,'i',0x00,'c',0x00};
+//        '/',0x00,
+//        'A',0x00,'.',0x00,'G',0x00,'e',0x00,'n',0x00,'t',0x00,'r',0x00,'i',0x00,'c',0x00
+        };
     const char prod[] = {sizeof(prod),  STRING_DESCRIPTOR,
         'P',0x00,'i',0x00,'n',0x00,'g',0x00,'u',0x00,'i',0x00,'n',0x00,'o',0x00};
     const char * const string_descriptor[] = { lang, manu, prod};
@@ -113,39 +114,37 @@ void delay(void) //__naked
     
 void start_write(void) //__naked
 {
-	__asm
+    __asm
     
-	#if defined(__18f2455)  || defined(__18f4455) || \
-	    defined(__18f2550)  || defined(__18f4550) || \
+    #if defined(__18f2455)  || defined(__18f4455) || \
+        defined(__18f2550)  || defined(__18f4550) || \
         defined(__18f25k50) || defined(__18f45k50)
 
-        ;bcf     _INTCON, 7      ; INTCONbits.GIE = 0 ; disable interrupts (activated in startup sequence)
-        movlw	0x55
-        movwf	_EECON2			; EECON2 = 0x55;
-        movlw	0xAA
-        movwf	_EECON2			; EECON2 = 0xAA;
-        bsf		_EECON1, 1		; EECON1bits.WR = 1; start flash/eeprom writing
+        movlw   0x55
+        movwf   _EECON2         ; EECON2 = 0x55;
+        movlw   0xAA
+        movwf   _EECON2         ; EECON2 = 0xAA;
+        bsf     _EECON1, 1      ; EECON1bits.WR = 1; start flash/eeprom writing
                                 ; CPU stall here for 2ms
-        ;bsf     _INTCON, 7      ; INTCONbits.GIE = 1 ; re-enable interrupts
-        ;nop						; proc. can forget to execute the first operation
+        nop                     ; proc. can forget to execute the first operation
 
     #elif defined(__18f26j50) || defined(__18f46j50) || \
-          defined(__18f14k50)
+          defined(__18f26j53) || defined(__18f46j53) || \
+          defined(__18f27j53) || defined(__18f47j53) || \
+          defined(__18f13k50) || defined(__18f14k50)
 
-		;bsf     _EECON1, 5      ; EECON1bits.WPROG = 1;	Program 2 bytes on the next WR command
-        bsf		_EECON1, 2		; EECON1bits.WREN = 1; allows write cycles to Flash program memory
-        ;bcf     _INTCON, 7      ; INTCONbits.GIE = 0 ; disable interrupts (activated in startup sequence)
-        movlw	0x55
-        movwf	_EECON2			; EECON2 = 0x55;
-        movlw	0xAA
-        movwf	_EECON2			; EECON2 = 0xAA;
-        bsf		_EECON1, 1		; EECON1bits.WR = 1; start flash/eeprom writing
-        bcf		_EECON1, 2		; EECON1bits.WREN = 0; inhibits write cycles to Flash program memory
-        ;bsf     _INTCON, 7      ; INTCONbits.GIE = 1 ; re-enable interrupts
+        ;bsf     _EECON1, 5      ; EECON1bits.WPROG = 1;	Program 2 bytes on the next WR command
+        bsf     _EECON1, 2      ; EECON1bits.WREN = 1; allows write cycles to Flash program memory
+        movlw   0x55
+        movwf   _EECON2         ; EECON2 = 0x55;
+        movlw   0xAA
+        movwf   _EECON2         ; EECON2 = 0xAA;
+        bsf     _EECON1, 1      ; EECON1bits.WR = 1; start flash/eeprom writing
+        bcf     _EECON1, 2      ; EECON1bits.WREN = 0; inhibits write cycles to Flash program memory
 
-	#endif
+    #endif
 
-	__endasm;
+    __endasm;
 }
 
 /*  --------------------------------------------------------------------
@@ -153,15 +152,15 @@ void start_write(void) //__naked
     
 void disable_boot(void) __naked
 {
+    // disable timer 1
     T1CON = 0x00;
+    // disable USB
     UCON = 0x00;
-	__asm
-        ;clrf	_T1CON				; disable timer 1
-        ;clrf	_UCON				; disable USB
-        bsf		LED_TRIS, LED_PIN	; led input
-        bcf		LED_PORT, LED_PIN	; led off
+    __asm
+        bsf     LED_TRIS, LED_PIN   ; led input
+        bcf     LED_PORT, LED_PIN   ; led off
         ;call    _delay              ; force timeout on USB
-	__endasm;
+    __endasm;
     delay();
 }
 
@@ -176,15 +175,15 @@ void usb_configure_endpoints()
 {
     UEP1 = 0b00011110;
     
-	// for IN
-	// set DTS bit, turn on data togle sync TOGGLE
-	EP_IN_BD(1).Stat.uc  = 0b01000000;
+    // for IN
+    // set DTS bit, turn on data togle sync TOGGLE
+    EP_IN_BD(1).Stat.uc  = 0b01000000;
 
-	// for OUT
-	EP_OUT_BD(1).Cnt  = EP1_BUFFER_SIZE;
-	EP_OUT_BD(1).ADDR = PTR16(&bootCmd);
-	// set UOWN bit, SIE owns the buffer
-	EP_OUT_BD(1).Stat.uc = 0b10000000;
+    // for OUT
+    EP_OUT_BD(1).Cnt  = EP1_BUFFER_SIZE;
+    EP_OUT_BD(1).ADDR = PTR16(&bootCmd);
+    // set UOWN bit, SIE owns the buffer
+    EP_OUT_BD(1).Stat.uc = 0b10000000;
 }
 
 /*  --------------------------------------------------------------------
@@ -208,7 +207,7 @@ void usb_ep_data_out_callback(char end_point)
     TBLPTRL = bootCmd.addrl;
 
 /**********************************************************************/
-	if (bootCmd.cmd ==  RESET)
+    if (bootCmd.cmd ==  RESET)
 /**********************************************************************/
 	{
 		disable_boot();
@@ -248,7 +247,7 @@ void usb_ep_data_out_callback(char end_point)
         #if defined(__18f2550)  || defined(__18f4550)  || \
             defined(__18f2455)  || defined(__18f4455)  || \
             defined(__18f25k50) || defined(__18f45k50) || \
-            defined(__18f14k50)
+            defined(__18f13k50) || defined(__18f14k50)
 
         /// The programming block is 32 bytes for all chips except x5k50
         /// The programming block is 64 bytes for x5k50.
@@ -271,7 +270,9 @@ void usb_ep_data_out_callback(char end_point)
 		EECON1 = 0b10000100; // allows write (WREN=1) in flash (EEPGD=1)
 		start_write();
 
-        #elif defined(__18f26j50) || defined(__18f46j50)
+        #elif defined(__18f26j50) || defined(__18f46j50) || \
+              defined(__18f26j53) || defined(__18f46j53) || \
+              defined(__18f27j53) || defined(__18f47j53)
         
         /// blocks must be erased before written
         /// the whole memory is erased at the begining of upload
@@ -332,7 +333,9 @@ void usb_ep_data_out_callback(char end_point)
 		}
 		// TBLPTRU = 0
 
-        #elif defined(__18f26j50) || defined(__18f46j50)
+        #elif defined(__18f26j50) || defined(__18f46j50) || \
+              defined(__18f26j53) || defined(__18f46j53) || \
+              defined(__18f27j53) || defined(__18f47j53)
 
 		// The erase block is 1024 bytes
         // bootCmd.len = num. of 1024-byte blocks to erase
@@ -382,51 +385,70 @@ void usb_ep_data_out_callback(char end_point)
  
 void main(void) //__naked
 {
-	dword i = 0;
+    //dword i = 0;
     byte t1_count = 0;
-	word led_counter = 0;
+    word led_counter = 0;
 
-	__asm
+    __asm
 
     //bcf     _PIR2, 4            ; Clear USB Interrupt Flag
 
 /**********************************************************************/
-    #if defined(__18f26j50) || defined(__18f46j50)
+    #if defined(__18f14k50) || \
+        defined(__18f2455)  || defined(__18f4455)  || \
+        defined(__18f2550)  || defined(__18f4550)        
 /**********************************************************************/
-        bsf     _OSCTUNEbits, 6     ; Enable the PLL (PLLEN=bit6)
-        ;call    _delay              ; Wait 2+ms until the PLL locks
-                                    ; before enabling USB module
-    __endasm;
-    delay();
-    __asm
-        movlw	0xFF
-        movwf	_ANCON0				; all I/O to Digital mode
-        movlw	0x1F
-        movwf	_ANCON1				; all I/O to Digital mode
+        movlw   0x0F
+        movwf   _ADCON1             ; all I/O to Digital mode
+        movlw   0x07
+        movwf   _CMCON              ; all I/O to Digital mode
 /**********************************************************************/
     #elif defined(__18f25k50) || defined(__18f45k50)
 /**********************************************************************/
         movlw   0x70                ; 0b01110000 : 111 = HFINTOSC (16 MHz)
-        movwf   _OSCCON             ; enable the 16MHz internal clock
+        movwf   _OSCCON             ; enable the 16 MHz internal clock
     wait_hfintosc:
         btfss   _OSCCON, 2          ; HFIOFS: HFINTOSC Frequency Stable bit
         bra     wait_hfintosc       ; wait HFINTOSC frequency is stable (HFIOFS=1) 
-        clrf	_ANSELA				; all I/O to Digital mode
-        clrf	_ANSELB				; all I/O to Digital mode
-        clrf	_ANSELC				; all I/O to Digital mode
+        clrf    _ANSELA             ; all I/O to Digital mode
+        clrf    _ANSELB             ; all I/O to Digital mode
+        clrf    _ANSELC             ; all I/O to Digital mode
         #if defined(__18f45k50)
-            clrf	_ANSELD			; all I/O to Digital mode
-            clrf	_ANSELE			; all I/O to Digital mode
+        clrf    _ANSELD             ; all I/O to Digital mode
+        clrf    _ANSELE             ; all I/O to Digital mode
         #endif
 /**********************************************************************/
-    #elif defined(__18f2550)  || defined(__18f4550)  || \
-          defined(__18f2455)  || defined(__18f4455)  || \
-          defined(__18f14k50)
+    #elif defined(__18f26j50) || defined(__18f46j50)
 /**********************************************************************/
-        movlw	0x0F
-        movwf	_ADCON1				; all I/O to Digital mode
-        movlw	0x07
-        movwf	_CMCON				; all I/O to Digital mode
+        bsf     _OSCTUNEbits, 6     ; Enable the PLL (PLLEN=bit6)
+        ;call    _delay              ; Wait 2+ms until the PLL locks
+                                     ; before enabling USB module
+    __endasm;
+        delay();
+    __asm
+        movlw   0xFF
+        movwf   _ANCON0             ; all I/O to Digital mode
+        movlw   0x1F
+        movwf   _ANCON1             ; all I/O to Digital mode
+/**********************************************************************/
+    #elif defined(__18f26j53) || defined(__18f46j53)|| \
+          defined(__18f27j53) || defined(__18f47j53)
+/**********************************************************************/
+        movlw   0x70                ; 0b01110000 : 111 = INTOSC (8 MHz)
+        movwf   _OSCCON             ; enable the 8 MHz internal clock
+    wait_intosc:
+        btfss   _OSCCON, 2          ; FLTS: Frequency Lock Tuning Status bit
+        bra     wait_intosc         ; wait INTOSC frequency is stable (FLTS=1) 
+;        banksel _ANCON0              ; ANCONx registers are not in access bank
+        movlw   0xFF
+        movwf   _ANCON0             ; all Analog pins to Digital mode
+;        banksel _ANCON1              ; ANCONx registers are not in access bank
+;        movlw   0x1F
+        movwf   _ANCON1             ; all I/O to Digital mode
+;        movlw   0x07
+;        movwf   _ADCON0             ; all I/O to Digital mode
+;        movlw   0x07
+;        movwf   _CMCON              ; all I/O to Digital mode
 /**********************************************************************/
     #else
 /**********************************************************************/
@@ -438,81 +460,81 @@ void main(void) //__naked
     #endif
 /**********************************************************************/
 
-    bcf		LED_TRIS, LED_PIN	; led output
-	bsf		LED_PORT, LED_PIN	; led on
+        bsf     _RCON, 7            ; enable priority levels on interrupts
 
-    ;bcf     _PIR1, 0            ; PIR1bits.TMR1IF = 0;
-	movlw	b'00110001'			; prescaler 8 (0b11)
-	movwf	_T1CON				; timer 1 on, 
+        bcf     LED_TRIS, LED_PIN   ; led output
+        bsf     LED_PORT, LED_PIN   ; led on
 
-	;bsf		_INTCON, 6			; Enable Peripheral interrupt (PEIE=bit6)
-	;bsf		_INTCON, 7			; Enable General interrupt (GIE=bit7)
+        movlw    b'00110001'        ; prescaler 8 (0b11)
+        movwf    _T1CON             ; timer 1 on, 
 
-	clrf	_EECON1 			; EECON1=0
+        clrf    _EECON1             ; EECON1=0
 
-	#if (SPEED == LOW_SPEED)
-        movlw	b'00010000'		; (0x10) Enable pullup resistors and low speed mode
-	#else
-        movlw	b'00010100'		; (0x14) Enable pullup resistors and full speed mode
-	#endif
-    
-	banksel	_UCFG
-	movwf	_UCFG, b
+        #if (SPEED == LOW_SPEED)
+        movlw   b'00010000'         ; (0x10) Enable pullup resistors and low speed mode
+        #else
+        movlw   b'00010100'         ; (0x14) Enable pullup resistors and full speed mode
+        #endif
 
-	__endasm;
+        banksel _UCFG
+        movwf   _UCFG, b
 
-	// Initialize USB
+    __endasm;
 
-	EP_IN_BD(1).ADDR = PTR16(&bootCmd);
-	currentConfiguration = 0x00;
-	deviceState = DETACHED;
+    // Initialize USB
+
+    EP_IN_BD(1).ADDR = PTR16(&bootCmd);
+    currentConfiguration = 0x00;
+    deviceState = DETACHED;
 
     // Non-blocking loop if USB cable is not connected (ext. supply)
-	do {
-		EnableUSBModule();
-		ProcessUSBTransactions();
-        i = i + 1;
-        if (i == 0xFFFFF) break; 
+
+    do {
+        EnableUSBModule();
+        ProcessUSBTransactions();
+        //i = i + 1;
+        //if (i == 0xFFFFF) break; 
     } while (deviceState != CONFIGURED);
     
     // If no USB cable then start user app. now
+/*
     if (deviceState != CONFIGURED)
     {
         t1_count = BOOT_TIMER_TICS;
         __asm
-            bcf		LED_PORT, LED_PIN	; led on
+            bcf     LED_PORT, LED_PIN   ; led on
         __endasm;
     }
-
-	while (1)
-	{
-		//if (i!=0)
+*/
+    while (1)
+    {
+        //if (i!=0)
             ProcessUSBTransactions();
 
-		// strobing LED
-		if (led_counter == 0)
-		{
-			__asm
-			movlw	LED_MASK	; toggle
-			xorwf	LED_PORT, f	; the led
-			__endasm;
-		}
-		led_counter++;
+        // strobing LED
+        if (led_counter == 0)
+        {
+            __asm
+            movlw   LED_MASK    ; toggle
+            xorwf   LED_PORT, f ; the led
+            __endasm;
+        }
+        led_counter++;
 
-		// timeout ?
-		if (PIR1bits.TMR1IF == 1)
-		{
-			t1_count++;
-			PIR1bits.TMR1IF = 0;
+        // timeout ?
+        if (PIR1bits.TMR1IF == 1)
+        {
+            t1_count++;
+            PIR1bits.TMR1IF = 0;
 
-			// if expired, then jump to user location
-			if (t1_count > BOOT_TIMER_TICS)
-			{
-				disable_boot();
-				__asm
-				goto	ENTRY		; start user app
-				__endasm;
-			}
-		}
-	}
+            // if expired, then jump to user location
+            if (t1_count > BOOT_TIMER_TICS)
+            {
+                disable_boot();
+                __asm
+                goto    ENTRY   ; start user app
+                __endasm;
+            }
+        }
+    }
 }

@@ -21,34 +21,40 @@
         #error "    No low-speed mode on this device.    "
         #error "    ---------------------------------    "
 
+    #elif (CRYSTAL == INTOSC)
+
+        #error "    ---------------------------------    "
+        #error "    Internal Crystal CAN NOT DRIVE USB Clock.     "
+        #error "    ---------------------------------    "
+
     #else
 
-        /*
-        if SDCC version < 3.1.5
-
-        static __code char __at __CONFIG1L _c1l = _USBPLL_CLOCK_SRC_FROM_96MHZ_PLL_2_1L & _CPUDIV__OSC1_OSC2_SRC___1__96MHZ_PLL_SRC___2__1L & _PLLDIV_DIVIDE_BY_5__20MHZ_INPUT__1L;
-        static __code char __at __CONFIG1H _c1h = _OSC_HS__HS_PLL__USB_HS_1H & _FCMEN_OFF_1H & _IESO_OFF_1H;
-        static __code char __at __CONFIG2L _c2l = _PUT_OFF_2L & _VREGEN_ON_2L & _BODEN_OFF_2L & _BODENV_2_0V_2L;
-        static __code char __at __CONFIG2H _c2h = _WDT_DISABLED_CONTROLLED_2H & _WDTPS_1_32768_2H;
-        static __code char __at __CONFIG3H _c3h = _CCP2MUX_RC1_3H & _PBADEN_PORTB_4_0__CONFIGURED_AS_DIGITAL_I_O_ON_RESET_3H & _LPT1OSC_OFF_3H & _MCLRE_MCLR_ON_RE3_OFF_3H;
-        static __code char __at __CONFIG4L _c4l = _STVR_OFF_4L & _LVP_OFF_4L & _ENHCPU_OFF_4L & _BACKBUG_OFF_4L & _ENICPORT_OFF_4L;
-        static __code char __at __CONFIG5L _c5l = _CP_0_OFF_5L & _CP_1_OFF_5L & _CP_2_OFF_5L & _CP_3_OFF_5L;
-        static __code char __at __CONFIG5H _c5h = _CPD_OFF_5H & _CPB_OFF_5H;
-        static __code char __at __CONFIG6L _c6l = _WRT_0_OFF_6L & _WRT_1_OFF_6L & _WRT_2_OFF_6L & _WRT_3_OFF_6L;
-        static __code char __at __CONFIG6H _c6h = _WRTD_OFF_6H & _WRTB_OFF_6H & _WRTC_OFF_6H;
-        static __code char __at __CONFIG7L _c7l = _EBTR_0_OFF_7L & _EBTR_1_OFF_7L & _EBTR_2_OFF_7L & _EBTR_3_OFF_7L;
-        static __code char __at __CONFIG7H _c7h = _EBTRB_OFF_7H;
-        */
-
-        #if (CRYSTAL == 8)
-            #pragma config PLLDIV = 2       // The PLL requires a 4 MHz input and it produces a 96 MHz output.
+        #if   (CRYSTAL == 4)
+            #pragma config PLLDIV = 1
+        #elif (CRYSTAL == 8)
+            #pragma config PLLDIV = 2
+        #elif (CRYSTAL == 12)
+            #pragma config PLLDIV = 3
+        #elif (CRYSTAL == 16)
+            #pragma config PLLDIV = 4
         #elif (CRYSTAL == 20)
-            #pragma config PLLDIV = 5       // The PLL requires a 4 MHz input and it produces a 96 MHz output.
+            #pragma config PLLDIV = 5
+        #elif (CRYSTAL == 24)
+            #pragma config PLLDIV = 6
+        #elif (CRYSTAL == 40)
+            #pragma config PLLDIV = 10
+        #elif (CRYSTAL == 48)
+            #pragma config PLLDIV = 12
+        #else    
+                #error "    ---------------------------------    "
+                #error "    Crystal Frequency Not supported.     "
+                #error "    ---------------------------------    "
         #endif
 
         #pragma config CPUDIV = OSC1_PLL2	// CPU_clk = PLL/2
         #pragma config USBDIV = 2			// USB_clk = PLL/2
         #pragma config FOSC = HSPLL_HS		// HS osc PLL
+
         #pragma config FCMEN = ON			// Fail Safe Clock Monitor
         #pragma config IESO = OFF			// Int/Ext switchover mode
         #pragma config PWRT = ON			// PowerUp Timer
@@ -60,9 +66,13 @@
         #pragma config PBADEN = OFF			// PORTB<4:0> A/D
         #pragma config CCP2MX = ON			// CCP2 Mux RC1
         #pragma config STVREN = ON			// Stack Overflow Reset
-        #pragma config LVP = OFF			// Low Voltage Programming
+        #if (LVP == 0)
+            #pragma config LVP = OFF		// High Voltage Programming
+        #else
+            #pragma config LVP = ON 		// Low Voltage Programming
+        #endif
         #if defined(__18f4550)
-        #pragma config ICPRT = OFF			// ICP
+            #pragma config ICPRT = OFF			// ICP
         #endif
         #pragma config XINST = OFF			// Ext CPU Instruction Set
         #pragma config DEBUG = OFF			// Background Debugging
@@ -88,52 +98,49 @@
 #elif defined(__18f26j50) || defined(__18f46j50)
 /**********************************************************************/
 
-    /*
-    if SDCC version < 3.1.5
+    #if (CRYSTAL == INTOSC)
 
-    #if (SPEED == LOW_SPEED) || (CRYSTAL == 8)
-    static __code char __at __CONFIG1L _conf0 = 0xAC;		// 8 MHz (int. or ext.)
+        #pragma config OSC = INTOSCPLL  // internal RC oscillator, PLL enabled, HSPLL used by USB
+        #pragma config PLLDIV = 2       // 8MHz/2 = The PLL requires a 4 MHz input and it produces a 96 MHz output.
+
     #else
-    static __code char __at __CONFIG1L _conf0 = 0x86;		// 20 MHz (ext.)
+
+        #pragma config OSC = HSPLL      // external oscillator, PLL enabled, HSPLL used by USB
+
+        #if   (CRYSTAL == 4)
+            #pragma config PLLDIV = 1
+        #elif (CRYSTAL == 8)
+            #pragma config PLLDIV = 2
+        #elif (CRYSTAL == 12)
+            #pragma config PLLDIV = 3
+        #elif (CRYSTAL == 16)
+            #pragma config PLLDIV = 4
+        #elif (CRYSTAL == 20)
+            #pragma config PLLDIV = 5
+        #elif (CRYSTAL == 24)
+            #pragma config PLLDIV = 6
+        #elif (CRYSTAL == 40)
+            #pragma config PLLDIV = 10
+        #elif (CRYSTAL == 48)
+            #pragma config PLLDIV = 12
+        #else    
+                #error "    ---------------------------------    "
+                #error "    Crystal Frequency Not supported.     "
+                #error "    ---------------------------------    "
+        #endif
+
     #endif
 
-    // DS39931D-page 40 - 2011 Microchip Technology Inc.
-    // PIC18F46J50 family core must run at 24 MHz in order for the USB module
-    // to get the 6 MHz clock needed for low-speed USB operation.
-
-    #if SPEED == LOW_SPEED
-    static __code char __at __CONFIG1H _conf1 = 0xF7;		// 24 MHz (CPU system clock divided by 2)
-    static __code char __at __CONFIG2L _conf2 = 0x1A;		// INTOSCPLL
-    #else
-    static __code char __at __CONFIG1H _conf1 = 0xF7;		// 48 MHz (No CPU system clock divide)
-    static __code char __at __CONFIG2L _conf2 = 0x1D;		// HSPLL
-    #endif
-
-    static __code char __at __CONFIG2H _conf3 = 0xFF;
-    static __code char __at __CONFIG3L _conf4 = 0x61;       // DSWDT and RTCC uses INTRC
-    static __code char __at __CONFIG3H _conf5 = 0xF8;
-    static __code char __at __CONFIG4L _conf6 = 0x81;// 0xFF
-    static __code char __at __CONFIG4H _conf7 = 0xF1;
-    */
-
-    #if (CRYSTAL == 20)                 // External 20 MHz
-        #pragma config PLLDIV = 5       // The PLL requires a 4 MHz input and it produces a 96 MHz output.
-    #else                               // Internal or External 8 MHz
-        #pragma config PLLDIV = 2       // The PLL requires a 4 MHz input and it produces a 96 MHz output.
-    #endif
-    
     // DS39931D-page 40 - 2011 Microchip Technology Inc.
     // PIC18F46J50 family core must run at 24 MHz in order for the USB module
     // to get the 6 MHz clock needed for low-speed USB operation.
 
     #if (SPEED == LOW_SPEED)
         #pragma config CPUDIV = OSC2_PLL2// 24 MHz (CPU system clock divided by 2)
-        #pragma config OSC = INTOSCPLL  // internal RC oscillator, PLL enabled, HSPLL used by USB
     #else
         #pragma config CPUDIV = OSC1    // 48 MHz (No CPU system clock divide)
-        #pragma config OSC = HSPLL      // external oscillator, PLL enabled, HSPLL used by USB
     #endif
-
+    
     #pragma config WDTEN = OFF          // WDT disabled (enabled by SWDTEN bit)
     #pragma config STVREN = ON          // stack overflow/underflow reset enabled
     #pragma config XINST = OFF          // Extended instruction set disabled
@@ -142,12 +149,12 @@
     #pragma config FCMEN = OFF          // Fail-Safe Clock Monitor disabled
     #pragma config LPT1OSC = OFF        // high power Timer1 mode
     #pragma config T1DIG = ON           // Sec Osc clock source may be selected
-    #pragma config WDTPS = 32768        // 1:32768
-    #pragma config DSWDTPS = 8192       // 1:8,192 (8.5 seconds)
+    #pragma config WDTPS = 256          // 1:256 (1 second)
+    #pragma config DSWDTPS = 8192       // 1:8192 (8.5 seconds)
     #pragma config DSWDTEN = OFF        // Disabled
     #pragma config DSBOREN = OFF        // Zero-Power BOR disabled in Deep Sleep
-    #pragma config RTCOSC = T1OSCREF    // RTCC uses T1OSC/T1CKI as clock
-    #pragma config DSWDTOSC = INTOSCREF // DSWDT uses INTOSC/INTRC as clock
+    #pragma config RTCOSC = INTOSCREF   // RTCC uses INTOSC as clock
+    #pragma config DSWDTOSC = INTOSCREF // DSWDT uses INTOSC as clock
     #pragma config MSSP7B_EN = MSK7     // 7 Bit address masking
     #pragma config IOL1WAY = OFF        // IOLOCK bit can be set and cleared
     #pragma config WPCFG = OFF          // Write/Erase last page protect Disabled
@@ -159,26 +166,35 @@
 #elif defined(__18f25k50) || defined(__18f45k50)// Config. Words for Internal Crystal (16 MHz) use
 /**********************************************************************/
 
+    #pragma config CFGPLLEN = ON        // PLL Enable Configuration bit (PLL Enabled)
+    #pragma config CPUDIV = NOCLKDIV    // 1:1 mode (for 48MHz CPU)
+
     #if (CRYSTAL == INTOSC)             // Internal 16 MHz Osc.
-        // CONFIG1L
         #pragma config PLLSEL = PLL3X       // PLL Selection (3x clock multiplier) => 3 x 16 = 48 MHz
-        #pragma config CFGPLLEN = ON        // PLL Enable Configuration bit (PLL Enabled)
-        //#pragma config CPUDIV = CLKDIV3     // CPU uses system clock divided by 3 (could be 1,2,3,6)
-        #pragma config CPUDIV = NOCLKDIV    // 1:1 mode (for 48MHz CPU)
-    #elif (CRYSTAL == 20)
+        #pragma config FOSC = INTOSCIO      // Oscillator Selection (Internal oscillator)
+
+    #elif (CRYSTAL == 12)
+        #pragma config PLLSEL = PLL4X       // PLL Selection (3x clock multiplier) => 3 x 16 = 48 MHz
+        #pragma config FOSC = HSOSCIO      // Oscillator Selection (Internal oscillator)
+
+    #elif (CRYSTAL == 16)
+        #pragma config PLLSEL = PLL3X       // PLL Selection (3x clock multiplier) => 3 x 16 = 48 MHz
+        #pragma config FOSC = HSOSCIO      // Oscillator Selection (Internal oscillator)
+
+    #elif (CRYSTAL == 48)
+        #pragma config PLLSEL = PLL3X      // Oscillator used directly
+        #pragma config FOSC = HSOSCIO      // Oscillator Selection (Internal oscillator)
+
+    #else    
         #error "    ---------------------------------    "
-        #error "    Not yet supported.                   "
+        #error "    Crystal Frequency Not supported.     "
         #error "    ---------------------------------    "
-    #elif (CRYSTAL == 8)
-        #error "    ---------------------------------    "
-        #error "    Not yet supported.                   "
-        #error "    ---------------------------------    "
+
     #endif
     
     #pragma config LS48MHZ = SYS24X4// USB Low-speed clock at 24 MHz, USB clock divider is set to 4
 
     // CONFIG1H
-    #pragma config FOSC = INTOSCIO      // Oscillator Selection (Internal oscillator)
     #pragma config PCLKEN = ON          // Primary Oscillator Shutdown (Primary oscillator enabled)
     #pragma config FCMEN = OFF          // Fail-Safe Clock Monitor (Fail-Safe Clock Monitor disabled)
     #pragma config IESO = OFF           // Internal/External Oscillator Switchover (Oscillator Switchover mode disabled)
@@ -202,10 +218,14 @@
 
     // CONFIG4L
     #pragma config STVREN = ON          // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
-    #pragma config LVP = ON             // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled if MCLRE is also 1)
+    #if (LVP == 0)
+        #pragma config LVP = OFF		// High Voltage Programming
+    #else
+        #pragma config LVP = ON 		// Low Voltage Programming
+    #endif
     #pragma config XINST = OFF          // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
     #if defined(__18f45k50)
-    #pragma config ICPRT = OFF			// ICP
+    #pragma config ICPRT = OFF          // ICP
     #endif
     
     // CONFIG5L
@@ -238,6 +258,93 @@
     // CONFIG7H
     #pragma config EBTRB = OFF          // Boot Block Table Read Protect (Boot block is not protected from table reads executed in other blocks)
 
+/**********************************************************************/
+#elif defined(__18f26j53) || defined(__18f46j53)|| \
+      defined(__18f27j53) || defined(__18f47j53)
+/**********************************************************************/
+
+    #if (CRYSTAL == INTOSC)             // Internal 8 MHz Osc.
+        #pragma config OSC = INTOSCPLL  // Oscillator Selection (Internal oscillator)
+        #pragma config PLLDIV = 2       // 8 MHz / 2 : The PLL requires a 4 MHz input and it produces a 96 MHz output.
+    #else
+        #pragma config OSC = HSPLL      // Oscillator Selection (External oscillator)
+
+        #if   (CRYSTAL == 4)
+            #pragma config PLLDIV = 1
+        #elif (CRYSTAL == 8)
+            #pragma config PLLDIV = 2
+        #elif (CRYSTAL == 12)
+            #pragma config PLLDIV = 3
+        #elif (CRYSTAL == 16)
+            #pragma config PLLDIV = 4
+        #elif (CRYSTAL == 20)
+            #pragma config PLLDIV = 5
+        #elif (CRYSTAL == 24)
+            #pragma config PLLDIV = 6
+        #elif (CRYSTAL == 40)
+            #pragma config PLLDIV = 10
+        #elif (CRYSTAL == 48)
+            #pragma config PLLDIV = 12
+        #else    
+                #error "    ---------------------------------    "
+                #error "    Crystal Frequency Not supported.     "
+                #error "    ---------------------------------    "
+        #endif
+
+    #endif
+    
+    // CONFIG1L
+    //#pragma config DEBUG = OFF			// Background Debugging
+    #pragma config XINST = OFF			// Ext CPU Instruction Set
+    #pragma config STVREN = ON          // Stack Full/Underflow Reset (Stack full/underflow will cause Reset)
+    #pragma config CFGPLLEN = ON        // PLL Enable Configuration bit (PLL Enabled)
+    #pragma config WDTEN = OFF          // WDT disabled (enabled by SWDTEN bit)
+
+    // CONFIG1H
+    #pragma config CP0 = OFF            // Block 0 Code Protect (Block 0 is not code-protected)
+    #pragma config CPUDIV = OSC1        // 48 MHz (No CPU system clock divide)
+
+    // CONFIG2L
+    #pragma config IESO = OFF           // Internal/External Oscillator Switchover (Oscillator Switchover mode disabled)
+    #pragma config FCMEN = OFF          // Fail-Safe Clock Monitor disabled
+    #pragma config CLKOEC = OFF         // CLKO output disabled on the RA6 pin
+    //#pragma config SOSCSEL = HIGH       // Digital (SCLKI) mode selected
+
+    // CONFIG2H
+    #pragma config WDTPS = 32768        // Watchdog Timer Postscaler (1:32768)
+
+    // CONFIG3L
+    #pragma config DSWDTPS = 8192       // 1:8,192 (8.5 seconds)
+    #pragma config DSWDTEN = OFF        // Disabled
+    #pragma config DSBOREN = OFF        // Zero-Power BOR disabled in Deep Sleep
+    #pragma config RTCOSC = INTOSCREF   // RTCC uses INTOSC as clock
+    #pragma config DSWDTOSC = INTOSCREF // DSWDT uses INTOSC as clock
+
+    // CONFIG3H
+    #pragma config MSSP7B_EN = MSK7     // 7 Bit address masking
+    #pragma config ADCSEL = BIT12       // 12-bit conversion mode is enabled
+    #pragma config IOL1WAY = OFF        // IOLOCK bit can be set and cleared
+    
+    // CONFIG4L
+    #pragma config WPCFG = OFF          // Write/Erase last page protect Disabled
+    #pragma config WPFP = PAGE_0        // Write Protect Program Flash Page 0
+
+    // CONFIG4H
+    #pragma config LS48MHZ = SYS24X4// USB Low-speed clock at 24 MHz, USB clock divider is set to 4
+    #pragma config WPEND = PAGE_0       // Start protection at page 0
+    #pragma config WPDIS = OFF          // WPFP[5:0], WPEND, and WPCFG bits ignored 
+
+/*
+    static __code char __at __CONFIG1L _c1l = 0x8C;
+    static __code char __at __CONFIG1H _c1h = 0x03;
+    static __code char __at __CONFIG2L _c2l = 0x1A;
+    static __code char __at __CONFIG2H _c2h = 0x08;
+    static __code char __at __CONFIG3L _c3l = 0x65;
+    static __code char __at __CONFIG3H _c3h = 0x08;
+    static __code char __at __CONFIG4L _c4l = 0x80;
+    static __code char __at __CONFIG4H _c4h = 0x0B; //0xF1;
+*/
+    
 /**********************************************************************/
 #else
 /**********************************************************************/
