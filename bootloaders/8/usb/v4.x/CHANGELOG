@@ -1,26 +1,34 @@
 /*******************************************************************************
-	Pinguino Bootloader Change Log
+    Pinguino Bootloader Change Log
 *******************************************************************************/
-	Version 4.07 (09-12-2012)
-		* added string descriptor
+    Version 4.09 (coming soon)
+        * added usb monitoring via extra pin for Pinguino 47j53
+    Version 4.08 (30-12-2012)
+        * added Internal Oscillator support when possible
+        * added 18f26j53 and 18f46j53 support
+        * added 18f27j53 and 18f47j53 support
+        * completed 18f13k50 and 18f14k50 support (not tested)
+        * added Wiztiti tool
+    Version 4.07 (09-12-2012)
+        * added string descriptor
         * new code to write in flash memory
-	Version 4.06 (23-11-2012)
-		* added 18f25k50 and 18f45k50 support
-	Version 4.05 (09-11-2012)
-		* added external power supply support
-	Version 4.04 (17-08-2012)
-		* added 16f1455 suport (to be completed)
-	Version 4.03 (12-06-2012)
-		* added 18f14k50 suport (to be completed)
-	Version 4.02 (02-05-2012)
-		* added low speed usb support
-	Version 4.01
-		* added 18f26j50 and 18f46j50 support
-	Version 4.00
+    Version 4.06 (23-11-2012)
+        * added 18f25k50 and 18f45k50 support
+    Version 4.05 (09-11-2012)
+        * added external power supply support
+    Version 4.04 (17-08-2012)
+        * added 16f1455 suport (to be completed)
+    Version 4.03 (12-06-2012)
+        * added 18f14k50 suport (to be completed)
+    Version 4.02 (02-05-2012)
+        * added low speed usb support
+    Version 4.01
+        * added 18f26j50 and 18f46j50 support
+    Version 4.00
         * 18f2550 and 18f4550 support
-		* based on Albert Faber's JAL bootloader
-		* and Alexander Enzmann USB Framework
-	Version 3.00
-		* based on Diolan Bootloader
-	Version 2.12
-		* based on Vasco Bootloader
+        * based on Albert Faber's JAL bootloader
+        * and Alexander Enzmann USB Framework
+    Version 3.00
+        * based on Diolan Bootloader
+    Version 2.12
+        * based on Vasco Bootloader

@@ -87,15 +87,15 @@ void main(void)
 
         if((application_data.invalid == 0)||(application_data.invalid == 1))
 		{
-		i--;
-		if (i==0)
-        		{
-	    		TRISA=TRISA&0xEF;
-	    		PORTAbits.RA4=0;
-            		application_data.main();
-	    		while (1);
-        		}
-		}
+            i--;
+            if (i==0)
+            {
+                TRISA = TRISA & 0xEF;
+                PORTAbits.RA4 = 0;
+                application_data.main();
+                while (1);
+            }
+        }
     }
 }
 

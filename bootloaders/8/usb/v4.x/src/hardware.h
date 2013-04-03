@@ -8,38 +8,35 @@
 	Released under the LGPL license (http://www.gnu.org/licenses/lgpl.html)
 *******************************************************************************/
 
-/*******************************************************************************
-	boot version
-*******************************************************************************/
-//moved in Makefile
-//#define MAJOR_VERSION						0x04
-//#define MINOR_VERSION						0x03
+#define LOW_SPEED							1
+#define HIGH_SPEED							0
 
 /*******************************************************************************
 	boot blinking led
 *******************************************************************************/
+
 #if defined(__18f2455)  || defined(__18f4455)  || \
     defined(__18f2550)  || defined(__18f4550)  || \
     defined(__18f25k50) || defined(__18f45k50) || \
-    defined(__18f14k50)
+    defined(__18f13k50) || defined(__18f14k50)
+
 	#define LED_PIN							4
 	#define LED_PORT						_LATA
 	#define LED_TRIS						_TRISA
+
 #endif
 
-#if defined(__18f26j50) || defined(__18f46j50)
+#if defined(__18f26j50) || defined(__18f46j50) || \
+    defined(__18f26j53) || defined(__18f46j53) || \
+    defined(__18f27j53) || defined(__18f47j53)
+
 	#define LED_PIN							2
 	#define LED_PORT						_LATC
 	#define LED_TRIS						_TRISC
+
 #endif
 
 #define LED_MASK							1 << LED_PIN
-
-/*******************************************************************************
-	CPU clock
-*******************************************************************************/
-#define LOW_SPEED							1
-#define HIGH_SPEED							0
 
 /*******************************************************************************
 	boot timer delay (practical values between 1..10 seconds)
