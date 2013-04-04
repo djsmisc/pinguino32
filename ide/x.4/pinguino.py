@@ -118,7 +118,15 @@ if __name__ == "__main__":
 
     if options.board != False or type(options.board) == type(1):  # False = 0
         curBoard = boardlist[options.board]
+        
+        boots = {"noboot": 0, "boot2": 0x2000, "boot4": 0x0C00}
+        
+        if options.bootloader: bootloader = options.bootloader[0]
+        else: bootloader = "boot2"  #Por defecto
 
+        curBoard.bldr = bootloader
+        curBoard.memstart = boots[bootloader] 
+            
         print "Board: " + curBoard.name
         print "Proc.: " + curBoard.proc
 

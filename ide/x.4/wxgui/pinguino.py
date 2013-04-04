@@ -1071,7 +1071,8 @@ def getOptions():
     parser.add_argument('-a', '--author', dest='author', action='store_true', default=False, help='show authors of this Pinguino IDE version and exit')
     parser.add_argument('-f', '--filename', dest='filename', nargs=1, default=False, help='filename to process')
     parser.add_argument('-dv', '--dev', dest='dev', nargs=1, default=False, help='set developer mode')
-    parser.add_argument('-ul', '--upload', dest='upload', const=True, action='store_const', default=False, help='set developer mode')
+    parser.add_argument('-ul', '--upload', dest='upload', const=True, action='store_const', default=False, help='upload code')
+    parser.add_argument('-bt', '--boot', dest='bootloader', nargs=1, default=False, help='set bootloader option')
     
     for b in range(len(boardlist)):
         parser.add_argument(    boardlist[b].shortarg,
