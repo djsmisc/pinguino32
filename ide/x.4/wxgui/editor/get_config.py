@@ -149,8 +149,8 @@ class ReadConfig:
             self.setConfig("IDE", "Window/Ypos", 0)
             self.SetPosition((0, 0))
 
-        maxim = self.getElse("IDE", "Maximized", "False")
-        if maxim == "True": self.Maximize()
+        maxim = self.getElse("IDE", "maximized", "False")
+        if maxim: self.Maximize()
 
         self.theme = self.getElse("IDE", "theme", "PinguinoX")   
 

@@ -96,6 +96,7 @@ class Pinguino(framePinguinoX, Editor):
         self.autocompleteHide = False
         self.extraName = ""
         self.changingBoard = False
+        self.lastKey = None
 
         if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
 

@@ -95,20 +95,20 @@ class AutoCompleterIDE(frameAutoCompleter):
             
             textEdit.AddText(key)
             
-            if self.IDE.getElse("Insert", "brackets", "False") == "True" and key == "[":
-                textEdit.InsertText(textEdit.CurrentPos, "]")
+            #if self.IDE.getElse("Insert", "brackets", "False") == "True" and key == "[":
+                #textEdit.InsertText(textEdit.CurrentPos, "]")
             
-            elif self.IDE.getElse("Insert", "doublecuotation", "False") == "True" and key == '"':
-                textEdit.InsertText(textEdit.CurrentPos, '"')
+            #elif self.IDE.getElse("Insert", "doublecuotation", "False") == "True" and key == '"':
+                #textEdit.InsertText(textEdit.CurrentPos, '"')
             
-            elif self.IDE.getElse("Insert", "singlecuotation", "False") == "True" and key == "'":
-                textEdit.InsertText(textEdit.CurrentPos, "'")
+            #elif self.IDE.getElse("Insert", "singlecuotation", "False") == "True" and key == "'":
+                #textEdit.InsertText(textEdit.CurrentPos, "'")
             
-            elif self.IDE.getElse("Insert", "keys", "False") == "True" and key == "{":
-                textEdit.InsertText(textEdit.CurrentPos, "}")
+            #elif self.IDE.getElse("Insert", "keys", "False") == "True" and key == "{":
+                #textEdit.InsertText(textEdit.CurrentPos, "}")
             
-            elif self.IDE.getElse("Insert", "parentheses", "False") == "True" and key == "(":
-                textEdit.InsertText(textEdit.CurrentPos, ")")            
+            #elif self.IDE.getElse("Insert", "parentheses", "False") == "True" and key == "(":
+                #textEdit.InsertText(textEdit.CurrentPos, ")")            
             
             
         except: pass

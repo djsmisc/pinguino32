@@ -302,22 +302,33 @@ class General(ReadConfig, LoadFeatures):
             word = self.wordUnderCursor(True)
             textEdit = self.stcpage[self.notebookEditor.GetSelection()]
             if self.addArguments(word): return
+            
+            
+        if key == self.lastKey:
+            self.lastKey = ""
+            return
 
         if key in ["[", "\"", "'", "{", "("]:
             textEdit = self.stcpage[self.notebookEditor.GetSelection()]
             cadena = textEdit.GetSelectedText()
-            if len(cadena) > 0: textEdit.Clear()              
+            if len(cadena) > 0: textEdit.Clear()
+                            
 
             if key == "[" and self.getElse("Insert", "brackets", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "["+cadena+"]")
+                self.lastKey = "]"
             elif key == '"' and self.getElse("Insert", "doublecuotation", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, '"'+cadena+'"')
+                self.lastKey = '"'
             elif key == "'" and self.getElse("Insert", "singlecuotation", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "'"+cadena+"'")
+                self.lastKey = "'"
             elif key == "{" and self.getElse("Insert", "keys", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "{"+cadena+"}")
+                self.lastKey = "}"
             elif key == "(" and self.getElse("Insert", "parentheses", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "("+cadena+")")
+                self.lastKey = ")"
             else:
                 textEdit.InsertText(textEdit.CurrentPos, key)
                 aj = len(cadena)
