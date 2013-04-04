@@ -560,9 +560,9 @@ class Pinguino(framePinguinoX, Editor):
             self.reservedword.append(fixed_rw[i])
 
         if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
-            self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0)
+            self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0, force_update=False)
         else:
-            self.displaymsg(_("Board config")+":\t"+board.name, 0)	    
+            self.displaymsg(_("Board config")+":\t"+board.name, 0, force_update=False)	    
 
         self.changingBoard = False	
 

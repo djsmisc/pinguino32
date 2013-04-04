@@ -939,7 +939,7 @@ class General(ReadConfig, LoadFeatures):
 # Display message
 # ------------------------------------------------------------------------------
 
-    def displaymsg(self, message, clearpanel):
+    def displaymsg(self, message, clearpanel, force_update=True):
         """ display message in the log window """
         
         try:
@@ -952,7 +952,7 @@ class General(ReadConfig, LoadFeatures):
         except:  
             print message
             
-        self.logwindow.Update()
+        if force_update: self.logwindow.Update()
 
     #----------------------------------------------------------------------
     def OnPreferences(self, event=None):
