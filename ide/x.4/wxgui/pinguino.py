@@ -281,7 +281,7 @@ class Pinguino(framePinguinoX, Editor):
             self.curBoard.board = "PIC"+name.upper()
             self.curBoard.memstart = 0x0000
             self.curBoard.memend = devlist[self.curBoard.proc][1]*1024
-            textStatus = self.curBoard.board
+            textStatus = self.curBoard.name
             
         self.displaymsg(_("Changing board")+"...", 0)
         self.statusBarEditor.SetStatusText(number=2, text=textStatus)
@@ -380,11 +380,9 @@ class Pinguino(framePinguinoX, Editor):
             result=dlg.ShowModal()
             dlg.Destroy()
             return False
-        temp = 1
-        if self.modeCompile == "BOOT":
-            self.displaymsg(_("Board:\t")+" " + self.curBoard.name, 1)
-            temp = 0
-        self.displaymsg(_("Proc:\t")+" " + self.curBoard.proc, temp)
+        
+        self.displaymsg(_("Board:\t")+" " + self.curBoard.name, 1)
+        self.displaymsg(_("Proc:\t")+" " + self.curBoard.proc, 0)
         self.displaymsg(_("File:\t")+" " + self.GetPath(), 0)
         self.displaymsg(_("compiling")+("..."), 0)
         
