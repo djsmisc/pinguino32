@@ -33,19 +33,19 @@ MICROCHIP_ID = 0x04D8
 PIC8_ID = 0xFEAA
 PIC32_ID = 0x003C
 
-class PinguinoNoBoot:
-    name='Pinguino (no Bootloader)'
-    id=wx.NewId()
-    arch=8
-    bldr='noboot'
-    proc=''
-    board=''
-    vendor=''
-    product=''
-    memstart=0x0000
-    memend=0xFFF8
-    shortarg='-b'
-    longarg='--noboot'
+#class PinguinoNoBoot:
+    #name='Pinguino (no Bootloader)'
+    #id=wx.NewId()
+    #arch=8
+    #bldr='noboot'
+    #proc=''
+    #board=''
+    #vendor=''
+    #product=''
+    #memstart=0x0000
+    #memend=0xFFF8
+    #shortarg='-b'
+    #longarg='--noboot'
 
 class Pinguino2550:
     name='Pinguino 2550'
@@ -330,7 +330,7 @@ class UBW32_795:
     longarg='--ubw795'
 
 boardlist = [   
-    PinguinoNoBoot,
+    #PinguinoNoBoot,
     Pinguino2550,  Pinguino4550,
     Pinguino25k50, CHRP3, Pinguino45k50,
     Pinguino26J50,

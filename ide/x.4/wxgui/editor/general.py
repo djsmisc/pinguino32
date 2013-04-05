@@ -304,9 +304,11 @@ class General(ReadConfig, LoadFeatures):
             if self.addArguments(word): return
             
             
-        if key == self.lastKey:
-            self.lastKey = ""
-            return
+        if self.lastKey and key == self.lastKey[0]:
+            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+            if textEdit.CurrentPos == self.lastKey[1] + 1:
+                self.lastKey = ""
+                return
 
         if key in ["[", "\"", "'", "{", "("]:
             textEdit = self.stcpage[self.notebookEditor.GetSelection()]
@@ -316,19 +318,19 @@ class General(ReadConfig, LoadFeatures):
 
             if key == "[" and self.getElse("Insert", "brackets", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "["+cadena+"]")
-                self.lastKey = "]"
+                self.lastKey = "]", textEdit.CurrentPos
             elif key == '"' and self.getElse("Insert", "doublecuotation", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, '"'+cadena+'"')
-                self.lastKey = '"'
+                self.lastKey = '"', textEdit.CurrentPos
             elif key == "'" and self.getElse("Insert", "singlecuotation", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "'"+cadena+"'")
-                self.lastKey = "'"
+                self.lastKey = "'", textEdit.CurrentPos
             elif key == "{" and self.getElse("Insert", "keys", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "{"+cadena+"}")
-                self.lastKey = "}"
+                self.lastKey = "}", textEdit.CurrentPos
             elif key == "(" and self.getElse("Insert", "parentheses", "False"):
                 textEdit.InsertText(textEdit.CurrentPos, "("+cadena+")")
-                self.lastKey = ")"
+                self.lastKey = ")", textEdit.CurrentPos
             else:
                 textEdit.InsertText(textEdit.CurrentPos, key)
                 aj = len(cadena)
@@ -879,13 +881,15 @@ class General(ReadConfig, LoadFeatures):
                 if os.path.isfile(file):
                     self.Open(file)
 
+            
             name = self.getConfig("Last", "Last_Focus")
-            c = 0
-            for i in self.filename:
-                if i == name: break
-                c += 1
-
-            self.notebookEditor.SetSelection(c)
+            if os.path.isfile(name):
+                c = 0
+                for i in self.filename:
+                    if i == name: break
+                    c += 1
+    
+                self.notebookEditor.SetSelection(c)
 
         except: pass
 

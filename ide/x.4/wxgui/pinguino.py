@@ -192,44 +192,26 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def getDevices(self, arch, mode, family):
+    def getDevices(self, arch, mode):
         """"""
 
-        if arch == 8:
-            if mode == "ICSP":
-                
-                devs = self.getPIC18F()
-                r_devs = []
-                #print family
-                family = family.replace( "x", "[0-9]")
-                for dev in devs:
-                    reg = re.match( "(" + family + ")", dev)
-                    if reg != None:
-                        if reg.group(1) == dev:
-                            r_devs.append(dev)
-                            
-                            
-                return 5, r_devs
+        #if arch == 8:
+        if mode == "ICSP": attr = "proc"
+        elif mode == "BOOT": attr = "name"
+        
+        devs = []
+        for board in boardlist:
+            if board.bldr == "noboot": pass
+            elif board.arch == arch: devs.append(getattr(board, attr))
+        return 2, devs  #Columns, List
 
-            if mode == "BOOT":
-                devs = []
-                for board in boardlist:
-                    if board.bldr == "noboot": pass
-                    elif board.arch == 8: devs.append(board.name)
-                return 3, devs  #Columns, List
-            
-            
-
-        elif arch == 32:
-            if mode == "ICSP":
-                return 0, [] 
-            
-            if mode == "BOOT":
-                devs = []
-                for board in boardlist:
-                    if board.bldr == "noboot": pass
-                    elif board.arch == 32: devs.append(board.name)
-                return 2, devs
+        
+        #elif arch == 32:
+            #if mode == "BOOT":
+                #devs = []
+                #for board in boardlist:
+                    #if board.arch == 32: devs.append(board.name)
+                #return 2, devs
 
 # ----------------------------------------------------------------------
 # Get OS name and define some OS dependant variable
@@ -276,6 +258,8 @@ class Pinguino(framePinguinoX, Editor):
         del self.keywordList[:]
         del self.reservedword[:]
         del self.libinstructions[:]
+        
+        self.modeCompile = mode 
 
         if mode == "BOOT":
             for board in boardlist:
@@ -287,23 +271,24 @@ class Pinguino(framePinguinoX, Editor):
                     else:
                         self.curBoard.bldr = bootloader[0]
                         self.curBoard.memstart = int(bootloader[1])
-
-            self.extraName = ""
-
+            
+            if arch == 8: textStatus=self.curBoard.name + " [ " + bootloader[0] + " ]"
+            if arch == 32: textStatus=self.curBoard.name
+            
         else:
             self.curBoard = boardlist[0]
             self.curBoard.proc = name
             self.curBoard.board = "PIC"+name.upper()
             self.curBoard.memstart = 0x0000
             self.curBoard.memend = devlist[self.curBoard.proc][1]*1024
-            self.extraName = " [" + self.curBoard.board + "]"
-
+            textStatus = self.curBoard.board
+            
         self.displaymsg(_("Changing board")+"...", 0)
-        self.statusBarEditor.SetStatusText(number=2, text=self.curBoard.name+self.extraName+" - "+mode)
+        self.statusBarEditor.SetStatusText(number=2, text=textStatus)
         if sys.platform=='darwin':
             self.readlib(self.curBoard) #So slow
         else:
-            self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, ))
+            self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, textStatus))
             self.Thread_curBoard.start()
 
 # ------------------------------------------------------------------------------
@@ -395,8 +380,11 @@ class Pinguino(framePinguinoX, Editor):
             result=dlg.ShowModal()
             dlg.Destroy()
             return False
-        self.displaymsg(_("Board:\t")+" " + self.curBoard.name, 1)
-        self.displaymsg(_("Proc:\t")+" " + self.curBoard.proc, 0)
+        temp = 1
+        if self.modeCompile == "BOOT":
+            self.displaymsg(_("Board:\t")+" " + self.curBoard.name, 1)
+            temp = 0
+        self.displaymsg(_("Proc:\t")+" " + self.curBoard.proc, temp)
         self.displaymsg(_("File:\t")+" " + self.GetPath(), 0)
         self.displaymsg(_("compiling")+("..."), 0)
         
@@ -497,7 +485,7 @@ class Pinguino(framePinguinoX, Editor):
 # Load .pdl or .pdl32 files (keywords and libraries)
 # ------------------------------------------------------------------------------
 
-    def readlib(self, board):
+    def readlib(self, board, textStatus=""):
         # trying to find PDL files to store reserved words
         self.keywordList = []
         if board.arch == 8:
@@ -560,10 +548,10 @@ class Pinguino(framePinguinoX, Editor):
         for i in range(len(fixed_rw)):
             self.reservedword.append(fixed_rw[i])
 
-        if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
-            self.displaymsg(_("Board config")+":\t"+board.name+self.extraName, 0, force_update=False)
-        else:
-            self.displaymsg(_("Board config")+":\t"+board.name, 0, force_update=False)	    
+        #if gui==True: # or AttributeError: 'Pinguino' object has no attribute 'extraName'
+            #self.displaymsg(_("Board config")+":\t"+textStatus, 0, force_update=False)
+        #else:
+        self.displaymsg(_("Board config")+":\t"+textStatus, 0, force_update=False)	    
 
         self.changingBoard = False	
 
