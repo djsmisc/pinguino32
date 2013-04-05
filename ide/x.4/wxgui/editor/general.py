@@ -954,16 +954,14 @@ class General(ReadConfig, LoadFeatures):
         """ display message in the log window """
         
         try:
-            if clearpanel==1:
-                self.logwindow.Clear()
-            try:
-                self.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
-            except:
-                self.logwindow.WriteText(message+"\n")
-        except:  
-            print message
+            if clearpanel==1: self.logwindow.Clear()
+            try: elf.logwindow.WriteText(message.decode("utf-8", "replace")+"\n")
+            except: self.logwindow.WriteText(message+"\n")
+            if force_update: self.logwindow.Update()
             
-        if force_update: self.logwindow.Update()
+        except: print message
+            
+        
 
     #----------------------------------------------------------------------
     def OnPreferences(self, event=None):
