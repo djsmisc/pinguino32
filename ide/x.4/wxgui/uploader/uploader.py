@@ -48,7 +48,7 @@ class baseUploader:
 # ------------------------------------------------------------------------------
     def txtWrite(self, message):
         """ display message in the log window """
-        self.output.WriteText(message)
+        self.output(message, 0)
 
 # ------------------------------------------------------------------------------
     def getDevice(self):
@@ -88,7 +88,7 @@ class Uploader:
 
         if self.curBoard.bldr == 'noboot':
             # TODO : interface here something like PICpgm (http://www.members.aon.at/electronics/pic/picpgm/)
-            self.logwindow.WriteText("You choose a board without bootloader.\nYou should either change your board type\nor use a programmer to upload your application on your board")
+            self.logwindow("You choose a board without bootloader.\nYou should either change your board type\nor use a programmer to upload your application on your board", 1)
         elif self.curBoard.bldr == 'boot2':
             curUploader = self.uploaderVSC(*parameters)
         elif self.curBoard.bldr == 'boot3':

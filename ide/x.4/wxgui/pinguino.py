@@ -437,7 +437,7 @@ class Pinguino(framePinguinoX, Editor):
             if os.path.exists(filename + '.hex'):
                 if self.curBoard.arch == 8:
                     #try:
-                    u = Uploader(self.logwindow, filename, self.curBoard)
+                    u = Uploader(self.displaymsg, filename, self.curBoard)
                     #except usb.USBError:  #No device
                     #self.displaymsg("No device",0)
                     #return
