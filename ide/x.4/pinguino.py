@@ -178,8 +178,6 @@ if __name__ == "__main__":
             #Very ugly method to upload code
             #------------------------------------------
             pobject.curBoard = curBoard
-            pobject.logwindow = wx.TextCtrl(None)
-            pobject.logwindow.WriteText = lambda x: sys.stdout.write(x)
             pobject.displaymsg = lambda *x: sys.stdout.write(x[0])
             pobject.OnUpload(path=filename)
             #------------------------------------------
