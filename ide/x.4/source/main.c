@@ -49,6 +49,15 @@
 
 #ifdef boot2
 
+    #if !defined(__18f2455) && !defined(__18f4455) && \
+        !defined(__18f2550) && !defined(__18f4550)
+        #error "********************************"
+        #error "*** Wrong Bootloader Version ***"
+        #error "***  Press F9 to change it.  ***"
+        #error "********************************"
+        
+    #endif
+    
     #include <common_types.h>
     #include <boot_iface.h>
     // only for compatibility with application_iface.o
@@ -108,8 +117,8 @@
     /// Init. all flag/interrupt (with low priority)
     /// ----------------------------------------------------------------
 
-/*    
     RCON = 0x80;                // Enable priority levels on interrupts
+/*
     INTCON = 0;
     INTCON2 = 0;
     INTCON3 = 0;
