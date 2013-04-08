@@ -96,10 +96,10 @@ void _startup (void) __naked
 
     __endasm;
 
-    /* Initialize global and/or static variables. */
+    // Initialize global and/or static variables.
     _do_cinit();
 
-    /* Call the Pinguino main routine. */
+    // Call the Pinguino main routine.
     pinguino_main();
 
     __asm
@@ -109,7 +109,7 @@ void _startup (void) __naked
 }
 
 
-/* the cinit table will be filled by the linker */
+// the cinit table will be filled by the linker
 extern __code struct
   {
     unsigned short num_init;
@@ -124,17 +124,15 @@ extern __code struct
 
 #define TBLRDPOSTINC	tblrd*+
 
-#define prom		0x00		/* 0x00 0x01 0x02*/
-#define curr_byte	0x03		/* 0x03 0x04 */
-#define curr_entry	0x05		/* 0x05 0x06 */
-#define data_ptr	0x07		/* 0x07 0x08 0x09 */
+#define prom		0x00		// 0x00 0x01 0x02
+#define curr_byte	0x03		// 0x03 0x04
+#define curr_entry	0x05		// 0x05 0x06
+#define data_ptr	0x07		// 0x07 0x08 0x09
 
-/* the variable initialisation routine */
+// the variable initialisation routine
 void _do_cinit (void) __naked
 {
-  /*
-   * access registers 0x00 - 0x09 are not saved in this function
-   */
+   // access registers 0x00 - 0x09 are not saved in this function
   __asm
     ; TBLPTR = &cinit
     movlw   low(_cinit)
