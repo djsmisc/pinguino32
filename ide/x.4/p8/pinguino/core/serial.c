@@ -34,7 +34,7 @@
 
 #include <pic18fregs.h>
 #include <typedef.h>
-//#include <stdlib.h>       // no more used (09-11-2012)
+//#include <stdlib.h>       // no longer used (09-11-2012)
 #include <delay.c>
 #include <oscillator.c>
 
@@ -43,6 +43,8 @@
     #include <stdio.c>
     #include <stdarg.h>
 #endif
+
+//extern u32 _cpu_clock_
 
 #if defined(__SERIAL_GETSTRING__) || defined(__SERIAL_PRINT__) || defined(__SERIAL_PRINTLN__)
     #ifndef __SERIAL_PRINTF__
@@ -68,8 +70,9 @@ void serial_begin(unsigned long baudrate)
 	unsigned long spbrg;
 	unsigned char highbyte,lowbyte;
 
-    //spbrg=(48000000/(4*baudrate))-1;
-    spbrg=(SystemGetClock()/(4*baudrate))-1;
+    spbrg=(48000000/(4*baudrate))-1;
+//    spbrg=(SystemGetClock()/(4*baudrate))-1;
+//    spbrg=(_cpu_clock_/(4*baudrate))-1;
 
 	highbyte=spbrg/256;
 	lowbyte=spbrg%256;
@@ -112,8 +115,8 @@ void serial_begin(unsigned long baudrate)
     PIE1bits.RC1IE=1;                       // enable interrupt on RX
     IPR1bits.RC1IP=1;                       // define high priority for RX interrupt
 
-    //PIR1bits.TX1IF=0;
-    //PIE1bits.TX1IE=0;
+    PIR1bits.TX1IF=0;  //
+    PIE1bits.TX1IE=0;  //
 
 #else
     #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
@@ -123,11 +126,12 @@ void serial_begin(unsigned long baudrate)
     wpointer=1;                             // initialize write pointer
     rpointer=1;                             // initialize read pointer
 
-    //RCONbits.IPEN = 1;                      // enable interrupt priorities
+//  RCONbits.IPEN = 1;                      //  enable interrupt priorities
     INTCONbits.GIEH = 1;                    // Enable global HP interrupts
     INTCONbits.GIEL = 1;                    // Enable global LP interrupts
+ 	INTCONbits.PEIE = 1;                    // Enable peripheral interrupts
 
-    //Delayms(100);                           // AG : 12-11-2012
+    Delayms(1000);                           // AG : 12-11-2012
 }
 
 // new character receive ?
