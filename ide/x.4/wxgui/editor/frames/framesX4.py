@@ -786,11 +786,6 @@ class panelOutput ( wx.Panel ):
 		bSizer30.Add( self.choicePort, 0, 0, 5 )
 		
 		self.logwindow = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		self.logwindow.SetMaxLength( 0 ) 
-		self.logwindow.SetFont( wx.Font( 10, 70, 90, 90, False, wx.EmptyString ) )
-		self.logwindow.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.logwindow.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
-		
 		bSizer30.Add( self.logwindow, 1, wx.EXPAND, 5 )
 		
 		gbSizer2 = wx.GridBagSizer( 0, 0 )
@@ -798,11 +793,6 @@ class panelOutput ( wx.Panel ):
 		gbSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.debuggingLine = wx.TextCtrl( self, wx.ID_ANY, _(u">>>"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.debuggingLine.SetMaxLength( 0 ) 
-		self.debuggingLine.SetFont( wx.Font( 10, 76, 90, 90, False, "Monospace" ) )
-		self.debuggingLine.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.debuggingLine.SetBackgroundColour( wx.Colour( 0, 0, 0 ) )
-		
 		gbSizer2.Add( self.debuggingLine, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.EXPAND, 5 )
 		
 		self.buttonSendDebug = wx.Button( self, wx.ID_ANY, _(u"Send"), wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1213,7 +1203,7 @@ class FrameSelectDevice ( wx.Frame ):
 		
 		radioBox_devChoices = [ _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device"), _(u"Device") ]
 		self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, radioBox_devChoices, 2, wx.RA_SPECIFY_COLS|wx.RA_SPECIFY_ROWS )
-		self.radioBox_dev.SetSelection( 0 )
+		self.radioBox_dev.SetSelection( 4 )
 		self.sizer2.Add( self.radioBox_dev, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		

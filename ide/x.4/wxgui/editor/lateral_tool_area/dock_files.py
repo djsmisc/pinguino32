@@ -170,7 +170,7 @@ class File:
             
             ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([*\w]+)[\s]*\(([\w ,*.\[\]]*)\)[\s]*"
             
-            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([ \w\[\]=,{}\"']*);"
+            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([ \w\[\]=,{}\"'\*]*);"
             ReStructs  = "[\s]*(typedef)*[\s]*(struct|union|enum)[\s]*([*\w]*)[\s]*(.+)"
             
             ReTypeDef  = "[\s]*(typedef)[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([\w\[\]]*)[\s]*"#([\w]*)"
