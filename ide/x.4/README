@@ -1,7 +1,7 @@
 Pinguino IDE Installation & Use Instructions
 *************************************************
 
-Copyright (C) 2008 Jean-Pierre MANDON <jp.mandon@gmail.com>
+Copyright (C) 2013 Jean-Pierre MANDON <jp.mandon@gmail.com>
 
 This file is free documentation; you have unlimited permission to copy, 
 distribute and modify it.
@@ -21,11 +21,26 @@ Windows
 - python 2.5
 - wxpython 2.8
 
-Pinguino is based on open source software:
-	compiler			SDCC 2.9.0		http://sdcc.sourceforge.net/
-	asm/linker		GPUTILS			http://gputils.sourceforge.net/
-	bootloader		VASCO project	http://vasco.gforge.enseeiht.fr/
-	IDE				Python			http://www.python.org/
+Mac OS X 10.6 (Snow Leopard)
+- python 2.6.1 (32 bit)
+- wxpython 2.8 (32 bit)
+- libusb 0.1.4
+- pyusb 0.4.3
+
+Pinguino (8 bit) is based on open source software:
+- compiler		SDCC 		http://sdcc.sourceforge.net/
+- asm/linker		GPUTILS		http://gputils.sourceforge.net/
+- bootloader (v1,2)	VASCO project	http://vasco.gforge.enseeiht.fr/
+- bootloader (v3)	Diolan		http://www.diolan.com/pic/
+- bootloader (v4)	JAL Project	http://www.justanotherlanguage.org/
+			and Alexander Enzmann's USB Framework
+- IDE			Python		http://www.python.org/
+
+Pinguino (32 bit) is based on open source software:
+- compiler		GCC		http://http://gcc.gnu.org/
+- asm/linker		BINUTILS	http://www.gnu.org/
+- C library		Newlib		http://sourceware.org/newlib/
+- IDE			Python		http://www.python.org/
 			
 Contributions, bug reports and questions are welcome.
 jp.mandon@gmail.com
