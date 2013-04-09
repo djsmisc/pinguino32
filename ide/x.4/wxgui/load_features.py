@@ -64,7 +64,7 @@ class LoadFeatures:
                 from wxgui.editor.lateral_tool_area import File
                 self.Files = File()
                 self.Files.__initDockFile__(self)
-            else: elf.lat.notebookLateral.RemovePage(0)             
+            else: self.lat.notebookLateral.RemovePage(0)             
             
             if config.getElse("Tools", "documents", "True"):
                 from wxgui.editor.lateral_tool_area import Documents
