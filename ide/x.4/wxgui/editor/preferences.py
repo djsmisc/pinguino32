@@ -240,13 +240,10 @@ class Preferences():
         value = ["official", "pinguinove"].index(self.IDE.getElse("IDE", "sourcedoc", "official"))
         self.comboBoxSourcedoc.SetSelection(value)
         
-        
-        checks = []
         for item in self.GlobalSet:
             value = self.IDE.getElse("Main", item, "True")
-            if value: checks.append(self.GlobalSet.index(item))
-        self.checkListPreferences.SetChecked(checks)
-        
+            if value: self.checkListPreferences.Check(self.GlobalSet.index(item))
+            
         self.IDE.saveConfig()
         
     #----------------------------------------------------------------------

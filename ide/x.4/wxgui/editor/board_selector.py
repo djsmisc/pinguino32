@@ -68,8 +68,8 @@ class BoarSelector:
             #index = self.radioBox_famChoices.index(self.FAMILY)
             #self.radioBox_fam.SetSelection(index)
 
-        if self.MODE == "BOOT": self.new_choices_dev(_("Processors"))
-        self.new_choices_dev(_("Devices"))
+        #if self.MODE == "BOOT": self.new_choices_dev()
+        self.new_choices_dev()
 
         if self.DEVICE in self.radioBox_devChoices:
             index = self.radioBox_devChoices.index(self.DEVICE)
@@ -143,10 +143,11 @@ class BoarSelector:
         mode = self.radioBox_mode.GetSelection()
         if mode == 0: self.MODE = "ICSP"
         elif mode == 1: self.MODE = "BOOT"
-
-        self.new_choices_fam()
-        self.r_device()
-        self.updateFrame()
+        
+        if self.ARCH == 8:
+            self.new_choices_fam()
+            self.r_device()
+            self.updateFrame()
 
     #----------------------------------------------------------------------
     def r_fam(self, event=None):
@@ -156,8 +157,8 @@ class BoarSelector:
             if self.MODE == "ICSP":
                 self.BOOTLOADER = self.Boot[0]
         #else:
-                if self.radioBox_famChoices:  #families have not been generated.
-                    self.FAMILY = self.radioBox_famChoices[sel]
+                #if self.radioBox_famChoices:  #families have not been generated.
+                #self.FAMILY = self.radioBox_famChoices[sel]
         
                 self.new_choices_dev()
         
@@ -167,18 +168,23 @@ class BoarSelector:
     def new_choices_fam(self):
         try: self.radioBox_fam.Destroy()
         except: pass 
-        columns, self.radioBox_famChoices = self.IDE.getfamilies(self.ARCH, self.MODE)
-        if not self.radioBox_famChoices: #if no families dfined, then, {8-bit/boot, 32-bit}
+        #columns, self.radioBox_famChoices = self.IDE.getfamilies(self.ARCH, self.MODE)
+        #if not self.radioBox_famChoices: #if no families dfined, then, {8-bit/boot, 32-bit}
             
-            if self.ARCH == 8:
-                self.radioBox_botChoices = ["Bootloader v1.x or v2.x", "Bootloader v4.x"]
-                self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Bootloader"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_botChoices, majorDimension=2)
-                self.r_fam()
-                index = self.Boot.index(self.BOOTLOADER)
-                self.radioBox_fam.SetSelection( index-1 )	
-                self.buildChoicesFam()    
-                self.new_choices_dev(_(u"Devices"))
-                return
+        if self.ARCH == 8 and self.MODE == "BOOT":
+            self.radioBox_botChoices = ["Bootloader v1.x or v2.x", "Bootloader v4.x"]
+            self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Bootloader"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_botChoices, majorDimension=2)
+            self.r_fam()
+            index = self.Boot.index(self.BOOTLOADER)
+            self.radioBox_fam.SetSelection( index-1 )	
+            self.buildChoicesFam()    
+            self.new_choices_dev()
+            return
+        
+        else:
+            self.new_choices_dev()
+            return
+            
             
         #if self.ARCH == 8:
             #self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Family"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_famChoices, majorDimension=columns)
@@ -190,27 +196,27 @@ class BoarSelector:
                 #self.radioBox_fam.SetSelection(index)	
             #return
         
-        if self.ARCH == 8: self.new_choices_dev(_(u"Processors"))
+        if self.ARCH == 8: self.new_choices_dev()
         else:
-            if self.MODE == "BOOT": self.new_choices_dev(_(u"Devices"))
-            elif self.MODE == "ICSP": self.new_choices_dev(_(u"Processors"))
+            if self.MODE == "BOOT": self.new_choices_dev()
+            elif self.MODE == "ICSP": self.new_choices_dev()
         
 
 
     #----------------------------------------------------------------------
-    def new_choices_dev(self, name):
+    def new_choices_dev(self):
         try:
             self.radioBox_dev.Destroy()
             self.m_scrolledWindow1.Destroy()
         except: pass 
-        columns, self.radioBox_devChoices = self.IDE.getDevices(self.ARCH, self.MODE)
+        columns, self.radioBox_devChoices = self.IDE.getDevices(self.ARCH)
 
         self.m_scrolledWindow1 = wx.ScrolledWindow( self.m_panel37, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
         self.m_scrolledWindow1.SetScrollRate( 5, 5 )
         self.sizer2 = wx.BoxSizer( wx.VERTICAL )
         
         if self.radioBox_devChoices:
-            self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, name, wx.DefaultPosition, wx.DefaultSize, self.radioBox_devChoices, majorDimension=columns)
+            self.radioBox_dev = wx.RadioBox( self.m_scrolledWindow1, wx.ID_ANY, _(u"Devices"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_devChoices, majorDimension=columns)
             self.radioBox_dev.SetSelection( 0 )
             self.radioBox_dev.Bind(wx.EVT_RADIOBOX, self.r_device)
 

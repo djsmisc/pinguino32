@@ -171,7 +171,7 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def getfamilies(self, arch, mode):
+    def getfamilies(self, arch):
         #Return a list of available families.
 
         if arch == 8:
@@ -192,26 +192,15 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def getDevices(self, arch, mode):
+    def getDevices(self, arch):
         """"""
-
-        #if arch == 8:
-        if mode == "ICSP": attr = "proc"
-        elif mode == "BOOT": attr = "name"
-        
         devs = []
         for board in boardlist:
             if board.bldr == "noboot": pass
-            elif board.arch == arch: devs.append(getattr(board, attr))
+            elif board.arch == arch: devs.append(board.name)
         return 2, devs  #Columns, List
+    
 
-        
-        #elif arch == 32:
-            #if mode == "BOOT":
-                #devs = []
-                #for board in boardlist:
-                    #if board.arch == 32: devs.append(board.name)
-                #return 2, devs
 
 # ----------------------------------------------------------------------
 # Get OS name and define some OS dependant variable
@@ -272,16 +261,18 @@ class Pinguino(framePinguinoX, Editor):
                         self.curBoard.bldr = bootloader[0]
                         self.curBoard.memstart = int(bootloader[1])
             
-            if arch == 8: textStatus=self.curBoard.name + " [ " + bootloader[0] + " ]"
+            if arch == 8: textStatus=self.curBoard.name + " [" + bootloader[0] + "]"
             if arch == 32: textStatus=self.curBoard.name
             
         else:
             self.curBoard = boardlist[0]
-            self.curBoard.proc = name
+            self.curBoard.name = name
+            for board in boardlist:
+                if name == board.name: self.curBoard.proc = board.proc
             self.curBoard.board = "PIC"+name.upper()
             self.curBoard.memstart = 0x0000
             self.curBoard.memend = devlist[self.curBoard.proc][1]*1024
-            textStatus = self.curBoard.name
+            textStatus = self.curBoard.name + " [ICSP]"
             
         self.displaymsg(_("Changing board")+"...", 0)
         self.statusBarEditor.SetStatusText(number=2, text=textStatus)
