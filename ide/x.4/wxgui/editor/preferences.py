@@ -101,14 +101,28 @@ class Preferences():
 
         #Tools
         #----------------------------------------------------------------------
-        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "files", self.checkBoxFiles.Value), self.checkBoxFiles)  
-        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "documents", self.checkBoxDocuments.Value), self.checkBoxDocuments)  
-        self.Bind(wx.EVT_CHECKBOX, lambda x:self.IDE.setConfig("Tools", "search", self.checkBoxSearch.Value), self.checkBoxSearch)  
+        
 
+        
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("files", self.checkBoxFiles), self.checkBoxFiles)  
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("documents", self.checkBoxDocuments), self.checkBoxDocuments)  
+        self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("search", self.checkBoxSearch), self.checkBoxSearch)  
+
+        #self.Bind(wx.EVT_CHECKBOX, self.setRestart, self.checkBoxFiles)
+        #self.Bind(wx.EVT_CHECKBOX, self.setRestart, self.checkBoxDocuments)
+        #self.Bind(wx.EVT_CHECKBOX, self.setRestart, self.checkBoxSearch)
+        
         #Others
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_COMBOBOX, lambda x:self.IDE.setConfig("IDE", "sourcedoc", ["official", "pinguinove"][self.comboBoxSourcedoc.Items.index(self.comboBoxSourcedoc.Value)]), self.comboBoxSourcedoc)
 
+    #----------------------------------------------------------------------
+    def setTools(self, name, check):
+        """"""
+        self.setRestart()
+        self.IDE.setConfig("Tools", name, check.Value)
+        
+        
         
     #----------------------------------------------------------------------
     def setColor(self, selColor, TextCtrl, option):
@@ -271,6 +285,10 @@ class Preferences():
                            self.GlobalSet[event.GetSelection()],
                            self.checkListPreferences.IsChecked(event.GetSelection()))
         
+        self.setRestart()
+            
+    #----------------------------------------------------------------------
+    def setRestart(self, event=None):
         if not self.labelNotice.IsShown():
             self.labelNotice.Show()
             self.fgSizer2.Layout()

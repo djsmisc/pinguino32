@@ -52,33 +52,42 @@ class LoadFeatures:
         """"""
         config = ReadConfig()
         config.loadConfig()
-        if config.getElse("Main", "tools", "True"):
+        
+        files_ = config.getElse("Tools", "files", "True")
+        documents_ = config.getElse("Tools", "documents", "True")
+        search_ = config.getElse("Tools", "search", "True")
+        
+        tools_ = files_ == documents_ == search_ == False
+        
+        if config.getElse("Main", "tools", "True") and not tools_:
             from wxgui.editor.frames import panelLateral
             self.lat = panelLateral(self)
             
             self._mgr.AddPane(self.lat,
                               wx.aui.AuiPaneInfo().Caption(_("Tools")).
                               Right().CloseButton(False).CaptionVisible(False))
+            
+     
                 
-            if config.getElse("Tools", "files", "True"):
+            if files_:
                 from wxgui.editor.lateral_tool_area import File
                 self.Files = File()
                 self.Files.__initDockFile__(self)
-            else: self.lat.notebookLateral.RemovePage(0)             
+            else: self.lat.file.Destroy()
             
-            if config.getElse("Tools", "documents", "True"):
+            if documents_:
                 from wxgui.editor.lateral_tool_area import Documents
                 self.Documents = Documents()
                 self.Documents.__initDocuments__(self)
                 lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
                 if os.path.isdir(lateralPath): self.Documents.buildLateralDir(lateralPath)
-            else: self.lat.notebookLateral.RemovePage(1)
+            else: self.lat.documents.Destroy()
                
-            if config.getElse("Tools", "search", "True"):
+            if search_:
                 from wxgui.editor.lateral_tool_area import Search
                 self.Search = Search()
                 self.Search.__initSearch__(self)
-            else: self.lat.notebookLateral.RemovePage(2)
+            else: self.lat.search.Destroy()
                             
                 
                 
