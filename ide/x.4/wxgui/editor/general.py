@@ -796,7 +796,6 @@ class General(ReadConfig, LoadFeatures):
 
     #----------------------------------------------------------------------
     def updates(self):
-        #if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
         if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True") and not self.needRestart():
             self.Files.update_dockFiles()
             
@@ -930,9 +929,10 @@ class General(ReadConfig, LoadFeatures):
         add2Toolbar("save", "Save", self.OnSave, _("Save File"))
         add2Toolbar("stop", "Close", self.OnClose, _("Close File"))
         self.toolbar.AddSeparator()
-        add2Toolbar("undo", "Undo", self.OnUndo, _("Undo"))
-        add2Toolbar("redo", "Redo", self.OnRedo, _("Redo"))
-        self.toolbar.AddSeparator()
+	add2Toolbar("undo", "Undo", self.OnUndo, _("Undo"))
+	add2Toolbar("redo", "Redo", self.OnRedo, _("Redo"))
+	self.toolbar.AddSeparator()
+	
         add2Toolbar("cut", "Cut", self.OnCut, _("Cut"))
         add2Toolbar("copy", "Copy", self.OnCopy, _("Copy"))
         add2Toolbar("paste", "Paste", self.OnPaste, _("Paste"))
@@ -941,7 +941,7 @@ class General(ReadConfig, LoadFeatures):
         self.toolbar.AddSeparator()
         
         if self.getElse("Main", "tools", "True") and self.getElse("Tools", "search", "True") and not self.needRestart():
-            add2Toolbar("find", "Fin", self.Search.OnFind, _("Search in File"))
+            add2Toolbar("find", "Find", self.Search.OnFind, _("Search in File"))
             add2Toolbar("replace", "Replace", self.Search.OnReplace, _("Replace in File"))
             self.toolbar.AddSeparator()
 
