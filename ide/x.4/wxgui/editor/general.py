@@ -518,7 +518,11 @@ class General(ReadConfig, LoadFeatures):
 	    self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
 	    self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255)) 
 	    self.debuggingLine.SetBackgroundColour(wx.Colour(0, 0, 0))
-	    self.debuggingLine.SetForegroundColour(wx.Colour(255, 255, 255))   
+	    self.debuggingLine.SetForegroundColour(wx.Colour(255, 255, 255))
+	    
+	    
+	#self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
+	#self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255)) 	
         
         
         self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)

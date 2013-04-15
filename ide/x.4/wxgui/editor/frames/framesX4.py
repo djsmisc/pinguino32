@@ -256,7 +256,7 @@ class framePreferences ( wx.Frame ):
 		self.appearance.SetSizer( fgSizer3 )
 		self.appearance.Layout()
 		fgSizer3.Fit( self.appearance )
-		self.auinotebookPreferences.AddPage( self.appearance, _(u"appearance"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.appearance, _(u"appearance"), False, wx.NullBitmap )
 		self.souce_code_font_size = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer4 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer4.AddGrowableCol( 1 )
@@ -409,7 +409,7 @@ class framePreferences ( wx.Frame ):
 		self.spinCtrlItemsCompleterCount = wx.SpinCtrl( self.auto_completion, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 5, 30, 14 )
 		fgSizer12.Add( self.spinCtrlItemsCompleterCount, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.checkBoxInsertParenthesis = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Insert argumentets with \"(\""), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.checkBoxInsertParenthesis = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Insert arguments with \"(\""), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.checkBoxInsertParenthesis.SetValue(True) 
 		fgSizer12.Add( self.checkBoxInsertParenthesis, 0, wx.ALL, 5 )
 		
@@ -433,12 +433,6 @@ class framePreferences ( wx.Frame ):
 		
 		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.checkBoxDoubleCuotes = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Double quotes: \"\""), wx.DefaultPosition, wx.DefaultSize, 0 )
-		fgSizer6.Add( self.checkBoxDoubleCuotes, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
-		
-		
-		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
 		self.checkBoxKeys = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Keys: {}"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer6.Add( self.checkBoxKeys, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
@@ -451,7 +445,13 @@ class framePreferences ( wx.Frame ):
 		
 		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.checkBoxSingleCuotes = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Single quotes: ''"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.checkBoxDoubleCuotes = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Double quotes: \""), wx.DefaultPosition, wx.DefaultSize, 0 )
+		fgSizer6.Add( self.checkBoxDoubleCuotes, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		
+		
+		fgSizer6.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.checkBoxSingleCuotes = wx.CheckBox( self.auto_completion, wx.ID_ANY, _(u"Single quotes: '"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		fgSizer6.Add( self.checkBoxSingleCuotes, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		
@@ -461,7 +461,7 @@ class framePreferences ( wx.Frame ):
 		self.auto_completion.SetSizer( bSizer39 )
 		self.auto_completion.Layout()
 		bSizer39.Fit( self.auto_completion )
-		self.auinotebookPreferences.AddPage( self.auto_completion, _(u"autocompletion"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.auto_completion, _(u"autocompletion"), True, wx.NullBitmap )
 		self.open_save_files = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		gSizer1 = wx.GridSizer( 2, 2, 0, 0 )
 		
