@@ -223,10 +223,7 @@
 	#define HLVDIN 17
 	#define C2OU 17
 
-    #if defined(PINGUINO2550) || defined(PINGUINO4550) || \
-        defined(PINGUINO25K50) || defined(PINGUINO45K50) || \
-        defined(PINGUINO2455) || defined(PINGUINO4455) || \
-        defined(CHRP3)
+    #if defined(PINGUINO2550) || defined(PINGUINO25K50) || defined(PINGUINO2455) || defined(CHRP3)
     
         // run led pin
         #define A4 18
@@ -234,6 +231,18 @@
         #define RUNLED 18
         #define LED1 18
         #define USERLED 18
+        
+    #endif
+
+    #if defined(PINGUINO4550) || defined(PINGUINO45K50) || defined(PINGUINO4455)
+    
+        // run led pin
+        #define A4 29
+        //#define RA4 29
+        #define RUNLED 29
+        #define LED1 29
+        #define USERLED 29
+        
     #endif
     
 #endif
