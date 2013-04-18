@@ -44,9 +44,9 @@ typedef union
 	struct
 	{
 		unsigned char	rsvd;		// reserved for future use. should be 0
-		unsigned char	sec;		// BCD codification for seconds, 00-59
-		unsigned char	min;		// BCD codification for minutes, 00-59
-		unsigned char	hour;		// BCD codification for hours, 00-24
+		unsigned char	seconds;		// BCD codification for seconds, 00-59
+		unsigned char	minutes;		// BCD codification for minutes, 00-59
+		unsigned char	hours;		// BCD codification for hours, 00-24
 	};								// field access
 	unsigned char		b[4];		// byte access
 	unsigned short		w[2];		// 16 bits access
@@ -58,9 +58,9 @@ typedef union
 {
 	struct
 	{
-		unsigned char	wday;		// BCD codification for day of the week, 00-06
-		unsigned char	mday;		// BCD codification for day of the month, 01-31
-		unsigned char	mon;		// BCD codification for month, 01-12
+		unsigned char	dayofweek;		// BCD codification for day of the week, 00-06
+		unsigned char	dayofmonth;		// BCD codification for day of the month, 01-31
+		unsigned char	month;		// BCD codification for month, 01-12
 		unsigned char	year;		// BCD codification for years, 00-99
 	};								// field access
 	unsigned char		b[4];		// byte access
@@ -118,16 +118,16 @@ void RTCC_ChimeEnable(void);
 void RTCC_ChimeDisable(void);
 int RTCC_GetChimeEnable(void);
 void RTCC_SetAlarmRepeat(int);
-void RTCC_AlarmRepeatEveryHalfSecond(void);
-void RTCC_AlarmRepeatEverySecond(void);
-void RTCC_AlarmRepeatEveryTenSeconds(void);
-void RTCC_AlarmRepeatEveryMinute(void);
-void RTCC_AlarmRepeatEveryTenMinutes(void);
-void RTCC_AlarmRepeatEveryHour(void);
-void RTCC_AlarmRepeatEveryDay(void);
-void RTCC_AlarmRepeatEveryWeek(void);
-void RTCC_AlarmRepeatEveryMonth(void);
-void RTCC_AlarmRepeatEveryYear(void);
+void RTCC_AlarmEveryHalfSecond(void);
+void RTCC_AlarmEverySecond(void);
+void RTCC_AlarmEveryTenSeconds(void);
+void RTCC_AlarmEveryMinute(void);
+void RTCC_AlarmEveryTenMinutes(void);
+void RTCC_AlarmEveryHour(void);
+void RTCC_AlarmEveryDay(void);
+void RTCC_AlarmEveryWeek(void);
+void RTCC_AlarmEveryMonth(void);
+void RTCC_AlarmEveryYear(void);
 int RTCC_GetAlarmRepeat(void);
 void RTCC_SetAlarmRepeatCount(char);
 char RTCC_GetAlarmRepeatCount(void);
@@ -181,9 +181,9 @@ rtccTime RTCC_ConvertTime(rtccTime *pTm)
 {
 	rtccTime t0;
 	
-	t0.hour = bcd2bin(pTm->hour);
-	t0.min  = bcd2bin(pTm->min);
-	t0.sec  = bcd2bin(pTm->sec);
+	t0.hours = bcd2bin(pTm->hours);
+	t0.minutes  = bcd2bin(pTm->minutes);
+	t0.seconds  = bcd2bin(pTm->seconds);
 	return t0;
 }
 
@@ -191,9 +191,9 @@ rtccDate RTCC_ConvertDate(rtccDate *pDt)
 {
 	rtccDate d0;
 	
-	d0.wday = bcd2bin(pDt->wday);
-	d0.mday = bcd2bin(pDt->mday);
-	d0.mon  = bcd2bin(pDt->mon);
+	d0.dayofweek = bcd2bin(pDt->dayofweek);
+	d0.dayofmonth = bcd2bin(pDt->dayofmonth);
+	d0.month  = bcd2bin(pDt->month);
 	d0.year = bcd2bin(pDt->year);
 	return d0;
 }
@@ -468,7 +468,7 @@ void RTCC_SetCalibration(int cal)
 	if (RTCCON & 0x8000)					// if RTCC is ON
 	{
 		t0 = RTCC_GetTime();
-		if ((t0.sec & 0xFF) == 00)			// we're at second 00, wait auto-adjust to be performed
+		if ((t0.seconds & 0xFF) == 00)			// we're at second 00, wait auto-adjust to be performed
 			while(!(RTCCON & 0x2));			// wait until second half...
 	}
 	RTCC_SetWriteEnable();
@@ -578,43 +578,43 @@ void RTCC_SetAlarmRepeat(int rpt)
 	RTCALRMbits.AMASK = rpt;
 }
 
-void RTCC_AlarmRepeatEveryHalfSecond(void)
+void RTCC_AlarmEveryHalfSecond(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_HALF_SECOND);
 }
-void RTCC_AlarmRepeatEverySecond(void)
+void RTCC_AlarmEverySecond(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_SECOND);
 }
-void RTCC_AlarmRepeatEveryTenSeconds(void)
+void RTCC_AlarmEveryTenSeconds(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_TEN_SECONDS);
 }
-void RTCC_AlarmRepeatEveryMinute(void)
+void RTCC_AlarmEveryMinute(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_MINUTE);
 }
-void RTCC_AlarmRepeatEveryTenMinutes(void)
+void RTCC_AlarmEveryTenMinutes(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_TEN_MINUTES);
 }
-void RTCC_AlarmRepeatEveryHour(void)
+void RTCC_AlarmEveryHour(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_HOUR);
 }
-void RTCC_AlarmRepeatEveryDay(void)
+void RTCC_AlarmEveryDay(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_DAY);
 }
-void RTCC_AlarmRepeatEveryWeek(void)
+void RTCC_AlarmEveryWeek(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_WEEK);
 }
-void RTCC_AlarmRepeatEveryMonth(void)
+void RTCC_AlarmEveryMonth(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_MONTH);
 }
-void RTCC_AlarmRepeatEveryYear(void)
+void RTCC_AlarmEveryYear(void)
 {
 	RTCC_SetAlarmRepeat(RTCC_ALARM_EVERY_YEAR);
 }
