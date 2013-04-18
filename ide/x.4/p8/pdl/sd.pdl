@@ -1,4 +1,4 @@
-Fatfs FATFS#include <sd/pff.c>#define __SPI2__
+Fatfs FATFS#include <sd/pff.c>
 Dir DIRTABLE#include <sd/pff.c>
 
 SD.readSector disk_readp#include <sd/diskio.c>

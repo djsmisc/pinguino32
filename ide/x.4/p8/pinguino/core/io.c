@@ -177,8 +177,8 @@ void IO_remap(void)
         PPSCONbits.IOLOCK = 1;			// Turn on PPS Write Protect
         //SystemLock();
 
-    #endif /* defined(PINGUINO26J50) || defined(PINGUINO46J50) */
+    #endif // defined(PINGUINO26J50) || defined(PINGUINO46J50)
 }
-#endif /* defined(__18f26j50) || defined(__18f46j50) */
+#endif // defined(__18f26j50) || defined(__18f46j50)
 
 #endif /* __IO_C */
