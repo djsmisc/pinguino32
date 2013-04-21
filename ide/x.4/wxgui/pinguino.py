@@ -412,6 +412,7 @@ class Pinguino(framePinguinoX, Editor):
                 #os.remove(filename+".c")
                 return True
         self.in_verify=0
+        self.focus()
 
 # ------------------------------------------------------------------------------
 # OnUpload:
