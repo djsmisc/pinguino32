@@ -592,9 +592,10 @@ class General(ReadConfig, LoadFeatures):
         self.Bind(wx.EVT_MENU, self.OnClear, self.menu.menuItemClear)
         self.Bind(wx.EVT_MENU, self.OnUndo, self.menu.menuItemUndo)
         self.Bind(wx.EVT_MENU, self.OnRedo, self.menu.menuItemRedo)
-        #self.Bind(wx.EVT_MENU, self.OnFind, self.menu.menuItemFind)
-        #self.Bind(wx.EVT_MENU, self.OnReplace, self.menu.menuItemReplace)
-        #self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)
+	
+	
+	self.Bind(wx.EVT_MENU, self.OnSelectall, self.menu.menuItemSelectAll)           
+	
         self.Bind(wx.EVT_MENU, self.OnComment, self.menu.menuItemComment_Uncomment)
         self.Bind(wx.EVT_MENU, self.OnIndent, self.menu.menuItemIndent)
         self.Bind(wx.EVT_MENU, self.OnUnIndent, self.menu.menuItemUnIndent)

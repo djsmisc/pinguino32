@@ -354,7 +354,7 @@ class framePreferences ( wx.Frame ):
 		self.highlight.SetSizer( fgSizer7 )
 		self.highlight.Layout()
 		fgSizer7.Fit( self.highlight )
-		self.auinotebookPreferences.AddPage( self.highlight, _(u"highligh"), False, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.highlight, _(u"highligh"), True, wx.NullBitmap )
 		self.others = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer10 = wx.FlexGridSizer( 0, 2, 0, 0 )
 		fgSizer10.SetFlexibleDirection( wx.BOTH )
@@ -461,7 +461,7 @@ class framePreferences ( wx.Frame ):
 		self.auto_completion.SetSizer( bSizer39 )
 		self.auto_completion.Layout()
 		bSizer39.Fit( self.auto_completion )
-		self.auinotebookPreferences.AddPage( self.auto_completion, _(u"autocompletion"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.auto_completion, _(u"autocompletion"), False, wx.NullBitmap )
 		self.open_save_files = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		gSizer1 = wx.GridSizer( 2, 2, 0, 0 )
 		
@@ -953,7 +953,7 @@ class panelLateral ( wx.Panel ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _(u"Documents"), True )
+		self.notebookLateral.AddPage( self.documents, _(u"Documents"), False )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
@@ -966,8 +966,8 @@ class panelLateral ( wx.Panel ):
 		
 		fgSizer1.Add( self.m_staticText3, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
 		
-		self.searchCtrlSearch = wx.SearchCtrl( self.search, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.searchCtrlSearch.ShowSearchButton( True )
+		self.searchCtrlSearch = wx.SearchCtrl( self.search, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+		self.searchCtrlSearch.ShowSearchButton( False )
 		self.searchCtrlSearch.ShowCancelButton( False )
 		fgSizer1.Add( self.searchCtrlSearch, 0, wx.EXPAND|wx.ALL, 5 )
 		
@@ -1042,7 +1042,7 @@ class panelLateral ( wx.Panel ):
 		self.search.SetSizer( fgSizer1 )
 		self.search.Layout()
 		fgSizer1.Fit( self.search )
-		self.notebookLateral.AddPage( self.search, _(u"Search"), False )
+		self.notebookLateral.AddPage( self.search, _(u"Search"), True )
 		
 		bSizer3.Add( self.notebookLateral, 1, wx.EXPAND, 5 )
 		

@@ -64,6 +64,13 @@ class Preferences():
         #Appearance
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_CHOICE,  self.SetTheme, self.choiceTheme)
+        
+        #Colors
+        #----------------------------------------------------------------------
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED,  lambda x:self.setColor(self.colourPickerErrorLine, self.textCtrlErrorLine, "codeerror"), self.colourPickerErrorLine)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED,  lambda x:self.setColor(self.colourPickerCurrentLine, self.textCtrlCurrentLine, "selection"), self.colourPickerCurrentLine)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED,  lambda x:self.setColor(self.colourPickerCodeNav, self.textCtrlCodeNave, "codenavigation"), self.colourPickerCodeNav)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED,  lambda x:self.setColor(self.colourPickerSearch, self.textCtrlSearch, "searchreplace"), self.colourPickerSearch)
 
         #Source
         #----------------------------------------------------------------------
@@ -101,9 +108,6 @@ class Preferences():
 
         #Tools
         #----------------------------------------------------------------------
-        
-
-        
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("files", self.checkBoxFiles), self.checkBoxFiles)  
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("documents", self.checkBoxDocuments), self.checkBoxDocuments)  
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("search", self.checkBoxSearch), self.checkBoxSearch)  
