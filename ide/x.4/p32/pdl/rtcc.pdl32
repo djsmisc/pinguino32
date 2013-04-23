@@ -57,16 +57,16 @@ RTCC.getChimeEnable RTCC_GetChimeEnable#include <rtcc.c>
 
 RTCC.setAlarmRepeat RTCC_SetAlarmRepeat#include <rtcc.c>
 RTCC.getAlarmRepeat RTCC_GetAlarmRepeat#include <rtcc.c>
-RTCC.alarmRepeatEveryHalfSecond RTCC_AlarmRepeatEveryHalfSecond#include <rtcc.c>
-RTCC.alarmRepeatEverySecond RTCC_AlarmRepeatEverySecond#include <rtcc.c>
-RTCC.alarmRepeatEveryTenSeconds RTCC_AlarmRepeatEveryTenSeconds#include <rtcc.c>
-RTCC.alarmRepeatEveryMinute RTCC_AlarmRepeatEveryMinute#include <rtcc.c>
-RTCC.alarmRepeatEveryTenMinutes RTCC_AlarmRepeatEveryTenMinutes#include <rtcc.c>
-RTCC.alarmRepeatEveryHour RTCC_AlarmRepeatEveryHour#include <rtcc.c>
-RTCC.alarmRepeatEveryDay RTCC_AlarmRepeatEveryDay#include <rtcc.c>
-RTCC.alarmRepeatEveryWeek RTCC_AlarmRepeatEveryWeek#include <rtcc.c>
-RTCC.alarmRepeatEveryMonth RTCC_AlarmRepeatEveryMonth#include <rtcc.c>
-RTCC.alarmRepeatEveryYear RTCC_AlarmRepeatEveryYear#include <rtcc.c>
+RTCC.alarmEveryHalfSecond RTCC_AlarmEveryHalfSecond#include <rtcc.c>
+RTCC.alarmEverySecond RTCC_AlarmEverySecond#include <rtcc.c>
+RTCC.alarmEveryTenSeconds RTCC_AlarmEveryTenSeconds#include <rtcc.c>
+RTCC.alarmEveryMinute RTCC_AlarmEveryMinute#include <rtcc.c>
+RTCC.alarmEveryTenMinutes RTCC_AlarmEveryTenMinutes#include <rtcc.c>
+RTCC.alarmEveryHour RTCC_AlarmEveryHour#include <rtcc.c>
+RTCC.alarmEveryDay RTCC_AlarmEveryDay#include <rtcc.c>
+RTCC.alarmEveryWeek RTCC_AlarmEveryWeek#include <rtcc.c>
+RTCC.alarmEveryMonth RTCC_AlarmEveryMonth#include <rtcc.c>
+RTCC.alarmEveryYear RTCC_AlarmEveryYear#include <rtcc.c>
 
 RTCC.setAlarmRepeatCount RTCC_SetAlarmRepeatCount#include <rtcc.c>
 RTCC.getAlarmRepeatCount RTCC_GetAlarmRepeatCount#include <rtcc.c>
