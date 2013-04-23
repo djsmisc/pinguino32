@@ -275,7 +275,11 @@ void DCF77_start(u8 dcfPin)
 	IntConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
 	T1CON    = 0x20;					// prescaler 1:64, internal peripheral clock
 	TMR1     = 0;						// clear timer register
-	PR1      = 12500;					// load period register
+    #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
+    PR1      = 6250;					// load period register
+    #else
+    PR1      = 12500;	                // load period register
+    #endif
 	IPC1SET  = 7;						// select interrupt priority and sub-priority
 	IFS0CLR  = 1 << INT_TIMER1_VECTOR;	// clear interrupt flag
 	IEC0SET  = 1 << INT_TIMER1_VECTOR;	// enable timer 1 interrupt
