@@ -10,7 +10,7 @@
 		U1TX = RF8 (pin 53) = White
 	--------------------------------------------------------------------------*/
 #define UARTPORT UART1
-#DEFINE UARTSPEED 9600
+#define UARTSPEED 9600
 
 const u8 mainMenu[] =
 {
