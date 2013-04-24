@@ -4,6 +4,7 @@
 import os
 import sys
 import shutil
+import traceback
 
 import wxgui
 
@@ -40,9 +41,7 @@ class MySplashScreen(wx.SplashScreen):
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
                                  5000, None, -1, style=wx.BORDER_SIMPLE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        #self.fc = wx.FutureCall(2000, self.ShowMain) #WTF, 2 seconds to start IDE
-        self.fc = wx.FutureCall(2000, self.ShowMain) #20 miliseconds
-
+        self.fc = wx.FutureCall(2000, self.ShowMain)
     #----------------------------------------------------------------------
     def OnClose(self, evt):
         evt.Skip()
@@ -70,13 +69,11 @@ class MyApp(wx.App):
             frame = Pinguino(None)
             frame.__initPinguino__(None)
             app.SetTopWindow(frame)
-            #app.cent
             frame.Show()
         else:			
             splash = MySplashScreen()
             splash.Show()
         return True
-
 
 
 def show_error():
@@ -87,9 +84,11 @@ def show_error():
 
 #----------------------------------------------------------------------
 def main():
-    app = MyApp()
-    app.MainLoop()
-    
+    try:
+        app = MyApp()
+        app.MainLoop()
+    except:
+        show_error()
 
 
 

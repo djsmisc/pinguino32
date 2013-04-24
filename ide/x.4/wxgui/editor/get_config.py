@@ -131,8 +131,6 @@ class ReadConfig:
                     self.addFile2Recent(file)
         except: pass
 
-
-
     
     #----------------------------------------------------------------------
     def setEditorFont(self):

@@ -35,9 +35,9 @@ class File:
     #----------------------------------------------------------------------
     def __initDockFile__(self, IDE):
         self.IDE = IDE
-        self.lateralFunc = self.IDE.lat.listCtrlFunc
-        self.lateralVars = self.IDE.lat.listCtrlVars
-        self.lateralDefi = self.IDE.lat.listCtrlDefi
+        self.lateralFunc = self.IDE.listCtrlFunc
+        self.lateralVars = self.IDE.listCtrlVars
+        self.lateralDefi = self.IDE.listCtrlDefi
         
         self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToFunc, self.lateralFunc)
         self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
@@ -138,12 +138,12 @@ class File:
         self.updateWidthColums()
         
         if self.IDE.notebookEditor.PageCount > 0:
-            self.IDE.auiManager.GetPane(self.IDE.panelOutput).Show()
-            self.IDE.auiManager.GetPane(self.IDE.lat).Show()
+            self.IDE.panelOutput.Show()
+            self.IDE.lat.Show()
             self.IDE.updateIDE()
         else:
-            self.IDE.auiManager.GetPane(self.IDE.panelOutput).Hide()
-            self.IDE.auiManager.GetPane(self.IDE.lat).Hide()
+            self.IDE.panelOutput.Hide()
+            self.IDE.lat.Hide()
             self.IDE.updateIDE()
         
         if len(self.IDE.stcpage) < 1:

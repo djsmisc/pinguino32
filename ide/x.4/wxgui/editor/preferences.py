@@ -67,10 +67,10 @@ class Preferences():
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_CHOICE,  self.SetTheme, self.choiceTheme)
 
-        #Distribution
-        #----------------------------------------------------------------------
-        self.Bind(wx.EVT_CHOICE,  lambda x:self.setConfig("IDE", "posTools", self.choiceTools.StringSelection), self.choiceTools)
-        self.Bind(wx.EVT_CHOICE,  lambda x:self.setConfig("IDE", "posOutput", self.choiceOutput.StringSelection), self.choiceOutput)
+        ##Distribution
+        ##----------------------------------------------------------------------
+        #self.Bind(wx.EVT_CHOICE,  lambda x:self.setConfig("IDE", "posTools", self.choiceTools.StringSelection), self.choiceTools)
+        #self.Bind(wx.EVT_CHOICE,  lambda x:self.setConfig("IDE", "posOutput", self.choiceOutput.StringSelection), self.choiceOutput)
         
         #Colors
         #----------------------------------------------------------------------
@@ -262,11 +262,11 @@ class Preferences():
         value = self.IDE.getElse("Tools", "search", "False")
         self.checkBoxSearch.SetValue(value)
         
-        value = self.IDE.getElse("IDE", "posOutput", "Bottom")
-        self.choiceOutput.SetSelection(self.choiceOutput.Strings.index(value))
+        #value = self.IDE.getElse("IDE", "posOutput", "Bottom")
+        #self.choiceOutput.SetSelection(self.choiceOutput.Strings.index(value))
         
-        value = self.IDE.getElse("IDE", "posTools", "Right")
-        self.choiceTools.SetSelection(self.choiceTools.Strings.index(value))
+        #value = self.IDE.getElse("IDE", "posTools", "Right")
+        #self.choiceTools.SetSelection(self.choiceTools.Strings.index(value))
         
         
         value = ["official", "pinguinove"].index(self.IDE.getElse("IDE", "sourcedoc", "official"))
