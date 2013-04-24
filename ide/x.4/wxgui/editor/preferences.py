@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 """-------------------------------------------------------------------------
-    ShortDescription.
+    Preferences.
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
@@ -25,11 +25,13 @@
 -------------------------------------------------------------------------"""
 
 import wx
-import sys, os
+import sys
+import os
 
-HOME_DIR = os.getcwd()
+from constants import THEME_DIR, HOME_DIR
 from wxgui._trad import _
-THEME_DIR = os.path.join(HOME_DIR, 'theme')
+
+from frames import framePreferences
 
 ########################################################################
 class Preferences():
@@ -39,7 +41,7 @@ class Preferences():
         
         self.GlobalSet = ["auto-complete", "open-save", "tools"]
         
-        self.labelNotice.Hide()
+        self.buttonRestart.Hide()
 
         self.auinotebookPreferences.SetTabCtrlHeight(0)
         self.auinotebookPreferences.SetSelection(0)
@@ -53,6 +55,7 @@ class Preferences():
         self.Bind(wx.EVT_LISTBOX, lambda event: self.setPage(event, self.listBoxPreferences.Count), self.checkListPreferences)
         self.Bind(wx.EVT_BUTTON, self.setDefaultConfig, self.buttonRestore)
         self.Bind(wx.EVT_BUTTON, self.writeConfig, self.buttonApply)
+        self.Bind(wx.EVT_BUTTON, self.IDE.restartApp, self.buttonRestart)
         self.Bind(wx.EVT_BUTTON, lambda x:self.Close(), self.buttonCancel)
         
         if not os.path.isfile(".config"): self.setDefaultConfig()
@@ -60,10 +63,14 @@ class Preferences():
         self.loadPreferences()
         
         
-
         #Appearance
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_CHOICE,  self.SetTheme, self.choiceTheme)
+
+        #Distribution
+        #----------------------------------------------------------------------
+        self.Bind(wx.EVT_CHOICE,  lambda x:self.setConfig("IDE", "posTools", self.choiceTools.StringSelection), self.choiceTools)
+        self.Bind(wx.EVT_CHOICE,  lambda x:self.setConfig("IDE", "posOutput", self.choiceOutput.StringSelection), self.choiceOutput)
         
         #Colors
         #----------------------------------------------------------------------
@@ -112,10 +119,6 @@ class Preferences():
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("documents", self.checkBoxDocuments), self.checkBoxDocuments)  
         self.Bind(wx.EVT_CHECKBOX, lambda x:self.setTools("search", self.checkBoxSearch), self.checkBoxSearch)  
 
-        #self.Bind(wx.EVT_CHECKBOX, self.setRestart, self.checkBoxFiles)
-        #self.Bind(wx.EVT_CHECKBOX, self.setRestart, self.checkBoxDocuments)
-        #self.Bind(wx.EVT_CHECKBOX, self.setRestart, self.checkBoxSearch)
-        
         #Others
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_COMBOBOX, lambda x:self.IDE.setConfig("IDE", "sourcedoc", ["official", "pinguinove"][self.comboBoxSourcedoc.Items.index(self.comboBoxSourcedoc.Value)]), self.comboBoxSourcedoc)
@@ -127,6 +130,11 @@ class Preferences():
         self.IDE.setConfig("Tools", name, check.Value)
         
         
+    #----------------------------------------------------------------------
+    def setConfig(self, *args):
+        """"""
+        self.IDE.setConfig(*args)
+        self.setRestart()
         
     #----------------------------------------------------------------------
     def setColor(self, selColor, TextCtrl, option):
@@ -254,6 +262,12 @@ class Preferences():
         value = self.IDE.getElse("Tools", "search", "False")
         self.checkBoxSearch.SetValue(value)
         
+        value = self.IDE.getElse("IDE", "posOutput", "Bottom")
+        self.choiceOutput.SetSelection(self.choiceOutput.Strings.index(value))
+        
+        value = self.IDE.getElse("IDE", "posTools", "Right")
+        self.choiceTools.SetSelection(self.choiceTools.Strings.index(value))
+        
         
         value = ["official", "pinguinove"].index(self.IDE.getElse("IDE", "sourcedoc", "official"))
         self.comboBoxSourcedoc.SetSelection(value)
@@ -293,11 +307,9 @@ class Preferences():
             
     #----------------------------------------------------------------------
     def setRestart(self, event=None):
-        if not self.labelNotice.IsShown():
-            self.labelNotice.Show()
-            self.fgSizer2.Layout()
-            self.SetSize(self.Size+wx.Size(0, self.labelNotice.Size[1]))
-            self.IDE.setConfig("Main", "needRestart", "True")
+        self.buttonApply.Hide()
+        self.buttonRestart.Show()
+
         
     #----------------------------------------------------------------------
     def writeConfig(self, event=None):
@@ -315,7 +327,7 @@ class Preferences():
         config.writelines(lines)
         config.close()
         
-        self.IDE.loadConfig()
+        self.IDE.loadConfigFile()
         self.IDE.applyPreferences()
         self.loadPreferences()        
 
@@ -323,3 +335,8 @@ class Preferences():
     def SetTheme(self, event):
         tid = event.GetInt()
         self.IDE.theme = self.themeList[tid]
+
+
+########################################################################
+class PreferencesIDE(framePreferences, Preferences):
+    """"""

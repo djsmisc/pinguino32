@@ -21,174 +21,79 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     -------------------------------------------------------------------------"""
 
-# ------------------------------------------------------------------------------
-# check dependencies
-# ------------------------------------------------------------------------------
+import os
+import platform
+import sys
+import threading
+import re
+import time
+import shutil
+from subprocess import Popen, STDOUT
 
-from check import *
+import argparse
+from boards import boardlist
+from editor import IDE
+from editor.frames import framePinguinoX
+from uploader import Uploader
 
-# ------------------------------------------------------------------------------
-# current version
-# ------------------------------------------------------------------------------
-pinguino_version = "x.4"
+from editor.constants import pinguino_version, HOME_DIR, P8_DIR, P32_DIR, TEMP_DIR, \
+     SOURCE_DIR
 
-
-# ------------------------------------------------------------------------------
-# default
-# ------------------------------------------------------------------------------
-THEME_DEFAULT = "PinguinoX"
-BOARD_DEFAULT = Pinguino2550()
-gui=False
-
-# ------------------------------------------------------------------------------
-# traducciones
-# ------------------------------------------------------------------------------
+#set words to translations
 from wxgui._trad import _
 
 #Used for Python and Pic32 debug,
 #os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
 
-# ------------------------------------------------------------------------------
-# Pinguino Class
-# ------------------------------------------------------------------------------
-
-class Pinguino(framePinguinoX, Editor):
-
-    global lang
+########################################################################
+class Pinguino(framePinguinoX, IDE):
     global gui
 
-    osdir = ""
-    sdcc = ""
-    #gcc = ""
-    debug_output = 0
-    debug_handle = False
-    debug_thread = False
-    debug_flag = False
-    in_verify = 0
-
-    noname = 0
-    keywordList = []
-    reservedword = []
-    libinstructions = []
-    regobject = []
-    rw = []
-    THEME = []
-    KEYWORD = []
-
-# ------------------------------------------------------------------------------
-# init
-# ------------------------------------------------------------------------------
+    #----------------------------------------------------------------------
     def __initPinguino__(self, parent):
-        #sys.setrecursionlimit(1500)
         
-        self.loadConfig()
-        self.setConfig("Main", "needRestart", "False")
-        self.saveConfig()
-
-        self.notebookEditor.Hide()
-        self.boardlist = boardlist
-        self.debugOutMessage = None
-        self.closing = False
-        self.currentLateralDir = os.path.join(os.getcwd(),"examples")
-        self.autoCompleteWords = []
-        self.recentsFiles = []
-        self.otherWords = []
+    # ----------------------------------------------------------------------
+    # Initializes vars
+    # ----------------------------------------------------------------------
         self.autocompleteHide = False
-        self.extraName = ""
         self.changingBoard = False
-        self.lastKey = None
-
-        if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
-
-        self._mgr = wx.aui.AuiManager(self)
-
-        self.setOSvariables()
-        self.configPanes()
-        self.buildMenu()
+        self.boardlist = boardlist
+        self.currentLateralDir = os.path.join(os.getcwd(),"examples")
+        self.recentsFiles = []
         
-
-        self.loadConfigBoard()
-        self.morePreferences()
-        
-        self.ConnectAll()
-        self.trees = []
-
+        # Autocompleter
+        self.autoCompleteWords = []
+        self.filesNeighbors = []
         self.allVars_back = [] 
         self.allFunc_back = []
-        self.allDefi_back = []	
-
-        #Threads
-        #if DEV:
-            #EVT_RESULT_REVISION(self, self.setRevision)
-            #threadRevision = threading.Thread(target=self.getRevision, args=( ))
-            #threadRevision.start()
-
-            #self.SetTitle('Pinguino IDE ' + pinguino_version + " rev. ["+_("loading...")+"]")
-            #self.displaymsg(_("Welcome to Pinguino IDE")+" (rev. ["+_("loading...")+"])", 1)
-        #else:
-        self.SetTitle("Pinguino IDE")
-        self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
-
-        #self.loadSettings()
-
-        ########################################
-        #Auto-complete frame build
+        self.allDefi_back = []
         
-        #from editor.autocompleter import AutoCompleterIDE
-        #CharsCount = self.getElse("Completer", "charscount", 1)
-        #MaxItemsCount = self.getElse("Completer", "MaxItemsCount", 10)
-        #self.AutoCompleter = AutoCompleterIDE(self)
-        #self.AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
-        #self.AutoCompleter.Hide()
+        self.setOSvariables()
         
-        self.AutoCompleter = self.LF_Autocompleter()
-        self.LF_Tools()
-
-        #########################################
-
+    # ----------------------------------------------------------------------
+    # Load config file
+    # ----------------------------------------------------------------------
+        self.loadConfigFile()
+        self.loadConfigIDE()        
+        
+        
+    # ----------------------------------------------------------------------
+    # Initializes environment
+    # ----------------------------------------------------------------------
+        if os.path.isdir(TEMP_DIR) == False: os.mkdir(TEMP_DIR)
             
-        self.DrawToolbar()
-        
-        
-        self.__initIDE__()        
+    
+    # ----------------------------------------------------------------------
+    # Initializes IDE objects
+    # ----------------------------------------------------------------------
+        self.initIDEobjects() 
 
 
-    #----------------------------------------------------------------------    
-    def getPIC18F(self):
-        # get all PIC18F devices supported by SDCC
-        proclist = []
-        fichier=open(os.path.join(P8_DIR, 'sdcc', 'include', 'pic16', 'pic16devices.txt'), 'r')
-        for line in fichier:
-            # if line begins with 'name'
-            if line.find('name') == 0:
-                proclist.append(line[line.find('18f'):-1])
-                #print line[line.find('18f'):-1]
-            for i in range(len(proclist)):
-                proclist[i] = proclist[i].strip()
-        fichier.close()
-        return proclist
+    # ----------------------------------------------------------------------
+    # Initializes config
+    # ----------------------------------------------------------------------
+        self.setEditorFont()
 
-
-
-    #----------------------------------------------------------------------
-    def getfamilies(self, arch):
-        #Return a list of available families.
-
-        if arch == 8:
-            if mode == "ICSP":
-                #TODO : add PIC18LF
-                return 4, ["18fxxx", "18fxxxx", "18fxxjxx", "18fxxkxx"]
-
-            elif mode == "BOOT":
-                return 1, []  #No sort by families
-
-
-        elif arch == 32:
-            if mode == "ICSP":
-                return 1, []
-
-            if mode == "BOOT":
-                return 1, []  #No sort by families
 
 
     #----------------------------------------------------------------------
@@ -200,13 +105,9 @@ class Pinguino(framePinguinoX, Editor):
             elif board.arch == arch: devs.append(board.name)
         return 2, devs  #Columns, List
     
-
-
-# ----------------------------------------------------------------------
-# Get OS name and define some OS dependant variable
-# ----------------------------------------------------------------------
+    #----------------------------------------------------------------------
     def setOSvariables(self):
-
+        """Get OS name and define some OS dependant variable"""
         pa = platform.architecture()
         if pa[0]=='64bit': OSarch="64"
         else: OSarch="32"
@@ -241,12 +142,14 @@ class Pinguino(framePinguinoX, Editor):
 
     #----------------------------------------------------------------------
     def setBoard(self, arch, mode, name, bootloader):
-        # clear all the lists before rebuild them
-        del self.rw[:]
-        del self.regobject[:]
-        del self.keywordList[:]
-        del self.reservedword[:]
-        del self.libinstructions[:]
+
+        self.changingBoard = True
+        
+        self.rw = []
+        self.regobject = []
+        self.keywordList = []
+        self.reservedword = []
+        self.libinstructions = []
         
         self.modeCompile = mode 
 
@@ -282,78 +185,8 @@ class Pinguino(framePinguinoX, Editor):
             self.Thread_curBoard = threading.Thread(target=self.readlib, args=(self.curBoard, textStatus))
             self.Thread_curBoard.start()
 
-# ------------------------------------------------------------------------------
-# OnAbout:
-# ------------------------------------------------------------------------------
 
-    def OnAbout(self, event):
-        description = """Pinguino is an Open Software and Open Hardware Arduino-like project. Boards are based on 8 or 32-bit USB built-in Microchip microcontrollers. The main goal is to build a real USB system without USB to serial converter.
-        """
-
-        licence = """Pinguino is free software; you can redistribute it and/or modify it
-        under the terms of the GNU General Public License as published by the Free Software Foundation;
-        either version 2 of the License, or (at your option) any later version.
-
-        Pinguino is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-        without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-        See the GNU General Public License for more details. You should have received a copy of
-        the GNU General Public License along with File Hunter; if not, write to
-        the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA"""
-
-
-        info = wx.AboutDialogInfo()
-        #bmp = wx.Icon(os.path.join(THEME_DIR, 'logoX3.png'), wx.BITMAP_TYPE_PNG)
-        image = wx.Image(os.path.join(THEME_DIR, 'logo3D.png'), wx.BITMAP_TYPE_PNG)
-        image = image.Scale(400, 300, wx.IMAGE_QUALITY_HIGH)
-        bmp = wx.BitmapFromImage(image)
-        #bmp = image.ConvertToBitmap()
-        
-        icon = wx.EmptyIcon()
-        icon.CopyFromBitmap(bmp)
-        info.SetIcon(icon)
-        
-        info.SetName('Pinguino')
-        info.SetVersion(pinguino_version)
-        #info.SetVersion("rev. " + self.localRev)
-        info.SetDescription(description)
-        # LGPL compatibility ?
-        #info.SetCopyright('2008, 2009, 2010, 2011 jean-pierre mandon')
-        info.SetWebSite('http://www.pinguino.cc')
-        info.SetLicence(licence)
-
-        info.AddDeveloper('Jean-Pierre Mandon')
-        info.AddDeveloper('Régis Blanchot')
-        info.AddDeveloper('Marcus Fazzi')
-        info.AddDeveloper('Jesus Carmona Esteban')
-        info.AddDeveloper('Alfred Broda')
-        info.AddDeveloper('Yeison Cardona')
-        info.AddDeveloper('Henk Van Beek')
-        info.AddDeveloper('Björn Pfeiffer')
-        info.AddDeveloper('Alexis Sánchez')     
-
-        info.AddDocWriter('Benoit Espinola')
-        info.AddDocWriter('Sebastien Koechlin')
-        info.AddDocWriter('Ivan Ricondo')
-        info.AddDocWriter('Jesus Carmona Esteban')
-        info.AddDocWriter('Marcus Fazzi')
-        info.AddDocWriter('Régis Blanchot')
-
-        info.AddArtist('France Cadet')
-        info.AddArtist('Laurent Costes')
-        info.AddArtist('Daniel Rodrí­guez')
-
-        info.AddTranslator('Joan Espinoza')
-        info.AddTranslator('Alexis Sánchez')
-        info.AddTranslator('Régis Blanchot')
-        info.AddTranslator('Moreno Manzini ')
-
-        wx.AboutBox(info)
-        
-
-# ------------------------------------------------------------------------------
-# OnVerify:
-# ------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------
     def OnVerify(self, event=None):
         if self.changingBoard:
             self.displaymsg(_("Please wait a moment.")+"\n", 0)
@@ -361,7 +194,7 @@ class Pinguino(framePinguinoX, Editor):
         
         self.displaymsg("", 1)
         
-        self.in_verify=1
+        #self.in_verify=1
         t0 = time.time()
         if self.GetPath()==-1:
             dlg = wx.MessageDialog(self,
@@ -411,13 +244,10 @@ class Pinguino(framePinguinoX, Editor):
                 os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
                 #os.remove(filename+".c")
                 return True
-        self.in_verify=0
+        #self.in_verify=0
         self.focus()
 
-# ------------------------------------------------------------------------------
-# OnUpload:
-# ------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------
     def OnUpload(self, event=None, path=None):
         
         if path == None: path = self.GetPath()
@@ -464,19 +294,10 @@ class Pinguino(framePinguinoX, Editor):
 
 
     #----------------------------------------------------------------------
-    def OnVerifyUpload(self, even=None):
-        if self.changingBoard:
-            self.displaymsg(_("Please wait a moment.")+"\n", 0)
-            return
-        if self.OnVerify(): self.OnUpload()
-
-
-# ------------------------------------------------------------------------------
-# Load .pdl or .pdl32 files (keywords and libraries)
-# ------------------------------------------------------------------------------
-
     def readlib(self, board, textStatus=""):
-        # trying to find PDL files to store reserved words
+        """Load .pdl or .pdl32 files (keywords and libraries)
+         trying to find PDL files to store reserved words."""
+        
         self.keywordList = []
         if board.arch == 8:
             libext='.pdl'
@@ -545,11 +366,8 @@ class Pinguino(framePinguinoX, Editor):
 
         self.changingBoard = False	
 
-
-# ------------------------------------------------------------------------------
-# ClearRedundancy:
-# ------------------------------------------------------------------------------
-
+    
+    #----------------------------------------------------------------------
     def ClearRedundancy(self, myList):
         seen = set()
         out = []
@@ -560,11 +378,10 @@ class Pinguino(framePinguinoX, Editor):
         return out
 
 
-# ------------------------------------------------------------------------------
-# Read Pinguino File (.pde) and translate it into C language
-# ------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------
     def preprocess(self, filename, board):
+        """Read Pinguino File (.pde) and translate it into C language"""
+        
         defineword={}
         index=0
         fileline={}
@@ -657,20 +474,15 @@ class Pinguino(framePinguinoX, Editor):
         fichier.close()
         return
 
-# ------------------------------------------------------------------------------
-# Add #define to define.h
-# ------------------------------------------------------------------------------
 
+    #----------------------------------------------------------------------
     def adddefine(self,chaine):
         """ add #define in define.h file """
         fichier = open(os.path.join(SOURCE_DIR, 'define.h'), 'a')
         fichier.writelines(chaine+"\n")
         fichier.close()
 
-# ------------------------------------------------------------------------------
-# Check if #define exists in define.h 
-# ------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------
     def notindefine(self,chaine):
         """ verify if #define exists in define.h file """
         fichier = open(os.path.join(SOURCE_DIR, 'define.h'), 'r')
@@ -682,10 +494,7 @@ class Pinguino(framePinguinoX, Editor):
         fichier.close()
         return(1)
 
-# ------------------------------------------------------------------------------
-# Convert Pinguino language into C language
-# ------------------------------------------------------------------------------
-
+    #----------------------------------------------------------------------
     def replaceword(self,line):
         """ convert pinguino language in C language """
         # replace arduino/pinguino language and add #define or #include to define.h
@@ -698,10 +507,8 @@ class Pinguino(framePinguinoX, Editor):
                     self.adddefine("#"+str(self.libinstructions[i][3]))
         return line+"\n"
 
-# ------------------------------------------------------------------------------
-# Remove comments
-# ------------------------------------------------------------------------------
 
+    #----------------------------------------------------------------------
     def removecomments(self, text):
         def replacer(match):
             s = match.group(0)
@@ -719,298 +526,291 @@ class Pinguino(framePinguinoX, Editor):
         )
         return re.sub(pattern, replacer, text)
 
-# ------------------------------------------------------------------------------
-# Compile
-# NB :  "--opt-code-size"   deprecated
-#       "--use-non-free"    implicit -I and -L options for non-free headers and libs
-# ------------------------------------------------------------------------------
 
+    #----------------------------------------------------------------------
     def compile(self, filename, board):
-        if (self.debug_output == 1):
-            print("compile " + board.proc)
-        else:
+        """ Compile.
+        
+        NB :  "--opt-code-size"   deprecated
+              "--use-non-free"    implicit -I and -L options for non-free headers and libs
+        """
+
+        if board.arch == 8:
             
-            if board.arch == 8:
-                
-                fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
-                
-                if board.bldr == 'boot2':
-                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose",\
-                        "-mpic16",\
-                        "--denable-peeps",\
-                        "--obanksel=9",\
-                        "--optimize-cmp",\
-                        "--optimize-df",\
-                        "-p" + board.proc,\
-                        "-D" + board.board,\
-                        "-D" + board.bldr,\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
-                        "-I" + os.path.dirname(filename),\
-                        "--compile-only",\
-                        "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
-                        os.path.join(SOURCE_DIR, 'main.c')],\
-                        stdout=fichier, stderr=STDOUT)
-                                   
-                elif board.bldr == 'boot4':
-                    #"--nostdinc",\
-                    #"--nostdlib",\
-                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose",\
-                        "-mpic16",\
-                        "--denable-peeps",\
-                        "--obanksel=9",\
-                        "--optimize-cmp",\
-                        "--optimize-df",\
-                        # Do not remove --ivt-loc option
-                        "--ivt-loc=" + str(board.memstart),\
-                        "-p" + board.proc,\
-                        "-D" + board.board,\
-                        "-D" + board.bldr,\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
-                        "-I" + os.path.dirname(filename),\
-                        "--compile-only",\
-                        os.path.join(SOURCE_DIR, 'main.c'),\
-                        "-o" + os.path.join(SOURCE_DIR, 'main.o')],\
-                        stdout=fichier, stderr=STDOUT)
-                                   
-                elif board.bldr == 'noboot':
-                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose",\
-                        "-mpic16",\
-                        "--denable-peeps",\
-                        "--obanksel=9",\
-                        "--optimize-cmp",\
-                        "--optimize-df",\
-                        "-p" + board.proc,\
-                        "-D" + board.board,\
-                        "-D" + board.bldr,\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
-                        "-I" + os.path.dirname(filename),\
-                        "--compile-only",\
-                        os.path.join(SOURCE_DIR, 'main.c'),\
-                        "-o" + os.path.join(SOURCE_DIR, 'main.o')],\
-                        stdout=fichier, stderr=STDOUT)
-                                   
-                sortie.communicate()
-                if sortie.poll()!=0:
-                    #
-                    # Error treatment (RB: fixed 2012-11-15)
-                    #
-                    
-                    # set the file pointer to the beginning of stdout
-                    fichier.seek(0)
-
-                    # read lines until 'error' or 'Error' is found
-                    for ligne in fichier:
-                        # ???
-                        #if not "stcpage" in globals():
-                        #    break
-                        if (gui == 0):
-                            break
-
-                        # C errors
-                        error_pos = ligne.find('error')
-                        if (error_pos != -1):
-                            #error_line_number = ligne[ ligne.find(":") + 1 : error_pos - 2]
-                            error_line_number = ligne.split(":")[1]
-                            #error_message = ligne[ error_pos + 9 : len(ligne)]
-                            error_message = ligne.split(":")[-1]
-                            error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
-                            # TODO : highlight more than one line / highlight must remain until line is changed
-                            self.highlightline(int(error_line_number)-1, error_color)
-                            self.displaymsg("error line " + error_line_number + " " + error_message, 0)
-                            
-                        # ASM errors
-                        error_pos = ligne.find('Error')
-                        if (error_pos != -1):
-                            # do not display error line number since they are from the ASM file
-                            # display error symbol instead
-                            error_symbol = ligne[ligne.find("(_") + 2 : ligne.find(").")]
-                            textEdit  = self.stcpage[self.notebookEditor.GetSelection()]
-                            textPlain = str(textEdit.GetTextUTF8())
-                            error_index = textPlain.find(error_symbol)
-                            textEdit.SetSelection(error_index, error_index + len(error_symbol))
-                            error_line_number = textEdit.LineFromPosition(error_index) + 1
-                            error_message = ligne[ error_pos + 13 : ligne.find("(_") - 1]
-                            error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
-                            self.highlightline(int(error_line_number)-1, error_color)
-                            self.displaymsg("error line " + str(error_line_number) + ": " + error_message.lower() + ": " + error_symbol, 0)
-
-                fichier.close()
-                return sortie.poll()
-
-            else:# if board.arch == 32:
-                return 0
-
-# ------------------------------------------------------------------------------
-# Link
-# NB :  "--opt-code-size"   deprecated
-#       "--use-non-free"    implicit -I and -L options for non-free headers and libs
-# ------------------------------------------------------------------------------
-
-    def link(self, filename, board):
-        if (self.debug_output == 1):
-            print("link " + board.proc)
-        else:
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
-            
-            if board.arch == 8:
+            if board.bldr == 'boot2':
+                sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
+                    "--verbose",\
+                    "-mpic16",\
+                    "--denable-peeps",\
+                    "--obanksel=9",\
+                    "--optimize-cmp",\
+                    "--optimize-df",\
+                    "-p" + board.proc,\
+                    "-D" + board.board,\
+                    "-D" + board.bldr,\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
+                    "-I" + os.path.dirname(filename),\
+                    "--compile-only",\
+                    "-o" + os.path.join(SOURCE_DIR, 'main.o'),\
+                    os.path.join(SOURCE_DIR, 'main.c')],\
+                    stdout=fichier, stderr=STDOUT)
                 
-                if board.bldr == 'boot2':
-                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose",\
-                        "-mpic16",\
-                        "--denable-peeps",\
-                        "--obanksel=9",\
-                        "--optimize-cmp",\
-                        "--optimize-df",\
-                        "--no-crt",\
-                        "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
-                        "-p" + board.proc,\
-                        "-D" + board.bldr,\
-                        "-D" + board.board,\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
-                        "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
-                        "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
-                        'libio' + board.proc + '.lib',\
-                        'libdev' + board.proc + '.lib',\
-                        'libc18f.lib',\
-                        'libm18f.lib',\
-                        'libsdcc.lib',\
-                        #'-llibio' + board.proc + '.lib',\
-                        #'-llibc18f.lib',\
-                        #'-llibm18f.lib',\
-                        #'-llibsdcc.lib',\
-                        "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                        os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
-                        os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
-                        os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
-                        os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
-                        os.path.join(SOURCE_DIR, 'main.o')],\
-                        stdout=fichier, stderr=STDOUT)
-                        
-                elif board.bldr == 'boot4':
-                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose", "-V",\
-                        "-mpic16",\
-                        # optimization
-                        "--denable-peeps",\
-                        "--obanksel=9",\
-                        "--optimize-cmp",\
-                        "--optimize-df",\
-                        # move all int. vectors after bootloader code
-                        "--ivt-loc=" + str(board.memstart),\
-                        # link memory map
-                        "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
-                        "-p" + board.proc,\
-                        "-D" + board.bldr,\
-                        "-D" + board.board,\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
-                        "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
-                        "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
-                        os.path.join(SOURCE_DIR, 'main.o'),\
-                        'libio' + board.proc + '.lib',\
-                        'libdev' + board.proc + '.lib',\
-                        'libc18f.lib',\
-                        'libm18f.lib',\
-                        # link the default run-time module (crt0i.o)
-                        'libsdcc.lib',\
-                        #'-llibio' + board.proc + '.lib',\
-                        #'-llibc18f.lib',\
-                        #'-llibm18f.lib',\
-                        #'-llibsdcc.lib',\
-                        "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                        ],\
-                        stdout=fichier, stderr=STDOUT)
-                        
-                elif board.bldr == 'noboot':
-                    sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
-                        "--verbose",\
-                        "-mpic16",\
-                        "--denable-peeps",\
-                        "--obanksel=9",\
-                        "--optimize-cmp",\
-                        "--optimize-df",\
-                        #"--no-crt",\ we use default run-time module inside libsdcc.lib
-                        "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
-                        "-p" + board.proc,\
-                        "-D" + board.bldr,\
-                        "-D" + board.board,\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
-                        "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
-                        "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
-                        "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
-                        'libio' + board.proc + '.lib',\
-                        'libdev' + board.proc + '.lib',\
-                        'libc18f.lib',\
-                        'libm18f.lib',\
-                        # link the default run-time module
-                        'libsdcc.lib',\
-                        #'-llibio' + board.proc + '.lib',\
-                        #'-llibc18f.lib',\
-                        #'-llibm18f.lib',\
-                        #'-llibsdcc.lib',\
-                        "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
-                        os.path.join(SOURCE_DIR, 'main.o')],\
-                        stdout=fichier, stderr=STDOUT)
-                        
-            else:#if board.arch == 32:
-                # "PDEDIR=" + os.path.dirname(self.GetPath()),\
-                # can't be used with Command Line version since editor isn't used
-                sortie=Popen([self.make,\
-                              "--makefile=" + os.path.join(SOURCE_DIR, 'Makefile32.'+self.osdir),\
-                              "HOME=" + HOME_DIR,\
-                              "PDEDIR=" + os.path.dirname(filename),\
-                              "PROC=" + board.proc,\
-                              "BOARD=" + board.board],\
-                             stdout=fichier, stderr=STDOUT)
-                             
+                               
+            elif board.bldr == 'boot4':
+                #"--nostdinc",\
+                #"--nostdlib",\
+                sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
+                    "--verbose",\
+                    "-mpic16",\
+                    "--denable-peeps",\
+                    "--obanksel=9",\
+                    "--optimize-cmp",\
+                    "--optimize-df",\
+                    # Do not remove --ivt-loc option
+                    "--ivt-loc=" + str(board.memstart),\
+                    "-p" + board.proc,\
+                    "-D" + board.board,\
+                    "-D" + board.bldr,\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
+                    "-I" + os.path.dirname(filename),\
+                    "--compile-only",\
+                    os.path.join(SOURCE_DIR, 'main.c'),\
+                    "-o" + os.path.join(SOURCE_DIR, 'main.o')],\
+                    stdout=fichier, stderr=STDOUT)
+                               
+            elif board.bldr == 'noboot':
+                sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
+                    "--verbose",\
+                    "-mpic16",\
+                    "--denable-peeps",\
+                    "--obanksel=9",\
+                    "--optimize-cmp",\
+                    "--optimize-df",\
+                    "-p" + board.proc,\
+                    "-D" + board.board,\
+                    "-D" + board.bldr,\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
+                    "-I" + os.path.dirname(filename),\
+                    "--compile-only",\
+                    os.path.join(SOURCE_DIR, 'main.c'),\
+                    "-o" + os.path.join(SOURCE_DIR, 'main.o')],\
+                    stdout=fichier, stderr=STDOUT)
+                               
             sortie.communicate()
-            fichier.seek(0)
-            # Check if child process has terminated
             if sortie.poll()!=0:
+                #
+                # Error treatment (RB: fixed 2012-11-15)
+                #
+                
+                # set the file pointer to the beginning of stdout
+                fichier.seek(0)
+
+                # read lines until 'error' or 'Error' is found
                 for ligne in fichier:
-                    if ligne.find('error')!=-1:
-                        self.displaymsg(ligne, 0)
+                    # ???
+                    #if not "stcpage" in globals():
+                    #    break
+                    #if (gui == 0):
+                        #break
+
+                    # C errors
+                    error_pos = ligne.find('error')
+                    if (error_pos != -1):
+                        #error_line_number = ligne[ ligne.find(":") + 1 : error_pos - 2]
+                        error_line_number = ligne.split(":")[1]
+                        #error_message = ligne[ error_pos + 9 : len(ligne)]
+                        error_message = ligne.split(":")[-1]
+                        error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
+                        # TODO : highlight more than one line / highlight must remain until line is changed
+                        if gui: self.highlightline(int(error_line_number)-1, error_color)
+                        self.displaymsg("error line " + error_line_number + " " + error_message, 0)
+                        
+                    # ASM errors
+                    error_pos = ligne.find('Error')
+                    if (error_pos != -1):
+                        # do not display error line number since they are from the ASM file
+                        # display error symbol instead
+                        error_symbol = ligne[ligne.find("(_") + 2 : ligne.find(").")]
+                        textEdit  = getCurrentPage()
+                        textPlain = str(textEdit.GetTextUTF8())
+                        error_index = textPlain.find(error_symbol)
+                        textEdit.SetSelection(error_index, error_index + len(error_symbol))
+                        error_line_number = textEdit.LineFromPosition(error_index) + 1
+                        error_message = ligne[ error_pos + 13 : ligne.find("(_") - 1]
+                        error_color = self.getColorConfig("Highligh", "codeerror", [120, 255, 152])
+                        self.highlightline(int(error_line_number)-1, error_color)
+                        self.displaymsg("error line " + str(error_line_number) + ": " + error_message.lower() + ": " + error_symbol, 0)
+
             fichier.close()
-            if sys.platform=='win32':
-                if board.board in ['PIC32_PINGUINO_220', 'GENERIC32MX250F128', 'GENERIC32MX220F032']:
-                    badrecord=":040000059D0040001A\n"
-                else:
-                    badrecord=":040000059D006000FA\n"                
-                if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
-                    fichiersource=open(os.path.join(SOURCE_DIR,"main32tmp.hex"),'r')
-                    fichierdest=open(os.path.join(SOURCE_DIR,"main32.hex"),'w+')
-                    for line in fichiersource:
-                        if line!=badrecord:
-                            fichierdest.writelines(line)
-                    fichiersource.close()
-                    fichierdest.close()
-                    os.remove(os.path.join(SOURCE_DIR,"main32tmp.hex"))
             return sortie.poll()
 
-# ------------------------------------------------------------------------------
-# Get the Code Size
-# ------------------------------------------------------------------------------
+        else:# if board.arch == 32:
+            return 0
 
+    #----------------------------------------------------------------------
+    def link(self, filename, board):
+        """Link.
+        
+        NB :  "--opt-code-size"   deprecated
+              "--use-non-free"    implicit -I and -L options for non-free headers and libs"""
+        
+        fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+        
+        if board.arch == 8:
+            
+            if board.bldr == 'boot2':
+                sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
+                    "--verbose",\
+                    "-mpic16",\
+                    "--denable-peeps",\
+                    "--obanksel=9",\
+                    "--optimize-cmp",\
+                    "--optimize-df",\
+                    "--no-crt",\
+                    "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
+                    "-p" + board.proc,\
+                    "-D" + board.bldr,\
+                    "-D" + board.board,\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
+                    "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
+                    "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
+                    'libio' + board.proc + '.lib',\
+                    'libdev' + board.proc + '.lib',\
+                    'libc18f.lib',\
+                    'libm18f.lib',\
+                    'libsdcc.lib',\
+                    #'-llibio' + board.proc + '.lib',\
+                    #'-llibc18f.lib',\
+                    #'-llibm18f.lib',\
+                    #'-llibsdcc.lib',\
+                    "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                    os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
+                    os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
+                    os.path.join(P8_DIR, 'obj', 'usb_descriptors.o'),\
+                    os.path.join(P8_DIR, 'obj', 'crt0ipinguino.o'),\
+                    os.path.join(SOURCE_DIR, 'main.o')],\
+                    stdout=fichier, stderr=STDOUT)
+                    
+            elif board.bldr == 'boot4':
+                sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
+                    "--verbose", "-V",\
+                    "-mpic16",\
+                    # optimization
+                    "--denable-peeps",\
+                    "--obanksel=9",\
+                    "--optimize-cmp",\
+                    "--optimize-df",\
+                    # move all int. vectors after bootloader code
+                    "--ivt-loc=" + str(board.memstart),\
+                    # link memory map
+                    "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.bldr + '.' + board.proc + '.lkr') + ",-m",\
+                    "-p" + board.proc,\
+                    "-D" + board.bldr,\
+                    "-D" + board.board,\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
+                    "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
+                    "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
+                    os.path.join(SOURCE_DIR, 'main.o'),\
+                    'libio' + board.proc + '.lib',\
+                    'libdev' + board.proc + '.lib',\
+                    'libc18f.lib',\
+                    'libm18f.lib',\
+                    # link the default run-time module (crt0i.o)
+                    'libsdcc.lib',\
+                    #'-llibio' + board.proc + '.lib',\
+                    #'-llibc18f.lib',\
+                    #'-llibm18f.lib',\
+                    #'-llibsdcc.lib',\
+                    "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                    ],\
+                    stdout=fichier, stderr=STDOUT)
+                    
+            elif board.bldr == 'noboot':
+                sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
+                    "--verbose",\
+                    "-mpic16",\
+                    "--denable-peeps",\
+                    "--obanksel=9",\
+                    "--optimize-cmp",\
+                    "--optimize-df",\
+                    #"--no-crt",\ we use default run-time module inside libsdcc.lib
+                    "-Wl-s" + os.path.join(P8_DIR, 'lkr', board.proc + '_g.lkr') + ",-m",\
+                    "-p" + board.proc,\
+                    "-D" + board.bldr,\
+                    "-D" + board.board,\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
+                    "-I" + os.path.join(P8_DIR, 'pinguino', 'libraries'),\
+                    "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
+                    "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
+                    'libio' + board.proc + '.lib',\
+                    'libdev' + board.proc + '.lib',\
+                    'libc18f.lib',\
+                    'libm18f.lib',\
+                    # link the default run-time module
+                    'libsdcc.lib',\
+                    #'-llibio' + board.proc + '.lib',\
+                    #'-llibc18f.lib',\
+                    #'-llibm18f.lib',\
+                    #'-llibsdcc.lib',\
+                    "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
+                    os.path.join(SOURCE_DIR, 'main.o')],\
+                    stdout=fichier, stderr=STDOUT)
+                    
+        else:#if board.arch == 32:
+            # "PDEDIR=" + os.path.dirname(self.GetPath()),\
+            # can't be used with Command Line version since editor isn't used
+            sortie=Popen([self.make,\
+                          "--makefile=" + os.path.join(SOURCE_DIR, 'Makefile32.'+self.osdir),\
+                          "HOME=" + HOME_DIR,\
+                          "PDEDIR=" + os.path.dirname(filename),\
+                          "PROC=" + board.proc,\
+                          "BOARD=" + board.board],\
+                         stdout=fichier, stderr=STDOUT)
+                         
+        sortie.communicate()
+        fichier.seek(0)
+        # Check if child process has terminated
+        if sortie.poll()!=0:
+            for ligne in fichier:
+                if ligne.find('error')!=-1:
+                    self.displaymsg(ligne, 0)
+        fichier.close()
+        if sys.platform=='win32':
+            if board.board in ['PIC32_PINGUINO_220', 'GENERIC32MX250F128', 'GENERIC32MX220F032']:
+                badrecord=":040000059D0040001A\n"
+            else:
+                badrecord=":040000059D006000FA\n"                
+            if os.path.exists(os.path.join(SOURCE_DIR,"main32tmp.hex")):
+                fichiersource=open(os.path.join(SOURCE_DIR,"main32tmp.hex"),'r')
+                fichierdest=open(os.path.join(SOURCE_DIR,"main32.hex"),'w+')
+                for line in fichiersource:
+                    if line!=badrecord:
+                        fichierdest.writelines(line)
+                fichiersource.close()
+                fichierdest.close()
+                os.remove(os.path.join(SOURCE_DIR,"main32tmp.hex"))
+        return sortie.poll()
+
+
+    #----------------------------------------------------------------------
     def getCodeSize(self, filename, board):
         codesize = 0
         address_Hi = 0
@@ -1034,15 +834,10 @@ class Pinguino(framePinguinoX, Editor):
         return "code size: " + str(codesize) + " / " + str(memfree) + " bytes" + " (" + str(100*codesize/memfree) + "% used)"
 
 
-#if DEV:
-    #########################################################################
-    #class UpgradeIDE(frameUpgrade, Upgrade):
-        #""""""
 
 # ------------------------------------------------------------------------------
 # getOptions
 # ------------------------------------------------------------------------------
-
 def getOptions():
     parser = argparse.ArgumentParser(description='*** Pinguino IDE ***')
     parser.add_argument('-v', '--version', dest='version', action='store_true', default=False, help='show Pinguino IDE version and exit')
@@ -1065,7 +860,6 @@ def getOptions():
 # ------------------------------------------------------------------------------
 # getVersion
 # ------------------------------------------------------------------------------
-
 def getVersion():
     return pinguino_version
 

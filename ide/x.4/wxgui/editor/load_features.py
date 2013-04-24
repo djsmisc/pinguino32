@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 """-------------------------------------------------------------------------
-    
+    load features
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
@@ -24,34 +24,43 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-from editor.get_config import ReadConfig
-import wx, os
+import wx
+import os
+
+from get_config import ReadConfig
 from wxgui._trad import _
 
 ########################################################################
 class LoadFeatures:
     """"""
+    
+    #----------------------------------------------------------------------
+    def loadFeatures(self):
+        """"""
+        self.LF_Autocompleter()
+        self.LF_Tools()
+    
     #----------------------------------------------------------------------
     def LF_Autocompleter(self):
         """"""
         config = ReadConfig()
-        config.loadConfig()
-        if config.getElse("main", "auto-complete", "True") and config.getElse("Completer", "Enable", "True"):
+        config.loadConfigFile()
+        if config.getElse("Main", "auto-complete", "True") and config.getElse("Completer", "Enable", "True"):        
             
-            from editor.autocompleter import AutoCompleterIDE
+            from autocompleter import AutoCompleterIDE
             CharsCount = config.getElse("Completer", "charscount", 1)
             MaxItemsCount = config.getElse("Completer", "MaxItemsCount", 10)
             AutoCompleter = AutoCompleterIDE(self)
             AutoCompleter.__initCompleter__(self, CharsCount, MaxItemsCount)
             AutoCompleter.Hide()
-            return AutoCompleter
+            self.AutoCompleter = AutoCompleter
         
         
     #----------------------------------------------------------------------
     def LF_Tools(self):
         """"""
         config = ReadConfig()
-        config.loadConfig()
+        config.loadConfigFile()
         
         files_ = config.getElse("Tools", "files", "True")
         documents_ = config.getElse("Tools", "documents", "True")
@@ -60,12 +69,31 @@ class LoadFeatures:
         tools_ = files_ == documents_ == search_ == False
         
         if config.getElse("Main", "tools", "True") and not tools_:
-            from wxgui.editor.frames import panelLateral
+            from frames import panelLateral
             self.lat = panelLateral(self)
             
-            self._mgr.AddPane(self.lat,
-                              wx.aui.AuiPaneInfo().Caption(_("Tools")).
-                              Right().CloseButton(False).CaptionVisible(False))
+            pos = self.getElse("IDE", "posTools", "Right")
+            if pos == "Top":            
+                self.auiManager.AddPane(self.lat,
+                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
+                    Top().CloseButton(False).CaptionVisible(False))
+                
+            elif pos == "Bottom":
+                self.auiManager.AddPane(self.lat,
+                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
+                    Bottom().CloseButton(False).CaptionVisible(False))
+                
+            elif pos == "Right":
+                self.auiManager.AddPane(self.lat,
+                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
+                    Right().CloseButton(False).CaptionVisible(False))
+                
+            elif pos == "Left": 
+                self.auiManager.AddPane(self.lat,
+                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
+                    Left().CloseButton(False).CaptionVisible(False))
+            
+
             
      
                 
@@ -90,11 +118,3 @@ class LoadFeatures:
             else: self.lat.search.Destroy()
                             
                 
-                
-                #lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
-                #self.__initDocuments__()
-                #if os.path.isdir(lateralPath):
-                    #self.buildLateralDir(lateralPath)
-
-    
-    

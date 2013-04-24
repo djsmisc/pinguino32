@@ -25,15 +25,14 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import os, wx
+import os
+import wx
 from ConfigParser import RawConfigParser
-from variables import APP_CONFIG
+from constants import APP_CONFIG
 
 ########################################################################
 class ReadConfig:
     """"""
-
-        
     #----------------------------------------------------------------------
     def getConfig(self, section, option):
         value = self.configIDE.get(section,option)
@@ -44,10 +43,9 @@ class ReadConfig:
         except:
             return value
         
-        
     #----------------------------------------------------------------------
     def getColorConfig(self, section, option, default=[0, 0, 0, 0]):
-        self.loadConfig()
+        self.loadConfigFile()
         try:
             value = self.configIDE.get(section,option)
             value = value[1:-1].split(",")
@@ -63,7 +61,7 @@ class ReadConfig:
         
 
     #----------------------------------------------------------------------
-    def loadConfig(self):
+    def loadConfigFile(self):
         if not os.path.isfile(APP_CONFIG):
             file = open(APP_CONFIG, mode="w")
             #file = codecs.open(APP_CONFIG, "w",encoding="utf-8")
@@ -85,25 +83,6 @@ class ReadConfig:
         config_file=open(APP_CONFIG,"w")
         self.configIDE.write(config_file)
         config_file.close()
-        """
-        config_file=codecs.open(APP_CONFIG,"w",encoding="utf-8")
-        for section in self.configIDE.sections():
-            config_file.write('['+section+']\n\r')
-            for option in self.configIDE.options(section):
-                config_file.write(option+' = ')
-                #print type(self.configIDE.get(section,option))
-                if type(self.configIDE.get(section,option)).__name__!='unicode':
-                    if type(self.configIDE.get(section,option)).__name__=='str':
-                        string_value=self.configIDE.get(section,option)
-                        string_value=unicode(string_value,'utf-8')
-                    else:
-                        string_value=str(self.configIDE.get(section,option))
-                else:
-                    string_value=self.configIDE.get(section,option)
-                config_file.write(string_value+'\r')
-            config_file.write('\n\r');
-        config_file.close()
-        """
         
     #---------------------------------------------------------------------- 
     def getElse(self, section, option, default):
@@ -113,17 +92,8 @@ class ReadConfig:
         return default
     
     #----------------------------------------------------------------------
-    def needRestart(self):
-        """"""
-        return self.getElse("Main", "needrestart", "False")
-    
-    
-    # ----------------------------------------------------------------------
-    # Load settings from config file
-    # ----------------------------------------------------------------------
-    def loadConfigBoard(self):
-        self.loadConfig()
-        
+    def loadConfigIDE(self):
+        self.loadConfigFile()
         arch = self.getElse("Board", "architecture", 8)
         mode = self.getElse("Board", "mode", "BOOT")
         #family = self.IDE.getElse("Board", "family", "18fxxx")
@@ -161,41 +131,12 @@ class ReadConfig:
                     self.addFile2Recent(file)
         except: pass
 
-        #perspectiva = self.getElse("IDE", "perspective", "")
-        #self._mgr.LoadPerspective(perspectiva)
-
-        #panelOutput = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        #panelLateral = "[\S]*dock_size\((\d,\d,\d)\)=([\d]*)[\S]*"
-        #perspectiva = self._mgr.SavePerspective()
-        #nOutput = int(self.getElse("IDE", "PerspectiveOutput", "119"))
-        #nLateral = int(self.getElse("IDE", "PerspectiveLateral", "286"))
-        #nOutputPos = self.getElse("IDE", "PerspectiveOutputPos", "119")
-        #nLateralPos = self.getElse("IDE", "PerspectiveLateralPos", "286")
-
-        #print nOutputPos
-
-        #try:
-            #oOutput = int(re.match(panelOutput, perspectiva).group(2))   
-            #oLateral = int(re.match(panelLateral, perspectiva).group(2))
-            #oOutputPos = re.match(panelOutput, perspectiva).group(1) 
-            #oLateralPos = re.match(panelLateral, perspectiva).group(1)
-
-            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oOutput), "dock_size%s=%d" %(nOutputPos, nOutput))
-            #perspectiva = perspectiva.replace("dock_size%s=%d" %(oOutputPos, oLateral), "dock_size%s=%d" %(nOutputPos, nLateral))
-            #self._mgr.LoadPerspective(perspectiva)
-        #except:
-            #print "No perspective"
-
-        #lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
-        #self.__initDocuments__()
-        #if os.path.isdir(lateralPath):
-            #self.buildLateralDir(lateralPath)
 
 
     
     #----------------------------------------------------------------------
-    def morePreferences(self):
-        self.loadConfig()
+    def setEditorFont(self):
+        self.loadConfigFile()
         if self.getElse("Source", "userfontinoutput", "False") == "True":
             if self.getConfig("Source", "fontdefault") == "False":
                 FaceNAme = self.getConfig("Source", "font")

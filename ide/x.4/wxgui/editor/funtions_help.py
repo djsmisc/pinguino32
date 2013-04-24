@@ -24,13 +24,17 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx, urllib2, re, threading, webbrowser
-
+import wx
 from wx.html import HtmlWindow
-#from frame import keywordFrame
-#from frameKeyWords import frameKeyWords
-import sys, os
-import locale
+
+import urllib2
+import re
+import os
+import threading
+import webbrowser
+
+from frames import frameKeyWords
+
 
 ########################################################################
 class functionsHelp():
@@ -65,15 +69,13 @@ class functionsHelp():
         self.htmlWindow1 = HtmlWindow(self)
         self.htmlWindow1.Hide()
         
-        self.lang = locale.getdefaultlocale()[0][:2]
-        #self.lang = "en"
-        
         from wxgui.editor.get_config import ReadConfig
         config = ReadConfig()
-        config.loadConfig()
+        config.loadConfigFile()
         source = config.getElse("IDE", "sourcedoc", "official")
         
         if source == "pinguinove":
+            self.lang = "es"
             self.wikiDoc = "http://www.pinguino.org.ve/wiki/index.php?title="
             self.wikiEdit = lambda keyword:"http://www.pinguino.org.ve/wiki/index.php?title="+keyword+"&action=edit"
             self.inicio = '<h2> <span class="mw-headline" id="Descripcion"> Descripcion </span></h2>\n'
@@ -84,6 +86,7 @@ class functionsHelp():
             self.example = "Ejemplo"
 
         elif source == "official":
+            self.lang = "en"
             self.wikiDoc = "http://wiki.pinguino.cc/index.php/"
             self.wikiEdit = lambda keyword:"http://wiki.pinguino.cc/index.php?title="+keyword+"&action=edit"
             self.inicio = '<a name="Name" id="Name"></a><h2> <span class="mw-headline"> Name </span></h2>\n'
@@ -341,3 +344,8 @@ class functionsHelp():
             text[title] = plain
         
         return titles, text
+    
+    
+########################################################################
+class FunctionsIDE(frameKeyWords, functionsHelp):
+    """"""

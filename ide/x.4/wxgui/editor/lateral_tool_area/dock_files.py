@@ -138,12 +138,12 @@ class File:
         self.updateWidthColums()
         
         if self.IDE.notebookEditor.PageCount > 0:
-            self.IDE._mgr.GetPane(self.IDE.panelOutput).Show()
-            self.IDE._mgr.GetPane(self.IDE.lat).Show()
+            self.IDE.auiManager.GetPane(self.IDE.panelOutput).Show()
+            self.IDE.auiManager.GetPane(self.IDE.lat).Show()
             self.IDE.updateIDE()
         else:
-            self.IDE._mgr.GetPane(self.IDE.panelOutput).Hide()
-            self.IDE._mgr.GetPane(self.IDE.lat).Hide()
+            self.IDE.auiManager.GetPane(self.IDE.panelOutput).Hide()
+            self.IDE.auiManager.GetPane(self.IDE.lat).Hide()
             self.IDE.updateIDE()
         
         if len(self.IDE.stcpage) < 1:
@@ -156,7 +156,7 @@ class File:
             textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
             text = textEdit.GetText().split("\n")
             dirname = self.IDE.filename[self.IDE.notebookEditor.GetSelection()]
-            self.otherWords = os.listdir(os.path.dirname(dirname))      
+            self.filesNeighbors = os.listdir(os.path.dirname(dirname))      
         except:
             return
         

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import check
-import pinguino
-import _trad
+from pinguino import setGui, getOptions, getVersion, Pinguino, boardlist
+from editor.constants import SOURCE_DIR
+from _trad import _
