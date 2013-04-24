@@ -200,7 +200,7 @@ class framePreferences ( wx.Frame ):
 		self.m_panel24 = wx.Panel( self.m_splitter9, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer20 = wx.BoxSizer( wx.VERTICAL )
 		
-		listBoxPreferencesChoices = [ _(u"Appearance"), _(u"Source Code Font/Size"), _(u"Highlight"), _(u"Distribution"), _(u"Others") ]
+		listBoxPreferencesChoices = [ _(u"Appearance"), _(u"Source Code Font/Size"), _(u"Highlight"), _(u"Others") ]
 		self.listBoxPreferences = wx.ListBox( self.m_panel24, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listBoxPreferencesChoices, 0 )
 		bSizer20.Add( self.listBoxPreferences, 1, wx.ALL|wx.EXPAND, 5 )
 		
@@ -344,35 +344,6 @@ class framePreferences ( wx.Frame ):
 		self.highlight.Layout()
 		fgSizer7.Fit( self.highlight )
 		self.auinotebookPreferences.AddPage( self.highlight, _(u"highligh"), False, wx.NullBitmap )
-		self.distribution = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		fgSizer11 = wx.FlexGridSizer( 2, 2, 0, 0 )
-		fgSizer11.AddGrowableCol( 1 )
-		fgSizer11.SetFlexibleDirection( wx.BOTH )
-		fgSizer11.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
-		
-		self.m_staticText171 = wx.StaticText( self.distribution, wx.ID_ANY, _(u"Tools"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText171.Wrap( -1 )
-		fgSizer11.Add( self.m_staticText171, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-		
-		choiceToolsChoices = [ _(u"Top"), _(u"Bottom"), _(u"Right"), _(u"Left") ]
-		self.choiceTools = wx.Choice( self.distribution, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceToolsChoices, 0 )
-		self.choiceTools.SetSelection( 0 )
-		fgSizer11.Add( self.choiceTools, 0, wx.ALL|wx.EXPAND, 5 )
-		
-		self.m_staticText18 = wx.StaticText( self.distribution, wx.ID_ANY, _(u"Output"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText18.Wrap( -1 )
-		fgSizer11.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-		
-		choiceOutputChoices = [ _(u"Top"), _(u"Bottom"), _(u"Right"), _(u"Left") ]
-		self.choiceOutput = wx.Choice( self.distribution, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceOutputChoices, 0 )
-		self.choiceOutput.SetSelection( 0 )
-		fgSizer11.Add( self.choiceOutput, 0, wx.ALL|wx.EXPAND, 5 )
-		
-		
-		self.distribution.SetSizer( fgSizer11 )
-		self.distribution.Layout()
-		fgSizer11.Fit( self.distribution )
-		self.auinotebookPreferences.AddPage( self.distribution, _(u"distribution"), True, wx.NullBitmap )
 		self.others = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer10 = wx.FlexGridSizer( 0, 2, 0, 0 )
 		fgSizer10.SetFlexibleDirection( wx.BOTH )
@@ -727,92 +698,42 @@ class frameKeyWords ( wx.Frame ):
 class framePinguinoX ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Pinguino IDE x.4"), pos = wx.DefaultPosition, size = wx.Size( 711,370 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Pinguino IDE x.4"), pos = wx.DefaultPosition, size = wx.Size( 719,498 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.panelEditor = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.splitterCO = wx.SplitterWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.splitterCO.Bind( wx.EVT_IDLE, self.splitterCOOnIdle )
+		
+		self.panelEditor = wx.Panel( self.splitterCO, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		self.panelEditor.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
 		
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.notebookEditor = wx.Notebook( self.panelEditor, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.splitterCL = wx.SplitterWindow( self.panelEditor, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.splitterCL.Bind( wx.EVT_IDLE, self.splitterCLOnIdle )
 		
-		bSizer2.Add( self.notebookEditor, 1, wx.EXPAND, 5 )
+		self.panelCentral = wx.Panel( self.splitterCL, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelCentral.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
 		
-		self.notebookPlugins = wx.Notebook( self.panelEditor, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NB_LEFT|wx.NO_BORDER )
-		self.notebookPlugins.Hide()
+		bSizer38 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.panelEditorPlug = wx.Panel( self.notebookPlugins, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		self.panelEditorPlug.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
+		self.notebookEditor = wx.Notebook( self.panelCentral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
 		
-		bSizer22 = wx.BoxSizer( wx.VERTICAL )
-		
-		
-		self.panelEditorPlug.SetSizer( bSizer22 )
-		self.panelEditorPlug.Layout()
-		bSizer22.Fit( self.panelEditorPlug )
-		self.notebookPlugins.AddPage( self.panelEditorPlug, _(u"Editor"), False )
-		
-		bSizer2.Add( self.notebookPlugins, 1, wx.EXPAND, 5 )
+		bSizer38.Add( self.notebookEditor, 1, wx.EXPAND, 5 )
 		
 		
-		self.panelEditor.SetSizer( bSizer2 )
-		self.panelEditor.Layout()
-		bSizer2.Fit( self.panelEditor )
-		bSizer1.Add( self.panelEditor, 1, wx.EXPAND, 5 )
-		
-		
-		self.SetSizer( bSizer1 )
-		self.Layout()
-		self.statusBarEditor = self.CreateStatusBar( 4, wx.ST_SIZEGRIP, wx.ID_ANY )
-		
-		self.Centre( wx.BOTH )
-	
-	def __del__( self ):
-		pass
-	
-
-###########################################################################
-## Class panelOutput
-###########################################################################
-
-class panelOutput ( wx.Panel ):
-	
-	def __init__( self, parent ):
-		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.TAB_TRAVERSAL )
-		
-		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWFRAME ) )
-		
-		bSizer30 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.logwindow = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		bSizer30.Add( self.logwindow, 1, wx.EXPAND, 5 )
-		
-		
-		self.SetSizer( bSizer30 )
-		self.Layout()
-	
-	def __del__( self ):
-		pass
-	
-
-###########################################################################
-## Class panelLateral
-###########################################################################
-
-class panelLateral ( wx.Panel ):
-	
-	def __init__( self, parent ):
-		wx.Panel.__init__ ( self, parent, id = wx.ID_ANY, pos = wx.DefaultPosition, size = wx.Size( 447,470 ), style = wx.TAB_TRAVERSAL )
-		
-		self.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
+		self.panelCentral.SetSizer( bSizer38 )
+		self.panelCentral.Layout()
+		bSizer38.Fit( self.panelCentral )
+		self.panelLateral = wx.Panel( self.splitterCL, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelLateral.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
 		
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.notebookLateral = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.notebookLateral = wx.Notebook( self.panelLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.file = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer7 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -838,10 +759,10 @@ class panelLateral ( wx.Panel ):
 		self.m_panel29 = wx.Panel( self.m_splitter4, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer24 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_splitter8 = wx.SplitterWindow( self.m_panel29, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
-		self.m_splitter8.Bind( wx.EVT_IDLE, self.m_splitter8OnIdle )
+		self.m_splitter81 = wx.SplitterWindow( self.m_panel29, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.m_splitter81.Bind( wx.EVT_IDLE, self.m_splitter81OnIdle )
 		
-		self.m_panel30 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.m_panel30 = wx.Panel( self.m_splitter81, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer25 = wx.BoxSizer( wx.VERTICAL )
 		
 		self.m_staticText14 = wx.StaticText( self.m_panel30, wx.ID_ANY, _(u"Variables"), wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -857,7 +778,7 @@ class panelLateral ( wx.Panel ):
 		self.m_panel30.SetSizer( bSizer25 )
 		self.m_panel30.Layout()
 		bSizer25.Fit( self.m_panel30 )
-		self.m_panel31 = wx.Panel( self.m_splitter8, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.m_panel31 = wx.Panel( self.m_splitter81, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer26 = wx.BoxSizer( wx.VERTICAL )
 		
 		self.m_staticText15 = wx.StaticText( self.m_panel31, wx.ID_ANY, _(u"Directives"), wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -873,8 +794,8 @@ class panelLateral ( wx.Panel ):
 		self.m_panel31.SetSizer( bSizer26 )
 		self.m_panel31.Layout()
 		bSizer26.Fit( self.m_panel31 )
-		self.m_splitter8.SplitHorizontally( self.m_panel30, self.m_panel31, 137 )
-		bSizer24.Add( self.m_splitter8, 1, wx.EXPAND, 5 )
+		self.m_splitter81.SplitHorizontally( self.m_panel30, self.m_panel31, 137 )
+		bSizer24.Add( self.m_splitter81, 1, wx.EXPAND, 5 )
 		
 		
 		self.m_panel29.SetSizer( bSizer24 )
@@ -887,7 +808,7 @@ class panelLateral ( wx.Panel ):
 		self.file.SetSizer( bSizer7 )
 		self.file.Layout()
 		bSizer7.Fit( self.file )
-		self.notebookLateral.AddPage( self.file, _(u"File"), False )
+		self.notebookLateral.AddPage( self.file, _(u"File"), True )
 		self.documents = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -941,7 +862,7 @@ class panelLateral ( wx.Panel ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _(u"Documents"), True )
+		self.notebookLateral.AddPage( self.documents, _(u"Documents"), False )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
@@ -1035,19 +956,56 @@ class panelLateral ( wx.Panel ):
 		bSizer3.Add( self.notebookLateral, 1, wx.EXPAND, 5 )
 		
 		
-		self.SetSizer( bSizer3 )
+		self.panelLateral.SetSizer( bSizer3 )
+		self.panelLateral.Layout()
+		bSizer3.Fit( self.panelLateral )
+		self.splitterCL.SplitVertically( self.panelCentral, self.panelLateral, 356 )
+		bSizer2.Add( self.splitterCL, 1, wx.EXPAND, 5 )
+		
+		
+		self.panelEditor.SetSizer( bSizer2 )
+		self.panelEditor.Layout()
+		bSizer2.Fit( self.panelEditor )
+		self.panelOutput = wx.Panel( self.splitterCO, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelOutput.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_GRAYTEXT ) )
+		
+		bSizer30 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.logwindow = wx.TextCtrl( self.panelOutput, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer30.Add( self.logwindow, 1, wx.EXPAND, 5 )
+		
+		
+		self.panelOutput.SetSizer( bSizer30 )
+		self.panelOutput.Layout()
+		bSizer30.Fit( self.panelOutput )
+		self.splitterCO.SplitHorizontally( self.panelEditor, self.panelOutput, 0 )
+		bSizer1.Add( self.splitterCO, 1, wx.EXPAND, 5 )
+		
+		
+		self.SetSizer( bSizer1 )
 		self.Layout()
+		self.statusBarEditor = self.CreateStatusBar( 4, wx.ST_SIZEGRIP, wx.ID_ANY )
+		
+		self.Centre( wx.BOTH )
 	
 	def __del__( self ):
 		pass
+	
+	def splitterCOOnIdle( self, event ):
+		self.splitterCO.SetSashPosition( 0 )
+		self.splitterCO.Unbind( wx.EVT_IDLE )
+	
+	def splitterCLOnIdle( self, event ):
+		self.splitterCL.SetSashPosition( 356 )
+		self.splitterCL.Unbind( wx.EVT_IDLE )
 	
 	def m_splitter4OnIdle( self, event ):
 		self.m_splitter4.SetSashPosition( 119 )
 		self.m_splitter4.Unbind( wx.EVT_IDLE )
 	
-	def m_splitter8OnIdle( self, event ):
-		self.m_splitter8.SetSashPosition( 137 )
-		self.m_splitter8.Unbind( wx.EVT_IDLE )
+	def m_splitter81OnIdle( self, event ):
+		self.m_splitter81.SetSashPosition( 137 )
+		self.m_splitter81.Unbind( wx.EVT_IDLE )
 	
 	def m_splitter3OnIdle( self, event ):
 		self.m_splitter3.SetSashPosition( 0 )

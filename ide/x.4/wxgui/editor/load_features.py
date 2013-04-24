@@ -69,39 +69,15 @@ class LoadFeatures:
         tools_ = files_ == documents_ == search_ == False
         
         if config.getElse("Main", "tools", "True") and not tools_:
-            from frames import panelLateral
-            self.lat = panelLateral(self)
-            
-            pos = self.getElse("IDE", "posTools", "Right")
-            if pos == "Top":            
-                self.auiManager.AddPane(self.lat,
-                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
-                    Top().CloseButton(False).CaptionVisible(False))
-                
-            elif pos == "Bottom":
-                self.auiManager.AddPane(self.lat,
-                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
-                    Bottom().CloseButton(False).CaptionVisible(False))
-                
-            elif pos == "Right":
-                self.auiManager.AddPane(self.lat,
-                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
-                    Right().CloseButton(False).CaptionVisible(False))
-                
-            elif pos == "Left": 
-                self.auiManager.AddPane(self.lat,
-                    wx.aui.AuiPaneInfo().Caption(_("Tools")).
-                    Left().CloseButton(False).CaptionVisible(False))
-            
+            self.lat = self.panelLateral
 
-            
-     
-                
+
             if files_:
                 from wxgui.editor.lateral_tool_area import File
                 self.Files = File()
                 self.Files.__initDockFile__(self)
-            else: self.lat.file.Destroy()
+            else:
+                self.lat.re
             
             if documents_:
                 from wxgui.editor.lateral_tool_area import Documents
@@ -109,12 +85,16 @@ class LoadFeatures:
                 self.Documents.__initDocuments__(self)
                 lateralPath = self.getElse("IDE", "LateralPath", os.path.join(os.getcwd(),"examples"))
                 if os.path.isdir(lateralPath): self.Documents.buildLateralDir(lateralPath)
-            else: self.lat.documents.Destroy()
+            else: self.documents.Destroy()
                
             if search_:
                 from wxgui.editor.lateral_tool_area import Search
                 self.Search = Search()
                 self.Search.__initSearch__(self)
-            else: self.lat.search.Destroy()
+            else: self.search.Destroy()
                             
                 
+        else:
+            self.splitterCL.Unsplit()
+
+        

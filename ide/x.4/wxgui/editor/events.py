@@ -193,9 +193,15 @@ class Events:
         self.setConfig("IDE", "Window/Xpos", x)
         self.setConfig("IDE", "Window/Ypos", y)
 
-        w, h = self.logwindow.GetSize()
-        self.setConfig("IDE", "Output/Width", w)
-        self.setConfig("IDE", "Output/Height", h)
+        #w, h = self.logwindow.GetSize()
+        #self.setConfig("IDE", "Output/Width", w)
+        #self.setConfig("IDE", "Output/Height", h)
+        
+        sashPos = self.splitterCL.GetSashPosition()
+        self.setConfig("IDE", "sashPosCL", sashPos)
+        
+        sashPos = self.splitterCO.GetSashPosition()
+        self.setConfig("IDE", "sashPosCO", sashPos)
 
         maxim = self.IsMaximized()
         self.setConfig("IDE", "Maximized", maxim)
@@ -227,7 +233,7 @@ class Events:
 
         self.saveConfig()
 
-        self.auiManager.UnInit()
+        #self.auiManager.UnInit()
         self.Destroy()
         self.Close()
         sys.exit(0)
@@ -564,7 +570,7 @@ class Events:
     def OnResize(self,event):
         try: self.background.CentreOnParent(wx.BOTH)
         except: pass
-        self.auiManager.Update()
+        #self.auiManager.Update()
         event.Skip()
 
     #----------------------------------------------------------------------

@@ -161,7 +161,16 @@ class General(ReadConfig, LoadFeatures):
 
     #----------------------------------------------------------------------
     def updateIDE(self):
-        self.auiManager.Update()
+	return
+	
+    #----------------------------------------------------------------------
+    def updateSashs(self):
+	""""""
+	sashposco = self.getElse("IDE", "sashposco", "500")
+	self.splitterCO.SetSashPosition(sashposco)
+	
+	sashposcl = self.getElse("IDE", "sashposcl", "500")
+	self.splitterCL.SetSashPosition(sashposcl)   
 	
     #----------------------------------------------------------------------
     def openLast(self):

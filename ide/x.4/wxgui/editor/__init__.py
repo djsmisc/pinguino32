@@ -30,7 +30,7 @@ import os
 import locale
 
 from events import Events
-from frames import panelOutput, menubarPinguino
+from frames import menubarPinguino
 from constants import THEME_DIR
 from wxgui._trad import _
 #from debugger import Debugger
@@ -54,7 +54,7 @@ class IDE(Editor, General, Testing, Events):
         self.buildToolbar()
         self.notebookEditor.Hide()
         
-        self.updateIDE()
+        #self.updateIDE()
         self.__initEditor__()
         #self.__initDebugger__()  #TODO
         self.__initTesting__() #TODO
@@ -78,34 +78,16 @@ class IDE(Editor, General, Testing, Events):
 
     #----------------------------------------------------------------------
     def configAui(self):
-        self.auiManager = wx.aui.AuiManager(self)
+        #self.auiManager = wx.aui.AuiManager(self)
         self.buildOutput()
         self.buildEditor()
-        self.addPanes()
+        #self.addPanes()
 
     #----------------------------------------------------------------------      
     def buildOutput(self):
-        self.panelOutput = panelOutput(self)
-        #self.debuggingLine = self.panelOutput.debuggingLine
-        #self.buttonSendDebug = self.panelOutput.buttonSendDebug
-        self.logwindow = self.panelOutput.logwindow
-        #self.choicePort = self.panelOutput.choicePort
-        #self.choicePort.Hide()
         if sys.platform != "darwin":
             self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
             self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255)) 
-            #self.debuggingLine.SetBackgroundColour(wx.Colour(0, 0, 0))
-            #self.debuggingLine.SetForegroundColour(wx.Colour(255, 255, 255))
-
-        #self.logwindow.SetBackgroundColour(wx.Colour(0, 0, 0))
-        #self.logwindow.SetForegroundColour(wx.Colour(255, 255, 255)) 	
-
-        #self.choicePort.Bind(wx.EVT_CHOICE, self.changeCDCPort)
-        #self.debuggingLine.SetInsertionPoint(125)
-        #self.debuggingLine.Hide()
-        #self.buttonSendDebug.Hide()
-        #self.debuggingLine.Bind(wx.EVT_KEY_UP, self.sendDebugging)
-        #self.buttonSendDebug.Bind(wx.EVT_BUTTON, self.sendLine)
 
     #----------------------------------------------------------------------      
     def buildEditor(self):
@@ -119,16 +101,16 @@ class IDE(Editor, General, Testing, Events):
         self.background.CentreOnParent(wx.BOTH)
         self.notebookEditor.SetMinSize((50, 100))
 
-    #----------------------------------------------------------------------
-    def addPanes(self):
-        pos = self.getElse("IDE", "posOutput", "Right")
-        if pos == "Top": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Top().CaptionVisible(False))
-        elif pos == "Bottom": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Bottom().CaptionVisible(False))
-        elif pos == "Right": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Right().CaptionVisible(False))
-        elif pos == "Left": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Left().CaptionVisible(False))
+    ##----------------------------------------------------------------------
+    #def addPanes(self):
+        #pos = self.getElse("IDE", "posOutput", "Bottom")
+        #if pos == "Top": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Top().CaptionVisible(False))
+        #elif pos == "Bottom": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Bottom().CaptionVisible(False))
+        #elif pos == "Right": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Right().CaptionVisible(False))
+        #elif pos == "Left": self.auiManager.AddPane(self.panelOutput, wx.aui.AuiPaneInfo().Left().CaptionVisible(False))
         
-        self.auiManager.AddPane(self.panelEditor, wx.CENTER)   
-        self.auiManager.Update()
+        #self.auiManager.AddPane(self.panelEditor, wx.CENTER)   
+        #self.auiManager.Update()
 
 #----------------------------------------------------------------------
 # Toolbar

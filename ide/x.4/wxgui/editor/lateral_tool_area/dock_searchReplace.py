@@ -34,18 +34,18 @@ class Search():
     #----------------------------------------------------------------------
     def __initSearch__(self, IDE):
         self.IDE = IDE
-        self.FindText = self.IDE.lat.searchCtrlSearch
-        self.ReplaceText = self.IDE.lat.searchCtrlReplace
+        self.FindText = self.IDE.searchCtrlSearch
+        self.ReplaceText = self.IDE.searchCtrlReplace
         self.ReplaceText.SetDescriptiveText("Replace")
         self.findIndex = -1
         #self.OnFind()
         
-        self.IDE.Bind(wx.EVT_BUTTON, self.findnext, self.IDE.lat.buttonNext)  
-        self.IDE.Bind(wx.EVT_BUTTON, self.findprev, self.IDE.lat.buttonPrev)
-        self.IDE.Bind(wx.EVT_BUTTON, self.findnext, self.IDE.lat.buttonNext)  
-        self.IDE.Bind(wx.EVT_BUTTON, self.findprev, self.IDE.lat.buttonPrev)
-        self.IDE.Bind(wx.EVT_BUTTON, self.replacetext, self.IDE.lat.buttonReplace)  
-        self.IDE.Bind(wx.EVT_BUTTON, self.replacealltext, self.IDE.lat.buttonReplaceAll)   
+        self.IDE.Bind(wx.EVT_BUTTON, self.findnext, self.IDE.buttonNext)  
+        self.IDE.Bind(wx.EVT_BUTTON, self.findprev, self.IDE.buttonPrev)
+        self.IDE.Bind(wx.EVT_BUTTON, self.findnext, self.IDE.buttonNext)  
+        self.IDE.Bind(wx.EVT_BUTTON, self.findprev, self.IDE.buttonPrev)
+        self.IDE.Bind(wx.EVT_BUTTON, self.replacetext, self.IDE.buttonReplace)  
+        self.IDE.Bind(wx.EVT_BUTTON, self.replacealltext, self.IDE.buttonReplaceAll)   
         self.IDE.Bind(wx.EVT_TEXT, self.updateFinds, self.FindText)
         
         self.IDE.Bind(wx.EVT_MENU, self.OnFind, self.IDE.menu.menuItemFind)
@@ -67,10 +67,10 @@ class Search():
                 self.FindText.SetFocus()
                 self.FindText.SetValue(sel)
                 
-        self.IDE.lat.notebookLateral.SetSelection(2)
-        self.IDE.lat.panelReplace.Hide()
-        self.IDE.lat.m_staticText4.Hide()
-        self.IDE.lat.searchCtrlReplace.Hide()			   
+        self.IDE.notebookLateral.SetSelection(2)
+        self.IDE.panelReplace.Hide()
+        self.IDE.m_staticText4.Hide()
+        self.IDE.searchCtrlReplace.Hide()			   
         self.FindText.SetFocus()
         self.IDE.updateIDE()		
 
@@ -86,8 +86,8 @@ class Search():
         if self.findIndex < 0: self.findIndex = result["count"] - 1
         self.highLine(word, self.findIndex)
         
-        self.IDE.lat.buttonReplace.Enable()
-        self.IDE.lat.buttonReplaceAll.Enable()
+        self.IDE.buttonReplace.Enable()
+        self.IDE.buttonReplaceAll.Enable()
         
         return True
 		
@@ -104,8 +104,8 @@ class Search():
         if self.findIndex >= result["count"]: self.findIndex = -1
         self.highLine(word, self.findIndex)
         
-        self.IDE.lat.buttonReplace.Enable()
-        self.IDE.lat.buttonReplaceAll.Enable()
+        self.IDE.buttonReplace.Enable()
+        self.IDE.buttonReplaceAll.Enable()
         
         return True
 
@@ -119,13 +119,13 @@ class Search():
                 self.FindText.SetValue(sel)
                 self.ReplaceText.SetFocus()
                 
-        self.IDE.lat.notebookLateral.SetSelection(2)        
-        self.IDE.lat.panelReplace.Show()
-        self.IDE.lat.m_staticText4.Show()
-        self.IDE.lat.searchCtrlReplace.Show()        
+        self.IDE.notebookLateral.SetSelection(2)        
+        self.IDE.panelReplace.Show()
+        self.IDE.m_staticText4.Show()
+        self.IDE.searchCtrlReplace.Show()        
         #self.FindText.SetFocus()
-        self.IDE.lat.buttonReplace.Disable()
-        self.IDE.lat.buttonReplaceAll.Disable()
+        self.IDE.buttonReplace.Disable()
+        self.IDE.buttonReplaceAll.Disable()
         #self.updateIDE()
 
     #----------------------------------------------------------------------
@@ -139,8 +139,8 @@ class Search():
         #self.findIndex -= 1
         #self.findnext(event)
         if not self.findnext(event):
-            self.IDE.lat.buttonReplace.Disable()
-            self.IDE.lat.buttonReplaceAll.Disable()
+            self.IDE.buttonReplace.Disable()
+            self.IDE.buttonReplaceAll.Disable()
             return False
         return True
 
@@ -161,7 +161,7 @@ class Search():
         textEdit.AddText(plain)
         textEdit.GotoPos(pos)
         
-        self.IDE.lat.searchReplaceInfo.SetLabel(_("Replaced %d matches in the file.") %count)
+        self.IDE.searchReplaceInfo.SetLabel(_("Replaced %d matches in the file.") %count)
 
 
     #----------------------------------------------------------------------
@@ -169,7 +169,7 @@ class Search():
         if word == "": return 
         
         textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
-        if self.IDE.lat.checkBox_sensitive.IsChecked():
+        if self.IDE.checkBox_sensitive.IsChecked():
             plain = str(textEdit.GetTextUTF8())
             word = str(word)
         else:
@@ -186,7 +186,7 @@ class Search():
                   "count": len(finds),
                   "finds": finds,}
         
-        self.IDE.lat.searchReplaceInfo.SetLabel(_("Finded %d matches in the file.") %len(finds))
+        self.IDE.searchReplaceInfo.SetLabel(_("Finded %d matches in the file.") %len(finds))
         
         return result
     

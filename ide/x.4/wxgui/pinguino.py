@@ -29,6 +29,7 @@ import re
 import time
 import shutil
 from subprocess import Popen, STDOUT
+import wx
 
 import argparse
 from boards import boardlist
@@ -93,7 +94,13 @@ class Pinguino(framePinguinoX, IDE):
     # Initializes config
     # ----------------------------------------------------------------------
         self.setEditorFont()
-
+        
+        
+# ----------------------------------------------------------------------
+# Update distribution
+# ----------------------------------------------------------------------
+        #This can't be instant
+        wx.FutureCall(1000, self.updateSashs)
 
 
     #----------------------------------------------------------------------
