@@ -55,10 +55,11 @@ class Search():
     def updateFinds(self, event):
         word = self.FindText.GetValue()
         if word != "": self.highLine(word, 0, False)
+        self.IDE.HideNextAutoComplete()
+        self.FindText.SetFocus()
         
     #---------------------------------------------------------------------- 
     def OnFind(self,event=None):
-        print "OK"
         if len(self.IDE.stcpage) > 0:
             textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
             sel = textEdit.GetSelectedText()

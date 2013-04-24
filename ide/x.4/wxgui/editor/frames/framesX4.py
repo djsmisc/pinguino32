@@ -34,7 +34,7 @@ class menubarPinguino ( wx.MenuBar ):
 		self.menuItemSave = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save")+ u"\t" + u"CTRL+S", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuFile.AppendItem( self.menuItemSave )
 		
-		self.menuItemSaveAs = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save as"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemSaveAs = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save as")+ u"\t" + u"SHIFT+S", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuFile.AppendItem( self.menuItemSaveAs )
 		
 		self.menuItemClose = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Close")+ u"\t" + u"CTRL+W", wx.EmptyString, wx.ITEM_NORMAL )
@@ -42,10 +42,10 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuFile.AppendSeparator()
 		
-		self.menuItemSaveAll = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save all"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemSaveAll = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save all")+ u"\t" + u"CTRL+SHIFT+S", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuFile.AppendItem( self.menuItemSaveAll )
 		
-		self.menuItemCloseAll = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Close all"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemCloseAll = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Close all")+ u"\t" + u"CTRL+SHIFT+W", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuFile.AppendItem( self.menuItemCloseAll )
 		
 		self.menuFile.AppendSeparator()
@@ -105,7 +105,7 @@ class menubarPinguino ( wx.MenuBar ):
 		self.menuItemClear = wx.MenuItem( self.menuEdit, wx.ID_ANY, _(u"Clear"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuEdit.AppendItem( self.menuItemClear )
 		
-		self.menuItemSelectAll = wx.MenuItem( self.menuEdit, wx.ID_ANY, _(u"Select all"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemSelectAll = wx.MenuItem( self.menuEdit, wx.ID_ANY, _(u"Select all")+ u"\t" + u"CTRL+A", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuEdit.AppendItem( self.menuItemSelectAll )
 		
 		self.menuEdit.AppendSeparator()
@@ -116,14 +116,6 @@ class menubarPinguino ( wx.MenuBar ):
 		self.Append( self.menuEdit, _(u"Edit") ) 
 		
 		self.menuView = wx.Menu()
-		self.menuItemTools = wx.MenuItem( self.menuView, wx.ID_ANY, _(u"Tools")+ u"\t" + u"F1", wx.EmptyString, wx.ITEM_CHECK )
-		self.menuView.AppendItem( self.menuItemTools )
-		self.menuItemTools.Check( True )
-		
-		self.menuItemOutput = wx.MenuItem( self.menuView, wx.ID_ANY, _(u"Output")+ u"\t" + u"F2", wx.EmptyString, wx.ITEM_CHECK )
-		self.menuView.AppendItem( self.menuItemOutput )
-		self.menuItemOutput.Check( True )
-		
 		self.menuItemToolbar = wx.MenuItem( self.menuView, wx.ID_ANY, _(u"Toolbar")+ u"\t" + u"F3", wx.EmptyString, wx.ITEM_CHECK )
 		self.menuView.AppendItem( self.menuItemToolbar )
 		self.menuItemToolbar.Check( True )
@@ -136,19 +128,16 @@ class menubarPinguino ( wx.MenuBar ):
 		
 		self.menuPinguino.AppendSeparator()
 		
-		self.menuItemUSBCDC = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"USB CDC (serial emulation)")+ u"\t" + u"CTRL+SHIFT+C", wx.EmptyString, wx.ITEM_CHECK )
-		self.menuPinguino.AppendItem( self.menuItemUSBCDC )
-		
 		self.menuItemViewStdout = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"View stdout")+ u"\t" + u"F8", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemViewStdout )
 		
 		self.menuPinguino.AppendSeparator()
 		
-		self.menuItemUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Upload")+ u"\t" + u"F6", wx.EmptyString, wx.ITEM_NORMAL )
-		self.menuPinguino.AppendItem( self.menuItemUpload )
-		
 		self.menuItemCompile = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Compile")+ u"\t" + u"F5", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemCompile )
+		
+		self.menuItemUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"Upload")+ u"\t" + u"F6", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuPinguino.AppendItem( self.menuItemUpload )
 		
 		self.menuItemCompileUpload = wx.MenuItem( self.menuPinguino, wx.ID_ANY, _(u"If Compile then Upload")+ u"\t" + u"F7", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuPinguino.AppendItem( self.menuItemCompileUpload )
@@ -211,13 +200,13 @@ class framePreferences ( wx.Frame ):
 		self.m_panel24 = wx.Panel( self.m_splitter9, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer20 = wx.BoxSizer( wx.VERTICAL )
 		
-		listBoxPreferencesChoices = [ _(u"Appearance"), _(u"Source Code Font/Size"), _(u"Highlight"), _(u"Others") ]
+		listBoxPreferencesChoices = [ _(u"Appearance"), _(u"Source Code Font/Size"), _(u"Highlight"), _(u"Distribution"), _(u"Others") ]
 		self.listBoxPreferences = wx.ListBox( self.m_panel24, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listBoxPreferencesChoices, 0 )
 		bSizer20.Add( self.listBoxPreferences, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		checkListPreferencesChoices = [_(u"Auto-completion"), _(u"Open/Save files"), _(u"Tools")]
 		self.checkListPreferences = wx.CheckListBox( self.m_panel24, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, checkListPreferencesChoices, 0 )
-		bSizer20.Add( self.checkListPreferences, 2, wx.ALL|wx.EXPAND, 5 )
+		bSizer20.Add( self.checkListPreferences, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
 		self.m_panel24.SetSizer( bSizer20 )
@@ -354,7 +343,36 @@ class framePreferences ( wx.Frame ):
 		self.highlight.SetSizer( fgSizer7 )
 		self.highlight.Layout()
 		fgSizer7.Fit( self.highlight )
-		self.auinotebookPreferences.AddPage( self.highlight, _(u"highligh"), True, wx.NullBitmap )
+		self.auinotebookPreferences.AddPage( self.highlight, _(u"highligh"), False, wx.NullBitmap )
+		self.distribution = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		fgSizer11 = wx.FlexGridSizer( 2, 2, 0, 0 )
+		fgSizer11.AddGrowableCol( 1 )
+		fgSizer11.SetFlexibleDirection( wx.BOTH )
+		fgSizer11.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		
+		self.m_staticText171 = wx.StaticText( self.distribution, wx.ID_ANY, _(u"Tools"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText171.Wrap( -1 )
+		fgSizer11.Add( self.m_staticText171, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		choiceToolsChoices = [ _(u"Top"), _(u"Bottom"), _(u"Right"), _(u"Left") ]
+		self.choiceTools = wx.Choice( self.distribution, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceToolsChoices, 0 )
+		self.choiceTools.SetSelection( 0 )
+		fgSizer11.Add( self.choiceTools, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		self.m_staticText18 = wx.StaticText( self.distribution, wx.ID_ANY, _(u"Output"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText18.Wrap( -1 )
+		fgSizer11.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		choiceOutputChoices = [ _(u"Top"), _(u"Bottom"), _(u"Right"), _(u"Left") ]
+		self.choiceOutput = wx.Choice( self.distribution, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceOutputChoices, 0 )
+		self.choiceOutput.SetSelection( 0 )
+		fgSizer11.Add( self.choiceOutput, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		
+		self.distribution.SetSizer( fgSizer11 )
+		self.distribution.Layout()
+		fgSizer11.Fit( self.distribution )
+		self.auinotebookPreferences.AddPage( self.distribution, _(u"distribution"), True, wx.NullBitmap )
 		self.others = wx.Panel( self.auinotebookPreferences, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer10 = wx.FlexGridSizer( 0, 2, 0, 0 )
 		fgSizer10.SetFlexibleDirection( wx.BOTH )
@@ -578,31 +596,21 @@ class framePreferences ( wx.Frame ):
 		bSizer19.Add( self.m_splitter9, 1, wx.EXPAND, 5 )
 		
 		self.m_panel29 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		self.fgSizer2 = wx.FlexGridSizer( 1, 4, 0, 0 )
+		self.fgSizer2 = wx.FlexGridSizer( 1, 5, 0, 0 )
 		self.fgSizer2.AddGrowableCol( 1 )
 		self.fgSizer2.SetFlexibleDirection( wx.BOTH )
 		self.fgSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
-		
-		self.labelNotice = wx.StaticText( self.m_panel29, wx.ID_ANY, _(u"Pinguino IDE requires a restart to reinitialize its config."), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.labelNotice.Wrap( -1 )
-		self.labelNotice.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
-		
-		self.fgSizer2.Add( self.labelNotice, 0, wx.ALL, 5 )
-		
-		
-		self.fgSizer2.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		
-		self.fgSizer2.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		
-		self.fgSizer2.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
 		self.buttonRestore = wx.Button( self.m_panel29, wx.ID_ANY, _(u"Restore Defaults"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.fgSizer2.Add( self.buttonRestore, 0, wx.ALL, 5 )
 		
 		
 		self.fgSizer2.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.buttonRestart = wx.Button( self.m_panel29, wx.ID_ANY, _(u"Restart"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.buttonRestart.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
+		
+		self.fgSizer2.Add( self.buttonRestart, 0, wx.ALL, 5 )
 		
 		self.buttonApply = wx.Button( self.m_panel29, wx.ID_ANY, _(u"Apply"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.fgSizer2.Add( self.buttonApply, 0, wx.ALL, 5 )
@@ -780,28 +788,8 @@ class panelOutput ( wx.Panel ):
 		
 		bSizer30 = wx.BoxSizer( wx.VERTICAL )
 		
-		choicePortChoices = []
-		self.choicePort = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 150,-1 ), choicePortChoices, 0 )
-		self.choicePort.SetSelection( 0 )
-		bSizer30.Add( self.choicePort, 0, 0, 5 )
-		
 		self.logwindow = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
 		bSizer30.Add( self.logwindow, 1, wx.EXPAND, 5 )
-		
-		gbSizer2 = wx.GridBagSizer( 0, 0 )
-		gbSizer2.SetFlexibleDirection( wx.BOTH )
-		gbSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
-		
-		self.debuggingLine = wx.TextCtrl( self, wx.ID_ANY, _(u">>>"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		gbSizer2.Add( self.debuggingLine, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.EXPAND, 5 )
-		
-		self.buttonSendDebug = wx.Button( self, wx.ID_ANY, _(u"Send"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		gbSizer2.Add( self.buttonSendDebug, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), 0, 5 )
-		
-		
-		gbSizer2.AddGrowableCol( 0 )
-		
-		bSizer30.Add( gbSizer2, 0, wx.EXPAND, 5 )
 		
 		
 		self.SetSizer( bSizer30 )
@@ -953,7 +941,7 @@ class panelLateral ( wx.Panel ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _(u"Documents"), False )
+		self.notebookLateral.AddPage( self.documents, _(u"Documents"), True )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
@@ -1042,7 +1030,7 @@ class panelLateral ( wx.Panel ):
 		self.search.SetSizer( fgSizer1 )
 		self.search.Layout()
 		fgSizer1.Fit( self.search )
-		self.notebookLateral.AddPage( self.search, _(u"Search"), True )
+		self.notebookLateral.AddPage( self.search, _(u"Search"), False )
 		
 		bSizer3.Add( self.notebookLateral, 1, wx.EXPAND, 5 )
 		

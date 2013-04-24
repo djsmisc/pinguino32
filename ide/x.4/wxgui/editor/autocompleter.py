@@ -24,7 +24,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx, sys, os
+import wx
+import sys
+import os
 from dic import Snippet
 
 try:
@@ -52,7 +54,7 @@ class AutoCompleterIDE(frameAutoCompleter):
         self.listCtrlAutocompleter.SetFocus()
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.activated, self.listCtrlAutocompleter)
         self.listCtrlAutocompleter.Bind(wx.EVT_CHAR, self.onCharEvent)
-        #self.Bind(wx.EVT_KEY_UP, self.onKeyEvent)
+        #self.IDE.Bind(wx.EVT_KEY_UP, self.IDE.KeyEvent)
         self.listCtrlAutocompleter.Bind(wx.EVT_KEY_UP, self.onKeyEvent)
         
     #----------------------------------------------------------------------

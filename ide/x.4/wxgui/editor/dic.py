@@ -27,7 +27,7 @@
 import os, time
 date = time.ctime()
 
-from wxgui._trad import _
+_=lambda x:x
 
 Autocompleter = {
     

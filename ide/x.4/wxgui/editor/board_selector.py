@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import wx
-from wxgui._trad import _
-
 """-------------------------------------------------------------------------
-    Selector board
+    BoarSelector
 
     author:		Yeison Cardona
     contact:		yeison.eng@gmail.com 
@@ -27,6 +24,11 @@ from wxgui._trad import _
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
+import wx
+from wxgui._trad import _
+from frames import FrameSelectDevice
+
+
 ########################################################################
 class BoarSelector:
     """"""
@@ -44,15 +46,12 @@ class BoarSelector:
         self.radioBox_arch.Bind(wx.EVT_RADIOBOX, self.r_arch)
         self.radioBox_mode.Bind(wx.EVT_RADIOBOX, self.r_mode)
 
-        self.IDE.loadConfig()
+        self.IDE.loadConfigFile()
         self.ARCH = self.IDE.getElse("Board", "architecture", 8)
         self.MODE = self.IDE.getElse("Board", "mode", "BOOT")
         #self.FAMILY = self.IDE.getElse("Board", "family", "18fxxx")
         self.DEVICE = self.IDE.getElse("Board", "device", "Pinguino 2550")
-        self.BOOTLOADER = self.IDE.getElse("Board", "bootloader", "['boot2', 0x2000]")
-        self.BOOTLOADER = self.BOOTLOADER[1:-1].split(",")
-        self.BOOTLOADER[0] = self.BOOTLOADER[0].replace("'", "")
-        self.BOOTLOADER[1] = eval(self.BOOTLOADER[1])
+        self.BOOTLOADER = self.getCurrentBootloader()
     
         if self.ARCH == 8: self.radioBox_arch.SetSelection(0)
         else: self.radioBox_arch.SetSelection(1)
@@ -163,6 +162,12 @@ class BoarSelector:
                 self.new_choices_dev()
         
         self.updateFrame()
+        
+    #----------------------------------------------------------------------
+    def getCurrentBootloader(self):
+        BOOTLOADER = self.IDE.getElse("Board", "bootloader", "['boot2', 0x2000]")
+        BOOTLOADER = BOOTLOADER[1:-1].split(",")
+        return [BOOTLOADER[0].replace("'", ""), eval(BOOTLOADER[1])]
 
     #----------------------------------------------------------------------
     def new_choices_fam(self):
@@ -175,8 +180,12 @@ class BoarSelector:
             self.radioBox_botChoices = ["Bootloader v1.x or v2.x", "Bootloader v4.x"]
             self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Bootloader"), wx.DefaultPosition, wx.DefaultSize, self.radioBox_botChoices, majorDimension=2)
             self.r_fam()
+            
+            self.BOOTLOADER = self.getCurrentBootloader()
             index = self.Boot.index(self.BOOTLOADER)
-            self.radioBox_fam.SetSelection( index-1 )	
+            
+            self.radioBox_fam.SetSelection( index-1 )
+            
             self.buildChoicesFam()    
             self.new_choices_dev()
             return
@@ -233,8 +242,12 @@ class BoarSelector:
         self.SetSize(self.Size)
         
 
-
     #----------------------------------------------------------------------
     def buildChoicesFam(self):
         self.sizer.Add( self.radioBox_fam, 0, wx.ALL|wx.EXPAND, 5 )
         self.radioBox_fam.Bind(wx.EVT_RADIOBOX, self.r_fam)
+
+
+########################################################################
+class ConfigDevice(FrameSelectDevice, BoarSelector):
+    """"""

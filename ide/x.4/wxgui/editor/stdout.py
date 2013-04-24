@@ -25,11 +25,13 @@
 -------------------------------------------------------------------------"""
 
 import wx
-import os, codecs
+import os
+import codecs
 from wxgui._trad import _
+from frames import frameStdout
+from constants import STDOUT_FILE
 
-STDOUT_FILE = os.path.join(os.getcwd(), 'source', "stdout")
-
+########################################################################  
 class Stdout():
 
     #----------------------------------------------------------------------
@@ -53,3 +55,8 @@ class Stdout():
         if lines == "": lines = _("Empty file...")
         self.m_richText2.AppendText(lines)
         
+        
+
+########################################################################
+class StdoutIDE(frameStdout, Stdout):
+    """"""

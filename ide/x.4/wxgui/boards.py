@@ -24,7 +24,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import wx	# wx.NewId()
+#import wx	# wx.NewId()
 
 # vendors id
 MICROCHIP_ID = 0x04D8
@@ -35,7 +35,7 @@ PIC32_ID = 0x003C
 
 class PinguinoNoBoot:
     name='Pinguino (no Bootloader)'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='noboot'
     proc=''
@@ -49,7 +49,7 @@ class PinguinoNoBoot:
 
 class Pinguino2550:
     name='Pinguino 2550'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot2'
     proc='18f2550'
@@ -63,7 +63,7 @@ class Pinguino2550:
 
 class Pinguino25k50:
     name='Pinguino 25k50'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot4'
     proc='18f25k50'
@@ -77,7 +77,7 @@ class Pinguino25k50:
 
 class Pinguino45k50:
     name='Pinguino 45k50'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot4'
     proc='18f45k50'
@@ -91,7 +91,7 @@ class Pinguino45k50:
 
 class CHRP3:
     name='CHRP3.0'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot4'
     proc='18f25k50'
@@ -105,7 +105,7 @@ class CHRP3:
 
 class Pinguino4550:
     name='Pinguino 4550'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot2'
     proc='18f4550'
@@ -119,7 +119,7 @@ class Pinguino4550:
 
 class Pinguino26J50:
     name='Pinguino 26J50'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot4'
     proc='18f26j50'
@@ -133,7 +133,7 @@ class Pinguino26J50:
 
 class Pinguino27J53:
     name='Pinguino 27J53'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot4'
     proc='18f27j53'
@@ -147,7 +147,7 @@ class Pinguino27J53:
 
 class PICuno_Equo:
     name='PICuno Equo'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot2'
     proc='18f4550'
@@ -162,7 +162,7 @@ class PICuno_Equo:
 
 class FreeJALduino:
     name='FreeJALduino'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=8
     bldr='boot2'
     proc='18f2550'
@@ -177,7 +177,7 @@ class FreeJALduino:
 
 class PIC32_Pinguino:
     name='PIC32 Pinguino'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX440F256H'
@@ -191,7 +191,7 @@ class PIC32_Pinguino:
 
 class PIC32_Pinguino_OTG:
     name='PIC32 Pinguino OTG'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX440F256H'
@@ -205,7 +205,7 @@ class PIC32_Pinguino_OTG:
 
 class PIC32_Pinguino_Micro:
     name='PIC32 Pinguino Micro'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX440F256H'
@@ -219,7 +219,7 @@ class PIC32_Pinguino_Micro:
 
 class PIC32_Pinguino_T795:
     name='PIC32 Pinguino T795'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX795F512H'
@@ -233,7 +233,7 @@ class PIC32_Pinguino_T795:
 
 class PIC32_Pinguino_220:
     name='PIC32 Pinguino 220'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX220F032D'
@@ -247,7 +247,7 @@ class PIC32_Pinguino_220:
 
 class GENERIC32MX250F128:
     name='GENERIC32MX250F128'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX250F128B'
@@ -261,7 +261,7 @@ class GENERIC32MX250F128:
 
 class GENERIC32MX220F032:
     name='GENERIC32MX220F032'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX220F032B'
@@ -275,7 +275,7 @@ class GENERIC32MX220F032:
 
 class Emperor_460:
     name='Emperor 460'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX460F512L'
@@ -289,7 +289,7 @@ class Emperor_460:
 
 class Emperor_795:
     name='Emperor 795'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX795F512L'
@@ -303,7 +303,7 @@ class Emperor_795:
 
 class UBW32_460:
     name='UBW32 460'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX460F512L'
@@ -317,7 +317,7 @@ class UBW32_460:
 
 class UBW32_795:
     name='UBW32 795'
-    id=wx.NewId()
+    #id=wx.NewId()
     arch=32
     bldr='microchip'
     proc='32MX795F512L'

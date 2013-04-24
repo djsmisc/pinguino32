@@ -29,10 +29,8 @@ import locale, gettext, os, sys
 loc = locale.getdefaultlocale()[0][0:2]
 
 # pt_BR Language Check, By Wagner de Queiroz, 2010-Mar,01
-if loc == "pt":
-    loc = locale.getdefaultlocale()[0][0:5]
-if loc != "pt_BR":
-    loc = locale.getdefaultlocale()[0][0:2]              
+if loc == "pt": loc = locale.getdefaultlocale()[0][0:5]
+if loc != "pt_BR": loc = locale.getdefaultlocale()[0][0:2]              
 
 lang = gettext.translation('pinguino', os.path.join(sys.path[0], 'locale'), languages=[loc], fallback=True)
 _=lang.ugettext

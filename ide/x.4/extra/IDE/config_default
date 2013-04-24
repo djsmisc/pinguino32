@@ -1,43 +1,51 @@
+[Board]
+architecture = 8
+mode = BOOT
+device = Pinguino 2550
+bootloader = [boot2, 0x2000]
+
 [IDE]
-window/width = 1151
-window/height = 547
+window/width = 1000
+window/height = 500
 window/xpos = 99
-window/ypos = 111
-output/width = 1149
-output/height = 140
-theme = PinguinoX
-board = Pinguino 2550
+window/ypos = 72
 maximized = False
-perspectiveoutput = 159
-perspectivelateral = 374
-checkupgradeatstart = False
-boardnoboot = 18f1220
-boardmode = USB Bootloader
+theme = PinguinoX
+sourcedoc = official
+output/width = 998
+output/height = 140
+postools = Right
+posoutput = Bottom
+
+[Main]
+tools = True
+open-save = True
+auto-complete = True
+
+[Tools]
+search = True
+files = True
+documents = True
 
 [Open/Save]
-autosavetime = 10
-template = True
 autosave = False
+openlast = True
+
+[Highligh]
+codeerror = [255, 103, 103]
 
 [Source]
-font = monospace
-size = 10
-fontdefault = True
-tabsize = 4
 userfontinoutput = True
 
-[Completer]
-charscount = 2
-maxitemscount = 14
-enable = True
-insertparentheses = True
-
 [Insert]
-brackets = False
-doublecuotation = False
-singlecuotation = False
-keys = False
-parentheses = False
+brackets = True
+keys = True
+parentheses = True
+doublecuotation = True
+singlecuotation = True
+
+[Completer]
+charscount = 1
 
 [Recents]
 recents_count = 0
@@ -45,15 +53,3 @@ recents_count = 0
 [Last]
 last_count = 0
 
-[Highligh]
-searchreplace = [255, 250, 70]
-codenavigation = [120, 255, 152]
-selection = [241, 132, 88]
-codeerror = [241, 96, 96]
-
-[Board]
-architectute = 8
-mode = BOOT
-family = 18fxxx
-device = Pinguino 2550
-bootloader = ['boot2', 8192]

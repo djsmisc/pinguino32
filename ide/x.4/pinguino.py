@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-import wx, os, sys
-#from wxgui.pinguino import getOptions, getVersion, Pinguino, setGui
-from wxgui.pinguino import setGui
-from wxgui.pinguino import *
-from wxgui._trad import _
+#check dependences
+from wxgui.check import CheckDependences
+CheckDependences()
 
+import os
+import sys
+import shutil
+
+import wx
+from wxgui import setGui, getOptions, getVersion, Pinguino, boardlist
+from wxgui import SOURCE_DIR
+from wxgui import _
+
+#to save trace when pignuino crash
 if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
 
 ########################################################################
@@ -34,7 +42,8 @@ class MySplashScreen(wx.SplashScreen):
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
                                  5000, None, -1, style=wx.BORDER_SIMPLE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.fc = wx.FutureCall(2000, self.ShowMain)
+        #self.fc = wx.FutureCall(2000, self.ShowMain) #WTF, 2 seconds to start IDE
+        self.fc = wx.FutureCall(2000, self.ShowMain) #20 miliseconds
 
     #----------------------------------------------------------------------
     def OnClose(self, evt):
@@ -49,8 +58,6 @@ class MySplashScreen(wx.SplashScreen):
         setGui(True)
         frame = Pinguino(None)
         frame.__initPinguino__(None)
-        #app.SMyAppetTopWindow(frame)
-        #app.cent
         frame.Show()
         if self.fc.IsRunning(): self.Raise()
 
@@ -83,10 +90,6 @@ def show_error():
 #----------------------------------------------------------------------
 def main():
     app = MyApp()
-    #app = App()
-
-    
-    #app.SetTopWindow(frame)
     app.MainLoop()
     
 
@@ -103,8 +106,8 @@ if __name__ == "__main__":
 # ---Command Line---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-
     options = getOptions()
+    
 
     if options.version == True:
         print "current version is " + getVersion() #pinguino_version
@@ -141,7 +144,15 @@ if __name__ == "__main__":
 
         print "File : " + filename
 
+        setGui(False)
         pobject=Pinguino(None)
+        
+        #Initialize vars
+        pobject.rw = []
+        pobject.regobject = []
+        pobject.reservedword = []
+        pobject.libinstructions = []
+        
         pobject.setOSvariables()
         pobject.readlib(curBoard)
         

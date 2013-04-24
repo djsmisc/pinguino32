@@ -22,328 +22,190 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 -------------------------------------------------------------------------"""
 
-import sys
 import os
 import time
-import platform
-
-""" check pinguino dependencies """
-
-# ------------------------------------------------------------------------------
-# turn development version off
-# !!! use True at your own risc as it could erase your bootloader !!!
-# ------------------------------------------------------------------------------
-
-#----------------------------------------------------------------------
-def setDEV():
-    #To get DEV value from command line
-    args = sys.argv[1:]
-    for par in ["--dev"]:
-        if par in args:
-            cont = args[args.index(par) + 1]
-            if cont.lower() == "true": return True
-            else: return False
-    return False
-
-DEV = setDEV()
-#DEV = True
-#DEV = False
-
-#from initialize import InitializeIDE
-from editor.general import General
+import sys
+import importlib
 
 HOME_DIR = os.getcwd()
-fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
-fichier.writelines('Pinguino started at ' + str(time.asctime(time.localtime(time.time())) + '\n\n' ))
 
-def perror():
-    print "fatal error, see pinguino.log for more details\n"
-    sys.exit()
+########################################################################
+class CheckDependences:
+    """ check pinguino dependencies """
+    
+    #----------------------------------------------------------------------
+    def __init__(self):
+        """Constructor"""
 
+        toCheck = {}
+        self.fichier = open(os.path.join(HOME_DIR, 'pinguino.log'), 'w+') # works with paths with spaces
+        self.fichier.writelines('Pinguino started at ' + str(time.asctime(time.localtime(time.time())) + '\n\n' ))
+        
+# ------------------------------------------------------------------------------
+# check OS and compilers
+# ------------------------------------------------------------------------------
+        if sys.platform == 'darwin':
+            self.fichier.writelines('System host is Mac OS X\n')
+            
+            toCheck["path"] = os.path.join(HOME_DIR, 'macosx', 'p8', 'bin')
+            toCheck["ok"] = '8-bit compiler OK.'
+            toCheck["fail"] = ['No 8-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/macosx.tar.bz2']
+            self.checkFile(toCheck)
+            
+            toCheck["path"] = os.path.join(HOME_DIR, 'macosx', 'p32', 'bin')
+            toCheck["ok"] = '32-bit compiler OK'
+            toCheck["fail"] = ['No 32-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/macosx.tar.bz2']
+            self.checkFile(toCheck)
+            
+        elif sys.platform == 'win32':
+            self.fichier.writelines('System host is Windows\n')
+            
+            toCheck["path"] = os.path.join(HOME_DIR, 'win32', 'p8', 'bin')
+            toCheck["ok"] = '8-bit compiler OK.'
+            toCheck["fail"] = ['No 8-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/win32.tar.bz2']
+            self.checkFile(toCheck)
+            
+            toCheck["path"] = os.path.join(HOME_DIR, 'win32', 'p32', 'bin')
+            toCheck["ok"] = '32-bit compiler OK.'
+            toCheck["fail"] = ['No 32-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/win32.tar.bz2']
+            self.checkFile(toCheck)        
+
+        else:
+            self.fichier.writelines('System host is GNU/Linux\n')
+            
+            toCheck["path"] = os.path.join(HOME_DIR, 'linux', 'p8', 'bin')
+            toCheck["ok"] ='8-bit compiler OK.'
+            toCheck["fail"] = ['No 8-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/linux.tar.bz2']
+            self.checkFile(toCheck)   
+
+            toCheck["path"] = os.path.join(HOME_DIR, 'linux', 'p32', 'bin')
+            toCheck["ok"] = '32-bit compiler OK.'
+            toCheck["fail"] = ['No 32-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/linux.tar.bz2']
+            self.checkFile(toCheck)               
+            
 
 # ------------------------------------------------------------------------------
 # check python's version 
 # ------------------------------------------------------------------------------
-
-if sys.version_info[0:2] < (2,5):
-    fichier.writelines('Pinguino IDE requires version python 2.5 or greater\n')
-    fichier.close()
-    perror()
-else:
-    fichier.writelines('Python version is OK (>=2.5)\n')
+        if sys.version_info[0:2] < (2,5):
+            self.fichier.writelines('Pinguino IDE requires version python 2.5 or greater\n')
+            perror()
+        else: self.fichier.writelines('Python version is OK (>=2.5)\n')
+            
 
 # ------------------------------------------------------------------------------
-# check OS and compilers
+# check Python modules
 # ------------------------------------------------------------------------------
+        self.checkModule(module="wx", name="wxPython", version="2.8")
+        self.checkModule(module="shutil", name="PyShutil", version="") 
+        self.checkModule(module="subprocess", name="Python", version=">2.5") 
+        self.checkModule(module="gettext", name="Python", version=">2.5")    
+        self.checkModule(module="locale", name="Python", version=">2.5")    
+        self.checkModule(module="webbrowser", name="Python", version=">2.5")  
+        self.checkModule(module="threading", name="Python", version=">2.5") 
+        self.checkModule(module="usb", name="PyUSB", version="1.0")   
+        #self.checkModule(module="serial", name="PySerial", version="2.5")         
 
 
-if sys.platform == 'darwin':
-    fichier.writelines('System host is Mac OS X\n')
-    if os.path.exists(os.path.join(HOME_DIR, 'macosx', 'p8', 'bin')):
-        fichier.writelines('8-bit compiler OK.\n')
-    else:
-        fichier.writelines('No 8-bit compiler for this system.\n')
-        fichier.writelines('Download it at http://www.pinguino.cc/download/testing/macosx.tar.bz2\n')
+# ------------------------------------------------------------------------------
+# check Pinguino modules
+# ------------------------------------------------------------------------------
+        ##def getFiles(url):
+            ##for path in os.listdir(url):
+                ##if os.path.isfile(os.path.join(url, path)):
+                    ##if path.endswith(".py"): print "\"" + os.path.join(url, path) + "\","
+                ##elif os.path.isdir(os.path.join(url, path)):
+                    ##getFiles(os.path.join(url, path))
+        ##getFiles("wxgui")
         
-    if os.path.exists(os.path.join(HOME_DIR, 'macosx', 'p32', 'bin')):
-        fichier.writelines('32-bit compiler OK.\n')
-    else:
-        fichier.writelines('No 32-bit compiler for this system.\n')
-        fichier.writelines('Download it at http://www.pinguino.cc/download/testing/macosx.tar.bz2\n')
+        allFiles = ["wxgui/pinguino.py",
+                    "wxgui/uploader/__init__.py",
+                    "wxgui/uploader/uploader.py",
+                    "wxgui/uploader/uploader8.py",
+                    "wxgui/uploader/uploaderMCC.py",
+                    "wxgui/uploader/uploaderVSC.py",
+                    "wxgui/uploader/autodetect.py",
+                    "wxgui/uploader/uploaderDLN.py",
+                    "wxgui/__init__.py",
+                    "wxgui/_trad.py",
+                    "wxgui/editor/events.py",
+                    "wxgui/editor/preferences.py",
+                    "wxgui/editor/__init__.py",
+                    "wxgui/editor/constants.py",
+                    "wxgui/editor/experimental.py",
+                    "wxgui/editor/editeur.py",
+                    "wxgui/editor/stdout.py",
+                    "wxgui/editor/autocompleter.py",
+                    "wxgui/editor/board_selector.py",
+                    "wxgui/editor/get_config.py",
+                    "wxgui/editor/funtions_help.py",
+                    "wxgui/editor/load_features.py",
+                    "wxgui/editor/dic.py",
+                    "wxgui/editor/frames/__init__.py",
+                    "wxgui/editor/frames/framesX4.py",
+                    "wxgui/editor/frames/gettext.py",
+                    "wxgui/editor/lateral_tool_area/__init__.py",
+                    "wxgui/editor/lateral_tool_area/dock_searchReplace.py",
+                    "wxgui/editor/lateral_tool_area/dock_documents.py",
+                    "wxgui/editor/lateral_tool_area/dock_files.py",
+                    "wxgui/editor/general.py",
+                    "wxgui/picdevlist.py",
+                    "wxgui/boards.py",
+                    "wxgui/argparse.py",
+                    "wxgui/check.py",]
         
-elif sys.platform == 'win32':
-    fichier.writelines('System host is Windows\n')
-    if os.path.exists(os.path.join(HOME_DIR, 'win32', 'p8', 'bin')):
-        fichier.writelines('8-bit compiler OK.\n')
-    else:
-        fichier.writelines('No 8-bit compiler for this system.\n')
-        fichier.writelines('Download it at http://www.pinguino.cc/download/testing/win32.tar.bz2\n')
+        for file in allFiles: self.checkPinguinoFile(file)
+            
         
-    if os.path.exists(os.path.join(HOME_DIR, 'win32', 'p32', 'bin')):
-        fichier.writelines('32-bit compiler OK.\n')
-    else:
-        fichier.writelines('No 32-bit compiler for this system.\n')
-        fichier.writelines('Download it at http://www.pinguino.cc/download/testing/win32.tar.bz2\n')
         
-else:
-    fichier.writelines('System host is GNU/Linux\n')
-    if os.path.exists(os.path.join(HOME_DIR, 'linux', 'p8', 'bin')):
-        fichier.writelines('8-bit compiler OK.\n')
-    else:
-        fichier.writelines('No 8-bit compiler for this system.\n')
-        fichier.writelines('Download it at http://www.pinguino.cc/download/testing/linux.tar.bz2\n')
-        
-    if os.path.exists(os.path.join(HOME_DIR, 'linux', 'p32', 'bin')):
-        fichier.writelines('32-bit compiler OK.\n')
-    else:
-        fichier.writelines('No 32-bit compiler for this system.\n')
-        fichier.writelines('Download it at http://www.pinguino.cc/download/testing/linux.tar.bz2\n')
-
-# ------------------------------------------------------------------------------
-# check python modules
-# ------------------------------------------------------------------------------
-
-try:
-    import wx, wx.combo
-    fichier.writelines('wx.python successfully loaded\n')
-except:
-    fichier.writelines('wx.python failed\n')
-    fichier.writelines('Try to re-install WXPython 2.8\n')
-    fichier.close()
-    perror()
-
-#try:
-    #import wx.aui
-    #fichier.writelines('wx.aui successfully loaded\n')
-#except:
-    #fichier.writelines('wx.aui failed\n')
-    #fichier.writelines('Try to re-install WXPython 2.8\n')
-    #fichier.close()
-    #perror()
-
-try:	
-    import re
-    fichier.writelines('Regex successfully loaded\n')
-except:
-    fichier.writelines('Regex failed\n')
-    fichier.writelines('Try to re-install PyReg\n')
-    fichier.close()
-    perror()
-
-try:
-    import shutil				# to use cp function
-    fichier.writelines('Shutil successfully loaded\n')
-except:
-    fichier.writelines('Shutil failed\n')
-    fichier.writelines('Try to re-install PyShutil\n')
-    fichier.close()
-    perror()
-
-try:	
-    from subprocess import Popen,PIPE,STDOUT
-    fichier.writelines('Subprocess successfully loaded\n')
-except:
-    fichier.writelines('Subprocess failed\n')
-    fichier.writelines('Try to re-install Python\n')
-    fichier.close()
-    perror()
-
-try:
-    import gettext				# to activate multi-language support
-    fichier.writelines('GetText successfully loaded\n')
-except:
-    fichier.writelines('GetText failed\n')
-    fichier.writelines('Try to re-install Python\n')
-    fichier.close()
-    perror()
-
-try:	
-    import locale				# to access system localization functionalities
-    fichier.writelines('Locale successfully loaded\n')
-except:
-    fichier.writelines('locale failed\n')
-    fichier.writelines('Try to re-install Python\n')
-    fichier.close()
-    perror()
-
-try:
-    import webbrowser			# to launch website from the IDE
-    fichier.writelines('WebBrowser successfully loaded\n')
-except:
-    fichier.writelines('Webbrowser failed\n')
-    fichier.writelines('Try to re-install Python\n')
-    fichier.close()
-    perror()
-
-try:	
-    import usb		    	    # USB interface for Python
-    fichier.writelines('USB successfully loaded\n')
-except:
-    fichier.writelines('USB python failed to be loaded\n')
-    fichier.writelines('Try to re-install PyUSB\n')
-    fichier.close()
-    perror()
-
-if DEV:
-    try:	
-        import serial			# adds the PySerial library (http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download)
-        fichier.writelines('Serial successfully loaded\n')
-    except:
-        fichier.writelines('Serial python failed to be loaded\n')
-        fichier.writelines('Try to re-install PySerial\n')
-        fichier.close()
-        perror()
-
-try:	
-    import threading			# thread functions
-    fichier.writelines('Threading successfully loaded\n')
-except:
-    fichier.writelines('Threading failed\n')
-    fichier.writelines('Try to re-install Python\n')
-    fichier.close()
-    perror()
-
-# ------------------------------------------------------------------------------
-# check pinguino modules
-# ------------------------------------------------------------------------------
-
-from editor.variables import * 
-
-try:
-    from editor.variables import * 
-    fichier.writelines('Variables successfully loaded\n')
-except:
-    fichier.writelines('Variables failed\n')
-    fichier.writelines('You should have variables.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()
-    
-try:	
-    from editor.frames import * 		
-    fichier.writelines('Frames successfully loaded\n')
-except:
-    fichier.writelines('Frames failed\n')
-    fichier.writelines('You should have framesX3.py at the wxgui/editor/frames/\n')
-    fichier.close()
-    perror()
-    
-from editor import functionsHelp
-try:	
-    from editor import functionsHelp		
-    fichier.writelines('functionsHelp successfully loaded\n')
-except:
-    fichier.writelines('functionsHelp failed\n')
-    fichier.writelines('You should have functions_help.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()
-
-#try:	
-    #from editor import AutoCompleter	
-    #fichier.writelines('AutoCompleter successfully loaded\n')
-#except:
-    #fichier.writelines('AutoCompleter failed\n')
-    #fichier.writelines('You should have autocompleter.py at the wxgui/editor/\n')
-    #fichier.close()
-    #perror()
-    
-try:	
-    from editor import Stdout		
-    fichier.writelines('Stdout successfully loaded\n')
-except:
-    fichier.writelines('Stdout failed\n')
-    fichier.writelines('You should have stdout.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()
-    
-#try:	
-    #from editor import PICpopup		
-    #fichier.writelines('PICpopup successfully loaded\n')
-#except:
-    #fichier.writelines('PICpopup failed\n')
-    #fichier.writelines('You should have pic_popup.py at the wxgui/editor/\n')
-    #fichier.close()
-    #perror()    
-    
-try:	
-    from editor import Preferences	
-    fichier.writelines('Preferences successfully loaded\n')
-except:
-    fichier.writelines('Preferences failed\n')
-    fichier.writelines('You should have preferences.py at the wxgui/editor/\n')
-    fichier.close()
-    perror()    
-
-try:
-    import argparse			# to write user-friendly command-line interfaces
-    fichier.writelines('ArgParse successfully loaded\n')
-except:
-    fichier.writelines('Argparse python failed to be loaded\n')
-    fichier.writelines('Try to re-install python argparse\n')
-    fichier.close()
-    perror()
-
-try:
-    from boards import boardlist, Pinguino2550
-    fichier.writelines('Pinguino Boards List successfully loaded\n')
-except:
-    fichier.writelines('Pinguino Boards List failed\n')
-    fichier.writelines('You should have boards.py in wxgui/\n')
-    fichier.close()
-    perror()
-
-try:
-    from picdevlist import * 
-    fichier.writelines('Pic List successfully loaded\n')
-except:
-    fichier.writelines('Pic List failed\n')
-    fichier.writelines('You should have picdevlist.py in wxgui/\n')
-    fichier.close()
-    perror()
-
-try:
-    from editor import Editor
-    fichier.writelines('Editor successfully loaded\n')
-except:
-    fichier.writelines('Editor failed\n')
-    fichier.writelines('You should have __init__.py in wxgui/editor/\n')
-    fichier.close()
-    perror()
-
-try:
-    from uploader import Uploader
-    fichier.writelines('Pinguino Uploader successfully loaded\n')
-except:
-    fichier.writelines('Pinguino Uploader failed\n')
-    fichier.writelines('You should have uploader.py in wxgui/uploader/\n')
-    fichier.close()
-    perror()
-
+        self.fichier.writelines('\nEverything is OK.\n')
+        self.fichier.close()
 
         
+    #----------------------------------------------------------------------
+    def checkFile(self, toCheck):
+        #self.fichier.write(toCheck["check"]+"\n")
+        if os.path.exists(toCheck["path"]): self.fichier.write(toCheck["ok"]+"\n")
+        else:
+            for mess in toCheck["fail"]: self.fichier.write(mess+"\n")
+            
+    #----------------------------------------------------------------------
+    def checkModule(self, **toCheck):
+        toCheck["name"] = toCheck.get("name", toCheck["module"])
+        if toCheck["name"] == "Python": toCheck["name"] = toCheck["module"]
+            
+        try:
+            importlib.import_module(toCheck["module"])
+            self.fichier.writelines('%(name)s successfully loaded\n'%toCheck)
+        except:
+            toCheck["version"] = toCheck.get("version", "")
+            self.fichier.writelines('%(module)s failed\n'%toCheck)
+            self.fichier.writelines('Try to re-install %(name)s %(version)s\n'%toCheck)
+            self.perror()
+            
+    #----------------------------------------------------------------------
+    def checkPinguinoModule(self, **toCheck):
+        try:
+            if toCheck.get("package", ""): importlib.import_module(toCheck["module"], package=toCheck["package"])
+            else: importlib.import_module(toCheck["module"])
+            self.fichier.writelines('%(module)s successfully loaded\n'%toCheck)
+        except:
+            self.fichier.writelines('%(module)s failed\n'%toCheck)
+            self.fichier.writelines('You should have %(module)s.py at the %(path)s\n'%toCheck)
+            self.perror()
+            
+    #----------------------------------------------------------------------
+    def checkPinguinoFile(self, file_):
+        dir, file = os.path.split(file_)
+        if os.path.isfile(file_): self.fichier.writelines('%s found\n'%file_)
+        else:
+            self.fichier.writelines('You should have %s at the %s\n'%(file, dir))
+            self.perror()
+            
+    #----------------------------------------------------------------------
+    def perror(self):
+        print "fatal error, see pinguino.log for more details\n"
+        self.fichier.close()
+        sys.exit()
 
-# ------------------------------------------------------------------------------
-# end of check 
-# ------------------------------------------------------------------------------
 
-fichier.writelines('\nEverything is OK.\n')
-fichier.close()
