@@ -25,9 +25,10 @@
 import os
 import time
 import sys
-import importlib
 
 HOME_DIR = os.getcwd()
+sys.path.append(os.path.join(HOME_DIR, "python_lib"))
+import importlib  #from python_lib
 
 ########################################################################
 class CheckDependences:
@@ -81,32 +82,8 @@ class CheckDependences:
             toCheck["path"] = os.path.join(HOME_DIR, 'linux', 'p32', 'bin')
             toCheck["ok"] = '32-bit compiler OK.'
             toCheck["fail"] = ['No 32-bit compiler for this system.', 'Download it at http://www.pinguino.cc/download/testing/linux.tar.bz2']
-            self.checkFile(toCheck)               
+            self.checkFile(toCheck)
             
-
-# ------------------------------------------------------------------------------
-# check python's version 
-# ------------------------------------------------------------------------------
-        if sys.version_info[0:2] < (2,5):
-            self.fichier.writelines('Pinguino IDE requires version python 2.5 or greater\n')
-            perror()
-        else: self.fichier.writelines('Python version is OK (>=2.5)\n')
-            
-
-# ------------------------------------------------------------------------------
-# check Python modules
-# ------------------------------------------------------------------------------
-        self.checkModule(module="wx", name="wxPython", version="2.8")
-        self.checkModule(module="shutil", name="PyShutil", version="") 
-        self.checkModule(module="subprocess", name="Python", version=">2.5") 
-        self.checkModule(module="gettext", name="Python", version=">2.5")    
-        self.checkModule(module="locale", name="Python", version=">2.5")    
-        self.checkModule(module="webbrowser", name="Python", version=">2.5")  
-        self.checkModule(module="threading", name="Python", version=">2.5") 
-        self.checkModule(module="usb", name="PyUSB", version="1.0")   
-        #self.checkModule(module="serial", name="PySerial", version="2.5")         
-
-
 # ------------------------------------------------------------------------------
 # check Pinguino modules
 # ------------------------------------------------------------------------------
@@ -117,6 +94,9 @@ class CheckDependences:
                 ##elif os.path.isdir(os.path.join(url, path)):
                     ##getFiles(os.path.join(url, path))
         ##getFiles("wxgui")
+        
+        dependences = ["python_lib/usb",
+                       "python_lib/importlib"]
         
         allFiles = ["wxgui/pinguino.py",
                     "wxgui/uploader/__init__.py",
@@ -154,14 +134,39 @@ class CheckDependences:
                     "wxgui/argparse.py",
                     "wxgui/check.py",]
         
-        for file in allFiles: self.checkPinguinoFile(file)
+        for file in allFiles + dependences: self.checkPinguinoFile(file)
             
-        
-        
+
+# ------------------------------------------------------------------------------
+# check Python version 
+# ------------------------------------------------------------------------------
+        if sys.version_info[0:2] < (2,5):
+            self.fichier.writelines('Pinguino IDE requires version python 2.5 or greater\n')
+            perror()
+        else: self.fichier.writelines('Python version is OK (>=2.5)\n')
+            
+
+# ------------------------------------------------------------------------------
+# check Python modules
+# ------------------------------------------------------------------------------
+        self.checkModule(module="wx", name="wxPython", version="2.8")
+        self.checkModule(module="shutil", name="PyShutil", version="") 
+        self.checkModule(module="subprocess", name="Python", version=">2.5") 
+        self.checkModule(module="gettext", name="Python", version=">2.5")    
+        self.checkModule(module="locale", name="Python", version=">2.5")    
+        self.checkModule(module="webbrowser", name="Python", version=">2.5")  
+        self.checkModule(module="threading", name="Python", version=">2.5") 
+        #self.checkModule(module="usb", name="PyUSB", version="1.0")   
+        #self.checkModule(module="serial", name="PySerial", version="2.5")         
+
+
+# ------------------------------------------------------------------------------
+# All right
+# ------------------------------------------------------------------------------
         self.fichier.writelines('\nEverything is OK.\n')
         self.fichier.close()
 
-        
+
     #----------------------------------------------------------------------
     def checkFile(self, toCheck):
         #self.fichier.write(toCheck["check"]+"\n")
@@ -197,7 +202,7 @@ class CheckDependences:
     #----------------------------------------------------------------------
     def checkPinguinoFile(self, file_):
         dir, file = os.path.split(file_)
-        if os.path.isfile(file_): self.fichier.writelines('%s found\n'%file_)
+        if os.path.exists(file_): self.fichier.writelines('%s found\n'%file_)
         else:
             self.fichier.writelines('You should have %s at the %s\n'%(file, dir))
             self.perror()

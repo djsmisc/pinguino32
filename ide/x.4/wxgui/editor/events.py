@@ -184,15 +184,6 @@ class Events:
     #----------------------------------------------------------------------
     def OnExit(self, event):
         self.stopTimers()
-        #self.closing = True  #Signal for Threads
-
-        try: self.upgrade.Cancel()
-        except: pass        
-
-        try:
-            self.pinguino.close()
-            #fclose(self.debug_handle)
-        except: pass
 
         w, h = self.GetSize()
         self.setConfig("IDE", "Window/Width", w)
@@ -238,6 +229,7 @@ class Events:
 
         self.auiManager.UnInit()
         self.Destroy()
+        self.Close()
         sys.exit(0)
 
 
