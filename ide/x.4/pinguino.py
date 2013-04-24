@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-#check dependences
-from wxgui.check import CheckDependences
-CheckDependences()
-
 import os
 import sys
 import shutil
+
+import wxgui
 
 import wx
 from wxgui import setGui, getOptions, getVersion, Pinguino, boardlist
@@ -15,7 +13,7 @@ from wxgui import SOURCE_DIR
 from wxgui import _
 
 #to save trace when pignuino crash
-if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
+#if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
 
 ########################################################################
 class MySplashScreen(wx.SplashScreen):

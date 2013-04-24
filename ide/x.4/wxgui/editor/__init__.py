@@ -50,7 +50,7 @@ class IDE(Editor, General, Testing, Events):
         self.BindEvents()
         self.loadFeatures()
         self.SetTitle("Pinguino IDE")
-        self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
+        if os.name == "posix": self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
         self.buildToolbar()
         self.notebookEditor.Hide()
         
