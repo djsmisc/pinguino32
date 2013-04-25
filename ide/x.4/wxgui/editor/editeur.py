@@ -176,7 +176,6 @@ class Editor:
         self.background.Hide()
         self.notebookEditor.Show()
         self.buildSheet(name)
-        self.updateIDE()
         self.notebookEditor.ChangeSelection(len(self.onglet)-1) ### Set ~ ChangeSelection -- bjoernp
         newIdx = self.notebookEditor.GetSelection()
         #self.stcpage[newIdx].Bind(stc.EVT_STC_MODIFIED,self.focus)
