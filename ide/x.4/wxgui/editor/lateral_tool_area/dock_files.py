@@ -140,11 +140,9 @@ class File:
         if self.IDE.notebookEditor.PageCount > 0:
             self.IDE.panelOutput.Show()
             self.IDE.lat.Show()
-            self.IDE.updateIDE()
         else:
             self.IDE.panelOutput.Hide()
             self.IDE.lat.Hide()
-            self.IDE.updateIDE()
         
         if len(self.IDE.stcpage) < 1:
             self.lateralVars.DeleteAllItems()

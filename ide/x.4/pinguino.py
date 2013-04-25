@@ -40,10 +40,11 @@ class MySplashScreen(wx.SplashScreen):
         wx.SplashScreen.__init__(self, bmp,
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
                                  5000, None, -1, style=wx.BORDER_SIMPLE)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
         self.fc = wx.FutureCall(2000, self.ShowMain)
+        
     #----------------------------------------------------------------------
-    def OnClose(self, evt):
+    def OnCloseSplash(self, evt):
         evt.Skip()
         self.Hide()
         if self.fc.IsRunning():
@@ -57,6 +58,8 @@ class MySplashScreen(wx.SplashScreen):
         frame.__initPinguino__(None)
         frame.Show()
         if self.fc.IsRunning(): self.Raise()
+        
+        
 
 ########################################################################
 class MyApp(wx.App):

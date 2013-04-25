@@ -159,9 +159,6 @@ class General(ReadConfig, LoadFeatures):
     def HideNextAutoComplete(self):
         self.autocompleteHide = True
 
-    #----------------------------------------------------------------------
-    def updateIDE(self):
-	return
 	
     #----------------------------------------------------------------------
     def updateSashs(self):

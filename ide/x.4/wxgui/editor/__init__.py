@@ -58,17 +58,12 @@ class IDE(Editor, General, Testing, Events):
         self.__initEditor__()
         #self.__initDebugger__()  #TODO
         self.__initTesting__() #TODO
-        self.initTimers()
+        #self.initTimers()
 
         #open last sesion
         if self.getElse("Main", "open-save", "True") and self.getElse("Open/Save", "openlast", "False"):
             self.openLast()
 
-        #hile lateral tools
-        if self.notebookEditor.PageCount == 0:
-            if self.getElse("Main", "Tools", "True"): self.auiManager.GetPane(self.lat).Hide()
-            self.updateIDE()
-            
         self.saveConfig()
 
 
