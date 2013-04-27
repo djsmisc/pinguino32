@@ -220,11 +220,15 @@ class Editor:
     #----------------------------------------------------------------------
     def updatenotebook(self):
         if self.notebookEditor.PageCount == 0:
+            self.splitterCO.Hide()
             self.notebookEditor.Hide()
             self.background.Show()
         else:
+            self.splitterCO.Show()
             self.background.Hide()
             self.notebookEditor.Show()
+            self.panelPrincipal.Layout()
+            self.panelCentral.Layout()
 
 
     #----------------------------------------------------------------------

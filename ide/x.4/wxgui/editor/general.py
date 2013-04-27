@@ -167,7 +167,8 @@ class General(ReadConfig, LoadFeatures):
 	self.splitterCO.SetSashPosition(sashposco)
 	
 	sashposcl = self.getElse("IDE", "sashposcl", "500")
-	self.splitterCL.SetSashPosition(sashposcl)   
+	self.splitterCL.SetSashPosition(sashposcl)
+	self.Files.adjustWidth()
 	
     #----------------------------------------------------------------------
     def openLast(self):
@@ -176,14 +177,14 @@ class General(ReadConfig, LoadFeatures):
                 file = self.getConfig("Last", "Last_%d"%i)
                 if os.path.isfile(file):
                     self.Open(file)
-
-            name = self.getConfig("Last", "Last_Focus")
-            if os.path.isfile(name):
-                c = 0
-                for i in self.filename:
-                    if i == name: break
-                    c += 1
-                self.notebookEditor.SetSelection(c)
+	    if i > 0:
+		name = self.getConfig("Last", "Last_Focus")
+		if os.path.isfile(name):
+		    c = 0
+		    for i in self.filename:
+			if i == name: break
+			c += 1
+		    self.notebookEditor.SetSelection(c)
 
         except: pass
 
@@ -217,10 +218,10 @@ class General(ReadConfig, LoadFeatures):
 	import wx
 	wx.GetApp().OnInit()
 	self.Destroy()
-
-        
-	    
-
+	
+    #----------------------------------------------------------------------
+    def updateIDE(self):
+	self.Fit()
 
 #----------------------------------------------------------------------
 def debugTime(function):

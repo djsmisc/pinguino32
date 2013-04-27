@@ -43,26 +43,40 @@ class File:
         self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
         self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
 
-        line = 60
-        s3 = (self.IDE.lat.GetSizeTuple()[0] - line) / 3
+        self.line = 60
+        s3 = (self.IDE.lat.GetSizeTuple()[0] - self.line) / 3
 
         self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3)
         self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Type"), width=s3)
         self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("In function"), width=s3)
-        self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=self.line)
     
         self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
         self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Return"), width=s3) 
         self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Parameters"), width=s3)
-        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=self.line)
         
         self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Directive"), width=s3) 
         self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
         self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=s3) 
-        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=self.line)
+        
 
         self.ENABLE = True
-
+        
+    #----------------------------------------------------------------------
+    def adjustWidth(self):
+        s3 = (self.IDE.lat.GetSizeTuple()[0] - self.line) / 3
+        for i in range(4):
+            if i == 3:
+                self.lateralVars.SetColumnWidth(i, self.line)
+                self.lateralFunc.SetColumnWidth(i, self.line)
+                self.lateralDefi.SetColumnWidth(i, self.line)
+            else:
+                self.lateralVars.SetColumnWidth(i, s3)
+                self.lateralFunc.SetColumnWidth(i, s3)
+                self.lateralDefi.SetColumnWidth(i, s3)
+        
 
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):

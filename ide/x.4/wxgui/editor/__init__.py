@@ -58,12 +58,15 @@ class IDE(Editor, General, Testing, Events):
         self.__initEditor__()
         #self.__initDebugger__()  #TODO
         self.__initTesting__() #TODO
-        #self.initTimers()
+        self.initTimers()
 
         #open last sesion
         if self.getElse("Main", "open-save", "True") and self.getElse("Open/Save", "openlast", "False"):
             self.openLast()
-
+            
+        #hide lateral tools and output
+        if self.notebookEditor.PageCount == 0: self.updatenotebook()
+        
         self.saveConfig()
 
 
@@ -86,13 +89,12 @@ class IDE(Editor, General, Testing, Events):
 
     #----------------------------------------------------------------------      
     def buildEditor(self):
-        self.EditorPanel = self.panelEditor
         #background with pinguino.cc colour and pinguino logo
-        self.EditorPanel.SetBackgroundColour(wx.Colour(175, 200, 225))
+        #self.panelCentral.SetBackgroundColour(wx.Colour(175, 200, 225))
         self.imageBackground = wx.Bitmap(os.path.join(THEME_DIR, 'logo.png'), wx.BITMAP_TYPE_ANY)
         if sys.platform == 'win32':
             self.imageBackground.SetSize((5000,5000)) # :)
-        self.background = wx.StaticBitmap(self.EditorPanel, wx.ID_ANY, self.imageBackground)
+        self.background = wx.StaticBitmap(self.panelPrincipal, wx.ID_ANY, self.imageBackground)
         self.background.CentreOnParent(wx.BOTH)
         self.notebookEditor.SetMinSize((50, 100))
 
