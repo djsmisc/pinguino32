@@ -14,7 +14,7 @@ from wxgui import SOURCE_DIR
 from wxgui import _
 
 #to save trace when pignuino crash
-#if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
+if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
 
 ########################################################################
 class MySplashScreen(wx.SplashScreen):
@@ -56,8 +56,8 @@ class MySplashScreen(wx.SplashScreen):
         setGui(True)
         frame = Pinguino(None)
         frame.__initPinguino__(None)
-        app.SetTopWindow(frame)
         frame.Show()
+        app.SetTopWindow(frame)
         if self.fc.IsRunning(): self.Raise()
         
         

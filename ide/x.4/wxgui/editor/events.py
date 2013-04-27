@@ -192,10 +192,6 @@ class Events:
         x, y = self.GetPosition()
         self.setConfig("IDE", "Window/Xpos", x)
         self.setConfig("IDE", "Window/Ypos", y)
-
-        #w, h = self.logwindow.GetSize()
-        #self.setConfig("IDE", "Output/Width", w)
-        #self.setConfig("IDE", "Output/Height", h)
         
         sashPos = self.splitterCL.GetSashPosition()
         self.setConfig("IDE", "sashPosCL", sashPos)
@@ -227,16 +223,11 @@ class Events:
             except: pass            
             self.setConfig("Last", "Last_Focus", name)
 
-        self.setConfig("IDE", "Theme", self.theme)
-
-        #self.setConfig("IDE", "perspective", perspectiva)        
+        self.setConfig("IDE", "Theme", self.theme)   
 
         self.saveConfig()
 
-        #self.auiManager.UnInit()
-        self.Destroy()
-        self.Close()
-        sys.exit(0)
+        sys.exit()
 
 
 
