@@ -126,7 +126,7 @@ class Search():
         #self.FindText.SetFocus()
         self.IDE.buttonReplace.Disable()
         self.IDE.buttonReplaceAll.Disable()
-        #self.updateIDE()
+        self.updateIDE()
 
     #----------------------------------------------------------------------
     def replacetext(self, event=None):

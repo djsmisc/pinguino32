@@ -369,7 +369,8 @@ class Events:
         #pane = self.auiManager.GetPane(self.lat)
         #if self.menu.menuItemTools.IsChecked():
             #pane.Show()
-        #else:
+        #else:[Recents]
+
             #pane.Hide()
         #self.updateIDE()
 

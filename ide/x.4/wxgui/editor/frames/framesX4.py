@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 19 2012)
+## Python code generated with wxFormBuilder (version Oct  8 2012)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO "NOT" EDIT THIS FILE!
@@ -704,7 +704,12 @@ class framePinguinoX ( wx.Frame ):
 		
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.splitterCO = wx.SplitterWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.panelPrincipal = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelPrincipal.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
+		
+		bSizer37 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.splitterCO = wx.SplitterWindow( self.panelPrincipal, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
 		self.splitterCO.Bind( wx.EVT_IDLE, self.splitterCOOnIdle )
 		
 		self.panelEditor = wx.Panel( self.splitterCO, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
@@ -979,7 +984,13 @@ class framePinguinoX ( wx.Frame ):
 		self.panelOutput.Layout()
 		bSizer30.Fit( self.panelOutput )
 		self.splitterCO.SplitHorizontally( self.panelEditor, self.panelOutput, 0 )
-		bSizer1.Add( self.splitterCO, 1, wx.EXPAND, 5 )
+		bSizer37.Add( self.splitterCO, 1, wx.EXPAND, 5 )
+		
+		
+		self.panelPrincipal.SetSizer( bSizer37 )
+		self.panelPrincipal.Layout()
+		bSizer37.Fit( self.panelPrincipal )
+		bSizer1.Add( self.panelPrincipal, 1, wx.EXPAND |wx.ALL, 0 )
 		
 		
 		self.SetSizer( bSizer1 )
