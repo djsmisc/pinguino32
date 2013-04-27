@@ -34,7 +34,7 @@ class menubarPinguino ( wx.MenuBar ):
 		self.menuItemSave = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save")+ u"\t" + u"CTRL+S", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuFile.AppendItem( self.menuItemSave )
 		
-		self.menuItemSaveAs = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save as")+ u"\t" + u"SHIFT+S", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menuItemSaveAs = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Save as")+ u"\t" + u"CTRL+SHIFT+A", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menuFile.AppendItem( self.menuItemSaveAs )
 		
 		self.menuItemClose = wx.MenuItem( self.menuFile, wx.ID_ANY, _(u"Close")+ u"\t" + u"CTRL+W", wx.EmptyString, wx.ITEM_NORMAL )
