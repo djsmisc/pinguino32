@@ -89,7 +89,7 @@ class Documents():
     #----------------------------------------------------------------------
     def setDirPicker(self, event):
         self.fixSizeDock()
-        path =  event.Path
+        path = event.Path
         self.buildLateralDir(path)
         
     #----------------------------------------------------------------------
