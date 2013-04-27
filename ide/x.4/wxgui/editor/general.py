@@ -106,9 +106,9 @@ class General(ReadConfig, LoadFeatures):
 
         varbls = []
         allfunctions = []
-        
+
         if self.getElse("Main", "Tools", "True") and self.getElse("Tools", "files", "True"):
-        
+
             for i in self.Files.allVars:
                 icons[i[0][:].replace("*", "")] = i[1][:].split()[-1]
                 varbls.append(i[0][:].replace("*", ""))
@@ -144,32 +144,32 @@ class General(ReadConfig, LoadFeatures):
 
     #----------------------------------------------------------------------
     def addArguments(self, funcionName):
-	if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True"):
-	    for func in self.Files.allFunc:
-		if func[0] in [funcionName, "*"+funcionName, "* "+funcionName]:
-		    arg = func[2]
-		    self.HideNextAutoComplete()
-		    textEdit = self.getCurrentPage()
-		    textEdit.InsertText(textEdit.CurrentPos, "("+arg+")")
-		    textEdit.SetSelection(textEdit.CurrentPos+1, textEdit.CurrentPos+len(arg)+1)
-		    return True
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True"):
+            for func in self.Files.allFunc:
+                if func[0] in [funcionName, "*"+funcionName, "* "+funcionName]:
+                    arg = func[2]
+                    self.HideNextAutoComplete()
+                    textEdit = self.getCurrentPage()
+                    textEdit.InsertText(textEdit.CurrentPos, "("+arg+")")
+                    textEdit.SetSelection(textEdit.CurrentPos+1, textEdit.CurrentPos+len(arg)+1)
+                    return True
         return False
 
     #----------------------------------------------------------------------
     def HideNextAutoComplete(self):
         self.autocompleteHide = True
 
-	
+
     #----------------------------------------------------------------------
     def updateSashs(self):
-	""""""
-	sashposco = self.getElse("IDE", "sashposco", "500")
-	self.splitterCO.SetSashPosition(sashposco)
-	
-	sashposcl = self.getElse("IDE", "sashposcl", "500")
-	self.splitterCL.SetSashPosition(sashposcl)
-	self.Files.adjustWidth()
-	
+        """"""
+        sashposco = self.getElse("IDE", "sashposco", 500)
+        self.splitterCO.SetSashPosition(sashposco)
+
+        sashposcl = self.getElse("IDE", "sashposcl", 500)
+        self.splitterCL.SetSashPosition(sashposcl)
+        self.Files.adjustWidth()
+
     #----------------------------------------------------------------------
     def openLast(self):
         try:
@@ -177,14 +177,14 @@ class General(ReadConfig, LoadFeatures):
                 file = self.getConfig("Last", "Last_%d"%i)
                 if os.path.isfile(file):
                     self.Open(file)
-	    if i > 0:
-		name = self.getConfig("Last", "Last_Focus")
-		if os.path.isfile(name):
-		    c = 0
-		    for i in self.filename:
-			if i == name: break
-			c += 1
-		    self.notebookEditor.SetSelection(c)
+            if i > 0:
+                name = self.getConfig("Last", "Last_Focus")
+                if os.path.isfile(name):
+                    c = 0
+                    for i in self.filename:
+                        if i == name: break
+                        c += 1
+                    self.notebookEditor.SetSelection(c)
 
         except: pass
 
@@ -198,8 +198,8 @@ class General(ReadConfig, LoadFeatures):
             except: self.logwindow.WriteText(message+"\n")
             if force_update: self.logwindow.Update()
         except: print message
-            
-        
+
+
 
     #----------------------------------------------------------------------
     def applyPreferences(self):
@@ -211,27 +211,27 @@ class General(ReadConfig, LoadFeatures):
         self.OnCloseAll()
         self.openLast()
         self.Show()
-	
+
     #----------------------------------------------------------------------
     def restartApp(self, event=None):
-	self.saveConfig()
-	import wx
-	wx.GetApp().OnInit()
-	self.Destroy()
-	
+        self.saveConfig()
+        import wx
+        wx.GetApp().OnInit()
+        self.Destroy()
+
     #----------------------------------------------------------------------
     def updateIDE(self):
-	self.Fit()
+        self.Fit()
 
 #----------------------------------------------------------------------
 def debugTime(function):
     import time
     DEBUG_TIME = True
     def process(*args):
-	inicio = time.time()
-	retorno = function(*args)
-	fin = time.time()
-	print function.__name__ + "\tTime: %.7fs" %(fin - inicio)
-	return retorno
+        inicio = time.time()
+        retorno = function(*args)
+        fin = time.time()
+        print function.__name__ + "\tTime: %.7fs" %(fin - inicio)
+        return retorno
     if DEBUG_TIME : return process
     else: return function
