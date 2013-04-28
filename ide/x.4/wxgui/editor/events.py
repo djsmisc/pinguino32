@@ -48,6 +48,7 @@ class Events:
         self.Bind(wx.EVT_CLOSE, self.OnExit)
         self.Bind(wx.EVT_SIZE, self.OnResize)
 
+
         #file menu
         self.Bind(wx.EVT_MENU, self.OnNew, self.menu.menuItemNew)
         self.Bind(wx.EVT_MENU, self.OnOpen, self.menu.menuItemOpen)
@@ -559,11 +560,11 @@ class Events:
         frame_1.Show()
 
     #----------------------------------------------------------------------
-    def OnResize(self,event):
+    def OnResize(self, event):
         try: self.background.CentreOnParent(wx.BOTH)
         except: pass
-        #self.auiManager.Update()
         event.Skip()
+        
 
     #----------------------------------------------------------------------
     def OnInsertChar(self, event=None):            

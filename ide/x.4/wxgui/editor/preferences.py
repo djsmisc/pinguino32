@@ -107,6 +107,7 @@ class Preferences():
         #Open/Save
         #----------------------------------------------------------------------
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "template", self.radioBtnFileTemplate.Value), self.radioBtnFileTemplate)  
+        self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "template", self.radioBtnFileTemplate.Value), self.radioBtnFileEmpty)  
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "autosave", self.radioBtnSaveEach.Value), self.radioBtnSaveEach)  
         self.Bind(wx.EVT_RADIOBUTTON, lambda x:self.IDE.setConfig("Open/Save", "autosave", self.radioBtnSaveEach.Value), self.radioBtnSaveNever)
         self.Bind(wx.EVT_SPINCTRL, lambda x:self.IDE.setConfig("Open/Save", "autosavetime", self.spinCtrlSaveTime.Value), self.spinCtrlSaveTime)  

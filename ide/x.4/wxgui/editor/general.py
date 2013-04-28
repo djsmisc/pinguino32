@@ -26,6 +26,7 @@
 
 import re
 import os
+import wx
 
 from dic import Snippet, Autocompleter
 from get_config import ReadConfig
@@ -168,7 +169,9 @@ class General(ReadConfig, LoadFeatures):
 
         sashposcl = self.getElse("IDE", "sashposcl", 500)
         self.splitterCL.SetSashPosition(sashposcl)
-        self.Files.adjustWidth()
+        
+        if self.getElse("Main", "tools", "True") and self.getElse("Tools", "files", "True"):
+            self.Files.adjustWidth()
 
     #----------------------------------------------------------------------
     def openLast(self):
@@ -210,12 +213,12 @@ class General(ReadConfig, LoadFeatures):
         self.OnSaveAll()
         self.OnCloseAll()
         self.openLast()
+        self.updatenotebook()
         self.Show()
 
     #----------------------------------------------------------------------
     def restartApp(self, event=None):
         self.saveConfig()
-        import wx
         wx.GetApp().OnInit()
         self.Destroy()
 
