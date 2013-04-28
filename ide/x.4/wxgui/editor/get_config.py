@@ -96,7 +96,6 @@ class ReadConfig:
         self.loadConfigFile()
         arch = self.getElse("Board", "architecture", 8)
         mode = self.getElse("Board", "mode", "BOOT")
-        #family = self.IDE.getElse("Board", "family", "18fxxx")
         device = self.getElse("Board", "device", "Pinguino 2550")
         bootloader = self.getElse("Board", "bootloader", "[boot2, 0x2000]")
         if bootloader != "noboot":
@@ -107,8 +106,8 @@ class ReadConfig:
         
         w = self.getElse("IDE", "window/width", 1000)
         h = self.getElse("IDE", "window/height", 500)
-        self.SetSize((w, h))
-
+        self.SetSize((w, h))        
+        
         # TODO fix the bug on windows for negative frame position 	    
         try:
             x = self.getElse("IDE", "Window/Xpos", 100)

@@ -813,7 +813,7 @@ class framePinguinoX ( wx.Frame ):
 		self.file.SetSizer( bSizer7 )
 		self.file.Layout()
 		bSizer7.Fit( self.file )
-		self.notebookLateral.AddPage( self.file, _(u"File"), False )
+		self.notebookLateral.AddPage( self.file, _(u"File"), True )
 		self.documents = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -867,7 +867,7 @@ class framePinguinoX ( wx.Frame ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _(u"Documents"), True )
+		self.notebookLateral.AddPage( self.documents, _(u"Documents"), False )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
