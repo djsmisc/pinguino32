@@ -101,7 +101,9 @@ class Pinguino(framePinguinoX, IDE):
 # ----------------------------------------------------------------------
         #This can't be instant
         wx.FutureCall(1000, self.updateSashs)
-        self.updateIDE()
+        
+        #Unnecessary on Windows XP and GNU/Linux, totally destructive on mac OS and Windows 7/8
+        #self.updateIDE()
 
 
     #----------------------------------------------------------------------
