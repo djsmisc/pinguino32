@@ -34,7 +34,7 @@ Autocompleter = {
 "directive": ["define", "include", "ifndef", "endif",  "undef", "if", "elif", "else", "error", "warning"],
 "reserved" : ["TRUE", "FALSE", "HIGH", "LOW", "INPUT", "OUTPUT", "FOSC", "MIPS", "ON", "OFF",
               "LED1", "LED2", "LED3", "LED4", "REDLED", "GREENLED", "BLUELED", "WHITELED", "YELLOWLED",
-              "PROGBUTTON", "USERBUTTON", "RUNLED",
+              "PROGBUTTON", "USERBUTTON", "RUNLED", "USERLED", "A4", 
               "PORTA", "PORTB", "PORTC", "PORTD", "PORTE", "PORTF", "PORTG",
               "if", "switch", "for", "while", "do", "continue", "break", "else", "return", "case", "default",
               "void", "const", "bool", "BOOL", "char", "unsigned", "short", "int", "long", "float", "double", "byte", "word",
