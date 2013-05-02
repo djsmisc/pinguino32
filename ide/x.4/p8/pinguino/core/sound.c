@@ -70,8 +70,8 @@
 
 	void noTone(u8 pin)
 	{
-		PWM_set_frequency(0);					// note (range 1..14)
-		PWM_set_percent_dutycycle(pin, 0);		// silence
+		PWM_setFrequency(0);					// note (range 1..14)
+		PWM_setPercentDutyCycle(pin, 0);		// silence
 		//pinmode(pin, INPUT);
 		//CCP1CON = 0;							// stop sound = stop pwm
 		//T2CONbits.TMR2ON = OFF;				// disable Timer2 = stop pwm = stop sound
@@ -79,8 +79,8 @@
 
 	void Tone(u8 pin, u16 freq, u16 duration)
 	{
-		PWM_set_frequency(freq);
-		PWM_set_percent_dutycycle(pin, 50);
+		PWM_setFrequency(freq);
+		PWM_setPercentDutyCycle(pin, 50);
 		Delayms(duration);						// length of sound in ms 
 		noTone(pin);
 	}
