@@ -35,14 +35,14 @@
 #include <macro.h>
 
 #ifndef CRYSTAL
-#define CRYSTAL 4000000L
+#define CRYSTAL 8000000L
 #endif
 
 // The indices are valid values for PLLDIV
-//static const u8 plldiv[] = {  1,  2,  3,  4,  5,  6, 10,  12 };
+//static const u8 plldiv[] = { 12, 10, 6, 5, 4, 3, 2, 1 };
 
 // The indices are valid values for CPDIV
-static const u8 cpudiv[] = { 1, 2, 3, 6 };
+static const u8 cpudiv[] = { 6, 3, 2, 1 };
 
 // The indices are valid values for IRCF
 #if defined(__18f14k22) || \
@@ -59,7 +59,7 @@ static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 400
 #endif
 
 #if defined(__18f14k22)
-    u32 _cpu_clock_ = 1000000;      // Default Config.
+
     #define _64MHZ_     0b10000111  // 7  NB = 16 x PLL
     #define _32MHZ_     0b10000110  // 7  NB =  8 x PLL
     #define _16MHZ_     0b111       // 7
@@ -70,18 +70,9 @@ static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 400
     #define _500KHZ_    0b010       // 2
     #define _250KHZ_    0b001       // 1
     #define _31KHZ_     0b000       // 0
-/*  ----------------------------------------------------------------------------
-    Switch on Primary clock source
-    --------------------------------------------------------------------------*/
-    #define SystemSetExtOsc()      do { OSCCONbits.SCS = 0b00; _cpu_clock_ = 64000000; } while (0)
-/*  ----------------------------------------------------------------------------
-    Switch on Timer1 oscillator, assumes this is a watch crystal
-    --------------------------------------------------------------------------*/
-    #define SystemSetTimer1Osc()   do { OSCCONbits.SCS = 0b01; _cpu_clock_ = 32768; } while (0)
 
 #elif defined(__18f25k50) || defined(__18f45k50)
 
-    u32 _cpu_clock_ = 48000000;
     #define _16MHZ_     0b111       // 7
     #define _8MHZ_      0b110       // 6
     #define _4MHZ_      0b101       // 5
@@ -90,20 +81,11 @@ static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 400
     #define _500KHZ_    0b010       // 2
     #define _250KHZ_    0b001       // 1
     #define _31KHZ_     0b000       // 0
-/*  ----------------------------------------------------------------------------
-    Switch on Primary clock source
-    --------------------------------------------------------------------------*/
-    #define SystemSetExtOsc()      do { OSCCONbits.SCS = 0b00; _cpu_clock_ = 48000000; } while (0)
-/*  ----------------------------------------------------------------------------
-    Switch on Timer1 oscillator, assumes this is a watch crystal
-    --------------------------------------------------------------------------*/
-    #define SystemSetTimer1Osc()   do { OSCCONbits.SCS = 0b01; _cpu_clock_ = 32768; } while (0)
 
 #elif defined(__18f2455)  || defined(__18f4455)  || \
       defined(__18f2550)  || defined(__18f4550)  || \
       defined(__18f26j50) || defined(__18f46j50)
       
-    u32 _cpu_clock_ = 48000000;
     #define _48MHZ_     0b10000111  // 7  NB = PLL 96MHz / 2
     #define _8MHZ_      0b111       // 7
     #define _4MHZ_      0b110       // 6
@@ -114,37 +96,25 @@ static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 400
     #define _125KHZ_    0b001       // 1
     #define _31KHZ_     0b000       // 0
     
-/*  ----------------------------------------------------------------------------
-    Switch on Primary clock source
-    --------------------------------------------------------------------------*/
-    #define SystemSetExtOsc()      do { OSCCONbits.SCS = 0b00; _cpu_clock_ = 48000000; } while (0)
-/*  ----------------------------------------------------------------------------
-    Switch on Timer1 oscillator, assumes this is a watch crystal
-    --------------------------------------------------------------------------*/
-    #define SystemSetTimer1Osc()   do { OSCCONbits.SCS = 0b01; _cpu_clock_ = 32768; } while (0)
-
 #endif
 
 /*  ----------------------------------------------------------------------------
-    Return current Clock frequency (Fosc) in Hz (not MHz !)
+    Switch on Primary clock source
     --------------------------------------------------------------------------*/
-#define SystemGetClock()           (_cpu_clock_)
+
+    #define System_setExtOsc()      do { OSCCONbits.SCS = 0b00; } while (0)
 
 /*  ----------------------------------------------------------------------------
-    Return current Instruction Clock frequency (Fosc/4) in Hz (not MHz !)
+    Switch on Timer1 oscillator, assumes this is a watch crystal
     --------------------------------------------------------------------------*/
-#define SystemGetInstructionClock() (_cpu_clock_/4)
 
-/*  ----------------------------------------------------------------------------
-    Return current Peripheral Clock frequency (Fosc/4) in Hz (not MHz !)
-    --------------------------------------------------------------------------*/
-#define SystemGetPeripheralClock() (_cpu_clock_/4)
+    #define System_setTimer1Osc()   do { OSCCONbits.SCS = 0b01; } while (0)
 
 /*  ----------------------------------------------------------------------------
     SystemReadFlashMemory() read in all relevant clock settings
     --------------------------------------------------------------------------*/
 
-u16 SystemReadFlashMemory(u32 address)
+static u16 System_readFlashMemory(u32 address)
 {
 	u8 h8,l8;
 
@@ -178,42 +148,47 @@ u16 SystemReadFlashMemory(u32 address)
     TODO : 18f14k22
     --------------------------------------------------------------------------*/
 
-u32 SystemClocksGetCpuFrequency() 
+u32 System_getCpuFrequency() 
 {
     u8 CPUDIV;
-    
-    #if defined(__18f25k50) || defined(__18f45k50) || \
-        defined(__18f2455)  || defined(__18f4455)  || \
-        defined(__18f2550)  || defined(__18f4550)
-    CPUDIV  = SystemReadFlashMemory(__CONFIG1L) & 0b00011000;
-    #else
-    CPUDIV  = SystemReadFlashMemory(__CONFIG1H) & 0b00000011;
-    #endif
 
-    #if defined(__18f25k50) || defined(__18f45k50)
-    if (OSCCON2bits.PLLEN)
-    #elif defined(__18f2455) || defined(__18f4455) || \
-          defined(__18f2550) || defined(__18f4550)
-    if (1)          // No PLLEN bit
-    #else
-    if (OSCTUNEbits.PLLEN)
-    #endif
+    switch (OSCCONbits.SCS)
+    {
+        case 0: // primary osc. (internal or external / CPUDIV)
 
-    {
-        return 48000000L / cpudiv[CPUDIV];
-    }
-    else
-    {
-        switch (OSCCONbits.SCS)
-        {
-            case 0: // primary osc. (internal or external / CPUDIV)
-                return CRYSTAL / cpudiv[CPUDIV];
-            case 1: // secondary osc. (timer 1, most of the time 32768 Hz)
-                return 32768;
-            case 2: // reserved or postscaled internal clock
-            case 3: // postscaled internal clock (IRCF)
-                return ircf[OSCCONbits.IRCF];
-        }
+            // CPUDIV ?
+            #if defined(__18f25k50) || defined(__18f45k50) || \
+                defined(__18f2455)  || defined(__18f4455)  || \
+                defined(__18f2550)  || defined(__18f4550)
+            CPUDIV  = System_readFlashMemory(__CONFIG1L) & 0b00011000;
+            #else
+            CPUDIV  = System_readFlashMemory(__CONFIG1H) & 0b00000011;
+            #endif
+            CPUDIV = cpudiv[CPUDIV];
+            
+            // PLL ?
+            #if defined(__18f25k50) || defined(__18f45k50)
+            if (OSCCON2bits.PLLEN)
+            #elif defined(__18f2455) || defined(__18f4455) || \
+                  defined(__18f2550) || defined(__18f4550)
+            if (1)          // No PLLEN bit
+            #else
+            if (OSCTUNEbits.PLLEN)
+            #endif
+            {
+                return 48000000L / CPUDIV;
+            }
+            else
+            {
+                return CRYSTAL / CPUDIV;
+            }
+            
+        case 1: // secondary osc. (timer 1, most of the time 32768 Hz)
+            return 32768;
+            
+        case 2: // reserved or postscaled internal clock
+        case 3: // postscaled internal clock (IRCF)
+            return ircf[OSCCONbits.IRCF];
     }
 }
 
@@ -223,9 +198,9 @@ u32 SystemClocksGetCpuFrequency()
     TODO : replace with #define
     --------------------------------------------------------------------------*/
 
-u32 SystemClocksGetPeripheralFrequency() 
+u32 System_getPeripheralFrequency() 
 {
-    return SystemClocksGetCpuFrequency() >> 2;
+    return System_getCpuFrequency() >> 2;
 }
 
 /*  ----------------------------------------------------------------------------
@@ -239,7 +214,7 @@ u32 SystemClocksGetPeripheralFrequency()
     defined(__18f26j50) || defined(__18f46j50)
 
 #if defined(SYSTEMSETINTOSC) || defined(SYSTEMSETPERIPHERALFREQUENCY)
-void SystemSetIntOsc(u8 speed)
+void System_setIntOsc(u8 speed)
 {
     u8 flag=0;
     
@@ -306,7 +281,7 @@ void SystemSetIntOsc(u8 speed)
 }
 
 #ifdef SYSTEMSETPERIPHERALFREQUENCY
-void SystemSetPeripheralFrequency(u8 speed)
+void System_setPeripheralFrequency(u8 speed)
 {
     SystemSetIntOsc(speed*4);
 }

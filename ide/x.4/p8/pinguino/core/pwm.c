@@ -4,12 +4,15 @@
 	PURPOSE:		new hardware PWM control functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 oct. 2010
-	LAST RELEASE:	12 feb. 2013
+	LAST RELEASE:	27 apr. 2013
 	----------------------------------------------------------------------------
 	freely adapted from JAL PWM Control Library.
 	----------------------------------------------------------------------------
     Changelog :
     * 12 Feb. 2013  regis blanchot - replaced duty cycle calculation
+    * 27 Apr. 2013  regis blanchot - moved pin definition to pin.h
+                                     renamed function (also in pwm.pdl)
+                                     CCPR1L = duty; -> CCPR1L = duty & 0xFF;
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -31,89 +34,76 @@
 
 #include <pic18fregs.h>
 #include <typedef.h>
+#include <pin.h>
 #include <digitalw.c>
 #include <oscillator.c>
 //#include <interrupt.c>    // to save memory space
 
-#ifdef PICUNO_EQUO
-	#define CCP1 		5
-	#define CCP2 		6
-//	#define	CCP2_ALT	3	//Digital Pin 3 = RB3. 
-							//If the Configuration bit CCP2MX = 0, CCP2 is multiplexed with RB3.
-							//But this can only be done if user can change the Configuration bit in bootloader firmware.
-#elif defined(PINGUINO26J50)
-	#define CCP1 		10  // cf. io.c
-	#define CCP2 		11
-#else
-	#define CCP1 		12
-	#define CCP2 		11
-#endif
-
-/*----------------------------------------------------------------------------
-GLOBAL VARIABLES
---------------------------------------------------------------------------*/
+/*  --------------------------------------------------------------------
+    GLOBAL VARIABLES
+    ------------------------------------------------------------------*/
 
 u16 _pr2_plus1 = 256;				// shadow value of PR2 set to max. + 1 
 u8  _t2con;							// shadow value of T2CON
 
-/*----------------------------------------------------------------------------
-PWM_set_frequency
-----------------------------------------------------------------------------
-@param:	frequency in hertz (range 3kHz .. 12MHz)
-----------------------------------------------------------------------------
-let's say p = TMR2 Prescale Value
-PWM Period 	= [(PR2) + 1] * 4 * TOSC * p
-so [(PR2) + 1] = PWM Period / (4 * TOSC * p)
-but PWM Period 	= 1 / PWM Frequency
-so [(PR2) + 1] = (1/PWM Frequency) / (4 * 1/FOSC * p)
-and [(PR2) + 1] = FOSC / (4 * PWM Frequency * p)
-then [(PR2) + 1] = FOSC / PWM Frequency / 4 / p
---------------------------------------------------------------------------*/
+/*  --------------------------------------------------------------------
+    PWM_setFrequency
+    --------------------------------------------------------------------
+    @param:	frequency in hertz (range 3kHz .. 12MHz)
+    --------------------------------------------------------------------
+    let's say p = TMR2 Prescale Value
+    PWM Period 	= [(PR2) + 1] * 4 * TOSC * p
+    so [(PR2) + 1] = PWM Period / (4 * TOSC * p)
+    but PWM Period 	= 1 / PWM Frequency
+    so [(PR2) + 1] = (1/PWM Frequency) / (4 * 1/FOSC * p)
+    and [(PR2) + 1] = FOSC / (4 * PWM Frequency * p)
+    then [(PR2) + 1] = FOSC / PWM Frequency / 4 / p
+    ------------------------------------------------------------------*/
 
-void PWM_set_frequency(u32 freq)
+void PWM_setFrequency(u32 freq)
 {
-	// PR2+1 calculation
-	_pr2_plus1 = SystemGetClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
+    // PR2+1 calculation
+    _pr2_plus1 = SystemGetClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
 
-	// Timer2 prescaler calculation
-	// PR2 max value is 255, so PR2+1 max value is 256
-	// highest prescaler value is 16
-	// 16 * 256 = 4096 so :
-	if (_pr2_plus1 <= 4096)					// check if it's not too high
-	{
-		if (_pr2_plus1 <= 256)				// no needs of any prescaler
-		{
-			_t2con = 0b00000000;			// prescaler is 1
-		}
-		else if (_pr2_plus1 <= 1024)		// needs prescaler 1:4
-		{
-			_pr2_plus1 = _pr2_plus1 >> 2;	// divided by 4
-			_t2con = 0b00000001;			// prescaler is 4
-		}
-		else								// needs prescaler 1:6
-		{
-			_pr2_plus1 = _pr2_plus1 >> 4;	// divided by 16
-			_t2con = 0b00000010;			// prescaler is 16
-		}
-	}
+    // Timer2 prescaler calculation
+    // PR2 max value is 255, so PR2+1 max value is 256
+    // highest prescaler value is 16
+    // 16 * 256 = 4096 so :
+    if (_pr2_plus1 <= 4096)					// check if it's not too high
+    {
+        if (_pr2_plus1 <= 256)				// no needs of any prescaler
+        {
+            _t2con = 0b00000000;			// prescaler is 1
+        }
+        else if (_pr2_plus1 <= 1024)		// needs prescaler 1:4
+        {
+            _pr2_plus1 = _pr2_plus1 >> 2;	// divided by 4
+            _t2con = 0b00000001;			// prescaler is 4
+        }
+        else								// needs prescaler 1:6
+        {
+            _pr2_plus1 = _pr2_plus1 >> 4;	// divided by 16
+            _t2con = 0b00000010;			// prescaler is 16
+        }
+    }
 }
 
-/*----------------------------------------------------------------------------
-PWM_set_dutycycle
-----------------------------------------------------------------------------
-Set dutycycle with 10-bits resolution, allowing 1024 PWM steps.
-The 'duty' argument is a (max) 10-bits absolute value for the duty cycle:
-* duty<1:0> are the 2 LSbits
-* duty<9:2> are the 8 MSbits
-Allowed range: 0..1023
-@param pin:		CCPx pin where buzzer is connected (5 or 6)
-@param duty:	10-bit duty cycle
-----------------------------------------------------------------------------
-PWM Duty Cycle = (CCPRxL:CCPxCON<5:4>) * Tosc * TMR2 prescaler
-(CCPRxL:CCPxCON<5:4>) = PWM Duty Cycle / (Tosc * TMR2 prescaler)
---------------------------------------------------------------------------*/
+/*  --------------------------------------------------------------------
+    PWM_setDutyCycle
+    --------------------------------------------------------------------
+    Set dutycycle with 10-bits resolution, allowing 1024 PWM steps.
+    The 'duty' argument is a (max) 10-bits absolute value for the duty cycle:
+    * duty<1:0> are the 2 LSbits
+    * duty<9:2> are the 8 MSbits
+    Allowed range: 0..1023
+    @param pin:		CCPx pin where buzzer is connected (5 or 6)
+    @param duty:	10-bit duty cycle
+    --------------------------------------------------------------------
+    PWM Duty Cycle = (CCPRxL:CCPxCON<5:4>) * Tosc * TMR2 prescaler
+    (CCPRxL:CCPxCON<5:4>) = PWM Duty Cycle / (Tosc * TMR2 prescaler)
+    ------------------------------------------------------------------*/
 
-void PWM_set_dutycycle(u8 pin, u16 duty)
+void PWM_setDutyCycle(u8 pin, u16 duty)
 {
     u8 temp;
 
@@ -132,14 +122,8 @@ void PWM_set_dutycycle(u8 pin, u16 duty)
                                             // <3:0> PWM mode
 
             // PWM duty cycle has 10-bit resolution
-            CCPR1L = duty;                  // 8 LSB
+            CCPR1L = duty & 0xFF;           // 8 LSB
             CCP1CON |= (duty >> 8) << 4;    // 2 MSB
-/*
-            temp = duty & 0b00000011;		// extract 2 LSbits of the duty
-            temp <<= 4;						// shift left 4 bits
-            CCP1CON |= temp;				// put in CCP1CON 4:5
-            CCPR1L = duty >> 2;				// 8 MSbits of the duty
-*/
             break;
 
         case CCP2:
@@ -148,14 +132,8 @@ void PWM_set_dutycycle(u8 pin, u16 duty)
             CCP2CON = 0b00001111;			// reset also 2 LSbits of duty cycle
 
             // PWM duty cycle (10-bit)
-            CCPR2L = duty;                  // 8 LSB
+            CCPR2L = duty & 0xFF;           // 8 LSB
             CCP2CON |= (duty >> 8) << 4;    // 2 MSB
-/*
-            temp = duty & 0b00000011;		// extract 2 LSbits of duty
-            temp <<= 4;						// shift left 4 bits
-            CCP2CON |= temp;				// put in CCP2CON 4:5  (DCBx1 and DCBx0)
-            CCPR2L = duty >> 2;				// 8 MSbits of duty
-*/
             break;
 
         default:
@@ -174,36 +152,29 @@ void PWM_set_dutycycle(u8 pin, u16 duty)
     pinmode(pin, OUTPUT);				// PWM pin as OUTPUT
 }
 
-/*----------------------------------------------------------------------------
-PWM_set_percent_dutycycle
-----------------------------------------------------------------------------
-Set a percentage duty cycle, allowing max 100 PWM steps.
-Allowed range: 0..100
-The duty cycle will be set to the specified percentage of the maximum
-for the current PWM frequency.
-Note: The number of available PWM steps can be lower than 100 with
-(very) high PWM frequencies.
---------------------------------------------------------------------------*/
+/*  --------------------------------------------------------------------
+    PWM_setPercentDutyCycle
+    --------------------------------------------------------------------
+    Set a percentage duty cycle, allowing max 100 PWM steps.
+    Allowed range: 0..100
+    The duty cycle will be set to the specified percentage of the maximum
+    for the current PWM frequency.
+    Note: The number of available PWM steps can be lower than 100 with
+    (very) high PWM frequencies.
+    ------------------------------------------------------------------*/
 
-void PWM_set_percent_dutycycle(u8 pin, u8 percent)
+void PWM_setPercentDutyCycle(u8 pin, u8 percent)
 {
-	u16 duty;
-	if (percent == 0)
-	{
-		duty = 0;
-	}
-	else if (percent >= 100)
-	{
-		duty = _pr2_plus1 - 1;
-		//duty = 1023;
-	}
-	else
-	{
-		duty = percent * (_pr2_plus1 / 4) / 25;	// (factor PR2/100)
-		//duty = 256 * percent / 25;
-	}
-	PWM_set_dutycycle(pin, duty << 2);
-	//PWM_set_dutycycle(pin, duty);
+    u16 duty;
+
+    if (percent == 0)
+        duty = 0;
+    else if (percent >= 100)
+        duty = _pr2_plus1 - 1;
+    else
+        duty = percent * (_pr2_plus1 / 4) / 25;	// (factor PR2/100)
+
+    PWM_setDutyCycle(pin, duty << 2);
 }
 
 #endif /* __PWM__ */

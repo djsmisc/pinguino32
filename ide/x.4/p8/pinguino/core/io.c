@@ -105,6 +105,12 @@ void IO_digital(void)
         CM2CON = 0x00; 
         CVRCON = 0x00;
 
+    #elif defined(__18f27j53) || defined(__18f47j53)
+
+        // Initialize all Analog pins as Digital I/O
+        ANCON0 = 0xFF;				// AN0 to AN7  Digital I/O
+        ANCON1 = 0x1F;				// AN8 to AN12 Digital I/O
+
     #endif
 }
 
@@ -134,7 +140,8 @@ void IO_digital(void)
 // NB1 : the Configuration bit IOL1WAY is set to OFF in the bootloader
 // NB2 : pins must be explicitly reconfigured as digital I/O when used with a PPS
 
-#if defined(__18f26j50) || defined(__18f46j50)
+#if defined(__18f26j50) || defined(__18f46j50) || \
+    defined(__18f27j53) || defined(__18f47j53)
 void IO_remap(void)
 {
     #if defined(__18f26j50) || defined(__18f46j50)
@@ -178,6 +185,10 @@ void IO_remap(void)
         //SystemLock();
 
     #endif // defined(PINGUINO26J50) || defined(PINGUINO46J50)
+
+    #if defined(__18f27j53) || defined(__18f47j53)
+    
+    #endif // defined(__18f27j53) || defined(__18f47j53)
 }
 #endif // defined(__18f26j50) || defined(__18f46j50)
 

@@ -10,7 +10,7 @@ toggle toggle#include <digitalw.c>
 
 analogRead analogread#include <analog.c>#define ANALOGREAD
 analogReference analogreference#include <analog.c>#define ANALOGREFERENCE
-analogWrite PWM_set_dutycycle#include <pwm.c>
+analogWrite analogwrite#include <analog.c>#define ANALOGWRITE
 
 min min#include <macro.h>
 max max#include <macro.h>

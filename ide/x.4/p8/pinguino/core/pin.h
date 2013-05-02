@@ -50,6 +50,9 @@
 //	#define RB3 	3
 	#define AN9 	3
 	#define VPO		3
+//	#define	CCP2_ALT	3	//Digital Pin 3 = RB3. 
+							//If the Configuration bit CCP2MX = 0, CCP2 is multiplexed with RB3.
+							//But this can only be done if user can change the Configuration bit in bootloader firmware.
 
 //	#define RD0 	4
 	#define SPP0	4
@@ -194,12 +197,6 @@
 //	#define RC2 12
 //	#define CCP1 12
 
-    #if defined(PINGUINO26J50) || defined(PINGUINO46J50)
-        #define LED1	12
-        #define USERLED	12
-        #define RTCC    1
-    #endif
-	
 	#define A0 13
 //	#define RA0 13
 	#define AN0 13
@@ -225,26 +222,34 @@
 
     #if defined(PINGUINO2550) || defined(PINGUINO25K50) || defined(PINGUINO2455) || defined(CHRP3)
     
-        // run led pin
-        #define A4 18
-        //#define RA4 18
-        #define RUNLED 18
-        #define LED1 18
-        #define USERLED 18
+        #define A4          18
+        //#define RA4       18
+        #define RUNLED      18
+        #define LED1        18
+        #define USERLED     18
+        #define CCP1        12
+        #define CCP2        11
         
+    #elif defined(PINGUINO4550) || defined(PINGUINO45K50) || defined(PINGUINO4455)
+    
+        #define A4          29
+        //#define RA4       29
+        #define RUNLED      29
+        #define LED1        29
+        #define USERLED     29
+        #define CCP1        12
+        #define CCP2        11
+        
+    #elif defined(PINGUINO26J50) || defined(PINGUINO46J50)
+
+        #define RTCC        1
+        #define CCP1        10  // cf. io.c
+        #define CCP2        11
+        #define LED1        12
+        #define USERLED     12
+
     #endif
 
-    #if defined(PINGUINO4550) || defined(PINGUINO45K50) || defined(PINGUINO4455)
-    
-        // run led pin
-        #define A4 29
-        //#define RA4 29
-        #define RUNLED 29
-        #define LED1 29
-        #define USERLED 29
-        
-    #endif
-    
 #endif
 
 #endif /* __PIN_H */

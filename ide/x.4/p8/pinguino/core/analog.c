@@ -7,12 +7,23 @@
 #ifndef __ANALOG__
 #define __ANALOG__
 
-#define ANALOG 		1
+#if defined(ANALOGREFERENCE) || defined(ANALOGREAD)
+    #define ANALOG 		1
+#endif
+
 #define DEFAULT		0
 #define	EXTERNAL	1
 
 #include <pic18fregs.h>
 #include <typedef.h>
+#include <pin.h>
+//#include <digitalw.c>
+
+/*  --------------------------------------------------------------------
+    Init
+    ------------------------------------------------------------------*/
+
+#ifdef ANALOG
 
 void analog_init(void)
 {
@@ -45,56 +56,112 @@ void analog_init(void)
 #endif
 }
 
+#endif /* ANALOG */
+
+/*  --------------------------------------------------------------------
+    analogReference
+    ------------------------------------------------------------------*/
+
 #ifdef ANALOGREFERENCE
+
 void analogreference(u8 Type)
 {
-#if !defined(PINGUINO26J50)
-	if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
-		ADCON1|=0x00;			//Vref+ = VDD
-	else if(Type == EXTERNAL)	//the voltage applied to the AREF pin (0 to 5V only) is used as the reference.
-		ADCON1|=0x10;			//Vref+ = External source
-#else
-	if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
-		ADCON0|=0x00;			//Vref+ = VDD
-	else if(Type == EXTERNAL)	//the voltage applied to the AREF pin (0 to 5V only) is used as the reference.
-		ADCON0|=0x40;			//Vref+ = External source
-#endif
+    #if !defined(PINGUINO26J50)
+    if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
+        ADCON1|=0x00;			//Vref+ = VDD
+    else if(Type == EXTERNAL)	//the voltage applied to the AREF pin (0 to 5V only) is used as the reference.
+        ADCON1|=0x10;			//Vref+ = External source
+    #else
+    if(Type == DEFAULT)			//the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
+        ADCON0|=0x00;			//Vref+ = VDD
+    else if(Type == EXTERNAL)	//the voltage applied to the AREF pin (0 to 5V only) is used as the reference.
+        ADCON0|=0x40;			//Vref+ = External source
+    #endif
 }
+
 #endif /* ANALOGREFERENCE */
 
+/*  --------------------------------------------------------------------
+    analogRead
+    ------------------------------------------------------------------*/
+
 #ifdef ANALOGREAD
+
 u16 analogread(u8 channel)
 {
-	u16 result=0;
-// #if defined(PINGUINO4550) || defined(PICUNO_EQUO)
-// ADCON1=0x07;
-// #else
-// ADCON1=0x0A;
-// #endif
+    u16 result=0;
+    // #if defined(PINGUINO4550) || defined(PICUNO_EQUO)
+    // ADCON1=0x07;
+    // #else
+    // ADCON1=0x0A;
+    // #endif
 
-	#ifdef PICUNO_EQUO
-		if(channel>=14 && channel<=16)
-			ADCON0=(channel-14)*4;
-		else if(channel>=17 && channel<=19)
-			ADCON0=(channel-13)*4;
+    #ifdef PICUNO_EQUO
+        if(channel>=14 && channel<=16)
+            ADCON0=(channel-14)*4;
+        else if(channel>=17 && channel<=19)
+            ADCON0=(channel-13)*4;
     #else
-		if(channel>=13 && channel<=17)
-            ADCON0=(channel-13)*4;              // A0 = 13, A1 = 14, ...
-		else if(channel<=5)
+        if(channel>=13 && channel<=17)
+            ADCON0=(channel-13)*4;             // A0 = 13, A1 = 14, ...
+        else if(channel<=5)
             ADCON0 = channel * 4;              // A0 = 0, A1 = 1, ...
-	#endif
-	
+    #endif
+
     //ADCON2=0xBD;
-	ADCON0bits.ADON=1;
-	for (result=1;result<10;result++)
+    ADCON0bits.ADON=1;
+    for (result=1;result<10;result++)
         __asm NOP __endasm;
     ADCON0bits.GO=1;
-	while (ADCON0bits.GO);
-	result=ADRESH<<8;
-	result+=ADRESL;
-	ADCON0bits.ADON=0;
-	return(result);
+    while (ADCON0bits.GO);
+    result=ADRESH<<8;
+    result+=ADRESL;
+    ADCON0bits.ADON=0;
+    return(result);
 }
+
 #endif /* ANALOGREAD */
+
+/*  --------------------------------------------------------------------
+    analogWrite
+    NB: PWM Max. resolution is 10 bits
+    ------------------------------------------------------------------*/
+
+#ifdef ANALOGWRITE
+void analogwrite_init()
+{
+    PR2 = 0xFF;                             // set PWM period to the max.
+    T2CON = 0b00000100;                     // Timer2 on, prescaler is 1
+}
+
+void analogwrite(u8 pin, u16 duty)
+{
+    switch (pin)
+    {
+        case CCP1:
+            CCP1CON = 0b00001111;
+            CCPR1L = duty & 0xFF;           // 8 LSB
+            CCP1CON |= (duty >> 8) << 4;    // 2 MSB in <5:4>
+            break;
+
+        case CCP2:
+            CCP2CON = 0b00001111;
+            CCPR2L = duty & 0xFF;           // 8 LSB
+            CCP2CON |= (duty >> 8) << 4;    // 2 MSB
+            break;
+    }
+
+    CCP1CON = 0b00001111;
+    CCPR1L = duty & 0xFF;           // 8 LSB
+    CCP1CON |= (duty >> 8) << 4;    // 2 MSB in <5:4>
+
+    CCP2CON = 0b00001111;
+    CCPR2L = duty & 0xFF;           // 8 LSB
+    CCP2CON |= (duty >> 8) << 4;    // 2 MSB
+
+    PIR1bits.TMR2IF = 0;
+}
+
+#endif /* ANALOGWRITE */
 
 #endif /* __ANALOG__ */
