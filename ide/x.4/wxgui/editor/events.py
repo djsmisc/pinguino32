@@ -30,6 +30,7 @@ import wx.stc as stc
 import codecs
 import sys
 import os
+import webbrowser
 
 from wxgui._trad import _
 from constants import TEMP_DIR, THEME_DIR, pinguino_version
@@ -490,29 +491,29 @@ class Events:
         info.SetLicence(licence)
 
         info.AddDeveloper('Jean-Pierre Mandon')
-        info.AddDeveloper('Régis Blanchot')
+        info.AddDeveloper('Regis Blanchot')
         info.AddDeveloper('Marcus Fazzi')
         info.AddDeveloper('Jesus Carmona Esteban')
         info.AddDeveloper('Alfred Broda')
         info.AddDeveloper('Yeison Cardona')
         info.AddDeveloper('Henk Van Beek')
-        info.AddDeveloper('Björn Pfeiffer')
-        info.AddDeveloper('Alexis Sánchez')     
+        info.AddDeveloper('Bjorn Pfeiffer')
+        info.AddDeveloper('Alexis Sanchez')     
 
         info.AddDocWriter('Benoit Espinola')
         info.AddDocWriter('Sebastien Koechlin')
         info.AddDocWriter('Ivan Ricondo')
         info.AddDocWriter('Jesus Carmona Esteban')
         info.AddDocWriter('Marcus Fazzi')
-        info.AddDocWriter('Régis Blanchot')
+        info.AddDocWriter('Regis Blanchot')
 
         info.AddArtist('France Cadet')
         info.AddArtist('Laurent Costes')
-        info.AddArtist('Daniel Rodrí­guez')
+        info.AddArtist('Daniel Rodri-guez')
 
         info.AddTranslator('Joan Espinoza')
-        info.AddTranslator('Alexis Sánchez')
-        info.AddTranslator('Régis Blanchot')
+        info.AddTranslator('Alexis Sanchez')
+        info.AddTranslator('Regis Blanchot')
         info.AddTranslator('Moreno Manzini ')
 
         wx.AboutBox(info)        
