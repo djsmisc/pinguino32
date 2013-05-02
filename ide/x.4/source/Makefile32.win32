@@ -108,7 +108,7 @@ clean:
 	if exist $(OBJDIR)\processor.o $(RM) $(OBJDIR)\processor.o
 
 copy:
-	$(CP) $(OBJDIR)\$(PROC).o $(OBJDIR)\processor.o
+	$(CP) $(OBJDIR)\$(PROC).o $(OBJDIR)\processor.o > nul
 
 link:
 	$(CC) $(ELF_FLAGS) $(LDFLAGS) $(CFLAGS) -o $(SRCDIR)\main32.elf $(SRCDIR)\main32.c \
@@ -124,5 +124,5 @@ exec:
 	$(OBJC) -O ihex $(SRCDIR)\main32.elf $(SRCDIR)\main32.hex
 	
 correct:
-	copy $(SRCDIR)\main32.hex $(SRCDIR)\main32tmp.hex   
+	$(CP) $(SRCDIR)\main32.hex $(SRCDIR)\main32tmp.hex > nul
 
