@@ -36,6 +36,13 @@
 #include <const.h>
 #include <macro.h>
 
+#ifdef boot4
+    // runtime start code with variable initialisation
+    //#include "crt0.c"
+    //#include "crt0i.c"
+    #include "crt0iz.c"
+#endif
+
 ////////////////////////////////////////////////////////////////////////
 #include "define.h"
 ////////////////////////////////////////////////////////////////////////
@@ -73,9 +80,6 @@
 
 #elif defined (noboot) || defined(boot4)
 
-    void main(void);
-    void reset_isr(void) __naked __interrupt 0;
-
     // Application entry point called from bootloader v4.x
     void main(void)
 
@@ -89,7 +93,7 @@
     /// ----------------------------------------------------------------
     /// Perform a loop for some processors until their frequency is stable
     /// ----------------------------------------------------------------
-    
+
     #if defined(__18f2455) || defined(__18f4455) || \
         defined(__18f2550) || defined(__18f4550)
     
@@ -117,11 +121,17 @@
     /// Init. all flag/interrupt (with low priority)
     /// ----------------------------------------------------------------
 
-    RCON = 0x80;                // Enable priority levels on interrupts
+    RCONbits.IPEN       = 1;        // Enable priority levels on interrupts
+    INTCONbits.GIEH     = 0;        // Disables all interrupts
+    INTCONbits.GIEL     = 0;        // Disables all interrupts
+
 /*
     INTCON = 0;
     INTCON2 = 0;
     INTCON3 = 0;
+*/
+
+/*
     // All peripheral interrupt disabled
     PIE1 = 0;
     PIE2 = 0;
@@ -129,6 +139,9 @@
         defined(__18f26j50) || defined(__18f46j50)
     PIE3 = 0;
     #endif
+*/
+
+/*
     // All interrupts with low priority
     INTCON2bits.TMR0IP = 0;
     IPR1bits.TMR1IP = 0;
@@ -139,6 +152,9 @@
         defined(__18f26j50) || defined(__18f46j50)
     IPR3 = 0;
     #endif
+*/
+
+/*
     // All peripheral interrupts flags cleared
     PIR1 = 0;
     PIR2 = 0;
@@ -154,14 +170,15 @@
 
     IO_init();
     IO_digital();
-    #if defined(__18f26j50) || defined(__18f46j50)
+    #if defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f27j53) || defined(__18f47j53)
     IO_remap();
     #endif
 
     /// ----------------------------------------------------------------
     /// Various Init.
     /// ----------------------------------------------------------------
-    
+
     #ifdef ON_EVENT
     IntInit();
     #endif
@@ -182,6 +199,10 @@
     analog_init();
     #endif
 
+    #ifdef ANALOGWRITE
+    analogwrite_init();
+    #endif
+
     #ifdef __MILLIS__           // Use Timer 0
     millis_init();
     #endif
@@ -197,7 +218,7 @@
 ////////////////////////////////////////////////////////////////////////
     setup();
 ////////////////////////////////////////////////////////////////////////
-    
+
     #if defined(TMR0INT) || defined(TMR1INT) || \
         defined(TMR2INT) || defined(TMR3INT) || \
         defined(TMR4INT)
@@ -216,23 +237,18 @@
     High Interrupt Vector
     --------------------------------------------------------------------------*/
 
-# if defined(__USBCDC) || defined(__USBBULK) || defined(__USB__) || \
+#if  defined(__USBCDC) || defined(__USBBULK) || defined(__USB__) || \
      defined(__SERIAL__) || defined(__MILLIS__) || defined(I2CINT) || \
      defined(SERVOSLIBRARY) || defined(INT0INT) || defined(__PS2KEYB__) || \
      defined(__DCF77__) || defined(RTCCALARMINTENABLE)
 
 #ifdef boot2
-
 #pragma code high_priority_isr 0x2020
-void high_priority_isr(void) __interrupt 1
-
-#else
+#endif
 
 // boot4 : ENTRY + 0x08
 // noboot: 0x08
-void high_priority_isr(void) __interrupt 1 //__naked
-
-#endif
+void high_priority_isr(void) __interrupt 1
 {
     #ifdef __USBCDC
     CDC_interrupt();
@@ -288,18 +304,12 @@ void high_priority_isr(void) __interrupt 1 //__naked
 #if defined(USERINT) || defined(ON_EVENT)
 
 #ifdef boot2
-
 #pragma code low_priority_isr 0x4000
-void low_priority_isr(void) __interrupt 2
-
-#else
+#endif
 
 // boot4 : ENTRY + 0x18
 // noboot: 0x18
-void low_priority_isr(void) __interrupt 2 //__naked
-
-#endif
-
+void low_priority_isr(void) __interrupt 2
 {
     #ifdef USERINT
     userinterrupt();
@@ -315,7 +325,7 @@ void low_priority_isr(void) __interrupt 2 //__naked
 /*  ----------------------------------------------------------------------------
     Reset Interrupt Vector
     --------------------------------------------------------------------------*/
-
+/*
 #if defined (noboot) || defined(boot4)
 
 // boot4 : ENTRY + 0x00
@@ -327,3 +337,4 @@ void reset_isr(void) __naked __interrupt 0
 }
 
 #endif
+*/
