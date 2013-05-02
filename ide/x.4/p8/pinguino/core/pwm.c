@@ -63,7 +63,7 @@ u8  _t2con;							// shadow value of T2CON
 void PWM_setFrequency(u32 freq)
 {
     // PR2+1 calculation
-    _pr2_plus1 = SystemGetClock() / 4 / freq;	// FOSC / (4 * PWM Frequency)
+    _pr2_plus1 = System_getPeripheralFrequency() / freq;	// FOSC / (4 * PWM Frequency)
 
     // Timer2 prescaler calculation
     // PR2 max value is 255, so PR2+1 max value is 256
@@ -117,7 +117,8 @@ void PWM_setDutyCycle(u8 pin, u16 duty)
         case CCP1:
 
             // PWM mode	
-            CCP1CON = 0b00001111;			// <7:6> single output
+            //CCP1CON = 0b00001111;			// <7:6> single output
+            CCP1CON = 0b00001100;			// <7:6> single output
                                             // <5:4> reset 2 LSbits of duty cycle
                                             // <3:0> PWM mode
 
@@ -129,7 +130,8 @@ void PWM_setDutyCycle(u8 pin, u16 duty)
         case CCP2:
 
             // PWM mode	
-            CCP2CON = 0b00001111;			// reset also 2 LSbits of duty cycle
+            //CCP2CON = 0b00001111;			// reset also 2 LSbits of duty cycle
+            CCP2CON = 0b00001100;			// reset also 2 LSbits of duty cycle
 
             // PWM duty cycle (10-bit)
             CCPR2L = duty & 0xFF;           // 8 LSB
