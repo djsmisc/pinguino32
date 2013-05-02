@@ -10,8 +10,6 @@
 // This example code is in the public domain.
 
 
-#include <Wire.h>
-
 void setup()
 {
   Wire.slave(4);                // join i2c bus with address #4

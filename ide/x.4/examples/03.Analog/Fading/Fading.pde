@@ -4,7 +4,7 @@
  This example shows how to fade an LED using the analogWrite() function.
  
  The circuit:
- * LED attached from digital pin 9 to ground.
+ * LED attached from digital pin 11 to ground.
  
  Created 1 Nov 2008
  By David A. Mellis
@@ -18,29 +18,33 @@
  */
 
 
-int ledPin = 9;    // LED connected to digital pin 9
+u8 ledPin = 11;    // LED connected to digital pin 11 (CCP)
 
-void setup()  { 
-  // nothing happens in setup 
+void setup()
+{ 
+    // nothing happens in setup 
+    pinMode(ledPin, OUTPUT);
 } 
 
-void loop()  { 
-  // fade in from min to max in increments of 5 points:
-  int fadeValue;
-  for(fadeValue = 0 ; fadeValue <= 255; fadeValue +=5) { 
-    // sets the value (range from 0 to 255):
-    analogWrite(ledPin, fadeValue);         
-    // wait for 30 milliseconds to see the dimming effect    
-    delay(30);                            
-  } 
+void loop()
+{ 
+    // fade in from min to max in increments of 5 points:
+    int fadeValue;
 
-  // fade out from max to min in increments of 5 points:
-  for(fadeValue = 255 ; fadeValue >= 0; fadeValue -=5) { 
-    // sets the value (range from 0 to 255):
-    analogWrite(ledPin, fadeValue);         
-    // wait for 30 milliseconds to see the dimming effect    
-    delay(30);                            
-  } 
+    for (fadeValue = 0 ; fadeValue <= 1023; fadeValue +=5)
+    { 
+        // sets the value (range from 0 to 1023):
+        analogWrite(ledPin, fadeValue);         
+        // wait for 30 milliseconds to see the dimming effect    
+        delay(30);                            
+    }
+
+    // fade out from max to min in increments of 5 points:
+    for (fadeValue = 1023 ; fadeValue >= 0; fadeValue -=5)
+    { 
+        // sets the value (range from 0 to 1023):
+        analogWrite(ledPin, fadeValue);         
+        // wait for 30 milliseconds to see the dimming effect    
+        delay(30);                            
+    }
 }
-
-

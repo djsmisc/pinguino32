@@ -1,14 +1,14 @@
 /*	----------------------------------------------------------------------------
 	Led Dimmer
 	----------------------------------------------------------------------------
-	author:			Régis Blanchot
-	description:	This example shows how to fade an LED on pin 0
-					using pwm functions.
- 	first release:	25/02/2012
+	author: 			Régis Blanchot
+	description:	This example shows how to fade a LED
+					      using PWM functions.
+ 	first release:25/02/2012
 	last update:	25/02/2012
 	pinguino ide:	> 9.5
 	----------------------------------------------------------------------------
-	wiring:			pin 0 ----- +LED- ----- 330 Ohm Resistor ----- GND
+	wiring:			pin ----- +LED- ----- 330 Ohm Resistor ----- GND
 	----------------------------------------------------------------------------
 	NB:			PIC18 PINGUINO x550	 can only use pins	D11, D12
 	    		PIC18 PINGUINO 26j50 can only use pins	D10, D11
