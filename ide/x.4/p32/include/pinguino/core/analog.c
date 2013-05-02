@@ -134,6 +134,22 @@ u16 __bufmask[]=   {0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 					0x002C,0x0000,0x0000,0x0000,0x0030,0x0034,0x0038,0x003C};				    
 #endif
 
+#if defined(PIC32_PINGUINO_T795)
+u16 __analogmask[]={  _3,  _4,  _6,  _7,  _9, _10, nil,	nil,	//0-7
+		     nil, nil, nil, nil, nil, nil, nil, nil,	//8-15
+		     nil, nil, _11, _12, nil, nil, nil, nil, 	//16-23
+		     nil, nil, nil, nil, nil, nil, nil, nil, 	//24-31
+		     nil,  _8, _14, _13, _15, nil, nil, nil,	//32-39
+		     nil,  _5,  _2,  _1,  _0};			//40-44
+u16 __bufmask[]=   {  12,  16,  24,  28,  36,  40, nil,	nil,	//0-7
+		     nil, nil, nil, nil, nil, nil, nil, nil,	//8-15
+		     nil, nil,  44,  48, nil, nil, nil, nil, 	//16-23
+		     nil, nil, nil, nil, nil, nil, nil, nil, 	//24-31
+		     nil,  32,  64,  52,  60, nil, nil, nil,	//32-39
+		     nil,  20,   8,   4,   0};			//40-44
+#endif
+
+
 /* 2012-10-11 RB the followings are already defined in const.h
 #define A0 0
 #define A1 1

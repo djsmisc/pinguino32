@@ -279,7 +279,7 @@
 	#define AD1_INT_ENABLE				0x00000002
 	#define CN_INT_ENABLE				0x00000001
 //PIC32MX795
-//if defined(UBW32_795) || defined(EMPEROR795)
+//if defined(UBW32_795) || defined(EMPEROR795) || defined(PIC32_PINGUINO_T795)
 	#define CAN1_INT_ENABLE				0x04000000
 	#define CAN2_INT_ENABLE				0x08000000
 	#define ETH_INT_ENABLE				0x10000000
@@ -828,7 +828,7 @@ unsigned int IntGetVectorSubPriority(u8 vector)
 
 void IntClearFlag(u8 numinter)
 {
-    #if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795) || defined(PIC32_PINGUINO_T795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
@@ -860,7 +860,7 @@ void IntClearFlag(u8 numinter)
 
 unsigned int IntGetFlag(u8 numinter)
 {
-    #if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795) || defined(PIC32_PINGUINO_T795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
@@ -889,7 +889,7 @@ unsigned int IntGetFlag(u8 numinter)
 
 void IntEnable(u8 numinter)
 {
-    #if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795) || defined(PIC32_PINGUINO_T795)
 	if (numinter > 63)
 	{
 		numinter -= 64;
@@ -918,7 +918,7 @@ void IntEnable(u8 numinter)
 
 void IntDisable(u8 numinter)
 {
-    #if defined(UBW32_795) || defined(EMPEROR795)
+    #if defined(UBW32_795) || defined(EMPEROR795) || defined(PIC32_PINGUINO_T795)
 	if (numinter > 63)
 	{
 		numinter -= 64;

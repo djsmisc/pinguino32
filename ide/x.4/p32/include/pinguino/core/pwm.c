@@ -287,10 +287,11 @@ u8 analogwrite(u8 pin, u16 setpoint)
 			default: return 0;
 		}		
 #endif
-#if defined(UBW32_460) || defined(UBW32_795)
+#if defined(UBW32_460) || defined(UBW32_795) || defined(PIC32_PINGUINO_T795)
 	switch (pin)
 		{
 			case  0:
+			case 24:
 			case 40: TRISDCLR=0x01;
 					 OC1CON=0;
 					 OC1R=setpoint;
@@ -300,6 +301,7 @@ u8 analogwrite(u8 pin, u16 setpoint)
 					 return 1;
 					 break;
 			case  1:
+			case  9:
 			case 43: TRISDCLR=0x02;
 					 OC2CON=0;
 					 OC2R=setpoint;
@@ -309,6 +311,7 @@ u8 analogwrite(u8 pin, u16 setpoint)
 					 return 1;
 					 break;
 			case  2:
+			case  8:
 			case 44: TRISDCLR=0x04;
 					 OC3CON=0;
 					 OC3R=setpoint;
@@ -318,6 +321,7 @@ u8 analogwrite(u8 pin, u16 setpoint)
 					 return 1;
 					 break;
 			case  3:
+			case  7:
 			case 45: TRISDCLR=0x08;
 					 OC4CON=0;
 					 OC4R=setpoint;
@@ -327,6 +331,7 @@ u8 analogwrite(u8 pin, u16 setpoint)
 					 return 1;
 					 break;
 			case  4:
+			case 25:
 			case 60: TRISDCLR=0x010;
 					 OC5CON=0;
 					 OC5R=setpoint;
