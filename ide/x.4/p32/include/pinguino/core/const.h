@@ -136,6 +136,17 @@
 		// UBW32 build-in buttons
 		#define PROGBUTTON	    68 //PORTEbits.RE7 = prog button
 		#define USERBUTTON	    69 //PORTEbits.RE6 = user button
+
+	#elif defined(PIC32_PINGUINO_T795)
+		// Olimex PIC32-T795 build-in leds
+		#define LED1			36 //PORTBbits.RB15	// green
+		#define LED2			19 //PORTBbits.RB12	// yellow
+
+		#define GREENLED		36 //PORTBbits.RB15	// green
+		#define YELLOWLED		19 //PORTBbits.RB12	// yellow
+
+		// UBW32 build-in buttons
+		#define PROGBUTTON	    24 //PORTDbits.RD0 = prog button
 		 
 	#elif defined(EMPEROR460) || defined(EMPEROR795)
 		// EMPEROR build-in leds

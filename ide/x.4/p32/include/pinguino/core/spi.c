@@ -45,6 +45,8 @@
 #ifndef SPIx				// Use SPI port 1, see PIC32 Datasheet
 	#if defined(PIC32_PINGUINO_OTG) || defined(PIC32_PINGUINO) || defined(PIC32_PINGUINO_MICRO)  //dk MICRO added
 		#define SPIx 2		// default SPI port is 2 for 32MX440F256H which has only one SPI port
+	#elif defined(PIC32_PINGUINO_T795) //Olimex PIC32-T795 default on header
+		#define SPIx 3		// default SPI port is 2 for 32MX440F256H which has only one SPI port
 	#else
 		#define SPIx 1		// default SPI port is 1
 	#endif
@@ -83,13 +85,14 @@
 #endif
 
 //Only 795 boards have SPI3 and SPI4
-#if defined(UBW32_795) || defined(EMPEROR795)
+#if defined(UBW32_795) || defined(EMPEROR795) || defined(PIC32_PINGUINO_T795)
 	#if (SPIx == 3)
 		#define BUFFER		SPI3BUF
 		#define STATUS		SPI3STATbits.SPIROV	// Receive Overflow Flag bit
 		#define STATRX  	SPI3STATbits.SPIRBF	// receive buffer full
 		#define STATTX		SPI3STATbits.SPITBF	// transmit buffer full
 		#define SPICONF		SPI3CON
+		#define SPICONCLR	SPI3CONCLR
 		#define CLKSPD		SPI3BRG
 		#define INTFAULT	INT_SPI3_FAULT
 		#define INTTXDONE 	INT_SPI3_TRANSFER_DONE
@@ -102,6 +105,7 @@
 		#define STATRX  	SPI4STATbits.SPIRBF	// receive buffer full
 		#define STATTX		SPI4STATbits.SPITBF	// transmit buffer full
 		#define SPICONF		SPI4CON
+		#define SPICONCLR	SPI4CONCLR
 		#define CLKSPD		SPI4BRG
 		#define INTFAULT	INT_SPI4_FAULT
 		#define INTTXDONE 	INT_SPI4_TRANSFER_DONE
