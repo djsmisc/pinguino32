@@ -10,8 +10,6 @@
 // This example code is in the public domain.
 
 
-#include <Wire.h>
-
 void setup()
 {
   Wire.begin(100); // join i2c bus as a master at 100 KHz

@@ -89,31 +89,32 @@ void loop()
       {
         case 'i' :	/* fi - Mount the volume */
 
-          Serial.printf("\r\nPIC is online...\r\nInitializing SD-card.\r\n");
-          Serial.printf("\r\nAttempting to mount file system.\r\n");
+          Serial.printf("\r\Init. SD-card.\r\n");
+          Serial.printf("\r\nAttempting to mount fs.\r\n");
           FResult = SD.mount(&fs);
           if( FResult == FR_OK )
-            Serial.printf("\r\nSuccesful mounting filesystem.\r\n");
+            Serial.printf("\r\nSuccesful mounting.\r\n");
           else if(FResult == FR_DISK_ERR)
           {
-            Serial.printf("\r\nError while initiating SD-card; ");
+            Serial.printf("\r\nInit error; ");
             break;
           }
           else
           {
-            Serial.printf("\r\nError trying to mount filesystem; %c.\r\n",(FResult + 0x30));
+            Serial.printf("\r\nFs mounting error; %c.\r\n",(FResult + 0x30));
             break;
           }
           break;
-  
-        case 'l' :	/* fl [<path>] - Directory listing */
+
+        case 'l' :	// fl [<path>] - Directory listing.
           while (*ptr == ' ') ptr++;
 // do a directory listing and list all files on the SD-card
-          Serial.printf("\r\nDirectory and File listing\r\n");
+          Serial.printf("\r\nDir & File list\r\n");
 
           FResult = SD.list(ptr);
           break;
-        case 'o' : /* fo <filename> */
+
+        case 'o' : // fo <filename>
           while (*ptr == ' ') ptr++;
 
           Serial.printf("\r\nAttempting to open file %s.\r\n",ptr);
@@ -122,9 +123,10 @@ void loop()
           if( FResult == FR_OK )
             Serial.printf("\r\nSuccesful opening \r\n");
           else
-            Serial.printf("\r\nError trying to open file; %c.\r\n",(FResult + 0x30));
+            Serial.printf("\r\nOpen error; %c.\r\n",(FResult + 0x30));
           break;
-        case 'd' :	/* fd - Read the file 128 bytes and dump it */
+  
+        case 'd' :	// fd - Read the file 128 bytes and dump it.
 
 // read file and print it until it ends
           do
@@ -139,15 +141,15 @@ void loop()
             }
           else
           {
-            Serial.printf("\r\nError trying to read file; %c.\r\n",(FResult + 0x30));
+            Serial.printf("\r\nRead error; %c.\r\n",(FResult + 0x30));
             break;
           }
           } while( br == 32 );	// if the pf_Read reads less then 32 bytes the file has ended
           break;
-        case 'e' : /* fe <value>- Move file pointer */
+        case 'e' : // fe <value>- Move file pointer
           SD.lseek(0);
           break;
-        case 'w' :	/* fw <len> <value>- Write the file */
+        case 'w' :	// fw <len> <value>- Write the file
           while (*ptr == ' ') ptr++;
           na=0;
           while (*ptr != ' ') {alen[na++]= *ptr; ptr++;}
@@ -162,20 +164,21 @@ void loop()
       //the last cluster/sector is filled with NULL as much as necessary
           }
           else
-            Serial.printf("\r\nError trying to write file; %c.\r\n",(FResult + 0x30));
+            Serial.printf("\r\nWrite error; %c.\r\n",(FResult + 0x30));
           break;
 
-        case 'u' :	/* fu - unmount drive */
+        case 'u' :	// fu - unmount drive
 
         // unmount drive
-          Serial.printf("\r\nAttempting to UNmount file system.");
+          Serial.printf("\r\nAttempting to UNmount fs.");
 
           FResult = SD.mount(NULL); // = unmount
           if( FResult != FR_OK )
-            Serial.printf("\r\nError trying to UNmount filesystem; %c.\r\n",(FResult + 0x30));
+            Serial.printf("\r\nUNmount error; %c.\r\n",(FResult + 0x30));
           else
-            Serial.printf("\r\nFile system succesfully unmounted.\r\n");
+            Serial.printf("\r\nSuccesful unmount.\r\n");
           break;
+
     }
   }
 }
