@@ -128,36 +128,27 @@ u16 analogread(u8 channel)
     ------------------------------------------------------------------*/
 
 #ifdef ANALOGWRITE
+
 void analogwrite_init()
 {
     PR2 = 0xFF;                             // set PWM period to the max.
     T2CON = 0b00000100;                     // Timer2 on, prescaler is 1
 }
 
-void analogwrite(u8 pin, u16 duty)
+void analogwrite(u8 pin, u8 duty)
 {
     switch (pin)
     {
         case CCP1:
-            CCP1CON = 0b00001111;
-            CCPR1L = duty & 0xFF;           // 8 LSB
-            CCP1CON |= (duty >> 8) << 4;    // 2 MSB in <5:4>
+            CCP1CON = 0b00001100;
+            CCPR1L = duty;
             break;
 
         case CCP2:
-            CCP2CON = 0b00001111;
-            CCPR2L = duty & 0xFF;           // 8 LSB
-            CCP2CON |= (duty >> 8) << 4;    // 2 MSB
+            CCP2CON = 0b00001100;
+            CCPR2L = duty;
             break;
     }
-
-    CCP1CON = 0b00001111;
-    CCPR1L = duty & 0xFF;           // 8 LSB
-    CCP1CON |= (duty >> 8) << 4;    // 2 MSB in <5:4>
-
-    CCP2CON = 0b00001111;
-    CCPR2L = duty & 0xFF;           // 8 LSB
-    CCP2CON |= (duty >> 8) << 4;    // 2 MSB
 
     PIR1bits.TMR2IF = 0;
 }
