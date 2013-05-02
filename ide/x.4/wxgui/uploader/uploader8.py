@@ -466,19 +466,19 @@ class uploader8(baseUploader):
     def writeHex(self):
 # ------------------------------------------------------------------------------
 
-        self.txtWrite("\n")
+        self.txtWrite("")
 
         # check file to upload
         # ----------------------------------------------------------------------
 
         if self.filename == '':
-            self.txtWrite("No program to write\n")
+            self.txtWrite("No program to write")
             self.closeDevice()
             return
 
         fichier = open(self.filename, 'r')
         if fichier == "":
-            self.txtWrite("Unable to open %s\n" % self.filename)
+            self.txtWrite("Unable to open %s" % self.filename)
             return
         fichier.close()
 
@@ -487,16 +487,16 @@ class uploader8(baseUploader):
 
         self.device = self.getDevice()
         if self.device == self.ERR_DEVICE_NOT_FOUND:
-            self.txtWrite("Pinguino not found\n")
-            self.txtWrite("Is your device connected and/or in bootloader mode ?\n")
+            self.txtWrite("Pinguino not found")
+            self.txtWrite("Is your device connected and/or in bootloader mode ?")
             return
         else:
-            self.txtWrite("Pinguino found ...\n")
+            self.txtWrite("Pinguino found ...")
 
         self.handle = self.initDevice()
         if self.handle == self.ERR_USB_INIT1:
-            self.txtWrite("Upload not possible\n")
-            self.txtWrite("Try to restart the bootloader mode\n")
+            self.txtWrite("Upload not possible")
+            self.txtWrite("Try to restart the bootloader mode")
             return
 
         # find out the processor
@@ -505,9 +505,9 @@ class uploader8(baseUploader):
         device_id = self.getDeviceID()
         #print device_id
         proc = self.getDeviceName(device_id)
-        self.txtWrite(" - with PIC%s (id=%s)\n" % (proc, hex(device_id)))
+        self.txtWrite(" - with PIC%s (id=%s)" % (proc, hex(device_id)))
         if proc != self.board.proc:
-            self.txtWrite("Error: Program compiled for %s but device has %s\n" % (self.board.proc, proc))
+            self.txtWrite("Error: Program compiled for %s but device has %s" % (self.board.proc, proc))
             self.closeDevice()
             return
 
@@ -516,35 +516,35 @@ class uploader8(baseUploader):
 
         #product = handle.getString(device.iProduct, 30)
         #manufacturer = handle.getString(device.iManufacturer, 30)
-        self.txtWrite(" - with USB bootloader v%s\n" % self.getVersion())
+        self.txtWrite(" - with USB bootloader v%s" % self.getVersion())
 
         # start writing
         # ----------------------------------------------------------------------
 
-        self.txtWrite("Writing User Application ...\n")
+        self.txtWrite("Uploading user program ...")
         status = self.hexWrite(self.filename, self.board)
         
         status = self.hexWrite(self.filename, self.board)
         if status == self.ERR_HEX_RECORD:
-            self.txtWrite("Record error\n")
+            self.txtWrite("Record error")
             self.closeDevice()
             return
         elif status == self.ERR_HEX_CHECKSUM:
-            self.txtWrite("Checksum error\n")
+            self.txtWrite("Checksum error")
             self.closeDevice()
             return
         elif status == self.ERR_USB_ERASE:
-            self.txtWrite("Erase error\n")
+            self.txtWrite("Erase error")
             self.closeDevice()
             return
         elif status == self.ERR_NONE:
-            self.txtWrite(os.path.basename(self.filename) + " successfully uploaded\n")
+            self.txtWrite(os.path.basename(self.filename) + " successfully uploaded")
 
         # reset and start start user's app.
         # ----------------------------------------------------------------------
 
-            #self.txtWrite("Resetting ...\n")
-            self.txtWrite("Starting Application ...\n")
+            #self.txtWrite("Resetting ...")
+            self.txtWrite("Starting user program ...")
             try:
                 self.resetDevice()
             except:
@@ -554,6 +554,6 @@ class uploader8(baseUploader):
             #self.closeDevice()
             return
         else:
-            self.txtWrite("Unknown error\n")
+            self.txtWrite("Unknown error")
             return
 # ------------------------------------------------------------------------------
