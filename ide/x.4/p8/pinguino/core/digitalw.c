@@ -166,14 +166,14 @@ void digitalwrite(unsigned char pin, unsigned char state)
 {
     switch (port[pin])
     {
+        case pA: if (state) PORTA=PORTA | mask[pin];
+                else PORTA=PORTA & (255-mask[pin]);
+                break;
         case pB: if (state) PORTB=PORTB | mask[pin]; 
                 else PORTB=PORTB & (255-mask[pin]);
                 break;
         case pC: if (state) PORTC=PORTC | mask[pin];
                 else PORTC=PORTC & (255-mask[pin]);
-                break;
-        case pA: if (state) PORTA=PORTA | mask[pin];
-                else PORTA=PORTA & (255-mask[pin]);
                 break;
         #if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
         case pD: if (state) PORTD=PORTD | mask[pin]; 
@@ -206,13 +206,13 @@ unsigned char digitalread(unsigned char pin)
 {
     switch (port[pin])
     {
+        case pA: if ((PORTA & mask[pin])!=0) return (1);
+            else return (0);
+            break;
         case pB: if ((PORTB & mask[pin])!=0) return (1);
             else return (0);
             break;
         case pC: if ((PORTC & mask[pin])!=0) return (1);
-            else return (0);
-            break;
-        case pA: if ((PORTA & mask[pin])!=0) return (1);
             else return (0);
             break;
         #if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
@@ -236,7 +236,7 @@ unsigned char digitalread(unsigned char pin)
     
     pLAT = (__data unsigned char volatile *) (port[pin] + 0x0F89); // PORTx
     
-    if ( *pLAT & b )
+    if ( (*pLAT & b) != 0)
         return 1;               // bit is set
     else
         return 0;               // bit is not set
@@ -247,14 +247,14 @@ void pinmode(unsigned char pin, unsigned char state)
 {
     switch (port[pin])
     {
+        case pA: if (state) TRISA=TRISA | mask[pin];
+            else TRISA=TRISA & (255-mask[pin]);
+            break;
         case pB: if (state) TRISB=TRISB | mask[pin];
             else TRISB=TRISB & (255-mask[pin]);
             break;
         case pC: if (state) TRISC=TRISC | mask[pin];
             else TRISC=TRISC & (255-mask[pin]);
-            break;
-        case pA: if (state) TRISA=TRISA | mask[pin];
-            else TRISA=TRISA & (255-mask[pin]);
             break;
         #if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
         case pD: if (state) TRISD=TRISD | mask[pin];
@@ -287,10 +287,15 @@ void pinmode(unsigned char pin, unsigned char state)
 // *pLAT = content of PORTx
 void toggle(unsigned char pin)
 {
-    unsigned char val;
-    val = digitalread(pin);
-    digitalwrite(pin, val^1);
-
+    unsigned char state;
+    state = digitalread(pin);
+    digitalwrite(pin, state^1);
+/*
+    if (state)
+        digitalwrite(pin, 0);
+    else
+        digitalwrite(pin, 1);
+*/
     /*
     unsigned char  b = mask[pin];          // 1<<bit
 

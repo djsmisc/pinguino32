@@ -1,26 +1,27 @@
-System.getCpuFrequency SystemGetClock#include <oscillator.c>
-System.getPeripheralFrequency SystemGetPeripheralClock#include <oscillator.c>
-System.setCpuFrequency SystemSetIntOsc#include <oscillator.c>#define SYSTEMSETINTOSC
-System.setPeripheralFrequency SystemSetPeripheralFrequency#include <oscillator.c>#define SYSTEMSETPERIPHERALFREQUENCY
-System.setIntOsc SystemSetIntOsc#include <oscillator.c>#define SYSTEMSETINTOSC
-System.setExtOsc SystemSetExtOsc#include <oscillator.c>#define SYSTEMSETEXTOSC
-System.setTimerOsc SystemSetTimer1Osc#include <oscillator.c>#define SYSTEMSETTIMER1OSC
+System.getCpuFrequency System_getCpuFrequency#include <oscillator.c>
+System.getPeripheralFrequency System_getPeripheralFrequency#include <oscillator.c>
+System.setCpuFrequency System_setCpuFrequency#include <oscillator.c>#define SYSTEMSETCPUFREQUENCY
+System.setPeripheralFrequency System_setPeripheralFrequency#include <oscillator.c>#define SYSTEMSETPERIPHERALFREQUENCY
 
-System.unlock SystemUnlock#include <system.c>#define SYSTEMUNLOCK
-System.lock SystemLock#include <system.c>#define SYSTEMLOCK
-System.reset SystemReset#include <system.c>#define SYSTEMRESET
+System.setIntOsc System_setIntOsc#include <oscillator.c>#define SYSTEMSETINTOSC
+System.setExtOsc System_setExtOsc#include <oscillator.c>#define SYSTEMSETEXTOSC
+System.setTimerOsc System_setTimer1Osc#include <oscillator.c>#define SYSTEMSETTIMER1OSC
 
-System.watchdog SystemWatchdog#include <watchdog.c>#define SYSTEMWATCHDOG
-System.noWatchdog SystemNoWatchdog#include <watchdog.c>#define SYSTEMNOWATCHDOG
-System.clearWatchdog SystemClearWatchdog#include <watchdog.c>#define SYSTEMCLEARWATCHDOG
-System.deepWatchdog SystemDeepWatchdog#include <watchdog.c>#define SYSTEMDEEPWATCHDOG
-System.noDeepWatchdog SystemNoDeepWatchdog#include <watchdog.c>#define SYSTEMNODEEPWATCHDOG
-System.clearDeepWatchdog SystemClearDeepWatchdog#include <watchdog.c>#define SYSTEMCLEARDEEPWATCHDOG
+System.unlock System_unlock#include <system.c>#define SYSTEMUNLOCK
+System.lock System_lock#include <system.c>#define SYSTEMLOCK
+System.reset System_reset#include <system.c>#define SYSTEMRESET
 
-System.idle SystemIdle#include <lowpower.c>#define SYSTEMIDLE
-System.run SystemRun#include <lowpower.c>#define SYSTEMRUN
-System.sleep SystemSleep#include <lowpower.c>#define SYSTEMSLEEP
-System.lowPower SystemSleep#include <lowpower.c>#define SYSTEMSLEEP
-System.deepSleep SystemDeepSleep#include <lowpower.c>#define SYSTEMDEEPSLEEP
-System.ultraLowPower SystemDeepSleep#include <lowpower.c>#define SYSTEMDEEPSLEEP
-System.deepSleepWakeUp SystemDeepSleepWakeUp#include <lowpower.c>#define SYSTEMDEEPSLEEPWAKEUP
+System.watchdog System_watchdog#include <watchdog.c>#define SYSTEMWATCHDOG
+System.noWatchdog System_noWatchdog#include <watchdog.c>#define SYSTEMNOWATCHDOG
+System.clearWatchdog System_clearWatchdog#include <watchdog.c>#define SYSTEMCLEARWATCHDOG
+System.deepWatchdog System_deepWatchdog#include <watchdog.c>#define SYSTEMDEEPWATCHDOG
+System.noDeepWatchdog System_noDeepWatchdog#include <watchdog.c>#define SYSTEMNODEEPWATCHDOG
+System.clearDeepWatchdog System_clearDeepWatchdog#include <watchdog.c>#define SYSTEMCLEARDEEPWATCHDOG
+
+System.idle System_idle#include <lowpower.c>#define SYSTEMIDLE
+System.run System_run#include <lowpower.c>#define SYSTEMRUN
+System.sleep System_sleep#include <lowpower.c>#define SYSTEMSLEEP
+System.lowPower System_sleep#include <lowpower.c>#define SYSTEMSLEEP
+System.deepSleep SystemD_depSleep#include <lowpower.c>#define SYSTEMDEEPSLEEP
+System.ultraLowPower System_deepSleep#include <lowpower.c>#define SYSTEMDEEPSLEEP
+System.deepSleepWakeUp System_deepSleepWakeUp#include <lowpower.c>#define SYSTEMDEEPSLEEPWAKEUP
