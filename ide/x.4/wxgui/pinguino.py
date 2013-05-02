@@ -725,6 +725,8 @@ class Pinguino(framePinguinoX, IDE):
                     "--obanksel=9",\
                     "--optimize-cmp",\
                     "--optimize-df",\
+                    # don't want to link default crt0i.o but crt0i.c
+                    "--no-crt",\
                     # move all int. vectors after bootloader code
                     "--ivt-loc=" + str(board.memstart),\
                     # link memory map
@@ -744,6 +746,7 @@ class Pinguino(framePinguinoX, IDE):
                     'libc18f.lib',\
                     'libm18f.lib',\
                     # link the default run-time module (crt0i.o)
+                    # except when "-no-crt" option is used
                     'libsdcc.lib',\
                     #'-llibio' + board.proc + '.lib',\
                     #'-llibc18f.lib',\
