@@ -525,7 +525,7 @@ void SystemConfig(u32 cpuCoreFrequency)
 	GetCP0Count()
 	--------------------------------------------------------------------------*/
 
-u32 GetCP0Count()
+u32 MIPS32 GetCP0Count()
 {
 	//u32 count;
 	//asm("di"); // Disable all interrupts
@@ -539,7 +539,7 @@ u32 GetCP0Count()
 	SetCP0Count()
 	--------------------------------------------------------------------------*/
 
-void SetCP0Count(u32 count)
+void MIPS32 SetCP0Count(u32 count)
 {
 	//asm("di"); // Disable all interrupts
 	_CP0_SET_COUNT(count);

@@ -976,7 +976,7 @@ unsigned int IntGetInterruptVectorPriority(void)
 	function can be used in other routines to restore the system interrupt state.
 	--------------------------------------------------------------------------*/
 
-unsigned int IntDisableInterrupts()
+unsigned int MIPS32 IntDisableInterrupts()
 {
 	unsigned int intStatus;
 
@@ -996,7 +996,7 @@ unsigned int IntDisableInterrupts()
 	the system interrupt state.
 	--------------------------------------------------------------------------*/
 
-unsigned int IntEnableInterrupts()
+unsigned int MIPS32 IntEnableInterrupts()
 {
 	unsigned int intStatus;
 
@@ -1014,7 +1014,7 @@ unsigned int IntEnableInterrupts()
 		status      - the state of the CP0 register Status.IE
 	--------------------------------------------------------------------------*/
 
-void IntRestoreInterrupts(unsigned int intStatus)
+void MIPS32 IntRestoreInterrupts(unsigned int intStatus)
 {
 	_CP0_SET_STATUS(intStatus); // Update Status
 }
@@ -1031,7 +1031,7 @@ void IntRestoreInterrupts(unsigned int intStatus)
 	NB : EBASE at 0xBD000000 (microchip) or 0xBD005000 (jean-pierre mandon)
 	--------------------------------------------------------------------------*/
 
-void IntSetEBASE(unsigned int ebase_address)
+void MIPS32 IntSetEBASE(unsigned int ebase_address)
 {
 	_CP0_SET_EBASE(ebase_address);
 }
@@ -1049,7 +1049,7 @@ void IntSetEBASE(unsigned int ebase_address)
 	NB : Place EBASE at 0xBD000000 (microchip) or 0xBD005000 (jean-pierre mandon)
 	--------------------------------------------------------------------------*/
 
-void IntConfigureSystem(u8 mode)
+void MIPS32 IntConfigureSystem(u8 mode)
 {
 	unsigned int temp;
 

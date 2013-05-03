@@ -97,6 +97,16 @@ void IOsetRemap()
 	SystemUnlock();
 	CFGCONbits.IOLOCK=0;			// unlock configuration
 	CFGCONbits.PMDLOCK=0;
+	#ifdef __SERIAL__
+		U2RXRbits.U2RXR =0b0010;    // Define U2RX as RB1
+		RPB0Rbits.RPB0R =0b0010;    // Define U2TX as RB0 _
+		U1RXRbits.U1RXR =0b0100;	// Define U1RX as RB2 ( D10 )
+		RPB3Rbits.RPB3R =0b0001;	// Define U1TX as RB3 ( D9 )
+	#endif
+	#ifdef __SPI__
+		SDI1Rbits.SDI1R=1;			// Define SDI1 as RB5  [Overlap!]
+		RPA4Rbits.RPA4R=3;			// Define SDO1 as RA4  [Overlap!]
+	#endif
     #ifdef __PWM__
         RPB4Rbits.RPB4R =0b0101;    // PWM0 = OC1 = RB4
         RPA4Rbits.RPA4R =0b0110;    // PWM1 = OC4 = RA4
