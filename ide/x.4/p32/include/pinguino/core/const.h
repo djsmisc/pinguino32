@@ -252,7 +252,7 @@
 
 		// OLIMEX build-in buttons
 		#define USERBUTTON		2	//PORTDbits.RD0 = user button
-	#elif defined(__32MX220F032B__)
+	#elif defined(__32MX220F032B__)|| defined(__32MX250F128B__)
 		#define USERLED			0
 	#endif
 
