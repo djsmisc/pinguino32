@@ -254,6 +254,8 @@
 		#define USERBUTTON		2	//PORTDbits.RD0 = user button
 	#elif defined(__32MX220F032B__)|| defined(__32MX250F128B__)
 		#define USERLED			0
+	#elif defined(PIC32_PINGUINO_220)
+		#define	USERLED			13	// SCK2 // led1 green
 	#endif
 
 #endif /* __CONST_H */
