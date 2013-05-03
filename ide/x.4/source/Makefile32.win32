@@ -60,6 +60,17 @@ ifeq ($(BOARD),GENERIC32MX220F032)
 endif
 
 # ------------------------------------------------------------------------------
+# select MIPS16/MIPS32 option
+# ------------------------------------------------------------------------------
+#__MIPS16_ENABLE__	= true
+ifdef __MIPS16_ENABLE__
+	MIPS16_INTER = -minterlink-mips16
+	MIPS16_OPT   = -mips16
+endif
+
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # commands
 # ------------------------------------------------------------------------------
 
@@ -82,12 +93,13 @@ MV				=	@move
 #					-pedantic -Wall\
 #					-std=c99 
 
-CFLAGS		=	-fdollars-in-identifiers $(INCLUDEDIRS)
+CFLAGS		=	-fdollars-in-identifiers $(INCLUDEDIRS) -msoft-float -ffunction-sections -fdata-sections 
 
 LDFLAGS		=	$(LIBDIRS) $(LIBS)
 
-ELF_FLAGS	=	-EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc \
+ELF_FLAGS	=	-EL -Os -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc \
 				-msoft-float \
+				$(MIPS16_INTER)  \
 				-Wl,-L$(OBJDIR) \
 				-Wl,--defsym,_min_heap_size=$(HEAP_SIZE) \
 				-Wl,-Map=$(SRCDIR)\output.map \
@@ -111,7 +123,9 @@ copy:
 	$(CP) $(OBJDIR)\$(PROC).o $(OBJDIR)\processor.o > nul
 
 link:
-	$(CC) $(ELF_FLAGS) $(LDFLAGS) $(CFLAGS) -o $(SRCDIR)\main32.elf $(SRCDIR)\main32.c \
+	$(CC) $(ELF_FLAGS) $(LDFLAGS) $(CFLAGS) $(MIPS16_OPT) -c -o $(SRCDIR)\main32.o $(SRCDIR)\main32.c 
+	$(CC) $(ELF_FLAGS) $(LDFLAGS) $(CFLAGS) -o $(SRCDIR)\main32.elf  \
+		$(SRCDIR)\main32.o \
 		$(OBJDIR)\crt0.S \
 		$(OBJDIR)\processor.o \
 		$(OBJDIR)\usb\$(CDCLIBRARY) \
