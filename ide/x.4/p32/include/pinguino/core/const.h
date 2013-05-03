@@ -8,6 +8,8 @@
 #ifndef __CONST_H
 	#define __CONST_H
 
+	#define MIPS32	__attribute__((noinline,nomips16))
+
 	#ifndef PI
 		#define PI				3.1415926535897932384626433832795
 	#endif
@@ -250,7 +252,8 @@
 
 		// OLIMEX build-in buttons
 		#define USERBUTTON		2	//PORTDbits.RD0 = user button
-
+	#elif defined(__32MX220F032B__)
+		#define USERLED			0
 	#endif
 
 #endif /* __CONST_H */
