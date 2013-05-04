@@ -847,7 +847,7 @@ class Pinguino(framePinguinoX, IDE):
                 if address >= board.memstart:
                     codesize = codesize + byte_count
         fichier.close()
-        return "code size: " + str(codesize) + " / " + str(memfree) + " bytes" + " (" + str(100*codesize/memfree) + "% used)"
+        return _("code size: ") + str(codesize) + " / " + str(memfree) + " " + _("bytes") + " (" + str(100*codesize/memfree) + "% " +_("used")+ ")" 
 
 
 
