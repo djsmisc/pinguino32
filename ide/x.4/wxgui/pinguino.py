@@ -250,7 +250,8 @@ class Pinguino(framePinguinoX, IDE):
                 shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), filename+".hex")
                 self.displaymsg(_("compilation done"),0)
                 self.displaymsg(self.getCodeSize(filename, self.curBoard),0)
-                self.displaymsg(str(time.time() - t0) + " "+_("seconds process time"),0)
+                t = "%.1f" % ( time.time() - t0 )
+                self.displaymsg( t + " "+_("seconds process time"),0)
                 os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
                 #os.remove(filename+".c")
                 return True
