@@ -46,6 +46,7 @@ class CheckDependences:
         info = {
                 "system": platform.system(),
                 "dist": "\t" + " ".join(list(platform.dist())),
+                "win32_ver": "\t" + " ".join(list(platform.win32_ver())),
                 "processor": platform.processor(),
                 "release": platform.release(),
                 }

@@ -254,13 +254,13 @@ class Preferences():
         value = self.IDE.getElse("Source", "userfontinoutput", "False")
         self.checkBoxuseoutput.SetValue(value)
         
-        value = self.IDE.getElse("Tools", "files", "False")
+        value = self.IDE.getElse("Tools", "files", "True")
         self.checkBoxFiles.SetValue(value)
         
-        value = self.IDE.getElse("Tools", "documents", "False")
+        value = self.IDE.getElse("Tools", "documents", "True")
         self.checkBoxDocuments.SetValue(value)
         
-        value = self.IDE.getElse("Tools", "search", "False")
+        value = self.IDE.getElse("Tools", "search", "True")
         self.checkBoxSearch.SetValue(value)
         
         #value = self.IDE.getElse("IDE", "posOutput", "Bottom")

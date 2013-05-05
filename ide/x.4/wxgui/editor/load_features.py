@@ -65,6 +65,7 @@ class LoadFeatures:
         files_ = config.getElse("Tools", "files", "True")
         documents_ = config.getElse("Tools", "documents", "True")
         search_ = config.getElse("Tools", "search", "True")
+        config.saveConfig()
         
         tools_ = files_ == documents_ == search_ == False
         
