@@ -29,6 +29,9 @@ import wx
 import os
 import locale
 
+import subprocess
+from subprocess import Popen
+
 from events import Events
 from frames import menubarPinguino
 from constants import THEME_DIR
@@ -49,7 +52,7 @@ class IDE(Editor, General, Testing, Events):
         self.buildMenubar()
         self.BindEvents()
         self.loadFeatures()
-        self.SetTitle("Pinguino IDE")
+        self.SetTitle("Pinguino IDE" +  getRevisionNumber())
         if os.name == "posix": self.displaymsg(_("Welcome to Pinguino IDE"), 1)            
         self.buildToolbar()
         self.notebookEditor.Hide()
@@ -234,3 +237,25 @@ class IDE(Editor, General, Testing, Events):
     #----------------------------------------------------------------------
     def stopTimers(self):
         self.KillTimers = True
+
+# ------------------------------------------------------------------------------
+# Get SVN revision number
+# ------------------------------------------------------------------------------
+def getRevisionNumber():
+    rev =''
+    try:
+        rev_txt = os.path.join('extra','EasyPack-doc','revision.txt')
+        if os.path.exists(rev_txt):
+            rev = open(rev_txt).readline()
+        if os.path.exists(os.path.join('..','.svn')):
+            p = Popen(['svnversion', '-n'],stdout=subprocess.PIPE)
+            rev = p.stdout.readline().split(':')[-1]
+            while not rev.isdigit() and len(rev)>0:
+                rev = rev[0:-1]
+            if not rev.isdigit():
+                rev =''
+            else:
+                rev = " - Rev" + rev  
+    except:
+        pass
+    return rev
