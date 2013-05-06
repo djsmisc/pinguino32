@@ -247,15 +247,15 @@ def getRevisionNumber():
         rev_txt = os.path.join('extra','EasyPack-doc','revision.txt')
         if os.path.exists(rev_txt):
             rev = open(rev_txt).readline()
-        if os.path.exists(os.path.join('..','.svn')):
+        elif os.path.exists(os.path.join('..','.svn')):
             p = Popen(['svnversion', '-n'],stdout=subprocess.PIPE)
             rev = p.stdout.readline().split(':')[-1]
             while not rev.isdigit() and len(rev)>0:
                 rev = rev[0:-1]
-            if not rev.isdigit():
-                rev =''
-            else:
-                rev = " - Rev" + rev  
+        else:
+             raise
+        rev = " - Rev" + rev  
     except:
+        rev =''
         pass
     return rev
