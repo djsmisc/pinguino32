@@ -27,6 +27,7 @@
 import wx
 import os
 import codecs
+import locale
 from wxgui._trad import _
 from frames import frameStdout
 from constants import STDOUT_FILE
@@ -46,8 +47,11 @@ class Stdout():
     
     #----------------------------------------------------------------------
     def loadStdout(self):
+        # Need for local encoding info because Windows OS emits 
+        # its local multibyte strings when a system error occurs.
+        enc = locale.getpreferredencoding()     
         try:
-            file = codecs.open(STDOUT_FILE, "r", "utf8")
+            file = codecs.open(STDOUT_FILE, "r", enc)
             lines = "\n".join(file.readlines())
             file.close()
         except:
