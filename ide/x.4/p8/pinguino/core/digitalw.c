@@ -166,21 +166,21 @@ void digitalwrite(unsigned char pin, unsigned char state)
 {
     switch (port[pin])
     {
-        case pA: if (state) PORTA=PORTA | mask[pin];
-                else PORTA=PORTA & (255-mask[pin]);
+        case pA: if (state) LATA=LATA | mask[pin];
+                else LATA=LATA & (255-mask[pin]);
                 break;
-        case pB: if (state) PORTB=PORTB | mask[pin]; 
-                else PORTB=PORTB & (255-mask[pin]);
+        case pB: if (state) LATB=LATB | mask[pin]; 
+                else LATB=LATB & (255-mask[pin]);
                 break;
-        case pC: if (state) PORTC=PORTC | mask[pin];
-                else PORTC=PORTC & (255-mask[pin]);
+        case pC: if (state) LATC=LATC | mask[pin];
+                else LATC=LATC & (255-mask[pin]);
                 break;
         #if defined(PINGUINO4550) || defined(PICUNO_EQUO) 
-        case pD: if (state) PORTD=PORTD | mask[pin]; 
-                else PORTD=PORTD & (255-mask[pin]);
+        case pD: if (state) LATD=LATD | mask[pin]; 
+                else LATD=LATD & (255-mask[pin]);
                 break;
-        case pE: if (state) PORTE=PORTE | mask[pin]; 
-                else PORTE=PORTE & (255-mask[pin]);
+        case pE: if (state) LATE=LATE | mask[pin]; 
+                else LATE=LATE & (255-mask[pin]);
                 break;
         #endif
     }
