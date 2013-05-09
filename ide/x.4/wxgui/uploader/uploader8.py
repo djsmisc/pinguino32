@@ -495,7 +495,7 @@ class uploader8(baseUploader):
 
         self.handle = self.initDevice()
         if self.handle == self.ERR_USB_INIT1:
-            self.txtWrite("Upload not possible")
+            self.txtWrite("Upload (write) not possible")
             self.txtWrite("Try to restart the bootloader mode")
             return
 
@@ -521,7 +521,7 @@ class uploader8(baseUploader):
         # start writing
         # ----------------------------------------------------------------------
 
-        self.txtWrite("Uploading user program ...")
+        self.txtWrite("Uploading (writing) user program ...")
         status = self.hexWrite(self.filename, self.board)
         
         status = self.hexWrite(self.filename, self.board)
