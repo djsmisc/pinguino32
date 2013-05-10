@@ -524,7 +524,7 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
-                _cycles_ = SystemGetInstructionClock() / 1000 / 2;
+                _cycles_ = SystemGetInstructionClock() / 1000 ;
 				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
@@ -539,21 +539,22 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 				break;
 		}
 
+		T0CON = _t0con;
 		INTCON2bits.TMR0IP = INT_LOW_PRIORITY;
-		INTCONbits.TMR0IE = INT_ENABLE;
-		INTCONbits.TMR0IF = 0;
 		TMR0H = preloadH[INT_TMR0];
 		TMR0L = preloadL[INT_TMR0];
-		T0CON = _t0con;
+		INTCONbits.TMR0IF = 0;
+		T0CONbits.TMR0ON = 1;
+		INTCONbits.TMR0IE = INT_ENABLE;
 		return INT_TMR0;
 	}
-	#ifdef DEBUG
 	else
 	{
+	#ifdef DEBUG
 		debug("Error : interrupt TIMER0 is already used !");
-		return false;
-	}
 	#endif
+		return INT_USED;
+	}
 }
 #endif
 
@@ -575,8 +576,8 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 			case INT_MICROSEC:
 				// 1us = 1.000 ns = 12 cy
                 _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
-				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
-				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+				preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #else
@@ -586,8 +587,8 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 			case INT_MILLISEC:
 				// 1ms = 1.000.000ns = 12.000 cy
                 _cycles_ = SystemGetInstructionClock() / 1000;
-				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
-				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+				preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
                 #else
@@ -599,8 +600,8 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				// 12.000.000 / 8 = 1.500.000
 				// 1.500.000 / 25 = 60000
                 _cycles_ = SystemGetInstructionClock() / 8 / 25;
-				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
-				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+				preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
+				preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
 				intCountLimit[INT_TMR1] = delay * 25;
                 #if defined(__18f26j50) || defined(__18f46j50)
 				_t1con = T1_OFF | T1_16BIT | T1_PS_1_8 | T1_OSC_OFF | T1_SYNC_EXT_OFF | T1_SOURCE_INT;
@@ -609,22 +610,25 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
                 #endif
 				break;
 		}
-
+		#if defined(__18f26j50) || defined(__18f46j50)
+		T1GCONbits.TMR1GE = 0;				/* First Ignore T1DIG effection */ 
+	    #endif
+		T1CON = _t1con;
 		IPR1bits.TMR1IP = INT_LOW_PRIORITY;
-		PIE1bits.TMR1IE = INT_ENABLE;
-		PIR1bits.TMR1IF = 0;
 		TMR1H = preloadH[INT_TMR1];
 		TMR1L = preloadL[INT_TMR1];
-		T1CON = _t1con;
+		PIR1bits.TMR1IF = 0;
+		T1CONbits.TMR1ON=1;					/* Explicitly timer start */
+		PIE1bits.TMR1IE = INT_ENABLE;
 		return INT_TMR1;
 	}
-	#ifdef DEBUG
 	else
 	{
+	#ifdef DEBUG
 		debug("Error : interrupt TIMER1 is already used !");
-		return INT_TMR1;
-	}
 	#endif
+		return INT_USED;
+	}
 }
 
 void OnRTCC(callback func, u16 delay)
@@ -712,24 +716,26 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 				break;
 		}
 
-		IPR1bits.TMR2IP = INT_LOW_PRIORITY;
-		PIE1bits.TMR2IE = INT_ENABLE;
-		PIR1bits.TMR2IF = 0;
-		PR2 = _pr2;	// Timer2 Match value
 		T2CON = _t2con;
+		PR2 = _pr2;	// Timer2 Match value
+		IPR1bits.TMR2IP = INT_LOW_PRIORITY;
+		PIR1bits.TMR2IF = 0;
+		T2CONbits.TMR2ON = 1;
+		PIE1bits.TMR2IE = INT_ENABLE;
 		return INT_TMR2;
 	}
-	#ifdef DEBUG
 	else
 	{
+	#ifdef DEBUG
 		debug("Error : interrupt TIMER2 is already used !");
-		return INT_TMR2;
-	}
 	#endif
+		return INT_USED;
+	}
 }
 #endif
 
 #ifdef TMR3INT
+/* Note: This function needs T1OSC as its clock source */
 u8 OnTimer3(callback func, u8 timediv, u16 delay)
 {
 	u8 _t3con = 0;
@@ -782,21 +788,22 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				break;
 		}
 
+		T3CON = _t3con;
 		IPR2bits.TMR3IP = INT_LOW_PRIORITY;
-		PIE2bits.TMR3IE = INT_ENABLE;
-		PIR2bits.TMR3IF = 0;
 		TMR3H = preloadH[INT_TMR3];
 		TMR3L = preloadL[INT_TMR3];
-		T3CON = _t3con;
+		PIR2bits.TMR3IF = 0;
+		T3CONbits.TMR3ON = 1;
+		PIE2bits.TMR3IE = INT_ENABLE;
 		return INT_TMR3;
 	}
-	#ifdef DEBUG
 	else
 	{
+	#ifdef DEBUG
 		debug("Error : interrupt TIMER3 is already used !");
-		return INT_TMR3;
-	}
 	#endif
+		return INT_USED;
+	}
 }
 #endif
 
@@ -837,20 +844,21 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
 				break;
 		}
 
-		IPR3bits.TMR4IP = INT_LOW_PRIORITY;
-		PIE3bits.TMR4IE = INT_ENABLE;
-		PIR3bits.TMR4IF = 0;
-		PR4 = _pr4;	// Timer2 Match value
 		T4CON = _t4con;
+		IPR3bits.TMR4IP = INT_LOW_PRIORITY;
+		PR4 = _pr4;	// Timer2 Match value
+		PIR3bits.TMR4IF = 0;
+		T4CONbits.TMR4ON = 1;
+		PIE3bits.TMR4IE = INT_ENABLE;
 		return INT_TMR4;
 	}
-	#ifdef DEBUG
 	else
 	{
+	#ifdef DEBUG
 		debug("Error : interrupt TIMER4 is already used !");
-		return INT_TMR4;
-	}
 	#endif /* DEBUG */
+		return INT_USED;
+	}
 }
 #else
 #error "Your processor don't have any Timer4."
