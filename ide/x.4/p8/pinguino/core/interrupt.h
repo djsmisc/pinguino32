@@ -35,7 +35,7 @@
 	#define INT_RISING_EDGE		1			// Interrupt on rising edge
 	#define INT_FALLING_EDGE	0			// Interrupt on falling edge
 	#define INT_NOT_USED		0
-	#define INT_USED			1
+	#define INT_USED			0xFF
 	#define INT_MICROSEC		1
 	#define INT_MILLISEC		2
 	#define INT_SEC				3
