@@ -38,22 +38,29 @@
 #define CRYSTAL 8000000L
 #endif
 
+u32 _cpu_clock_;
+
 // The indices are valid values for PLLDIV
 //static const u8 plldiv[] = { 12, 10, 6, 5, 4, 3, 2, 1 };
-
-// The indices are valid values for CPDIV
-static const u8 cpudiv[] = { 6, 3, 2, 1 };
 
 // The indices are valid values for IRCF
 #if defined(__18f14k22) || \
     defined(__18f25k50) || defined(__18f45k50)
-
+// The indices are valid values for CPDIV
+static const u8 cpudiv[] = { 6, 3, 2, 1 };	/* TODO */
+static const u8 cpudiv_xtal[] = { 1, 1, 1, 1 };
 static const u32 ircf[] = { 31250, 250000, 500000, 1000000, 2000000, 4000000, 8000000, 16000000 };
 
 #elif   defined(__18f2455)  || defined(__18f4455)  || \
-        defined(__18f2550)  || defined(__18f4550)  || \
-        defined(__18f26j50) || defined(__18f46j50)
+        defined(__18f2550)  || defined(__18f4550)   
+// The indices are valid values for CPDIV
+static const u8 cpudiv[] = { 2, 3, 4, 6 };
+static const u8 cpudiv_xtal[] = { 1, 2, 3, 4 };
+static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 4000000, 8000000 };
 
+#elif   defined(__18f26j50) || defined(__18f46j50)
+// The indices are valid values for CPDIV
+static const u8 cpudiv[] = { 6, 3, 2, 1 };
 static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 4000000, 8000000 };
 
 #endif
@@ -150,38 +157,49 @@ static u16 System_readFlashMemory(u32 address)
 
 u32 System_getCpuFrequency() 
 {
-    u8 CPUDIV;
+    u8 CPUDIV,CPUDIV_XTAL,fosc;
 
     switch (OSCCONbits.SCS)
     {
         case 0: // primary osc. (internal or external / CPUDIV)
 
+            #if defined(__18f25k50) || defined(__18f45k50)
+            if (OSCCON2bits.PLLEN){
+                return 64000000L;
+            } 
+			else{
+                return CRYSTAL;
+            }
+            #endif
             // CPUDIV ?
-            #if defined(__18f25k50) || defined(__18f45k50) || \
-                defined(__18f2455)  || defined(__18f4455)  || \
+            #if defined(__18f2455)  || defined(__18f4455)  || \
                 defined(__18f2550)  || defined(__18f4550)
-            CPUDIV  = System_readFlashMemory(__CONFIG1L) & 0b00011000;
+            CPUDIV  = ( System_readFlashMemory(__CONFIG1L) & 0b00011000 ) >> 3;
+			CPUDIV_XTAL = cpudiv_xtal[CPUDIV];
+            fosc  = System_readFlashMemory(__CONFIG1H) & 0b00001111;
             #else
             CPUDIV  = System_readFlashMemory(__CONFIG1H) & 0b00000011;
             #endif
             CPUDIV = cpudiv[CPUDIV];
             
             // PLL ?
-            #if defined(__18f25k50) || defined(__18f45k50)
-            if (OSCCON2bits.PLLEN)
-            #elif defined(__18f2455) || defined(__18f4455) || \
+            #if defined(__18f2455) || defined(__18f4455) || \
                   defined(__18f2550) || defined(__18f4550)
-            if (1)          // No PLLEN bit
-            #else
-            if (OSCTUNEbits.PLLEN)
-            #endif
-            {
-                return 48000000L / CPUDIV;
+			fosc >>=1;
+            if( (fosc==0) || (fosc==2) || (fosc==6) ){
+                return CRYSTAL / CPUDIV_XTAL;
             }
-            else
-            {
+            else{
+                return 96000000UL / CPUDIV;
+            }
+            #elif defined(__18f26j50) || defined(__18f46j50)
+            if (OSCTUNEbits.PLLEN) {
+                return 48000000L / CPUDIV;
+            } 
+			else{
                 return CRYSTAL / CPUDIV;
             }
+            #endif
             
         case 1: // secondary osc. (timer 1, most of the time 32768 Hz)
             return 32768;
@@ -197,7 +215,7 @@ u32 System_getCpuFrequency()
     On PIC18F, Peripheral Freq. = CPU. Freq. / 4
     TODO : replace with #define
     --------------------------------------------------------------------------*/
-
+#define SystemGetInstructionClock()		System_getPeripheralFrequency()	
 u32 System_getPeripheralFrequency() 
 {
     return System_getCpuFrequency() >> 2;
@@ -217,10 +235,14 @@ u32 System_getPeripheralFrequency()
 void System_setIntOsc(u8 speed)
 {
     u8 flag=0;
+    u8 _save_gie;
     
     #if defined(__18f26j50) || defined(__18f46j50)
     u16 pll_startup_counter = 600;
     #endif
+
+    _save_gie = INTCONbits.GIE;
+	INTCONbits.GIE = 0;
 
     OSCCONbits.SCS  = 0b11;     // Select Internal Osc.
     
@@ -236,21 +258,30 @@ void System_setIntOsc(u8 speed)
     #endif
 
     #if defined(__18f14k22)
-    if (speed == _64MHZ_) {_cpu_clock_ = 64000000; flag = 1; OSCTUNEbits.PLLEN = 1; }
-    #endif
-
-    #if defined(__18f26j50) || defined(__18f46j50)
-    if (speed == _48MHZ_)
-    {
+    if (speed == _64MHZ_) {
+		cpu_clock_ = 64000000; 
+		flag = 1; 
+        OSCTUNEbits.PLLEN = 1;
+        // Enable the PLL and wait 2+ms until the PLL locks
+        while (pll_startup_counter--);
+		OSCCONbits.SCS  = 0b00; // Select PLL.
+    }
+    #elif defined(__18f26j50) || defined(__18f46j50)
+    if (speed == _48MHZ_) {
         _cpu_clock_ = 48000000;
         OSCTUNEbits.PLLEN = 1;
         // Enable the PLL and wait 2+ms until the PLL locks
         while (pll_startup_counter--);
+		OSCCONbits.SCS  = 0b00; // Select PLL.
     }
-    #endif
-
-    #if defined(__18f14k22)
-    if (speed == _32MHZ_) {_cpu_clock_ = 32000000; OSCTUNEbits.PLLEN = 1; }
+    #elif defined(__18f14k22)
+    if (speed == _32MHZ_) {
+		_cpu_clock_ = 32000000; 
+        OSCTUNEbits.PLLEN = 1;
+        // Enable the PLL and wait 2+ms until the PLL locks
+        while (pll_startup_counter--);
+		OSCCONbits.SCS  = 0b00; // Select PLL.
+    }
     #endif
 
     #if defined(__18f14k22) || defined(__18f25k50) || defined(__18f45k50)
@@ -278,6 +309,9 @@ void System_setIntOsc(u8 speed)
     #if defined(__18f25k50) || defined(__18f45k50)
     while (!OSCCONbits.HFIOFS); // wait INTOSC frequency is stable (HFIOFS=1) 
     #endif
+
+	updateMillisReloadValue();
+	INTCONbits.GIE = _save_gie;
 }
 
 #ifdef SYSTEMSETPERIPHERALFREQUENCY
