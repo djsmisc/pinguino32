@@ -73,7 +73,7 @@ void CDC_init(void)
 // CDC.write
 void CDCwrite(u8 c)
 {
-    CDCputs(c, 1);
+    CDCputs(&c, 1);
 }
 
 // CDC.printf
