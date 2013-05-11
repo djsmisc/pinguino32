@@ -248,6 +248,76 @@
 
 // boot4 : ENTRY + 0x08
 // noboot: 0x08
+#define NAKED_ISR
+#ifdef NAKED_ISR
+void high_priority_isr_body(void)	__naked
+{
+	/* TBLPTR and TABLAT register have to be saved */
+	__asm
+		MOVFF	TBLPTRL, POSTDEC1
+		MOVFF	TBLPTRH, POSTDEC1
+		MOVFF	TBLPTRU, POSTDEC1
+		MOVFF	TABLAT,	 POSTDEC1
+		MOVFF	FSR2L,   POSTDEC1
+    #ifdef __USBCDC
+    call _CDC_interrupt
+    #endif
+    
+    #if defined(__USBBULK)
+    call _bulk_interrupt
+    #endif
+
+    #ifdef __USB__
+    call _usb_interrupt
+    #endif
+
+    #ifdef __SERIAL__
+    call _serial_interrupt
+    #endif
+
+    #ifdef __MILLIS__
+    call _millis_interrupt
+    #endif
+
+    #ifdef I2CINT
+    call _I2C_interrupt
+    #endif
+
+    #ifdef SERVOSLIBRARY
+    call _servos_interrupt
+    #endif
+
+    #ifdef INT0INT
+    call _userhighinterrupt
+    #endif
+
+    #ifdef __PS2KEYB__
+    call _keyboard_interrupt
+    #endif
+
+    #ifdef __DCF77__
+    call _dcf77_interrupt
+    #endif
+
+    #ifdef RTCCALARMINTENABLE
+    call _rtcc_interrupt
+    #endif
+		MOVFF	PREINC1, FSR2L
+		MOVFF	PREINC1, TABLAT
+		MOVFF	PREINC1, TBLPTRU
+		MOVFF	PREINC1, TBLPTRH
+		MOVFF	PREINC1, TBLPTRL
+
+		RETURN
+	__endasm;
+}
+
+void high_priority_isr(void)	__interrupt 1
+{
+	high_priority_isr_body();
+}
+
+#else
 void high_priority_isr(void) __interrupt 1
 {
     #ifdef __USBCDC
@@ -296,6 +366,7 @@ void high_priority_isr(void) __interrupt 1
 }
 
 #endif
+#endif
 
 /*  ----------------------------------------------------------------------------
     Low Interrupt Vector
@@ -309,6 +380,42 @@ void high_priority_isr(void) __interrupt 1
 
 // boot4 : ENTRY + 0x18
 // noboot: 0x18
+#ifdef NAKED_ISR
+void low_priority_isr_body(void) __naked
+{
+	/* TBLPTR and TABLAT register have to be saved */
+	__asm
+		MOVFF	TBLPTRL, POSTDEC1
+		MOVFF	TBLPTRH, POSTDEC1
+		MOVFF	TBLPTRU, POSTDEC1
+		MOVFF	TABLAT,	 POSTDEC1
+
+
+        #ifdef USERINT
+		call _userinterrupt
+        #endif
+
+        #ifdef ON_EVENT
+		call _userlowinterrupt
+        #endif
+
+
+		MOVFF	PREINC1, TABLAT
+		MOVFF	PREINC1, TBLPTRU
+		MOVFF	PREINC1, TBLPTRH
+		MOVFF	PREINC1, TBLPTRL
+
+		RETURN
+		__endasm;
+}
+
+void low_priority_isr(void) __interrupt 2
+{
+
+	low_priority_isr_body();
+
+}
+#else
 void low_priority_isr(void) __interrupt 2
 {
     #ifdef USERINT
@@ -320,6 +427,7 @@ void low_priority_isr(void) __interrupt 2
     #endif
 }
 
+#endif
 #endif
 
 /*  ----------------------------------------------------------------------------
