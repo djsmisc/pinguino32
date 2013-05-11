@@ -258,7 +258,7 @@ void high_priority_isr_body(void)	__naked
 		MOVFF	TBLPTRH, POSTDEC1
 		MOVFF	TBLPTRU, POSTDEC1
 		MOVFF	TABLAT,	 POSTDEC1
-		MOVFF	FSR2L,   POSTDEC1
+		
     #ifdef __USBCDC
     call _CDC_interrupt
     #endif
@@ -302,7 +302,6 @@ void high_priority_isr_body(void)	__naked
     #ifdef RTCCALARMINTENABLE
     call _rtcc_interrupt
     #endif
-		MOVFF	PREINC1, FSR2L
 		MOVFF	PREINC1, TABLAT
 		MOVFF	PREINC1, TBLPTRU
 		MOVFF	PREINC1, TBLPTRH
