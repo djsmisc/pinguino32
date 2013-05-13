@@ -544,7 +544,6 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 		TMR0H = preloadH[INT_TMR0];
 		TMR0L = preloadL[INT_TMR0];
 		INTCONbits.TMR0IF = 0;
-		T0CONbits.TMR0ON = 1;
 		INTCONbits.TMR0IE = INT_ENABLE;
 		return INT_TMR0;
 	}
@@ -618,7 +617,6 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 		TMR1H = preloadH[INT_TMR1];
 		TMR1L = preloadL[INT_TMR1];
 		PIR1bits.TMR1IF = 0;
-		T1CONbits.TMR1ON=1;					/* Explicitly timer start */
 		PIE1bits.TMR1IE = INT_ENABLE;
 		return INT_TMR1;
 	}
@@ -720,7 +718,6 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 		PR2 = _pr2;	// Timer2 Match value
 		IPR1bits.TMR2IP = INT_LOW_PRIORITY;
 		PIR1bits.TMR2IF = 0;
-		T2CONbits.TMR2ON = 1;
 		PIE1bits.TMR2IE = INT_ENABLE;
 		return INT_TMR2;
 	}
@@ -793,7 +790,6 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 		TMR3H = preloadH[INT_TMR3];
 		TMR3L = preloadL[INT_TMR3];
 		PIR2bits.TMR3IF = 0;
-		T3CONbits.TMR3ON = 1;
 		PIE2bits.TMR3IE = INT_ENABLE;
 		return INT_TMR3;
 	}
@@ -848,7 +844,6 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
 		IPR3bits.TMR4IP = INT_LOW_PRIORITY;
 		PR4 = _pr4;	// Timer2 Match value
 		PIR3bits.TMR4IF = 0;
-		T4CONbits.TMR4ON = 1;
 		PIE3bits.TMR4IE = INT_ENABLE;
 		return INT_TMR4;
 	}
