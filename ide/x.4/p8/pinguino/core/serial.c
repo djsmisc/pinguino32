@@ -217,9 +217,11 @@ unsigned char serial_read()
 
 	if (serial_available())
     {
+		PIE1bits.RCIE=0;             // Atomic operation start
 	    caractere=rx[rpointer++];
 	    if (rpointer==RXBUFFERLENGTH)
 		rpointer=1;
+		PIE1bits.RCIE=1;             // Atomic operation end
     }
 	return(caractere);
 }
