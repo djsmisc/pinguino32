@@ -70,7 +70,8 @@ void serial_begin(unsigned long baudrate)
 	unsigned long spbrg;
 	unsigned char highbyte,lowbyte;
 
-    spbrg=(48000000/(4*baudrate))-1;
+    spbrg=(System_getCpuFrequency()/(4*baudrate))-1;
+    //spbrg=(48000000/(4*baudrate))-1;
 //    spbrg=(SystemGetClock()/(4*baudrate))-1;
 //    spbrg=(_cpu_clock_/(4*baudrate))-1;
 
@@ -103,6 +104,8 @@ void serial_begin(unsigned long baudrate)
     IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 
 #elif defined(__18f26j50) || defined(__18f46j50)
+	TRISCbits.TRISC6	= 0;					/* Tx1	*/
+	TRISCbits.TRISC7	= 1;					/* Rx1	*/
 	TXSTA1bits.BRGH=1;               	  	// set BRGH bit
 	BAUDCON1bits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH1=highbyte;                       // set UART speed SPBRGH
