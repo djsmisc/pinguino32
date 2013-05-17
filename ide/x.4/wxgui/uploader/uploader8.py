@@ -416,7 +416,7 @@ class uploader8(baseUploader):
         # erase memory from self.board.memstart to max_address 
         # ----------------------------------------------------------------------
 
-        # Pinguino x6j50
+        # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
         if "j" in board.proc :
             #print board.proc
             numBlocksMax  = 1 + ((self.board.memend - self.board.memstart) / 1024)
@@ -428,19 +428,29 @@ class uploader8(baseUploader):
 
             self.eraseFlash(self.board.memstart, numBlocks1024)
 
-        # Pinguino x550 or Pinguino x5k50
+        # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
         else:
-            numBlocks64 = 1 + ((max_address - self.board.memstart) / 64)
+            self.txtWrite("max_address = "+str(max_address))
+            memoryspace = max_address - self.board.memstart
+            numBlocks64 = (memoryspace / 64)
+            
+            # max_address is a multiple of DATABLOCKSIZE
+            if (memoryspace % 64) != 0:
+                numBlocks64 = numBlocks64 + 1
+
             if numBlocks64 > 511:
                 return self.ERR_USB_ERASE
+
             if numBlocks64 < 256:
                 self.eraseFlash(self.board.memstart, numBlocks64)
+
             else:
-                # erase flash memory from self.board.memstart to self.board.memstart + 0x4000
+                # erase flash memory
+                # from self.board.memstart to self.board.memstart + 255 x 64 = 0x3FC0
                 self.eraseFlash(self.board.memstart, 255)
-                # erase flash memory from self.board.memstart + 0x4000 to max_address
-                numBlocks64 = numBlocks64 - 255
-                self.eraseFlash(self.board.memstart + 0x4000, numBlocks64)
+                # erase flash memory from self.board.memstart + 0x3FC0 to max_address
+                numBlocks64 = numBlocks64 - 256
+                self.eraseFlash(self.board.memstart + 0x3FC0, numBlocks64)
 
         # write blocks of DATABLOCKSIZE bytes
         # ----------------------------------------------------------------------
