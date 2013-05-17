@@ -15,7 +15,7 @@
 #include <pic18fregs.h>
 #include <typedef.h>
 #include <spi.h>
-#include <digitalw.c>
+//#include <digitalw.c>
 
 u8 this_mode = SPI_MODE1;
 u8 this_clock = SPI_CLOCK_DIV4;
@@ -70,14 +70,14 @@ void SPI_init()
 	SSPCON1 = (SSPCON1 & 0xF7) | this_clock;
 
 	if (this_clock <= SPI_CLOCK_TIMER2)
-		pinmode(SCKPIN, OUTPUT);
+		SCKPIN = OUTPUT;
 	else
-		pinmode(SCKPIN, INPUT);
+		SCKPIN = INPUT;
 		
-	pinmode(SDIPIN, INPUT);
-	pinmode(SDOPIN, OUTPUT);
+	SDIPIN = INPUT;
+	SDOPIN = OUTPUT;
 	if (this_role == SPI_SLAVE_SS)
-		pinmode(SSPIN, INPUT);
+		SSPIN = INPUT;
 
 	SSPCON1bits.SSPEN = 1;
 }
