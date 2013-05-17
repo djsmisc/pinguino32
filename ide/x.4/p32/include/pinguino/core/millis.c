@@ -36,6 +36,8 @@
  * must be declared as "volatile" to prevent caching.
  */
 volatile u32 _millis;
+volatile u32 _micros;
+
 #if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 volatile u32 _tmr2;
 volatile u32 _tmr2_upd;
@@ -78,6 +80,7 @@ u32 micros()
         // The code for the 220 has not been tested!
        // return 1000*_millis + (1000*(65535-TMR2))/_tmr2; // Tested but gives more microsseconds
        _micros = 1000*_millis + (1000*(TMR2 - _tmr2))/_tmr2; // working good micros()
+       return _micros;
     #else
         return 1000*_millis + (1000*TMR2)/PR2;
     #endif
