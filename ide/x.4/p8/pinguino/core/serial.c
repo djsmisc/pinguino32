@@ -91,6 +91,7 @@ void serial_begin(unsigned long baudrate)
 
 #elif defined(__18f2550) || defined(__18f4550) || \
       defined(__18f25k50) || defined(__18f45k50)
+	TRISCbits.TRISC7	= 1;					/* Rx1	set input */
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
 	BAUDCONbits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH=highbyte;                        // set UART speed SPBRGH
@@ -104,8 +105,7 @@ void serial_begin(unsigned long baudrate)
     IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 
 #elif defined(__18f26j50) || defined(__18f46j50)
-	TRISCbits.TRISC6	= 0;					/* Tx1	*/
-	TRISCbits.TRISC7	= 1;					/* Rx1	*/
+	TRISCbits.TRISC7	= 1;					/* Rx1	set input */
 	TXSTA1bits.BRGH=1;               	  	// set BRGH bit
 	BAUDCON1bits.BRG16=1;					// set 16 bits SPBRG
 	SPBRGH1=highbyte;                       // set UART speed SPBRGH
@@ -134,7 +134,7 @@ void serial_begin(unsigned long baudrate)
     INTCONbits.GIEL = 1;                    // Enable global LP interrupts
  	INTCONbits.PEIE = 1;                    // Enable peripheral interrupts
 
-    Delayms(1000);                           // AG : 12-11-2012
+    //Delayms(1000);                           // AG : 12-11-2012
 }
 
 // new character receive ?
@@ -331,7 +331,8 @@ u8 serial_getkey()
 #if defined(__SERIAL_GETSTRING__)
 u8 * serial_getstring()
 {
-	u8 buffer[80];
+	static u8 buffer[80]; // Need static attribute, because a function can not return local array without
+	                      // static attribute.
 	u8 c;
 	u8 i = 0;
 
