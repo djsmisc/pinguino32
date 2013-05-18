@@ -41,7 +41,35 @@
 void IO_init(void)
 {
     // Initialize everything as an output
-    TRISA = 0x00;
+    
+    // Set everything low
+    LATA  = 0x00;
+    LATB  = 0x00;
+	#if defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f27j53) || defined(__18f47j53)
+	    #ifdef __SERIAL__
+		LATC  = 0x44;	// Except UART TX,TX2 bit (maintain high state to not emit extra low state) 
+		#else
+		LATC  = 0x00;	
+	    #endif
+	#endif
+	#if defined(__18f2550) || defined(__18f4550) || \
+      defined(__18f25k50) || defined(__18f45k50)
+	    #ifdef __SERIAL__
+		LATC  = 0x40;	// Except UART TX bit (maintain high state to not emit extra low state) 
+		#else
+		LATC  = 0x40;	
+	    #endif
+	#endif
+
+    #if defined(__18f4455)  || defined(__18f4550)  || \
+        defined(__18f45k50) || defined(__18f46j50) || \
+        defined(__18f47j53)
+    LATD  = 0x00; 
+    LATE  = 0x00; 
+    #endif
+
+	TRISA = 0x00;
     TRISB = 0x00;
     TRISC = 0x00;
     #if defined(__18f4455)  || defined(__18f4550)  || \
@@ -51,17 +79,7 @@ void IO_init(void)
     TRISE = 0x00; 
     #endif
 
-    // Set everything low
-    LATA  = 0x00;
-    LATB  = 0x00;
-    LATC  = 0x00;
-    #if defined(__18f4455)  || defined(__18f4550)  || \
-        defined(__18f45k50) || defined(__18f46j50) || \
-        defined(__18f47j53)
-    LATD  = 0x00; 
-    LATE  = 0x00; 
-    #endif
-
+#if 0	// This seems to not necessary. by avrin
     // Set everything low
     PORTA  = 0x00;
     PORTB  = 0x00;
@@ -72,6 +90,7 @@ void IO_init(void)
     PORTD  = 0x00; 
     PORTE  = 0x00; 
     #endif
+#endif
 }
 
 // All Analog Pins as Digital IOs
