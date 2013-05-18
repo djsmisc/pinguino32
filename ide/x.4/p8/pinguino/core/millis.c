@@ -18,7 +18,7 @@ volatile u32 _reload_val;
 
 void updateMillisReloadValue(void )   /* Call from System_setIntOsc() */
 {
-	/* Atomic oparation */
+	/* Atomic operation */
     INTCONbits.TMR0IE = INT_DISABLE;
 	_reload_val = 0xFFFF - System_getPeripheralFrequency() / 1000 ;
     INTCONbits.TMR0IE = INT_ENABLE;
@@ -56,7 +56,7 @@ void millis_init(void)
 u32 millis()
 {
 	u32 temp;
-	/* Atomic opration for multibyte value */
+	/* Atomic operation for multibyte value */
     INTCONbits.TMR0IE = INT_DISABLE;
 	temp = _millis;
     INTCONbits.TMR0IE = INT_ENABLE;
