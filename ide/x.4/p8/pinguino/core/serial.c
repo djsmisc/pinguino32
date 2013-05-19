@@ -252,6 +252,21 @@ void serial_printf(char *fmt, ...)
 	--------------------------------------------------------------------------*/
 
 #if defined(__SERIAL_PRINT__) || defined(__SERIAL_PRINTLN__)
+#	define serial_print(m,type)		{ serial_print_##type(m);  }
+#	define serial_println(m,type)	{ serial_print_##type(m);  serial_printf("\r\n"); }
+void serial_print_FLOAT(float m){ serial_printf("%f",m); }
+void serial_print_DEC(u16 m)    { serial_printf("%d",m); }
+void serial_print_HEX(u16 m)    { serial_printf("%x",m); }
+void serial_print_BYTE(u16 m)   { serial_printf("%d",m); }
+void serial_print_OCT(u16 m)    { serial_printf("%o",m); }
+void serial_print_BIN(u16 m)    { serial_printf("%b",m); }
+#endif
+
+/* serial_print() function can not correctly support serial_print("some string") aka Serial.print("some string").
+ * In case serial_print("some string"), va_arg(args, u32) will return a unexpected invalid value. 
+ * by avrin */
+
+#if 0
 //void serial_print(char *fmt,...)
 void serial_print(const char *fmt,...)
 {
@@ -298,7 +313,7 @@ void serial_print(const char *fmt,...)
 	a carriage return character (ASCII 13, or '\r') and a newline character
 	(ASCII 10, or '\n').
 	--------------------------------------------------------------------------*/
-
+#if 0
 #if defined(__SERIAL_PRINTLN__)
 void serial_println(char *fmt,...)
 {
@@ -306,6 +321,7 @@ void serial_println(char *fmt,...)
 	serial_printf("\n\r");
 }
 #endif /* __SERIAL_PRINTLN__ */
+#endif
 
 /*	----------------------------------------------------------------------------
 	serial_getkey()
