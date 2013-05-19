@@ -108,9 +108,11 @@ _startup (void) __naked
     bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
     bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
 
-  /* cleanup the RAM */
+  /* cleanup the RAM 
+	 Data RAM area is 0x000 - 0xEBF */
     ; Load FSR0 with top of RAM.
-    setf    _FSR0L, a
+    movlw   0xbf
+    movwf   _FSR0L, a
     movlw   0x0e
     movwf   _FSR0H, a
 
