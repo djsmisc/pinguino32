@@ -91,8 +91,20 @@ void CDCprintf(const u8 *fmt, ...)
 }
 
 // CDC.print
-// last is a string (char *) or an integer
+#	define CDCprint(m,type)		{ CDCprint_##type(m);  }
+#	define CDCPrintln(m,type)	{ CDCprint_##type(m);  CDCprintf("\r\n"); }
+void CDCprint_FLOAT(float m){ CDCprintf("%f",m); }
+void CDCprint_DEC(u16 m)    { CDCprintf("%d",m); }
+void CDCprint_HEX(u16 m)    { CDCprintf("%x",m); }
+void CDCprint_BYTE(u16 m)   { CDCprintf("%d",m); }
+void CDCprint_OCT(u16 m)    { CDCprintf("%o",m); }
+void CDCprint_BIN(u16 m)    { CDCprintf("%b",m); }
 
+/* CDCprint() function can not correctly support CDCprint("some string") aka CDC.print("some string").
+ * In case CDCprint("some string"), va_arg(args, u32) will return a unexpected invalid value. 
+ * by avrin */
+#if 0
+// last is a string (char *) or an integer
 void CDCprint(const u8 *fmt, ...)
 {
     u8 s;
@@ -128,6 +140,7 @@ void CDCprint(const u8 *fmt, ...)
     }
     va_end(args);
 }
+#endif
 
 //CDC.println
 void CDCprintln(const u8 *fmt, ...)
