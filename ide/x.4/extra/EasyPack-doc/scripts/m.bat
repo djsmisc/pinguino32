@@ -4,7 +4,7 @@ rem Specify variables
 set REV=8xx
 set VERSION=01
 set REL_DATE=2013-05
-set PYTHON_DIR=c:\python26x
+set PYTHON_DIR=c:\python26
 set ZIP7_EXE=d:\7-zip\7z.exe
 
 
@@ -15,9 +15,11 @@ set TARGET_DIR=..\x4-easy-rev%REV%
 
 if "%1"=="r" goto archive
 
-del /q dist
+rd /q /s %TARGET_DIR%
+rd /q /s dist
+rd /q /s build 
 
-python setup.py py2exe
+%PYTHON_DIR%\python.exe setup.py py2exe
 
 
 set XOPT=/d /y /s /i
@@ -25,7 +27,6 @@ xcopy /d /y .\*				%TARGET_DIR%\
 del /q %TARGET_DIR%\*.dll
 del /q %TARGET_DIR%\*.pyd
 del /q %TARGET_DIR%\*.py
-del /q %TARGET_DIR%\*.exe
 
 xcopy %XOPT% dist\*			%TARGET_DIR%
 
@@ -40,7 +41,7 @@ xcopy %XOPT% theme			%TARGET_DIR%\theme
 xcopy %XOPT% win32			%TARGET_DIR%\win32
 
 xcopy %XOPT% wxgui			%TARGET_DIR%\wxgui
-del /q %TARGET_DIR%\wxgui\*.pyc
+del /q /s %TARGET_DIR%\wxgui\*.pyc
 
 
 copy  /y  extra\EasyPack-doc\config_default.txt	%TARGET_DIR%\.config
@@ -52,7 +53,8 @@ del /q %TARGET_DIR%\PinguinoOSX.command
 del /q %TARGET_DIR%\*.sh
 del /q %TARGET_DIR%\*.log
 
-echo %REV% - EasyPack >  extra\EasyPack-doc\revision.txt 
+echo %REV% - EasyPack >  %TARGET_DIR%\extra\EasyPack-doc\revision.txt 
+copy /y extra\EasyPack-doc\EasyPack_ReleaseNote_en.txt %TARGET_DIR%\
 
 goto end
 
