@@ -1,14 +1,18 @@
 This Packaging script intends to use Pingunio X.4 about rev.800 or later at this moment.
 
 Prerequisite:
+  Windows7(32bit):
+      This script seems to work only on 32bit Windows so far. 
   Subversion client:
     TortoiseSVN:
-	   [ http://tortoisesvn.net/downloads.html ]
-	   In install procces, add the selection of 'command line client tools'. 
+       [ http://tortoisesvn.net/downloads.html ]
+       In the installation procces, add the selection of 'command line client tools'. 
   7-Zip:
       [ http://www.7-zip.org/ ]
   Pinguino: http://pinguino.cc 
-      svn checkout http://pinguino32.googlecode.com/svn/ide/ pinguino32
+      [ svn checkout http://pinguino32.googlecode.com/svn/ide/ pinguino32 ]
+      It would be better to use clean copy from the above repository otherwise some your local changes
+      will be included to the package unintentionally.
   Python: v2.6.6    
       [ http://www.python.org/ftp/python/2.6.6/python-2.6.6.msi ]
   Py2exe: v0.6.9
@@ -24,12 +28,21 @@ Prerequisite:
 
 Packaging:
 1. Copy setup.py, m.bat, msvcp90.dll to original Pinguino root folder (existing pinguino_start.bat).
-2. Edit m.bat.
+2. Edit m.bat copied.
    Specify REV,VERSION,REL_DATE,PYTHON_DIR,ZIP7_EXE variables.
 3. Open MS-DOS command line window, change your folder to original Pinguino root folder and execute 'm.bat'.
-   Target Pinguino folder is ..\x4-easy-revNNN. (NNN is revision number)
+   The target Pinguino folder is ..\x4-easy-revNNN. (NNN is revision number)
 4. If you'd like to make 7z archive package, execute 'm.bat r' in command line window. 
-   The archive file will generated in the parent folder.
+   The archive file will be generated in the parent folder.
+
+
+Making update pack:
+ If you make a update package with new differential files to EasyPack released,  
+ rewrite the content of extra\EasyPack-doc\revision.txt to
+ i.e. 
+ '872 - Updated EasyPack' so on.
+
+
 
 
 

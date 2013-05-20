@@ -15,7 +15,7 @@ tabsize = 4
 
 [Board]
 device = Pinguino 2550
-bootloader = [boot2, 0x2000]
+bootloader = ['boot4', 3072]
 architecture = 8
 mode = BOOT
 
