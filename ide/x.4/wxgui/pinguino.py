@@ -43,8 +43,11 @@ from editor.constants import pinguino_version, HOME_DIR, P8_DIR, P32_DIR, TEMP_D
 #set words to translations
 from wxgui._trad import _
 
-#Used for Python and Pic32 debug,
-os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
+if sys.platform == 'win32':
+    os.environ['PATH'] = os.environ['PATH'] + ';' + os.path.join(HOME_DIR,'win32','p8','bin') 
+else:
+    #Used for Python and Pic32 debug,
+    os.environ["LD_LIBRARY_PATH"]="/usr/lib32:%s/linux/p32/bin:/usr/lib:/usr/lib64" % HOME_DIR
 
 ########################################################################
 class Pinguino(framePinguinoX, IDE):
