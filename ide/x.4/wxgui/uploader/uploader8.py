@@ -449,7 +449,7 @@ class uploader8(baseUploader):
                 # from self.board.memstart to self.board.memstart + 255 x 64 = 0x3FC0
                 self.eraseFlash(self.board.memstart, 255)
                 # erase flash memory from self.board.memstart + 0x3FC0 to max_address
-                numBlocks64 = numBlocks64 - 256
+                numBlocks64 = numBlocks64 - 255
                 self.eraseFlash(self.board.memstart + 0x3FC0, numBlocks64)
 
         # write blocks of DATABLOCKSIZE bytes
