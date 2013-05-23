@@ -240,7 +240,9 @@
 #if  defined(__USBCDC) || defined(__USBBULK) || defined(__USB__) || \
      defined(__SERIAL__) || defined(__MILLIS__) || defined(I2CINT) || \
      defined(SERVOSLIBRARY) || defined(INT0INT) || defined(__PS2KEYB__) || \
-     defined(__DCF77__) || defined(RTCCALARMINTENABLE)
+     defined(__DCF77__) || defined(RTCCALARMINTENABLE) || \
+     defined(USERINT) || defined(ON_EVENT)
+
 
 #ifdef boot2
 #pragma code high_priority_isr 0x2020
@@ -308,13 +310,10 @@ void high_priority_isr(void) __interrupt 1
 		MOVFF	PREINC1, TBLPTRL
 	__endasm;
 }
-#endif
 
 /*  ----------------------------------------------------------------------------
     Low Interrupt Vector
     --------------------------------------------------------------------------*/
-
-#if defined(USERINT) || defined(ON_EVENT)
 
 #ifdef boot2
 #pragma code low_priority_isr 0x4000
@@ -346,6 +345,7 @@ void low_priority_isr(void) __interrupt 2
 		MOVFF	PREINC1, TBLPTRL
 	__endasm;
 }
+
 #endif
 
 /*  ----------------------------------------------------------------------------

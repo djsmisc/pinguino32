@@ -40,7 +40,7 @@ void _entry (void) __naked __interrupt 0;
 void _startup (void) __naked;
 
 /* Access bank selector. */
-#define a 0
+#define _bank_ 0
 
 
 /*
@@ -63,12 +63,12 @@ _startup (void) __naked
     lfsr    2, _stack_end
 
     ; 1st silicon does not do this on POR
-    clrf    _TBLPTRU, a
+    clrf    _TBLPTRU, _bank_
 
     ; Initialize the flash memory access configuration.
     ; This is harmless for non-flash devices, so we do it on all parts.
-    bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
-    bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
+    bsf     0xa6, 7, _bank_      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
+    bcf     0xa6, 6, _bank_      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
   __endasm;
 
   /* Call the main routine. */
