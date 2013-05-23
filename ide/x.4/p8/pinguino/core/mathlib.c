@@ -4,10 +4,11 @@
 	PURPOSE:		math. functions
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	2009 ?
-	LAST RELEASE:	2012 Jul. 10
+	LAST RELEASE:	2013 Mai 22
 	----------------------------------------------------------------------------
 	CHANGELOG:
     * 2012 Jul. 10  regis blanchot  fixed bug (functions already defined in macro.h)
+    * 2013 Mai  22  regis blanchot  added random function
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -28,6 +29,21 @@
 #define __MATHLIB_C
 
 #include <typedef.h>
+#include <stdlib.h>
+
+/**	----------------------------------------------------------------------------
+	---------- random
+ 	----------------------------------------------------------------------------
+	Description	: returns pseudo random number between mini and maxi
+	Parameters	:
+	Returns		: integer between mini and maxi
+    Nota        : random number generator must be initialize with randomSeed function
+ 	--------------------------------------------------------------------------*/
+
+int random(int mini, int maxi)
+{
+    return ((rand()%maxi) + mini);
+}
 
 /**	----------------------------------------------------------------------------
 	---------- Map

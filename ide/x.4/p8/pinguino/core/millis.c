@@ -2,7 +2,7 @@
 // Jean-Pierre MANDON 2009
 // added interrupt.c functions (regis blanchot 2011)
 // [14-05-12][jp.mandon changed long to u32 and Millis to millis / thanks mark harper]
-// [31-01-13][r.blanchot use of SystemGetInstructionClock()]
+// [31-01-13][r.blanchot use of System_getPeripheralFrequency()]
 
 #ifndef _MILLIS_C_
 #define _MILLIS_C_
