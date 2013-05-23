@@ -1,29 +1,42 @@
-// Wire Master Reader
-// by Nicholas Zambetti <http://www.zambetti.com>
+/*----------------------------------------------------- 
+Author:  André Gentric
+Date: Sat May 18 2013
+Description:
+This is the master reader program
+associated to "wire_st.pde" the slave transmitter program
+available speeds are 100, 400, 1000 Khz coded respectively 1, 4, 10 in Wire.begin
+Upload each .hex
+Open a tty terminal 9600 bds connected to the master to show the received message
+If a terminal is already opened shut it and restart it
+Start the slave (even if it starts at the end of uploading) before the master
+Tested with a Pinguino 18f4550 connected to another Pinguino 18f4550 (as master)
+thru SDA and SCL lines (pins RB0, RB1). Each of these lines is connected to +5V 
+thru a 2.2KOhm resistor.
+-----------------------------------------------------*/
 
-// Demonstrates use of the Wire library
-// Reads data from an I2C/TWI slave device
-// Refer to the "Wire Slave Sender" example for use with this
+u8 I2C_address = 0x2C; //slave address
 
-// Created 29 March 2006
-
-// This example code is in the public domain.
-
-void setup()
-{
-  Wire.master(100);    // join i2c bus (speed is 100KHz)
-  Serial.begin(9600);  // start serial for output
+void setup() {
+    //run once:
+  Wire.begin(0,100); // 0=master mode and 100=100 KHz as bus speed    
+  Serial.begin(9600);
+  delay(100);
 }
-
-void loop()
-{
-  Wire.requestFrom(2, 6);    // request 6 bytes from slave device #2
-
+void loop() {
+u8 c[32]; // length to adapt to your requirement
+u8 i;
+    //run repeatedly:
+  Wire.requestFrom(I2C_address,32); // here 32 characters as maxi are requested
+  delay(500);  Serial.printf("\r\n<");
+  delay(200);
+  while(!Wire.available());
+  i=0;
   while(Wire.available())    // slave may send less than requested
   { 
-    char c = Wire.receive(); // receive a byte as character
-    Serial.print(c);         // print the character
+    c[i] = Wire.read(); // receive a byte as character
+	Serial.printf("%c",c[i]); // print the character
+	i++;
   }
 
-  delay(500);
+  delay(1000);
 }
