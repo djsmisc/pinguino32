@@ -14,7 +14,6 @@ Adapted from Nicholas Zambetti Todd Krein's programs
 
 #include <stdlib.h>
 #include <serial.c>
-#include <i2c.c>
 
 // i2c buffer length
 #ifndef _I2CBUFFERLENGTH_
@@ -71,19 +70,19 @@ static volatile u8 i2c_sendStop;			// should the transaction end with a stop
 static volatile u8 i2c_inRepStart;			// in the middle of a repeated start
 static volatile u8 i2c_error;
 
-u8 _i2c_txBuffer[_I2CBUFFERLENGTH_];              // i2c tx buffer
-u8 _i2c_rxBuffer[_I2CBUFFERLENGTH_];              // i2c rx buffer
-u8 _i2c_rxBufferIndex = 0;
-u8 _i2c_rxBufferLength = 0;
+static volatile u8 _i2c_txBuffer[_I2CBUFFERLENGTH_];              // i2c tx buffer
+static volatile u8 _i2c_rxBuffer[_I2CBUFFERLENGTH_];              // i2c rx buffer
+static volatile u8 _i2c_rxBufferIndex = 0;
+static volatile u8 _i2c_rxBufferLength = 0;
 
-u8 _i2c_txAddress = 0;
-u8 _i2c_txBufferIndex = 0;
-u8 _i2c_txBufferLength = 0;
-u8 _i2c_transmitting = 0;
+static volatile u8 _i2c_txAddress = 0;
+static volatile u8 _i2c_txBufferIndex = 0;
+static volatile u8 _i2c_txBufferLength = 0;
+static volatile u8 _i2c_transmitting = 0;
 
-u8 _i2c_masterBuffer[_I2CBUFFERLENGTH_];
-u8 _i2c_masterBufferIndex;
-u8 _i2c_masterBufferLength;
+static volatile u8 _i2c_masterBuffer[_I2CBUFFERLENGTH_];
+static volatile u8 _i2c_masterBufferIndex;
+static volatile u8 _i2c_masterBufferLength;
 
 #ifdef I2CINT
   #include <i2cslave.c>
@@ -279,7 +278,7 @@ if(resp_sla) {
  *          2 not slave transmitter
  *          0 ok
  */
-
+#ifdef I2CINT
 u8 I2C_transmit(const u8* data, u8 length)
 {
   u8 i;
@@ -299,10 +298,11 @@ u8 I2C_transmit(const u8* data, u8 length)
   for(i = 0; i < length; ++i){
     _i2c_txBuffer[i] = data[i];
   }
+ //serial_printf("\r\n%2X",length); 
   return 0;
 }
-
-void I2C_begin(u8 address)
+#endif
+void I2C_begin(u8 address, u16 speed)
 {
 if (address !=0) {
 //  SSPADD = address; done in I2C_init
@@ -323,7 +323,7 @@ if (address !=0) {
   i2c_inRepStart = false;
   
 if (address ==0) {
-  I2C_master(I2C_400KHZ);
+  I2C_master(speed);
   }
 
 }
@@ -410,13 +410,16 @@ u8 I2C_inBuffer(u8 data)
     // update amount in buffer
 //serial_printf("\r\n%2X",data);	
     _i2c_txBufferLength = _i2c_txBufferIndex;
-  }else{
+  }
+#ifdef I2CINT
+  else{
   // in slave send mode
     // reply to master
 
     I2C_transmit(&data, 1);
 
   }
+#endif
   return 1;
 }
 
@@ -431,13 +434,16 @@ u8 I2C_inBufferS(u8 *data, u8 quantity)
     for( i = 0; i < quantity; ++i){
       I2C_inBuffer(data[i]);
     }
-  }else{
+  }
+#ifdef I2CINT
+  else{
   // in slave send mode
     // reply to master
 
     I2C_transmit(data, quantity);
 
   }
+#endif
   return quantity;
 }
 u8 I2C_inBufferStr(u8 *data)
@@ -451,7 +457,9 @@ u8 I2C_inBufferStr(u8 *data)
       I2C_inBuffer(data[i]);
 	  ++i;
     }
-  }else{
+  }
+#ifdef I2CINT
+  else{
   i=0;
   while (data[i] != '\0') i++;
   // in slave send mode
@@ -460,6 +468,7 @@ u8 I2C_inBufferStr(u8 *data)
     I2C_transmit(data,i);
 
   }
+#endif
   return i;
 }
 /*	----------------------------------------------------------------------------

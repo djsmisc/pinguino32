@@ -22,6 +22,7 @@ u8  i2c_datapresent;   // datapresent flag
 
 
 extern void receiveEvent(u8);
+extern void requestEvent(void);
 
 void i2c_hw_slave_init(u8 height_bits_icaddress)
 {
@@ -46,8 +47,10 @@ u8 i;
 	
 	_i2c_rxBufferIndex = 0;
 	_i2c_txBufferIndex = 0;
+	_i2c_rxBufferLength = 0;
 	i2c_datapresent=0; //received data
-    for (i=0;i< _I2CBUFFERLENGTH_;i++) {_i2c_rxBuffer[i]=0; _i2c_txBuffer[i]=0;}
+ 	_i2c_txBufferLength = 0;
+   for (i=0;i< _I2CBUFFERLENGTH_;i++) {_i2c_rxBuffer[i]=0; _i2c_txBuffer[i]=0;}
 }
 
 
@@ -87,8 +90,18 @@ void i2c_call_process_message()
       _i2c_rxBufferIndex=0;
   }
 
-}   
+}
 
+void i2c_call_process_message2()
+{
+//when master requests data
+    _i2c_txBufferIndex = 0;
+    _i2c_txBufferLength = 0;
+
+    _i2c_onRequest_function(); // call to slave to get data
+   while (!_i2c_txBufferLength);
+}
+   
 // this callback is used when something wrong happened 
 // during communication between master and us
 void i2c_hw_slave_on_error()
@@ -116,14 +129,12 @@ void i2c_hw_slave_on_state_1(u8 _trash)
 void i2c_hw_slave_on_state_2(u8 rcv)
 {
    i2c_datapresent   = 1;      // Indicate we received data
-//serial_printf("i%2X ",i2c_rxindex);
    // store data
    _i2c_rxBuffer[_i2c_rxBufferIndex] = rcv; 
 
    if (_i2c_rxBufferIndex < I2C_BUFFER_SIZE)
       _i2c_rxBufferIndex++;   // point to next position
    _i2c_rxBufferLength = _i2c_rxBufferIndex;
-//serial_printf(":l%2X ",i2c_rxlength);
 
 }
 
@@ -131,8 +142,7 @@ void i2c_hw_slave_on_state_2(u8 rcv)
 // from us. It should use i2c_hw_slave_write() to send something
 void i2c_hw_slave_on_state_3()
 {   // let user process buffer
-   i2c_call_process_message();
- 
+     i2c_call_process_message2();
    // send first byte to master
    i2c_hw_slave_write_i2c(_i2c_txBuffer[0]);  // send first databyte
    _i2c_txBufferIndex = 1;                          // point to next position
@@ -143,14 +153,12 @@ void i2c_hw_slave_on_state_3()
 // still wants to read and get data from us.
 void i2c_hw_slave_on_state_4()
 {
-   // This shouldn't occur in our i2c echo example
 
    i2c_hw_slave_write_i2c(_i2c_txBuffer[_i2c_txBufferIndex]);    // send data 
 
    if (_i2c_txBufferIndex < _I2CBUFFERLENGTH_)
       _i2c_txBufferIndex++;   // point to next position
 
-//   i2c_hw_slave_on_error();
 }
 
 // this callback is used when master does not want to talk
@@ -226,9 +234,7 @@ LA7=1;
       else if (!((tmpstat | 0b00001000) ^ 0b00101001))
       {
         rcv = i2c_hw_slave_read_i2c();
-//serial_printf("\r\nI/R%2X", rcv);
         i2c_hw_slave_on_state_2(rcv);
-//        _i2c_onReceive_function();
       }
       // state 3: read operation, last byte is address, buffer empty
       // master wants to get a value from us
@@ -241,7 +247,6 @@ LA7=1;
          // with a new version of the i2c statemachine (see also AN734)
          _trash = i2c_hw_slave_read_i2c();
          i2c_hw_slave_on_state_3();
-//         _i2c_onRequest_function();
 
       }
       else if (!((tmpstat & 0b11111011) ^ 0b00101000))

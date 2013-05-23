@@ -70,8 +70,14 @@ void IO_init(void)
     #endif
 
 	TRISA = 0x00;
+#ifndef I2CINT	
     TRISB = 0x00;
-    TRISC = 0x00;
+#endif
+    TRISCbits.TRISC0 = 0x00;
+    TRISCbits.TRISC1 = 0x00;
+    TRISCbits.TRISC2 = 0x00;
+    TRISCbits.TRISC6 = 0x00;
+    TRISCbits.TRISC7 = 0x00;
     #if defined(__18f4455)  || defined(__18f4550)  || \
         defined(__18f45k50) || defined(__18f46j50) || \
         defined(__18f47j53)
