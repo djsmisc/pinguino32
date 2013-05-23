@@ -31,7 +31,7 @@
     
     Pinguino    x550    x6j50
     SDA         DO      D5
-    SDL         D1      D4
+    SCL         D1      D4
     
     The last bit of the control byte defines the operation to
     be performed. When set to a one a read operation is
