@@ -59,7 +59,7 @@ void _entry (void) __naked __interrupt 0;
 void _startup (void) __naked;
 
 /* Access bank selector. */
-#define a 0
+#define _bank_ 0
 
 
 /*
@@ -101,27 +101,27 @@ _startup (void) __naked
     lfsr    2, _stack_end
 
     ; 1st silicon does not do this on POR
-    clrf    _TBLPTRU, a
+    clrf    _TBLPTRU, _bank_
 
     ; Initialize the flash memory access configuration.
     ; This is harmless for non-flash devices, so we do it on all parts.
-    bsf     0xa6, 7, a      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
-    bcf     0xa6, 6, a      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
+    bsf     0xa6, 7, _bank_      ; EECON1.EEPGD = 1, TBLPTR accesses program memory
+    bcf     0xa6, 6, _bank_      ; EECON1.CFGS  = 0, TBLPTR accesses program memory
 
   /* cleanup the RAM 
 	 Data RAM area is 0x000 - 0xEBF */
     ; Load FSR0 with top of RAM.
     movlw   0xbf
-    movwf   _FSR0L, a
+    movwf   _FSR0L, _bank_
     movlw   0x0e
-    movwf   _FSR0H, a
+    movwf   _FSR0H, _bank_
 
     ; Place 0xff at address 0x00 as a sentinel.
-    setf    0x00, a
+    setf    0x00, _bank_
 
 clear_loop:
-    clrf    _POSTDEC0, a
-    movf    0x00, w, a
+    clrf    _POSTDEC0, _bank_
+    movf    0x00, w, _bank_
     bnz     clear_loop
 
   /* Initialize global and/or static variables. */
@@ -131,11 +131,11 @@ clear_loop:
    */
     ; TBLPTR = &cinit
     movlw   low(_cinit)
-    movwf   _TBLPTRL, a
+    movwf   _TBLPTRL, _bank_
     movlw   high(_cinit)
-    movwf   _TBLPTRH, a
+    movwf   _TBLPTRH, _bank_
     movlw   upper(_cinit)
-    movwf   _TBLPTRU, a
+    movwf   _TBLPTRU, _bank_
 
     ; entry_count = cinit.num_init
     TBLRDPOSTINC
@@ -233,9 +233,9 @@ copy_loop_dec:
 
     ; Decrement and test the byte counter.
     ; The cycle ends when the value of counter reaches the -1.
-    decf    byte_count, f, a
+    decf    byte_count, f, _bank_
     bc      copy_loop
-    decf    (byte_count + 1), f, a
+    decf    (byte_count + 1), f, _bank_
     bc      copy_loop
 
     ; Restore the table pointer for the next entry.
@@ -249,9 +249,9 @@ entry_loop_dec:
 
     ; Decrement and test the entry counter.
     ; The cycle ends when the value of counter reaches the -1.
-    decf    entry_count, f, a
+    decf    entry_count, f, _bank_
     bc      entry_loop
-    decf    (entry_count + 1), f, a
+    decf    (entry_count + 1), f, _bank_
     bc      entry_loop
   __endasm;
 
