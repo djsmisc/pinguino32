@@ -79,14 +79,15 @@ void Delayms(unsigned int milliseconds)
 {
     unsigned int i;
     
-    for (i=0;i<milliseconds;i++)
+    for (i=0; i<milliseconds; i++)
         delay1ktcy(12);
 }
 
 void Delayus(unsigned int microseconds)
 {
     unsigned int i;
-    for (i=0;i<microseconds;i++)
+    
+    for (i=0; i<microseconds; i++)
         ;
 }
 
