@@ -430,7 +430,7 @@ class uploader8(baseUploader):
 
         # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
         else:
-            self.txtWrite("max_address = "+str(max_address))
+            #self.txtWrite("max_address = "+str(max_address))
             memoryspace = max_address - self.board.memstart
             numBlocks64 = (memoryspace / 64)
             
