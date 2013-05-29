@@ -26,8 +26,11 @@
 #include <delay.c>		//Arduino like delays
 #include <digitalw.c>	//Arduino like DigitalWrite and Read
 #include <lcdlib.h>
+#ifdef LCDPRINTF
 #include <stdio.c>
 #include <stdarg.h>
+#endif
+
 
 /** Positive pulse on E */
 void lcd_pulseEnable(void)
