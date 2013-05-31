@@ -2,6 +2,8 @@
 // Jean-Pierre Mandon 2010
 // a 4,7k pull-up resistor is wired on pin 10
 
+// For 8bit PICs.   
+
 unsigned int counts=0;
 
 void setup()
@@ -19,5 +21,5 @@ void loop()
 {
 counts=(TMR3H<<8)+TMR3L;
 Serial.print(counts,DEC);
-Serial.print("\n\r");
+Serial.printf("\n\r");
 }

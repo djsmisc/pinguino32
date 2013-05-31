@@ -27,11 +27,11 @@ void setup()
 
 void loop()
 {
-  Serial.print(analogRead(redPin));
-  Serial.print(",");
-  Serial.print(analogRead(greenPin));
-  Serial.print(",");
-  Serial.println(analogRead(bluePin));
+  Serial.print(analogRead(redPin),DEC);
+  Serial.printf(",");
+  Serial.print(analogRead(greenPin),DEC);
+  Serial.printf(",");
+  Serial.println(analogRead(bluePin),DEC);
 }
 
 /* Processing code for this example

@@ -11,12 +11,14 @@ void setup()
 
 void loop()
 {
-	Serial.print("TEST\n\r");
+	Serial.printf("TEST\n\r");
 	if (Serial.available())
 	{
-		Serial.print("caractere");
+		Serial.printf("caractere \r\n");
 		caractere=Serial.read();
-		Serial.print(chaine);
-		Serial.print(&caractere);
+		Serial.printf("%s \r\n",chaine);
+		Serial.print(caractere,DEC);
+        delay(1000);
 	}
+    delay(100);
 }
