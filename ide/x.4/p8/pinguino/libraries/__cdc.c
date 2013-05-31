@@ -140,7 +140,6 @@ void CDCprint(const u8 *fmt, ...)
     }
     va_end(args);
 }
-#endif
 
 //CDC.println
 void CDCprintln(const u8 *fmt, ...)
@@ -151,6 +150,7 @@ void CDCprintln(const u8 *fmt, ...)
     CDCprintf(fmt, args);
     CDCprintf("\n\r");
 }
+#endif
 
 // CDC.getKey
 u8 CDCgetkey(void)
