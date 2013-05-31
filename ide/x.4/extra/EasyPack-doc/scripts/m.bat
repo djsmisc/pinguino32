@@ -1,7 +1,7 @@
 rem @echo off
 
 rem Specify variables
-set REV=856
+set REV=857
 set VERSION=01
 set REL_DATE=2013-05
 set PYTHON_DIR=c:\python26

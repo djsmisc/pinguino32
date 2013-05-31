@@ -23,7 +23,7 @@ Prerequisite:
      or as Python v2.6.6 includes 'msvc*90.dll' file , you may install the Python instead of vcredist_x86.exe
        form here,
          http://www.python.org/ftp/python/2.6.6/python-2.6.6.msi
-  2. On 8bit PICs, if you encounter the error message of "sdcc can't find ..." during compilation,  
+  2. On 8bit PICs, if you encounter the error message of "sdcpp can't find ..." during compilation,  
      add SDCC execution path to Windows environment variable PATH.
      i.e.
 	 If you extract EasyPack to c:\x4-easy-revNNN (NNN is revision number),
@@ -47,7 +47,7 @@ Tested environment:
     Windows 7(32bit).
 
 History:
-rev8xx    v01: 2013/05
+rev857    v01: 2013/05, packaged and released by avrin.
 rev685mod v01: 2013/02, packaged and released by avrin.
 
 This package based on:
