@@ -24,7 +24,7 @@ void setup()
   Serial.begin(9600); 
 
   // prints title with ending line break 
-  Serial.println("ASCII Table ~ Character Map"); 
+  Serial.printf("ASCII Table ~ Character Map\r\n"); 
 } 
 
 // first visible ASCIIcharacter '!' is number 33:
@@ -40,26 +40,26 @@ void loop()
   // ASCII, so 33, the first number,  will show up as '!' 
   Serial.print(thisByte, BYTE);    
 
-  Serial.print(", dec: "); 
+  Serial.printf(", dec: "); 
   // prints value as string as an ASCII-encoded decimal (base 10).
   // Decimal is the  default format for Serial.print() and Serial.println(),
   // so no modifier is needed:
-  Serial.print(thisByte);      
+  Serial.print(thisByte,DEC);      
   // But you can declare the modifier for decimal if you want to.
   //this also works if you uncomment it:
 
   // Serial.print(thisByte, DEC);  
 
 
-  Serial.print(", hex: "); 
+  Serial.printf(", hex: "); 
   // prints value as string in hexadecimal (base 16):
   Serial.print(thisByte, HEX);     
 
-  Serial.print(", oct: "); 
+  Serial.printf(", oct: "); 
   // prints value as string in octal (base 8);
   Serial.print(thisByte, OCT);     
 
-  Serial.print(", bin: "); 
+  Serial.printf(", bin: "); 
   // prints value as string in binary (base 2) 
   // also prints ending line break:
   Serial.println(thisByte, BIN);   

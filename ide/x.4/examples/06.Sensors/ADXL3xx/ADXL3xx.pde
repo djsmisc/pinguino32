@@ -51,14 +51,14 @@ void setup()
 void loop()
 {
   // print the sensor values:
-  Serial.print(analogRead(xpin));
+  Serial.print(analogRead(xpin),DEC);
   // print a tab between values:
-  Serial.print("\t");
-  Serial.print(analogRead(ypin));
+  Serial.printf("\t");
+  Serial.print(analogRead(ypin),DEC);
   // print a tab between values:
-  Serial.print("\t");
-  Serial.print(analogRead(zpin));
-  Serial.println("");
+  Serial.printf("\t");
+  Serial.print(analogRead(zpin),DEC);
+  Serial.printf("\r\n");
   // delay before next reading:
   delay(100);
 }

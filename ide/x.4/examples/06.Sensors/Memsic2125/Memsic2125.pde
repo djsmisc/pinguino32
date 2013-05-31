@@ -53,11 +53,11 @@ void loop() {
   accelerationY = ((pulseY / 10) - 500) * 8;
 
   // print the acceleration
-  Serial.print(accelerationX);
+  Serial.print(accelerationX,DEC);
   // print a tab character:
-  Serial.print("\t");
-  Serial.print(accelerationY);
-  Serial.println("");
+  Serial.printf("\t");
+  Serial.print(accelerationY,DEC);
+  Serial.printf("\r\n");
 
   delay(100);
 }

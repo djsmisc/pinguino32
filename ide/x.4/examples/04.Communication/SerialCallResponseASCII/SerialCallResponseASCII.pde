@@ -57,16 +57,16 @@ void loop()
     thirdSensor = map(digitalRead(2), 0, 1, 0, 255);  
     // send sensor values:
     Serial.print(firstSensor, DEC);
-    Serial.print(",");
+    Serial.printf(",");
     Serial.print(secondSensor, DEC);
-    Serial.print(",");
+    Serial.printf(",");
     Serial.println(thirdSensor, DEC);               
   }
 }
 
 void establishContact() {
   while (Serial.available() <= 0) {
-    Serial.println("0,0,0");   // send an initial string
+    Serial.printf("0,0,0\r\n");   // send an initial string
     delay(300);
   }
 }

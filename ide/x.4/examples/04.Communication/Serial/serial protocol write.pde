@@ -52,7 +52,7 @@ if (Serial.available())
 		// and use those characters to light a led
 		digitalWrite(caractere1,caractere2);
 		// say OK to the transmitter
-		Serial.print("bonjour\n\r");
+		Serial.printf("bonjour\n\r");
 		end:;		
 		}
 	}
