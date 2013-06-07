@@ -8,7 +8,9 @@ Installation and start up Pinguno IDE:
      (N,n,y,m is number or string) 
      It's highly recommended extracting this archive file to the folder 
      which name dose not have 'spaces or multibyte strings'.
-  2. Execute x4-easy-revNNNnnn\pinguino.exe,
+  2. Move the x4-easy-revNNN folder to i.e. 'C:\x4-easy-revNNN'.
+     (Because gpasm.exe can't recognize the long folder name.) 
+  3. Execute x4-easy-revNNNnnn\pinguino.exe,
      or
      x4-easy-revNNNnnn\pinguino_start.bat
 
@@ -77,7 +79,7 @@ Packaging scripts and patches:
 
 
 
-Thank you very much, Pinguino Developper Team 
+Thank you very much, Pinguino Developper Team, many comitters 
 and community members.
 
 
