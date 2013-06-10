@@ -4,11 +4,12 @@
 	PURPOSE:		One wire driver to use with DS18B20 digital temperature sensor.
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	28 Sep 2010
-	LAST RELEASE:	26 Jun 2012
+	LAST RELEASE:	10 Jun 2013
 	----------------------------------------------------------------------------
 	02 Jun 2011	Jean-Pierre Mandon	fixed a bug in decimal part of the measure
 	17 Jan 2012	Mark Harper			update to deal correctly with negative temperatures
-	29 Jun 2012 Régis Blanchot		changed CRC calculation to save 8-bit Pinguino's RAM
+	29 Jun 2012     Régis Blanchot		changed CRC calculation to save 8-bit Pinguino's RAM
+        10 Jun 2013     Moreno Manzini          Added DS18B20StartMeasure and DS18B20ReadMeasure to acquire and read temperature in non-blocking mode
 	----------------------------------------------------------------------------
 	TODO : 
 	----------------------------------------------------------------------------
@@ -108,6 +109,8 @@
 	u8 DS18B20GetFirst(u8);
 	u8 DS18B20GetNext(u8);
 	u8 DS18B20_crc(u8);
+	u8 DS18B20StartMeasure(u8 pin, u8 num, u8 resolution);
+	u8 DS18B20ReadMeasure(u8 pin, u8 num, DS18B20_Temperature * t);
 
 /*	----------------------------------------------------------------------------
 	---------- DS18B20Read()
@@ -484,6 +487,133 @@
 
         return dowcrc;
 	}
+
+
+
+
+/*	----------------------------------------------------------------------------
+	---------- DS18B20StartMeasure()
+	----------------------------------------------------------------------------
+	* Description:	reads the ds18x20 device on the 1-wire bus and starting the temperature acquisition
+	* Arguments:	pin = pin number where one wire bus is connected.
+					num = index of the sensor or SKIPROM
+					resolution = 9 to 12 bit resolution
+					t = temperature pointer
+	--------------------------------------------------------------------------*/
+
+	u8 DS18B20StartMeasure(u8 pin, u8 num, u8 resolution)
+	{
+		u8 	res, busy = LOW;
+		u8 	temp_lsb, temp_msb;
+		u16	temp;
+
+		switch (resolution)
+		{
+			case RES12BIT:	res = 0b01100000;	break;	// 12-bit resolution
+			case RES11BIT:	res = 0b01000000;	break;	// 11-bit resolution
+			case RES10BIT:	res = 0b00100000;	break;	// 10-bit resolution
+			case  RES9BIT:	res = 0b00000000;	break;	//  9-bit resolution
+			default:		res = 0b00000000;	break;	//  9-bit resolution
+			/// NB: The power-up default of these bits is R0 = 1 and R1 = 1 (12-bit resolution)
+		}
+		
+		if (!DS18B20Configure(pin, num, 0, 0, res)) return FALSE; // no alarm
+
+		if (OneWireReset(pin)) return FALSE;
+
+		if (num == SKIPROM)
+		{
+			// Skip ROM, address all devices
+			OneWireWrite(pin, SKIPROM);
+		}
+		else
+		{
+			// Talk to a particular device
+			if (!DS18B20MatchRom(pin, num)) return FALSE;
+		}
+
+		OneWireWrite(pin, CONVERT_T);		// Start temperature conversion
+		return TRUE;
+	}
+
+
+
+
+/*	----------------------------------------------------------------------------
+	---------- DS18B20ReadMeasure()
+	----------------------------------------------------------------------------
+	* Description:	reads the ds18x20 device on the 1-wire bus and returns the temperature previously acquired
+	* Arguments:	pin = pin number where one wire bus is connected.
+					num = index of the sensor or SKIPROM
+					t = temperature pointer
+	--------------------------------------------------------------------------*/
+
+	u8 DS18B20ReadMeasure(u8 pin, u8 num, DS18B20_Temperature * t)
+	{
+		u8 	res, busy = LOW;
+		u8 	temp_lsb, temp_msb;
+		u16	temp;
+
+		if (OneWireReset(pin)) return FALSE;
+
+		if (num == SKIPROM)
+		{
+			// Skip ROM, address all devices
+			OneWireWrite(pin, SKIPROM);
+		}
+		else
+		{
+			// Talk to a particular device
+			if (!DS18B20MatchRom(pin, num)) return FALSE;
+		}
+
+		OneWireWrite(pin, READ_SCRATCHPAD);// Read scratchpad
+
+		temp_lsb = OneWireRead(pin);		// byte 0 of scratchpad : temperature lsb
+		temp_msb = OneWireRead(pin);		// byte 1 of scratchpad : temperature msb
+
+		if (OneWireReset(pin)) return FALSE;
+
+		// Calculation
+		// ---------------------------------------------------------------------
+		//	Temperature Register Format
+		//			BIT7	BIT6	BIT5	BIT4	BIT3	BIT2	BIT1	BIT0
+		//	LS BYTE 2^3		2^2		2^1		2^0		2^-1	2^-2	2^-3	2^-4
+		//			BIT15	BIT14	BIT13	BIT12	BIT11	BIT10	BIT9	BIT8
+		//	MS BYTE S		S		S		S		S		2^6		2^5 	2^4
+		//	S = SIGN
+
+		temp = temp_msb;				
+		temp = (temp << 8) + temp_lsb;	// combine msb & lsb into 16 bit variable
+		
+		if (temp_msb & 0b11111000)		// test if sign is set, i.e. negative
+		{		
+			t->sign = 1;
+			temp = (temp ^ 0xFFFF) + 1;	// 2's complement conversion
+		}
+		else
+		{
+			t->sign = 0;
+		}
+
+		t->integer = (temp >> 4) & 0x7F;	// fractional part is removed, leaving only integer part
+
+/*	
+		t->fraction = 0;					// fractional part
+		if (BitRead(temp, 0)) t->fraction +=  625;
+		if (BitRead(temp, 1)) t->fraction += 1250;
+		if (BitRead(temp, 2)) t->fraction += 2500;
+		if (BitRead(temp, 3)) t->fraction += 5000;
+*/
+		t->fraction = (temp & 0x0F) * 625;
+		t->fraction /= 100;					// two digits after decimal 
+
+		return TRUE;
+	}
+
+
+
+
 
 #endif
 

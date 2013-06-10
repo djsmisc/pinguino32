@@ -1,4 +1,6 @@
 TEMPERATURE DS18B20_Temperature#include <18b20.c>
+DS18B20.startMeasure DS18B20StartMeasure#include <18b20.c>
+DS18B20.readMeasure DS18B20ReadMeasure#include <18b20.c>
 DS18B20.read DS18B20Read#include <18b20.c>
 DS18B20.matchRom DS18B20MatchRom#include <18b20.c>
 DS18B20.readRom DS18B20ReadRom#include <18b20.c>
