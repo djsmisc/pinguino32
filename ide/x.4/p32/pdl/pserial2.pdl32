@@ -9,3 +9,4 @@ Serial2.getString serial2getstring#include <pinguinoserial2.c>
 Serial2.available serial2available#include <pinguinoserial2.c>
 Serial2.read serial2read#include <pinguinoserial2.c>
 Serial2.flush serial2flush#include <pinguinoserial2.c>
+Serial2.ClearRxError serial2clearrxerror#include <pinguinoserial2.c>
