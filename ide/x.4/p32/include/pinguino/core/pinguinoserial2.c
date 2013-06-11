@@ -4,7 +4,7 @@
 	PURPOSE:		
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 	FIRST RELEASE:	01 jan. 2011
-	LAST RELEASE:	18 feb. 2012
+	LAST RELEASE:	11 jun. 2013
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -185,5 +185,13 @@ void serial2flush(void)
 #endif
 }
 
+BOOL serial2clearrxerror(void)
+{
+#ifdef PIC32_PINGUINO_220
+	return(ClearRxError(UART1));
+#else
+	return(ClearRxError(UART2));
+#endif
+}
 #endif /* __PINGUINOSERIAL2_C */
 

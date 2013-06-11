@@ -4,7 +4,7 @@
 	PURPOSE:		
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	10 nov. 2010
-	LAST RELEASE:	18 feb. 2012
+	LAST RELEASE:	11 jun. 2013
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@
 	// 23 set.2011 Marcus Fazzi added support for UART4,5 AND 6
 	// 18 feb.2012 jp mandon added support for PIC32-PIGUINO-220
 	// 19 may.2012 jp mandon added support for GENERIC32MX250F128 and GENERIC32MX220F032
+  // 11 jun. 2013 MM OERR Gestion on UART 1
 	
 #ifndef __SERIAL__
 #define __SERIAL__
@@ -931,6 +932,7 @@ void SerialGetDataBuffer(u8 port)
 	}
 }
 
+
 /*	----------------------------------------------------------------------------
 	SerialInterrupt
 	TODO: move this to interrupt library and add it to main32.c
@@ -939,6 +941,8 @@ void SerialGetDataBuffer(u8 port)
 // vector 24 or 32 (PIC32_PINGUINO_220)
 void Serial1Interrupt(void)
 {
+	char    Dummy;
+
 	// Is this an RX interrupt from UART1 ?
 	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U1RXIF)
@@ -946,13 +950,24 @@ void Serial1Interrupt(void)
 	if (IntGetFlag(INT_UART1_RECEIVER))
 	#endif
 	{
-		SerialGetDataBuffer(UART1);
+   if (U1STAbits.OERR != 0)
+    U1STAbits.OERR = 0;
+   else
+ 		 do
+     {
+      if ((U1STAbits.FERR != 0) || (U1STAbits.PERR != 0))
+       Dummy = U1RXREG;
+      else
+       SerialGetDataBuffer(UART1);
+     }
+    while (U1STAbits.URXDA != 0);
 		#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U1RXIF=0;
 		#else	
 		IntClearFlag(INT_UART1_RECEIVER);
 		#endif
 	}
+
 	// Is this an TX interrupt from UART1 ?
 	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U1TXIF)
@@ -966,6 +981,7 @@ void Serial1Interrupt(void)
 		IntClearFlag(INT_UART1_TRANSMITTER);
 		#endif
 	}
+
 	// Is this an ERROR interrupt from UART1 ?
 	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U1EIF)
@@ -979,11 +995,14 @@ void Serial1Interrupt(void)
 		IntClearFlag(INT_UART1_ERROR);
 		#endif
 	}		
+
 }
 
 // vector 32 or 37 (PIC32_PINGUINO_220)
 void Serial2Interrupt(void)
 {
+	char    Dummy;
+
 	// Is this an RX interrupt from UART2 ?
 	#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 	if (IFS1bits.U2RXIF)
@@ -992,7 +1011,17 @@ void Serial2Interrupt(void)
 	#endif
 	
 	{
-		SerialGetDataBuffer(UART2);
+   if (U2STAbits.OERR != 0)
+    U2STAbits.OERR = 0;
+   else
+ 		 do
+     {
+      if ((U2STAbits.FERR != 0) || (U2STAbits.PERR != 0))
+       Dummy = U2RXREG;
+      else
+       SerialGetDataBuffer(UART2);
+     }
+    while (U2STAbits.URXDA != 0);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
 		#if defined(PIC32_PINGUINO_220)||defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
 		IFS1bits.U2RXIF=0;
@@ -1035,7 +1064,17 @@ void Serial3Interrupt(void)
 	// Is this an RX interrupt from UART3 ?
 	if (IntGetFlag(INT_UART3_RECEIVER))
 	{
-		SerialGetDataBuffer(UART3);
+   if (U3STAbits.OERR != 0)
+    U3STAbits.OERR = 0;
+   else
+ 		 do
+     {
+      if ((U3STAbits.FERR != 0) || (U3STAbits.PERR != 0))
+       Dummy = U3RXREG;
+      else
+       SerialGetDataBuffer(UART3);
+     }
+    while (U3STAbits.URXDA != 0);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
 		IntClearFlag(INT_UART3_RECEIVER);
 	}
@@ -1055,7 +1094,17 @@ void Serial4Interrupt(void)
 	// Is this an RX interrupt from UART4 ?
 	if (IntGetFlag(INT_UART4_RECEIVER))
 	{
-		SerialGetDataBuffer(UART4);
+   if (U4STAbits.OERR != 0)
+    U4STAbits.OERR = 0;
+   else
+ 		 do
+     {
+      if ((U4STAbits.FERR != 0) || (U4STAbits.PERR != 0))
+       Dummy = U4RXREG;
+      else
+       SerialGetDataBuffer(UART4);
+     }
+    while (U4STAbits.URXDA != 0);
 		//toggle(REDLED);			// Toggle LED to indicate UART activity
 		IntClearFlag(INT_UART4_RECEIVER);
 	}
@@ -1074,7 +1123,17 @@ void Serial5Interrupt(void)
 	// Is this an RX interrupt from UART5 ?
 	if (IntGetFlag(INT_UART5_RECEIVER))
 	{
-		SerialGetDataBuffer(UART5);
+   if (U5STAbits.OERR != 0)
+    U5STAbits.OERR = 0;
+   else
+ 		 do
+     {
+      if ((U5STAbits.FERR != 0) || (U5STAbits.PERR != 0))
+       Dummy = U5RXREG;
+      else
+       SerialGetDataBuffer(UART5);
+     }
+    while (U5STAbits.URXDA != 0);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
 		IntClearFlag(INT_UART5_RECEIVER);
 	}
@@ -1093,7 +1152,17 @@ void Serial6Interrupt(void)
 	// Is this an RX interrupt from UART6 ?
 	if (IntGetFlag(INT_UART6_RECEIVER))
 	{
-		SerialGetDataBuffer(UART6);
+   if (U6STAbits.OERR != 0)
+    U6STAbits.OERR = 0;
+   else
+ 		 do
+     {
+      if ((U6STAbits.FERR != 0) || (U6STAbits.PERR != 0))
+       Dummy = U6RXREG;
+      else
+       SerialGetDataBuffer(UART6);
+     }
+    while (U6STAbits.URXDA != 0);
 		//Toggle(REDLED);			// Toggle LED to indicate UART activity
 		IntClearFlag(INT_UART6_RECEIVER);
 	}
@@ -1104,6 +1173,76 @@ void Serial6Interrupt(void)
 	}
 }
 #endif
+
+/*	----------------------------------------------------------------------------
+	ClearRxError
+	--------------------------------------------------------------------------*/
+
+BOOL ClearRxError(u8 port)
+{
+
+	switch (port)
+	{
+		case UART1:
+    if (U1STAbits.OERR != 0)
+     {
+      U1STAbits.OERR = 0;
+      return(FALSE);
+     }
+    break;
+
+		case UART2:
+    if (U2STAbits.OERR != 0)
+     {
+      U2STAbits.OERR = 0;
+      return(FALSE);
+     }
+		break;
+
+#ifdef ENABLE_UART3
+		case UART3:
+    if (U3STAbits.OERR != 0)
+     {
+      U3STAbits.OERR = 0;
+      return(FALSE);
+     }
+		break;
+#endif
+
+#ifdef ENABLE_UART4
+		case UART4:
+    if (U4STAbits.OERR != 0)
+     {
+      U4STAbits.OERR = 0;
+      return(FALSE);
+     }
+		break;
+#endif
+
+#ifdef ENABLE_UART5
+		case UART5:
+    if (U5STAbits.OERR != 0)
+     {
+      U5STAbits.OERR = 0;
+      return(FALSE);
+     }
+		break;
+#endif
+
+#ifdef ENABLE_UART6
+		case UART6:
+    if (U6STAbits.OERR != 0)
+     {
+      U6STAbits.OERR = 0;
+      return(FALSE);
+     }
+		break;
+#endif
+	}
+ return(TRUE);
+}
+
+
 
 
 //IFS0CLR = UART1_ALL_INTERRUPT;			// clear any existing event

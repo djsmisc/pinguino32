@@ -5,7 +5,7 @@
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 					UART4 by Marcus Fazzi <anunakin@ieee.org>
 	FIRST RELEASE:	23 set. 2011
-	LAST RELEASE:	
+	LAST RELEASE:	11 jun. 2013
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -113,6 +113,12 @@ char serial4read(void)
 void serial4flush(void)
 {
 	SerialFlush(UART4);
+}
+
+
+BOOL serial4clearrxerror(void)
+{
+	return(ClearRxError(UART4));
 }
 
 #endif /* __PINGUINOSERIAL4_C */

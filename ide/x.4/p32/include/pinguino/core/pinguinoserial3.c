@@ -5,7 +5,7 @@
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 					UART3 by Marcus Fazzi <anunakin@ieee.org>
 	FIRST RELEASE:	21 set. 2011
-	LAST RELEASE:	
+	LAST RELEASE:	11 jun. 2013
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -113,6 +113,11 @@ char serial3read(void)
 void serial3flush(void)
 {
 	SerialFlush(UART3);
+}
+
+BOOL serial3clearrxerror(void)
+{
+	return(ClearRxError(UART3));
 }
 
 #endif /* __PINGUINOSERIAL3_C */

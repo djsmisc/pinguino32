@@ -5,7 +5,7 @@
 	PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
 					UART5 by Marcus Fazzi <anunakin@ieee.org>
 	FIRST RELEASE:	23 set. 2011
-	LAST RELEASE:	
+	LAST RELEASE:	11 jun. 2013
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -113,6 +113,11 @@ char serial5read(void)
 void serial5flush(void)
 {
 	SerialFlush(UART5);
+}
+
+BOOL serial5clearrxerror(void)
+{
+	return(ClearRxError(UART5));
 }
 
 #endif /* __PINGUINOSERIAL5_C */
