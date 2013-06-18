@@ -7,4 +7,5 @@ CDC.printf CDCprintf#include <__cdc.c>
 CDC.read CDCgets#include <__cdc.c>
 CDC.getKey CDCgetkey#include <__cdc.c>
 CDC.getString CDCgetstring#include <__cdc.c>
+CDC.USBIsConnected CDCUSBIsConnected#include <__cdc.c>
 

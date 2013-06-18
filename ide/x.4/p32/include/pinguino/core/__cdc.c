@@ -5,6 +5,8 @@
 
 // 25 Feb. 2012 added support for 32MX220F032 jp.mandon
 // 03 Mar. 2012 fixed a bug in WINDOWS CDC jp.mandon
+// 18 Jun. 2013 Added CDC.USBIsConnected to check if USB cable is connected Moreno manzini
+
 
 #ifndef __USBCDC
 #define __USBCDC
@@ -314,5 +316,25 @@ char * CDCgetstring(void)
 	buffer[i] = '\0';
 	return buffer;
 }
+
+BOOL CDCUSBNotConnected = false;
+
+BOOL CDCUSBIsConnected(void)
+ {
+  if ( (U1OTGSTATbits.VBUSVD != 0) && (U1OTGSTATbits.SESVD != 0) )
+   {
+    if (CDCUSBNotConnected == true)
+     {
+      CDC_init();
+      CDCUSBNotConnected = false;
+     }
+    return(true);
+   }
+  else
+   {
+    CDCUSBNotConnected = true;
+    return (false);
+   }
+ }
 
 #endif	/* __USBCDC */
