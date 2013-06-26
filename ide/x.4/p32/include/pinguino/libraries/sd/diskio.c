@@ -604,11 +604,14 @@ DWORD get_fattime(void) {
 //	tmr = (((DWORD) pDt.year - 80)) | ((DWORD) pDt.mon) | ((DWORD) pDt.mday)
 //			| (WORD) (pTm.hour) | (WORD) (pTm.min) | (WORD) (pTm.sec);
 	tmr = cDt.year + 20;
-	tmr = (tmr << 4) | cDt.mon;		// shifts left 4 bits and adds month
-	tmr = (tmr << 5) | cDt.mday;		// shifts left 5 bits and adds m.day
-	tmr = (tmr << 5) | cTm.hour;		// shifts left 5 bits and adds hour
-	tmr = (tmr << 6) | cTm.min;		// shift left 6 bits and adds minutes
-	tmr = (tmr << 5) | (cTm.sec/2);	// shifts left 5 bits and adds seconds/2
+   
+  // Correction according to a newer rtcc library, with diff struct members.
+  
+	 tmr = (tmr << 4) | cDt.month;		// shifts left 4 bits and adds monthth
+	tmr = (tmr << 5) | cDt.dayofmonth;		// shifts left 5 bits and adds m.day
+	tmr = (tmr << 5) | cTm.hours;		// shifts left 5 bits and adds hour
+	tmr = (tmr << 6) | cTm.minutes;		// shift left 6 bits and adds minutes
+	tmr = (tmr << 5) | (cTm.seconds/2);	// shifts left 5 bits and adds seconds/2
 
 //	For other boards use a fixed date and time of 01 Jan 2012 12:00:00
 #else
