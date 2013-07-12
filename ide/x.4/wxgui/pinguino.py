@@ -438,6 +438,7 @@ class Pinguino(framePinguinoX, IDE):
         i=0
         for line in fichier:
             if line.find("#include")!=-1 or line.find("#define")!=-1:
+                line = line[:line.find('//')]   # Ignores C++ comments, fixing Issue 11
                 self.adddefine(line)    # add to define.h
                 fileline[i]="\r\n";    # delete from user.c
                 i=i+1
