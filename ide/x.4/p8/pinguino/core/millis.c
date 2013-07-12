@@ -9,8 +9,8 @@
 
 #include <pic18fregs.h>
 #include <typedef.h>
-#include <interrupt.h>
-#include <interrupt.c>
+//#include <interrupt.h>
+//#include <interrupt.c>
 #include <oscillator.c>         // SystemGetInstructionClock()
 
 volatile u32 _millis;
@@ -19,13 +19,13 @@ volatile u32 _reload_val;
 void updateMillisReloadValue(void )   /* Call from System_setIntOsc() */
 {
 	/* Atomic operation */
-    INTCONbits.TMR0IE = INT_DISABLE;
+    INTCONbits.TMR0IE = 0;//INT_DISABLE;
 	_reload_val = 0xFFFF - System_getPeripheralFrequency() / 1000 ;
-    INTCONbits.TMR0IE = INT_ENABLE;
+    INTCONbits.TMR0IE = 1;//INT_ENABLE;
 }
 void millis_init(void)
 {
-    intUsed[INT_TMR0] = INT_USED;
+//    intUsed[INT_TMR0] = INT_USED;
 
     /*
     T0CON = 0x80;		// TMR0 on, 16 bits counter, prescaler=2
@@ -37,18 +37,18 @@ void millis_init(void)
     // if TMR0 is loaded with 65536 - 12000
     // overload will occur after 12.000 cycles = 1ms
     
-    INTCONbits.GIEH = 0;   // Disable global HP interrupts
-    INTCONbits.GIEL = 0;   // Disable global LP interrupts
-    T0CON = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
+    INTCONbits.GIEH    = 0;   // Disable global HP interrupts
+    INTCONbits.GIEL    = 0;   // Disable global LP interrupts
+    T0CON = 0b00001000;//T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
 	_reload_val = 0xFFFF - System_getPeripheralFrequency() / 1000 ;
     TMR0H = high8(_reload_val);
     TMR0L =  low8(_reload_val);
-    INTCON2bits.TMR0IP = INT_HIGH_PRIORITY;
-    INTCONbits.TMR0IF = 0;
-    INTCONbits.TMR0IE = INT_ENABLE;
-	T0CONbits.TMR0ON =1;
-    INTCONbits.GIEH = 1;   // Enable global HP interrupts
-    INTCONbits.GIEL = 1;   // Enable global LP interrupts
+    INTCON2bits.TMR0IP = 1;//INT_HIGH_PRIORITY;
+    INTCONbits.TMR0IF  = 0;
+    INTCONbits.TMR0IE  = 1;//INT_ENABLE;
+	T0CONbits.TMR0ON   = 1;
+    INTCONbits.GIEH    = 1;   // Enable global HP interrupts
+    INTCONbits.GIEL    = 1;   // Enable global LP interrupts
 
     _millis = 0;
 }
@@ -57,9 +57,9 @@ u32 millis()
 {
 	u32 temp;
 	/* Atomic operation for multibyte value */
-    INTCONbits.TMR0IE = INT_DISABLE;
+    INTCONbits.TMR0IE = 0;//INT_DISABLE;
 	temp = _millis;
-    INTCONbits.TMR0IE = INT_ENABLE;
+    INTCONbits.TMR0IE = 1;//INT_ENABLE;
     return(temp);
 }
 

@@ -197,7 +197,7 @@ LA7=1;
             return;
          }
          if ((tmpstat & 0b00110000) == 0b00110000)
-		 {
+         {
             i2c_hw_slave_on_stop();
             return;
          }

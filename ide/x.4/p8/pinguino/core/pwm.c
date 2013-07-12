@@ -13,6 +13,7 @@
     * 27 Apr. 2013  regis blanchot - moved pin definition to pin.h
                                      renamed function (also in pwm.pdl)
                                      CCPR1L = duty; -> CCPR1L = duty & 0xFF;
+    * 26 Jun. 2013  regis blanchot - fixed PWM_setDutyCycle()
 	----------------------------------------------------------------------------
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -115,29 +116,19 @@ void PWM_setDutyCycle(u8 pin, u16 duty)
     switch (pin)
     {
         case CCP1:
-
-            // PWM mode	
-            //CCP1CON = 0b00001111;			// <7:6> single output
-            CCP1CON = 0b00001100;			// <7:6> single output
-                                            // <5:4> reset 2 LSbits of duty cycle
-                                            // <3:0> PWM mode
-
-            // PWM duty cycle has 10-bit resolution
-            CCPR1L = duty & 0xFF;           // 8 LSB
-            CCP1CON |= (duty >> 8) << 4;    // 2 MSB
+            CCP1CON  = 0b00001100;
+            CCPR1L   = ( duty >> 2 ) & 0xFF;         // 8 LSB
+            //CCP1CON |= ( (duty & 0x300) >> 8) << 4;  // 2 MSB in <5:4>
+            CCP1CON |= (duty & 0x300) >> 4;  // 2 MSB in <5:4>
             break;
 
         case CCP2:
-
-            // PWM mode	
-            //CCP2CON = 0b00001111;			// reset also 2 LSbits of duty cycle
-            CCP2CON = 0b00001100;			// reset also 2 LSbits of duty cycle
-
-            // PWM duty cycle (10-bit)
-            CCPR2L = duty & 0xFF;           // 8 LSB
-            CCP2CON |= (duty >> 8) << 4;    // 2 MSB
+            CCP2CON  = 0b00001100;
+            CCPR2L   = ( duty >> 2 ) & 0xFF;                  // 8 LSB
+            //CCP2CON |= ( (duty & 0x3FF) >> 8) << 4;  // 2 MSB in <5:4>
+            CCP1CON |= (duty & 0x300) >> 4;  // 2 MSB in <5:4>
             break;
-
+            
         default:
             #ifdef DEBUG
                 #error "Invalid CCPx Pin"

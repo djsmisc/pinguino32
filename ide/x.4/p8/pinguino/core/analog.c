@@ -3,6 +3,7 @@
 // added 18F4550 support 2009/08/10
 // 2012-07-10 regis blanchot added 18F26J50 support
 // 2012-11-19 regis blanchot added 18F1220 and 18F1230 support
+// 2013-06-26 regis blanchot fixed analogWrite()
 
 #ifndef __ANALOG__
 #define __ANALOG__
@@ -124,29 +125,45 @@ u16 analogread(u8 channel)
 
 /*  --------------------------------------------------------------------
     analogWrite
-    NB: PWM Max. resolution is 10 bits
+
+    analogWrite() uses PWM module.
+    The maximum PWM resolution (bits) for a given PWM frequency is given by the equation :
+
+    PWM Resolution (max) = Log ( Fosc / Fpwm ) / Log ( 2 )
+
+    If 10-bit (max) resolution is needed, then Fpwm must be <=  Fosc / 1024.
+    For ex. if Fosc = 48 MHz then Fpwm must be <= 46875 Hz
+
+    If Fosc = 48 MHz and Fpwm = 46875 Hz and Prescaler = 1, then : 
+    PWM Period = 1 / Fpwm = [(PR2) + 1] • 4 • TOSC •(TMR2 Prescale Value)
+    PR2 = ( Fosc / Fpwm / 4 / TMR2 Prescale Value ) - 1
+    PR2 = 255
     ------------------------------------------------------------------*/
 
 #ifdef ANALOGWRITE
 
 void analogwrite_init()
 {
-    PR2 = 0xFF;                             // set PWM period to the max.
+    PR2 = 0xFF;                             // set PWM period to the max. to get 10-bit res.
     T2CON = 0b00000100;                     // Timer2 on, prescaler is 1
 }
 
-void analogwrite(u8 pin, u8 duty)
+void analogwrite(u8 pin, u16 duty)
 {
     switch (pin)
     {
         case CCP1:
-            CCP1CON = 0b00001100;
-            CCPR1L = duty;
+            CCP1CON  = 0b00001100;
+            CCPR1L   = ( duty >> 2 ) & 0xFF;         // 8 LSB
+            //CCP1CON |= ( (duty & 0x300) >> 8) << 4;  // 2 MSB in <5:4>
+            CCP1CON |= (duty & 0x300) >> 4;  // 2 MSB in <5:4>
             break;
 
         case CCP2:
-            CCP2CON = 0b00001100;
-            CCPR2L = duty;
+            CCP2CON  = 0b00001100;
+            CCPR2L   = ( duty >> 2 ) & 0xFF;                  // 8 LSB
+            //CCP2CON |= ( (duty & 0x3FF) >> 8) << 4;  // 2 MSB in <5:4>
+            CCP1CON |= (duty & 0x300) >> 4;  // 2 MSB in <5:4>
             break;
     }
 

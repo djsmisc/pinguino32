@@ -240,7 +240,7 @@
         #define CCP1        12
         #define CCP2        11
         
-    #elif defined(PINGUINO26J50) || defined(PINGUINO46J50)
+    #elif defined(PINGUINO26J50) || defined(PINGUINO46J50) || defined(PINGUINO27J53)
 
         #define RTCC        1
         #define CCP1        10  // cf. io.c
