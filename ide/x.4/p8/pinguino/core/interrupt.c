@@ -517,14 +517,14 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1 us = 1.000 ns = 12 cy
-                _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
+                _cycles_ = System_getPeripheralFrequency() / 1000 / 1000;
 				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy
-                _cycles_ = SystemGetInstructionClock() / 1000 ;
+                _cycles_ = System_getPeripheralFrequency() / 1000 ;
 				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_OFF;
@@ -532,7 +532,7 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
 				// 12.000.000 / 256 = 46875
-                _cycles_ = SystemGetInstructionClock() >> 8;
+                _cycles_ = System_getPeripheralFrequency() >> 8;
 				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				_t0con = T0_OFF | T0_16BIT | T0_SOURCE_INT | T0_PS_ON | T0_PS_1_256;
@@ -574,7 +574,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1us = 1.000 ns = 12 cy
-                _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
+                _cycles_ = System_getPeripheralFrequency() / 1000 / 1000;
 				preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
@@ -585,7 +585,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				break;
 			case INT_MILLISEC:
 				// 1ms = 1.000.000ns = 12.000 cy
-                _cycles_ = SystemGetInstructionClock() / 1000;
+                _cycles_ = System_getPeripheralFrequency() / 1000;
 				preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
@@ -598,7 +598,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
 				// 12.000.000 / 8 = 1.500.000
 				// 1.500.000 / 25 = 60000
-                _cycles_ = SystemGetInstructionClock() / 8 / 25;
+                _cycles_ = System_getPeripheralFrequency() / 8 / 25;
 				preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
 				intCountLimit[INT_TMR1] = delay * 25;
@@ -696,19 +696,19 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1us = 12 cy
-				_pr2 = SystemGetInstructionClock() / 1000 / 1000;
+				_pr2 = System_getPeripheralFrequency() / 1000 / 1000;
 				_t2con = T2_OFF | T2_PS_1_1 | T2_POST_1_1;
 				break;
 			case INT_MILLISEC:
 				// 1ms = 12.000 cy
 				// 12.000 / 15 / 16 = 50
-				_pr2 = SystemGetInstructionClock() / 1000 / 240;
+				_pr2 = System_getPeripheralFrequency() / 1000 / 240;
 				_t2con = T2_OFF | T2_POST_1_15 | T2_PS_1_16;
 				break;
 			case INT_SEC:
 				// 1sec = 12.000.000 cy
 				// 12.000.000 / 15 / 16 = 50.000 = 200 * 250
-				_pr2 = SystemGetInstructionClock() / 240 / 200;
+				_pr2 = System_getPeripheralFrequency() / 240 / 200;
 				intCountLimit[INT_TMR2] = delay * 200;
 				_t2con = T2_OFF | T2_POST_1_15 | T2_PS_1_16;
 				break;
@@ -751,7 +751,7 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
             // 1 cy = 1/(Fosc/4)=4/Fosc=4/48MHz=83ns
 			case INT_MICROSEC:
 				// 1us = 1.000 ns = 12 cy
-                _cycles_ = SystemGetInstructionClock() / 1000 / 1000;
+                _cycles_ = System_getPeripheralFrequency() / 1000 / 1000;
 				preloadH[INT_TMR3] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR3] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
@@ -762,7 +762,7 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				break;
 			case INT_MILLISEC:
 				// 1 ms = 1.000.000 ns = 12.000 cy at Fosc/4
-                _cycles_ = SystemGetInstructionClock() / 1000;
+                _cycles_ = System_getPeripheralFrequency() / 1000;
 				preloadH[INT_TMR3] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR3] =  low8(0xFFFF - _cycles_);
                 #if defined(__18f26j50) || defined(__18f46j50)
@@ -773,7 +773,7 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 				break;
 			case INT_SEC:
 				// 1 sec = 1.000.000.000 ns = 12.000.000 cy
-                _cycles_ = SystemGetInstructionClock() / 8 / 25;
+                _cycles_ = System_getPeripheralFrequency() / 8 / 25;
 				preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
 				preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
 				intCountLimit[INT_TMR3] = delay * 25;
@@ -822,19 +822,19 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
 		{
 			case INT_MICROSEC:
 				// 1us = 12 cy
-				_pr4 = SystemGetInstructionClock() / 1000 / 1000;
+				_pr4 = System_getPeripheralFrequency() / 1000 / 1000;
 				_t4con = T4_OFF | T4_PS_1_1 | T4_POST_1_1;
 				break;
 			case INT_MILLISEC:
 				// 1ms = 12.000 cy
 				// 12.000 / 15 / 16 = 50
-				_pr4 = SystemGetInstructionClock() / 1000 / 240;
+				_pr4 = System_getPeripheralFrequency() / 1000 / 240;
 				_t4con = T4_OFF | T4_POST_1_15 | T4_PS_1_16;
 				break;
 			case INT_SEC:
 				// 1sec = 12.000.000 cy
 				// 12.000.000 / 15 / 16 = 50.000 = 200 * 25
-				_pr4 = SystemGetInstructionClock() / 240 / 200;
+				_pr4 = System_getPeripheralFrequency() / 240 / 200;
 				intCountLimit[INT_TMR4] = delay * 200;
 				_t4con = T4_OFF | T4_POST_1_15 | T4_PS_1_16;
 				break;

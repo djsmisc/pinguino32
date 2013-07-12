@@ -73,7 +73,7 @@ void lcd_send(u8 value, u8 mode)
 	else
 	{
 		lcd_write4bits(value >> 4);	// Upper 4 bits first
-		lcd_write4bits(value);		    // Lower 4 bits second
+		lcd_write4bits(value);	    // Lower 4 bits second
 	}
 }
 
