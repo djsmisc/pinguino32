@@ -14,20 +14,22 @@
 #define myLED1	1
 #define myLED2	2
 #define myLED3	3
-#define myLED4	4
+//PINGUINO 26J50 Only
+//#define myLED4	4
 
 void blink0() {	toggle(myLED0); }
 void blink1() {	toggle(myLED1); }
 void blink2() {	toggle(myLED2); }
 void blink3() {	toggle(myLED3); }
-void blink4() {	toggle(myLED4); }
+//PINGUINO 26J50 Only
+//void blink4() {	toggle(myLED4); }
 
 void setup()
 {
-	// Clear RB3 to RB0
+	// Clear RB4 to RB0
 	LATB  &= 0b11100000;
 	PORTB &= 0b11100000;
-	// RB3 to RB0 are OUTPUT
+	// RB4 to RB0 are OUTPUT
 	TRISB &= 0b11100000;
 
 	OnTimer0(blink0, INT_MILLISEC, 500);	// Use Timer0 to toggle pin 0 every 500 ms
