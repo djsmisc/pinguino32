@@ -698,7 +698,7 @@ class frameKeyWords ( wx.Frame ):
 class framePinguinoX ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Pinguino IDE x.4"), pos = wx.DefaultPosition, size = wx.Size( 719,498 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Pinguino IDE x.4"), pos = wx.DefaultPosition, size = wx.Size( 757,430 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL, name = u"Pinguino IDE x.3" )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -710,6 +710,7 @@ class framePinguinoX ( wx.Frame ):
 		bSizer37 = wx.BoxSizer( wx.VERTICAL )
 		
 		self.splitterCO = wx.SplitterWindow( self.panelPrincipal, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.splitterCO.SetSashGravity( 0.8 )
 		self.splitterCO.Bind( wx.EVT_IDLE, self.splitterCOOnIdle )
 		
 		self.panelEditor = wx.Panel( self.splitterCO, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
@@ -718,9 +719,10 @@ class framePinguinoX ( wx.Frame ):
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 		
 		self.splitterCL = wx.SplitterWindow( self.panelEditor, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.SP_3D )
+		self.splitterCL.SetSashGravity( 0.8 )
 		self.splitterCL.Bind( wx.EVT_IDLE, self.splitterCLOnIdle )
 		
-		self.panelCentral = wx.Panel( self.splitterCL, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelCentral = wx.Panel( self.splitterCL, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.FULL_REPAINT_ON_RESIZE|wx.TAB_TRAVERSAL )
 		self.panelCentral.SetBackgroundColour( wx.Colour( 175, 200, 225 ) )
 		
 		bSizer38 = wx.BoxSizer( wx.VERTICAL )
@@ -813,7 +815,7 @@ class framePinguinoX ( wx.Frame ):
 		self.file.SetSizer( bSizer7 )
 		self.file.Layout()
 		bSizer7.Fit( self.file )
-		self.notebookLateral.AddPage( self.file, _(u"File"), True )
+		self.notebookLateral.AddPage( self.file, _(u"Code navigator"), False )
 		self.documents = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -867,7 +869,7 @@ class framePinguinoX ( wx.Frame ):
 		self.documents.SetSizer( bSizer4 )
 		self.documents.Layout()
 		bSizer4.Fit( self.documents )
-		self.notebookLateral.AddPage( self.documents, _(u"Documents"), False )
+		self.notebookLateral.AddPage( self.documents, _(u"Explore"), True )
 		self.search = wx.Panel( self.notebookLateral, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		fgSizer1 = wx.FlexGridSizer( 2, 2, 0, 0 )
 		fgSizer1.AddGrowableCol( 1 )
@@ -956,7 +958,7 @@ class framePinguinoX ( wx.Frame ):
 		self.search.SetSizer( fgSizer1 )
 		self.search.Layout()
 		fgSizer1.Fit( self.search )
-		self.notebookLateral.AddPage( self.search, _(u"Search"), False )
+		self.notebookLateral.AddPage( self.search, _(u"Search/Replace"), False )
 		
 		bSizer3.Add( self.notebookLateral, 1, wx.EXPAND, 5 )
 		
@@ -964,7 +966,7 @@ class framePinguinoX ( wx.Frame ):
 		self.panelLateral.SetSizer( bSizer3 )
 		self.panelLateral.Layout()
 		bSizer3.Fit( self.panelLateral )
-		self.splitterCL.SplitVertically( self.panelCentral, self.panelLateral, 356 )
+		self.splitterCL.SplitVertically( self.panelCentral, self.panelLateral, 490 )
 		bSizer2.Add( self.splitterCL, 1, wx.EXPAND, 5 )
 		
 		
@@ -1007,7 +1009,7 @@ class framePinguinoX ( wx.Frame ):
 		self.splitterCO.Unbind( wx.EVT_IDLE )
 	
 	def splitterCLOnIdle( self, event ):
-		self.splitterCL.SetSashPosition( 356 )
+		self.splitterCL.SetSashPosition( 490 )
 		self.splitterCL.Unbind( wx.EVT_IDLE )
 	
 	def m_splitter4OnIdle( self, event ):

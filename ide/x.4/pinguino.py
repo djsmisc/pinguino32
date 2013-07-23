@@ -65,7 +65,10 @@ class MySplashScreen(wx.SplashScreen):
 ########################################################################
 class MyApp(wx.App):
     def __init__(self):
-        wx.App.__init__(self, redirect=True, filename="pinguinoPanic")
+        if "--dev" in sys.argv and sys.argv[sys.argv.index("--dev")+1].lower() == "true":
+            wx.App.__init__(self)
+        else:
+            wx.App.__init__(self, redirect=True, filename="pinguinoPanic")
         
     def OnInit(self):
         if sys.platform=='darwin':

@@ -35,9 +35,9 @@ class Documents():
         self.lateralDir = self.IDE.listCtrlDir
         self.lateralFiles = self.IDE.listCtrlFiles
         self.recentPathsDir = []
-        #self.currentLateralDir = os.path.join(os.getcwd(),"examples")
+        if not os.path.isdir(self.IDE.currentLateralDir):
+            self.parentDir = os.path.join(os.getcwd(),"examples")
         self.parentDir = self.IDE.currentLateralDir
-        #print self.parentDir
         
         self.lateralDir.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Columns0', width=-1)  
         self.lateralFiles.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading='Columns0', width=-1)
@@ -90,6 +90,8 @@ class Documents():
     def setDirPicker(self, event):
         self.fixSizeDock()
         path = event.Path
+        if len(path) == event.GetSelection() == 0:
+            path = self.currentLateralDir
         self.buildLateralDir(path)
         
     #----------------------------------------------------------------------
@@ -110,6 +112,7 @@ class Documents():
         self.fixSizeDock()
         path = self.IDE.dirPicker.GetPath()
         sel = event.GetLabel()
+        
         if sel == "..":
             self.currentLateralDir = os.path.split(path)[0]
             self.buildLateralDir(self.currentLateralDir)
