@@ -7476,7 +7476,7 @@
                 </object>
             </object>
         </object>
-        <object class="Frame" expanded="0">
+        <object class="Frame" expanded="1">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -7494,7 +7494,7 @@
             <property name="minimum_size"></property>
             <property name="name">framePinguinoX</property>
             <property name="pos"></property>
-            <property name="size">719,498</property>
+            <property name="size">757,430</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
             <property name="title">Pinguino IDE x.4</property>
@@ -7538,16 +7538,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer1</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">0</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxPanel" expanded="0">
+                    <object class="wxPanel" expanded="1">
                         <property name="BottomDockable">1</property>
                         <property name="LeftDockable">1</property>
                         <property name="RightDockable">1</property>
@@ -7621,16 +7621,16 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="wxBoxSizer" expanded="0">
+                        <object class="wxBoxSizer" expanded="1">
                             <property name="minimum_size"></property>
                             <property name="name">bSizer37</property>
                             <property name="orient">wxVERTICAL</property>
                             <property name="permission">none</property>
-                            <object class="sizeritem" expanded="0">
+                            <object class="sizeritem" expanded="1">
                                 <property name="border">5</property>
                                 <property name="flag">wxEXPAND</property>
                                 <property name="proportion">1</property>
-                                <object class="wxSplitterWindow" expanded="0">
+                                <object class="wxSplitterWindow" expanded="1">
                                     <property name="BottomDockable">1</property>
                                     <property name="LeftDockable">1</property>
                                     <property name="RightDockable">1</property>
@@ -7674,7 +7674,7 @@
                                     <property name="pin_button">1</property>
                                     <property name="pos"></property>
                                     <property name="resize">Resizable</property>
-                                    <property name="sashgravity">0.0</property>
+                                    <property name="sashgravity">0.8</property>
                                     <property name="sashpos">0</property>
                                     <property name="sashsize">-1</property>
                                     <property name="show">1</property>
@@ -7714,8 +7714,8 @@
                                     <event name="OnSplitterSashPosChanging"></event>
                                     <event name="OnSplitterUnsplit"></event>
                                     <event name="OnUpdateUI"></event>
-                                    <object class="splitteritem" expanded="0">
-                                        <object class="wxPanel" expanded="0">
+                                    <object class="splitteritem" expanded="1">
+                                        <object class="wxPanel" expanded="1">
                                             <property name="BottomDockable">1</property>
                                             <property name="LeftDockable">1</property>
                                             <property name="RightDockable">1</property>
@@ -7789,16 +7789,16 @@
                                             <event name="OnSetFocus"></event>
                                             <event name="OnSize"></event>
                                             <event name="OnUpdateUI"></event>
-                                            <object class="wxBoxSizer" expanded="0">
+                                            <object class="wxBoxSizer" expanded="1">
                                                 <property name="minimum_size"></property>
                                                 <property name="name">bSizer2</property>
                                                 <property name="orient">wxVERTICAL</property>
                                                 <property name="permission">none</property>
-                                                <object class="sizeritem" expanded="0">
+                                                <object class="sizeritem" expanded="1">
                                                     <property name="border">5</property>
                                                     <property name="flag">wxEXPAND</property>
                                                     <property name="proportion">1</property>
-                                                    <object class="wxSplitterWindow" expanded="0">
+                                                    <object class="wxSplitterWindow" expanded="1">
                                                         <property name="BottomDockable">1</property>
                                                         <property name="LeftDockable">1</property>
                                                         <property name="RightDockable">1</property>
@@ -7842,8 +7842,8 @@
                                                         <property name="pin_button">1</property>
                                                         <property name="pos"></property>
                                                         <property name="resize">Resizable</property>
-                                                        <property name="sashgravity">0.0</property>
-                                                        <property name="sashpos">356</property>
+                                                        <property name="sashgravity">0.8</property>
+                                                        <property name="sashpos">490</property>
                                                         <property name="sashsize">-1</property>
                                                         <property name="show">1</property>
                                                         <property name="size"></property>
@@ -7896,7 +7896,7 @@
                                                                 <property name="bg">175,200,225</property>
                                                                 <property name="caption"></property>
                                                                 <property name="caption_visible">1</property>
-                                                                <property name="center_pane">0</property>
+                                                                <property name="center_pane">1</property>
                                                                 <property name="close_button">1</property>
                                                                 <property name="context_help"></property>
                                                                 <property name="context_menu">1</property>
@@ -7933,7 +7933,7 @@
                                                                 <property name="tooltip"></property>
                                                                 <property name="window_extra_style"></property>
                                                                 <property name="window_name"></property>
-                                                                <property name="window_style">wxTAB_TRAVERSAL</property>
+                                                                <property name="window_style">wxFULL_REPAINT_ON_RESIZE|wxTAB_TRAVERSAL</property>
                                                                 <event name="OnChar"></event>
                                                                 <event name="OnEnterWindow"></event>
                                                                 <event name="OnEraseBackground"></event>
@@ -8049,8 +8049,8 @@
                                                                 </object>
                                                             </object>
                                                         </object>
-                                                        <object class="splitteritem" expanded="0">
-                                                            <object class="wxPanel" expanded="0">
+                                                        <object class="splitteritem" expanded="1">
+                                                            <object class="wxPanel" expanded="1">
                                                                 <property name="BottomDockable">1</property>
                                                                 <property name="LeftDockable">1</property>
                                                                 <property name="RightDockable">1</property>
@@ -8092,7 +8092,7 @@
                                                                 <property name="permission">protected</property>
                                                                 <property name="pin_button">1</property>
                                                                 <property name="pos"></property>
-                                                                <property name="resize">Resizable</property>
+                                                                <property name="resize">Fixed</property>
                                                                 <property name="show">1</property>
                                                                 <property name="size"></property>
                                                                 <property name="subclass"></property>
@@ -8124,16 +8124,16 @@
                                                                 <event name="OnSetFocus"></event>
                                                                 <event name="OnSize"></event>
                                                                 <event name="OnUpdateUI"></event>
-                                                                <object class="wxBoxSizer" expanded="0">
+                                                                <object class="wxBoxSizer" expanded="1">
                                                                     <property name="minimum_size"></property>
                                                                     <property name="name">bSizer3</property>
                                                                     <property name="orient">wxVERTICAL</property>
                                                                     <property name="permission">none</property>
-                                                                    <object class="sizeritem" expanded="0">
+                                                                    <object class="sizeritem" expanded="1">
                                                                         <property name="border">5</property>
                                                                         <property name="flag">wxEXPAND</property>
                                                                         <property name="proportion">1</property>
-                                                                        <object class="wxNotebook" expanded="0">
+                                                                        <object class="wxNotebook" expanded="1">
                                                                             <property name="BottomDockable">1</property>
                                                                             <property name="LeftDockable">1</property>
                                                                             <property name="RightDockable">1</property>
@@ -8211,9 +8211,9 @@
                                                                             <event name="OnSetFocus"></event>
                                                                             <event name="OnSize"></event>
                                                                             <event name="OnUpdateUI"></event>
-                                                                            <object class="notebookpage" expanded="0">
+                                                                            <object class="notebookpage" expanded="1">
                                                                                 <property name="bitmap"></property>
-                                                                                <property name="label">File</property>
+                                                                                <property name="label">Code navigator</property>
                                                                                 <property name="select">0</property>
                                                                                 <object class="wxPanel" expanded="0">
                                                                                     <property name="BottomDockable">1</property>
@@ -9375,7 +9375,7 @@
                                                                             </object>
                                                                             <object class="notebookpage" expanded="0">
                                                                                 <property name="bitmap"></property>
-                                                                                <property name="label">Documents</property>
+                                                                                <property name="label">Explore</property>
                                                                                 <property name="select">1</property>
                                                                                 <object class="wxPanel" expanded="0">
                                                                                     <property name="BottomDockable">1</property>
@@ -10269,7 +10269,7 @@
                                                                             </object>
                                                                             <object class="notebookpage" expanded="0">
                                                                                 <property name="bitmap"></property>
-                                                                                <property name="label">Search</property>
+                                                                                <property name="label">Search/Replace</property>
                                                                                 <property name="select">0</property>
                                                                                 <object class="wxPanel" expanded="0">
                                                                                     <property name="BottomDockable">1</property>

@@ -28,12 +28,17 @@ import locale, gettext, os, sys
 
 loc = locale.getdefaultlocale()[0][0:2]
 
-# pt_BR Language Check, By Wagner de Queiroz, 2010-Mar,01
-if loc == "pt": loc = locale.getdefaultlocale()[0][0:5]
-if loc != "pt_BR": loc = locale.getdefaultlocale()[0][0:2]              
 
-if sys.platform == 'win32': # needed for for py2exe on [EasyPack]
-    lang = gettext.translation('pinguino', os.path.join('.', 'locale'), languages=[loc], fallback=True)
+if "--dev" in sys.argv and sys.argv[sys.argv.index("--dev")+1].lower() == "true":
+    _ = lambda x:x
+    
 else:
-    lang = gettext.translation('pinguino', os.path.join(sys.path[0], 'locale'), languages=[loc], fallback=True)
-_=lang.ugettext
+    # pt_BR Language Check, By Wagner de Queiroz, 2010-Mar,01
+    if loc == "pt": loc = locale.getdefaultlocale()[0][0:5]
+    if loc != "pt_BR": loc = locale.getdefaultlocale()[0][0:2]              
+    
+    if sys.platform == 'win32': # needed for for py2exe on [EasyPack]
+        lang = gettext.translation('pinguino', os.path.join('.', 'locale'), languages=[loc], fallback=True)
+    else:
+        lang = gettext.translation('pinguino', os.path.join(sys.path[0], 'locale'), languages=[loc], fallback=True)
+    _=lang.ugettext

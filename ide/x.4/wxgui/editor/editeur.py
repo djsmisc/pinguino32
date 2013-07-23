@@ -319,7 +319,7 @@ class Editor:
         pageIdx = self.notebookEditor.GetSelection()
         if self.notebookEditor.GetPageText(pageIdx)[0]=="*":
             dlg = wx.MessageDialog(self,
-                                   _("Save file ?"), _("Warning")+"!",
+                                   _("Save file ?\n"+self.filename[pageIdx]), _("Warning")+"!",
                                    wx.YES_NO | wx.ICON_WARNING | wx.CANCEL
                                    )
             result=dlg.ShowModal()
