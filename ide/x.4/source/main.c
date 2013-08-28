@@ -4,7 +4,7 @@
     PURPOSE:        application main function
     PROGRAMER:      Jean-pierre Mandon - Régis Blanchot
     FIRST RELEASE:  19 Sep 2008
-    LAST RELEASE:   28 Feb 2013
+    LAST RELEASE:   31 Jul 2013
     ----------------------------------------------------------------------------
     CHANGELOG :
     Originally based on a file by (c) 2006 Pierre Gaufillet <pierre.gaufillet@magic.fr>
@@ -65,8 +65,10 @@
         
     #endif
     
-    #include <common_types.h>
-    #include <boot_iface.h>
+    // 2013-07-31 - A. Gentric - fix usb.c
+    //#include <common_types.h>
+    //#include <boot_iface.h>
+    
     // only for compatibility with application_iface.o
     #ifndef __USB__
         void epap_in()      { return; }
