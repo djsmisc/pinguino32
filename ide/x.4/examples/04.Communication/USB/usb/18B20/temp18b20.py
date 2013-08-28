@@ -46,9 +46,11 @@ class Pinguino():
 
 	VENDOR = 0x04D8
 	PRODUCT = 0xFEAA
-	CONFIGURATION = 3
+	CONFIGURATION = 0x01 # on Pinguino 26J50
+	#CONFIGURATION = 0x03 # on Pinguino 2550 ?
 	INTERFACE = 0
-	ENDPOINT_IN = 0x82
+	#ENDPOINT_IN = 0x82 #2550
+   	ENDPOINT_IN = 0x81 #26j50
 	ENDPOINT_OUT = 0x01
 
 	device = None
