@@ -248,6 +248,19 @@
         #define LED1        12
         #define USERLED     12
 
+    #elif defined(PINGUINO47J53A) || defined(PINGUINO47J53B)
+
+        #define RTCC        1
+        #define CCP1        1  // cf. io.c
+        #define CCP2        2
+        #define CCP3        3
+        #define CCP4        4
+        #define CCP5        5
+        #define CCP6        6
+        #define CCP7        7
+        #define LED1        18 // RC2
+        #define USERLED     18
+
     #endif
 
 #endif

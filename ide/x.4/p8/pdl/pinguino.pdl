@@ -3,10 +3,10 @@ delayMicroseconds Delayus#include <delay.c>
 
 millis millis#include <millis.c>#define __MILLIS__
 
-digitalWrite digitalwrite#include <digitalw.c>
-pinMode pinmode#include <digitalw.c>
-digitalRead digitalread#include <digitalw.c>
-toggle toggle#include <digitalw.c>
+digitalWrite digitalwrite#include <digitalw.c>#define DIGITALWRITE
+pinMode pinmode#include <digitalw.c>#define PINMODE
+digitalRead digitalread#include <digitalw.c>#define DIGITALREAD
+toggle toggle#include <digitalw.c>#define TOGGLE
 
 analogRead analogread#include <analog.c>#define ANALOGREAD
 analogReference analogreference#include <analog.c>#define ANALOGREFERENCE
