@@ -145,6 +145,20 @@ class Pinguino27J53:
     shortarg='-j53'
     longarg='--pinguino27j53'
 
+class Pinguino47J53A:
+    name='Pinguino 47J53-A'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f47j53'
+    board='PINGUINO47J53A'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0x1FFF8
+    shortarg='-j53A'
+    longarg='--pinguino47j53a'
+
 class PICuno_Equo:
     name='PICuno Equo'
     #id=wx.NewId()
@@ -334,7 +348,7 @@ boardlist = [
     Pinguino2550,  Pinguino4550,
     Pinguino25k50, CHRP3, Pinguino45k50,
     Pinguino26J50,
-    Pinguino27J53, 
+    Pinguino27J53,Pinguino47J53A, 
     PIC32_Pinguino, PIC32_Pinguino_OTG,
     PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,
     GENERIC32MX250F128, GENERIC32MX220F032,
