@@ -38,8 +38,8 @@ Contact us at admin@embeddedadventures.com
 	
 */
 
-//#ifndef __MRF24J40_DEFINES_H
-//#define __MRF24J40_DEFINES_H
+#ifndef __MRF24J40_DEFINES_H
+#define __MRF24J40_DEFINES_H
 
 #define RXMCR			0x00
 
@@ -900,4 +900,4 @@ Contact us at admin@embeddedadventures.com
 #define UPNONCE11		0x24B
 #define UPNONCE12		0x24C
 
-//#endif
+#endif

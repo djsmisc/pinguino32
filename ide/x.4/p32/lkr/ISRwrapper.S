@@ -141,7 +141,7 @@ vector_\_XX\()_ISR_wrapper:
 	ISR_wrapper	32,Serial2Interrupt	# UART 2
 	ISR_wrapper	35,RTCCInterrupt	# RTCC
 
-#if defined(PIC32_PINGUINO_T795) || defined(UBW32_795) || defined(EMPEROR795)	
+#if defined(PIC32_PINGUINO_T795) || defined(UBW32_795) || defined(EMPEROR795)
 	ISR_wrapper 31,Serial3Interrupt # UART 3
 	ISR_wrapper 49,Serial4Interrupt # UART 4
 	ISR_wrapper 51,Serial5Interrupt # UART 5
