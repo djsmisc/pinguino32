@@ -97,8 +97,8 @@ void mrf24j40_flush_receive_buffer() {
 
 
 
-void mrf24j40_set_channel(uns8 _channel) {
-
+void mrf24j40_set_channel(uns8 _channel)
+{
 	current_channel = _channel;
 	_channel = _channel - 11;
 	_channel = 0x02 + 0x10 * _channel;
@@ -107,12 +107,12 @@ void mrf24j40_set_channel(uns8 _channel) {
 	mrf24j40_short_addr_write(RFCTL, 0x04);	// RFCTL (0x36) = 0x04 – Reset RF state machine.
 	mrf24j40_short_addr_write(RFCTL, 0x00);	// RFCTL (0x36) = 0x00
         
-        #ifndef __PIC32MX__
+    #ifndef __PIC32MX__
         	delay_us(200);	// Delay at least 192us			
 	#endif
 	#ifdef __PIC32MX__
         	Delayus(200);
-        #endif        	
+    #endif        	
 }	
 
 
@@ -293,11 +293,11 @@ void mrf24h40_pan_association_requested() {
 	
 
 	
-void mrf24j40_set_pan_id(uns16 _pan_id) {
+void mrf24j40_set_pan_id(uns16 _pan_id)
+{
 	pan_id = _pan_id;
 	mrf24j40_short_addr_write(PANIDL, pan_id & 0xff);
 	mrf24j40_short_addr_write(PANIDH, pan_id >> 8);
-	
 }
 
 void mrf24j40_set_extended_address(uns8 *_extended_address) {
@@ -319,15 +319,14 @@ void mrf24j40_set_extended_address(uns8 *_extended_address) {
     #endif        	
 }	
 
-void mrf24j40_set_short_address(uns16 _short_address) {
-
+void mrf24j40_set_short_address(uns16 _short_address)
+{
 	// Keep hold of the short address
 	short_address = _short_address;
 	
 	// Tell the mrf about it
 	mrf24j40_short_addr_write(SADRL, short_address & 0xff);
 	mrf24j40_short_addr_write(SADRH, short_address >> 8);
-
 }
 
 
@@ -844,7 +843,8 @@ uns8 mrf24j40_short_addr_read(uns8 addr)
 	return result;
 }	
 
-void mrf24j40_short_addr_write(uns8 addr, uns8 data) {
+void mrf24j40_short_addr_write(uns8 addr, uns8 data)
+{
         #ifndef __PIC32MX__
 	        clear_pin(mrf24j40_cs_port, mrf24j40_cs_pin);
 	        addr = addr & 0b00111111;	// <5:0> bits
