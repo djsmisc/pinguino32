@@ -1,0 +1,407 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+requestHandled      0x1               /tmp/cc67b62q.o
+deviceState         0x1               /tmp/cc67b62q.o
+currentConfiguration
+                    0x1               /tmp/cc67b62q.o
+inPtr               0x4               /tmp/cc67b62q.o
+bootCmd             0x40              /tmp/cc67b62q.o
+ctrlTransferStage   0x1               /tmp/cc67b62q.o
+wCount              0x2               /tmp/cc67b62q.o
+outPtr              0x4               /tmp/cc67b62q.o
+deviceAddress       0x1               /tmp/cc67b62q.o
+controlTransferBuffer
+                    0x40              /tmp/cc67b62q.o
+ep_bdt              0xc0              /tmp/cc67b62q.o
+SetupPacket         0x40              /tmp/cc67b62q.o
+selfPowered         0x1               /tmp/cc67b62q.o
+
+Discarded input sections
+
+ .text          0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .data          0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .bss           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .reginfo       0x0000000000000000       0x18 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .pdr           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .init          0x0000000000000000        0x8 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .fini          0x0000000000000000        0x8 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+ .text          0x0000000000000000      0x1a8 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .data          0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .bss           0x0000000000000000       0x20 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .reginfo       0x0000000000000000       0x18 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .ctors         0x0000000000000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .dtors         0x0000000000000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .jcr           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .tm_clone_table
+                0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .sdata         0x0000000000000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .fini          0x0000000000000000       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .init          0x0000000000000000       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .data          0x0000000000000000        0x0 /tmp/cc04BP6G.o
+ .bss           0x0000000000000000        0x0 /tmp/cc04BP6G.o
+ .reginfo       0x0000000000000000       0x18 /tmp/cc04BP6G.o
+ .pdr           0x0000000000000000       0xc0 /tmp/cc04BP6G.o
+ .data          0x0000000000000000        0x0 /tmp/cc67b62q.o
+ .bss           0x0000000000000000        0x0 /tmp/cc67b62q.o
+ .reginfo       0x0000000000000000       0x18 /tmp/cc67b62q.o
+ .pdr           0x0000000000000000      0x120 /tmp/cc67b62q.o
+ .data          0x0000000000000000        0x0 /tmp/ccuNKuwb.o
+ .bss           0x0000000000000000        0x0 /tmp/ccuNKuwb.o
+ .reginfo       0x0000000000000000       0x18 /tmp/ccuNKuwb.o
+ .pdr           0x0000000000000000       0xa0 /tmp/ccuNKuwb.o
+ .text          0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .data          0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .bss           0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .reginfo       0x0000000000000000       0x18 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .pdr           0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .text          0x0000000000000000       0x60 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .data          0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .bss           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .reginfo       0x0000000000000000       0x18 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .ctors         0x0000000000000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .dtors         0x0000000000000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .jcr           0x0000000000000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .tm_clone_table
+                0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .init          0x0000000000000000       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+ .text          0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .data          0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .bss           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .reginfo       0x0000000000000000       0x18 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .pdr           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .init          0x0000000000000000       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .fini          0x0000000000000000       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+ .text          0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .data          0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .bss           0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .reginfo       0x0000000000000000       0x18 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+ .pdr           0x0000000000000000        0x0 /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+kseg0_data_mem   0x0000000080000000 0x0000000000002000 rw !x
+kseg0_program_mem 0x000000009d003000 0x0000000000005000 xr
+exception_mem    0x000000009d000000 0x0000000000002000 xr
+kseg0_boot_mem   0x000000009fc00000 0x0000000000000bf0 xr
+kseg1_boot_mem   0x00000000bfc00000 0x0000000000000490 xr
+kseg1_data_mem   0x00000000a0000000 0x0000000000002000 w !x
+configsfrs       0x00000000bfc00bf0 0x0000000000000010
+config3          0x00000000bfc00bf0 0x0000000000000004
+config2          0x00000000bfc00bf4 0x0000000000000004
+config1          0x00000000bfc00bf8 0x0000000000000004
+config0          0x00000000bfc00bfc 0x0000000000000004
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crti.o
+LOAD /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+                0x0000000000000200                _min_heap_size = 0x200
+LOAD /tmp/cc04BP6G.o
+LOAD /tmp/cc67b62q.o
+LOAD /tmp/ccuNKuwb.o
+LOAD /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+LOAD /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/libgcc.a
+LOAD /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/libgcc.a
+LOAD /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+LOAD /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtn.o
+LOAD /dvpt/pinguino/local/bootloaders/32/usb/v1.x/obj/non-free/processor.o
+                0x0000000000000001                PROVIDE (_vector_spacing, 0x1)
+                0x000000009d001000                _ebase_address = 0x9d001000
+                0x00000000bfc00000                _RESET_ADDR = 0xbfc00000
+                0x00000000bfc00380                _BEV_EXCPT_ADDR = 0xbfc00380
+                0x000000009d001180                _GEN_EXCPT_ADDR = (_ebase_address + 0x180)
+
+.config_BFC00BF0
+ *(.config_BFC00BF0)
+
+.config_BFC00BF4
+ *(.config_BFC00BF4)
+
+.config_BFC00BF8
+ *(.config_BFC00BF8)
+
+.config_BFC00BFC
+ *(.config_BFC00BFC)
+                0x0000000000000400                PROVIDE (_min_stack_size, 0x400)
+                0x0000000000000000                PROVIDE (_min_heap_size, 0x0)
+
+.reset          0x00000000bfc00000       0x10
+ *(.reset)
+ .reset         0x00000000bfc00000       0x10 /tmp/ccuNKuwb.o
+                0x00000000bfc00000                _reset
+
+.bev_excpt      0x00000000bfc00380        0x4
+ *(.bev_handler)
+ .bev_handler   0x00000000bfc00380        0x4 /tmp/ccuNKuwb.o
+
+.app_excpt      0x000000009d001180        0x4
+ *(.gen_handler)
+ .gen_handler   0x000000009d001180        0x4 /tmp/ccuNKuwb.o
+
+.vector_0       0x000000009d001200        0x0
+ *(.vector_0)
+                0x0000000000000001                ASSERT (((_vector_spacing == 0x0) || (SIZEOF (.vector_0) <= (_vector_spacing << 0x5))), function at exception vector 0 too large)
+
+.startup        0x000000009fc00000      0x1bc
+ *(.startup)
+ .startup       0x000000009fc00000      0x1bc /tmp/ccuNKuwb.o
+
+.text           0x000000009d003000      0xe3c
+                0x000000009d003000                _text_begin = .
+ *(.text .stub .text.* .gnu.linkonce.t.*)
+ .text          0x000000009d003000      0x59c /tmp/cc04BP6G.o
+                0x000000009d003000                delay
+                0x000000009d00301c                flash_operation
+                0x000000009d003068                exit_boot
+                0x000000009d0030cc                usb_configure_endpoints
+                0x000000009d00313c                usb_ep_data_out_callback
+                0x000000009d0033c8                main
+ .text          0x000000009d00359c      0x88c /tmp/cc67b62q.o
+                0x000000009d00359c                GetDescriptor
+                0x000000009d003658                ProcessStandardRequest
+                0x000000009d003790                InDataStage
+                0x000000009d003840                OutDataStage
+                0x000000009d0038c8                SetupStage
+                0x000000009d003a30                WaitForSetupStage
+                0x000000009d003a6c                ProcessControlTransfer
+                0x000000009d003bbc                EnableUSBModule
+                0x000000009d003c60                ProcessUSBTransactions
+ .text          0x000000009d003e28       0x14 /tmp/ccuNKuwb.o
+ *(.text.*personality*)
+ *(.gnu.warning)
+ *(.mips16.fn.*)
+ *(.mips16.call.*)
+                0x000000009d003e3c                _text_end = .
+
+.rodata         0x000000009d003e3c       0x7c
+ *(.rodata .rodata.* .gnu.linkonce.r.*)
+ .rodata.string_descriptor
+                0x000000009d003e3c        0xc /tmp/cc04BP6G.o
+                0x000000009d003e3c                string_descriptor
+ .rodata.prod   0x000000009d003e48       0x14 /tmp/cc04BP6G.o
+                0x000000009d003e48                prod
+ .rodata.manu   0x000000009d003e5c       0x18 /tmp/cc04BP6G.o
+                0x000000009d003e5c                manu
+ .rodata.configuration_descriptor
+                0x000000009d003e74       0x28 /tmp/cc04BP6G.o
+                0x000000009d003e74                configuration_descriptor
+ .rodata.device_descriptor
+                0x000000009d003e9c       0x1c /tmp/cc04BP6G.o
+                0x000000009d003e9c                device_descriptor
+ *(.rodata1)
+                0x000000009d003eb8                . = ALIGN (0x4)
+
+.sdata2         0x000000009d003eb8        0x0
+ *(.sdata2 .sdata2.* .gnu.linkonce.s2.*)
+                0x000000009d003eb8                . = ALIGN (0x4)
+
+.sbss2          0x000000009d003eb8        0x0
+ *(.sbss2 .sbss2.* .gnu.linkonce.sb2.*)
+                0x000000009d003eb8                . = ALIGN (0x4)
+
+.eh_frame_hdr
+ *(.eh_frame_hdr)
+
+.eh_frame       0x0000000080000000        0x4
+ *(.eh_frame)
+ .eh_frame      0x0000000080000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .eh_frame      0x0000000080000000        0x4 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+
+.dbg_data       0x00000000a0000000        0x0
+                0x00000000a0000000                . = (. + DEFINED (_DEBUGGER)?0x200:0x0)
+
+.data           0x00000000a0000000        0x0 load address 0x000000009d003eb8
+                0x00000000a0000000                _data_begin = .
+ *(.data .data.* .gnu.linkonce.d.*)
+ *(.gnu.linkonce.d.*personality*)
+ *(.data1)
+                0x000000009d003eb8                _data_image_begin = LOADADDR (.data)
+
+.eh_frame
+ *(.eh_frame)
+                0x00000000a0007ff0                _gp = (ALIGN (0x10) + 0x7ff0)
+
+.got
+ *(.got.plt)
+ *(.got)
+
+.sdata          0x00000000a0000000        0x4 load address 0x000000009d003eb8
+                0x00000000a0000000                _sdata_begin = .
+ *(.sdata .sdata.* .gnu.linkonce.s.*)
+ .sdata.lang    0x00000000a0000000        0x4 /tmp/cc04BP6G.o
+                0x00000000a0000000                lang
+                0x00000000a0000004                _sdata_end = .
+
+.lit8
+ *(.lit8)
+
+.lit4
+ *(.lit4)
+                0x00000000a0000004                . = ALIGN (0x4)
+                0x00000000a0000004                _data_end = .
+                0x00000000a0000004                _bss_begin = .
+
+.sbss           0x00000000a0000004       0x12 load address 0x000000009d003ebc
+                0x00000000a0000004                _sbss_begin = .
+ *(.dynsbss)
+ *(.sbss .sbss.* .gnu.linkonce.sb.*)
+ *(.scommon)
+ .scommon       0x00000000a0000004       0x12 /tmp/cc67b62q.o
+                0x00000000a0000004                requestHandled
+                0x00000000a0000005                deviceState
+                0x00000000a0000006                currentConfiguration
+                0x00000000a0000008                inPtr
+                0x00000000a000000c                ctrlTransferStage
+                0x00000000a000000e                wCount
+                0x00000000a0000010                outPtr
+                0x00000000a0000014                deviceAddress
+                0x00000000a0000015                selfPowered
+                0x00000000a0000016                _sbss_end = .
+
+.bss            0x00000000a0000018      0x180 load address 0x000000009d003ebc
+ *(.dynbss)
+ *(.bss .bss.* .gnu.linkonce.b.*)
+ *(COMMON)
+ COMMON         0x00000000a0000018      0x180 /tmp/cc67b62q.o
+                0x00000000a0000018                bootCmd
+                0x00000000a0000058                controlTransferBuffer
+                0x00000000a0000098                ep_bdt
+                0x00000000a0000158                SetupPacket
+                0x00000000a0000198                . = ALIGN (0x4)
+                0x00000000a0000198                . = ALIGN (0x4)
+                0x00000000a0000198                _end = .
+                0x00000000a0000198                _bss_end = .
+
+.heap           0x00000000a0000198      0x200
+                0x00000000a0000198                _heap = .
+                0x00000000a0000398                . = (. + _min_heap_size)
+ *fill*         0x00000000a0000198      0x200 
+
+.stack          0x00000000a0000398      0x400
+                0x00000000a0000398                _splim = .
+                0x00000000a0000398                _SPLIM = .
+                0x00000000a0000798                . = (. + _min_stack_size)
+ *fill*         0x00000000a0000398      0x400 
+
+.ramfunc        0x00000000a0000800        0x0 load address 0x000000009d003ebc
+                0x00000000a0000800                _ramfunc_begin = .
+ *(.ramfunc .ramfunc.*)
+                0x00000000a0000800                . = ALIGN (0x4)
+                0x00000000a0000800                _ramfunc_end = .
+                0x000000009d003ebc                _ramfunc_image_begin = LOADADDR (.ramfunc)
+                0x0000000000000000                _ramfunc_length = SIZEOF (.ramfunc)
+                0x0000000000000800                _bmxdkpba_address = (_ramfunc_begin - ORIGIN (kseg1_data_mem))
+                0x0000000000002000                _bmxdudba_address = 0x2000
+                0x0000000000002000                _bmxdupba_address = 0x2000
+                0x00000000a0002000                _stack = (_ramfunc_length > 0x0)?(_ramfunc_begin - 0x4):(ORIGIN (kseg1_data_mem) + 0x2000)
+                0x0000000000000001                ASSERT (((_min_stack_size + _min_heap_size) <= (_stack - _heap)), Not enough space to allocate both stack and heap.  Reduce heap and/or stack size.)
+
+.pdr            0x0000000000000000        0x0
+ *(.pdr)
+ .pdr           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .pdr           0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+
+.reginfo
+ *(.reginfo)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x11
+ *(.comment)
+ .comment       0x0000000000000000       0x11 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000000       0x12 /tmp/cc04BP6G.o
+ .comment       0x0000000000000000       0x12 /tmp/cc67b62q.o
+ .comment       0x0000000000000000       0x12 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+
+.mdebug.abi32   0x0000000000000000        0x0
+ .mdebug.abi32  0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .mdebug.abi32  0x0000000000000000        0x0 /tmp/cc04BP6G.o
+ .mdebug.abi32  0x0000000000000000        0x0 /tmp/cc67b62q.o
+ .mdebug.abi32  0x0000000000000000        0x0 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+
+.gnu.attributes
+                0x0000000000000000       0x10
+ .gnu.attributes
+                0x0000000000000000       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtbegin.o
+ .gnu.attributes
+                0x0000000000000010       0x10 /tmp/cc04BP6G.o
+ .gnu.attributes
+                0x0000000000000020       0x10 /tmp/cc67b62q.o
+ .gnu.attributes
+                0x0000000000000030       0x10 /dvpt/gcc/mips/linux64/lib/gcc/mips-elf/4.7.2/soft-float/el/crtend.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info .gnu.linkonce.wi.*)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+/DISCARD/
+ *(.note.GNU-stack)
+OUTPUT(/dvpt/pinguino/local/bootloaders/32/usb/v1.x/build/Bootloader_v1.0_32MX220F032D.elf elf32-littlemips)
