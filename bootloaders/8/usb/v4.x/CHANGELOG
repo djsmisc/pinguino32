@@ -1,8 +1,8 @@
 /*******************************************************************************
     Pinguino Bootloader Change Log
 *******************************************************************************/
-    Version 4.09 (coming soon)
-        * added usb monitoring via extra pin for Pinguino 47j53
+    Version 4.09 (17-05-2013)
+        * fixed bug for external power supply support
     Version 4.08 (30-12-2012)
         * added Internal Oscillator support when possible
         * added 18f26j53 and 18f46j53 support
