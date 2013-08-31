@@ -276,11 +276,13 @@ void usb_ep_data_out_callback(char end_point)
         
         /// blocks must be erased before written
         /// the whole memory is erased at the begining of upload
-        /// we write 32 bytes not 64 bytes
-        /// n   : write [address]      + 64 bytes
-        /// n+1 : write [address + 32] + 64 bytes
-        /// 32 bytes are written 2 times
-        /// that's why we use 2-byte write instead of 64-byte write
+        /// but we write 32 bytes not 64 bytes
+        /// 0   : write [address]       + 64 bytes
+        /// 1   : write [address + 32]  + 64 bytes
+        /// ...
+        /// n   : write [address + 32n] + 64 bytes
+        /// so if we use 64-byte write mode, 32 bytes are written 2 times
+        /// that's why we use 2-byte write instead
         
 		EECON1bits.WPROG = 1; // Enable single-word write
 		for (counter=0; counter < bootCmd.len; counter+=2)
@@ -316,6 +318,7 @@ void usb_ep_data_out_callback(char end_point)
         // bootCmd.len = num. of 64-byte block to erase
         
 		EECON1 = 0b10010100; // allows erase (WREN=1, FREE=1) in flash (EEPGD=1)
+
 		for (counter=0; counter < bootCmd.len; counter++)
 		{
             EECON1bits.FREE = 1;    // allow a program memory erase operation
@@ -385,11 +388,11 @@ void usb_ep_data_out_callback(char end_point)
  
 void main(void) //__naked
 {
-    //dword i = 0;
+    //#if !defined(__18f47j53)
+    dword i = 0;
+    //#endif
     byte t1_count = 0;
     word led_counter = 0;
-
-    __asm
 
     //bcf     _PIR2, 4            ; Clear USB Interrupt Flag
 
@@ -398,13 +401,16 @@ void main(void) //__naked
         defined(__18f2455)  || defined(__18f4455)  || \
         defined(__18f2550)  || defined(__18f4550)        
 /**********************************************************************/
+    __asm
         movlw   0x0F
         movwf   _ADCON1             ; all I/O to Digital mode
         movlw   0x07
         movwf   _CMCON              ; all I/O to Digital mode
+    __endasm;
 /**********************************************************************/
     #elif defined(__18f25k50) || defined(__18f45k50)
 /**********************************************************************/
+    __asm
         movlw   0x70                ; 0b01110000 : 111 = HFINTOSC (16 MHz)
         movwf   _OSCCON             ; enable the 16 MHz internal clock
     wait_hfintosc:
@@ -417,9 +423,11 @@ void main(void) //__naked
         clrf    _ANSELD             ; all I/O to Digital mode
         clrf    _ANSELE             ; all I/O to Digital mode
         #endif
+    __endasm;
 /**********************************************************************/
     #elif defined(__18f26j50) || defined(__18f46j50)
 /**********************************************************************/
+    __asm
         bsf     _OSCTUNEbits, 6     ; Enable the PLL (PLLEN=bit6)
         ;call    _delay              ; Wait 2+ms until the PLL locks
                                      ; before enabling USB module
@@ -430,10 +438,12 @@ void main(void) //__naked
         movwf   _ANCON0             ; all I/O to Digital mode
         movlw   0x1F
         movwf   _ANCON1             ; all I/O to Digital mode
+    __endasm;
 /**********************************************************************/
     #elif defined(__18f26j53) || defined(__18f46j53)|| \
           defined(__18f27j53) || defined(__18f47j53)
 /**********************************************************************/
+    __asm
         movlw   0x70                ; 0b01110000 : 111 = INTOSC (8 MHz)
         movwf   _OSCCON             ; enable the 8 MHz internal clock
     wait_intosc:
@@ -449,6 +459,7 @@ void main(void) //__naked
 ;        movwf   _ADCON0             ; all I/O to Digital mode
 ;        movlw   0x07
 ;        movwf   _CMCON              ; all I/O to Digital mode
+    __endasm;
 /**********************************************************************/
     #else
 /**********************************************************************/
@@ -459,6 +470,23 @@ void main(void) //__naked
 
     #endif
 /**********************************************************************/
+
+    // Check if USB cable is attached
+    /*
+    #if defined(__18f47j53)
+
+    __asm
+        bcf     MON_TRIS, MON_PIN   ; monitoring pin as output
+        btfsc   MON_PORT, MON_PIN   ; skip if bit is clear
+        goto    ENTRY               ; start user app
+    __endasm;
+
+    #endif
+    */
+    
+    // Init. led, timer and usb
+
+    __asm
 
         bsf     _RCON, 7            ; enable priority levels on interrupts
 
@@ -481,23 +509,21 @@ void main(void) //__naked
 
     __endasm;
 
-    // Initialize USB
-
     EP_IN_BD(1).ADDR = PTR16(&bootCmd);
     currentConfiguration = 0x00;
     deviceState = DETACHED;
 
-    // Non-blocking loop if USB cable is not connected (ext. supply)
-
     do {
         EnableUSBModule();
         ProcessUSBTransactions();
-        //i = i + 1;
-        //if (i == 0xFFFFF) break; 
+        //#if !defined(__18f47j53)
+        i = i + 1;
+        if (i == 0xFFFFF) break; 
+        //#endif
     } while (deviceState != CONFIGURED);
-    
+
     // If no USB cable then start user app. now
-/*
+    //#if !defined(__18f47j53)
     if (deviceState != CONFIGURED)
     {
         t1_count = BOOT_TIMER_TICS;
@@ -505,11 +531,16 @@ void main(void) //__naked
             bcf     LED_PORT, LED_PIN   ; led on
         __endasm;
     }
-*/
+    //#endif
+
+    // Wait for User Upload
+    
     while (1)
     {
-        //if (i!=0)
-            ProcessUSBTransactions();
+        //#if !defined(__18f47j53)
+        if (i!=0)
+        //#endif
+        ProcessUSBTransactions();
 
         // strobing LED
         if (led_counter == 0)

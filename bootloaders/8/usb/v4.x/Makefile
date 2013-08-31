@@ -56,9 +56,10 @@ SDCCDIR		= /dvpt/sdcc/linux64
 
 # bootloader version (cf. changelog.txt)
 MAJ_VER		= 4
-MIN_VER		= 8
+MIN_VER		= 9
 
 # end of bootloader / start of pinguino application
+# ENTRY%64 must be 0
 ENTRY		= 0x0C00
 
 # string descriptor flag
