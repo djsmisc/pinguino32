@@ -58,7 +58,8 @@ static const u8 cpudiv[] = { 2, 3, 4, 6 };
 static const u8 cpudiv_xtal[] = { 1, 2, 3, 4 };
 static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 4000000, 8000000 };
 
-#elif   defined(__18f26j50) || defined(__18f46j50)
+#elif   defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f27j53) || defined(__18f47j53)
 // The indices are valid values for CPDIV
 static const u8 cpudiv[] = { 6, 3, 2, 1 };
 static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 4000000, 8000000 };
@@ -91,8 +92,9 @@ static const u32 ircf[] = { 31250, 125000, 250000, 500000, 1000000, 2000000, 400
 
 #elif defined(__18f2455)  || defined(__18f4455)  || \
       defined(__18f2550)  || defined(__18f4550)  || \
-      defined(__18f26j50) || defined(__18f46j50)
-      
+      defined(__18f26j50) || defined(__18f46j50) || \
+      defined(__18f27j53) || defined(__18f47j53)
+
     #define _48MHZ_     0b10000111  // 7  NB = PLL 96MHz / 2
     #define _8MHZ_      0b111       // 7
     #define _4MHZ_      0b110       // 6
@@ -192,7 +194,9 @@ u32 System_getCpuFrequency()
             else{
                 return 96000000UL / CPUDIV;
             }
-            #elif defined(__18f26j50) || defined(__18f46j50)
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+
             if (OSCTUNEbits.PLLEN) {
                 return 48000000L / CPUDIV;
             } 
@@ -229,7 +233,9 @@ u32 System_getPeripheralFrequency()
 #if defined(__18f14k22) || \
     defined(__18f2550)  || defined(__18f4550)  || \
     defined(__18f25k50) || defined(__18f45k50) || \
-    defined(__18f26j50) || defined(__18f46j50)
+    defined(__18f26j50) || defined(__18f46j50) || \
+    defined(__18f27j53) || defined(__18f47j53)
+
 
 #if defined(SYSTEMSETINTOSC) || defined(SYSTEMSETPERIPHERALFREQUENCY)
 void System_setIntOsc(u8 speed)
@@ -266,7 +272,9 @@ void System_setIntOsc(u8 speed)
         while (pll_startup_counter--);
 		OSCCONbits.SCS  = 0b00; // Select PLL.
     }
-    #elif defined(__18f26j50) || defined(__18f46j50)
+    #elif defined(__18f26j50) || defined(__18f46j50) || \
+          defined(__18f27j53) || defined(__18f47j53)
+
     if (speed == _48MHZ_) {
         _cpu_clock_ = 48000000;
         OSCTUNEbits.PLLEN = 1;
@@ -297,7 +305,9 @@ void System_setIntOsc(u8 speed)
 
     #if defined(__18f2455)  || defined(__18f4455)  || \
         defined(__18f2550)  || defined(__18f4550)  || \
-        defined(__18f26j50) || defined(__18f46j50)
+        defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f27j53) || defined(__18f47j53)
+
     if (speed == _125KHZ_) _cpu_clock_ =   125000;
     #endif
 
