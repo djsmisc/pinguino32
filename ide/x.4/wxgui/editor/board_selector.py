@@ -36,6 +36,8 @@ class BoarSelector:
     #----------------------------------------------------------------------
     def __init_selector__(self, IDE):
         """"""
+        #self.staticText_warningICSP.Show()
+        
         self.Boot =[["noboot", 0], ["boot2", 0x2000], ["boot4", 0x0C00]]
         self.IDE = IDE
 
@@ -140,8 +142,14 @@ class BoarSelector:
     #----------------------------------------------------------------------
     def r_mode(self, event=None):
         mode = self.radioBox_mode.GetSelection()
-        if mode == 0: self.MODE = "ICSP"
-        elif mode == 1: self.MODE = "BOOT"
+        if mode == 0:
+            self.MODE = "ICSP"
+            self.staticText_warningICSP.Show()
+        elif mode == 1:
+            self.MODE = "BOOT"
+            self.staticText_warningICSP.Hide()
+            
+        #self.staticText_warningICSP
         
         if self.ARCH == 8:
             self.new_choices_fam()

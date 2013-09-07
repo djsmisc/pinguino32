@@ -144,7 +144,7 @@ class CheckDependences:
                     os.path.join("wxgui", "editor", "lateral_tool_area", "dock_documents.py"),
                     os.path.join("wxgui", "editor", "lateral_tool_area", "dock_files.py"),
                     os.path.join("wxgui", "editor", "general.py"),
-                    os.path.join("wxgui", "picdevlist.py"),
+                    #os.path.join("wxgui", "picdevlist.py"),
                     os.path.join("wxgui", "boards.py"),
                     os.path.join("wxgui", "argparse.py"),
                     os.path.join("wxgui", "check.py"),]

@@ -1151,6 +1151,12 @@ class FrameSelectDevice ( wx.Frame ):
 		
 		self.sizer = wx.BoxSizer( wx.VERTICAL )
 		
+		self.staticText_warningICSP = wx.StaticText( self.m_panel37, wx.ID_ANY, _(u"WARNING!! this mode can overwrite the bootloader code."), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.staticText_warningICSP.Wrap( -1 )
+		self.staticText_warningICSP.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
+		
+		self.sizer.Add( self.staticText_warningICSP, 0, wx.ALL, 5 )
+		
 		radioBox_famChoices = [ _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX") ]
 		self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Sort"), wx.DefaultPosition, wx.DefaultSize, radioBox_famChoices, 6, wx.RA_SPECIFY_COLS )
 		self.radioBox_fam.SetSelection( 3 )
