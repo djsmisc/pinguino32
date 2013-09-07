@@ -123,12 +123,17 @@ class ReadConfig:
 
         self.theme = self.getElse("IDE", "theme", "PinguinoX")   
 
+        
+
+    #----------------------------------------------------------------------
+    def loadRecents(self):
         try:
             for i in range(self.getConfig("Recents", "Recents_count")):
                 file = self.getConfig("Recents", "Recents_%d"%i)
                 if os.path.isfile(file):
                     self.addFile2Recent(file)
         except: pass
+        return self.recentsFiles
 
     
     #----------------------------------------------------------------------
