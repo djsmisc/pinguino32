@@ -189,12 +189,12 @@ class IDE(Editor, General, Testing, Events):
         try: self.recentsFiles
         except: self.recentsFiles = []
             
-
         if file in self.recentsFiles: self.recentsFiles.remove(file)
         self.recentsFiles.insert(0, file)
         self.recentsFiles = self.recentsFiles[:10]
         for file in range(len(self.recentsFiles)):
-            menu_r = wx.MenuItem(menu, wx.NewId(), self.recentsFiles[file], wx.EmptyString, wx.ITEM_NORMAL)
+            #menu_r = wx.MenuItem(menu, wx.NewId(), self.recentsFiles[file], wx.EmptyString, wx.ITEM_NORMAL) #Complete path on menu
+            menu_r = wx.MenuItem(menu, wx.NewId(), os.path.split(self.recentsFiles[file])[-1], wx.EmptyString, wx.ITEM_NORMAL) #Only name
             self.Bind(wx.EVT_MENU, self.open_path(self.recentsFiles[file]), menu_r)
             menu.AppendItem(menu_r)
 
@@ -253,7 +253,7 @@ def getRevisionNumber():
             while not rev.isdigit() and len(rev)>0:
                 rev = rev[0:-1]
         else:
-             raise
+            raise
         rev = " - Rev" + rev  
     except:
         rev =''

@@ -97,6 +97,7 @@ class Pinguino(framePinguinoX, IDE):
     # Initializes config
     # ----------------------------------------------------------------------
         self.setEditorFont()
+        self.loadRecents()
         
         
     # ----------------------------------------------------------------------
