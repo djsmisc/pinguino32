@@ -1131,6 +1131,12 @@ class FrameSelectDevice ( wx.Frame ):
 		self.radioBox_mode.SetSelection( 0 )
 		bSizer41.Add( self.radioBox_mode, 0, wx.ALL|wx.EXPAND, 5 )
 		
+		self.staticText_warningICSP = wx.StaticText( self.m_panel38, wx.ID_ANY, _(u"WARNING!! this mode can\noverwrite the bootloader code."), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.staticText_warningICSP.Wrap( -1 )
+		self.staticText_warningICSP.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
+		
+		bSizer41.Add( self.staticText_warningICSP, 0, wx.ALL, 5 )
+		
 		
 		bSizer41.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
@@ -1150,12 +1156,6 @@ class FrameSelectDevice ( wx.Frame ):
 		bSizer40.Add( self.m_panel38, 0, wx.EXPAND |wx.ALL, 5 )
 		
 		self.sizer = wx.BoxSizer( wx.VERTICAL )
-		
-		self.staticText_warningICSP = wx.StaticText( self.m_panel37, wx.ID_ANY, _(u"WARNING!! this mode can overwrite the bootloader code."), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.staticText_warningICSP.Wrap( -1 )
-		self.staticText_warningICSP.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
-		
-		self.sizer.Add( self.staticText_warningICSP, 0, wx.ALL, 5 )
 		
 		radioBox_famChoices = [ _(u"XX"), _(u"XX"), _(u"XX"), _(u"XX") ]
 		self.radioBox_fam = wx.RadioBox( self.m_panel37, wx.ID_ANY, _(u"Sort"), wx.DefaultPosition, wx.DefaultSize, radioBox_famChoices, 6, wx.RA_SPECIFY_COLS )

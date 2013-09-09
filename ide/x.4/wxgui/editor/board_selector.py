@@ -55,6 +55,10 @@ class BoarSelector:
         self.DEVICE = self.IDE.getElse("Board", "device", "Pinguino 2550")
         self.BOOTLOADER = self.getCurrentBootloader()
     
+
+        if self.MODE == "ICSP": self.staticText_warningICSP.SetLabel("WARNING!! this mode can\noverwrite the bootloader code.")
+        else: self.staticText_warningICSP.SetLabel("") 
+    
         if self.ARCH == 8: self.radioBox_arch.SetSelection(0)
         else: self.radioBox_arch.SetSelection(1)
             #self.r_arch()
@@ -113,6 +117,7 @@ class BoarSelector:
         self.sizer2.Fit( self.m_scrolledWindow1 )
         self.m_panel37.Layout()
         self.Layout()
+              
         
         #self.Centre( wx.BOTH )
 
@@ -120,13 +125,8 @@ class BoarSelector:
     #----------------------------------------------------------------------
     def r_arch(self, event=None):
         board = self.radioBox_arch.GetSelection()
-        if board == 0:
-            self.ARCH = 8
-            #self.radioBox_mode.Enable()
-        elif board == 1:
-            self.ARCH = 32
-            #self.radioBox_mode.SetSelection(1)
-            #self.radioBox_mode.Disable()
+        if board == 0: self.ARCH = 8
+        elif board == 1: self.ARCH = 32       
             
         self.new_choices_fam()
         self.r_device()
@@ -142,14 +142,11 @@ class BoarSelector:
     #----------------------------------------------------------------------
     def r_mode(self, event=None):
         mode = self.radioBox_mode.GetSelection()
-        if mode == 0:
-            self.MODE = "ICSP"
-            self.staticText_warningICSP.Show()
-        elif mode == 1:
-            self.MODE = "BOOT"
-            self.staticText_warningICSP.Hide()
+        if mode == 0: self.MODE = "ICSP"
+        elif mode == 1: self.MODE = "BOOT"
             
-        #self.staticText_warningICSP
+        if self.MODE == "ICSP": self.staticText_warningICSP.SetLabel("WARNING!! this mode can\noverwrite the bootloader code.")
+        else: self.staticText_warningICSP.SetLabel("")  
         
         if self.ARCH == 8:
             self.new_choices_fam()
