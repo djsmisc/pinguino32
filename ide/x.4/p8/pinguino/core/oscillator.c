@@ -166,43 +166,62 @@ u32 System_getCpuFrequency()
         case 0: // primary osc. (internal or external / CPUDIV)
 
             #if defined(__18f25k50) || defined(__18f45k50)
-            if (OSCCON2bits.PLLEN){
+            
+            if (OSCCON2bits.PLLEN)
+            {
                 return 64000000L;
             } 
-			else{
+			else
+            {
                 return CRYSTAL;
             }
+            
             #endif
+            
             // CPUDIV ?
+            
             #if defined(__18f2455)  || defined(__18f4455)  || \
                 defined(__18f2550)  || defined(__18f4550)
+                
             CPUDIV  = ( System_readFlashMemory(__CONFIG1L) & 0b00011000 ) >> 3;
 			CPUDIV_XTAL = cpudiv_xtal[CPUDIV];
             fosc  = System_readFlashMemory(__CONFIG1H) & 0b00001111;
+
             #else
+
             CPUDIV  = System_readFlashMemory(__CONFIG1H) & 0b00000011;
+
             #endif
+
             CPUDIV = cpudiv[CPUDIV];
             
             // PLL ?
+            
             #if defined(__18f2455) || defined(__18f4455) || \
                   defined(__18f2550) || defined(__18f4550)
+                  
 			fosc >>=1;
-            if( (fosc==0) || (fosc==2) || (fosc==6) ){
+            if( (fosc==0) || (fosc==2) || (fosc==6) )
+            {
                 return CRYSTAL / CPUDIV_XTAL;
             }
-            else{
+            else
+            {
                 return 96000000UL / CPUDIV;
             }
+            
             #elif defined(__18f26j50) || defined(__18f46j50) || \
                   defined(__18f27j53) || defined(__18f47j53)
 
-            if (OSCTUNEbits.PLLEN) {
+            if (OSCTUNEbits.PLLEN)
+            {
                 return 48000000L / CPUDIV;
             } 
-			else{
+			else
+            {
                 return CRYSTAL / CPUDIV;
             }
+            
             #endif
             
         case 1: // secondary osc. (timer 1, most of the time 32768 Hz)

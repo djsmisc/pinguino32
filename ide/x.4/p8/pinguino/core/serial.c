@@ -71,7 +71,7 @@ void serial_begin(unsigned long baudrate)
 	unsigned char highbyte,lowbyte;
 
     spbrg=(System_getCpuFrequency()/(4*baudrate))-1;
-    //spbrg=(48000000/(4*baudrate))-1;
+//    spbrg=(48000000/(4*baudrate))-1;
 //    spbrg=(SystemGetClock()/(4*baudrate))-1;
 //    spbrg=(_cpu_clock_/(4*baudrate))-1;
 
@@ -104,7 +104,8 @@ void serial_begin(unsigned long baudrate)
     PIE1bits.RCIE=1;                        // enable interrupt on RX
     IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 
-#elif defined(__18f26j50) || defined(__18f46j50)
+#elif defined(__18f26j50) || defined(__18f46j50) || \
+      defined(__18f27j53) || defined(__18f47j53)
 	TRISCbits.TRISC7	= 1;					/* Rx1	set input */
 	TXSTA1bits.BRGH=1;               	  	// set BRGH bit
 	BAUDCON1bits.BRG16=1;					// set 16 bits SPBRG
@@ -167,7 +168,8 @@ void serial_interrupt(void)
         PIR1bits.RCIF=0;				// clear RX interrupt flag
         caractere=RCREG;				// take received char
 
-    #elif defined(__18f26j50) || defined(__18f46j50)
+    #elif defined(__18f26j50) || defined(__18f46j50) || \
+      defined(__18f27j53) || defined(__18f47j53)
 
     if (PIR1bits.RC1IF) 
     {
@@ -202,7 +204,8 @@ void serial_putchar(unsigned char caractere)
 	defined(__18f25k50) || defined(__18f45k50)
 	while (!TXSTAbits.TRMT);
 	TXREG=caractere;		        // yes, send char
-#elif defined(__18f26j50) || defined(__18f46j50)
+#elif defined(__18f26j50) || defined(__18f46j50) || \
+      defined(__18f27j53) || defined(__18f47j53)
 	while (!TXSTA1bits.TRMT);
 	TXREG1=caractere;		        // yes, send char
 #else
