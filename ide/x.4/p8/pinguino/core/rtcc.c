@@ -30,7 +30,8 @@
 #ifndef __RTCC__
 #define __RTCC__
 
-#if !defined(__18f26j50) && !defined(__18f46j50)
+#if !defined(__18f26j50) && !defined(__18f46j50) && \
+    !defined(__18f27j53) && !defined(__18f47j53)
     #error "Error : your Pinguino has no RTCC module." 
 #endif
 
