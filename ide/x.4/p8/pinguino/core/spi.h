@@ -12,11 +12,48 @@
 #define __SPI_H__
 
 // pins
-#define SDIPIN		        TRISBbits.TRISB0
-#define SDOPIN		        TRISCbits.TRISC7
-#define SCKPIN		        TRISBbits.TRISB1
-#define SSPIN		        TRISAbits.TRISA5
+#if defined(__18f2455) || defined(__18f4455) || \
+    defined(__18f2550) || defined(__18f4550)
+    #define SD_CS			PORTAbits.RA5		// Chip Select
+    #define SSPIN		TRISAbits.TRISA5	// Chip Select TRIS
+    #define SDIPIN   	TRISBbits.TRISB0	// SDI Master input/SDO Slave output TRIS
+    #define SCKPIN   	TRISBbits.TRISB1	// SCK Clock TRIS
+    #define SDOPIN  	TRISCbits.TRISC7	// SDO Master output/SDI Slave input TRIS
+    #define BUFFER          SSPBUF
+    #define CONFIG          SSPCON1
+    #define STATUS          SSPSTAT
+    #define WCOL            SSPCON1bits.WCOL
+	#define CKP             SSPCON1bits.CKP
+	#define CKE             SSPSTATbits.CKE
+    #define SSPIE           PIE1bits.SSPIE
+    #define FLAG            PIR1bits.SSPIF
+	#define SSPHPE          IPR1bits.SSPIP
+    #define ENABLE          SSPCON1bits.SSPEN
+    
+	
+#elif defined(__18f26j50)|| defined(__18f46j50) || \
+      defined(__18f27j53)|| defined(__18f47j53)
+// Pinguinos 18F26J50 / 18F47J53  uses SPI2 (cf. io.c)
+// because SPI1 share same pins as UART1
+    #define SD_CS			PORTBbits.RB0		// SPI2 Chip Select
+    #define SSPIN		    TRISBbits.TRISB0	// SPI2 Chip Select TRIS
+    #define SDIPIN      	TRISBbits.TRISB3	// SPI2 SDO Master input/Slave output TRIS
+    #define SCKPIN      	TRISBbits.TRISB2	// SPI2 SCK Clock TRIS
+    #define SDOPIN      	TRISBbits.TRISB1	// SPI2 SDI Master output/Slave input TRIS
+    #define BUFFER          SSP2BUF
+    #define CONFIG          SSP2CON1
+    #define STATUS          SSP2STAT
+    #define WCOL            SSP2CON1bits.WCOL
+	#define CKP             SSP2CON1bits.CKP
+	#define CKE             SSP2STATbits.CKE
+    #define SSPIE           PIE3bits.SSP2IE
+    #define FLAG            PIR3bits.SSP2IF
+	#define SSPHPE          IPR3bits.SSP2IP
+    #define ENABLE          SSP2CON1bits.SSPEN
 
+#else
+    #error "This library is only for Pinguino x455, x550, x6j50 or x7j53"
+#endif
 /*	----------------------------------------------------------------------------
 	---------- *** MODES ***
 	----------------------------------------------------------------------------

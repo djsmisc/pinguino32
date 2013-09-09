@@ -81,7 +81,19 @@ u8 hidRxLen;                          // # of bytes put into buffer
   TODO: find something smarter to allocate the buffer, like in usbmmap.c
   of the microchip firmware. If not all endpoints are used the space in RAM is wasted.
   **/
-volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+
+//
+//  RB 09/09/2012 : added some other PIC support
+//
+
+#if   defined(__18f14k50) || defined(__18f14k50)  // Bank 2
+    volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
+#elif defined(__18f26j53) || defined(__18f46j53) || \
+      defined(__18f27j53) || defined(__18f47j53)  // Bank 13
+    volatile BufferDescriptorTable __at (0xD00) ep_bdt[32];
+#else                                             // Bank 4
+    volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+#endif
 
   // Put endpoint 0 buffers into dual port RAM
 #pragma udata usbram5 SetupPacket controlTransferBuffer
