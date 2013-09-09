@@ -136,7 +136,8 @@ class Documents():
     #--------------------------------------------------------------------------
     def OnOpenFile(self, event):
         sel = event.GetLabel()
-        path = os.path.join(self.currentLateralDir, self.parentDir, sel)
+        #path = os.path.join(self.currentLateralDir, self.parentDir, sel)
+        path = os.path.join(self.parentDir, sel)
         try: self.background.Hide()
         except: pass  #self.background not exist
         self.IDE.Open(path)
