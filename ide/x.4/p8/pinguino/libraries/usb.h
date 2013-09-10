@@ -137,6 +137,13 @@ typedef union
 #define EP_IN_BD(ep)  (ep_bdt[(ep << 1) + 1])
 
 /* Buffer descriptors Table */
+#if   defined(__18f14k50) || defined(__18f14k50)  // Bank 2
+extern volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
+#elif defined(__18f26j53) || defined(__18f46j53) || \
+      defined(__18f27j53) || defined(__18f47j53)  // Bank 13
+extern volatile BufferDescriptorTable __at (0xD00) ep_bdt[32];
+#else                                             // Bank 4
 extern volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+#endif
 
 #endif /*USB_H_*/

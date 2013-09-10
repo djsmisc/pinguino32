@@ -28,6 +28,7 @@
 #define __PIN_H
 
 #if defined(PICUNO_EQUO)
+
 	#define C7 		0
 //	#define RC7 	0
 	#define RX 		0
@@ -123,7 +124,11 @@
 	#define LED1	20
 	#define USERLED	20
 
-#else // Pinguino x550, x5k50 or x6j50
+#elif defined(PINGUINO2455)  || defined(PINGUINO4455)  || \
+      defined(PINGUINO2550)  || defined(PINGUINO4550)  || \
+      defined(PINGUINO25K50) || defined(PINGUINO45K50) || \
+      defined(PINGUINO26J50) || defined(PINGUINO46J50) || \
+      defined(PINGUINO27J53)
 
 	#define B0 0
 //	#define RB0 0
@@ -248,20 +253,68 @@
         #define LED1        12
         #define USERLED     12
 
-    #elif defined(PINGUINO47J53A) || defined(PINGUINO47J53B)
-
-        #define RTCC        1
-        #define CCP1        1  // cf. io.c
-        #define CCP2        2
-        #define CCP3        3
-        #define CCP4        4
-        #define CCP5        5
-        #define CCP6        6
-        #define CCP7        7
-        #define LED1        18 // RC2
-        #define USERLED     18
-
     #endif
+
+#elif defined(PINGUINO47J53A) || defined(PINGUINO47J53B)
+
+    //#error "*** BREAKPOINT ***"
+
+    #define B0          0
+
+    #define B1          1
+    #define RTCC        1  // RB1
+
+    #define B2          2
+    #define B3          3
+
+    #define B4          4
+    #define CCP4        4  // RB4
+
+    #define B5          5
+    #define CCP5        5  // RB5
+
+    #define B6          6
+    #define CCP6        6  // RB6
+
+    #define B7          7
+    #define CCP7        7  // RB7
+
+    #define A0          8
+    #define A1          9
+    #define A2          10
+    #define A3          11
+    #define A4          12
+    #define A5          13
+    #define A6          14
+    #define A7          15
+
+    #define C0          16
+
+    #define C1          17
+    #define CCP8        17 // RC1
+
+    #define C2          18
+    #define LED1        18 // RC2
+    #define USERLED     18 // RC2
+
+    #define C3          19
+    #define C4          20
+    #define C5          21
+
+    #define C6          22
+    #define CCP9        22 // RC6
+
+    #define C7          23
+    #define CCP10       23 // RC7
+
+    #define D0          24
+    #define D1          25
+    #define D2          26
+    #define D3          27
+    #define D4          28
+    #define D5          29
+    #define D6          30
+    #define D7          31
 
 #endif
 

@@ -620,7 +620,7 @@ void ProcessControlTransfer(void) {
       if(UADDR == 0)
   // If we get a reset after a SET_ADDRESS, then we need
   // to drop back to the Default state.
-        deviceState = DEFAULT;
+        deviceState = DEFAULT_STATUS;
     }
 
     if (ctrlTransferStage == DATA_IN_STAGE) {
@@ -813,7 +813,7 @@ void BusReset() {
   remoteWakeup = 0;                     // Remote wakeup is off by default
   selfPowered = 0;                      // Self powered is off by default
   currentConfiguration = 0;             // Clear active configuration
-  deviceState = DEFAULT;
+  deviceState = DEFAULT_STATUS;
 }
 
 
@@ -854,7 +854,7 @@ void ProcessUSBTransactions(void)
     UIRbits.UERRIF = 0;
 
   // Unless we have been reset by the host, no need to keep processing
-  if (deviceState < DEFAULT)
+  if (deviceState < DEFAULT_STATUS)
     return;
 
   // A transaction has finished.  Try default processing on endpoint 0.

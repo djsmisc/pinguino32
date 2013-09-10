@@ -5,26 +5,8 @@
 #define _DISKIOC
 
 #include <sd/diskio.h>
+#include <spi.c>
 #include <delay.c>
-
-// Pinguino 18F26J50 uses SPI2 (cf. io.c)
-// because SPI1 share same pins as UART1
-#if defined(PINGUINO26J50)
-    #define SD_CS			PORTBbits.RB0		// SPI2 Chip Select
-    #define SD_CS_TRIS		TRISBbits.TRISB0	// SPI2 Chip Select TRIS
-    #define SPI_MISO_TRIS	TRISBbits.TRISB3	// SPI2 SDO Master input/Slave output TRIS
-    #define SPI_SCK_TRIS	TRISBbits.TRISB2	// SPI2 SCK Clock TRIS
-    #define SPI_MOSI_TRIS	TRISBbits.TRISB1	// SPI2 SDI Master output/Slave input TRIS
-    #define BUFFER          SSP2BUF
-    #define CONFIG          SSP2CON1
-    #define STATUS          SSP2STAT
-    #define WCOL            SSP2CON1bits.WCOL
-    #define FLAG            PIR3bits.SSP2IF
-    #define ENABLE          SSP2CON1bits.SSPEN
-#else
-    #error "This library is only for Pinguino x6j50"
-#endif
-
 /* Definitions for MMC/SDC command */
 #define CMD0	(0x40+0)	/* GO_IDLE_STATE */
 #define CMD1	(0x40+1)	/* SEND_OP_COND (MMC) */
@@ -49,16 +31,9 @@
 #define SELECT()	SD_CS = 0	/* MMC CS = Low */
 #define DESELECT()	SD_CS = 1	/* MMC CS = High */
 
-#define SOCKPORT	PORTD		/* (PORTD) Socket contact port, no CD or WP support */
-#define SOCKWP	(1<<2)			/* Write protect switch (RD2) */
-#define SOCKINS	(1<<3)			/* Card detect switch (RD3) */
-
 #define	FCLK_SLOW()	(CONFIG = 0x22)	/* Set slow clock (100k-400k) */
 #define	FCLK_FAST()	(CONFIG = 0x21)	/* Set fast clock (depends on the CSD) */
 
-#define DELAY_PRESCALER   (u8)      8
-#define DELAY_OVERHEAD    (u8)      5
-#define MILLISECDELAY   (u16)((GetInstructionClock()/DELAY_PRESCALER/(u16)1000) - DELAY_OVERHEAD)
 #define NCR_TIMEOUT     (u8)20        //Byte times before command response is expected (must be at least 8)
 #define WRITE_TIMEOUT   (u32)0xA0000  //SPI byte times to wait before timing out when the media is performing a write operation (should be at least 250ms for SD cards).
 
@@ -67,34 +42,11 @@
    Module Private Functions
 
 ---------------------------------------------------------------------------*/
+void SPI_init(u8 sync_mode, u8 bus_mode, u8 smp_phase);
+u8 SPI_write(u8 datax);
+u8 SPI_read();
 
 static u16 CardType;
-
-/*-----------------------------------------------------------------------*/
-/* Exchange a byte between PIC and MMC via SPI  (Platform dependent)     */
-/*-----------------------------------------------------------------------*/
-
-u8 xmit_spi(unsigned char datax) {
-    char clear;
-    clear = BUFFER;        // clear BF
-    FLAG = 0;              // enable SPI2 interrupt
-    BUFFER = datax;        // send data
-
-    if (WCOL)
-        return (1);
-    else
-        while (!FLAG);
-    return(0);
-}
-
-u8 rcvr_spi(void) {
-    char clear;
-    clear = BUFFER; //clear BF
-    FLAG = 0;
-    BUFFER = 0xFF; // Initiate bus cycle
-    while (!FLAG);
-    return(BUFFER);
-}
 
 /*-----------------------------------------------------------------------*/
 /* Wait for card ready                                                   */
@@ -106,9 +58,9 @@ static u8 wait_ready (void)
 
 
 	Tim2 = 500;	/* Wait for ready in timeout of 500ms */
-	res=rcvr_spi();
+	res=SPI_read();
 	do
-		res = rcvr_spi();
+		res = SPI_read();
 	while ((res != 0xFF) && (Tim2--));
 
 	return res;
@@ -121,26 +73,8 @@ static u8 wait_ready (void)
 static void release_spi (void)
 {
 	DESELECT();
-	rcvr_spi();
+	SPI_read();
 }
-
-/*-----------------------------------------------------------------------*/
-/* Power Control  (Platform dependent)                                   */
-/*-----------------------------------------------------------------------*/
-/* When the target system does not support socket power control, there   */
-/* is nothing to do in these functions and chk_power always returns 1.   */
-
-static void power_on (void)
-{
-	DESELECT();
-	ENABLE = 0;         // Disable SPI2
-	STATUS = 0x40;      // mode0,0  stat.CKE(6)=1
-	CONFIG = 0x02;      // 0x02=slow mode0,0 con1.CKP(4)=0
-	ENABLE = 1;         // Enable SPI2 Master Mode
-	Delayms(30);
-	DESELECT();
-}
-
 static void power_off (void)
 {
 	SELECT();				/* Wait for card ready */
@@ -172,50 +106,40 @@ static u8 send_cmd (
 
 	/* Send command packet */
 	SELECT();
-	xmit_spi(cmd);						/* Start + Command index */
-	xmit_spi((u8)(arg >> 24));		/* Argument[31..24] */
-	xmit_spi((u8)(arg >> 16));		/* Argument[23..16] */
-	xmit_spi((u8)(arg >> 8));			/* Argument[15..8] */
-	xmit_spi((u8)arg);				/* Argument[7..0] */
+	SPI_write(cmd);						/* Start + Command index */
+	SPI_write((u8)(arg >> 24));		/* Argument[31..24] */
+	SPI_write((u8)(arg >> 16));		/* Argument[23..16] */
+	SPI_write((u8)(arg >> 8));			/* Argument[15..8] */
+	SPI_write((u8)arg);				/* Argument[7..0] */
 	n = 0x01;							/* Dummy CRC + Stop */
 	if (cmd == CMD0) n = 0x95;			/* Valid CRC for CMD0(0) */
 	if (cmd == CMD8) n = 0x87;			/* Valid CRC for CMD8(0x1AA) */
 	if (cmd == CMD12) n = 0xC3;
-	xmit_spi(n);
+	SPI_write(n);
 
 	/* Receive command response */
-	if (cmd == CMD12) rcvr_spi();		/* Skip a stuff byte when stop reading */
+	if (cmd == CMD12) SPI_read();		/* Skip a stuff byte when stop reading */
 	n = NCR_TIMEOUT;								/* Wait for a valid response in timeout of 10 attempts */
 	do
-		res = rcvr_spi();
+		res = SPI_read();
 	while ((res == 0xFF) && (--n) );
 
 	if(cmd==CMD12)
 	{
 		longtimeout = WRITE_TIMEOUT;
 		do
-			res = rcvr_spi();
+			res = SPI_read();
 		while ((res == 0x00) && (--longtimeout));
 		res = 0x00;
 	}
 
-	xmit_spi(0xFF);
+	SPI_write(0xFF);
 	if((cmd != CMD9)&&(cmd != CMD10)&&(cmd != CMD17)&&(cmd != CMD18)&&(cmd != CMD24)&&(cmd != CMD25))
 		DESELECT();
 
 	return res;			/* Return with the response value */
 }
-
-void pin_init(void)
-{
-	SD_CS_TRIS = OUTPUT;		// SD chip select (inv)
-
-	SPI_SCK_TRIS = OUTPUT;		// SPI-SCK
-	SPI_MISO_TRIS = INPUT; 		// SPI-MISO
-	SPI_MOSI_TRIS = OUTPUT;		// SPI-MOSI
-	// start values
-	SD_CS = 1;		// CS is inverted
-}
+ 
 /*-----------------------------------------------------------------------*/
 /* Initialize Disk Drive                                                 */
 /*-----------------------------------------------------------------------*/
@@ -225,22 +149,22 @@ DSTATUS disk_initialize(void)
 	u8 n, cmd, ty, ocr[4], rep, timeout;
 	u16 tmr;
 
-	power_on();							/* Force socket power on */
+	SPI_init(2,0,0);							/* Force socket power on */
 
-	for (n = 10; n; n--) xmit_spi(0xFF);	/* Dummy clocks */
+	for (n = 10; n; n--) SPI_write(0xFF);	/* Dummy clocks */
 	ty = 0;
 	timeout=100;
 // Trying to enter Idle state
 	do {
 		DESELECT();
-		xmit_spi(0xFF);
+		SPI_write(0xFF);
 		SELECT();
 		rep = send_cmd(CMD0,0);
 	} while ((rep != 1) && (--timeout) );
     if(timeout == 0)
     {
 		DESELECT();
-		xmit_spi(0xFF);
+		SPI_write(0xFF);
 		SELECT();
 		rep = send_cmd(CMD12,0);
 		rep = send_cmd(CMD0,0);
@@ -250,13 +174,13 @@ DSTATUS disk_initialize(void)
 	rep = send_cmd(CMD8, 0x1AA);
 
 	if ( rep == 1) {	/* SDHC */
-		for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();		/* Get trailing return value of R7 resp */
+		for (n = 0; n < 4; n++) ocr[n] = SPI_read();		/* Get trailing return value of R7 resp */
 
 		if (ocr[2] == 0x01 && ocr[3] == 0xAA) {				/* The card can work at vdd range of 2.7-3.6V */
 			for (tmr = 25000; tmr && send_cmd(ACMD41, 1UL << 30); tmr--) ;	/* Wait for leaving idle state (ACMD41 with HCS bit) */
 
 			if (tmr && send_cmd(CMD58, 0) == 0) {		/* Check CCS bit in the OCR */
-				for (n = 0; n < 4; n++) ocr[n] = rcvr_spi();
+				for (n = 0; n < 4; n++) ocr[n] = SPI_read();
 				ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;	/* SDv2 */
 			}
 		}
@@ -309,7 +233,7 @@ DRESULT disk_readp (
 	if (send_cmd(CMD17, lba) == 0) {		/* READ_SINGLE_BLOCK */
 		Tim1 = 200;
 		do							/* Wait for data packet in timeout of 200ms */
-			rc = rcvr_spi();
+			rc = SPI_read();
 //			Tim1 = decreasetim(Tim1);
 		while (rc == 0xFF && (Tim1--));
 	}
@@ -321,16 +245,16 @@ DRESULT disk_readp (
 
 			/* Skip leading bytes */
 			if (ofs) {
-				do rcvr_spi(); while (--ofs);
+				do SPI_read(); while (--ofs);
 			}
 
 			/* Receive a part of the sector */
 				do
-					*buff++ = rcvr_spi();
+					*buff++ = SPI_read();
 				while (--cnt);
 
 			/* Skip trailing bytes and CRC */
-			do rcvr_spi(); while (--bc);
+			do SPI_read(); while (--bc);
 
 			res = cnt ? 1 : RES_OK;
 		}
@@ -360,7 +284,7 @@ DRESULT disk_writep (
 	if (buff) {		/* Send data bytes */
 		bc = (u16)sa;
 		while (bc && wc) {		/* Send data bytes to the card */
-			xmit_spi(*buff++);
+			SPI_write(*buff++);
 			wc--; bc--;
 		}
 		res = RES_OK;
@@ -368,15 +292,15 @@ DRESULT disk_writep (
 		if (sa) {	/* Initiate sector write process */
 			if (!(CardType & CT_BLOCK)) sa *= 512;	/* Convert to byte address if needed */
 			if (send_cmd(CMD24, sa) == 0) {			/* WRITE_SINGLE_BLOCK */
-				xmit_spi(0xFF); xmit_spi(0xFE);		/* Data block header */
+				SPI_write(0xFF); SPI_write(0xFE);		/* Data block header */
 				wc = 512;							/* Set byte counter */
 				res = RES_OK;
 			}
 		} else {	/* Finalize sector write process */
 			bc = wc + 2;
-			while (bc--) xmit_spi(0);	/* Fill left bytes and CRC with zeros */
-			if ((rcvr_spi() & 0x1F) == 0x05) {	/* Receive data resp and wait for end of write process in timeout of 300ms */
-				for (bc = 65000; rcvr_spi() != 0xFF && bc; bc--) ;	/* Wait ready */
+			while (bc--) SPI_write(0);	/* Fill left bytes and CRC with zeros */
+			if ((SPI_read() & 0x1F) == 0x05) {	/* Receive data resp and wait for end of write process in timeout of 300ms */
+				for (bc = 65000; SPI_read() != 0xFF && bc; bc--) ;	/* Wait ready */
 				if (bc) res = RES_OK;
 			}
 			release_spi();
