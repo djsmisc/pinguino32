@@ -100,7 +100,7 @@ definition for the initial ep0, most are defined here since they are used be the
 #define DETACHED     0
 #define ATTACHED     1
 #define POWERED      2
-#define DEFAULT      3
+#define DEFAULT_STATUS      3
 #define ADDRESS      4
 #define CONFIGURED   5
 
