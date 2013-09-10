@@ -297,6 +297,7 @@ class Editor:
         self.SendSizeEvent()
 
         self.addFile2Recent(path)
+        self.updatenotebook()
 
 
 
