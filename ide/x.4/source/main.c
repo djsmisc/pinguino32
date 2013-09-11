@@ -88,7 +88,8 @@
 #endif
 
 {
-    #if defined(__18f26j50) || defined(__18f46j50)
+    #if defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f27j53) || defined(__18f47j53)
         u16 pll_startup_counter = 600;
     #endif
     
@@ -111,7 +112,8 @@
             // wait HFINTOSC frequency is stable (HFIOFS=1) 
             while (!OSCCONbits.HFIOFS);
 
-    #elif defined(__18f26j50) || defined(__18f46j50)
+    #elif defined(__18f26j50) || defined(__18f46j50) || \
+          defined(__18f27j53) || defined(__18f47j53)
 
         // Enable the PLL and wait 2+ms until the PLL locks
         OSCTUNEbits.PLLEN = 1;
