@@ -19,6 +19,10 @@
 /                     Added write funciton.
 /                     Changed stream read mode interface.
 /----------------------------------------------------------------------------*/
+
+#ifndef __PFF_C
+#define __PFF_C
+
 #include <sd/pff.h>		/* Petit FatFs configurations and declarations */
 #include <sd/diskio.c>		/* Declarations of low level disk I/O functions */
 #include <string.h>
@@ -37,8 +41,6 @@
 ---------------------------------------------------------------------------*/
 
 static FATFS *FatFs;	/* Pointer to the file system object (logical drive) */
-
-
 
 /*-----------------------------------------------------------------------*/
 /* String functions                                                      */
@@ -474,7 +476,6 @@ FRESULT pf_mount (
 	u8 fmt, buf[36];
 	u32 bsect, fsize, tsect, mclst;
 	DRESULT Dresult;
-	pin_init();
 	Dresult = disk_initialize();
 	if(Dresult != RES_OK)
 		return FR_DISK_ERR;
@@ -877,21 +878,33 @@ FRESULT scan_files (char* path)
     int i;
 
     res = pf_opendir(&dir, path);
-    if (res == FR_OK) {
+
+    if (res == FR_OK)
+    {
         i = sizeof(path);
-        for (;;) {
+
+        for (;;)
+        {
             res = pf_readdir(&dir, &fno);
-            if (res != FR_OK || fno.fname[0] == 0) break;
-            if (fno.fattrib & AM_DIR) {
+
+            if (res != FR_OK || fno.fname[0] == 0)
+                break;
+
+            if (fno.fattrib & AM_DIR)
+            {
                 psprintf(&path[i], "/%s", fno.fname);
                 res = scan_files(path);
                 if (res != FR_OK) break;
                 path[i] = 0;
-            } else {
+            }
+            
+            else
+            {
                 #ifdef SERIAL_PRINT
 				serial_printf("%s/", path);
                 serial_printf("%s\r\n", fno.fname);
 				#endif
+
                 #ifdef CDC_PRINT
                 CDCprintf("%s/", path);
                 CDCprintf("%s\r\n", fno.fname);
@@ -903,4 +916,5 @@ FRESULT scan_files (char* path)
     return res;
 }
 
+#endif /* __PFF_C */
 

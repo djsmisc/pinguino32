@@ -219,7 +219,7 @@ void IO_remap(void)
 
         RPINR21 = 6;                    // RP6 (RB3) <- SDI2
         RPOR5 = 11;                     // RP5 (RB2) -> SCK2
-        RPOR4 = 10;                      // RP4 (RB1) -> SDO2 (func. num. 10)
+        RPOR4 = 10;                     // RP4 (RB1) -> SDO2 (func. num. 10)
    
         EECON2 = 0x55;
         EECON2 = 0xAA;

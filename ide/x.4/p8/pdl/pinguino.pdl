@@ -14,7 +14,7 @@ analogWrite analogwrite#include <analog.c>#define ANALOGWRITE
 
 min min#include <macro.h>
 max max#include <macro.h>
-abs abs#include <stdlib.h>
+abs abs#include <mathlib.c>
 constrain constrain#include <macro.h>
 map map#include <mathlib.c>
 powf powf#include <math.h>

@@ -43,7 +43,6 @@ Functions for BULK classes
 
 
 // BULK specific buffers
-//extern volatile byte CDCControlBuffer[CDC_IN_EP_SIZE];
 extern volatile byte BULKRxBuffer[BULK_BULK_OUT_SIZE];
 extern volatile byte BULKTxBuffer[BULK_BULK_IN_SIZE];
 

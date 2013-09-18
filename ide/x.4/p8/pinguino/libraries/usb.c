@@ -2,11 +2,13 @@
 // Jean-Pierre MANDON 2008
 // modified 08/2010 usbavailable function, USBRX buffer size
 
+
 // USB
 
 #ifndef __PINGUINOUSB
 #define __PINGUINOUSB
 
+#if defined(boot2)
 #include <pic18fregs.h>
 #include <typedef.h>
 #include <usb.h>
@@ -28,6 +30,12 @@ volatile u8 RXbuffer[EP1_BUFFER_SIZE];
 #define USBRXSIZE 64		// size of usb rx buffer
 u8 usbrx[USBRXSIZE];		// usb rx buffer pinguino
 u8 usbwp,usbrp;		// pointer for USB buffer pinguino
+
+void dispatch_usb_event(void);
+void fill_in_buffer(u8 EPnum,
+                    u8 **source,
+                    u16 buffer_size, 
+                    u16 *nb_byte);
 
 static u8 last_send_was_null;
 u16 ep2_num_bytes_to_send;
@@ -132,6 +140,17 @@ u8 usbread()
     }
     return(caractere);
 }
+u8 usbreceive(u8 *rxpointer)
+{
+    u8 rp = 0;
+	while (usbavailable())
+	{
+	    rxpointer[rp++]= usbrx[usbrp++];
+        if (usbrp==USBRXSIZE)
+            usbrp=1;
+	}
+	return(rp);
+}
 
 void epap_out(void)
 {
@@ -193,4 +212,14 @@ void usb_interrupt(void)
     }
 }
 
+void usbputs(u8 *txpointer, u8 length)
+{
+usbsend(txpointer,length);
+}
+
+u8 usbgets(void)
+{
+return(usbread()); // one only character is returned
+}
+#endif //boot2
 #endif
