@@ -36,7 +36,7 @@
 #ifndef __DIGITALW__
 #define __DIGITALW__
 
-//#include <pic18fregs.h>
+#include <pic18fregs.h>
 //#include <typedef.h>
 
 /*

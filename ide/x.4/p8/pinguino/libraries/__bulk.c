@@ -2,20 +2,34 @@
 // Jean-Pierre Mandon 2010
 
 #ifndef __USBBULK
+
+#ifdef boot4
+
 #define __USBBULK
 
 #define USB_USE_BULK
 //#define BULKDEBUG
+#define EP1_BUFFER_SIZE 64//added 24-8-13
 
 #include <usb/usb_bulk.h>
 #include <usb/usb_config.c>
 #include <usb/picUSB.c>
 #include <usb/usb_bulk.c>
+#include <typedef.h>
 #include <delay.c>
+#include <stdio.c>                  // Pinguino printf
+#include <stdarg.h>
+
+// BULK buffer length
+#ifndef _BULKBUFFERLENGTH_
+#define _BULKBUFFERLENGTH_ 64
+#endif
+
+u8 _bulk_buffer[_BULKBUFFERLENGTH_];  // usb buffer
+
 #ifdef BULKDEBUG
 #include <serial.c>
 #endif
-
 void bulk_init()
 {
     #ifdef BULKDEBUG
@@ -23,8 +37,10 @@ void bulk_init()
     #endif
 
     // Init
-    INTCON=0;
-    INTCON2=0xC0;
+//    INTCON=0;
+    INTCONbits.GIEH = 0;
+    INTCONbits.GIEL = 0;
+//    INTCON2=0xC0;
     UCON=0;
     UCFG=0;
     UEP0=0;UEP1=0;UEP2=0;UEP3=0;UEP4=0;UEP5=0;
@@ -64,20 +80,54 @@ void bulk_interrupt(void)
 {
     #if defined(__18f25k50) || defined(__18f45k50)
     if(PIR3bits.USBIF)
+    {
+	    PIR3bits.USBIF = 0;
     #else
     if(PIR2bits.USBIF)
-    #endif
     {
+	    PIR2bits.USBIF = 0;
+   #endif
         ProcessUSBTransactions();
         UIRbits.SOFIF = 0;
         UIRbits.URSTIF = 0;
-        #if defined(__18f25k50) || defined(__18f45k50)
-        PIR3bits.USBIF = 0;
-        #else
-        PIR2bits.USBIF = 0;
-        #endif
+
         UEIR = 0;
     }
 }
+// BULK.printf
+void BULK_printf(const u8 *fmt, ...)
+{
+    u8 length;
+    va_list	args;
+
+    va_start(args, fmt);
+    length = psprintf2(_bulk_buffer, fmt, args);
+    BULKputs(_bulk_buffer,length);
+    va_end(args);
+}
+u8 BULK_write(u8 *txpointer, u8 length)
+{
+return(BULKputs(txpointer,length));
+}
+
+u8 BULK_read(u8 *rxpointer)
+{
+return(BULKgets(rxpointer)); // now rxpointer buffer is filled and the buffer length is returned
+}
+
+
+#elif boot2
+#include <usb.c>
+void BULK_write(u8 *txpointer, u8 length)
+{
+usbsend(txpointer,length);
+}
+
+u8 BULK_read(u8 *rxpointer)
+{
+return(usbreceive(rxpointer)); // one only character is returned
+}
+
+#endif //boot4 and boot2
 
 #endif

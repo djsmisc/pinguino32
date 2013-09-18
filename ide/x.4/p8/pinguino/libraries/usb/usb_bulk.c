@@ -8,16 +8,14 @@
 #include "picUSB.h"
 #include "usb_config.h"
 
+#ifdef USB_USE_BULK
   // Put USB I/O buffers into dual port RAM.
 #pragma udata usbram5 BULKRxBuffer BULKTxBuffer
   // UART specific buffers
 
-#ifdef USB_USE_BULK
 volatile byte BULKRxBuffer[BULK_BULK_OUT_SIZE];
 volatile byte BULKTxBuffer[BULK_BULK_IN_SIZE];
-#endif
 
-#ifdef USB_USE_BULK
   /**
   Initialize
   **/
@@ -37,7 +35,10 @@ void BULKInitEndpoint(void) {
   EP_IN_BD(BULK_DATA_EP_NUM).Stat.uc = BDS_DTS ;
 }
 
-
+byte BULKavailable()
+{ u8 received = (!EP_OUT_BD(BULK_DATA_EP_NUM).Stat.UOWN) &&(EP_OUT_BD(BULK_DATA_EP_NUM).Cnt > 0);
+  return(received );
+}
   /**
   Function to read a string from USB
   @param buffer Buffer for reading data

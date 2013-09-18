@@ -140,11 +140,11 @@ __code USB_Configuration_Descriptor libconfiguration_descriptor = {
     // Configuration Descriptor Header
     {sizeof(USB_Configuration_Descriptor_Header),// Size of this descriptor in bytes
     CONFIGURATION_DESCRIPTOR,                   // CONFIGURATION descriptor type
-    sizeof(USB_Configuration_Descriptor_Header),// Total length of data for this configuration
+    sizeof(USB_Configuration_Descriptor),// Total length of data for this configuration
     1,                                          // Number of interfaces in this configuration
-    3,                                          // Index value of this configuration
+    1,                                          // Index value of this configuration
     0,                                          // Configuration string index
-    0,				                            // Attributes
+    192,				                        //0 Attributes
     20}, 
     {sizeof(USB_Interface_Descriptor),          // Size of this descriptor in bytes
     INTERFACE_DESCRIPTOR,                       // Interface descriptor type
@@ -154,20 +154,20 @@ __code USB_Configuration_Descriptor libconfiguration_descriptor = {
     0xff,                             			// Class code
     0xff,				                     	// Subclass code
     0xff,                                     	// vendor specific
-    4},
+    0},                         //4
     // Endpoint 1 Out
     {sizeof(USB_Endpoint_Descriptor),           // Size of Descriptor
     ENDPOINT_DESCRIPTOR,                        // Descriptor Type
     0x01,                                       // Endpoint Address
     0x02,                                       // Attribute = Bulk Transfer
-    0x40,0x00,
+    EP1_BUFFER_SIZE,
     0x00},                                      // Poll Intervall
     // Endpoint 2 IN
     {sizeof(USB_Endpoint_Descriptor),           // Size of Descriptor
     ENDPOINT_DESCRIPTOR,                        // Descriptor Type
-    0x82,                                       // Endpoint Address
+    0x81,                                       // 82Endpoint Address
     0x02,                                       // Attribute = Bulk Transfer
-    0x40,0x00,
+    EP1_BUFFER_SIZE,
     0x00}
 };
 #endif
