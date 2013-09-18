@@ -1,6 +1,9 @@
 /*******************************************************************************
     Pinguino Bootloader Change Log
 *******************************************************************************/
+    Version 4.10 (17-09-2013)
+        * fixed bug (timer1 is now disabled when USB transaction is done)
+        * added better support to Internal Oscillator (x6j50, x6j53, x7j53)
     Version 4.09 (17-05-2013)
         * fixed bug for external power supply support
     Version 4.08 (30-12-2012)
