@@ -168,6 +168,22 @@ class Pinguino(framePinguinoX, IDE):
         self.modeCompile = mode
         warning = ""
 
+        # RB 17/09/2013
+        for board in boardlist:
+            if name == board.name:
+                self.curBoard = board
+                if arch == 32 :
+                    textStatus=self.curBoard.name
+                else :
+                    if mode != "BOOT" :
+                        self.curBoard.bldr = "noboot"
+                        self.curBoard.memstart = 0x0000
+                        warning = "\nWARNING!! Bootloader will be erased.\n"
+                        textStatus = self.curBoard.name + " [ICSP]"
+                    else :
+                        textStatus=self.curBoard.name + " [" + bootloader[0] + "]"
+
+        """
         if mode == "BOOT":
             for board in boardlist:
                 if name == board.name:
@@ -192,8 +208,8 @@ class Pinguino(framePinguinoX, IDE):
             #self.curBoard.memend = devlist[self.curBoard.proc][1]*1024 
             warning = "\nWARNING!! this mode can overwrite the bootloader code.\n"
             textStatus = self.curBoard.name + " [ICSP]"
-            
-            
+        """
+
         self.displaymsg(_("Changing board")+"...", 0)
         self.statusBarEditor.SetStatusText(number=2, text=textStatus)
         if sys.platform=='darwin':

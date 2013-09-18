@@ -33,6 +33,8 @@ MICROCHIP_ID = 0x04D8
 PIC8_ID = 0xFEAA
 PIC32_ID = 0x003C
 
+# RB 17/09/2013
+"""
 class PinguinoNoBoot:
     name='Pinguino (no Bootloader)'
     #id=wx.NewId()
@@ -46,6 +48,7 @@ class PinguinoNoBoot:
     memend=0xFFF8
     shortarg='-b'
     longarg='--noboot'
+"""
 
 class Pinguino2550:
     name='Pinguino 2550'
@@ -128,8 +131,22 @@ class Pinguino26J50:
     product=PIC8_ID
     memstart=0x0C00       # bootloader offset
     memend=0xFFF8
-    shortarg='-j'
+    shortarg='-j50'
     longarg='--pinguino26j50'
+
+class Pinguino46J50:
+    name='Pinguino 46J50'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f46j50'
+    board='PINGUINO46J50'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0xFFF8
+    shortarg='-J50'
+    longarg='--pinguino46j50'
 
 class Pinguino27J53:
     name='Pinguino 27J53'
@@ -343,12 +360,14 @@ class UBW32_795:
     shortarg='-U'
     longarg='--ubw795'
 
+    # RB 17/09/2013
+    #PinguinoNoBoot,
 boardlist = [   
-    PinguinoNoBoot,
     Pinguino2550,  Pinguino4550,
-    Pinguino25k50, CHRP3, Pinguino45k50,
-    Pinguino26J50,
-    Pinguino27J53,Pinguino47J53A, 
+    Pinguino25k50, Pinguino45k50,
+    Pinguino26J50, Pinguino46J50,
+    Pinguino27J53, Pinguino47J53A,
+    CHRP3, 
     PIC32_Pinguino, PIC32_Pinguino_OTG,
     PIC32_Pinguino_Micro, PIC32_Pinguino_T795, PIC32_Pinguino_220,
     GENERIC32MX250F128, GENERIC32MX220F032,
