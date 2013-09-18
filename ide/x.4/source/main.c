@@ -88,17 +88,22 @@
 #endif
 
 {
-    #if defined(__18f26j50) || defined(__18f46j50) || \
-        defined(__18f27j53) || defined(__18f47j53)
-        u16 pll_startup_counter = 600;
-    #endif
-    
     /// ----------------------------------------------------------------
     /// Perform a loop for some processors until their frequency is stable
     /// ----------------------------------------------------------------
 
-    #if defined(__18f2455) || defined(__18f4455) || \
-        defined(__18f2550) || defined(__18f4550)
+    #if defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f26j53) || defined(__18f46j53) || \
+        defined(__18f27j53) || defined(__18f47j53)
+
+        u16 pll_startup_counter = 600;
+
+        // Enable the PLL and wait 2+ms until the PLL locks
+        OSCTUNEbits.PLLEN = 1;
+        while (pll_startup_counter--);
+    
+    #elif defined(__18f2455) || defined(__18f4455) || \
+          defined(__18f2550) || defined(__18f4550)
     
         // If Internal Oscillator is used
         if (OSCCONbits.SCS > 0x02)
@@ -111,13 +116,6 @@
         if (OSCCONbits.SCS > 0x02)
             // wait HFINTOSC frequency is stable (HFIOFS=1) 
             while (!OSCCONbits.HFIOFS);
-
-    #elif defined(__18f26j50) || defined(__18f46j50) || \
-          defined(__18f27j53) || defined(__18f47j53)
-
-        // Enable the PLL and wait 2+ms until the PLL locks
-        OSCTUNEbits.PLLEN = 1;
-        while (pll_startup_counter--);
 
     #endif
 
