@@ -40,11 +40,11 @@ class Pinguino():
 
 	VENDOR = 0x04D8
 	PRODUCT = 0xFEAA
-	CONFIGURATION = 0x01 # on Pinguino 26J50
-	#CONFIGURATION = 0x03 # on Pinguino 2550
+	CONFIGURATION = 0x01 # if bootloader v4.x
+	#CONFIGURATION = 0x03 # if bootloader v2.x
 	INTERFACE = 0
-	#ENDPOINT_IN = 0x82 # on Pinguino 2550
-   	ENDPOINT_IN = 0x81 # on Pinguino 26J50
+   	ENDPOINT_IN = 0x81 # if bootloader v4.x
+	#ENDPOINT_IN = 0x82 # if bootloader v2.x
 	ENDPOINT_OUT = 0x01
 
 	device = None

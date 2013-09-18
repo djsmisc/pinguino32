@@ -18,7 +18,7 @@
  */
 
 
-u8 ledPin = 10;    // LED connected to digital pin 11 (CCP)
+u8 ledPin = 11;    // LED connected to digital pin 11 (CCP)
 
 void setup()
 { 
