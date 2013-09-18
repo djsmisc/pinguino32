@@ -3,7 +3,7 @@
 */
 
 void setup()
-{                
+{
     // initialize the digital pin USERLED as an output.
     pinMode(USERLED, OUTPUT);     
 }
