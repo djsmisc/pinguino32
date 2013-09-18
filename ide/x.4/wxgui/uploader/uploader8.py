@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 #-*- coding: iso-8859-15 -*-
 
-"""-------------------------------------------------------------------------
+"""---------------------------------------------------------------------
     Pinguino Universal Uploader
 
-    Author:          Regis Blanchot <rblanchot@gmail.com> 
+    Author:          Regis Blanchot <rblanchot@gmail.com>
     Last release:    2012-04-20
-    
+
     This library is free software you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
@@ -19,13 +19,14 @@
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--------------------------------------------------------------------------"""
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+    MA  02110-1301  USA
+---------------------------------------------------------------------"""
 
 # This class is based on :
 # - Diolan USB bootloader licenced (LGPL) by Diolan <http://www.diolan.com>
 # - jallib USB bootloader licenced (BSD) by Albert Faber
-# See also PyUSB Doc. http://wiki.erazor-zone.de/wiki:projects:python:pyusb:pydoc
+# See also http://wiki.erazor-zone.de/wiki:projects:python:pyusb:pydoc
 # Pinguino Device Descriptors : lsusb -v -d 04d8:feaa
 
 import sys
@@ -34,11 +35,12 @@ import usb            # checked in check.py
 
 from uploader import baseUploader
 
+
 class uploader8(baseUploader):
     """ upload .hex into pinguino device """
 
     # General Data Packet Structure (usbBuf)
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     #    __________________
     #    |    COMMAND     |   0       [CMD]
     #    |      LEN       |   1       [LEN]
@@ -52,7 +54,7 @@ class uploader8(baseUploader):
     #    |                |   62
     #    |________________|   63
     #
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     BOOT_CMD                        =    0
     BOOT_CMD_LEN                    =    1
     BOOT_ADDR_LO                    =    2
@@ -69,7 +71,7 @@ class uploader8(baseUploader):
     BOOT_SIZE                       =    1
 
     # Bootloader commands
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     READ_VERSION_CMD                =    0x00
     READ_FLASH_CMD                  =    0x01
     WRITE_FLASH_CMD                 =    0x02
@@ -81,30 +83,30 @@ class uploader8(baseUploader):
     RESET_CMD                       =    0xFF
 
     # Data Block's size to write
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     DATABLOCKSIZE                   =    32
 
     # USB Packet size
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     MAXPACKETSIZE                   =    64
-    
+
     # bulk endpoints
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     IN_EP                           =    0x81    # endpoint for Bulk reads
     OUT_EP                          =    0x01    # endpoint for Bulk writes
 
     # configuration
-    # --------------------------------------------------------------------------
+    # ------------------------------------------------------------------
     ACTIVE_CONFIG                   =    0x01
     INTERFACE_ID                    =    0x00
     TIMEOUT                         =    1200
 
     # Table with Microchip 8-bit USB devices
-    # device_id:[PIC name] 
-    # --------------------------------------------------------------------------
+    # device_id:[PIC name]
+    # ------------------------------------------------------------------
 
     devices_table = \
-    {  
+    {
         0x4740: ['18f13k50'],
         0x4700: ['18lf13k50'],
 
@@ -118,7 +120,7 @@ class uploader8(baseUploader):
         0x4CC0: ['18lf24j50'],
         0x5C60: ['18f24k50'],
         0x5CE0: ['18lf24k50'],
-        
+
         0x1240: ['18f2550'],
         0x2A40: ['18f2553'],
         0x4C20: ['18f25j50'],
@@ -128,7 +130,7 @@ class uploader8(baseUploader):
 
         0x4C40: ['18f26j50'],
         0x4D00: ['18lf26j50'],
-        
+
         0x5860: ['18f27j53'],
 
         0x1200: ['18f4450'],
@@ -136,62 +138,61 @@ class uploader8(baseUploader):
         0x2A20: ['18f4458'],
         0x4C60: ['18f44j50'],
         0x4D20: ['18lf44j50'],
-        
+
         0x1200: ['18f4550'],
         0x2A00: ['18f4553'],
         0x4C80: ['18f45j50'],
         0x4D40: ['18lf45j50'],
         0x5C00: ['18f45k50'],
         0x5C80: ['18lf45k50'],
-        
+
         0x4CA0: ['18f46j50'],
         0x4D60: ['18lf46j50'],
 
         0x58E0: ['18f47j53'],
-        
+
         0x4100: ['18f65j50'],
         0x1560: ['18f66j50'],
         0x4160: ['18f66j55'],
         0x4180: ['18f67j50'],
+        
         0x41A0: ['18f85j50'],
         0x41E0: ['18f86j50'],
         0x1F40: ['18f86j55'],
         0x4220: ['18f87j50']
     }
 
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
     def initDevice(self):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
 #   TODO: to move in uploader.py ?
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ init pinguino device """
-        #conf = self.device.configurations[0]
-        #iface = conf.interfaces[0][0]
         handle = self.device.open()
         if handle:
-            ##handle.detachKernelDriver(iface.interfaceNumber)
-            #handle.setConfiguration(conf)
-            #handle.claimInterface(iface)
-            ##handle.setAltInterface(iface)
             handle.setConfiguration(self.ACTIVE_CONFIG)
             handle.claimInterface(self.INTERFACE_ID)
             return handle
         return self.ERR_USB_INIT1
-# ------------------------------------------------------------------------------
-    def sendCMD(self, usbBuf):  
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
+    def sendCMD(self, usbBuf):
+# ----------------------------------------------------------------------
         """ send command to the bootloader """
+        #self.txtWrite('[%s]' % ', '.join(map(hex, usbBuf)))
         sent_bytes = self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
-        #print sent_bytes
+        #self.txtWrite(str(sent_bytes))
         if sent_bytes == len(usbBuf):
-            #print "Block issued without problem."
-            # whatever is returned, USB packet size is always 64 bytes long in high speed mode
+            #self.txtWrite("Block issued without problem.")
+            # whatever is returned, USB packet size is always
+            # 64 bytes long in high speed mode
             return self.handle.bulkRead(self.IN_EP, self.MAXPACKETSIZE, self.TIMEOUT)
-        else:        
+        else:
             return self.ERR_USB_WRITE
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     def resetDevice(self):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ reset device """
         usbBuf = [0] * self.MAXPACKETSIZE
         # command code
@@ -199,29 +200,31 @@ class uploader8(baseUploader):
         # write data packet
         #usbBuf = self.sendCMD(usbBuf)
         usbBuf = self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     def getVersion(self):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ get bootloader version """
         usbBuf = [0] * self.MAXPACKETSIZE
         # command code
         usbBuf[self.BOOT_CMD] = self.READ_VERSION_CMD
         # write data packet and get response
         usbBuf = self.sendCMD(usbBuf)
-        if usbBuf == self.ERR_USB_WRITE:
+        if usbBuf == self.ERR_USB_WRITE :
             return self.ERR_USB_WRITE
-        else:        
+        else:
             # major.minor
             return str(usbBuf[self.BOOT_VER_MAJOR]) + "." + \
                    str(usbBuf[self.BOOT_VER_MINOR])
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     def getDeviceID(self):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ read 2-byte device ID from location 0x3FFFFE """
         usbBuf = self.readFlash(0x3FFFFE, 2)
         if usbBuf == self.ERR_USB_WRITE:
             return self.ERR_USB_WRITE
-        else:        
+        else:
             #print "BUFFER =", usbBuf
             dev1 = usbBuf[self.BOOT_DEV1]
             #print "DEV1 =", dev1
@@ -232,16 +235,18 @@ class uploader8(baseUploader):
             device_rev = device_id & 0x001F
             # mask revision number
             return device_id  & 0xFFE0
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     def getDeviceName(self, device_id):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         for n in self.devices_table:
             if n == device_id:
                 return self.devices_table[n][0]
         return self.ERR_DEVICE_NOT_FOUND
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     def eraseFlash(self, address, numBlocks):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ erase numBlocks of flash memory """
         usbBuf = [0] * self.MAXPACKETSIZE
         # command code
@@ -252,13 +257,13 @@ class uploader8(baseUploader):
         usbBuf[self.BOOT_ADDR_LO] = (address      ) & 0xFF
         usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
         usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
-        # write data packet and get response
-        #print usbBuf
-        usbBuf = self.sendCMD(usbBuf)
-        #print usbBuf
-# ------------------------------------------------------------------------------
+        # write data packet   
+        return self.sendCMD(usbBuf)
+        #self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
+
+# ----------------------------------------------------------------------
     def readFlash(self, address, length):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ read a block of flash """
         usbBuf = [0] * self.MAXPACKETSIZE
         # command code
@@ -273,9 +278,10 @@ class uploader8(baseUploader):
         return self.sendCMD(usbBuf)
         #self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
         #return self.handle.bulkRead(self.IN_EP, self.BOOT_DATA_START + length, self.TIMEOUT)
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     def writeFlash(self, address, datablock):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ write a block of code
             first 5 bytes are for block description (BOOT_CMD, BOOT_CMD_LEN and BOOT_ADDR)
             data block size should be of DATABLOCKSIZE bytes
@@ -298,9 +304,12 @@ class uploader8(baseUploader):
         #print usbBuf
         usbBuf = self.sendCMD(usbBuf)
         #print usbBuf
-# ------------------------------------------------------------------------------
+        if usbBuf == self.ERR_USB_WRITE :
+            self.txtWrite("Write error")
+
+# ----------------------------------------------------------------------
     def hexWrite(self, filename, board):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
         """ Parse the Hex File Format and send data to usb device """
 
         """
@@ -321,14 +330,14 @@ class uploader8(baseUploader):
         codesize    = 0
 
         # read hex file
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         fichier = open(filename,'r')
         lines = fichier.readlines()
         fichier.close()
 
         # 1st pass : calculate checksum and max_address
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         for line in lines:
             byte_count = int(line[1:3], 16)
@@ -365,18 +374,18 @@ class uploader8(baseUploader):
                 #print "max address =", max_address
 
         # max_address must be divisible by self.DATABLOCKSIZE
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         max_address = max_address + self.DATABLOCKSIZE - (max_address % self.DATABLOCKSIZE)
 
         # pre-fill data sequence with 0xFF
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         for i in range(max_address - self.board.memstart):
             data.append(0xFF)
 
         # 2nd pass : parse bytes from line into data
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         address_Hi = 0
 
@@ -413,7 +422,7 @@ class uploader8(baseUploader):
                 return self.ERR_HEX_RECORD
 
         # erase memory from self.board.memstart to max_address 
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
         if "j" in board.proc :
@@ -426,6 +435,7 @@ class uploader8(baseUploader):
                 numBlocks1024 = numBlocksMax
 
             self.eraseFlash(self.board.memstart, numBlocks1024)
+            #self.txtWrite("*** BREAKPOINT ***")
 
         # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
         else:
@@ -452,7 +462,7 @@ class uploader8(baseUploader):
                 self.eraseFlash(self.board.memstart + 0x3FC0, numBlocks64)
 
         # write blocks of DATABLOCKSIZE bytes
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         for addr in range(self.board.memstart, max_address, self.DATABLOCKSIZE):
             index = addr - self.board.memstart
@@ -461,15 +471,16 @@ class uploader8(baseUploader):
         self.txtWrite("%d bytes written." % codesize)
 
         return self.ERR_NONE
-# ------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------
     #def writeHex(self, output, filename, board):
     def writeHex(self):
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
         self.txtWrite("")
 
         # check file to upload
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         if self.filename == '':
             self.txtWrite("No program to write")
@@ -483,7 +494,7 @@ class uploader8(baseUploader):
         fichier.close()
 
         # search for a Pinguino board
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         self.device = self.getDevice()
         if self.device == self.ERR_DEVICE_NOT_FOUND:
@@ -500,7 +511,7 @@ class uploader8(baseUploader):
             return
 
         # find out the processor
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         device_id = self.getDeviceID()
         proc = self.getDeviceName(device_id)
@@ -512,18 +523,18 @@ class uploader8(baseUploader):
             return
 
         # find out bootloader version
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         #product = handle.getString(device.iProduct, 30)
         #manufacturer = handle.getString(device.iManufacturer, 30)
         self.txtWrite(" - with USB bootloader v%s" % self.getVersion())
 
         # start writing
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
         self.txtWrite("Uploading user program ...")
         status = self.hexWrite(self.filename, self.board)
-        
+
         if status == self.ERR_HEX_RECORD:
             self.txtWrite("Record error")
             self.closeDevice()
@@ -543,7 +554,7 @@ class uploader8(baseUploader):
             self.txtWrite(os.path.basename(self.filename) + " successfully uploaded")
 
         # reset and start start user's app.
-        # ----------------------------------------------------------------------
+        # --------------------------------------------------------------
 
             #self.txtWrite("Resetting ...")
             self.txtWrite("Starting user program ...")
@@ -559,4 +570,4 @@ class uploader8(baseUploader):
         else:
             self.txtWrite("Unknown error")
             return
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------
