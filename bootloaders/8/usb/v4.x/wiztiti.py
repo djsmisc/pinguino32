@@ -184,9 +184,8 @@ class MainPanel(wx.Panel):
         for i in range(len(devicesList)):
             if (self.checkboxList[i].GetValue()):
                 proc = self.checkboxList[i].GetLabel()
+                self.Compile(proc, osc, string, speed, lvp)
 
-        self.Compile(proc, osc, string, speed, lvp)
-            
     # If User press Upload button
     #----------------------------------------------------------------------
     def OnHelp(self,event):
