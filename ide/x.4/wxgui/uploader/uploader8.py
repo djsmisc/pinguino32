@@ -522,6 +522,12 @@ class uploader8(baseUploader):
             self.closeDevice()
             return
 
+        # find out flash memory size
+        # --------------------------------------------------------------
+
+        memfree = self.board.memend - self.board.memstart;
+        self.txtWrite(" - with %d bytes free (%d KB)" % (memfree, memfree/1024))
+
         # find out bootloader version
         # --------------------------------------------------------------
 

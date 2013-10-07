@@ -71,7 +71,7 @@ class Uploader:
 
     #need to be imported HERE!!
     from uploaderVSC import uploaderVSC
-    from uploaderDLN import uploaderDLN
+    #from uploaderDLN import uploaderDLN
     from uploader8   import uploader8
     #from uploaderMCC import uploaderMCC
 
@@ -91,8 +91,8 @@ class Uploader:
             self.logwindow("You choose a board without bootloader.\nYou should either change your board type\nor use a programmer to upload your application on your board", 1)
         elif self.curBoard.bldr == 'boot2':
             curUploader = self.uploaderVSC(*parameters)
-        elif self.curBoard.bldr == 'boot3':
-            curUploader = self.uploaderDLN(*parameters)
+        #elif self.curBoard.bldr == 'boot3':
+        #    curUploader = self.uploaderDLN(*parameters)
         elif self.curBoard.bldr == 'boot4':
             curUploader = self.uploader8(*parameters)
         elif self.curBoard.bldr == 'microchip':
