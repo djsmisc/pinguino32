@@ -172,6 +172,8 @@ class Pinguino(framePinguinoX, IDE):
         for board in boardlist:
             if name == board.name:
                 self.curBoard = board
+                self.curBoard.bldr = bootloader[0]
+                self.curBoard.memstart = int(bootloader[1])
                 if arch == 32 :
                     textStatus=self.curBoard.name
                 else :
@@ -182,6 +184,7 @@ class Pinguino(framePinguinoX, IDE):
                         textStatus = self.curBoard.name + " [ICSP]"
                     else :
                         textStatus=self.curBoard.name + " [" + bootloader[0] + "]"
+
 
         """
         if mode == "BOOT":
@@ -767,7 +770,7 @@ class Pinguino(framePinguinoX, IDE):
                     "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
                     "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
                     os.path.join(SOURCE_DIR, 'main.o'),\
-                    'libio' + board.proc + '.lib',\
+                    #'libio' + board.proc + '.lib',\
                     'libdev' + board.proc + '.lib',\
                     'libc18f.lib',\
                     'libm18f.lib',\

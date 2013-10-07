@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 
-"""-------------------------------------------------------------------------
+"""---------------------------------------------------------------------
     Pinguino Boards List
 
     author:			Regis Blanchot
@@ -22,7 +22,7 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
--------------------------------------------------------------------------"""
+---------------------------------------------------------------------"""
 
 #import wx	# wx.NewId()
 
@@ -50,6 +50,24 @@ class PinguinoNoBoot:
     longarg='--noboot'
 """
 
+"""---------------------------------------------------------------------
+    8-bit Boards
+---------------------------------------------------------------------"""
+
+class Pinguino2455:
+    name='Pinguino 2455'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f2455'
+    board='PINGUINO2455'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0x3fff
+    shortarg='-p2455'
+    longarg='--pinguino2455'
+    
 class Pinguino2550:
     name='Pinguino 2550'
     #id=wx.NewId()
@@ -61,8 +79,23 @@ class Pinguino2550:
     product=PIC8_ID
     memstart=0x2000       # bootloader offset
     memend=0x7fff
-    shortarg='-p'
+    shortarg='-p2550'
     longarg='--pinguino2550'
+    
+class FreeJALduino:
+    name='FreeJALduino'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot2'
+    proc='18f2550'
+    board='FREEJALDUINO'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x2000
+    memend=0x7fff
+    config=0x300000
+    shortarg='-J'
+    longarg='--freejalduino'
 
 class Pinguino25k50:
     name='Pinguino 25k50'
@@ -75,50 +108,8 @@ class Pinguino25k50:
     product=PIC8_ID
     memstart=0x0C00       # bootloader offset
     memend=0x7fff
-    shortarg='-k'
+    shortarg='-p25k50'
     longarg='--pinguino25k50'
-
-class Pinguino45k50:
-    name='Pinguino 45k50'
-    #id=wx.NewId()
-    arch=8
-    bldr='boot4'
-    proc='18f45k50'
-    board='PINGUINO45K50'
-    vendor=MICROCHIP_ID
-    product=PIC8_ID
-    memstart=0x0C00       # bootloader offset
-    memend=0x7fff
-    shortarg='-l'
-    longarg='--pinguino45k50'
-
-class CHRP3:
-    name='CHRP3.0'
-    #id=wx.NewId()
-    arch=8
-    bldr='boot4'
-    proc='18f25k50'
-    board='CHRP3'
-    vendor=MICROCHIP_ID
-    product=PIC8_ID
-    memstart=0x0C00       # bootloader offset
-    memend=0x7fff
-    shortarg='-c'
-    longarg='--chrp3'
-
-class Pinguino4550:
-    name='Pinguino 4550'
-    #id=wx.NewId()
-    arch=8
-    bldr='boot2'
-    proc='18f4550'
-    board='PINGUINO4550'
-    vendor=MICROCHIP_ID
-    product=PIC8_ID
-    memstart=0x2000       # bootloader offset
-    memend=0x7fff
-    shortarg='-P'
-    longarg='--pinguino4550'
 
 class Pinguino26J50:
     name='Pinguino 26J50'
@@ -131,22 +122,8 @@ class Pinguino26J50:
     product=PIC8_ID
     memstart=0x0C00       # bootloader offset
     memend=0xFFF8
-    shortarg='-j50'
+    shortarg='-p26j50'
     longarg='--pinguino26j50'
-
-class Pinguino46J50:
-    name='Pinguino 46J50'
-    #id=wx.NewId()
-    arch=8
-    bldr='boot4'
-    proc='18f46j50'
-    board='PINGUINO46J50'
-    vendor=MICROCHIP_ID
-    product=PIC8_ID
-    memstart=0x0C00       # bootloader offset
-    memend=0xFFF8
-    shortarg='-J50'
-    longarg='--pinguino46j50'
 
 class Pinguino27J53:
     name='Pinguino 27J53'
@@ -159,22 +136,36 @@ class Pinguino27J53:
     product=PIC8_ID
     memstart=0x0C00       # bootloader offset
     memend=0x1FFF8
-    shortarg='-j53'
+    shortarg='-p27j53'
     longarg='--pinguino27j53'
 
-class Pinguino47J53A:
-    name='Pinguino 47J53-A'
+class Pinguino4455:
+    name='Pinguino 4455'
     #id=wx.NewId()
     arch=8
     bldr='boot4'
-    proc='18f47j53'
-    board='PINGUINO47J53A'
+    proc='18f4455'
+    board='PINGUINO4455'
     vendor=MICROCHIP_ID
     product=PIC8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x1FFF8
-    shortarg='-j53A'
-    longarg='--pinguino47j53a'
+    memend=0x3fff
+    shortarg='-p4455'
+    longarg='--pinguino4455'
+
+class Pinguino4550:
+    name='Pinguino 4550'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot2'
+    proc='18f4550'
+    board='PINGUINO4550'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x2000       # bootloader offset
+    memend=0x7fff
+    shortarg='-p4550'
+    longarg='--pinguino4550'
 
 class PICuno_Equo:
     name='PICuno Equo'
@@ -191,20 +182,65 @@ class PICuno_Equo:
     shortarg='-eq'
     longarg='--picunoequo'
 
-class FreeJALduino:
-    name='FreeJALduino'
+class Pinguino45k50:
+    name='Pinguino 45k50'
     #id=wx.NewId()
     arch=8
-    bldr='boot2'
-    proc='18f2550'
-    board='FREEJALDUINO'
+    bldr='boot4'
+    proc='18f45k50'
+    board='PINGUINO45K50'
     vendor=MICROCHIP_ID
     product=PIC8_ID
-    memstart=0x2000
+    memstart=0x0C00       # bootloader offset
     memend=0x7fff
-    config=0x300000
-    shortarg='-J'
-    longarg='--freejalduino'
+    shortarg='-p45k50'
+    longarg='--pinguino45k50'
+
+class CHRP3:
+    name='CHRP3.0'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f25k50'
+    board='CHRP3'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0x7fff
+    shortarg='-c'
+    longarg='--chrp3'
+
+class Pinguino46J50:
+    name='Pinguino 46J50'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f46j50'
+    board='PINGUINO46J50'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0xFFF8
+    shortarg='-p46j50'
+    longarg='--pinguino46j50'
+
+class Pinguino47J53A:
+    name='Pinguino 47J53-A'
+    #id=wx.NewId()
+    arch=8
+    bldr='boot4'
+    proc='18f47j53'
+    board='PINGUINO47J53A'
+    vendor=MICROCHIP_ID
+    product=PIC8_ID
+    memstart=0x0C00       # bootloader offset
+    memend=0x1FFF8
+    shortarg='-p47j53A'
+    longarg='--pinguino47j53a'
+
+"""---------------------------------------------------------------------
+    32-bit Boards
+---------------------------------------------------------------------"""
 
 class PIC32_Pinguino:
     name='PIC32 Pinguino'
@@ -360,10 +396,16 @@ class UBW32_795:
     shortarg='-U'
     longarg='--ubw795'
 
+"""---------------------------------------------------------------------
+    Board list
+---------------------------------------------------------------------"""
+
     # RB 17/09/2013
     #PinguinoNoBoot,
-boardlist = [   
+boardlist = [
+    Pinguino2455,  Pinguino4455,
     Pinguino2550,  Pinguino4550,
+    PICuno_Equo,   FreeJALduino,
     Pinguino25k50, Pinguino45k50,
     Pinguino26J50, Pinguino46J50,
     Pinguino27J53, Pinguino47J53A,
