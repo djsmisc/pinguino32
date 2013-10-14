@@ -28,7 +28,7 @@
 #ifndef __EEPROM_C
 	#define __EEPROM_C
 
-    #if !defined (__18f2550)  && !defined (__18f4550)  && \
+    #if !defined (__18f2455)  && !defined (__18f2550)  && !defined (__18f4550)  && \
         !defined (__18f25k50) && !defined (__18f45k50)
         #error "Error : this library is intended to be used only with 8-bit Pinguino with EEPROM" 
     #endif
