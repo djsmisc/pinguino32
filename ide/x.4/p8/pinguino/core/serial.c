@@ -89,7 +89,8 @@ void serial_begin(unsigned long baudrate)
 	IPR1bits.RCIP=1;                        // define high priority for RX interrupt
 	TXSTAbits.TXEN=1;                       // enable TX
 
-#elif defined(__18f2550) || defined(__18f4550) || \
+#elif defined(__18f2455) || \
+	  defined(__18f2550) || defined(__18f4550) || \
       defined(__18f25k50) || defined(__18f45k50)
 	TRISCbits.TRISC7	= 1;					/* Rx1	set input */
 	TXSTAbits.BRGH=1;               	  	// set BRGH bit
@@ -198,9 +199,10 @@ void serial_interrupt(void)
 // write char
 void serial_putchar(unsigned char caractere)
 {
-#if defined(__18f1220) || defined(__18f1320) || \
+#if defined(__18f1220) || defined(__18f1320)    || \
     defined(__18f14k22) || defined(__18lf14k22) || \
-    defined(__18f2550) || defined(__18f4550) || \
+    defined(__18f2455)                          || \
+    defined(__18f2550) || defined(__18f4550)    || \
 	defined(__18f25k50) || defined(__18f45k50)
 	while (!TXSTAbits.TRMT);
 	TXREG=caractere;		        // yes, send char

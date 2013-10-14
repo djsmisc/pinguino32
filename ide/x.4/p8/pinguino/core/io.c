@@ -53,7 +53,7 @@ void IO_init(void)
 		LATC  = 0x00;	
 	    #endif
 	#endif
-	#if defined(__18f2550) || defined(__18f4550) || \
+	#if  defined(__18f2455) || defined(__18f2550) || defined(__18f4550) || \
       defined(__18f25k50) || defined(__18f45k50)
 	    #ifdef __SERIAL__
 		LATC  = 0x40;	// Except UART TX bit (maintain high state to not emit extra low state) 

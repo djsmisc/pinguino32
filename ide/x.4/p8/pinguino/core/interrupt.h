@@ -142,7 +142,7 @@
 	/// T1CON: TIMER1 CONTROL REGISTER
 	///
 
-	#if defined(__18f2550) || defined(__18f4550) || defined(__18f14k22)
+	#if defined(__18f2455) || defined(__18f2550) || defined(__18f4550) || defined(__18f14k22)
 
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T1_16BIT			(1<<7)	// 16-bit mode
@@ -219,7 +219,7 @@
 	/// T3CON: TIMER3 CONTROL REGISTER
 	///
 
-	#if defined(__18f2550) || defined(__18f4550)
+	#if  defined(__18f2455) || defined(__18f2550) || defined(__18f4550)
 
 	// bit 7 RD16: 16-Bit Read/Write Mode Enable bit
 	#define T3_16BIT			(1<<7)  // 1 = Enables register read/write of Timer3 in one 16-bit operation

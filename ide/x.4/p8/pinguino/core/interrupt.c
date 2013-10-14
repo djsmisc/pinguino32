@@ -151,20 +151,20 @@ void IntSetEnable(u8 inter, u8 enable)
 			PIE2bits.OSCFIE = enable;
 			break;
 		case INT_CM:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 			PIE2bits.CMIE = enable;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
 			PIE2bits.CM1IE = enable;
 		#endif
 			break;
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 		case INT_EE:
 			PIE2bits.EEIE = enable;
 			break;
 		#endif
 		case INT_BCL:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 			PIE2bits.BCLIE = enable;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
@@ -172,7 +172,7 @@ void IntSetEnable(u8 inter, u8 enable)
 		#endif
 			break;
 		case INT_HLVD:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 			PIE2bits.HLVDIE = enable;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
@@ -281,20 +281,20 @@ void IntClearFlag(u8 inter)
 			PIR2bits.OSCFIF = 0;
 			break;
 		case INT_CM:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 			PIR2bits.CMIF = 0;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
 			PIR2bits.CM1IF = 0;
 		#endif
 			break;
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 		case INT_EE:
 			PIR2bits.EEIF = 0;
 			break;
 		#endif
 		case INT_BCL:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 			PIR2bits.BCLIF = 0;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
@@ -302,7 +302,7 @@ void IntClearFlag(u8 inter)
 		#endif
 			break;
 		case INT_HLVD:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 			PIR2bits.HLVDIF = 0;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
@@ -370,24 +370,24 @@ u8 IntIsFlagSet(u8 inter)
     #endif
 		case INT_OSCF:	return PIR2bits.OSCFIF;
 		case INT_CM:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
         	return PIR2bits.CMIF;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
         	return PIR2bits.CM1IF;
 		#endif
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
 		case INT_EE:	return PIR2bits.EEIF;
 		#endif
 		case INT_BCL:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
         	return PIR2bits.BCLIF;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
         	return PIR2bits.BCL1IF;
 		#endif
 		case INT_HLVD:
-		#if defined(__18f4550) || defined(__18f2550)
+		#if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
         	return PIR2bits.HLVDIF;
 		#endif
 		#if defined(__18f26j50) || defined(__18f46j50)
@@ -631,7 +631,7 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 
 void OnRTCC(callback func, u16 delay)
 {
-#if defined(__18f2550) || defined(__18f4550)
+#if defined(__18f2550) || defined(__18f4550) || defined(__18f2455)
 	u8 _t1con = 0;
 
 	if (intUsed[INT_TMR1] == INT_NOT_USED)

@@ -249,7 +249,7 @@ u32 System_getPeripheralFrequency()
     * 18f14k22 : PLL enabled = INTOSC x 4 only if INTOSC = 8 or 16 MHz
     --------------------------------------------------------------------------*/
 
-#if defined(__18f14k22) || \
+#if defined(__18f14k22) || defined(__18f2455)  || \
     defined(__18f2550)  || defined(__18f4550)  || \
     defined(__18f25k50) || defined(__18f45k50) || \
     defined(__18f26j50) || defined(__18f46j50) || \
@@ -274,7 +274,7 @@ void System_setIntOsc(u8 speed)
     #if defined(__18f25k50) || defined(__18f45k50)
     OSCCON2bits.PLLEN = 0;      // PLL disabled
     OSCCON2bits.INTSRC = 1;     // select INTOSC as a 31.25 KHz clock source
-    #elif defined(__18f2550) || defined(__18f4550) || \
+    #elif defined(__18f2455) || defined(__18f4550) || \
           defined(__18f2550) || defined(__18f4550)
     OSCTUNEbits.INTSRC = 1;     // select INTOSC as a 31.25 KHz clock source
     #else
