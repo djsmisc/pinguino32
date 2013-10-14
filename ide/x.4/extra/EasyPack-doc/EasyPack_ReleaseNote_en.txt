@@ -4,15 +4,15 @@ First, to extract 7z archive , '7-Zip' has to be installed from here,
      http://www.7-zip.org/
 
 Installation and start up Pinguno IDE:
-  1. Using 7-Zip, extract 'Pinguino-X4-EasyPack-Win32-RevNNNnnn-vNN-yyyy-mm.7z' to the arbitrary folder.
-     (N,n,y,m is number or string) 
+  1. Using 7-Zip, extract 'Pinguino-X4-EasyPack-Win32-RevNNN-vNN-yyyy-mm.7z' to the arbitrary folder.
+     (N,y,m is number or string) 
      It's highly recommended extracting this archive file to the folder 
      which name dose not have 'spaces or multibyte strings'.
   2. Move the x4-easy-revNNN folder to i.e. 'C:\x4-easy-revNNN'.
      (Because gpasm.exe can't recognize the long folder name.) 
-  3. Execute x4-easy-revNNNnnn\pinguino.exe,
+  3. Execute x4-easy-revNNN\pinguino.exe,
      or
-     x4-easy-revNNNnnn\pinguino_start.bat
+     x4-easy-revNNN\pinguino_start.bat
 
 THAT'S ALL!!
 
@@ -49,6 +49,7 @@ Tested environment:
     Windows 7(32bit).
 
 History:
+rev903    v01: 2013/10, packaged and released by avrin.
 rev857    v01: 2013/05, packaged and released by avrin.
 rev685mod v01: 2013/02, packaged and released by avrin.
 
@@ -79,10 +80,10 @@ Packaging scripts and patches:
 
 
 
-Thank you very much, Pinguino Developper Team, many comitters 
+Thank you very much, Pinguino Developper Team, many committers 
 and community members.
 
 
 
-2013/05: by avrin
+2013/10: by avrin
 
