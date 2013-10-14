@@ -64,7 +64,7 @@ class Pinguino2455:
     vendor=MICROCHIP_ID
     product=PIC8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x3fff
+    memend=0x5fff
     shortarg='-p2455'
     longarg='--pinguino2455'
     
