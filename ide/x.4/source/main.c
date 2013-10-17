@@ -36,6 +36,13 @@
 #include <const.h>
 #include <macro.h>
 
+#ifdef noboot
+    // runtime start code with variable initialisation
+    //#include "crt0.c"
+    //#include "crt0i.c"
+    #include "config.h"
+#endif
+
 #ifdef boot4
     // runtime start code with variable initialisation
     //#include "crt0.c"
@@ -88,6 +95,21 @@
 #endif
 
 {
+    #if defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f26j53) || defined(__18f46j53) || \
+        defined(__18f27j53) || defined(__18f47j53)
+
+        u16 pll_startup_counter = 600;
+
+    #endif
+    
+    /// ----------------------------------------------------------------
+    /// If Power-on reset occurred, set NOT_POR bit to 1
+    /// ----------------------------------------------------------------
+
+    if (!RCONbits.NOT_POR)
+        RCONbits.NOT_POR = 1;
+    
     /// ----------------------------------------------------------------
     /// Perform a loop for some processors until their frequency is stable
     /// ----------------------------------------------------------------
@@ -95,8 +117,6 @@
     #if defined(__18f26j50) || defined(__18f46j50) || \
         defined(__18f26j53) || defined(__18f46j53) || \
         defined(__18f27j53) || defined(__18f47j53)
-
-        u16 pll_startup_counter = 600;
 
         // Enable the PLL and wait 2+ms until the PLL locks
         OSCTUNEbits.PLLEN = 1;
