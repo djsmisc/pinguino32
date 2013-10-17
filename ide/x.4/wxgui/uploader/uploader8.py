@@ -99,7 +99,7 @@ class uploader8(baseUploader):
     # ------------------------------------------------------------------
     ACTIVE_CONFIG                   =    0x01
     INTERFACE_ID                    =    0x00
-    TIMEOUT                         =    1200
+    TIMEOUT                         =    10000       # 1200
 
     # Table with Microchip 8-bit USB devices
     # device_id:[PIC name]
@@ -258,8 +258,8 @@ class uploader8(baseUploader):
         usbBuf[self.BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
         usbBuf[self.BOOT_ADDR_UP] = (address >> 16) & 0xFF
         # write data packet   
-        return self.sendCMD(usbBuf)
-        #self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
+        #return self.sendCMD(usbBuf)
+        self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
 
 # ----------------------------------------------------------------------
     def readFlash(self, address, length):
@@ -301,11 +301,12 @@ class uploader8(baseUploader):
             #self.txtWrite(hex(datablock[i]))
             usbBuf[self.BOOT_DATA_START + i] = datablock[i]
         # write data packet on usb device
+        self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
         #print usbBuf
-        usbBuf = self.sendCMD(usbBuf)
+        #usbBuf = self.sendCMD(usbBuf)
         #print usbBuf
-        if usbBuf == self.ERR_USB_WRITE :
-            self.txtWrite("Write error")
+        #if usbBuf == self.ERR_USB_WRITE :
+        #    self.txtWrite("Write error")
 
 # ----------------------------------------------------------------------
     def hexWrite(self, filename, board):
