@@ -27,28 +27,44 @@ import sys
 codesize = 0
 address_Hi = 0
 max_address = 0
+old_address = 0
 
 if (len(sys.argv) > 1):
+
     filename = sys.argv[1]
     fichier = open(filename + ".hex", 'r')
     lines = fichier.readlines()
+
     for line in lines:
+
         byte_count = int(line[1:3], 16)
         address_Lo = int(line[3:7], 16)
         record_type= int(line[7:9], 16)
+        address = (address_Hi << 16) + address_Lo
+
         # extended linear address record
         if record_type == 4:
             address_Hi = int(line[9:13], 16) << 16
-        # address calculation
-        address = (address_Hi << 16) + address_Lo
-        if (address > max_address) and (address < 0xFFF8):
-            max_address = address
-            # code size
+
+        # code size
         if record_type == 0:
             codesize = codesize + byte_count
+
+        # address calculation
+        if (address > old_address) and (address < 0xFFF8):
+            max_address = address + byte_count
+            old_address = address
+
     fichier.close()
-    print "code size: %d bytes (0x%x)" % (codesize, codesize)
-    #print "possible vectors relocation : %s" % hex((int(max_address/1024)+1)*1024)
+
+    page1024 = int(max_address/1024) + 1
+
+    print
+    print "code size is : %d bytes (0x%X)" % (codesize, codesize)
+    print "max. address : 0x%X" % max_address
+    print "app. address : 0x%X" % (page1024 * 1024)
+    print "still %d bytes to gain !" % ( max_address - ( ( page1024 - 1 ) * 1024 ) )
+    print
 else:
     print "No file to proceed"
     print "usage: ./codesize.py filename (without .hex extension)"

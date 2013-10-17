@@ -11,8 +11,16 @@
 #include <pic18fregs.h>
 
 /**********************************************************************/
-#if defined(__18f2550) || defined(__18f4550) || \
-    defined(__18f2455) || defined(__18f4455)
+#if   defined(__18f13k50) || defined(__18f14k50)
+/**********************************************************************/
+
+    #error "    ---------------------------------    "
+    #error "    Config. Words still to do for this chip"
+    #error "    ---------------------------------    "
+
+/**********************************************************************/
+#elif defined(__18f2550) || defined(__18f4550) || \
+      defined(__18f2455) || defined(__18f4455)
 /**********************************************************************/
 
     #if (SPEED == LOW_SPEED)
@@ -58,7 +66,7 @@
         #pragma config FCMEN = ON			// Fail Safe Clock Monitor
         #pragma config IESO = OFF			// Int/Ext switchover mode
         #pragma config PWRT = ON			// PowerUp Timer
-        #pragma config BOR = OFF			// Brown Out
+        #pragma config BOR = ON 			// Brown Out
         #pragma config VREGEN = ON			// Int Voltage Regulator
         #pragma config WDT = OFF			// WatchDog Timer
         #pragma config MCLRE = ON			// MCLR
@@ -107,6 +115,8 @@
 
         #pragma config OSC = HSPLL      // external oscillator, PLL enabled, HSPLL used by USB
 
+        //#pragma config PLLDIV = CRYSTAL / 4
+        
         #if   (CRYSTAL == 4)
             #pragma config PLLDIV = 1
         #elif (CRYSTAL == 8)
@@ -160,7 +170,10 @@
     #pragma config WPCFG = OFF          // Write/Erase last page protect Disabled
     #pragma config WPEND = PAGE_0       // Start protection at page 0
     #pragma config WPFP = PAGE_1        // Write Protect Program Flash Page 0
-    #pragma config WPDIS = OFF          // WPFP[5:0], WPEND, and WPCFG bits ignored 
+
+    // GPUTILS rev. 995 - bug #269 (https://sourceforge.net/p/gputils/bugs/269/)
+    // fixed in rev. 996
+    #pragma config WPDIS = OFF          // WPFP, WPEND, and WPCFG bits ignored 
 
 /**********************************************************************/
 #elif defined(__18f25k50) || defined(__18f45k50)// Config. Words for Internal Crystal (16 MHz) use
@@ -317,9 +330,15 @@
     #pragma config DSWDTPS = 8192       // 1:8,192 (8.5 seconds)
     #pragma config DSWDTEN = OFF        // Disabled
     #pragma config DSBOREN = OFF        // Zero-Power BOR disabled in Deep Sleep
-    #pragma config RTCOSC = INTOSCREF   // RTCC uses INTOSC as clock
-    #pragma config DSWDTOSC = INTOSCREF // DSWDT uses INTOSC as clock
 
+    #if defined(__18f47j53)
+    #pragma config RTCOSC   = T1OSCREF  // RTCC uses T1OSC/T1CKI as clock
+    #pragma config DSWDTOSC = T1OSCREF  // DSWDT uses T1OSC/T1CKI as clock
+    #else
+    #pragma config RTCOSC   = INTOSCREF // RTCC uses INTOSC as clock
+    #pragma config DSWDTOSC = INTOSCREF // DSWDT uses INTOSC as clock
+    #endif
+    
     // CONFIG3H
     #pragma config MSSP7B_EN = MSK7     // 7 Bit address masking
     #pragma config ADCSEL = BIT12       // 12-bit conversion mode is enabled

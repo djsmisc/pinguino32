@@ -5,7 +5,7 @@
 #	Author:	Régis Blanchot <rblanchot@gmail.com>                       #
 #           André Gentric                                              #
 #                                                                      #
-#	Usage: make --makefile=Makefile PROC=18f26j50 OSC=20 STRINGDESC=0 LVP=0
+#	Usage: make --makefile=Makefile PROC=18f26j50 OSC=20               #
 #          to compile the bootloader                                   #
 #                                                                      #
 #	This file is part of Pinguino Project (http://www.pinguino.cc)     #
@@ -31,24 +31,44 @@
 #                                                                      #
 ########################################################################
 
-LOW_SPEED	= 1
-HIGH_SPEED	= 0
-LVP			= 0
-
 ########################################################################
 #	CONFIGURATION OPTIONS                                              #
 ########################################################################
 
+# SDCC's toolchain directory
+SDCCDIR		= /dvpt/sdcc/linux64
+
 CPU			= $(PROC)
 CRYSTAL		= $(OSC)
 
-# usb speed (HIGH_SPEED or LOW_SPEED)
-USBSPEED	= $(HIGH_SPEED)
+########################################################################
+#	OPTIONAL CONFIGURATION OPTIONS                                     #
+########################################################################
 
-# SDCC's toolchain directory
-SDCCDIR		= /dvpt/sdcc/linux64
-# Pinguino directory
-#PINGUINODIR = /dvpt/pinguino/local/branches/x.4
+LOW_SPEED	= 1
+HIGH_SPEED	= 0
+ONE			= 1
+
+# usb speed (HIGH_SPEED = 0 / LOW_SPEED = 1)
+ifeq ("x${SPEED}", "x")
+USBSPEED	= 0
+else
+USBSPEED	= $(SPEED)
+endif
+
+# low voltage programing (YES = 1 / NO = 0)
+ifeq ("x${VOLTAGE}", "x")
+LVP			= 0
+else
+LVP			= $(VOLTAGE)
+endif
+
+# string descriptor flag  (YES = 1 / NO = 0)
+ifeq ("x${STRINGDESC}", "x")
+STRING		= 0
+else
+STRING		= $(STRINGDESC)
+endif
 
 ########################################################################
 #	DO NOT CHANGE FOLLOWINGS WITHOUT CARE                              #
@@ -56,20 +76,19 @@ SDCCDIR		= /dvpt/sdcc/linux64
 
 # bootloader version (cf. changelog.txt)
 MAJ_VER		= 4
-MIN_VER		= 10
+MIN_VER		= 12
 
-# end of bootloader / start of pinguino application
-# ENTRY%64 must be 0
+# Microchip Vendor ID / Pinguino Product ID (Microchip sublicense)
+VID			= 0x04D8
+PID			= 0xFEAA
+
+# ENTRY address is the end of bootloader / start of user's application
+# ENTRY must be a multiple of 1024 because :
+# 1/ flash must be erased before any write,
+# 2/ some PICs can only erase 1024-byte long blocks 
 ENTRY		= 0x0C00
 
-# string descriptor flag
-STRING		= $(STRINGDESC)
-
-#ifeq ($(USBSPEED), $(LOW_SPEED))
-#CRYSTAL	 = 8
-#endif
-
-#FAM			= $(shell echo $(CPU) | cut -c 1-3)
+# PIC Family (18F or 16F ?)
 FAM			= $(findstring 18f, $(CPU))
 
 ifeq ($(FAM), 18f)
@@ -86,85 +105,89 @@ PRJ		= Bootloader_v$(MAJ_VER).$(MIN_VER)_$(CPU)_X$(CRYSTAL)MHz
 endif
 
 # files
-# startup files (cf. sdcc/sources/sdcc/device/lib/pic16/startup)
-# crt0	 minimal initialisation routine
-# crt0i	 initialisation of variables (default)
-# crt0iz RAM cleanup and initialisation of variables
-CRTB		= crt0iBoot4
-#CRTP		= crt0iPinguino
 SRCS		= $(wildcard src/*.c)
 OBJS		= $(SRCS:src/%.c=obj/%.o)
 
-# directories
-BINDIR		= $(SDCCDIR)/bin
-#INCLUDEDIR	= $(SDCCDIR)/share/sdcc/non-free/include/$(ARCH)
-#LIBDIR		= $(SDCCDIR)/share/sdcc/lib/$(ARCH)
+# compiler
+CC			= $(SDCCDIR)/bin/sdcc
 
-# flags
-CC			= $(BINDIR)/sdcc
-
+# Compiler flags
 CFLAGS		= -V \
 			  -m$(ARCH) \
 			  -p$(CPU) \
 			  $(OPTIMIZ) \
-		      --fomit-frame-pointer \
-		      --use-non-free \
-		      -D ENTRY=$(ENTRY) \
-		      -D STRING=$(STRING) \
-		      -D SPEED=$(USBSPEED) \
-		      -D CRYSTAL=$(CRYSTAL) \
-		      -D LVP=$(LVP) \
-		      -D MAJOR_VERSION=$(MAJ_VER) \
-		      -D MINOR_VERSION=$(MIN_VER)
+			  --use-non-free \
+			  --fomit-frame-pointer \
+			  -D VENDORID=$(VID) \
+			  -D PRODUCTID=$(PID) \
+			  -D ENTRY=$(ENTRY) \
+			  -D STRING=$(STRING) \
+			  -D SPEED=$(USBSPEED) \
+			  -D LOW_SPEED=1 \
+			  -D HIGH_SPEED=0 \
+			  -D LVP=$(LVP) \
+			  -D CRYSTAL=$(CRYSTAL) \
+			  -D MAJOR_VERSION=$(MAJ_VER) \
+			  -D MINOR_VERSION=$(MIN_VER)
 
-AFLAGS		= -Wa-w2
+# Assembler flags
+# -w[0|1|2] : set message level
+AFLAGS		= -Wa,"-w0"
 
-# we use our own linker script and startup code (work)
-LDFLAGS		= -Wl,"--map -w -s lkr/boot4.$(CPU).lkr" \
-			  --use-crt=obj/$(CRTB).o
-#			  --no-crt
+# Linker flags
+# -m : output a map file
+# -w : disable "processor mismatch" warning
+# -s : we use our own linker script and startup code (work)
+# --no-crt : do not link the default run-time modules
 
-# we use default linker script and own startup code (doesn't work)
-#LDFLAGS		= --no-crt
+LDFLAGS		= -Wl-uENTRY=$(ENTRY),-slkr/boot4.$(CPU).lkr \
+			  --no-crt
 
 ########################################################################
 #	RULES                                                              #
 ########################################################################
+#                                                                      #
+#	$@ 	Le nom de la cible                                             #
+#	$< 	Le nom de la première dépendance                               #
+#	$^ 	La liste des dépendances                                       #
+#	$? 	La liste des dépendances plus récentes que la cible            #
+#	$* 	Le nom du fichier sans suffixe                                 #
+#                                                                      #
+########################################################################
 
 #all: start clean $(CRTP).o $(PRJ).hex size
-all: start clean $(CRTB).o $(PRJ).hex size
+#all: start clean $(CRTB).o $(PRJ).hex size
+all: start clean $(PRJ).hex size
 
 # Start message
 start:
 	@echo $(PRJ) ...
-	
-# Deleting all the debug files generated
+
+# Deletes all the debug files generated
 clean:
 	@rm -f obj/*.o  obj/*.asm obj/*.lst
 	@rm -f hex/*.cod hex/*.map hex/*.lst
 
-# make obj/crt0iBoot4.o
-$(CRTB).o:
-	@$(CC) $(CFLAGS) $(AFLAGS) -c obj/$(CRTB).c -o obj/$(CRTB).o
+# Compiles obj/crt0Boot4.o
+#$(CRTB).o:
+#	@$(CC) $(CFLAGS) $(AFLAGS) -c obj/$(CRTB).c -o obj/$(CRTB).o
 
-# make obj/crt0iPinguino.o
-#$(CRTP).o:
-#	@echo Compiling $(CRTP).o ...
-#	@$(CC) $(CFLAGS) --ivt-loc=$(ENTRY) -c obj/$(CRTP).c -o obj/crt0i$(CPU).o
-#	@cp obj/crt0i$(CPU).o $(PINGUINODIR)/p8/obj/
-
-# Compiling and assembling all the src/.c in obj/.o
+# Compiles and assembles all the src/.c in obj/.o
 obj/%.o: src/%.c
 	@$(CC) $(CFLAGS) $(AFLAGS) -c $< -o $@
 
-# Linking the modules all together
+# Links the modules all together
 $(PRJ).hex: $(OBJS)
-	@$(CC) $(CFLAGS) $(AFLAGS) $(LDFLAGS) -o hex/$@ $^
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o hex/$@ $^
 
-# Calculating the whole code size
+# Calculates the whole code size
 size:
 	@tools/codesize.py hex/$(PRJ)
 	
-# Programming the Chip
+# Programs the Chip
 burn:
-	tools/picpgm -pic PIC$(CPU) hex/$(PRJ).hex
+	tools/picpgm -port USB -pic PIC$(CPU) -p_code ../hex/$(PRJ).hex
+
+# Desassemble
+desa:
+	$(SDCCDIR)/bin/gpdasm -p$(CPU) hex/$(PRJ).hex > ~/Bureau/$(PRJ).txt
