@@ -213,17 +213,23 @@ s16 RTCC_GetCalibration(void)
 #endif
 
 /*	-----------------------------------------------------------------------------
-	The function initializes the RTCC device.
+    The function initializes the RTCC device.
     *It enables the secondary oscillator (SOSC),
     *sets the desired time, date and calibration
     *enables the RTCC,
     *disables the Alarm and the RTCC clock output (RTCOE=0), 
-    *NB : RTCC source is INTRC oscillator (cf. bootloader v4.x CONFIG3L<1>)
+    
+    *NB : Pinguino x6j50 RTCC source is INTRC oscillator (cf. bootloader v4.x CONFIG3L<1>)
+        : Pinguino 47j53 RTCC source is T1OSC oscillator (cf. bootloader v4.x CONFIG3L<1>)
 	---------------------------------------------------------------------------*/
 
 #ifdef RTCCINIT
 void RTCC_init(u32 tm, u32 dt, s16 drift)
 {
+    #if defined(PINGUINO47J53A) || defined(PINGUINO47J53B)
+    T1CONbits.T1OSCEN = 1;
+    #endif
+    
     RTCC_SetTime(tm);
     RTCC_SetDate(dt);
     RTCC_SetCalibration(drift);
