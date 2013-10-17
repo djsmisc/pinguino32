@@ -8,17 +8,14 @@
 	Released under the LGPL license (http://www.gnu.org/licenses/lgpl.html)
 *******************************************************************************/
 
-#define LOW_SPEED							1
-#define HIGH_SPEED							0
-
 /*******************************************************************************
 	boot blinking led
 *******************************************************************************/
 
-#if defined(__18f2455)  || defined(__18f4455)  || \
+#if defined(__18f13k50) || defined(__18f14k50) || \
+    defined(__18f2455)  || defined(__18f4455)  || \
     defined(__18f2550)  || defined(__18f4550)  || \
-    defined(__18f25k50) || defined(__18f45k50) || \
-    defined(__18f13k50) || defined(__18f14k50)
+    defined(__18f25k50) || defined(__18f45k50)
 
 	#define LED_PIN							4
 	#define LED_PORT						_LATA
@@ -37,26 +34,6 @@
 #endif
 
 #define LED_MASK							1 << LED_PIN
-
-/*******************************************************************************
-	boot timer delay (practical values between 1..10 seconds)
-*******************************************************************************/
-//#define BOOT_DELAY_IN_SECONDS				10
-
-// timer ticks: clock / 4 / prescaler = 8  / 16 timer overflow
-#if SPEED == LOW_SPEED
-//	#define CPU_CLOCK						24000000
-    #define BOOT_TIMER_TICS					114
-#else
-//	#define CPU_CLOCK						48000000
-    #define BOOT_TIMER_TICS					229
-#endif
-//  #define TIMER_TICKS_PER_SECOND			CPU_CLOCK / 65536 / 8 / 4
-//  #define BOOT_TIMER_TICS					BOOT_DELAY_IN_SECONDS * TIMER_TICKS_PER_SECOND
-
-//#if BOOT_TIMER_TICS > 256
-//	#error "Boot delay too large"
-//#endif
 
 /*******************************************************************************
 	BOOTLOADER COMMANDS

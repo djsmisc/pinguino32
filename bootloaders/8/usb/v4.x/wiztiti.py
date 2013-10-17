@@ -3,14 +3,16 @@
 
 ########################################################################
 #                                                                      #
-#	Wistiti - Pinguino's Best Friend                                   #
-#	8-bit USB Bootloader Factory                                       #
-#	Author:	2012 - Régis Blanchot <rblanchot@gmail.com>                #
+#   Wistiti - Pinguino's Best Friend                                   #
+#   8-bit USB Bootloader Factory                                       #
+#   Compile 8-bit Pinguino USB Bootloader                              #
+#   Author:	2012 - Régis Blanchot <rblanchot@gmail.com>                #
+#   Last update : 3 oct. 2013                                          #
 #                                                                      #
-#	Usage: ./wiztiti.py                                                #
+#   Usage: ./wiztiti.py                                                #
 #                                                                      #
-#	This file is part of Pinguino Project (http://www.pinguino.cc)     #
-#	Released under the LGPL license (www.gnu.org/licenses/lgpl.html)   #
+#   This file is part of Pinguino Project (http://www.pinguino.cc)     #
+#   Released under the LGPL license (www.gnu.org/licenses/lgpl.html)   #
 #                                                                      #
 ########################################################################
 
@@ -46,7 +48,8 @@ help_upload  = "Upload : program the Bootloader into the target microcontroller.
 
 ########################################################################
 class MainPanel(wx.Panel):
-    """"""
+    """
+    """
  
     #-------------------------------------------------------------------
     def __init__(self, parent):
@@ -202,13 +205,15 @@ class MainPanel(wx.Panel):
     # Compile Bootloader(s) by calling Makefile
     #----------------------------------------------------------------------
     def Compile(self, proc, osc, string, speed, lvp):
-        output = Popen(args=[   "make", "--makefile=Makefile",
+        output = Popen(args=[   "make",
+                                "all",
+                                "--makefile=Makefile",
                                 "-e",
                                 "PROC=" + proc,
                                 "OSC=" + osc,
                                 "STRINGDESC=" + string,
                                 "SPEED=" + speed,
-                                "LVP=" + lvp ],
+                                "VOLTAGE=" + lvp ],
                                 stdout=PIPE,
                                 stderr=STDOUT,
                                 shell=False,        # redirect error stream to stdout

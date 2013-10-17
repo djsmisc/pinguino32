@@ -28,6 +28,7 @@
 **/
 
 #define PTR16(x) ((unsigned int)(((unsigned long)x) & 0xFFFF))
+#define BCD(x)   ((( x / 10 ) << 4) | ( x % 10 ))
 
 /**
 	definition for the initial ep0
@@ -45,6 +46,12 @@
 
 #define EP0_BUFFER_SIZE				MAX_PACKET_SIZE
 #define EP1_BUFFER_SIZE				MAX_PACKET_SIZE
+
+// Control Transfer Stages - see USB spec chapter 5
+#define SETUP_STAGE    0                // Start of a control transfer (followed by 0 or more data stages)
+#define DATA_OUT_STAGE 1                // Data from host to device
+#define DATA_IN_STAGE  2                // Data from device to host
+#define STATUS_STAGE   3                // Unused - if data I/O went ok, then back to Setup
 
 // USB direction
 #define OUT							0
@@ -185,6 +192,26 @@ typedef struct
 } USB_Device_Descriptor;
 
 
+// added on 11/10/13
+// USB Device Qualifier Descriptor
+typedef struct
+{
+    unsigned char bLength;              /* Size of the Descriptor in Bytes (18 bytes = 0x12) */
+    unsigned char bDescriptorType;      /* Device Descriptor (0x01) */
+    unsigned int  bcdUSB;               /* USB Specification Number which device complies to. */
+    unsigned char bDeviceClass;         /* Class Code (Assigned by USB Org).
+                                           If equal to Zero, each interface specifies it’s own class code.
+                                           If equal to 0xFF, the class code is vendor specified.
+                                           Otherwise field is valid Class Code.*/
+    unsigned char bDeviceSubClass;      /* Subclass Code (Assigned by USB Org) */
+    unsigned char bDeviceProtocol;      /* Protocol Code (Assigned by USB Org) */
+    unsigned char bMaxPacketSize0;      /* Maximum Packet Size for Zero Endpoint.
+                                           Valid Sizes are 8, 16, 32, 64 */
+    unsigned char bNumConfigurations;   /* Number of Possible Configurations */
+    unsigned char bReserved;
+} USB_Device_Qualifier_Descriptor;
+
+
 // Configuration Descriptors
 typedef struct
 {
@@ -321,9 +348,9 @@ extern unsigned int wCount; // Total # of bytes to move
 // USB Descriptors
 extern __code USB_Device_Descriptor device_descriptor;
 extern __code USB_Configuration_Descriptor configuration_descriptor;
-#if (STRING == 1)
+//#if (STRING == 1)
 extern const char * const string_descriptor[];
-#endif
+//#endif
 
 // Global variables
 extern byte deviceState;    // Visible device states (from USB 2.0, chap 9.1.1)
