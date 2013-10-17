@@ -28,7 +28,7 @@
 
 #if !defined(__18f26j50) && !defined(__18f46j50) && \
     !defined(__18f27j53) && !defined(__18f47j53)
-    #error "Error : your Pinguino has no RTCC module." 
+    #error "Error : your Pinguino has no built-in RTCC module." 
 #endif
 
 #include <typedef.h>
