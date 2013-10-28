@@ -1,2 +1,0 @@
-
-C:\Users\jpm\Documents\Pinguino\pinguino32x_windows\examples\cdc>C:\Users\jpm\Documents\pinguinocompiler32Windows\bin\mips-objcopy.exe -O ihex C:\Users\jpm\Documents\Pinguino\pinguino32x_windows\source\main32.elf C:\Users\jpm\Documents\Pinguino\pinguino32x_windows\source\main32.hex  

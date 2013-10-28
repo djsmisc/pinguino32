@@ -1,4 +1,0 @@
-/home/regis/Hobbies/Electronique/Projets/Pinguino/local/trunk/linux/source/user.c:13: error 20: Undefined identifier 'A0'
-/home/regis/Hobbies/Electronique/Projets/Pinguino/local/trunk/linux/source/user.c:13: error 20: Undefined identifier 'A0'
-/home/regis/Hobbies/Electronique/Projets/Pinguino/local/trunk/linux/source/user.c:14: error 20: Undefined identifier 'Serial'
-/home/regis/Hobbies/Electronique/Projets/Pinguino/local/trunk/linux/source/user.c:14: error 25: Structure/Union expected left of '.->'
