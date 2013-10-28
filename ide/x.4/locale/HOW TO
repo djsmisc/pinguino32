@@ -73,7 +73,6 @@ In the pinguino IDE directory, you can see this directory structure:
 	│       ├── pinguino.mo
 	│       └── pinguino.po
 	└── sources
-	    ├── debugger.py
 	    ├── dock_files.py
 	    ├── editeur.py
 	    ├── framesX3.py
