@@ -115,6 +115,10 @@ u8 BULK_read(u8 *rxpointer)
 return(BULKgets(rxpointer)); // now rxpointer buffer is filled and the buffer length is returned
 }
 
+u8 BULK_available(void)
+{
+return(BULKavailable());
+}
 
 #elif boot2
 #include <usb.c>
@@ -126,6 +130,11 @@ usbsend(txpointer,length);
 u8 BULK_read(u8 *rxpointer)
 {
 return(usbreceive(rxpointer)); // one only character is returned
+}
+
+u8 BULK_available(void)
+{
+return(usbavailable());
 }
 
 #endif //boot4 and boot2
