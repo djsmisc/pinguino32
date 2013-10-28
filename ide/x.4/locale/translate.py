@@ -37,8 +37,6 @@ print "\033[1;32mCopy files to translate\033[0m"
 src = os.getcwd()
 shutil.copy2(os.path.join(src.rstrip('locale'), 'wxgui/pinguino.py'),
                                                 'sources/pinguino.py')
-shutil.copy2(os.path.join(src.rstrip('locale'), 'wxgui/editor/debugger.py'),
-                                                'sources/debugger.py')
 shutil.copy2(os.path.join(src.rstrip('locale'), 'wxgui/editor/editeur.py'),
                                                 'sources/editeur.py')
 shutil.copy2(os.path.join(src.rstrip('locale'), 'wxgui/editor/general.py'),

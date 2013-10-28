@@ -31,61 +31,80 @@ from wxgui._trad import _
 
 ########################################################################
 class File:
+    ENABLE = False
     #----------------------------------------------------------------------
-    def __initDockFile__(self):
-        self.lateralFunc = self.lat.listCtrlFunc
-        self.lateralVars = self.lat.listCtrlVars
-        self.lateralDefi = self.lat.listCtrlDefi
+    def __initDockFile__(self, IDE):
+        self.IDE = IDE
+        self.lateralFunc = self.IDE.listCtrlFunc
+        self.lateralVars = self.IDE.listCtrlVars
+        self.lateralDefi = self.IDE.listCtrlDefi
         
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToFunc, self.lateralFunc)
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
-        self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
+        self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToFunc, self.lateralFunc)
+        self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToVar, self.lateralVars)
+        self.IDE.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.moveToDefi, self.lateralDefi)
 
-        line = 60
-        s3 = (self.lat.GetSizeTuple()[0] - line) / 3
+        self.line = 60
+        s3 = (self.IDE.lat.GetSizeTuple()[0] - self.line) / 3
 
         self.lateralVars.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3)
         self.lateralVars.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Type"), width=s3)
         self.lateralVars.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("In function"), width=s3)
-        self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        self.lateralVars.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=self.line)
     
         self.lateralFunc.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
         self.lateralFunc.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Return"), width=s3) 
         self.lateralFunc.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Parameters"), width=s3)
-        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        self.lateralFunc.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=self.line)
         
         self.lateralDefi.InsertColumn(col=0, format=wx.LIST_FORMAT_LEFT, heading=_("Directive"), width=s3) 
         self.lateralDefi.InsertColumn(col=1, format=wx.LIST_FORMAT_LEFT, heading=_("Name"), width=s3) 
         self.lateralDefi.InsertColumn(col=2, format=wx.LIST_FORMAT_LEFT, heading=_("Value"), width=s3) 
-        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=line)
+        self.lateralDefi.InsertColumn(col=3, format=wx.LIST_FORMAT_LEFT, heading=_("Line"), width=self.line)
+        
+
+        self.ENABLE = True
+        
+    #----------------------------------------------------------------------
+    def adjustWidth(self):
+        s3 = (self.IDE.lat.GetSizeTuple()[0] - self.line) / 3
+        for i in range(4):
+            if i == 3:
+                self.lateralVars.SetColumnWidth(i, self.line)
+                self.lateralFunc.SetColumnWidth(i, self.line)
+                self.lateralDefi.SetColumnWidth(i, self.line)
+            else:
+                self.lateralVars.SetColumnWidth(i, s3)
+                self.lateralFunc.SetColumnWidth(i, s3)
+                self.lateralDefi.SetColumnWidth(i, s3)
+        
 
     #----------------------------------------------------------------------
     def moveToVar(self, event=None):
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         textEdit.GotoLine(textEdit.LineCount)
         self.allVars.reverse()
-        color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
-        self.highlightline(int(self.allVars[event.GetIndex()][3])-1, color)
+        color = self.IDE.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
+        self.IDE.highlightline(int(self.allVars[event.GetIndex()][3])-1, color)
         self.allVars.reverse()
         textEdit.SetFocus()
         
     #----------------------------------------------------------------------
     def moveToFunc(self, event=None):
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         textEdit.GotoLine(textEdit.LineCount)
         self.allFunc.reverse()
-        color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
-        self.highlightline(int(self.allFunc[event.GetIndex()][3])-1, color)
+        color = self.IDE.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
+        self.IDE.highlightline(int(self.allFunc[event.GetIndex()][3])-1, color)
         self.allFunc.reverse()
         textEdit.SetFocus()
         
     #----------------------------------------------------------------------
     def moveToDefi(self, event=None):
-        textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+        textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
         textEdit.GotoLine(textEdit.LineCount)
         self.allDefi.reverse()
-        color = self.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
-        self.highlightline(int(self.allDefi[event.GetIndex()][3])-1, color)
+        color = self.IDE.getColorConfig("Highligh", "codenavigation", [120, 255, 152])
+        self.IDE.highlightline(int(self.allDefi[event.GetIndex()][3])-1, color)
         self.allDefi.reverse()
         textEdit.SetFocus()  
         
@@ -127,28 +146,29 @@ class File:
         
     #----------------------------------------------------------------------
     def update_dockFiles(self, event=None):
+        #if not self.ENABLE: return
+
+        
         self.updateWidthColums()
         
-        if self.notebookEditor.PageCount > 0:
-            self._mgr.GetPane(self.panelOutput).Show()
-            self._mgr.GetPane(self.lat).Show()
-            self.updateIDE()
+        if self.IDE.notebookEditor.PageCount > 0:
+            self.IDE.panelOutput.Show()
+            self.IDE.lat.Show()
         else:
-            self._mgr.GetPane(self.panelOutput).Hide()
-            self._mgr.GetPane(self.lat).Hide()
-            self.updateIDE()
+            self.IDE.panelOutput.Hide()
+            self.IDE.lat.Hide()
         
-        if len(self.stcpage) < 1:
+        if len(self.IDE.stcpage) < 1:
             self.lateralVars.DeleteAllItems()
             self.lateralFunc.DeleteAllItems()
             if event: event.Skip()
             return 
             
         try:
-            textEdit = self.stcpage[self.notebookEditor.GetSelection()]
+            textEdit = self.IDE.stcpage[self.IDE.notebookEditor.GetSelection()]
             text = textEdit.GetText().split("\n")
-            dirname = self.filename[self.notebookEditor.GetSelection()]
-            self.otherWords = os.listdir(os.path.dirname(dirname))      
+            dirname = self.IDE.filename[self.IDE.notebookEditor.GetSelection()]
+            self.filesNeighbors = os.listdir(os.path.dirname(dirname))      
         except:
             return
         
@@ -162,7 +182,7 @@ class File:
             
             ReFunction = "[\s]*(unsigned)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([*\w]+)[\s]*\(([\w ,*.\[\]]*)\)[\s]*"
             
-            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([ \w\[\]=,{}]*);"
+            ReVariable = "[\s]*(volatile|register|static|extern)*[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([*])*[\s]*([ \w\[\]=,{}\"'\*]*);"
             ReStructs  = "[\s]*(typedef)*[\s]*(struct|union|enum)[\s]*([*\w]*)[\s]*(.+)"
             
             ReTypeDef  = "[\s]*(typedef)[\s]*(unsigned|signed)*[\s]*(short|long)*[\s]*(" + self.tiposDatos + ")[\s]*([\w\[\]]*)[\s]*"#([\w]*)"
@@ -287,39 +307,39 @@ class File:
             count += 1
             
         self.allDefi.sort()
-        self.allDefi_back.sort()
+        self.IDE.allDefi_back.sort()
         self.allFunc.sort()
-        self.allFunc_back.sort()
+        self.IDE.allFunc_back.sort()
         self.allVars.sort()
-        self.allVars_back.sort()
+        self.IDE.allVars_back.sort()
               
-        if self.allVars_back != self.allVars:        
+        if self.IDE.allVars_back != self.allVars:        
             count = 0
             #self.allVars.reverse()
             self.lateralVars.DeleteAllItems()
             for var in self.allVars:
                 self.addVarInListCtrl(count, var)
                 count += 1
-            self.allVars_back = self.allVars[:]
+            self.IDE.allVars_back = self.allVars[:]
         
-        if self.allFunc_back != self.allFunc:
+        if self.IDE.allFunc_back != self.allFunc:
             count = 0
             #self.allFunc.reverse()
             self.lateralFunc.DeleteAllItems()
             for var in self.allFunc:
                 self.addFuncInListCtrl(count, var)
                 count += 1
-            self.allFunc_back = self.allFunc[:]
+            self.IDE.allFunc_back = self.allFunc[:]
         
         
-        if self.allDefi_back != self.allDefi:
+        if self.IDE.allDefi_back != self.allDefi:
             count = 0
             #self.allDefi.reverse()
             self.lateralDefi.DeleteAllItems()
             for var in self.allDefi:
                 self.addDefiInListCtrl(count, var)
                 count += 1
-            self.allDefi_back = self.allDefi[:]
+            self.IDE.allDefi_back = self.allDefi[:]
             
 
         if event != None: event.Skip() #Update NoteBook   
