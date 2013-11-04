@@ -107,8 +107,11 @@
     /// If Power-on reset occurred, set NOT_POR bit to 1
     /// ----------------------------------------------------------------
 
-    if (!RCONbits.NOT_POR)
-        RCONbits.NOT_POR = 1;
+    if (RCONbits.NOT_POR == 0)
+    {
+        RCON |= 0b10010011;     // set all reset flag
+                                // enable priority levels on interrupts
+    }
     
     /// ----------------------------------------------------------------
     /// Perform a loop for some processors until their frequency is stable
@@ -140,12 +143,11 @@
     #endif
 
     /// ----------------------------------------------------------------
-    /// Init. all flag/interrupt (with low priority)
+    /// Init. all flag/interrupt
     /// ----------------------------------------------------------------
 
-    RCONbits.IPEN       = 1;        // Enable priority levels on interrupts
-    INTCONbits.GIEH     = 0;        // Disables all interrupts
-    INTCONbits.GIEL     = 0;        // Disables all interrupts
+    INTCONbits.GIEH     = 0;        // Disables all HP interrupts
+    INTCONbits.GIEL     = 0;        // Disables all LP interrupts
 
 /*
     INTCON = 0;
@@ -217,7 +219,7 @@
     bulk_init();
     #endif
 
-    #ifdef ANALOG
+    #if defined(ANALOGREFERENCE) || defined(ANALOGREAD)
     analog_init();
     #endif
 
@@ -255,15 +257,15 @@
     }
 }
 
-/*  ----------------------------------------------------------------------------
-    High Interrupt Vector
-    --------------------------------------------------------------------------*/
-
 #if  defined(__USBCDC)      || defined(__USBBULK)   || defined(__USB__)     || \
      defined(USERINT)       || defined(INT0INT)     || defined(I2CINT)      || \
      defined(__SERIAL__)    || defined(ON_EVENT)    || defined(__MILLIS__)  || \
      defined(SERVOSLIBRARY) || defined(__PS2KEYB__) || defined(__DCF77__)   || \
      defined(RTCCALARMINTENABLE)
+
+/*  ----------------------------------------------------------------------------
+    High Interrupt Vector
+    --------------------------------------------------------------------------*/
 
 #ifdef boot2
 #pragma code high_priority_isr 0x2020
@@ -274,12 +276,12 @@
 void high_priority_isr(void) __interrupt 1
 {
     __asm
-        MOVFF   _TBLPTRL, _POSTDEC1
-        MOVFF   _TBLPTRH, _POSTDEC1
-        MOVFF   _TBLPTRU, _POSTDEC1
-        MOVFF   _TABLAT,  _POSTDEC1
+        MOVFF   TBLPTRL, POSTDEC1
+        MOVFF   TBLPTRH, POSTDEC1
+        MOVFF   TBLPTRU, POSTDEC1
+        MOVFF   TABLAT,  POSTDEC1
     __endasm;
-        
+
     #ifdef __USBCDC
     CDC_interrupt();
     #endif
@@ -325,11 +327,12 @@ void high_priority_isr(void) __interrupt 1
     #endif
 
     __asm 
-        MOVFF   _PREINC1, _TABLAT
-        MOVFF   _PREINC1, _TBLPTRU
-        MOVFF   _PREINC1, _TBLPTRH
-        MOVFF   _PREINC1, _TBLPTRL
+        MOVFF   PREINC1, TABLAT
+        MOVFF   PREINC1, TBLPTRU
+        MOVFF   PREINC1, TBLPTRH
+        MOVFF   PREINC1, TBLPTRL
     __endasm;
+
 }
 
 /*  ----------------------------------------------------------------------------
@@ -344,11 +347,12 @@ void high_priority_isr(void) __interrupt 1
 // noboot: 0x18
 void low_priority_isr(void) __interrupt 2
 {
+
     __asm
-        MOVFF   _TBLPTRL, _POSTDEC1
-        MOVFF   _TBLPTRH, _POSTDEC1
-        MOVFF   _TBLPTRU, _POSTDEC1
-        MOVFF   _TABLAT,  _POSTDEC1
+        MOVFF   TBLPTRL, POSTDEC1
+        MOVFF   TBLPTRH, POSTDEC1
+        MOVFF   TBLPTRU, POSTDEC1
+        MOVFF   TABLAT,  POSTDEC1
     __endasm;
 
     #ifdef USERINT
@@ -360,11 +364,12 @@ void low_priority_isr(void) __interrupt 2
     #endif
 
     __asm 
-        MOVFF   _PREINC1, _TABLAT
-        MOVFF   _PREINC1, _TBLPTRU
-        MOVFF   _PREINC1, _TBLPTRH
-        MOVFF   _PREINC1, _TBLPTRL
+        MOVFF   PREINC1, TABLAT
+        MOVFF   PREINC1, TBLPTRU
+        MOVFF   PREINC1, TBLPTRH
+        MOVFF   PREINC1, TBLPTRL
     __endasm;
+
 }
 
 #endif
