@@ -6,12 +6,8 @@
 // 2013-06-26 regis blanchot fixed analogWrite()
 // 2013-09-09 regis blanchot added 18F47J53 support
 
-#ifndef __ANALOG__
-#define __ANALOG__
-
-#if defined(ANALOGREFERENCE) || defined(ANALOGREAD)
-    #define ANALOGINIT 		1
-#endif
+#ifndef __ANALOG_C
+#define __ANALOG_C
 
 #define DEFAULT		0
 #define	EXTERNAL	1
@@ -25,8 +21,6 @@
 /*  --------------------------------------------------------------------
     Init
     ------------------------------------------------------------------*/
-
-#ifdef ANALOGINIT
 
 void analog_init(void)
 {
@@ -84,8 +78,6 @@ void analog_init(void)
 
     #endif
 }
-
-#endif /* ANALOG */
 
 /*  --------------------------------------------------------------------
     analogReference
@@ -299,4 +291,4 @@ void analogwrite(u8 pin, u16 duty)
 
 #endif /* ANALOGWRITE */
 
-#endif /* __ANALOG__ */
+#endif /* __ANALOG_C */
