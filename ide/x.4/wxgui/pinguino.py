@@ -577,6 +577,7 @@ class Pinguino(framePinguinoX, IDE):
         if board.arch == 8:
             
             fichier = open(os.path.join(SOURCE_DIR, 'stdout'), 'w+')
+
             if board.bldr == 'boot2':
                 sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                     "--verbose",\
@@ -600,8 +601,6 @@ class Pinguino(framePinguinoX, IDE):
                 
                                
             elif board.bldr == 'boot4':
-                #"--nostdinc",\
-                #"--nostdlib",\
                 sortie = Popen([os.path.join(self.P8_BIN_DIR, self.c8),\
                     "--verbose",\
                     "-mpic16",\
@@ -733,10 +732,6 @@ class Pinguino(framePinguinoX, IDE):
                     'libc18f.lib',\
                     'libm18f.lib',\
                     'libsdcc.lib',\
-                    #'-llibio' + board.proc + '.lib',\
-                    #'-llibc18f.lib',\
-                    #'-llibm18f.lib',\
-                    #'-llibsdcc.lib',\
                     "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                     os.path.join(P8_DIR, 'obj', 'application_iface.o'),\
                     os.path.join(P8_DIR, 'obj', 'boot_iface.o'),\
@@ -770,17 +765,13 @@ class Pinguino(framePinguinoX, IDE):
                     "-L" + os.path.join(P8_DIR, 'sdcc', 'lib', 'pic16'),\
                     "-L" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'lib', 'pic16'),\
                     os.path.join(SOURCE_DIR, 'main.o'),\
-                    #'libio' + board.proc + '.lib',\
+                    'libio' + board.proc + '.lib',\
                     'libdev' + board.proc + '.lib',\
                     'libc18f.lib',\
                     'libm18f.lib',\
                     # link the default run-time module (crt0i.o)
                     # except when "-no-crt" option is used
                     'libsdcc.lib',\
-                    #'-llibio' + board.proc + '.lib',\
-                    #'-llibc18f.lib',\
-                    #'-llibm18f.lib',\
-                    #'-llibsdcc.lib',\
                     "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                     ],\
                     stdout=fichier, stderr=STDOUT)
@@ -810,10 +801,6 @@ class Pinguino(framePinguinoX, IDE):
                     'libm18f.lib',\
                     # link the default run-time module
                     'libsdcc.lib',\
-                    #'-llibio' + board.proc + '.lib',\
-                    #'-llibc18f.lib',\
-                    #'-llibm18f.lib',\
-                    #'-llibsdcc.lib',\
                     "-o" + os.path.join(SOURCE_DIR, 'main.hex'),\
                     os.path.join(SOURCE_DIR, 'main.o')],\
                     stdout=fichier, stderr=STDOUT)
