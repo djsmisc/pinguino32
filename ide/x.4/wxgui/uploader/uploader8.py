@@ -199,7 +199,7 @@ class uploader8(baseUploader):
         usbBuf[self.BOOT_CMD] = self.RESET_CMD
         # write data packet
         #usbBuf = self.sendCMD(usbBuf)
-        usbBuf = self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
+        self.handle.bulkWrite(self.OUT_EP, usbBuf, self.TIMEOUT)
 
 # ----------------------------------------------------------------------
     def getVersion(self):
@@ -565,13 +565,8 @@ class uploader8(baseUploader):
 
             #self.txtWrite("Resetting ...")
             self.txtWrite("Starting user program ...")
-            try:
-                self.resetDevice()
-            except:
-                pass
-            # Device has been reseted, it is no longer a USB device
-            # and therefore can not be closed
-            #self.closeDevice()
+            self.resetDevice()
+            self.closeDevice()
             return
             
         else:
