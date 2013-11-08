@@ -155,14 +155,14 @@ word wCount;                            // Number of bytes of data
 
 #if   defined(__18f14k50) || defined(__18f14k50)
     // Bank 2
-    volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
+    volatile BufferDescriptorTable __at (0x200) ep_bdt[4];
 #elif defined(__18f26j53) || defined(__18f46j53) || \
       defined(__18f27j53) || defined(__18f47j53)
     // Bank 13
-    volatile BufferDescriptorTable __at (0xD00) ep_bdt[32];
+    volatile BufferDescriptorTable __at (0xD00) ep_bdt[4];
 #else
     // Bank 4
-    volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+    volatile BufferDescriptorTable __at (0x400) ep_bdt[4];
 #endif
 
 #pragma udata usbram5 SetupPacket controlTransferBuffer
@@ -175,7 +175,7 @@ volatile allcmd bootCmd;
    * Data stage for a Control Transfer that sends data to the host
    **/
 
-void InDataStage(unsigned char ep)
+void InDataStage()
 {
     byte i;
     word bufferSize;
@@ -188,10 +188,11 @@ void InDataStage(unsigned char ep)
 
     // Load the high two bits of the byte count into BC8:BC9
     // Clear BC8 and BC9
-    EP_IN_BD(ep).Stat.uc &= ~(BDS_BC8 | BDS_BC9);
-    EP_IN_BD(ep).Stat.uc |= (byte)((bufferSize & 0x0300) >> 8);
-    EP_IN_BD(ep).Cnt = (byte)(bufferSize & 0xFF);
-    EP_IN_BD(ep).ADDR = PTR16(&controlTransferBuffer);
+    EP_IN_BD(0).Stat.uc &= ~(BDS_BC8 | BDS_BC9);
+    EP_IN_BD(0).Stat.uc |= (byte)((bufferSize & 0x0300) >> 8);
+    EP_IN_BD(0).Cnt = (byte)(bufferSize & 0xFF);
+    //EP_IN_BD(0).ADDR = PTR16(&controlTransferBuffer);
+    EP_IN_BD(0).ADDR = (unsigned long *)&controlTransferBuffer;
 
     // Update the number of bytes that still need to be sent.  Getting
     // all the data back to the host can take multiple transactions, so
@@ -214,7 +215,8 @@ void WaitForSetupStage()
 {
     ctrlTransferStage = SETUP_STAGE;
     EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
-    EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+    //EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+    EP_OUT_BD(0).ADDR = (unsigned long *)&SetupPacket;
     // Give to SIE, enable data toggle checks
     EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTSEN;
     EP_IN_BD(0).Stat.uc = 0x00;           // Give control to CPU
@@ -486,7 +488,8 @@ void ProcessUSBTransactions()
 
                         // for OUT
                         EP_OUT_BD(1).Cnt  = EP1_BUFFER_SIZE;
-                        EP_OUT_BD(1).ADDR = PTR16(&bootCmd);
+                        //EP_OUT_BD(1).ADDR = PTR16(&bootCmd);
+                        EP_OUT_BD(1).ADDR = (unsigned long *)&bootCmd;
                         // set UOWN bit, SIE owns the buffer
                         EP_OUT_BD(1).Stat.uc = 0b10000000;
 
@@ -555,7 +558,8 @@ void ProcessUSBTransactions()
                     {
                         // If this service wasn't handled then stall endpoint 0
                         EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
-                        EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+                        //EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+                        EP_OUT_BD(0).ADDR = (unsigned long *)&SetupPacket;
                         EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_BSTALL;
                         EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_BSTALL;
                     }
@@ -566,15 +570,17 @@ void ProcessUSBTransactions()
                         if(SetupPacket.wLength < wCount)
                             wCount = SetupPacket.wLength;
 
-                        InDataStage(0);
+                        InDataStage();
                         ctrlTransferStage = DATA_IN_STAGE;
                         // Reset the out buffer descriptor for endpoint 0
                         EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
-                        EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+                        //EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
+                        EP_OUT_BD(0).ADDR = (unsigned long *)&SetupPacket;
                         EP_OUT_BD(0).Stat.uc = BDS_UOWN;
 
                         // Set the in buffer descriptor on endpoint 0 to send data
-                        EP_IN_BD(0).ADDR = PTR16(&controlTransferBuffer);
+                        //EP_IN_BD(0).ADDR = PTR16(&controlTransferBuffer);
+                        EP_IN_BD(0).ADDR = (unsigned long *)&controlTransferBuffer;
                         // Give to SIE, DATA1 packet, enable data toggle checks
                         EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
                     }
@@ -590,7 +596,8 @@ void ProcessUSBTransactions()
 
                         // Set the out buffer descriptor on endpoint 0 to receive data
                         EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
-                        EP_OUT_BD(0).ADDR = PTR16(&controlTransferBuffer);
+                        //EP_OUT_BD(0).ADDR = PTR16(&controlTransferBuffer);
+                        EP_OUT_BD(0).ADDR = (unsigned long *)&controlTransferBuffer;
                         // Give to SIE, DATA1 packet, enable data toggle checks
                         EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
                     }
@@ -649,7 +656,7 @@ void ProcessUSBTransactions()
                 if (ctrlTransferStage == DATA_IN_STAGE)
                 {
                     // Start (or continue) transmitting data
-                    InDataStage(0);
+                    InDataStage();
 
                     // Turn control over to the SIE and toggle the data bit
                     if(EP_IN_BD(0).Stat.DTS)
