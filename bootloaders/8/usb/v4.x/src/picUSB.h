@@ -27,7 +27,10 @@
 	macros
 **/
 
-#define PTR16(x) ((unsigned int)(((unsigned long)x) & 0xFFFF))
+// transform 32-bit to 16-bit address
+//#define PTR16(x) ((unsigned int)(((unsigned long)x) & 0xFFFF))
+
+// transform decimal to bcd number
 #define BCD(x)   ((( x / 10 ) << 4) | ( x % 10 ))
 
 /**
@@ -155,14 +158,7 @@ typedef union
     {
         BDStat Stat;                    /* Buffer Descriptor Status Register */
         unsigned char Cnt;              /* Number of bytes to send/sent/(that can be )received */
-        unsigned char ADRL;             /* Buffer Address Low */
-        unsigned char ADRH;             /* Buffer Address High */
-    };
-    struct
-    {
-        unsigned :8;
-        unsigned :8;
-        __data unsigned int *ADDR;      /* Buffer Address */
+        __data unsigned long *ADDR;     /* Pointer on 32-bit Buffer Address */
     };
 } BufferDescriptorTable;
 
@@ -237,6 +233,7 @@ See also: http://www.beyondlogic.org/usbnutshell/usb6.htm
 TODO: split this Array up to be more precise
 TODO: use word instead of LSB/MSB bytes
 **/
+
 typedef union
 {
   struct {
@@ -312,10 +309,12 @@ typedef struct
     See USB CDC 1.1 Page 15
     Define your own Configuration Descriptor here.
 **/
+
 typedef struct
-{   USB_Configuration_Descriptor_Header  Header;
+{
+    USB_Configuration_Descriptor_Header  Header;
     USB_Interface_Descriptor DataInterface;
-//    USB_Endpoint_Descriptor ep_config;  // unused
+    //    USB_Endpoint_Descriptor ep_config;  // unused
     USB_Endpoint_Descriptor ep_out;
     USB_Endpoint_Descriptor ep_in;
 } USB_Configuration_Descriptor;
@@ -358,16 +357,17 @@ extern byte selfPowered;
 extern byte currentConfiguration;
 
 ///
-/// ep_bdt[4] changed to ep_bdt[32] par André, le 04-07-2012
+/// ep_bdt[4]  changed to ep_bdt[32] par André, le 04-07-2012
+/// ep_bdt[32] changed to ep_bdt[4] par Régis, le 07-11-2013
 ///
 
 #if   defined(__18f14k50) || defined(__18f14k50)  // Bank 2
-extern volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
+extern volatile BufferDescriptorTable __at (0x200) ep_bdt[4];
 #elif defined(__18f26j53) || defined(__18f46j53) || \
       defined(__18f27j53) || defined(__18f47j53)  // Bank 13
-extern volatile BufferDescriptorTable __at (0xD00) ep_bdt[32];
+extern volatile BufferDescriptorTable __at (0xD00) ep_bdt[4];
 #else                                             // Bank 4
-extern volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+extern volatile BufferDescriptorTable __at (0x400) ep_bdt[4];
 #endif
 
 // Out buffer descriptor of endpoint ep

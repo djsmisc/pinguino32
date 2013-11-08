@@ -39,33 +39,25 @@ void disable_boot(void) //__naked
      * When disabling the USB module, make sure the SUSPND bit (UCON<1>)
      * is clear prior to clearing the USBEN bit. Clearing the USBEN bit
      * when the module is in the suspended state may prevent the module
-     * from fully powering down
+     * from fully powering down.
      */
 
     UCONbits.SUSPND = 0;
     UCONbits.USBEN  = 0;
-    UCON = 0;                   // disable USB & detach from bus
-    UCFG = 0;                   // disable USB transceiver
-    UIE  = 0;                   // disable all USB interrupts
-    UEIE = 0;                   // disable all USB Error int.
-
-    /*
-    UIR                // disable all USB interrupts
-    UEIR               ;
-    UADDR              ;
-    UEP0               // clear endpoint 0
-    */
-
+    
     while (counter--);          // force timeout on USB
                                 // if too short CDC won't work
-    __asm
+
+    RCONbits.NOT_POR = 0;       // set Power-on Reset
+
+    __asm                       // switch off the led
 
         bsf     LED_TRIS, LED_PIN   ; led input
         bcf     LED_PORT, LED_PIN   ; led off
-        goto    ENTRY               ; start user app
 
     __endasm;
 
+    Reset();                    // reset the PIC
 }
 
 /** --------------------------------------------------------------------
@@ -236,7 +228,8 @@ void main(void)
 
         #endif
 
-        EP_IN_BD(1).ADDR = PTR16(&bootCmd);
+        //EP_IN_BD(1).ADDR = PTR16(&bootCmd);
+        EP_IN_BD(1).ADDR = (unsigned long *)&bootCmd;
         currentConfiguration = 0x00;
         deviceState = DETACHED;
 
@@ -510,6 +503,9 @@ void usb_ep_data_out_callback(char end_point)
              * next block to erase is at TBLPTR = TBLPTR + 1024
              * This can not be used in SDCC because
              * TBLPTR is at the same address as TBLPRTL
+             * addwf f,1 means the result is stored back in register f
+             * bcf STATUS, C will clear the carry bit
+             * clrf WREG is the same as movlw	0x00            ; 0x00 -> W
              */
 
             __asm
@@ -519,6 +515,7 @@ void usb_ep_data_out_callback(char end_point)
                                         ;  (C) is affected
                 movlw	0x00            ; 0x00 -> W
                 addwfc	_TBLPTRU, 1     ;  (W) + (TBLPTRU) + (C) -> TBLPTRU
+                                        ; Add W and Carry Bit to F
 
             __endasm;
 

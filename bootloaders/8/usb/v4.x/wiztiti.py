@@ -226,11 +226,9 @@ class MainPanel(wx.Panel):
             pos = outputlines[i].find("error:")
             if pos != -1:
                 error = error + outputlines[i][pos+7:-1] + "\r\n"
-        # Display a dialog with the results
+        # Display a dialog only if an error occurs
         if error != "":
             dialog = wx.MessageDialog ( self, error, 'Error!', style = wx.OK )
-        else:
-            dialog = wx.MessageDialog ( self, outputlines[0] + "\r\nCompilation Sucessful!", 'Results', style = wx.OK )
         dialog.ShowModal()
         dialog.Destroy()
         

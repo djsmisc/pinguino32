@@ -76,7 +76,7 @@ endif
 
 # bootloader version (cf. changelog.txt)
 MAJ_VER		= 4
-MIN_VER		= 12
+MIN_VER		= 13
 
 # Microchip Vendor ID / Pinguino Product ID (Microchip sublicense)
 VID			= 0x04D8

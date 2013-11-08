@@ -7,6 +7,9 @@
     Version 4.?? (??-??-??)
         * code size < 2048 bytes
         * ENTRY = 0x0800
+    Version 4.13 (07-11-2013)
+        * fixed interrupt bug (in disable_boot())
+        * fixed 64K bug (in Buffer Descriptor Table)
     Version 4.12 (14-10-2013)
         * Reset source detection
         * user application starts without any delay on Power-on Reset
