@@ -9,22 +9,24 @@
 //   |     | 
 //   +-----+
 
-u8 position,user_servo=0;
+#define MYSERVO 0
+u8 position=0;
+s8 dir=1;
 
 void setup(void)
 {
     pinMode(USERLED, OUTPUT);    
-    servo.attach(user_servo);
-    servo.setMinimumPulse(user_servo,700);
-    servo.setMaximumPulse(user_servo,2300);
+    servo.attach(MYSERVO);
+    servo.setMinimumPulse(MYSERVO,  500);
+    servo.setMaximumPulse(MYSERVO, 2500);
 }  
 
 void loop(void)
 {
-    for (position=1; position<180; position++)
-    {
-        servo.write(user_servo,position);
-        toggle(USERLED);
-        delay(200);
-    }
+    servo.write(MYSERVO, position);
+    position = position + dir;
+    if (position>180) dir = -1;
+    if (position<001) dir = 1;
+    toggle(USERLED);
+    delay(50);
 }
