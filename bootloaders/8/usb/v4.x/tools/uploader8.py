@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 #-*- coding: iso-8859-15 -*-
 
-"""-------------------------------------------------------------------------
+"""---------------------------------------------------------------------
+     _____  _____ __   _  ______ _     _ _____ __   _  _____ 
+    |_____]   |   | \  | |  ____ |     |   |   | \  | |     |
+    |       __|__ |  \_| |_____| |_____| __|__ |  \_| |_____|
+                                                             
     Pinguino Universal Uploader
 
     Author:            Regis Blanchot <rblanchot@gmail.com> 
@@ -18,9 +22,11 @@
     Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--------------------------------------------------------------------------"""
+    License along with this library; if not, write to the
+    Free Software Foundation, Inc.
+    51 Franklin Street, Fifth Floor
+    Boston, MA  02110-1301  USA
+---------------------------------------------------------------------"""
 
 #-----------------------------------------------------------------------
 #    Usage: uploader8.py path/filename.hex
@@ -40,14 +46,14 @@ import usb
 #-----------------------------------------------------------------------
 
 memstart                        =    0x0C00    # bootloader offset
-memend                          =    0x0000    # get its value with
+memend                          =    0x0000    # get its value from
                                                # getDeviceFlash(device_id)
 
 # 8-bit Pinguino's ID
 #-----------------------------------------------------------------------
 
-VENDOR_ID                       =    0x04D8
-PRODUCT_ID                      =    0xFEAA
+VENDOR_ID                       =    0x04D8    # Microchip License
+PRODUCT_ID                      =    0xFEAA    # Pinguino Sub-License
 
 # Hex format record types
 #-----------------------------------------------------------------------
@@ -59,16 +65,16 @@ Start_Segment_Address_Record    =     03
 Extended_Linear_Address_Record  =     04
 Start_Linear_Address_Record     =     05
 
-# General Data Packet Structure (usbBuf)
+# usbBuf Data Packet Structure
 #-----------------------------------------------------------------------
 #    __________________
 #    |    COMMAND     |   0       [CMD]
 #    |      LEN       |   1       [LEN]
-#    |     ADDRL      |   2       [        ]  [addrl]
-#    |     ADDRH      |   3       [ADR.pAdr]: [addrh]
-#    |     ADDRU      |   4       [        ]  [addru]
+#    |     ADDRL      |   2       [ADDRL]
+#    |     ADDRH      |   3       [ADDRH]
+#    |     ADDRU      |   4       [ADDRU]
 #    |                |   5       [DATA]
-#    |                |
+#    .                .
 #    .      DATA      .
 #    .                .
 #    |                |   62
@@ -105,20 +111,20 @@ RESET_CMD                       =    0xFF
 #-----------------------------------------------------------------------
 DATABLOCKSIZE                   =    32
 
-# USB Packet size
+# USB Max. Packet size
 #-----------------------------------------------------------------------
 MAXPACKETSIZE                   =    64
 
-# bulk endpoints
+# Bulk endpoints
 #-----------------------------------------------------------------------
 IN_EP                           =    0x81    # endpoint for Bulk reads
 OUT_EP                          =    0x01    # endpoint for Bulk writes
 
-# configuration
+# Configuration
 #-----------------------------------------------------------------------
 ACTIVE_CONFIG                   =    0x01
 INTERFACE_ID                    =    0x00
-TIMEOUT                         =    0
+TIMEOUT                         =    10000
 
 # Error codes returned by various functions
 #-----------------------------------------------------------------------
@@ -249,11 +255,6 @@ def resetDevice(handle):
     usbBuf[BOOT_CMD] = RESET_CMD
     # write data packet
     handle.bulkWrite(OUT_EP, usbBuf, TIMEOUT)
-    #usbBuf = sendCMD(handle, usbBuf)
-    #if usbBuf == ERR_USB_WRITE:
-    #    return ERR_USB_WRITE
-    #else:
-    #    return usbBuf
         
 # ----------------------------------------------------------------------
 def getVersion(handle):
@@ -316,18 +317,13 @@ def eraseFlash(handle, address, numBlocks):
     usbBuf[BOOT_CMD] = ERASE_FLASH_CMD
     # number of blocks to erase
     usbBuf[BOOT_SIZE] = numBlocks
-    # block address (must be divisible by 64)
+    # 1rst block address
+    # NB : must be divisible by 64 or 1024 depending on PIC model
     usbBuf[BOOT_ADDR_LO] = (address      ) & 0xFF
     usbBuf[BOOT_ADDR_HI] = (address >> 8 ) & 0xFF
     usbBuf[BOOT_ADDR_UP] = (address >> 16) & 0xFF
-    # write data packet and get response
+    # write data packet
     handle.bulkWrite(OUT_EP, usbBuf, TIMEOUT)
-    #return sendCMD(handle, usbBuf)
-    #usbBuf = sendCMD(handle, usbBuf)
-    #if usbBuf == ERR_USB_WRITE:
-    #    return ERR_USB_WRITE
-    #else:
-    #    return usbBuf
         
 # ----------------------------------------------------------------------
 def readFlash(handle, address, length):
@@ -344,11 +340,6 @@ def readFlash(handle, address, length):
     usbBuf[BOOT_ADDR_UP] = (address >> 16) & 0xFF
     # send request to the bootloader
     return sendCMD(handle, usbBuf)
-    #usbBuf = sendCMD(handle, usbBuf)
-    #if usbBuf == ERR_USB_WRITE:
-    #    return ERR_USB_WRITE
-    #else:
-    #    return usbBuf
         
 # ----------------------------------------------------------------------
 def writeFlash(handle, address, datablock):
@@ -371,11 +362,7 @@ def writeFlash(handle, address, datablock):
         usbBuf[BOOT_DATA_START + i] = datablock[i]
     # write data packet on usb device
     handle.bulkWrite(OUT_EP, usbBuf, TIMEOUT)
-    #usbBuf = sendCMD(handle, usbBuf)
-    #if usbBuf == ERR_USB_WRITE:
-    #    return ERR_USB_WRITE
-    #else:
-    #    return usbBuf
+
 
 # ----------------------------------------------------------------------
 def hexWrite(handle, filename, proc, memend):
@@ -399,6 +386,17 @@ def hexWrite(handle, filename, proc, memend):
     address_Hi  = 0
     codesize    = 0
 
+    # get the erased block size
+    # ----------------------------------------------------------------------
+
+    # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
+    if "j" in proc :
+        erasedBlockSize = 1024
+
+    # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
+    else:
+        erasedBlockSize = 64
+
     # read hex file
     # ----------------------------------------------------------------------
 
@@ -406,7 +404,7 @@ def hexWrite(handle, filename, proc, memend):
     lines = fichier.readlines()
     fichier.close()
 
-    # 1st pass : calculate checksum and max_address
+    # calculate checksum, code size and max_address
     # ----------------------------------------------------------------------
 
     for line in lines:
@@ -429,110 +427,59 @@ def hexWrite(handle, filename, proc, memend):
 
         # extended linear address record
         if record_type == Extended_Linear_Address_Record:
-            address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
-            #address = (address_Hi << 16) + address_Lo
+            # upper 16 bits (bits 16-31) of the data address
+            address_Hi = int(line[9:13], 16) << 16
             
-        # code size
-        if (address >= memstart) and (address < memend):
-            codesize = codesize + byte_count
-
-        # max address
-        if (address > old_address) and (address < memend):
-            max_address = address + byte_count
-            old_address = address
-
-    # max_address must be divisible by self.DATABLOCKSIZE
-    # --------------------------------------------------------------
-
-    max_address = max_address + DATABLOCKSIZE - (max_address % DATABLOCKSIZE)
-    #print memstart, max_address, memend
-
-    # fill data sequence with 0xFF
-    # ----------------------------------------------------------------------
-
-    for i in range(max_address - memstart):
-        data.append(0xFF)
-
-    # 2nd pass : parse bytes from line into data
-    # ----------------------------------------------------------------------
-
-    address_Hi    = 0
-
-    for line in lines:
-        byte_count = int(line[1:3], 16)
-        address_Lo = int(line[3:7], 16) # four hex digits
-        record_type= int(line[7:9], 16)
-
-        # 32-bit address
-        address = (address_Hi << 16) + address_Lo
-        #print address
-
         # data record
         if record_type == Data_Record:
+
+            # 32-bit address
+            address = address_Hi + address_Lo
+
+            # max address
+            if (address > old_address) and (address < memend):
+                max_address = address + byte_count
+                old_address = address
+
             if (address >= memstart) and (address < memend):
-                #print hex(address)
+
+                # code size
+                if (address >= memstart) and (address < memend):
+                    codesize = codesize + byte_count
+
+                # append data
                 for i in range(byte_count):
-                    #print address - memstart + i
-                    #print int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-                    data[address - memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-                #print "-----------"
-                
+                    data.append(int(line[9 + (2 * i) : 11 + (2 * i)], 16))
+
         # end of file record
-        elif record_type == End_Of_File_Record:
+        if record_type == End_Of_File_Record:
             break
 
-        # extended linear address record
-        elif record_type == Extended_Linear_Address_Record:
-            address_Hi = int(line[9:13], 16) # upper 16 bits (bits 16-31) of the data address
-            #print "address_Hi = " + hex(address_Hi)
+    # max_address must be divisible by erasedBlockSize
+    # --------------------------------------------------------------
 
-        # unsupported record type
-        else:
-            return ERR_HEX_RECORD
+    max_address = max_address + erasedBlockSize - (max_address % erasedBlockSize)
 
     # erase memory from memstart to max_address 
     # ----------------------------------------------------------------------
 
-    # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
-    if "j" in proc :
-        #print board.proc
-        numBlocksMax  = 1 + ((memend - memstart) / 1024)
-        numBlocks1024 = 1 + ((max_address - memstart) / 1024)
-        #print "memstart      =", memstart
-        #print "memend        =", memend
-        #print "max_address   =", max_address
-        #print "numBlocksMax  =", numBlocksMax
-        #print "numBlocks1024 =", numBlocks1024
+    numBlocksMax = (memend      - memstart) / erasedBlockSize
+    numBlocks    = (max_address - memstart) / erasedBlockSize
+    
+    if numBlocks > numBlocksMax:
+        #numBlocks = numBlocksMax
+        return ERR_USB_ERASE
 
-        if numBlocks1024 > numBlocksMax:
-            numBlocks1024 = numBlocksMax
+    if numBlocks < 256:
+        eraseFlash(handle, memstart, numBlocks)
 
-        eraseFlash(handle, memstart, numBlocks1024)
-        #self.txtWrite("*** BREAKPOINT ***")
-
-    # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
     else:
-        #self.txtWrite("max_address = "+str(max_address))
-        memoryspace = max_address - memstart
-        numBlocks64 = (memoryspace / 64)
-        
-        # max_address is a multiple of DATABLOCKSIZE
-        if (memoryspace % 64) != 0:
-            numBlocks64 = numBlocks64 + 1
-
-        if numBlocks64 > 511:
-            return ERR_USB_ERASE
-
-        if numBlocks64 < 256:
-            eraseFlash(handle, memstart, numBlocks64)
-
-        else:
-            # erase flash memory
-            # from self.board.memstart to self.board.memstart + 255 x 64 = 0x3FC0
-            self.eraseFlash(handle, memstart, 255)
-            # erase flash memory from self.board.memstart + 0x3FC0 to max_address
-            numBlocks64 = numBlocks64 - 255
-            eraseFlash(handle, memstart + 0x3FC0, numBlocks64)
+        numBlocks = numBlocks - 255
+        upperAddress = memstart + 255 * erasedBlockSize
+        # from self.board.memstart to upperAddress 
+        eraseFlash(memstart, 255)
+        # erase flash memory from upperAddress to max_address
+        eraseFlash(upperAddress, numBlocks)
 
     # write blocks of DATABLOCKSIZE bytes
     # ----------------------------------------------------------------------
@@ -540,7 +487,7 @@ def hexWrite(handle, filename, proc, memend):
     for addr in range(memstart, max_address, DATABLOCKSIZE):
         index = addr - memstart
         writeFlash(handle, addr, data[index:index+DATABLOCKSIZE])
-        print "block@%d has been issued" % addr
+        #print "block@%d has been issued" % addr
 
     print "%d bytes written.\n" % codesize
 
