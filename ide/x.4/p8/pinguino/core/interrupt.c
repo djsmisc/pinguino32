@@ -45,12 +45,7 @@
 		#define ON_EVENT
 	#endif
 
-    #if !defined(__18f1220) && !defined(__18f1320) && \
-        !defined(__18f14k22) && !defined(__18lf14k22) && \
-        !defined (__18f2455) && !defined (__18f4455) && \
-        !defined (__18f2550) && !defined (__18f4550) && \
-        !defined (__18f25k50) && !defined (__18f45k50) && \
-        !defined(__18f26j50) && !defined(__18f46j50)
+    #if defined(__PIC32MX__)
         #error "Error : this library is intended to be used only with 8-bit Pinguino" 
     #endif
     

@@ -33,6 +33,7 @@ bitRead BitRead#include <macro.h>
 bitSet BitSet#include <macro.h>
 bitWrite BitSet#include <macro.h>
 bitClear BitClear#include <macro.h>
+bitInv BitInv#include <macro.h>
 bit Bit#include <macro.h>
 lowByte low8#include <macro.h>
 highByte high8#include <macro.h>

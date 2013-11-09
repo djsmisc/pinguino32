@@ -13,12 +13,12 @@
 
 	/// ASM
 
-	#define nop()					{ __asm nop __endasm; }
-	#define clrwdt()				{ __asm clrwdt __endasm; }
-	#define reset()				    { __asm reset __endasm; }
-	#define sleep()				    { __asm sleep __endasm; }
-	#define interrupts()			{ INTCONbits.GIE  = 1; }
-	#define noInterrupts()		    { INTCONbits.GIE  = 0; }
+	#define nop()					do { __asm nop    __endasm; } while (0)
+	#define clrwdt()				do { __asm clrwdt __endasm; } while (0)
+	#define reset()				    do { __asm reset  __endasm; } while (0)
+	#define sleep()				    do { __asm sleep  __endasm; } while (0)
+	#define interrupts()			do { INTCONbits.GIEH  = 1; INTCONbits.GIEL  = 1; } while (0)
+	#define noInterrupts()		    do { INTCONbits.GIEH  = 0; INTCONbits.GIEL  = 0; } while (0)
 
 	/// C
 
@@ -35,7 +35,10 @@
 	/// MATH
 
 	#define min(a,b)				((a)<(b)?(a):(b))
+    //#define min(x, y)               (y ^ ((x ^ y) & -(x < y)))
 	#define max(a,b)				((a)>(b)?(a):(b))
+    //#define max(x, y)               (x ^ ((x ^ y) & -(x < y)))
+
     //already defined in stdlib.h
 	//#define abs(x)					((x)>0?(x):-(x))
 	#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
@@ -43,6 +46,7 @@
 	#define radians(deg)			((deg)*DEG_TO_RAD)
 	#define degrees(rad)			((rad)*RAD_TO_DEG)
 	#define sq(x)					((x)*(x))
+    #define swap(a, b)              ((&(a) == &(b)) || (((a) -= (b)), ((b) += (a)), ((a) = (b) - (a))))
 
 	/// CLOCK
 
@@ -76,6 +80,10 @@
 	// Clear (0) bit #n from octet
 	#define BitClear(octet, n) \
 		(octet &= ~(1 << n))			//(octet &= !(1 << n))
+
+	// Inverse bit #n from octet
+	#define BitInv(octet, n) \
+		(octet ^= (1 << n))
 
 	#define BitWrite(value, bit, bitvalue) \
 		(bitvalue ? bitSet(value, bit) : bitClear(value, bit))
