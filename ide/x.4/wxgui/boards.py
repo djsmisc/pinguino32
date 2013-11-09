@@ -60,7 +60,7 @@ class Pinguino2455:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x5fff
+    memend=0x6000
     shortarg='-p2455'
     longarg='--pinguino2455'
     
@@ -73,7 +73,7 @@ class Pinguino2550:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x2000       # bootloader offset
-    memend=0x7fff
+    memend=0x8000
     shortarg='-p2550'
     longarg='--pinguino2550'
     
@@ -86,7 +86,7 @@ class FreeJALduino:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x2000
-    memend=0x7fff
+    memend=0x8000
     config=0x300000
     shortarg='-J'
     longarg='--freejalduino'
@@ -100,7 +100,7 @@ class Pinguino25k50:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x7fff
+    memend=0x8000
     shortarg='-p25k50'
     longarg='--pinguino25k50'
 
@@ -113,7 +113,7 @@ class Pinguino26J50:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0xFFF8
+    memend=0x10000
     shortarg='-p26j50'
     longarg='--pinguino26j50'
 
@@ -126,7 +126,7 @@ class Pinguino27J53:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x1FFF8
+    memend=0x20000
     shortarg='-p27j53'
     longarg='--pinguino27j53'
 
@@ -139,7 +139,7 @@ class Pinguino4455:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x3fff
+    memend=0x6000
     shortarg='-p4455'
     longarg='--pinguino4455'
 
@@ -152,7 +152,7 @@ class Pinguino4550:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x2000       # bootloader offset
-    memend=0x7fff
+    memend=0x8000
     shortarg='-p4550'
     longarg='--pinguino4550'
 
@@ -165,7 +165,7 @@ class PICuno_Equo:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x2000
-    memend=0x7fff
+    memend=0x8000
     config=0x300000
     shortarg='-eq'
     longarg='--picunoequo'
@@ -179,7 +179,7 @@ class Pinguino45k50:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x7fff
+    memend=0x8000
     shortarg='-p45k50'
     longarg='--pinguino45k50'
 
@@ -192,7 +192,7 @@ class CHRP3:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x7fff
+    memend=0x8000
     shortarg='-c'
     longarg='--chrp3'
 
@@ -205,7 +205,7 @@ class Pinguino46J50:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0xFFF8
+    memend=0x10000
     shortarg='-p46j50'
     longarg='--pinguino46j50'
 
@@ -218,7 +218,7 @@ class Pinguino47J53A:
     vendor=MICROCHIP_ID
     product=P8_ID
     memstart=0x0C00       # bootloader offset
-    memend=0x1FFF8
+    memend=0x20000
     shortarg='-p47j53A'
     longarg='--pinguino47j53a'
 

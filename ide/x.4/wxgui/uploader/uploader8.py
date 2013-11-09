@@ -309,7 +309,7 @@ class uploader8(baseUploader):
         #    self.txtWrite("Write error")
 
 # ----------------------------------------------------------------------
-    def hexWrite(self, filename, board):
+    def hexWrite(self, filename):
 # ----------------------------------------------------------------------
         """ Parse the Hex File Format and send data to usb device """
 
@@ -330,6 +330,15 @@ class uploader8(baseUploader):
         address_Hi  = 0
         codesize    = 0
 
+        #self.txtWrite("%s" % self.board.proc)
+        # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
+        if "j" in self.board.proc :
+            eraseBlockSize = 1024
+
+        # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
+        else:
+            eraseBlockSize = 64
+
         # read hex file
         # --------------------------------------------------------------
 
@@ -337,7 +346,7 @@ class uploader8(baseUploader):
         lines = fichier.readlines()
         fichier.close()
 
-        # 1st pass : calculate checksum and max_address
+        # calculate checksum, code size and max. address
         # --------------------------------------------------------------
 
         for line in lines:
@@ -345,9 +354,6 @@ class uploader8(baseUploader):
             address_Lo = int(line[3:7], 16) # lower 16 bits (bits 0-15) of the data address
             record_type= int(line[7:9], 16)
             
-            address = (address_Hi << 16) + address_Lo
-            #print "address =", address
-
             # checksum calculation
             end = 9 + byte_count * 2 # position of checksum at end of line
             checksum = int(line[end:end+2], 16)
@@ -362,105 +368,68 @@ class uploader8(baseUploader):
             # extended linear address record
             if record_type == self.Extended_Linear_Address_Record:
                 address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
-                #address = (address_Hi << 16) + address_Lo
-
-            # code size
-            if (address >= self.board.memstart) and (address < self.board.memend):
-                codesize = codesize + byte_count
-
-            # max address
-            if (address > old_address) and (address < self.board.memend):
-                max_address = address + byte_count
-                old_address = address
-                #print "max address =", max_address
-
-        # max_address must be divisible by self.DATABLOCKSIZE
-        # --------------------------------------------------------------
-
-        max_address = max_address + self.DATABLOCKSIZE - (max_address % self.DATABLOCKSIZE)
-
-        # pre-fill data sequence with 0xFF
-        # --------------------------------------------------------------
-
-        for i in range(max_address - self.board.memstart):
-            data.append(0xFF)
-
-        # 2nd pass : parse bytes from line into data
-        # --------------------------------------------------------------
-
-        address_Hi = 0
-
-        for line in lines:
-            byte_count  = int(line[1:3], 16)
-            address_Lo  = int(line[3:7], 16) # four hex digits
-            record_type = int(line[7:9], 16)
-
-            # 32-bit address
-            address = (address_Hi << 16) + address_Lo
-            #print hex(address)
-
+                
             # data record
             if record_type == self.Data_Record:
+                
+                # 32-bit address
+                address = address_Hi + address_Lo
+                #self.txtWrite("address = %d" % address)
+
+                # max address
+                if (address > old_address) and (address < self.board.memend):
+                    max_address = address + byte_count
+                    old_address = address
+                    #self.txtWrite("max_address = %X" % max_address)
+
                 if (address >= self.board.memstart) and (address < self.board.memend):
-                    #print hex(address)
+
+                    # code size
+                    codesize = codesize + byte_count
+                    #self.txtWrite("address = %X" % address)
+
+                    # append data
+                    #self.txtWrite("address = %X" % address)
                     for i in range(byte_count):
-                        #print address - self.board.memstart + i
+                        #self.txtWrite("address = %X" % (address - self.board.memstart + i))
                         #print int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-                        data[address - self.board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-                    
+                        data.append(int(line[9 + (2 * i) : 11 + (2 * i)], 16))
+
             # end of file record
-            elif record_type == self.End_Of_File_Record:
+            if record_type == self.End_Of_File_Record:
                 break
 
-            # extended linear address record
-            elif record_type == self.Extended_Linear_Address_Record:
-                address_Hi = int(line[9:13], 16) # upper 16 bits (bits 16-31) of the data address
-                #print "address_Hi = " + hex(address_Hi)
-                #address = (address_Hi << 16) + address_Lo
-
             # unsupported record type
-            else:
-                return self.ERR_HEX_RECORD
+            #else:
+            #    return self.ERR_HEX_RECORD
 
+        # max_address must be divisible by eraseBlockSize
+        # --------------------------------------------------------------
+
+        max_address = max_address + eraseBlockSize - (max_address % eraseBlockSize)
+        #self.txtWrite("max_address = %d" % max_address)
+            
         # erase memory from self.board.memstart to max_address 
         # --------------------------------------------------------------
 
-        # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
-        if "j" in board.proc :
-            #print board.proc
-            numBlocksMax  = 1 + ((self.board.memend - self.board.memstart) / 1024)
-            numBlocks1024 = 1 + ((max_address - self.board.memstart) / 1024)
-            #print "numBlocks1024 =", numBlocks1024
+        numBlocksMax = (self.board.memend - self.board.memstart) / eraseBlockSize
+        numBlocks    = (max_address - self.board.memstart) / eraseBlockSize
+        #self.txtWrite("numBlocks = %d" % numBlocks)
+        
+        if numBlocks > numBlocksMax:
+            #numBlocks = numBlocksMax
+            return self.ERR_USB_ERASE
 
-            if numBlocks1024 > numBlocksMax:
-                numBlocks1024 = numBlocksMax
+        if numBlocks < 256:
+            self.eraseFlash(self.board.memstart, numBlocks)
 
-            self.eraseFlash(self.board.memstart, numBlocks1024)
-            #self.txtWrite("*** BREAKPOINT ***")
-
-        # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
         else:
-            #self.txtWrite("max_address = "+str(max_address))
-            memoryspace = max_address - self.board.memstart
-            numBlocks64 = (memoryspace / 64)
-            
-            # max_address is a multiple of DATABLOCKSIZE
-            if (memoryspace % 64) != 0:
-                numBlocks64 = numBlocks64 + 1
-
-            if numBlocks64 > 511:
-                return self.ERR_USB_ERASE
-
-            if numBlocks64 < 256:
-                self.eraseFlash(self.board.memstart, numBlocks64)
-
-            else:
-                # erase flash memory
-                # from self.board.memstart to self.board.memstart + 255 x 64 = 0x3FC0
-                self.eraseFlash(self.board.memstart, 255)
-                # erase flash memory from self.board.memstart + 0x3FC0 to max_address
-                numBlocks64 = numBlocks64 - 255
-                self.eraseFlash(self.board.memstart + 0x3FC0, numBlocks64)
+            numBlocks = numBlocks - 255
+            upperAddress = self.board.memstart + 255 * eraseBlockSize
+            # from self.board.memstart to upperAddress 
+            self.eraseFlash(self.board.memstart, 255)
+            # erase flash memory from upperAddress to max_address
+            self.eraseFlash(upperAddress, numBlocks)
 
         # write blocks of DATABLOCKSIZE bytes
         # --------------------------------------------------------------
@@ -468,6 +437,7 @@ class uploader8(baseUploader):
         for addr in range(self.board.memstart, max_address, self.DATABLOCKSIZE):
             index = addr - self.board.memstart
             self.writeFlash(addr, data[index:index+self.DATABLOCKSIZE])
+            #self.txtWrite("index = %d" % index)
 
         self.txtWrite("%d bytes written." % codesize)
 
@@ -540,7 +510,7 @@ class uploader8(baseUploader):
         # --------------------------------------------------------------
 
         self.txtWrite("Uploading user program ...")
-        status = self.hexWrite(self.filename, self.board)
+        status = self.hexWrite(self.filename)
 
         if status == self.ERR_HEX_RECORD:
             self.txtWrite("Record error")
