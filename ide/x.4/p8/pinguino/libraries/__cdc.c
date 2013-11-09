@@ -64,6 +64,7 @@ void CDC_init(void)
         PIE2bits.USBIE = 1;     // enable usb interrupt
         IPR2bits.USBIP = 1;     // high priority interrupt
     #endif
+    
     INTCONbits.GIEH = 1;   // Enable global HP interrupts
     INTCONbits.GIEL = 1;   // Enable global LP interrupts
 }
@@ -89,21 +90,24 @@ void CDCprintf(const u8 *fmt, ...)
     CDCputs(_cdc_buffer,length);
     va_end(args);
 }
-
+/*
 // CDC.print
-#	define CDCprint(m,type)		{ CDCprint_##type(m);  }
-#	define CDCPrintln(m,type)	{ CDCprint_##type(m);  CDCprintf("\r\n"); }
+#define CDCprint(m,type)	{ CDCprint_##type(m);  }
+#define CDCprintln(m,type)	{ CDCprint_##type(m);  CDCprintf("\r\n"); }
 void CDCprint_FLOAT(float m){ CDCprintf("%f",m); }
 void CDCprint_DEC(u16 m)    { CDCprintf("%d",m); }
 void CDCprint_HEX(u16 m)    { CDCprintf("%x",m); }
 void CDCprint_BYTE(u16 m)   { CDCprintf("%d",m); }
 void CDCprint_OCT(u16 m)    { CDCprintf("%o",m); }
 void CDCprint_BIN(u16 m)    { CDCprintf("%b",m); }
+*/
 
 /* CDCprint() function can not correctly support CDCprint("some string") aka CDC.print("some string").
  * In case CDCprint("some string"), va_arg(args, u32) will return a unexpected invalid value. 
  * by avrin */
-#if 0
+
+//#if 0
+
 // last is a string (char *) or an integer
 void CDCprint(const u8 *fmt, ...)
 {
@@ -150,7 +154,8 @@ void CDCprintln(const u8 *fmt, ...)
     CDCprintf(fmt, args);
     CDCprintf("\n\r");
 }
-#endif
+
+//#endif
 
 // CDC.getKey
 u8 CDCgetkey(void)

@@ -63,6 +63,8 @@
 //
 // -------------------------------------------------------------------------------------------------------
 
+#ifndef __SERVOS_C
+#define __SERVOS_C
 
 #define SERVOSLIBRARY 1
 
@@ -1157,3 +1159,5 @@ void servos_interrupt(void)
 	return;
 }
 #endif
+
+#endif /* __SERVOS_C */

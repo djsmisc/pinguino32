@@ -31,9 +31,9 @@
 #include <typedef.h>
 #include <stdlib.h>
 
-int abs(int j)
+int abs(int v)
 {
-	return (j < 0) ? -j : j;
+	return (v < 0) ? -(unsigned)v : v;
 }
 
 /**	----------------------------------------------------------------------------
