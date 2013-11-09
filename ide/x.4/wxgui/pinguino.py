@@ -589,6 +589,9 @@ class Pinguino(framePinguinoX, IDE):
                     "-p" + board.proc,\
                     "-D" + board.board,\
                     "-D" + board.bldr,\
+                    "-DBOARD=\"" + board.board + "\"",\
+                    "-DPROC=\"" + board.proc + "\"",\
+                    "-DBOOT_VER=2",\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
@@ -613,6 +616,9 @@ class Pinguino(framePinguinoX, IDE):
                     "-p" + board.proc,\
                     "-D" + board.board,\
                     "-D" + board.bldr,\
+                    "-DBOARD=\"" + board.board + "\"",\
+                    "-DPROC=\"" + board.proc + "\"",\
+                    "-DBOOT_VER=4",\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
@@ -634,6 +640,9 @@ class Pinguino(framePinguinoX, IDE):
                     "-p" + board.proc,\
                     "-D" + board.board,\
                     "-D" + board.bldr,\
+                    "-DBOARD=\"" + board.board + "\"",\
+                    "-DPROC=\"" + board.proc + "\"",\
+                    "-DBOOT_VER=0",\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
@@ -721,6 +730,9 @@ class Pinguino(framePinguinoX, IDE):
                     "-p" + board.proc,\
                     "-D" + board.bldr,\
                     "-D" + board.board,\
+                    "-DBOARD=\"" + board.board + "\"",\
+                    "-DPROC=\"" + board.proc + "\"",\
+                    "-DBOOT_VER=2",\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
@@ -758,6 +770,9 @@ class Pinguino(framePinguinoX, IDE):
                     "-p" + board.proc,\
                     "-D" + board.bldr,\
                     "-D" + board.board,\
+                    "-DBOARD=\"" + board.board + "\"",\
+                    "-DPROC=\"" + board.proc + "\"",\
+                    "-DBOOT_VER=4",\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
@@ -789,6 +804,9 @@ class Pinguino(framePinguinoX, IDE):
                     "-p" + board.proc,\
                     "-D" + board.bldr,\
                     "-D" + board.board,\
+                    "-DBOARD=\"" + board.board + "\"",\
+                    "-DPROC=\"" + board.proc + "\"",\
+                    "-DBOOT_VER=0",\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'sdcc', 'non-free', 'include', 'pic16'),\
                     "-I" + os.path.join(P8_DIR, 'pinguino', 'core'),\
@@ -848,19 +866,28 @@ class Pinguino(framePinguinoX, IDE):
         memfree = board.memend - board.memstart
         fichier = open(filename + ".hex", 'r')
         lines = fichier.readlines()
+
         for line in lines:
+
             byte_count = int(line[1:3], 16)
             address_Lo = int(line[3:7], 16)
             record_type= int(line[7:9], 16)
+
             # extended linear address record
             if record_type == 4:
                 address_Hi = int(line[9:13], 16) << 16
-                        # address calculation
-            address = (address_Hi << 16) + address_Lo
+
             # code size
             if record_type == 0:
-                if address >= board.memstart:
+
+                # address calculation
+                address = address_Hi + address_Lo
+                #self.displaymsg(_("address = %X" % address),0)
+                
+                #if address >= board.memstart:
+                if (address >= board.memstart) and (address < board.memend):
                     codesize = codesize + byte_count
+
         fichier.close()
         return _("code size: ") + str(codesize) + " / " + str(memfree) + " " + _("bytes") + " (" + str(100*codesize/memfree) + "% " +_("used")+ ")" 
 
