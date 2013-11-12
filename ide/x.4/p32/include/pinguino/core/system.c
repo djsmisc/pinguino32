@@ -307,7 +307,7 @@ void SystemClocksCalcCpuClockSettings(SystemClocksSettings *s,
    */
   if (pllInputDivs[s->PLLIDIV] >= 2) 
     {
-      s->PLLODIV = 0; // /1
+      s->PLLODIV = PLLODIV1; // /1
 
       #ifdef EXTENDED_TEST_CASE
         s->error = Error_NoCombinationFound;
@@ -315,14 +315,14 @@ void SystemClocksCalcCpuClockSettings(SystemClocksSettings *s,
     }
   else 
     {
-      s->PLLODIV = 1; // /2
+      s->PLLODIV = PLLODIV2; // /2
 
       #ifdef EXTENDED_TEST_CASE
         s->error = Error_NoCombinationFound;
       #endif
     }
 
-  s->PLLMULT = 5; // x20
+  s->PLLMULT = PLLMULT20; // x20
 }
 
 /**
@@ -366,7 +366,7 @@ void SystemClocksCalcPeripheralClockSettings(SystemClocksSettings *s,
     }
 
   // No match: Use default value
-  s->PBDIV = 0; // /1
+  s->PBDIV = PBDIV1; // /1
   #ifdef EXTENDED_TEST_CASE
     s->error = Error_NoCombinationFound;
   #endif
