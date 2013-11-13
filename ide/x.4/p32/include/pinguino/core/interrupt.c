@@ -834,7 +834,7 @@ void IntClearFlag(u8 numinter)
 		numinter -= 64;
 		BitClear(IFS2, numinter);
 	}
-	else if (numinter > 31 && numinter <= 63) 
+	else if (numinter > 31) 
     #else
 	if (numinter > 31)
     #endif
@@ -866,7 +866,7 @@ unsigned int IntGetFlag(u8 numinter)
 		numinter -= 64;
 		return BitRead(IFS2, numinter);
 	}
-	else if (numinter > 31 && numinter <= 63)
+	else if (numinter > 31)
     #else
 	if (numinter > 31)
     #endif
@@ -895,7 +895,7 @@ void IntEnable(u8 numinter)
 		numinter -= 64;
 		BitSet(IFS2, numinter);
 	}
-	else if (numinter > 31 && numinter <= 63) 
+	else if (numinter > 31) 
     #else
 	if (numinter > 31)
     #endif
@@ -924,7 +924,7 @@ void IntDisable(u8 numinter)
 		numinter -= 64;
 		BitClear(IFS2, numinter);
 	}
-	else if (numinter > 31 && numinter <= 63) 
+	else if (numinter > 31) 
     #else
 	if (numinter > 31)
     #endif
