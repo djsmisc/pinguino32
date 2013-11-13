@@ -433,8 +433,6 @@ void PWM_set_dutycycle(u8 pin, u16 duty)
 {
 	//u8 temp;
 
-	if (duty > 0xFFFF) duty = 0xFFFF;			// upper limit (16-bit)
-
 	// PWM period
 	PR3 = _pr3_plus1 - 1;						// set PR3 (max or PWM_set_frequency)
 
