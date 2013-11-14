@@ -309,7 +309,7 @@ class uploader8(baseUploader):
         #    self.txtWrite("Write error")
 
 # ----------------------------------------------------------------------
-    def hexWrite(self, filename):
+    def hexWrite(self, filename, board):
 # ----------------------------------------------------------------------
         """ Parse the Hex File Format and send data to usb device """
 
@@ -330,14 +330,22 @@ class uploader8(baseUploader):
         address_Hi  = 0
         codesize    = 0
 
-        #self.txtWrite("%s" % self.board.proc)
+        # size of erased block
+        # --------------------------------------------------------------
+
         # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
-        if "j" in self.board.proc :
-            eraseBlockSize = 1024
+        if "j" in board.proc :
+            erasedBlockSize = 1024
 
         # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
         else:
-            eraseBlockSize = 64
+            erasedBlockSize = 64
+
+        # image of the whole PIC memory (above memstart)
+        # --------------------------------------------------------------
+
+        for i in range(self.board.memend - self.board.memstart):
+            data.append(0xFF)
 
         # read hex file
         # --------------------------------------------------------------
@@ -346,12 +354,13 @@ class uploader8(baseUploader):
         lines = fichier.readlines()
         fichier.close()
 
-        # calculate checksum, code size and max. address
+        # calculate checksum and max_address
         # --------------------------------------------------------------
 
         for line in lines:
             byte_count = int(line[1:3], 16)
-            address_Lo = int(line[3:7], 16) # lower 16 bits (bits 0-15) of the data address
+            # lower 16 bits (bits 0-15) of the data address
+            address_Lo = int(line[3:7], 16)
             record_type= int(line[7:9], 16)
             
             # checksum calculation
@@ -367,57 +376,49 @@ class uploader8(baseUploader):
 
             # extended linear address record
             if record_type == self.Extended_Linear_Address_Record:
-                address_Hi = int(line[9:13], 16) << 16 # upper 16 bits (bits 16-31) of the data address
-                
+                # upper 16 bits (bits 16-31) of the data address
+                address_Hi = int(line[9:13], 16) << 16
+
             # data record
-            if record_type == self.Data_Record:
-                
-                # 32-bit address
+            elif record_type == self.Data_Record:
+
                 address = address_Hi + address_Lo
-                #self.txtWrite("address = %d" % address)
 
                 # max address
                 if (address > old_address) and (address < self.board.memend):
                     max_address = address + byte_count
                     old_address = address
-                    #self.txtWrite("max_address = %X" % max_address)
 
+                # code size
                 if (address >= self.board.memstart) and (address < self.board.memend):
-
-                    # code size
                     codesize = codesize + byte_count
-                    #self.txtWrite("address = %X" % address)
 
-                    # append data
-                    #self.txtWrite("address = %X" % address)
-                    for i in range(byte_count):
-                        #self.txtWrite("address = %X" % (address - self.board.memstart + i))
-                        #print int(line[9 + (2 * i) : 11 + (2 * i)], 16)
-                        data.append(int(line[9 + (2 * i) : 11 + (2 * i)], 16))
+                # data append
+                for i in range(byte_count):
+                    #Caution : addresses are not always contiguous
+                    #data.append(int(line[9 + (2 * i) : 11 + (2 * i)], 16))
+                    data[address - self.board.memstart + i] = int(line[9 + (2 * i) : 11 + (2 * i)], 16)
 
             # end of file record
-            if record_type == self.End_Of_File_Record:
+            elif record_type == self.End_Of_File_Record:
                 break
 
             # unsupported record type
-            #else:
-            #    return self.ERR_HEX_RECORD
+            else:
+                return self.ERR_HEX_RECORD
 
-        # max_address must be divisible by eraseBlockSize
+        # max_address must be divisible by self.DATABLOCKSIZE
         # --------------------------------------------------------------
 
-        max_address = max_address + eraseBlockSize - (max_address % eraseBlockSize)
-        #self.txtWrite("max_address = %d" % max_address)
-            
+        max_address = max_address + erasedBlockSize - (max_address % erasedBlockSize)
+
         # erase memory from self.board.memstart to max_address 
         # --------------------------------------------------------------
 
-        numBlocksMax = (self.board.memend - self.board.memstart) / eraseBlockSize
-        numBlocks    = (max_address - self.board.memstart) / eraseBlockSize
-        #self.txtWrite("numBlocks = %d" % numBlocks)
-        
+        numBlocksMax = (self.board.memend - self.board.memstart) / erasedBlockSize
+        numBlocks    = (max_address - self.board.memstart) / erasedBlockSize
+
         if numBlocks > numBlocksMax:
-            #numBlocks = numBlocksMax
             return self.ERR_USB_ERASE
 
         if numBlocks < 256:
@@ -425,10 +426,10 @@ class uploader8(baseUploader):
 
         else:
             numBlocks = numBlocks - 255
-            upperAddress = self.board.memstart + 255 * eraseBlockSize
-            # from self.board.memstart to upperAddress 
+            upperAddress = self.board.memstart + 255 * erasedBlockSize
+            # from self.board.memstart to self.board.memstart + 255 x 64 = 0x3FC0
             self.eraseFlash(self.board.memstart, 255)
-            # erase flash memory from upperAddress to max_address
+            # erase flash memory from self.board.memstart + 0x3FC0 to max_address
             self.eraseFlash(upperAddress, numBlocks)
 
         # write blocks of DATABLOCKSIZE bytes
@@ -437,7 +438,6 @@ class uploader8(baseUploader):
         for addr in range(self.board.memstart, max_address, self.DATABLOCKSIZE):
             index = addr - self.board.memstart
             self.writeFlash(addr, data[index:index+self.DATABLOCKSIZE])
-            #self.txtWrite("index = %d" % index)
 
         self.txtWrite("%d bytes written." % codesize)
 
@@ -510,7 +510,7 @@ class uploader8(baseUploader):
         # --------------------------------------------------------------
 
         self.txtWrite("Uploading user program ...")
-        status = self.hexWrite(self.filename)
+        status = self.hexWrite(self.filename, self.board)
 
         if status == self.ERR_HEX_RECORD:
             self.txtWrite("Record error")
