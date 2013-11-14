@@ -157,19 +157,19 @@
 	#define SERIAL_BUFFERLENGTH 				128				// rx buffer length
 //#endif
 
-volatile char UART1SerialBuffer[SERIAL_BUFFERLENGTH];	// UART1 buffer
-volatile char UART2SerialBuffer[SERIAL_BUFFERLENGTH];	// UART2 buffer
+volatile unsigned char UART1SerialBuffer[SERIAL_BUFFERLENGTH];	// UART1 buffer
+volatile unsigned char UART2SerialBuffer[SERIAL_BUFFERLENGTH];	// UART2 buffer
 #ifdef ENABLE_UART3
-volatile char UART3SerialBuffer[SERIAL_BUFFERLENGTH];	// UART3 buffer
+volatile unsigned char UART3SerialBuffer[SERIAL_BUFFERLENGTH];	// UART3 buffer
 #endif
 #ifdef ENABLE_UART4
-volatile char UART4SerialBuffer[SERIAL_BUFFERLENGTH];	// UART4 buffer
+volatile unsigned char UART4SerialBuffer[SERIAL_BUFFERLENGTH];	// UART4 buffer
 #endif
 #ifdef ENABLE_UART5
-volatile char UART5SerialBuffer[SERIAL_BUFFERLENGTH];	// UART5 buffer
+volatile unsigned char UART5SerialBuffer[SERIAL_BUFFERLENGTH];	// UART5 buffer
 #endif
 #ifdef ENABLE_UART6
-volatile char UART6SerialBuffer[SERIAL_BUFFERLENGTH];	// UART6 buffer
+volatile unsigned char UART6SerialBuffer[SERIAL_BUFFERLENGTH];	// UART6 buffer
 #endif
 
 volatile long UART1wpointer, UART1rpointer;				// write and read pointer
@@ -529,7 +529,7 @@ void SerialPinConfigure(u8 port)
 /*	----------------------------------------------------------------------------
 	SerialIntConfigure() : Serial Interrupts Configuration
 	----------------------------------------------------------------------------
-	@param		port		1 (UART1), 2 (UART2) or 3 (UART3)
+	@param		port		1 (UART1), 2 (UART2), 3 (UART3) ...
 	@param		baudrate	baud rate
 	@return		baudrate
 	--------------------------------------------------------------------------*/
@@ -727,9 +727,9 @@ char SerialAvailable(u8 port)
 	SerialRead : Get char
 	--------------------------------------------------------------------------*/
 
-char SerialRead(u8 port)
+int SerialRead(u8 port)
 {
-	char c = 0;
+	int c = 0;
 
 	if (SerialAvailable(port))
 	{
@@ -825,8 +825,8 @@ char * SerialGetString(u8 port)
 
 void SerialGetDataBuffer(u8 port)
 {
-	char caractere;
-	char newwp;
+	unsigned char caractere;
+	long newwp;
 
 	switch (port)
 	{
@@ -1061,6 +1061,8 @@ void Serial2Interrupt(void)
 // vector 31 is shared with SPI2
 void Serial3Interrupt(void)
 {	
+	char    Dummy;
+
 	// Is this an RX interrupt from UART3 ?
 	if (IntGetFlag(INT_UART3_RECEIVER))
 	{
@@ -1090,6 +1092,8 @@ void Serial3Interrupt(void)
 // vector 49
 void Serial4Interrupt(void)
 {	
+	char    Dummy;
+
 	//toggle(REDLED);
 	// Is this an RX interrupt from UART4 ?
 	if (IntGetFlag(INT_UART4_RECEIVER))
@@ -1120,6 +1124,8 @@ void Serial4Interrupt(void)
 // vector 51
 void Serial5Interrupt(void)
 {
+	char    Dummy;
+
 	// Is this an RX interrupt from UART5 ?
 	if (IntGetFlag(INT_UART5_RECEIVER))
 	{
@@ -1149,6 +1155,8 @@ void Serial5Interrupt(void)
 // vector 50
 void Serial6Interrupt(void)
 {
+	char    Dummy;
+
 	// Is this an RX interrupt from UART6 ?
 	if (IntGetFlag(INT_UART6_RECEIVER))
 	{
