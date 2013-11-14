@@ -40,20 +40,24 @@ if (len(sys.argv) > 1):
         byte_count = int(line[1:3], 16)
         address_Lo = int(line[3:7], 16)
         record_type= int(line[7:9], 16)
-        address = (address_Hi << 16) + address_Lo
 
         # extended linear address record
         if record_type == 4:
             address_Hi = int(line[9:13], 16) << 16
 
-        # code size
+        # data
         if record_type == 0:
+
+            # 32-bit address
+            address = address_Hi + address_Lo
+
+            # code size
             codesize = codesize + byte_count
 
-        # address calculation
-        if (address > old_address) and (address < 0xFFF8):
-            max_address = address + byte_count
-            old_address = address
+            # address calculation
+            if (address > old_address) and (address < 0x20000):
+                max_address = address + byte_count
+                old_address = address
 
     fichier.close()
 
