@@ -606,7 +606,7 @@ void SerialConfigure(u8 port, u32 config, u32 enable, u32 baudrate)
 }
 
 /*	----------------------------------------------------------------------------
-	SerialWriteChar1 : write data bits 0-8 on the UART1
+	SerialUART1WriteChar : write data bits 0-8 on the UART1
 	--------------------------------------------------------------------------*/
 
 void SerialUART1WriteChar(char c)
@@ -616,7 +616,7 @@ void SerialUART1WriteChar(char c)
 }
 
 /*	----------------------------------------------------------------------------
-	SerialWriteChar2 : write data bits 0-8 on the UART2
+	SerialUART2WriteChar : write data bits 0-8 on the UART2
 	--------------------------------------------------------------------------*/
 
 void SerialUART2WriteChar(char c)
@@ -626,7 +626,7 @@ void SerialUART2WriteChar(char c)
 }
 
 /*	----------------------------------------------------------------------------
-	SerialWriteChar3 : write data bits 0-8 on the UART3
+	SerialUART3WriteChar : write data bits 0-8 on the UART3
 	--------------------------------------------------------------------------*/
 #ifdef ENABLE_UART3
 void SerialUART3WriteChar(char c)
@@ -637,7 +637,7 @@ void SerialUART3WriteChar(char c)
 #endif
 
 /*	----------------------------------------------------------------------------
-	SerialWriteChar4 : write data bits 0-8 on the UART3
+	SerialUART4WriteChar : write data bits 0-8 on the UART4
 	--------------------------------------------------------------------------*/
 #ifdef ENABLE_UART4
 void SerialUART4WriteChar(char c)
@@ -648,7 +648,7 @@ void SerialUART4WriteChar(char c)
 #endif
 
 /*	----------------------------------------------------------------------------
-	SerialWriteChar5 : write data bits 0-8 on the UART3
+	SerialUART5WriteChar : write data bits 0-8 on the UART5
 	--------------------------------------------------------------------------*/
 #ifdef ENABLE_UART5
 void SerialUART5WriteChar(char c)
@@ -659,7 +659,7 @@ void SerialUART5WriteChar(char c)
 #endif
 
 /*	----------------------------------------------------------------------------
-	SerialWriteChar6 : write data bits 0-8 on the UART3
+	SerialUART6WriteChar : write data bits 0-8 on the UART6
 	--------------------------------------------------------------------------*/
 #ifdef ENABLE_UART6
 void SerialUART6WriteChar(char c)
