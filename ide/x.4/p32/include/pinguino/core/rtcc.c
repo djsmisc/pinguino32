@@ -92,8 +92,8 @@ typedef enum
 // Prototypes
 rtccTime RTCC_ConvertTime(rtccTime *);
 rtccDate RTCC_ConvertDate(rtccDate *);
-int RTCC_SetWriteEnable(void);
-int RTCC_SetWriteDisable(void);
+void RTCC_SetWriteEnable(void);
+void RTCC_SetWriteDisable(void);
 int RTCC_GetWriteEnable(void);
 void RTCC_Enable(void);
 void RTCC_Disable(void);
@@ -205,7 +205,7 @@ rtccDate RTCC_ConvertDate(rtccDate *pDt)
 	sequence has been executed.
 	---------------------------------------------------------------------------*/
 
-int RTCC_SetWriteEnable(void)
+void RTCC_SetWriteEnable(void)
 {
 	// assume interrupts are disabled
 	// assume the DMA controller is suspended
@@ -217,7 +217,7 @@ int RTCC_SetWriteEnable(void)
 	// re-enable the DMA controller
 }
 
-int RTCC_SetWriteDisable(void)
+void RTCC_SetWriteDisable(void)
 {
 	// assume interrupts are disabled
 	// assume the DMA controller is suspended
