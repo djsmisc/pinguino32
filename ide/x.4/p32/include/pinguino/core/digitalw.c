@@ -409,9 +409,9 @@ u8 digitalread(u8 pin)
 			#endif
 		
 		#endif
-		default: return -1;
+		default: return 255;
 	}
-	return -1;
+	return 255;
 }
 
 void toggle(u8 pin)
