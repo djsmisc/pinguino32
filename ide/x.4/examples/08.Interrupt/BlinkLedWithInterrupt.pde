@@ -10,10 +10,12 @@
 
 void myBlink()
 {
+/*
     u8 val;
     val = digitalRead(USERLED);
     digitalWrite(USERLED, val^1);
-    //	toggle(USERLED);
+*/
+    toggle(USERLED);
 }
 
 void setup()

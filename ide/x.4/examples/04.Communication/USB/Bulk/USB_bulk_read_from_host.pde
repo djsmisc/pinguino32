@@ -27,6 +27,7 @@ void loop()
       receivedbyte = BULK.read(buffer);
     } while (receivedbyte == 0);
 */
+
 //Second method to test if data are present
 //Here if data are not present you continue
     if(BULK.available()) 
