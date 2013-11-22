@@ -8,14 +8,26 @@
 #ifndef __PINGUINOUSB
 #define __PINGUINOUSB
 
-#if defined(boot2)
+//#if defined(boot2)
+
 #include <pic18fregs.h>
 #include <typedef.h>
 #include <usb.h>
 
 #define __USB__
 
-volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+//
+//  RB 12/11/2013 : added some other PIC support
+//
+
+#if   defined(__18f14k50) || defined(__18f14k50)  // Bank 2
+    volatile BufferDescriptorTable __at (0x200) ep_bdt[32];
+#elif defined(__18f26j53) || defined(__18f46j53) || \
+      defined(__18f27j53) || defined(__18f47j53)  // Bank 13
+    volatile BufferDescriptorTable __at (0xD00) ep_bdt[32];
+#else                                             // Bank 4
+    volatile BufferDescriptorTable __at (0x400) ep_bdt[32];
+#endif
 
 // Size of the power EP application buffer
 #define EP1_BUFFER_SIZE 64
@@ -140,6 +152,7 @@ u8 usbread()
     }
     return(caractere);
 }
+
 u8 usbreceive(u8 *rxpointer)
 {
     u8 rp = 0;
@@ -214,12 +227,14 @@ void usb_interrupt(void)
 
 void usbputs(u8 *txpointer, u8 length)
 {
-usbsend(txpointer,length);
+    usbsend(txpointer, length);
 }
 
 u8 usbgets(void)
 {
-return(usbread()); // one only character is returned
+    return(usbread()); // one only character is returned
 }
-#endif //boot2
-#endif
+
+//#endif /* boot2 */
+
+#endif /* __PINGUINOUSB */

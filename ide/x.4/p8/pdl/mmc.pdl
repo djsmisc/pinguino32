@@ -1,8 +1,10 @@
-File MFILE#include <sd/pff.c>#define __SPI2__
+Fatfs FATFS#include <sd/pff.c>#define _USE_PFF
 Dir DIRTABLE#include <sd/pff.c>
 
-MMC.readSector readSECTOR#include <sd/diskio.c>
-MMC.writeSector writeSECTOR#include <sd/diskio.c>
+MMC.readSector disk_readp#include <sd/diskio.c>
+MMC.writeSector disk_writep#include <sd/diskio.c>
+
+MMC.printSector disk_printp#include <sd/sectorprn.c>
 
 MMC.readDir readDIR#include <sd/pff.c>
 MMC.findDir findDIR#include <sd/pff.c>
@@ -16,6 +18,5 @@ MMC.open pf_open#include <sd/pff.c>
 MMC.read pf_read#include <sd/pff.c>
 MMC.write pf_write#include <sd/pff.c>
 MMC.print pf_print#include <sd/pff.c>
-MMC.lseek pf_seek#include <sd/pff.c>
+MMC.lseek pf_lseek#include <sd/pff.c>
 MMC.list scan_files#include <sd/pff.c>
-
