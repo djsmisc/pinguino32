@@ -7,6 +7,7 @@
 
 RM="rm -rf"
 LOG="log"
+#PINGUINO="./pinguino_start.sh"
 PINGUINO="./pinguino.py"
 TARGET="examples"
 
@@ -25,7 +26,7 @@ fi
 
 find ${TARGET} -type f -name *.pde | while read FILE ; do
     FNAME=$(basename "${FILE}" .pde)
-    OUTPUT=$(${PINGUINO} $1 --filename "${FILE}")
+    OUTPUT=$(${PINGUINO} $1 -f "${FILE}" -bt boot4)
     END=${OUTPUT:(-2)}
     if [ "$END" = "OK" ]; then
         echo -e $GREEN ${FILE} COMPILED! $TERM
