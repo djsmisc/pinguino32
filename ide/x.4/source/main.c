@@ -104,7 +104,7 @@
     #endif
     
     /// ----------------------------------------------------------------
-    /// If Power-on reset occurred, set NOT_POR bit to 1
+    /// If we start from a Power-on reset, set NOT_POR bit to 1
     /// ----------------------------------------------------------------
 
     if (RCONbits.NOT_POR == 0)
@@ -125,6 +125,9 @@
         OSCTUNEbits.PLLEN = 1;
         while (pll_startup_counter--);
     
+        // If Internal Oscillator is used
+        // ???
+
     #elif defined(__18f2455) || defined(__18f4455) || \
           defined(__18f2550) || defined(__18f4550)
     
@@ -194,18 +197,22 @@
 
     IO_init();
     IO_digital();
+    
     #if defined(__18f26j50) || defined(__18f46j50) || \
+        defined(__18f26j53) || defined(__18f46j53) || \
         defined(__18f27j53) || defined(__18f47j53)
+
     IO_remap();
+
     #endif
 
     /// ----------------------------------------------------------------
     /// Various Init.
     /// ----------------------------------------------------------------
 
-    #ifdef ON_EVENT
-    IntInit();
-    #endif
+    //#ifdef ON_EVENT
+    //IntInit();
+    //#endif
 
     #ifdef __USB__
     usb_init();
@@ -245,8 +252,11 @@
 
     #if defined(TMR0INT) || defined(TMR1INT) || \
         defined(TMR2INT) || defined(TMR3INT) || \
-        defined(TMR4INT)
+        defined(TMR4INT) || defined(TMR5INT) || \
+        defined(TMR6INT) || defined(TMR8INT) 
+
     IntTimerStart();            // Enable all defined timers interrupts
+
     #endif
 
     while (1)
