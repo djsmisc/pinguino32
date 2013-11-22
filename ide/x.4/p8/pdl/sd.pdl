@@ -1,22 +1,28 @@
-Fatfs FATFS#include <sd/pff.c>
-Dir DIRTABLE#include <sd/pff.c>
+SDFatfs FATFS#include <sd/tff.c>#define _USE_TFF
 
-SD.readSector disk_readp#include <sd/diskio.c>
-SD.writeSector disk_writep#include <sd/diskio.c>
+SD.mkDir f_mkdir#include <sd/tff.c>
+SD.openDir f_opendir#include <sd/tff.c>
+SD.readDir f_readdir#include <sd/tff.c>
+
+SD.begin f_mount#include <sd/tff.c>
+SD.init f_mount#include <sd/tff.c>
+SD.mount f_mount#include <sd/tff.c>
+SD.open f_open#include <sd/tff.c>
+SD.read f_read#include <sd/tff.c>
+SD.write f_write#include <sd/tff.c>
+SD.save f_sync#include <sd/tff.c>
+SD.seek f_lseek#include <sd/tff.c>
+SD.remove f_unlink#include <sd/tff.c>
+SD.rename f_rename#include <sd/tff.c>
+SD.close f_close#include <sd/tff.c>
+SD.mkfs f_mkfs#include <sd/tff.c>
+
+SD.gets  fgets#include <sd/tff.c>
+SD.putc  fputc#include <sd/tff.c>
+SD.puts  fputs#include <sd/tff.c>
+SD.printf  fprintf#include <sd/tff.c>
+
+SD.readSector disk_readp#include <sd/diskio.c>#define _USE_PFF
+SD.writeSector disk_writep#include <sd/diskio.c>#define _USE_PFF
 
 SD.printSector disk_printp#include <sd/sectorprn.c>
-
-SD.readDir readDIR#include <sd/pff.c>
-SD.findDir findDIR#include <sd/pff.c>
-SD.mkdir newDIR#include <sd/pff.c>
-
-SD.begin pf_mount#include <sd/pff.c>
-SD.init pf_mount#include <sd/pff.c>
-SD.mount pf_mount#include <sd/pff.c>
-SD.unmount pf_unmount#include <sd/pff.c>
-SD.open pf_open#include <sd/pff.c>
-SD.read pf_read#include <sd/pff.c>
-SD.write pf_write#include <sd/pff.c>
-SD.print pf_print#include <sd/pff.c>
-SD.lseek pf_lseek#include <sd/pff.c>
-SD.list scan_files#include <sd/pff.c>

@@ -19,10 +19,6 @@
 /                     Added write funciton.
 /                     Changed stream read mode interface.
 /----------------------------------------------------------------------------*/
-
-#ifndef __PFF_C
-#define __PFF_C
-
 #include <sd/pff.h>		/* Petit FatFs configurations and declarations */
 #include <sd/diskio.c>		/* Declarations of low level disk I/O functions */
 #include <string.h>
@@ -41,6 +37,8 @@
 ---------------------------------------------------------------------------*/
 
 static FATFS *FatFs;	/* Pointer to the file system object (logical drive) */
+
+
 
 /*-----------------------------------------------------------------------*/
 /* String functions                                                      */
@@ -673,7 +671,6 @@ FRESULT pf_write (
 	}
 	remain = fs->fsize - fs->fptr;
 	if (btw > remain) btw = (u16)remain;			/* Truncate btw by remaining bytes */
-
 	while (btw)	{									/* Repeat until all data transferred */
 		if (((u16)fs->fptr % 512) == 0) {				/* On the sector boundary? */
 			if ((fs->fptr / 512 % fs->csize) == 0) {	/* On the cluster boundary? */
@@ -875,36 +872,21 @@ FRESULT scan_files (char* path)
     FRESULT res;
     FILINFO fno;
     DIR dir;
-    int i;
-
+    char bufpath[12];
     res = pf_opendir(&dir, path);
-
-    if (res == FR_OK)
-    {
-        i = sizeof(path);
-
-        for (;;)
-        {
+    if (res == FR_OK) {
+        for (;;) {
             res = pf_readdir(&dir, &fno);
-
-            if (res != FR_OK || fno.fname[0] == 0)
-                break;
-
-            if (fno.fattrib & AM_DIR)
-            {
-                psprintf(&path[i], "/%s", fno.fname);
-                res = scan_files(path);
+           if (res != FR_OK || fno.fname[0] == 0) break;
+            if (fno.fattrib & AM_DIR) {
+                psprintf(bufpath, "/%s", fno.fname);
+                res = scan_files(bufpath);
                 if (res != FR_OK) break;
-                path[i] = 0;
-            }
-            
-            else
-            {
+            } else {
                 #ifdef SERIAL_PRINT
 				serial_printf("%s/", path);
                 serial_printf("%s\r\n", fno.fname);
 				#endif
-
                 #ifdef CDC_PRINT
                 CDCprintf("%s/", path);
                 CDCprintf("%s\r\n", fno.fname);
@@ -916,5 +898,4 @@ FRESULT scan_files (char* path)
     return res;
 }
 
-#endif /* __PFF_C */
 

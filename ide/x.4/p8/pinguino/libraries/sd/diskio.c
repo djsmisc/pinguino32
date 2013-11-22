@@ -7,6 +7,7 @@
 #include <sd/diskio.h>
 #include <spi.c>
 #include <delay.c>
+#include <serial.c>
 /* Definitions for MMC/SDC command */
 #define CMD0	(0x40+0)	/* GO_IDLE_STATE */
 #define CMD1	(0x40+1)	/* SEND_OP_COND (MMC) */
@@ -26,6 +27,9 @@
 #define CMD55	(0x40+55)	/* APP_CMD */
 #define CMD58	(0x40+58)	/* READ_OCR */
 
+/* Port Controls  (Platform dependent) */
+#define CS_LOW()  SD_CS = 0	/* MMC CS = L */
+#define CS_HIGH() SD_CS = 1	/* MMC CS = H */
 
 /* Port Controls  (Platform dependent) */
 #define SELECT()	SD_CS = 0	/* MMC CS = Low */
@@ -46,6 +50,9 @@ void SPI_init(u8 sync_mode, u8 bus_mode, u8 smp_phase);
 u8 SPI_write(u8 datax);
 u8 SPI_read();
 
+static volatile
+DSTATUS Stat = STA_NOINIT;	/* Disk status */
+
 static u16 CardType;
 
 /*-----------------------------------------------------------------------*/
@@ -55,16 +62,42 @@ static u16 CardType;
 static u8 wait_ready (void)
 {
 	u8 res;
+	u16 tmr = 500;	/* Wait for ready in timeout of 500ms */
 
-
-	Tim2 = 500;	/* Wait for ready in timeout of 500ms */
-	res=SPI_read();
 	do
 		res = SPI_read();
-	while ((res != 0xFF) && (Tim2--));
+	while ((res != 0xFF) && (tmr--));
 
 	return res;
 }
+/*-----------------------------------------------------------------------*/
+/* Deselect the card and release SPI bus                                 */
+/*-----------------------------------------------------------------------*/
+
+static
+void deselect (void)
+{
+	CS_HIGH();
+	SPI_write(0xFF);		/* Dummy clock (force DO hi-z for multiple slave SPI) */
+}
+
+
+
+/*-----------------------------------------------------------------------*/
+/* Select the card and wait ready                                        */
+/*-----------------------------------------------------------------------*/
+
+static
+int select (void)	/* 1:Successful, 0:Timeout */
+{
+	CS_LOW();
+	SPI_write(0xFF);		/* Dummy clock (force DO enabled) */
+
+	if (wait_ready()) return 1;	/* OK */
+	deselect();
+	return 0;	/* Timeout */
+}
+
 
 /*-----------------------------------------------------------------------*/
 /* Deselect the card and release SPI bus                                 */
@@ -82,7 +115,7 @@ static void power_off (void)
 	release_spi();
 
 	ENABLE = 0;				/* Disable SPI2 */
-
+	Stat |= STA_NOINIT;	/* Force uninitialized */
 	return;
 }
 
@@ -148,6 +181,7 @@ DSTATUS disk_initialize(void)
 {
 	u8 n, cmd, ty, ocr[4], rep, timeout;
 	u16 tmr;
+	if (Stat & STA_NODISK) return Stat;	/* No card in the socket */
 
 	SPI_init(2,0,0);							/* Force socket power on */
 
@@ -204,14 +238,251 @@ DSTATUS disk_initialize(void)
 	release_spi();
 
 	if (ty) {			/* Initialization succeded */
-		FCLK_FAST();
-		return RES_OK;
+		Stat &= ~STA_NOINIT;	/* Clear STA_NOINIT */
+    	FCLK_FAST();
 	} else {			/* Initialization failed */
 		power_off();
-		return STA_NOINIT;
 	}
+	return Stat;
+}
+#ifdef _USE_TFF
+/*-----------------------------------------------------------------------*/
+/* Receive a data packet from MMC                                        */
+/*-----------------------------------------------------------------------*/
+
+static
+int rcvr_datablock (	/* 1:OK, 0:Failed */
+	byte *buff,			/* Data buffer to store received data */
+	word btr			/* Byte count (must be multiple of 4) */
+)
+{
+	byte token, i;
+	word tmr = 1000, cnt = btr;
+
+	do {							/* Wait for data packet in timeout of 100ms */
+		for(i=0; i<100; i++);
+		token = SPI_read();
+	} while ((token == 0xFF) && tmr--);
+
+	if(token != 0xFE) return 1;		/* If not valid data token, retutn with error */
+
+	if(tmr) {
+		do
+			*buff++ = SPI_read();
+		while (--cnt);
+			/* Skip CRC */
+		SPI_read();SPI_read();
+	}
+	return 0;						/* Return with success */
 }
 
+static
+int xmit_datablock (	/* 1:OK, 0:Failed */
+	const byte *buff,	/* 512 byte data block to be transmitted */
+	byte token			/* Data token */
+)
+{
+	byte resp;
+	word bc = 512;
+
+	if (!wait_ready()) return 1;
+
+	SPI_write(token);		/* Xmit a token */
+	if (token != 0xFD) {	/* Not StopTran token */
+		do { /* Xmit the 512 byte data block to the MMC */
+			SPI_write(*buff++);
+			SPI_write(*buff++);
+		} while (bc -= 2);
+
+		SPI_write(0xFF);
+		SPI_write(0xFF);
+		resp = SPI_read();		/* xchg_spi(0xFF)Receive a data response */
+		if ((resp & 0x1F) == 0x05){	/* If not accepted, return with error */
+			for (bc = 5000; SPI_read() != 0xFF && bc; bc--) ;	/* Wait ready */
+			if(bc) return 0;
+		}
+	}
+	return 1;
+}
+
+/*-----------------------------------------------------------------------*/
+/* Read Sector                                                   */
+/*-----------------------------------------------------------------------*/
+
+DRESULT disk_read (
+	u8 *buff,		/* Pointer to the read buffer (NULL:Read bytes are forwarded to the stream) */
+	u32 lba,		/* Sector number (LBA) */
+	u8 count		/* Sector count (1..255) */
+)
+{
+	DRESULT res;
+	u8 rc;
+	u16 cnt = 512;
+	if (Stat & STA_NOINIT) return RES_NOTRDY;
+	if (!(CardType & CT_BLOCK)) lba *= 512;		/* Convert to byte address if needed */
+
+	res = RES_ERROR;
+	if (count == 1) {
+		SPI_read();SPI_read();select();SPI_read();SPI_read();
+		rc = send_cmd(CMD17, lba);
+
+		if((rc==0) && !rcvr_datablock(buff, cnt))
+			res = RES_OK;
+	}
+	else {				/* Multiple block read */
+		if (send_cmd(CMD18, lba) == 0) {	/* READ_MULTIPLE_BLOCK */
+			do {
+				if (rcvr_datablock(buff, 512)) break;
+				buff += 512;
+			} while (--count);
+			if (count == 0) res= RES_OK;
+			send_cmd(CMD12, 0);				/* STOP_TRANSMISSION */
+		}
+	}
+
+	release_spi();
+
+	return res;
+}
+
+/*-----------------------------------------------------------------------*/
+/* Write sector                                                  */
+/*-----------------------------------------------------------------------*/
+
+DRESULT disk_write (
+	const u8 *buff,	/* Pointer to the bytes to be written (NULL:Initiate/Finalize sector write) */
+	u32 sa,			/* Number of bytes to send, Sector number (LBA) or zero */
+	u8 count				/* Sector count (1..255) */
+)
+{
+	DRESULT res;
+	static u16 wc;
+	if (Stat & STA_NOINIT) return RES_NOTRDY;
+	if (Stat & STA_PROTECT) return RES_WRPRT;
+
+	if (!(CardType & CT_BLOCK)) sa *= 512;	/* Convert to byte address if needed */
+	res = RES_ERROR;
+	if (count == 1) {		/* Single block write */
+		if ( (send_cmd(CMD24, sa) == 0)	/* WRITE_BLOCK */
+			&& !xmit_datablock(buff,0xFE))
+			res = RES_OK;
+	}
+	else {				/* Multiple block write */
+		if (CardType & CT_SDC) send_cmd(ACMD23, count);
+		if (send_cmd(CMD25, sa) == 0) {	/* WRITE_MULTIPLE_BLOCK */
+			do {
+				if (xmit_datablock(buff, 0xFC)) break;
+				buff += 512;
+			} while (--count);
+			if (!xmit_datablock(0, 0xFD) && (count==0))	/* STOP_TRAN token */
+				res = RES_OK;
+		}
+	}
+    deselect();
+	return res;
+}
+/*-----------------------------------------------------------------------*/
+/* Miscellaneous Functions                                               */
+/*-----------------------------------------------------------------------*/
+
+#if _USE_IOCTL
+DRESULT disk_ioctl (
+	byte cmd,		/* Control code */
+	void *buff		/* Buffer to send/receive data block */
+)
+{
+	DRESULT res;
+	byte n, csd[16], *ptr = buff;
+	dword csz;
+
+	if (Stat & STA_NOINIT) return RES_NOTRDY;
+
+	res = RES_ERROR;
+	switch (cmd) {
+	case CTRL_SYNC :	/* Flush write-back cache, Wait for end of internal process */
+		if (select()) res = RES_OK;
+		break;
+
+	case GET_SECTOR_COUNT :	/* Get number of sectors on the disk (word) */
+		if ((send_cmd(CMD9, 0) == 0) && !rcvr_datablock(csd, 16)) {
+			if ((csd[0] >> 6) == 1) {	/* SDv2? */
+				csz = csd[9] + ((word)csd[8] << 8) + ((dword)(csd[7] & 63) << 16) + 1;
+				*(dword*)buff = csz << 10;
+			} else {					/* SDv1 or MMCv3 */
+				n = (csd[5] & 15) + ((csd[10] & 128) >> 7) + ((csd[9] & 3) << 1) + 2;
+				csz = (csd[8] >> 6) + ((word)csd[7] << 2) + ((word)(csd[6] & 3) << 10) + 1;
+				*(dword*)buff = csz << (n - 9);
+			}
+			res = RES_OK;
+		}
+		break;
+
+	case GET_BLOCK_SIZE :	/* Get erase block size in unit of sectors (dword) */
+		if (CardType & CT_SD2) {	/* SDv2? */
+			if (send_cmd(ACMD13, 0) == 0) {		/* Read SD status */
+				SPI_write(0xFF);
+				if (!rcvr_datablock(csd, 16)) {				/* Read partial block */
+					for (n = 64 - 16; n; n--) SPI_write(0xFF);	/* Purge trailing data */
+					*(dword*)buff = 16UL << (csd[10] >> 4);
+					res = RES_OK;
+				}
+			}
+		} else {					/* SDv1 or MMCv3 */
+			if ((send_cmd(CMD9, 0) == 0) && !rcvr_datablock(csd, 16)) {	/* Read CSD */
+				if (CardType & CT_SD1) {	/* SDv1 */
+					*(dword*)buff = (((csd[10] & 63) << 1) + ((word)(csd[11] & 128) >> 7) + 1) << ((csd[13] >> 6) - 1);
+				} else {					/* MMCv3 */
+					*(dword*)buff = ((word)((csd[10] & 124) >> 2) + 1) * (((csd[11] & 3) << 3) + ((csd[11] & 224) >> 5) + 1);
+				}
+				res = RES_OK;
+			}
+		}
+		break;
+
+	case MMC_GET_TYPE :		/* Get card type flags (1 byte) */
+		*ptr = CardType;
+		res = RES_OK;
+		break;
+
+	case MMC_GET_CSD :	/* Receive CSD as a data block (16 bytes) */
+		if ((send_cmd(CMD9, 0) == 0)	/* READ_CSD */
+			&& !rcvr_datablock(buff, 16))
+			res = RES_OK;
+		break;
+
+	case MMC_GET_CID :	/* Receive CID as a data block (16 bytes) */
+		if ((send_cmd(CMD10, 0) == 0)	/* READ_CID */
+			&& !rcvr_datablock(buff, 16))
+			res = RES_OK;
+		break;
+
+	case MMC_GET_OCR :	/* Receive OCR as an R3 resp (4 bytes) */
+		if (send_cmd(CMD58, 0) == 0) {	/* READ_OCR */
+			for (n = 0; n < 4; n++)
+				*((byte*)buff+n) = SPI_read();
+			res = RES_OK;
+		}
+		break;
+
+	case MMC_GET_SDSTAT :	/* Receive SD statsu as a data block (64 bytes) */
+		if ((CardType & CT_SD2) && send_cmd(ACMD13, 0) == 0) {	/* SD_STATUS */
+			SPI_write(0xFF);
+			if (!rcvr_datablock(buff, 64))
+				res = RES_OK;
+		}
+		break;
+
+	default:
+		res = RES_PARERR;
+	}
+
+	deselect();
+
+	return res;
+}
+#endif
+#endif //_USE_TFF
+#ifdef _USE_PFF
 /*-----------------------------------------------------------------------*/
 /* Read Partial Sector                                                   */
 /*-----------------------------------------------------------------------*/
@@ -224,21 +495,19 @@ DRESULT disk_readp (
 )
 {
 	DRESULT res;
-	u8 rc;
+	u8 rc, tmr = 200;
 	u16 bc;
 
 	if (!(CardType & CT_BLOCK)) lba *= 512;		/* Convert to byte address if needed */
 
 	res = RES_ERROR;
 	if (send_cmd(CMD17, lba) == 0) {		/* READ_SINGLE_BLOCK */
-		Tim1 = 200;
 		do							/* Wait for data packet in timeout of 200ms */
 			rc = SPI_read();
-//			Tim1 = decreasetim(Tim1);
-		while (rc == 0xFF && (Tim1--));
+		while (rc == 0xFF && (tmr--));
 	}
 
-	if(Tim1) {
+	if(tmr) {
 		if (rc == 0xFE) {				/* A data packet arrived */
 			bc = 514 - ofs - cnt;
 
@@ -309,14 +578,7 @@ DRESULT disk_writep (
 
 	return res;
 }
-
-u16 decreasetim(u16 Tim)
-{ u16 i;
-  for (i=0; i<1; i++);
-  if (Tim) Tim--;
-  return Tim;
-}
-
+#endif
 /********************************************************************
  * Function:        void PrintSectorData( BYTE* data )
  *

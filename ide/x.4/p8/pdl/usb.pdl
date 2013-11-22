@@ -13,6 +13,10 @@ BULK.available BULK_available#include <__bulk.c>
 BULK.gets BULKgets#include <__bulk.c>
 BULK.puts BULKputs#include <__bulk.c>
 
-USB.read usbgets#include <usb.c>
-USB.send usbputs#include <usb.c>
-USB.available usbavailable#include <usb.c>
+USB.read BULK_read#include <__bulk.c>
+USB.write BULK_write#include <__bulk.c>
+USB.send BULK_write#include <__bulk.c>
+USB.printf BULK_printf#include <__bulk.c>
+USB.available BULK_available#include <__bulk.c>
+USB.gets BULKgets#include <__bulk.c>
+USB.puts BULKputs#include <__bulk.c>

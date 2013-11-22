@@ -72,6 +72,7 @@
 	@param		inter:		interrupt number
 	--------------------------------------------------------------------------*/
 
+#if defined(INTENABLE) || defined(INTDISABLE)
 void IntSetEnable(u8 inter, u8 enable)
 {
     if (enable == INT_DISABLE)
@@ -91,9 +92,11 @@ void IntSetEnable(u8 inter, u8 enable)
 			INTCON3bits.INT2IE = enable;
 			break;
 		case INT_TMR0:
+            #error "INT_TMR0"
 			INTCONbits.TMR0IE = enable;
 			break;
 		case INT_TMR1:
+            #error "INT_TMR1"
 			PIE1bits.TMR1IE = enable;
 			break;
 		case INT_TMR2:
@@ -186,18 +189,23 @@ void IntSetEnable(u8 inter, u8 enable)
 		#endif
 	}
 }
+#endif /* defined(INTENABLE) || defined(INTDISABLE) */
 
+#if defined(INTDISABLE)
 void IntDisable(u8 inter)
 {
     IntSetEnable(inter, INT_DISABLE);
 }
+#endif /* defined(INTDISABLE) */
 
+#if defined(INTENABLE)
 void IntEnable(u8 inter)
 {
     IntSetEnable(inter, INT_ENABLE);
     INTCONbits.GIEH = 1;   // Enable global HP interrupts
     INTCONbits.GIEL = 1;   // Enable global LP interrupts
 }
+#endif /* defined(INTENABLE) */
 
 /*	----------------------------------------------------------------------------
 	---------- IntClearFlag
@@ -207,6 +215,7 @@ void IntEnable(u8 inter)
 	@param		inter:		interrupt number
 	--------------------------------------------------------------------------*/
 
+#if defined(INTCLEARFLAG)
 void IntClearFlag(u8 inter)
 {
 	switch(inter)
@@ -316,6 +325,7 @@ void IntClearFlag(u8 inter)
 		#endif
 	}
 }
+#endif /* defined(INTCLEARFLAG) */
 
 /*	----------------------------------------------------------------------------
 	---------- IntIsFlagSet
@@ -326,6 +336,7 @@ void IntClearFlag(u8 inter)
     @return     1 if set, 0 if not set
 	--------------------------------------------------------------------------*/
 
+#if defined(INTISFLAGSET)
 u8 IntIsFlagSet(u8 inter)
 {
 	switch(inter)
@@ -397,6 +408,7 @@ u8 IntIsFlagSet(u8 inter)
 	}
     return 0;
 }
+#endif /* defined(INTISFLAGSET) */
 
 /*	----------------------------------------------------------------------------
 	---------- int_init
@@ -404,12 +416,13 @@ u8 IntIsFlagSet(u8 inter)
 	@author		Régis Blanchot <rblanchot@gmail.com>
 	@descr		Disable all the interrupt
 	--------------------------------------------------------------------------*/
-
+/*
 void IntInit()
 {
 	u8 i;
 
-	RCONbits.IPEN = 1;					// Enable HP/LP interrupts
+    //RB : Should have been already defined in main.c
+	//RCONbits.IPEN = 1;					// Enable HP/LP interrupts
 
     INTCONbits.GIEH = 0;                // Disable global HP interrupts
     INTCONbits.GIEL = 0;                // Disable global LP interrupts
@@ -420,7 +433,7 @@ void IntInit()
 	INTCONbits.GIEH = 1;				// Enable HP interrupts
 	INTCONbits.GIEL = 1;				// Enable LP interrupts
 }
-
+*/
 /*	----------------------------------------------------------------------------
 	---------- int_start
 	----------------------------------------------------------------------------

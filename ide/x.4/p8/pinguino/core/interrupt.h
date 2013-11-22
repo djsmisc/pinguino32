@@ -4,7 +4,10 @@
 	PURPOSE:		interrupt routines
 	PROGRAMER:		regis blanchot <rblanchot@gmail.com>
 	FIRST RELEASE:	08-06-2012
-	LAST RELEASE:	11-06-2012
+	LAST RELEASE:	09-11-2013
+	----------------------------------------------------------------------------
+	CHANGELOG :
+    * 09-11-2013    régis blanchot  added PIC18FxxJ53 support
 	----------------------------------------------------------------------------
 	TODO :
 	----------------------------------------------------------------------------
@@ -40,58 +43,70 @@
 	#define INT_MILLISEC		2
 	#define INT_SEC				3
 
-	/// Interrupts list
+	/// Interrupts list (these #define can be used in Pinguino's Code Source)
 
 	#define INT_TMR0			0
 	#define INT_TMR1			1
 	#define INT_TMR2			2
 	#define INT_TMR3			3
-	#define INT_TMR4			4
+	#define INT_TMR4			4       // x6j50 and xxj53 only
+	#define INT_TMR5			5       // xxj53 only
+	#define INT_TMR6			6       // xxj53 only
+    // INT_TMR7 doesn't exist
+	#define INT_TMR8			8       // xxj53 only
 
-	#define INT_INTEDG0			5
-	#define INT_INTEDG1			6
-	#define INT_INTEDG2			7
-	#define INT_INTEDG3			8
+	#define INT_INTEDG0			8
+	#define INT_INTEDG1			9
+	#define INT_INTEDG2			10
+	#define INT_INTEDG3			11
 
-	#define INT_INT0			9
-	#define INT_INT1			10
-	#define INT_INT2			11
-	#define INT_INT3			12
+	#define INT_INT0			12
+	#define INT_INT1			13
+	#define INT_INT2			14
+	#define INT_INT3			15
 
-	#define INT_RB				13
+	#define INT_RB				16
 
 	#define INT_CCP1			14
 	#define INT_CCP2			15
+    // INT_CCP3 doesn't exist
+	#define INT_CCP4			16
+	#define INT_CCP5			17
+	#define INT_CCP6			18
+	#define INT_CCP7			19
+	#define INT_CCP8			20
+	#define INT_CCP9			21
+	#define INT_CCP10			22
+    
+	#define INT_CM				23
+	#define INT_CM1				23
+	#define INT_CM2				24
 
-	#define INT_CM				16
-	#define INT_CM1				16
-	#define INT_CM2				17
+	#define INT_RC				25
+	#define INT_TX				26
+	#define INT_RC1				25      // xxj53 only
+	#define INT_TX1				26      // xxj53 only
+	#define INT_RC2				27      // xxj53 only
+	#define INT_TX2				28      // xxj53 only
 
-	#define INT_RC				18
-	#define INT_TX				19
-	#define INT_RC1				18
-	#define INT_TX1				19
-	#define INT_RC2				20
-	#define INT_TX2				21
+	#define INT_AD				29
+	#define INT_OSCF			30
+	#define INT_EE				31
+	#define INT_HLVD			32
 
-	#define INT_AD				22
-	#define INT_OSCF			23
-	#define INT_EE				24
-	#define INT_HLVD			25
+	#define INT_BCL				33
+	#define INT_BCL1			33
+	#define INT_BCL2			34
 
-	#define INT_BCL				26
-	#define INT_BCL1			26
-	#define INT_BCL2			27
+	#define INT_USB				35
 
-	#define INT_USB				28
+	#define INT_SSP				36
+	#define INT_SSP1			36
+	#define INT_SSP2			37
 
-	#define INT_SSP				29
-	#define INT_SSP1			29
-	#define INT_SSP2			30
-
-    #define INT_CTMU            31
-    #define INT_RTCC            32
-	#define INT_NUM				33
+    #define INT_CTMU            38      // x6j50 and xxj53 only
+    #define INT_RTCC            39      // x6j50 and xxj53 only
+	#define INT_NUM				40
 
 	///
 	/// CCPxCON: STANDARD CCPx CONTROL REGISTER
@@ -268,7 +283,9 @@
 	#define T3_ON				(1<<0)      // 1 = Enables Timer3
 	#define T3_OFF				(0)         // 0 = Stops Timer3
     
-    #elif defined(__18f26j50) || defined(__18f46j50)
+    #elif defined(__18f26j50) || defined(__18f46j50) ||
+          defined(__18f26j53) || defined(__18f46j53) ||
+          defined(__18f27j53) || defined(__18f47j53)
 
     // bit 7-6 TMR3CS<1:0>: Timer1 Clock Source Select bits
     #define T3_SOURCE_EXT       (0b10<<6)   // Timer3 clock source is the T1OSC or T1CKI pin
@@ -299,7 +316,9 @@
 
     #endif
 
-    #if defined(__18f26j50) || defined(__18f46j50)
+    #if defined(__18f26j50) || defined(__18f46j50) ||
+        defined(__18f26j53) || defined(__18f46j53) ||
+        defined(__18f27j53) || defined(__18f47j53)
 
     // bit 6-3  T4OUTPS<3:0>: Timer4 Output Postscale Select bits
 	#define T4_POST_1_1			(0<<3) // 1:1 Postscale
@@ -328,4 +347,86 @@
 
     #endif
 
+    #if defined(__18f26j53) || defined(__18f46j53) ||
+        defined(__18f27j53) || defined(__18f47j53)
+
+    // bit 7-6 TMR5CS<1:0>: Timer5 Clock Source Select bits
+    #define T5_SOURCE_EXT       (0b10<<6)   // Timer5 clock source is the T1OSC or T1CKI pin
+    #define T5_RUN_FROM_OSC     (0b01<<6)   // Timer5 clock source is the system clock (FOSC)(1)
+    #define T5_SOURCE_INT       (0b00<<6)   // Timer5 clock source is the instruction clock (FOSC/4)
+	// bit 5-4 T5CKPS1:T5CKPS0: Timer5 Input Clock Prescale Select bits
+	#define T5_PS_1_8			(0b11<<4)   // 1:8 Prescale value
+	#define T5_PS_1_4			(0b10<<4)   // 1:4 Prescale value
+	#define T5_PS_1_2			(0b01<<4)   // 1:2 Prescale value
+	#define T5_PS_1_1			(0b00<<4)   // 1:1 Prescale value
+    // bit 3 T5OSCEN: Timer5 Oscillator Source Select bit
+    // When TMR5CS<1:0> = T5_SOURCE_EXT:
+    #define T5_SOURCE_T1OSC     (1<<3)      // Power up the Timer1 crystal driver (T1OSC) and supply the Timer3 clock from the crystal output
+    #define T5_SOURCE_T3OSC     (0)         // Timer1 crystal driver is off, Timer3 clock is from the T3CKI digital input pin assigned in PPS module(2)
+    // When TMR5CS<1:0> = T5_RUN_FROM_OSC or T5_SOURCE_INT:
+    //#define T5_SOURCE_T1OSC   (1<<3)      // Power up the Timer1 crystal driver (T1OSC)
+    #define T5_SOURCE_T1OFF     (0)         // Timer1 crystal driver is off(2)
+	// bit 2 T5SYNC: Timer5 External Clock Input Synchronization Control bit
+	// When TMR5CS = T5_SOURCE_EXT:
+	#define T5_NOT_SYNC			(1<<2)      // 1 = Do not synchronize external clock input
+	#define T5_SYNC				(0)         // 0 = Synchronize external clock input
+	// bit 1 RD16: 16-Bit Read/Write Mode Enable bit
+	#define T5_16BIT			(1<<1)      // 16-bit mode
+	#define T5_8BIT				(0)         // 8-bit mode
+	// bit 0 TMR5ON: Timer5 On bit
+	#define T5_ON				(1<<0)      // 1 = Enables Timer3
+	#define T5_OFF				(0)         // 0 = Stops Timer3
+
+    // bit 6-3  T6OUTPS<3:0>: Timer6 Output Postscale Select bits
+	#define T6_POST_1_1			(0<<3) // 1:1 Postscale
+	#define T6_POST_1_2			(1<<3) // 1:2 Postscale
+	#define T6_POST_1_3			(2<<3) // 1:3 Postscale
+	#define T6_POST_1_4			(3<<3) // 1:4 Postscale
+	#define T6_POST_1_5			(4<<3) // 1:5 Postscale
+	#define T6_POST_1_6			(5<<3) // 1:6 Postscale
+	#define T6_POST_1_7			(6<<3) // 1:7 Postscale
+	#define T6_POST_1_8			(7<<3) // 1:8 Postscale
+	#define T6_POST_1_9			(8<<3) // 1:9 Postscale
+	#define T6_POST_1_10		(9<<3) // 1:10 Postscale
+	#define T6_POST_1_11		(10<<3) // 1:11 Postscale
+	#define T6_POST_1_12		(11<<3) // 1:12 Postscale
+	#define T6_POST_1_13		(12<<3) // 1:13 Postscale
+	#define T6_POST_1_14		(13<<3) // 1:14 Postscale
+	#define T6_POST_1_15		(14<<3) // 1:15 Postscale
+	#define T6_POST_1_16		(15<<3) // 1:16 Postscale
+    // bit 2    TMR6ON: Timer6 On bit
+	#define T6_ON				(1<<2)  // Timer6 is on
+	#define T6_OFF				(0)     // Timer6 is off
+    // bit 1-0  T6CKPS<1:0>: Timer6 Clock Prescale Select bits
+	#define T6_PS_1_1			0b00 // Prescaler is 1
+	#define T6_PS_1_4			0b01 // Prescaler is 4
+	#define T6_PS_1_16			0b11 // Prescaler is 16
+
+    // bit 6-3  T8OUTPS<3:0>: Timer8 Output Postscale Select bits
+	#define T8_POST_1_1			(0<<3) // 1:1 Postscale
+	#define T8_POST_1_2			(1<<3) // 1:2 Postscale
+	#define T8_POST_1_3			(2<<3) // 1:3 Postscale
+	#define T8_POST_1_4			(3<<3) // 1:4 Postscale
+	#define T8_POST_1_5			(4<<3) // 1:5 Postscale
+	#define T8_POST_1_6			(5<<3) // 1:6 Postscale
+	#define T8_POST_1_7			(6<<3) // 1:7 Postscale
+	#define T8_POST_1_8			(7<<3) // 1:8 Postscale
+	#define T8_POST_1_9			(8<<3) // 1:9 Postscale
+	#define T8_POST_1_10		(9<<3) // 1:10 Postscale
+	#define T8_POST_1_11		(10<<3) // 1:11 Postscale
+	#define T8_POST_1_12		(11<<3) // 1:12 Postscale
+	#define T8_POST_1_13		(12<<3) // 1:13 Postscale
+	#define T8_POST_1_14		(13<<3) // 1:14 Postscale
+	#define T8_POST_1_15		(14<<3) // 1:15 Postscale
+	#define T8_POST_1_16		(15<<3) // 1:16 Postscale
+    // bit 2    TMR84ON: Timer8 On bit
+	#define T8_ON				(1<<2)  // Timer8 is on
+	#define T8_OFF				(0)     // Timer8 is off
+    // bit 1-0  T8CKPS<1:0>: Timer8 Clock Prescale Select bits
+	#define T8_PS_1_1			0b00 // Prescaler is 1
+	#define T8_PS_1_4			0b01 // Prescaler is 4
+	#define T8_PS_1_16		    0b11 // Prescaler is 16
+
+    #endif
+    
 #endif /* __INTERRUPT_H */
