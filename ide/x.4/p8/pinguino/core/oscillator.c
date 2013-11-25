@@ -169,7 +169,7 @@ u32 System_getCpuFrequency()
             
             if (OSCCON2bits.PLLEN)
             {
-                return 64000000L;
+                return 48000000L;
             } 
 			else
             {

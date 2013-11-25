@@ -234,6 +234,18 @@
         #define USERLED     18
         #define CCP1        12
         #define CCP2        11
+
+        #if defined(CHRP3)
+            #define LED11   0 // ???
+            #define LED10   0
+            #define LED9    1
+            #define LED8    2
+            #define LED7    3
+            #define LED6    4
+            #define LED5    5
+            #define LED4    6
+            #define LED3    7
+        #endif
         
     #elif defined(PINGUINO4550) || defined(PINGUINO45K50) || defined(PINGUINO4455)
     
