@@ -946,9 +946,9 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
         return INT_USED;
     }
 }
+#endif /* TMR4INT */
 #else
 #error "Your processor don't have any Timer4."
-#endif /* TMR4INT */
 #endif /* defined(__18f26j50) || defined(__18f46j50) ... */
 
 /*	----------------------------------------------------------------------------
