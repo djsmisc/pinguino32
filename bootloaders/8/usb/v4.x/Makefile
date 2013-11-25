@@ -76,7 +76,7 @@ endif
 
 # bootloader version (cf. changelog.txt)
 MAJ_VER		= 4
-MIN_VER		= 13
+MIN_VER		= 14
 
 # Microchip Vendor ID / Pinguino Product ID (Microchip sublicense)
 VID			= 0x04D8
@@ -129,6 +129,7 @@ CFLAGS		= -V \
 			  -D CRYSTAL=$(CRYSTAL) \
 			  -D MAJOR_VERSION=$(MAJ_VER) \
 			  -D MINOR_VERSION=$(MIN_VER)
+#			  --pstack-model=large \
 
 # Assembler flags
 # -w[0|1|2] : set message level
@@ -138,6 +139,7 @@ AFLAGS		= -Wa,"-w0"
 # -m : output a map file
 # -w : disable "processor mismatch" warning
 # -s : we use our own linker script and startup code (work)
+# -u : add macro value for script.
 # --no-crt : do not link the default run-time modules
 
 LDFLAGS		= -Wl-uENTRY=$(ENTRY),-slkr/boot4.$(CPU).lkr \

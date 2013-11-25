@@ -55,7 +55,7 @@ if (len(sys.argv) > 1):
             codesize = codesize + byte_count
 
             # address calculation
-            if (address > old_address) and (address < 0x20000):
+            if (address > old_address) and (address < 0x0C00):
                 max_address = address + byte_count
                 old_address = address
 

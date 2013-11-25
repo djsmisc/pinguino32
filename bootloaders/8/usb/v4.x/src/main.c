@@ -66,7 +66,8 @@ void disable_boot(void) //__naked
 
 void main(void)
 {
-    #if defined(__18f26j50) || defined(__18f46j50) || \
+    #if defined(__18f25k50) || defined(__18f45k50) || \
+        defined(__18f26j50) || defined(__18f46j50) || \
         defined(__18f26j53) || defined(__18f46j53) || \
         defined(__18f27j53) || defined(__18f47j53)
 
@@ -76,23 +77,6 @@ void main(void)
     
     dword usb_counter = 0;
     
-    // If power-on reset, jump to user application
-    // -----------------------------------------------------------------
-
-    if (RCONbits.NOT_POR == 0)
-    {
-        RCON |= 0b10110011;     // reset all reset flag
-        __asm
-        goto ENTRY
-        __endasm;
-    }
-    
-    // If MCLR reset, jump to bootloader
-    // -----------------------------------------------------------------
-
-    if (RCONbits.IPEN == 0)
-    {
-
     // Init. oscillator and I/O
     // -----------------------------------------------------------------
 
@@ -120,6 +104,11 @@ void main(void)
 
         #endif
 
+        OSCCON2bits.PLLEN = 1;      // Enable the PLL
+
+        while (pll_counter--);      // Wait > 2ms until the PLL locks.
+                                    // Must be done before enabling USB module
+
         ANSELA = 0;                 // all I/O to Digital mode
         ANSELB = 0;                 // all I/O to Digital mode
         ANSELC = 0;                 // all I/O to Digital mode
@@ -132,8 +121,28 @@ void main(void)
         #endif
         
 /**********************************************************************/
-    #elif defined(__18f26j50) || defined(__18f46j50) || \
-          defined(__18f26j53) || defined(__18f46j53) || \
+    #elif defined(__18f26j50) || defined(__18f46j50)
+/**********************************************************************/
+
+        #if (CRYSTAL == INTOSC)
+
+        OSCCON = 0x70;              // 0b01110000 : 111 = INTOSC (8 MHz)
+                                    // enable the 8 MHz internal clock
+                                    // Primary clock source (INTOSC or HSPLL)
+                                    // is defined by FOSC<2:0> (cf. config.h)
+
+        #endif
+        
+        OSCTUNEbits.PLLEN = 1;      // Enable the PLL
+
+        while (pll_counter--);      // Wait > 2ms until the PLL locks.
+                                    // Must be done before enabling USB module
+
+        ANCON0 = 0xFF;              // AN0 to AN7  are Digital I/O
+        ANCON1 = 0x1F;              // AN8 to AN12 are Digital I/O
+
+/**********************************************************************/
+    #elif defined(__18f26j53) || defined(__18f46j53) || \
           defined(__18f27j53) || defined(__18f47j53)
 /**********************************************************************/
 
@@ -146,13 +155,12 @@ void main(void)
 
         while(!OSCCONbits.FLTS);    // wait INTOSC frequency is stable (FLTS=1) 
 
-        #else
+        #endif
         
         OSCTUNEbits.PLLEN = 1;      // Enable the PLL
 
         while (pll_counter--);      // Wait > 2ms until the PLL locks.
                                     // Must be done before enabling USB module
-        #endif
 
         ANCON0 = 0xFF;              // AN0 to AN7  are Digital I/O
         ANCON1 = 0x1F;              // AN8 to AN12 are Digital I/O
@@ -163,12 +171,30 @@ void main(void)
 
             #error "    --------------------------    "
             #error "    PIC NO YET SUPPORTED !        "
-            #error "    Please contact developers.    "
+            #error "    Please contact developer.     "
+            #error "    <rblanchot@gmail.com>         "
             #error "    --------------------------    "
 
 /**********************************************************************/
         #endif
 /**********************************************************************/
+
+    // If power-on reset, jump to user application
+    // -----------------------------------------------------------------
+
+    if (RCONbits.NOT_POR == 0)
+    {
+        RCON |= 0b10010011;     // reset all reset flag
+        __asm
+        goto ENTRY
+        __endasm;
+    }
+    
+    // If MCLR reset, jump to bootloader
+    // -----------------------------------------------------------------
+
+    if (RCONbits.IPEN == 0)
+    {
 
     // Init. interrupt : no jump to interrupt vectors
     // -----------------------------------------------------------------
@@ -176,8 +202,8 @@ void main(void)
         RCONbits.IPEN   = 1;        // enables priority levels on
                                     // interrupts (cf. vectors.h)
                                     // MUST BE SET OR INTERRUPT WILL NOT WORK !!!
-        INTCONbits.GIEH = 0;        // Disable global HP interrupts
-        INTCONbits.GIEL = 0;        // Disable global LP interrupts
+        //INTCONbits.GIEH = 0;        // Disable global HP interrupts
+        //INTCONbits.GIEL = 0;        // Disable global LP interrupts
 
     // Init. timer1 to overroll after 65536*8*83ns = 43.5 ms
     // -----------------------------------------------------------------
@@ -191,8 +217,8 @@ void main(void)
      * bit 0   TMR1ON  = 1 , enables Timer 1
      */
 
-        PIE1bits.TMR1IE = 0;        // TMR1 Interrupt is disabled
-        IPR1bits.TMR1IP = 0;        // TMR1 Interrupt gets LP
+        //PIE1bits.TMR1IE = 0;        // TMR1 Interrupt is disabled
+        //IPR1bits.TMR1IP = 0;        // TMR1 Interrupt gets LP
         TMR1L = 0;                  // clear Timer 1 counter because
         TMR1H = 0;                  // counter get an unknown value at reset
         T1CON = 0b00110001;         // clock source is Fosc/4 (0b00)
@@ -229,7 +255,7 @@ void main(void)
         #endif
 
         //EP_IN_BD(1).ADDR = PTR16(&bootCmd);
-        EP_IN_BD(1).ADDR = (unsigned long *)&bootCmd;
+        EP_IN_BD(1).ADDR = (unsigned long)&bootCmd;
         currentConfiguration = 0x00;
         deviceState = DETACHED;
 
