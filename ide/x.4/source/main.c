@@ -95,7 +95,8 @@
 #endif
 
 {
-    #if defined(__18f26j50) || defined(__18f46j50) || \
+    #if defined(__18f25k50) || defined(__18f45k50) || \
+        defined(__18f26j50) || defined(__18f46j50) || \
         defined(__18f26j53) || defined(__18f46j53) || \
         defined(__18f27j53) || defined(__18f47j53)
 
@@ -142,6 +143,10 @@
         if (OSCCONbits.SCS > 0x02)
             // wait HFINTOSC frequency is stable (HFIOFS=1) 
             while (!OSCCONbits.HFIOFS);
+
+        // Enable the PLL and wait 2+ms until the PLL locks
+        OSCCON2bits.PLLEN = 1;
+        while (pll_startup_counter--);
 
     #endif
 
@@ -210,10 +215,6 @@
     /// Various Init.
     /// ----------------------------------------------------------------
 
-    //#ifdef ON_EVENT
-    //IntInit();
-    //#endif
-
     #ifdef __USB__
     usb_init();
     #endif
@@ -256,7 +257,14 @@
         defined(TMR6INT) || defined(TMR8INT) 
 
     IntTimerStart();            // Enable all defined timers interrupts
+                                // at the same time
 
+    #endif
+
+    #ifdef ON_EVENT
+    //IntInit();
+    INTCONbits.GIEH = 1;   // Enable global HP interrupts
+    INTCONbits.GIEL = 1;   // Enable global LP interrupts
     #endif
 
     while (1)
