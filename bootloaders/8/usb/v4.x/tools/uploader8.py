@@ -5,7 +5,7 @@
      _____  _____ __   _  ______ _     _ _____ __   _  _____ 
     |_____]   |   | \  | |  ____ |     |   |   | \  | |     |
     |       __|__ |  \_| |_____| |_____| __|__ |  \_| |_____|
-                                                             
+
     Pinguino Stand-alone Uploader
 
     Author:          Regis Blanchot <rblanchot@gmail.com> 

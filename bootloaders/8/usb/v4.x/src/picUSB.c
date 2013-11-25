@@ -47,6 +47,7 @@ __code USB_Device_Descriptor device_descriptor =
 };
 
 // added on 11/10/13
+/*
 __code USB_Device_Qualifier_Descriptor device_qualifier_descriptor = 
 {
     sizeof(USB_Device_Qualifier_Descriptor),    // Size of this descriptor in bytes
@@ -59,6 +60,7 @@ __code USB_Device_Qualifier_Descriptor device_qualifier_descriptor =
     1,                                          // Number of possible configurations
     0                                           // Reserved
 };
+*/
 
 __code USB_Configuration_Descriptor configuration_descriptor =
 {
@@ -192,7 +194,7 @@ void InDataStage()
     EP_IN_BD(0).Stat.uc |= (byte)((bufferSize & 0x0300) >> 8);
     EP_IN_BD(0).Cnt = (byte)(bufferSize & 0xFF);
     //EP_IN_BD(0).ADDR = PTR16(&controlTransferBuffer);
-    EP_IN_BD(0).ADDR = (unsigned long *)&controlTransferBuffer;
+    EP_IN_BD(0).ADDR = (unsigned long)&controlTransferBuffer;
 
     // Update the number of bytes that still need to be sent.  Getting
     // all the data back to the host can take multiple transactions, so
@@ -216,7 +218,7 @@ void WaitForSetupStage()
     ctrlTransferStage = SETUP_STAGE;
     EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
     //EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
-    EP_OUT_BD(0).ADDR = (unsigned long *)&SetupPacket;
+    EP_OUT_BD(0).ADDR = (unsigned long)&SetupPacket;
     // Give to SIE, enable data toggle checks
     EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTSEN;
     EP_IN_BD(0).Stat.uc = 0x00;           // Give control to CPU
@@ -307,27 +309,19 @@ void ProcessUSBTransactions()
         UCONbits.SUSPND = 1;
 
         #if defined(__18f25k50) || defined(__18f45k50)
-        PIR3bits.USBIF = 0;
-        #else
-        PIR2bits.USBIF = 0;
-        #endif
 
-        #if defined(__18f25k50) || defined(__18f45k50)
-        INTCONbits.IOCIF = 0;
-        #else
-        INTCONbits.RBIF = 0;
-        #endif
+            PIR3bits.USBIF = 0;
+            INTCONbits.IOCIF = 0;
+            PIE3bits.USBIE = 1;
+            INTCONbits.IOCIE = 1;
 
-        #if defined(__18f25k50) || defined(__18f45k50)
-        PIE3bits.USBIE = 1;
         #else
-        PIE2bits.USBIE = 1;
-        #endif
 
-        #if defined(__18f25k50) || defined(__18f45k50)
-        INTCONbits.IOCIE = 1;
-        #else
-        INTCONbits.RBIE = 1;
+            PIR2bits.USBIF = 0;
+            INTCONbits.RBIF = 0;
+            PIE2bits.USBIE = 1;
+            INTCONbits.RBIE = 1;
+
         #endif
     }
 
@@ -456,6 +450,7 @@ void ProcessUSBTransactions()
                                 wCount = *outPtr;
                             }
 // added on 11/10/13
+/*
                             else if (SetupPacket.wValue1 == DEVICE_QUALIFIER_DESCRIPTOR)
                             {
                                 requestHandled = 1;
@@ -464,6 +459,7 @@ void ProcessUSBTransactions()
                                 outPtr = (byte *)&device_qualifier_descriptor;
                                 wCount = sizeof(USB_Device_Qualifier_Descriptor);
                             }
+*/
                         }
                     }
 
@@ -489,7 +485,7 @@ void ProcessUSBTransactions()
                         // for OUT
                         EP_OUT_BD(1).Cnt  = EP1_BUFFER_SIZE;
                         //EP_OUT_BD(1).ADDR = PTR16(&bootCmd);
-                        EP_OUT_BD(1).ADDR = (unsigned long *)&bootCmd;
+                        EP_OUT_BD(1).ADDR = (unsigned long)&bootCmd;
                         // set UOWN bit, SIE owns the buffer
                         EP_OUT_BD(1).Stat.uc = 0b10000000;
 
@@ -559,7 +555,7 @@ void ProcessUSBTransactions()
                         // If this service wasn't handled then stall endpoint 0
                         EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
                         //EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
-                        EP_OUT_BD(0).ADDR = (unsigned long *)&SetupPacket;
+                        EP_OUT_BD(0).ADDR = (unsigned long)&SetupPacket;
                         EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_BSTALL;
                         EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_BSTALL;
                     }
@@ -575,12 +571,12 @@ void ProcessUSBTransactions()
                         // Reset the out buffer descriptor for endpoint 0
                         EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
                         //EP_OUT_BD(0).ADDR = PTR16(&SetupPacket);
-                        EP_OUT_BD(0).ADDR = (unsigned long *)&SetupPacket;
+                        EP_OUT_BD(0).ADDR = (unsigned long)&SetupPacket;
                         EP_OUT_BD(0).Stat.uc = BDS_UOWN;
 
                         // Set the in buffer descriptor on endpoint 0 to send data
                         //EP_IN_BD(0).ADDR = PTR16(&controlTransferBuffer);
-                        EP_IN_BD(0).ADDR = (unsigned long *)&controlTransferBuffer;
+                        EP_IN_BD(0).ADDR = (unsigned long)&controlTransferBuffer;
                         // Give to SIE, DATA1 packet, enable data toggle checks
                         EP_IN_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
                     }
@@ -597,7 +593,7 @@ void ProcessUSBTransactions()
                         // Set the out buffer descriptor on endpoint 0 to receive data
                         EP_OUT_BD(0).Cnt = EP0_BUFFER_SIZE;
                         //EP_OUT_BD(0).ADDR = PTR16(&controlTransferBuffer);
-                        EP_OUT_BD(0).ADDR = (unsigned long *)&controlTransferBuffer;
+                        EP_OUT_BD(0).ADDR = (unsigned long)&controlTransferBuffer;
                         // Give to SIE, DATA1 packet, enable data toggle checks
                         EP_OUT_BD(0).Stat.uc = BDS_UOWN | BDS_DTS | BDS_DTSEN;
                     }

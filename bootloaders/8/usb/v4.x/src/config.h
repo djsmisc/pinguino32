@@ -1,4 +1,4 @@
-/*******************************************************************************
+/***********************************************************************
 	Title:	USB Pinguino Bootloader
 	File:	config.h
 	Descr.: configuration bits for supported PIC18F
@@ -6,9 +6,19 @@
 
 	This file is part of Pinguino (http://www.pinguino.cc)
 	Released under the LGPL license (http://www.gnu.org/licenses/lgpl.html)
-*******************************************************************************/
+***********************************************************************/
 
 #include <pic18fregs.h>
+
+/***********************************************************************
+While in Low-Voltage ICSP Programming (LVP) mode, the RB5 pin can no
+longer be used as a general purpose I/O pin and should be held low
+during normal operation.
+
+When using Low-Voltage ICSP Programming (LVP) and the pull-ups on PORTB
+are enabled, bit 5 in the TRISB register must be cleared to disable the
+pull-up on RB5 and ensure the proper operation of the device.
+***********************************************************************/
 
 /**********************************************************************/
 #if   defined(__18f13k50) || defined(__18f14k50)
@@ -77,6 +87,7 @@
         #if (LVP == 0)
             #pragma config LVP = OFF		// High Voltage Programming
         #else
+            // make certain that RB5/PGM is held low during entry into ICSP.
             #pragma config LVP = ON 		// Low Voltage Programming
         #endif
         #if defined(__18f4550)
@@ -234,6 +245,7 @@
     #if (LVP == 0)
         #pragma config LVP = OFF		// High Voltage Programming
     #else
+        // make certain that RB5/PGM is held low during entry into ICSP.
         #pragma config LVP = ON 		// Low Voltage Programming
     #endif
     #pragma config XINST = OFF          // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)

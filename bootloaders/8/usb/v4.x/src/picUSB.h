@@ -158,7 +158,7 @@ typedef union
     {
         BDStat Stat;                    /* Buffer Descriptor Status Register */
         unsigned char Cnt;              /* Number of bytes to send/sent/(that can be )received */
-        __data unsigned long *ADDR;     /* Pointer on 32-bit Buffer Address */
+        __data unsigned long *ADDR;      /* a 12-bit pointer in data RAM memory */
     };
 } BufferDescriptorTable;
 
@@ -345,6 +345,8 @@ extern byte *inPtr;         // Address of buffer to receive data from host
 extern unsigned int wCount; // Total # of bytes to move
 
 // USB Descriptors
+// __code : 21-bit code pointer in FLASH memory
+
 extern __code USB_Device_Descriptor device_descriptor;
 extern __code USB_Configuration_Descriptor configuration_descriptor;
 //#if (STRING == 1)
