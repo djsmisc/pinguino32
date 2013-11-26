@@ -171,10 +171,16 @@ const unsigned char port[19]={
 /**********************************************************************/
 
 const unsigned char mask[14]={
-                    _7,_6,_2,_3,_0,_2,_1,_1,_2,_3,_4,_5,_6,_7};
+                    _7,_0,_4,_0,_1,_2,_3,_4,        // 0 - 7
+                    _5,_6,_7,_0,_1,_2,              // 8 - 13
+                    _0,_1,_2,_3,_5,_0,_1,_2         // 14 - 21
+                    };
                     
 const unsigned char port[14]={
-                    1,1,0,0,3,1,1,3,3,3,3,3,3,3};
+                    pC, pC, pA, pB, pB, pB, pB, pB,
+                    pB, pB, pB, pC, pC, pC,
+                    pA, pA, pA, pA, pA, pE, pE, pE
+                    };
 
 #else
     #error "Processor Not Yet Supported. Please, Take Contact with Developpers."
