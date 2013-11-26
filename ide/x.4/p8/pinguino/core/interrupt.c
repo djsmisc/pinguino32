@@ -91,110 +91,222 @@ void IntSetEnable(u8 inter, u8 enable)
         
     switch(inter)
     {
+        #if defined(INT0INT)
         case INT_INT0:
             INTCONbits.INT0IE = enable;
             break;
+        #endif
+        
+        #if defined(INT1INT)
         case INT_INT1:
             INTCON3bits.INT1IE = enable;
             break;
+        #endif
+
+        #if defined(INT2INT)
         case INT_INT2:
             INTCON3bits.INT2IE = enable;
             break;
+        #endif
+
+        #if defined(TMR0INT)
         case INT_TMR0:
-            #error "INT_TMR0"
+            INTCON2bits.TMR0IP = INT_LOW_PRIORITY;
             INTCONbits.TMR0IE = enable;
             break;
+        #endif
+
+        #if defined(TMR1INT)
         case INT_TMR1:
-            #error "INT_TMR1"
+            IPR1bits.TMR1IP = INT_LOW_PRIORITY;
             PIE1bits.TMR1IE = enable;
             break;
+        #endif
+
+        #if defined(TMR2INT)
         case INT_TMR2:
+            IPR1bits.TMR2IP = INT_LOW_PRIORITY;
             PIE1bits.TMR2IE = enable;
             break;
+        #endif
+
+        #if defined(TMR3INT)
         case INT_TMR3:
+            IPR2bits.TMR3IP = INT_LOW_PRIORITY;
             PIE2bits.TMR3IE = enable;
             break;
-        #if defined(__18f26j50) || defined(__18f46j50)
-        case INT_TMR4:
-            PIE3bits.TMR4IE = enable;
-            break;
         #endif
-        case INT_RB:
-        #if defined(__18f25k50) || defined(__18f45k50)
-            INTCONbits.IOCIE = enable;
-        #else
-            INTCONbits.RBIE = enable;
+
+            
+        #if defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR4INT)
+            case INT_TMR4:
+                IPR3bits.TMR4IP = INT_LOW_PRIORITY;
+                PIE3bits.TMR4IE = enable;
+                break;
+            #endif
         #endif
-            break;
+
+        
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR5INT)
+            case INT_TMR5:
+                IPR5bits.TMR5IP = INT_LOW_PRIORITY;
+                PIE5bits.TMR5IE = enable;
+                break;
+            #endif
+        #endif
+        
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR6INT)
+            case INT_TMR6:
+                IPR5bits.TMR6IP = INT_LOW_PRIORITY;
+                PIE5bits.TMR6IE = enable;
+                break;
+            #endif
+        #endif
+        
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR8INT)
+            case INT_TMR8:
+                IPR5bits.TMR8IP = INT_LOW_PRIORITY;
+                PIE5bits.TMR8IE = enable;
+                break;
+            #endif
+        #endif
+
+        #if defined(RBINT)
+            case INT_RB:
+            #if defined(__18f25k50) || defined(__18f45k50)
+                INTCONbits.IOCIE = enable;
+            #else
+                INTCONbits.RBIE = enable;
+            #endif
+                break;
+        #endif
+            
         #if !defined(__18f1220) && !defined(__18f1320) && \
             !defined(__18f14k22) && !defined(__18lf14k22)
-        case INT_USB:
-        #if defined(__18f25k50) || defined(__18f45k50)
-            PIE3bits.USBIE = enable;
-        #else
-            PIE2bits.USBIE = enable;
+            #if defined(USBINT)
+                case INT_USB:
+                #if defined(__18f25k50) || defined(__18f45k50)
+                    PIE3bits.USBIE = enable;
+                #else
+                    PIE2bits.USBIE = enable;
+                #endif
+                    break;
+            #endif
         #endif
-            break;
-        #endif
+        
+        #if defined(ADINT)
         case INT_AD:
             PIE1bits.ADIE = enable;
             break;
+        #endif
+
+        #if defined(RCINT)
         case INT_RC:
             PIE1bits.RCIE = enable;
             break;
+        #endif
+
+        #if defined(TXINT)
         case INT_TX:
             PIE1bits.TXIE = enable;
             break;
+        #endif
+
+        #if defined(CCP1INT)
         case INT_CCP1:
             PIE1bits.CCP1IE = enable;
             break;
+        #endif
+            
         #if !defined(__18f1220) && !defined(__18f1320) && \
             !defined(__18f14k22) && !defined(__18lf14k22)
-        case INT_CCP2:
-            PIE2bits.CCP2IE = enable;
-            break;
+            #if defined(CCP2INT)
+            case INT_CCP2:
+                PIE2bits.CCP2IE = enable;
+                break;
+            #endif
         #endif
+
+        #if defined(OSCFINT)
         case INT_OSCF:
             PIE2bits.OSCFIE = enable;
             break;
-        case INT_CM:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            PIE2bits.CMIE = enable;
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            PIE2bits.CM1IE = enable;
+
+        #if defined(CMINT)
+            case INT_CM:
+            #if defined(__18f2455) || defined(__18f4455) || \
+                defined(__18f2550) || defined(__18f4550)
+                PIE2bits.CMIE = enable;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                PIE2bits.CM1IE = enable;
+            #endif
+                break;
         #endif
-            break;
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-        case INT_EE:
-            PIE2bits.EEIE = enable;
-            break;
+
+            
+        #if defined(__18f2455) || defined(__18f4455) || \
+            defined(__18f2550) || defined(__18f4550)
+            #if defined(EEINT)
+            case INT_EE:
+                PIE2bits.EEIE = enable;
+                break;
+            #endif
         #endif
-        case INT_BCL:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            PIE2bits.BCLIE = enable;
+        
+        #if defined(BCLINT)
+            case INT_BCL:
+                #if defined(__18f2455) || defined(__18f4455) || \
+                    defined(__18f2550) || defined(__18f4550)
+                PIE2bits.BCLIE = enable;
+                #elif defined(__18f26j50) || defined(__18f46j50) || \
+                      defined(__18f26j53) || defined(__18f46j53) || \
+                      defined(__18f27j53) || defined(__18f47j53)
+                PIE2bits.BCL1IE = enable;
+                #endif
+                break;
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            PIE2bits.BCL1IE = enable;
+            
+        #if defined(HLVDINT)
+            case INT_HLVD:
+                #if defined(__18f2455) || defined(__18f4455) || \
+                    defined(__18f2550) || defined(__18f4550)
+                PIE2bits.HLVDIE = enable;
+                #elif defined(__18f26j50) || defined(__18f46j50) || \
+                      defined(__18f26j53) || defined(__18f46j53) || \
+                      defined(__18f27j53) || defined(__18f47j53)
+                PIE2bits.LVDIE = enable;
+                #endif
+                break;
         #endif
-            break;
-        case INT_HLVD:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            PIE2bits.HLVDIE = enable;
+            
+        #if defined(SSPINT)
+            #if defined(__18f4550)
+            case INT_SSP:
+                PIE1bits.SSPIE = enable;
+                break;
+            #endif
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            PIE2bits.LVDIE = enable;
-        #endif
-            break;
-        #if defined(__18f4550)
-        case INT_SSP:
-            PIE1bits.SSPIE = enable;
-            break;
-        #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-        case INT_RTCC:
-            PIE3bits.RTCCIE = enable;
-            break;
+        
+        #if defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(RTCCINT)
+            case INT_RTCC:
+                PIE3bits.RTCCIE = enable;
+                break;
+            #endif
         #endif
     }
 }
@@ -248,108 +360,171 @@ void IntClearFlag(u8 inter)
 {
     switch(inter)
     {
-        case INT_INT0:
-            INTCONbits.INT0IF = 0;
-            break;
-        case INT_INT1:
-            INTCON3bits.INT1IF = 0;
-            break;
-        case INT_INT2:
-            INTCON3bits.INT2IF = 0;
-            break;
-        case INT_TMR0:
-            INTCONbits.TMR0IF = 0;
-            break;
-        case INT_TMR1:
-            PIR1bits.TMR1IF = 0;
-            break;
-        case INT_TMR2:
-            PIR1bits.TMR2IF = 0;
-            break;
-        case INT_TMR3:
-            PIR2bits.TMR3IF = 0;
-            break;
-        #if defined(__18f26j50) || defined(__18f46j50)
-        case INT_TMR4:
-            PIR3bits.TMR4IF = 0;
-            break;
+        #if defined(INT0INT)
+        case INT_INT0: INTCONbits.INT0IF = 0; break;
         #endif
-        case INT_RB:
-        #if defined(__18f25k50) || defined(__18f45k50)
-            INTCONbits.IOCIF = 0;
-        #else
-            INTCONbits.RBIF = 0;
+
+        #if defined(INT1INT)
+        case INT_INT1: INTCON3bits.INT1IF = 0; break;
         #endif
-            break;
+
+        #if defined(INT2INT)
+        case INT_INT2: INTCON3bits.INT2IF = 0; break;
+        #endif
+
+        #if defined(TMR0INT)
+        case INT_TMR0: INTCONbits.TMR0IF = 0; break;
+        #endif
+
+        #if defined(TMR1INT)
+        case INT_TMR1: PIR1bits.TMR1IF = 0; break;
+        #endif
+
+        #if defined(TMR2INT)
+        case INT_TMR2: PIR1bits.TMR2IF = 0; break;
+        #endif
+
+        #if defined(TMR3INT)
+        case INT_TMR3: PIR2bits.TMR3IF = 0; break;
+        #endif
+
+        #if defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR4INT)
+            case INT_TMR4: PIR3bits.TMR4IF = 0; break;
+            #endif
+        #endif
+
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR5INT)
+            case INT_TMR5: PIR5bits.TMR5IF = 0; break;
+            #endif
+        #endif
+
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR6INT)
+            case INT_TMR6: PIR5bits.TMR6IF = 0; break;
+            #endif
+        #endif
+
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR8INT)
+            case INT_TMR8: PIR5bits.TMR8IF = 0; break;
+            #endif
+        #endif
+
+        #if defined(RBINT)
+            case INT_RB:
+            #if defined(__18f25k50) || defined(__18f45k50)
+                INTCONbits.IOCIF = 0;
+            #else
+                INTCONbits.RBIF = 0;
+            #endif
+                break;
+        #endif
+        
         #if !defined(__18f1220) && !defined(__18f1320) && \
             !defined(__18f14k22) && !defined(__18lf14k22)
-        case INT_USB:
-        #if defined(__18f25k50) || defined(__18f45k50)
-            PIR3bits.USBIF = 0;
-        #else
-            PIR2bits.USBIF = 0;
+            #if defined(USBINT)
+                case INT_USB:
+                #if defined(__18f25k50) || defined(__18f45k50)
+                    PIR3bits.USBIF = 0;
+                #else
+                    PIR2bits.USBIF = 0;
+                #endif
+                    break;
+            #endif
         #endif
-            break;
+
+        #if defined(ADINT)
+        case INT_AD: PIR1bits.ADIF = 0; break;
         #endif
-        case INT_AD:
-            PIR1bits.ADIF = 0;
-            break;
-        case INT_RC:
-            PIR1bits.RCIF = 0;
-            break;
-        case INT_TX:
-            PIR1bits.TXIF = 0;
-            break;
-        case INT_CCP1:
-            PIR1bits.CCP1IF = 0;
-            break;
+
+        #if defined(RCINT)
+        case INT_RC: PIR1bits.RCIF = 0; break;
+        #endif
+
+        #if defined(TXINT)
+        case INT_TX: PIR1bits.TXIF = 0; break;
+        #endif
+
+        #if defined(CCP1INT)
+        case INT_CCP1: PIR1bits.CCP1IF = 0; break;
+        #endif
+
         #if !defined(__18f1220) && !defined(__18f1320) && \
             !defined(__18f14k22) && !defined(__18lf14k22)
-        case INT_CCP2:
-            PIR2bits.CCP2IF = 0;
-            break;
+            #if defined(CCP2INT)
+            case INT_CCP2: PIR2bits.CCP2IF = 0; break;
+            #endif
         #endif
-        case INT_OSCF:
-            PIR2bits.OSCFIF = 0;
-            break;
-        case INT_CM:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            PIR2bits.CMIF = 0;
+
+        #if defined(OSCFINT)
+        case INT_OSCF: PIR2bits.OSCFIF = 0; break;
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            PIR2bits.CM1IF = 0;
+
+        #if defined(CMINT)
+            case INT_CM:
+            #if defined(__18f2455) || defined(__18f4455) || \
+                defined(__18f2550) || defined(__18f4550)
+                PIR2bits.CMIF = 0;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                PIR2bits.CM1IF = 0;
+            #endif
+                break;
         #endif
-            break;
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-        case INT_EE:
-            PIR2bits.EEIF = 0;
-            break;
+        
+        #if defined(__18f2455) || defined(__18f4455) || \
+            defined(__18f2550) || defined(__18f4550)
+            #if defined(EEINT)
+            case INT_EE: PIR2bits.EEIF = 0; break;
+            #endif
         #endif
-        case INT_BCL:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            PIR2bits.BCLIF = 0;
+        
+        #if defined(BCLINT)
+            case INT_BCL:
+            #if defined(__18f2455) || defined(__18f4455) || \
+                defined(__18f2550) || defined(__18f4550)
+                PIR2bits.BCLIF = 0;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                PIR2bits.BCL1IF = 0;
+            #endif
+                break;
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            PIR2bits.BCL1IF = 0;
+
+        #if defined(HLVDINT)
+            case INT_HLVD:
+            #if defined(__18f2455) || defined(__18f4455) || \
+                defined(__18f2550) || defined(__18f4550)
+                PIR2bits.HLVDIF = 0;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                PIR2bits.LVDIF = 0;
+            #endif
+                break;
         #endif
-            break;
-        case INT_HLVD:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            PIR2bits.HLVDIF = 0;
+        
+        #if defined(SSPINT)
+            #if defined(__18f4550)
+            case INT_SSP: PIR1bits.SSPIF = 0; break;
+            #endif
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            PIR2bits.LVDIF = 0;
-        #endif
-            break;
-        #if defined(__18f4550)
-        case INT_SSP:
-            PIR1bits.SSPIF = 0;
-            break;
-        #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-        case INT_RTCC:
-            PIR3bits.RTCCIF = 0;
-            break;
+        
+        #if defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(RTCCINT)
+            case INT_RTCC: PIR3bits.RTCCIF = 0; break;
+            #endif
         #endif
     }
 }
@@ -369,69 +544,168 @@ u8 IntIsFlagSet(u8 inter)
 {
     switch(inter)
     {
+        #if defined(INT0INT)
         case INT_INT0:  return INTCONbits.INT0IF;
+        #endif
+        
+        #if defined(INT1INT)
         case INT_INT1:	return INTCON3bits.INT1IF;
+        #endif
+        
+        #if defined(INT2INT)
         case INT_INT2:	return INTCON3bits.INT2IF;
+        #endif
+        
+        #if defined(TMR0INT)
         case INT_TMR0:	return INTCONbits.TMR0IF;
+        #endif
+        
+        #if defined(TMR1INT)
         case INT_TMR1:	return PIR1bits.TMR1IF;
+        #endif
+        
+        #if defined(TMR2INT)
         case INT_TMR2:	return PIR1bits.TMR2IF;
+        #endif
+        
+        #if defined(TMR3INT)
         case INT_TMR3:	return PIR2bits.TMR3IF;
-        #if defined(__18f26j50) || defined(__18f46j50)
-        case INT_TMR4:	return PIR3bits.TMR4IF;
         #endif
+
+        #if defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR4INT)
+            case INT_TMR4:	return PIR3bits.TMR4IF;
+            #endif
+        #endif
+
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR5INT)
+            case INT_TMR5:	return PIR5bits.TMR5IF;
+            #endif
+        #endif
+
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR6INT)
+            case INT_TMR6:	return PIR5bits.TMR6IF;
+            #endif
+        #endif
+
+        #if defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(TMR8INT)
+            case INT_TMR8:	return PIR5bits.TMR8IF;
+            #endif
+        #endif
+
+        #if defined(RBINT)
         case INT_RB:
-        #if defined(__18f25k50) || defined(__18f45k50)
-            return INTCONbits.IOCIF;
-        #else
-            return INTCONbits.RBIF;
+            #if defined(__18f25k50) || defined(__18f45k50)
+                return INTCONbits.IOCIF;
+            #else
+                return INTCONbits.RBIF;
+            #endif
         #endif
-    #if !defined(__18f1220) && !defined(__18f1320) && \
-        !defined(__18f14k22) && !defined(__18lf14k22)
-        case INT_USB:
-        #if defined(__18f25k50) || defined(__18f45k50)
-            return  PIR3bits.USBIF;
+
+        #if !defined(__18f1220) && !defined(__18f1320) && \
+            !defined(__18f14k22) && !defined(__18lf14k22)
+            #if defined(USBINT)
+            case INT_USB:
+                #if defined(__18f25k50) || defined(__18f45k50)
+                    return  PIR3bits.USBIF;
+                #else
+                    return  PIR2bits.USBIF;
+                #endif
+            #endif
         #else
-            return  PIR2bits.USBIF;
+            #error "No USB on this chip"
         #endif
-    #endif
+        
+        #if defined(ADINT)
         case INT_AD:	return PIR1bits.ADIF;
+        #endif
+
+        #if defined(RCINT)
         case INT_RC:	return PIR1bits.RCIF;
+        #endif
+
+        #if defined(TXINT)
         case INT_TX:	return PIR1bits.TXIF;
+        #endif
+
+        #if defined(CCP1INT)
         case INT_CCP1:	return PIR1bits.CCP1IF;
-    #if !defined(__18f1220) && !defined(__18f1320) && \
-        !defined(__18f14k22) && !defined(__18lf14k22)
-        case INT_CCP2:	return PIR2bits.CCP2IF;
-    #endif
+        #endif
+
+        #if !defined(__18f1220) && !defined(__18f1320) && \
+            !defined(__18f14k22) && !defined(__18lf14k22)
+            #if defined(CCP2INT)
+            case INT_CCP2:	return PIR2bits.CCP2IF;
+            #endif
+        #endif
+
+        #if defined(OSCFINT)
         case INT_OSCF:	return PIR2bits.OSCFIF;
-        case INT_CM:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            return PIR2bits.CMIF;
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            return PIR2bits.CM1IF;
+
+        #if defined(CMINT)
+            case INT_CM:
+            #if   defined(__18f2455) || defined(__18f4550) || \
+                  defined(__18f2550) || defined(__18f4550)
+                return PIR2bits.CMIF;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                return PIR2bits.CM1IF;
+            #endif
         #endif
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-        case INT_EE:	return PIR2bits.EEIF;
+
+        #if   defined(__18f2455) || defined(__18f4550) || \
+              defined(__18f2550) || defined(__18f4550)
+            #if defined(EEINT)
+            case INT_EE:	return PIR2bits.EEIF;
+            #endif
         #endif
-        case INT_BCL:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            return PIR2bits.BCLIF;
+       
+        #if defined(BCLINT)
+            case INT_BCL:
+            #if   defined(__18f2455) || defined(__18f4550) || \
+                  defined(__18f2550) || defined(__18f4550)
+                return PIR2bits.BCLIF;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                return PIR2bits.BCL1IF;
+            #endif
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            return PIR2bits.BCL1IF;
+
+        #if defined(HLVDINT)
+            case INT_HLVD:
+            #if   defined(__18f2455) || defined(__18f4550) || \
+                  defined(__18f2550) || defined(__18f4550)
+                return PIR2bits.HLVDIF;
+            #elif defined(__18f26j50) || defined(__18f46j50) || \
+                  defined(__18f26j53) || defined(__18f46j53) || \
+                  defined(__18f27j53) || defined(__18f47j53)
+                return PIR2bits.LVDIF;
+            #endif
         #endif
-        case INT_HLVD:
-        #if defined(__18f4550) || defined(__18f2550) || defined(__18f2455)
-            return PIR2bits.HLVDIF;
+
+        #if defined(__18f4455) || defined(__18f4550)
+            #if defined(SSPINT)
+            case INT_SSP:	return PIR1bits.SSPIF;
+            #endif
         #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-            return PIR2bits.LVDIF;
-        #endif
-        #if defined(__18f4550)
-        case INT_SSP:	return PIR1bits.SSPIF;
-        #endif
-        #if defined(__18f26j50) || defined(__18f46j50)
-        case INT_RTCC:	return PIR3bits.RTCCIF;
+
+        #if defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
+            #if defined(RTCCINT)
+            case INT_RTCC:	return PIR3bits.RTCCIF;
+            #endif
         #endif
     }
     return 0;
@@ -561,7 +835,7 @@ void IntTimerStop()
 }
 
 /*	----------------------------------------------------------------------------
-    ---------- OnTimerX
+    ---------- OnTimer0
     ----------------------------------------------------------------------------
     @author		Regis Blanchot <rblanchot@gmail.com>
     @descr		Configure timers to execute function func every delay ms, us or sec
@@ -627,6 +901,16 @@ u8 OnTimer0(callback func, u8 timediv, u16 delay)
 }
 #endif
 
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer1
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
+
 #ifdef TMR1INT
 u8 OnTimer1(callback func, u8 timediv, u16 delay)
 {
@@ -645,27 +929,19 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
             case INT_MICROSEC:
                 // 1us = 1.000 ns = 12 cy
                 _cycles_ = System_getPeripheralFrequency() / 1000 / 1000;
-                preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
-                preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
-                #if defined(__18f26j50) || defined(__18f46j50)
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_1 | T1_SOURCE_INT;
-                #elif defined(__18f25k50) || defined(__18f45k50)
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_SOSC_OFF | T1_PS_1_1 | T1_SOURCE_INT;
+                #if defined(__18f25k50) || defined(__18f45k50)
+                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_SOSC_OFF | T1_PS_1_1 | T1_RUN_FROM_OSC;
                 #else
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF| T1_OSC_OFF | T1_PS_1_1 | T1_SOURCE_INT | T1_RUN_FROM_ANOTHER ;
+                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF| T1_OSC_OFF | T1_PS_1_1 | T1_RUN_FROM_OSC;
                 #endif
                 break;
             case INT_MILLISEC:
                 // 1ms = 1.000.000ns = 12.000 cy
                 _cycles_ = System_getPeripheralFrequency() / 1000;
-                preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
-                preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
-                #if defined(__18f26j50) || defined(__18f46j50)
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_1 | T1_SOURCE_INT;
-                #elif defined(__18f25k50) || defined(__18f45k50)
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_SOSC_OFF | T1_PS_1_1 | T1_SOURCE_INT;
+                #if defined(__18f25k50) || defined(__18f45k50)
+                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_SOSC_OFF | T1_PS_1_1 | T1_RUN_FROM_OSC;
                 #else
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_1 | T1_SOURCE_INT | T1_RUN_FROM_ANOTHER;
+                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_1 | T1_RUN_FROM_OSC;
                 #endif
                 break;
             case INT_SEC:
@@ -673,20 +949,22 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
                 // 12.000.000 / 8 = 1.500.000
                 // 1.500.000 / 25 = 60000
                 _cycles_ = System_getPeripheralFrequency() / 8 / 25;
-                preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
-                preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
                 intCountLimit[INT_TMR1] = delay * 25;
-                #if defined(__18f26j50) || defined(__18f46j50)
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_8 | T1_SOURCE_INT;
-                #elif defined(__18f25k50) || defined(__18f45k50)
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_SOSC_OFF | T1_PS_1_8 | T1_SOURCE_INT;
+                #if defined(__18f25k50) || defined(__18f45k50)
+                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_SOSC_OFF | T1_PS_1_8 | T1_RUN_FROM_OSC;
                 #else
-                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_8 | T1_SOURCE_INT | T1_RUN_FROM_ANOTHER ;
+                _t1con = T1_OFF | T1_16BIT | T1_SYNC_EXT_OFF | T1_OSC_OFF | T1_PS_1_8 | T1_RUN_FROM_OSC;
                 #endif
                 break;
         }
-        #if defined(__18f26j50) || defined(__18f46j50) || \
-            defined(__18f25k50) || defined(__18f45k50)
+
+        preloadH[INT_TMR1] = high8(0xFFFF - _cycles_);
+        preloadL[INT_TMR1] =  low8(0xFFFF - _cycles_);
+
+        #if defined(__18f25k50) || defined(__18f45k50) || \
+            defined(__18f26j50) || defined(__18f46j50) || \
+            defined(__18f26j53) || defined(__18f46j53) || \
+            defined(__18f27j53) || defined(__18f47j53)
         T1GCONbits.TMR1GE = 0;				/* First Ignore T1DIG effection */ 
         #endif
 
@@ -709,52 +987,67 @@ u8 OnTimer1(callback func, u8 timediv, u16 delay)
 
 void OnRTCC(callback func, u16 delay)
 {
-#if defined(__18f2550) || defined(__18f4550) || defined(__18f2455)
-    u8 _t1con = 0;
+    #if defined(__18f2455) || defined(__18f4455) || \
+        defined(__18f2550) || defined(__18f4550)
 
-    if (intUsed[INT_TMR1] == INT_NOT_USED)
-    {
-        intUsed[INT_TMR1] = INT_USED;
-        intCount[INT_TMR1] = 0;
-        intCountLimit[INT_TMR1] = delay;
-        intFunction[INT_TMR1] = func;
+        u8 _t1con = 0;
 
-        // Preload TMR1 register pair for 1 mn (60 s = 60 x 1000 x 4 x 250 us) overflow
-        preloadH[INT_TMR1] = 0x80;			// (0xFFFF - 0xFF0F) = 240
-        preloadL[INT_TMR1] = 0x00;			// TMR1L is never preloaded or altered
+        if (intUsed[INT_TMR1] == INT_NOT_USED)
+        {
+            intUsed[INT_TMR1] = INT_USED;
+            intCount[INT_TMR1] = 0;
+            intCountLimit[INT_TMR1] = delay;
+            intFunction[INT_TMR1] = func;
 
-        // RD16    = 1	Enables register read/write of Timer1 in one 16-bit operation
-        // T1RUN   = 0	Device clock is derived from another source (le quartz 20MHz)
-        // T1CKPS1 = 0	00 = 1:1 Prescale value
-        // T1CKPS0 = 0
-        // T1OSCEN = 1	Timer1 oscillator is on
-        // T1SYNC  = 0	When TMR1CS = 1, Synchronize external clock input
-        // TMR1CS  = 1	External clock from RC0/T1OSO/T13CKI pin (on the rising edge)
-        // TMR1ON  = 0	Stops Timer1
-        _t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
-        // 18F26J50 -> _t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
+            // Preload TMR1 register pair for 1 mn (60 s = 60 x 1000 x 4 x 250 us) overflow
+            preloadH[INT_TMR1] = 0x80;			// (0xFFFF - 0xFF0F) = 240
+            preloadL[INT_TMR1] = 0x00;			// TMR1L is never preloaded or altered
 
-        IPR1bits.TMR1IP = INT_LOW_PRIORITY;
-        PIE1bits.TMR1IE = INT_ENABLE;
-        PIR1bits.TMR1IF = 0;
-        TMR1H = preloadH[INT_TMR1];
-        TMR1L = preloadL[INT_TMR1];
-        T1CON = _t1con;
-    }
-    #ifdef DEBUG
-    else
-    {
-        debug("Error : interrupt TIMER1 is already used !");
-    }
+            // RD16    = 1	Enables register read/write of Timer1 in one 16-bit operation
+            // T1RUN   = 0	Device clock is derived from another source (le quartz 20MHz)
+            // T1CKPS1 = 0	00 = 1:1 Prescale value
+            // T1CKPS0 = 0
+            // T1OSCEN = 1	Timer1 oscillator is on
+            // T1SYNC  = 0	When TMR1CS = 1, Synchronize external clock input
+            // TMR1CS  = 1	External clock from RC0/T1OSO/T13CKI pin (on the rising edge)
+            // TMR1ON  = 0	Stops Timer1
+            _t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_RUN_FROM_ANOTHER | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
+            // 18F26J50 -> _t1con = T1_OFF | T1_16BIT | T1_PS_1_1 | T1_OSC_ON | T1_SYNC_EXT_ON | T1_SOURCE_EXT;
+
+            IPR1bits.TMR1IP = INT_LOW_PRIORITY;
+            PIE1bits.TMR1IE = INT_ENABLE;
+            PIR1bits.TMR1IF = 0;
+            TMR1H = preloadH[INT_TMR1];
+            TMR1L = preloadL[INT_TMR1];
+            T1CON = _t1con;
+        }
+        #ifdef DEBUG
+        else
+        {
+            debug("Error : interrupt TIMER1 is already used !");
+        }
+        #endif
+
+    #elif defined(__18f26j50) || defined(__18f46j50) || \
+          defined(__18f26j53) || defined(__18f46j53) || \
+          defined(__18f27j53) || defined(__18f47j53)
+
+        // TODO
+
     #endif
-#endif
-
-#if defined(__18f26j50) || defined(__18f46j50)
-// TODO
-#endif
 }
 
-#endif
+#endif /* TMR1INT */
+
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer2
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
 
 #ifdef TMR2INT
 u8 OnTimer2(callback func, u8 timediv, u16 delay)
@@ -809,6 +1102,16 @@ u8 OnTimer2(callback func, u8 timediv, u16 delay)
 }
 #endif
 
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer3
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
+
 #ifdef TMR3INT
 /* Note: This function needs T1OSC as its clock source */
 u8 OnTimer3(callback func, u8 timediv, u16 delay)
@@ -830,45 +1133,36 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
             case INT_MICROSEC:
                 // 1us = 1.000 ns = 12 cy
                 _cycles_ = System_getPeripheralFrequency() / 1000 / 1000;
-                preloadH[INT_TMR3] = high8(0xFFFF - _cycles_);
-                preloadL[INT_TMR3] =  low8(0xFFFF - _cycles_);
-                #if defined(__18f26j50) || defined(__18f46j50)
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_SOURCE_INT;
-                #elif defined(__18f25k50) || defined(__18f45k50)
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_SOSC_OFF | T3_PS_1_1 | T3_SOURCE_INT;
+                #if defined(__18f25k50) || defined(__18f45k50)
+                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_SOSC_OFF | T3_PS_1_1 | T3_RUN_FROM_OSC;
                 #else
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_SOURCE_INT;
+                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_RUN_FROM_OSC;
                 #endif
                 break;
             case INT_MILLISEC:
                 // 1 ms = 1.000.000 ns = 12.000 cy at Fosc/4
                 _cycles_ = System_getPeripheralFrequency() / 1000;
-                preloadH[INT_TMR3] = high8(0xFFFF - _cycles_);
-                preloadL[INT_TMR3] =  low8(0xFFFF - _cycles_);
-                #if defined(__18f26j50) || defined(__18f46j50)
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_SOURCE_INT;
-                #elif defined(__18f25k50) || defined(__18f45k50)
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_SOSC_OFF | T3_PS_1_1 | T3_SOURCE_INT;
+                #if defined(__18f25k50) || defined(__18f45k50)
+                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_SOSC_OFF | T3_PS_1_1 | T3_RUN_FROM_OSC;
                 #else
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_SOURCE_INT;
+                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_RUN_FROM_OSC;
                 #endif
                 break;
             case INT_SEC:
                 // 1 sec = 1.000.000.000 ns = 12.000.000 cy
                 _cycles_ = System_getPeripheralFrequency() / 8 / 25;
-                preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
-                preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
                 intCountLimit[INT_TMR3] = delay * 25;
-                #if defined(__18f26j50) || defined(__18f46j50)
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_8 | T3_SOURCE_INT;
-                #elif defined(__18f25k50) || defined(__18f45k50)
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_SOSC_OFF | T3_PS_1_8 | T3_SOURCE_INT;
+                #if defined(__18f25k50) || defined(__18f45k50)
+                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_SOSC_OFF | T3_PS_1_8 | T3_RUN_FROM_OSC;
                 #else
-                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_8 | T3_SOURCE_INT;
+                _t3con = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_8 | T3_RUN_FROM_OSC;
                 #endif
                 break;
         }
 
+        preloadH[INT_TMR0] = high8(0xFFFF - _cycles_);
+        preloadL[INT_TMR0] =  low8(0xFFFF - _cycles_);
+        
         #if defined(__18f26j50) || defined(__18f46j50) || \
             defined(__18f25k50) || defined(__18f45k50)
         T3GCONbits.TMR3GE = 0;				/* First Ignore T1DIG effection */ 
@@ -892,10 +1186,22 @@ u8 OnTimer3(callback func, u8 timediv, u16 delay)
 }
 #endif
 
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer4
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
+
+#ifdef TMR4INT
+
 #if defined(__18f26j50) || defined(__18f46j50) || \
     defined(__18f26j53) || defined(__18f46j53) || \
     defined(__18f27j53) || defined(__18f47j53)
-#ifdef TMR4INT
+
 u8 OnTimer4(callback func, u8 timediv, u16 delay)
 {
     u8 _t4con = 0;
@@ -946,10 +1252,227 @@ u8 OnTimer4(callback func, u8 timediv, u16 delay)
         return INT_USED;
     }
 }
+    #else
+        #error "Your processor don't have any Timer4."
+    #endif /* defined(__18f26j50) || defined(__18f46j50) ... */
 #endif /* TMR4INT */
-#else
-#error "Your processor don't have any Timer4."
-#endif /* defined(__18f26j50) || defined(__18f46j50) ... */
+
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer5
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
+
+#ifdef TMR5INT
+
+#if defined(__18f26j53) || defined(__18f46j53) || \
+    defined(__18f27j53) || defined(__18f47j53)
+
+u8 OnTimer5(callback func, u8 timediv, u16 delay)
+{
+    u8 _t5con = T5_OFF | T5_16BIT | T5_SYNC_EXT_OFF | T5_SOURCE_T1OFF | T5_PS_1_1 | T5_RUN_FROM_OSC;
+    u16 _cycles_;
+
+    if (intUsed[INT_TMR5] == INT_NOT_USED)
+    {
+        intUsed[INT_TMR5] = INT_USED;
+        intCount[INT_TMR5] = 0;
+        intCountLimit[INT_TMR5] = delay;
+        intFunction[INT_TMR5] = func;
+
+        switch(timediv)
+        {
+            // nb : T5_SOURCE_INT => Fosc/4
+            // 1 cy = 1/(Fosc/4)=4/Fosc=4/48MHz=83ns
+            case INT_MICROSEC:
+                // 1us = 1.000 ns = 12 cy
+                _cycles_ = System_getPeripheralFrequency() / 1000 / 1000;
+                break;
+            case INT_MILLISEC:
+                // 1 ms = 1.000.000 ns = 12.000 cy at Fosc/4
+                _cycles_ = System_getPeripheralFrequency() / 1000;
+                break;
+            case INT_SEC:
+                // 1 sec = 1.000.000.000 ns = 12.000.000 cy
+                _cycles_ = System_getPeripheralFrequency() / 8 / 25;
+                intCountLimit[INT_TMR5] = delay * 25;
+                _t5con = _t5con | T5_PS_1_8;
+                break;
+        }
+
+        preloadH[INT_TMR5] = high8(0xFFFF - _cycles_);
+        preloadL[INT_TMR5] =  low8(0xFFFF - _cycles_);
+
+        T5GCONbits.TMR5GE = 0;				/* First Ignore T1DIG effection */ 
+
+        T5CON = _t5con;
+        IPR5bits.TMR5IP = INT_LOW_PRIORITY;
+        TMR5H = preloadH[INT_TMR5];
+        TMR5L = preloadL[INT_TMR5];
+        PIR5bits.TMR5IF = 0;
+        PIE5bits.TMR5IE = INT_ENABLE;
+        return INT_TMR5;
+    }
+    else
+    {
+    #ifdef DEBUG
+        debug("Error : interrupt TIMER5 is already used !");
+    #endif
+        return INT_USED;
+    }
+}
+    #else
+        #error "Your processor don't have any Timer5."
+    #endif /* defined(__18f27j53) || defined(__18f47j53) ... */
+#endif /* TMR5INT */
+
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer6
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
+
+#ifdef TMR6INT
+
+#if defined(__18f26j53) || defined(__18f46j53) || \
+    defined(__18f27j53) || defined(__18f47j53)
+
+u8 OnTimer6(callback func, u8 timediv, u16 delay)
+{
+    u8 _t6con = 0;
+    u8 _pr6 = 0;
+
+    if (intUsed[INT_TMR6] == INT_NOT_USED)
+    {
+        intUsed[INT_TMR6] = INT_USED;
+        intCount[INT_TMR6] = 0;
+        intCountLimit[INT_TMR6] = delay;
+        intFunction[INT_TMR6] = func;
+
+        // time = Tcy*postscaler*pr2*prescaler
+        switch(timediv)
+        {
+            case INT_MICROSEC:
+                // 1us = 12 cy
+                _pr6 = System_getPeripheralFrequency() / 1000 / 1000;
+                _t6con = T6_OFF | T6_PS_1_1 | T6_POST_1_1;
+                break;
+            case INT_MILLISEC:
+                // 1ms = 12.000 cy
+                // 12.000 / 15 / 16 = 50
+                _pr6 = System_getPeripheralFrequency() / 1000 / 240;
+                _t6con = T6_OFF | T6_POST_1_15 | T6_PS_1_16;
+                break;
+            case INT_SEC:
+                // 1sec = 12.000.000 cy
+                // 12.000.000 / 15 / 16 = 50.000 = 200 * 25
+                _pr6 = System_getPeripheralFrequency() / 240 / 200;
+                intCountLimit[INT_TMR6] = delay * 200;
+                _t6con = T6_OFF | T6_POST_1_15 | T6_PS_1_16;
+                break;
+        }
+
+        T6CON = _t6con;
+        IPR5bits.TMR6IP = INT_LOW_PRIORITY;
+        PR6 = _pr6;	// Timer6 Match value
+        PIR5bits.TMR6IF = 0;
+        PIE5bits.TMR6IE = INT_ENABLE;
+        return INT_TMR6;
+    }
+    else
+    {
+    #ifdef DEBUG
+        debug("Error : interrupt TIMER6 is already used !");
+    #endif /* DEBUG */
+        return INT_USED;
+    }
+}
+    #else
+        #error "Your processor don't have any Timer6."
+    #endif /* defined(__18f27j53) || defined(__18f47j53) ... */
+#endif /* TMR6INT */
+
+/*	----------------------------------------------------------------------------
+    ---------- OnTimer8
+    ----------------------------------------------------------------------------
+    @author		Regis Blanchot <rblanchot@gmail.com>
+    @descr		Configure timers to execute function func every delay ms, us or sec
+    @param		timediv:	INT_MICROSEC, INT_MILLISEC, INT_SEC
+                func:		function called when interrupt occures
+                delay:		delay before overload
+    --------------------------------------------------------------------------*/
+
+#ifdef TMR8INT
+
+#if defined(__18f26j53) || defined(__18f46j53) || \
+    defined(__18f27j53) || defined(__18f47j53)
+
+u8 OnTimer8(callback func, u8 timediv, u16 delay)
+{
+    u8 _t8con = 0;
+    u8 _pr8 = 0;
+
+    if (intUsed[INT_TMR8] == INT_NOT_USED)
+    {
+        intUsed[INT_TMR8] = INT_USED;
+        intCount[INT_TMR8] = 0;
+        intCountLimit[INT_TMR8] = delay;
+        intFunction[INT_TMR8] = func;
+
+        // time = Tcy*postscaler*pr2*prescaler
+        switch(timediv)
+        {
+            case INT_MICROSEC:
+                // 1us = 12 cy
+                _pr8 = System_getPeripheralFrequency() / 1000 / 1000;
+                _t8con = T8_OFF | T8_PS_1_1 | T8_POST_1_1;
+                break;
+            case INT_MILLISEC:
+                // 1ms = 12.000 cy
+                // 12.000 / 15 / 16 = 50
+                _pr8 = System_getPeripheralFrequency() / 1000 / 240;
+                _t8con = T8_OFF | T8_POST_1_15 | T8_PS_1_16;
+                break;
+            case INT_SEC:
+                // 1sec = 12.000.000 cy
+                // 12.000.000 / 15 / 16 = 50.000 = 200 * 25
+                _pr8 = System_getPeripheralFrequency() / 240 / 200;
+                intCountLimit[INT_TMR8] = delay * 200;
+                _t8con = T8_OFF | T8_POST_1_15 | T8_PS_1_16;
+                break;
+        }
+
+        T8CON = _t8con;
+        IPR5bits.TMR8IP = INT_LOW_PRIORITY;
+        PR8 = _pr8;	// Timer8 Match value
+        PIR5bits.TMR8IF = 0;
+        PIE5bits.TMR8IE = INT_ENABLE;
+        return INT_TMR8;
+    }
+    else
+    {
+    #ifdef DEBUG
+        debug("Error : interrupt TIMER8 is already used !");
+    #endif /* DEBUG */
+        return INT_USED;
+    }
+}
+
+    #else
+
+        #error "Your processor don't have any Timer8."
+
+    #endif /* defined(__18f27j53) || defined(__18f47j53) ... */
+
+#endif /* TMR8INT */
 
 /*	----------------------------------------------------------------------------
     ---------- OnCounter
@@ -1338,8 +1861,8 @@ void userhighinterrupt()
     #ifdef INT0INT
     if (INTCONbits.INT0IE && INTCONbits.INT0IF)
     {
-        intFunction[INT_INT0]();
         INTCONbits.INT0IF = 0;
+        intFunction[INT_INT0]();
     }
     #endif
 }
@@ -1361,6 +1884,7 @@ void userlowinterrupt()
         intFunction[INT_INT1]();
     }
     #endif
+    
     #ifdef INT2INT
     if (INTCON3bits.INT2IE && INTCON3bits.INT2IF)
     {
@@ -1368,6 +1892,7 @@ void userlowinterrupt()
         intFunction[INT_INT2]();
     }
     #endif
+    
     #ifdef RBINT
     if (INTCONbits.RBIE && INTCONbits.RBIF)
     {
@@ -1375,6 +1900,7 @@ void userlowinterrupt()
         intFunction[INT_RB]();
     }
     #endif
+    
     #if defined (TMR0INT) || defined(CNTR0INT)
     if (INTCONbits.TMR0IE && INTCONbits.TMR0IF)
     {
@@ -1389,6 +1915,7 @@ void userlowinterrupt()
         }
     }
     #endif
+    
     #if defined (TMR1INT) || defined(CNTR1INT)
     if (PIE1bits.TMR1IE && PIR1bits.TMR1IF)
     {
@@ -1403,6 +1930,7 @@ void userlowinterrupt()
         }
     }
     #endif
+    
     #ifdef TMR2INT
     if (PIE1bits.TMR2IE && PIR1bits.TMR2IF)
     {
@@ -1416,6 +1944,7 @@ void userlowinterrupt()
         // NB : no need to reload PR2
     }
     #endif
+    
     #if defined (TMR3INT) || defined(CNTR3INT)
     if (PIE2bits.TMR3IE && PIR2bits.TMR3IF)
     {
@@ -1430,6 +1959,7 @@ void userlowinterrupt()
         }
     }
     #endif
+    
     #ifdef TMR4INT
     if (PIE3bits.TMR4IE && PIR3bits.TMR4IF)
     {
@@ -1443,6 +1973,46 @@ void userlowinterrupt()
         // NB : no need to reload PR4
     }
     #endif
+    
+    #ifdef TMR5INT
+    if (PIE5bits.TMR5IE && PIR5bits.TMR5IF)
+    {
+        //T5CONbits.TMR5ON = OFF;
+        PIR5bits.TMR5IF = 0;
+        if (intCount[INT_TMR5]++ >= intCountLimit[INT_TMR5])
+        {
+            intCount[INT_TMR5] = 0;
+            intFunction[INT_TMR5]();
+        }
+    }
+    #endif
+    
+    #ifdef TMR6INT
+    if (PIE5bits.TMR6IE && PIR5bits.TMR6IF)
+    {
+        //T6CONbits.TMR6ON = OFF;
+        PIR5bits.TMR6IF = 0;
+        if (intCount[INT_TMR6]++ >= intCountLimit[INT_TMR6])
+        {
+            intCount[INT_TMR6] = 0;
+            intFunction[INT_TMR6]();
+        }
+    }
+    #endif
+    
+    #ifdef TMR8INT
+    if (PIE5bits.TMR8IE && PIR5bits.TMR8IF)
+    {
+        //T8CONbits.TMR8ON = OFF;
+        PIR5bits.TMR8IF = 0;
+        if (intCount[INT_TMR8]++ >= intCountLimit[INT_TMR8])
+        {
+            intCount[INT_TMR8] = 0;
+            intFunction[INT_TMR8]();
+        }
+    }
+    #endif
+    
     #ifdef ADINT
     if (PIE1bits.ADIE && PIR1bits.ADIF)
     {
@@ -1450,6 +2020,7 @@ void userlowinterrupt()
         intFunction[INT_AD]();
     }
     #endif
+    
     #ifdef RCINT
     if (PIE1bits.RCIE && PIR1bits.RCIF)
     {
@@ -1457,6 +2028,7 @@ void userlowinterrupt()
         intFunction[INT_RC]();
     }
     #endif
+    
     #ifdef TXINT
     if (PIE1bits.TXIE && PIR1bits.TXIF)
     {
@@ -1464,6 +2036,7 @@ void userlowinterrupt()
         intFunction[INT_TX]();
     }
     #endif
+    
     #ifdef CCP1INT
     if (PIE1bits.CCP1IE && PIR1bits.CCP1IF)
     {
@@ -1471,6 +2044,7 @@ void userlowinterrupt()
         intFunction[INT_CCP1]();
     }
     #endif
+    
     #ifdef CCP2INT
     if (PIE2bits.CCP2IE && PIR2bits.CCP2IF)
     {
@@ -1478,13 +2052,16 @@ void userlowinterrupt()
         intFunction[INT_CCP2]();
     }
     #endif
+    
     #ifdef EEINT
+    
     if (PIE2bits.EEIE && PIR2bits.EEIF)
     {
         PIR2bits.EEIF = 0;
         intFunction[INT_EE]();
     }
     #endif
+    
     #ifdef USBINT
     if (PIE2bits.USBIE && PIR2bits.USBIF)
     {
@@ -1492,6 +2069,7 @@ void userlowinterrupt()
         intFunction[INT_USB]();
     }
     #endif
+    
     #ifdef OSCFINT
     if (PIE2bits.OSCFIE && PIR2bits.OSCFIF)
     {
@@ -1499,6 +2077,7 @@ void userlowinterrupt()
         intFunction[INT_OSCF]();
     }
     #endif
+    
     #ifdef CMINT
     if (PIE2bits.CMIE && PIR2bits.CMIF)
     {
@@ -1506,6 +2085,7 @@ void userlowinterrupt()
         intFunction[INT_CM]();
     }
     #endif
+    
     #ifdef BCLINT
     if (PIE2bits.BCLIE && PIR2bits.BCLIF)
     {
@@ -1513,6 +2093,7 @@ void userlowinterrupt()
         intFunction[INT_BCL]();
     }
     #endif
+    
     #ifdef HLVDINT
     if (PIE2bits.HLVDIE && PIR2bits.HLVDIF)
     {
@@ -1520,6 +2101,7 @@ void userlowinterrupt()
         intFunction[INT_HLVD]();
     }
     #endif
+    
     #ifdef SSPINT
     if (PIE1bits.SSPIE && PIR1bits.SSPIF)
     {
