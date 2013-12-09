@@ -133,12 +133,10 @@ void Tmr2Interrupt(void)
 #endif /* __MILLIS__ */
 
 #ifndef __SPI__
-/*
 void SPIxInterrupt(void)
 {
 	Nop();    
 }
-*/
 #endif /* __SPI__ */
 
 // vector 35
