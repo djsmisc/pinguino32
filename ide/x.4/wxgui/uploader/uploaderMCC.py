@@ -49,7 +49,7 @@ VENDOR_ID						=	0x04D8
 PRODUCT_ID						=	0x003C
 INTERFACE_ID					=	0x00
 ACTIVE_CONFIG					=	1
-TIMEOUT							=	0
+TIMEOUT							=	10000
 
 # Data block description 
 BYTESPERADDRESS					=	1

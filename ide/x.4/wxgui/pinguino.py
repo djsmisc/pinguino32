@@ -295,6 +295,8 @@ class Pinguino(framePinguinoX, IDE):
             filename = path
             filename, extension = os.path.splitext(filename)
             if os.path.exists(filename + '.hex'):
+                #u = Uploader(self.displaymsg, filename, self.curBoard)
+                #"""
                 if self.curBoard.arch == 8:
                     #try:
                     u = Uploader(self.displaymsg, filename, self.curBoard)
@@ -314,6 +316,7 @@ class Pinguino(framePinguinoX, IDE):
                     fichier.seek(0)
                     self.displaymsg(fichier.read(),0)
                     fichier.close()
+                #"""
             else:# no file
                 dlg = wx.MessageDialog(self,
                                        _('File must be verified/compiled before upload'),
@@ -843,7 +846,7 @@ class Pinguino(framePinguinoX, IDE):
                     self.displaymsg(ligne, 0)
         fichier.close()
         if sys.platform=='win32':
-            if board.board in ['PIC32_PINGUINO_220', 'GENERIC32MX250F128', 'GENERIC32MX220F032']:
+            if board.board in ['PIC32_PINGUINO_220', 'PINGUINO32MX250', 'PINGUINO32MX220']:
                 badrecord=":040000059D0040001A\n"
             else:
                 badrecord=":040000059D006000FA\n"                
@@ -863,7 +866,12 @@ class Pinguino(framePinguinoX, IDE):
     def getCodeSize(self, filename, board):
         codesize = 0
         address_Hi = 0
-        memfree = board.memend - board.memstart
+        if board.arch == 32:
+            memfree = board.memend - board.ebase #memstart
+        else:
+            memfree = board.memend - board.memstart
+        print "%X"%board.memstart
+        print "%X"%board.memend
         fichier = open(filename + ".hex", 'r')
         lines = fichier.readlines()
 
@@ -882,6 +890,7 @@ class Pinguino(framePinguinoX, IDE):
 
                 # address calculation
                 address = address_Hi + address_Lo
+                #print "address=%X"%address;
                 #self.displaymsg(_("address = %X" % address),0)
                 
                 #if address >= board.memstart:
