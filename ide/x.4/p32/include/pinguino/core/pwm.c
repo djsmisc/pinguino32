@@ -113,7 +113,7 @@ u8 analogwrite(u8 pin, u16 setpoint)
 	}
 #endif
 
-#if defined(GENERIC32MX250F128)||defined(GENERIC32MX220F032)
+#if defined(PINGUINO32MX250)||defined(PINGUINO32MX220)
 	switch (pin)
 	{
 		case 1:
