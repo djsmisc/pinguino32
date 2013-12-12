@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
+"""
+pep8 TODO: (pep8 --max-line-length=120 pinguino.py)
+pinguino.py:108:24: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+pinguino.py:112:23: E712 comparison to True should be 'if cond is True:' or 'if cond:'
+pinguino.py:118:22: E712 comparison to False should be 'if cond is not False:' or 'if cond:'
+pinguino.py:118:54: E721 do not compare types, use 'isinstance()'
+pinguino.py:134:29: E712 comparison to False should be 'if cond is False:' or 'if not cond:'
+pinguino.py:177:64: E712 comparison to True should be 'if cond is not True:' or 'if not cond:'
+pinguino.py:185:27: E712 comparison to False should be 'if cond is not False:' or 'if cond:'
+"""
 import os
 import sys
 import shutil
 import traceback
-
-import wxgui
 
 import wx
 from wxgui import setGui, getOptions, getVersion, Pinguino, boardlist
@@ -14,13 +22,12 @@ from wxgui import SOURCE_DIR
 from wxgui import _
 
 #to save trace when pignuino crash
-if os.path.isfile("pinguinoPanic"): os.remove("pinguinoPanic")
+if os.path.isfile("pinguinoPanic"):
+    os.remove("pinguinoPanic")
 
-########################################################################
+
 class MySplashScreen(wx.SplashScreen):
-    #----------------------------------------------------------------------
     def __init__(self):
-        """"""
         #bmp = wx.Image(os.path.join("theme", "logoX3.png")).ConvertToBitmap()
         image = wx.Image(os.path.join("theme", "logo3D.png"), wx.BITMAP_TYPE_PNG)
         #image = image.Scale(500, 375, wx.IMAGE_QUALITY_HIGH)
@@ -35,15 +42,14 @@ class MySplashScreen(wx.SplashScreen):
         #memDC.DrawText(_("loading..."), 10, 355)
         memDC.DrawText(_("loading..."), 10, 275)
         memDC.SelectObject(wx.NullBitmap)
-        
-        # TODO : replace wx.BORDER_SIMPLE (windows only)		
+
+        # TODO : replace wx.BORDER_SIMPLE (windows only)
         wx.SplashScreen.__init__(self, bmp,
                                  wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
                                  5000, None, -1, style=wx.BORDER_SIMPLE)
         self.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
         self.fc = wx.FutureCall(2000, self.ShowMain)
-        
-    #----------------------------------------------------------------------
+
     def OnCloseSplash(self, evt):
         evt.Skip()
         self.Hide()
@@ -51,33 +57,31 @@ class MySplashScreen(wx.SplashScreen):
             self.fc.Stop()
             self.ShowMain()
 
-    #----------------------------------------------------------------------
     def ShowMain(self):
         setGui(True)
         frame = Pinguino(None)
         app.SetTopWindow(frame)
         frame.__initPinguino__(None)
         frame.Show()
-        if self.fc.IsRunning(): self.Raise()
-        
-        
+        if self.fc.IsRunning():
+            self.Raise()
 
-########################################################################
+
 class MyApp(wx.App):
     def __init__(self):
-        if "--dev" in sys.argv and sys.argv[sys.argv.index("--dev")+1].lower() == "true":
+        if "--dev" in sys.argv and sys.argv[sys.argv.index("--dev") + 1].lower() == "true":
             wx.App.__init__(self)
         else:
             wx.App.__init__(self, redirect=True, filename="pinguinoPanic")
-        
+
     def OnInit(self):
-        if sys.platform=='darwin':
+        if sys.platform == 'darwin':
             setGui(True)
             frame = Pinguino(None)
             frame.__initPinguino__(None)
             app.SetTopWindow(frame)
             frame.Show()
-        else:			
+        else:
             splash = MySplashScreen()
             splash.Show()
         return True
@@ -85,11 +89,10 @@ class MyApp(wx.App):
 
 def show_error():
     message = ''.join(traceback.format_exception(*sys.exc_info()))
-    dialog = wx.MessageDialog(None, message, 'Error!', wx.OK|wx.ICON_ERROR)
+    dialog = wx.MessageDialog(None, message, 'Error!', wx.OK | wx.ICON_ERROR)
     dialog.ShowModal()
-    
 
-#----------------------------------------------------------------------
+
 def main():
     try:
         app = MyApp()
@@ -97,24 +100,13 @@ def main():
     except:
         show_error()
 
-
-
-# ------------------------------------------------------------------------------
-# MAIN
-# ------------------------------------------------------------------------------
-
 if __name__ == "__main__":
     app = wx.PySimpleApp(0)
 
-# ------------------------------------------------------------------------------
-# ---Command Line---------------------------------------------------------------
-# ------------------------------------------------------------------------------
-
     options = getOptions()
-    
 
     if options.version == True:
-        print "current version is " + getVersion() #pinguino_version
+        print "current version is " + getVersion()  # pinguino_version
         sys.exit(1)
 
     if options.author == True:
@@ -125,15 +117,17 @@ if __name__ == "__main__":
 
     if options.board != False or type(options.board) == type(1):  # False = 0
         curBoard = boardlist[options.board]
-        
+
         boots = {"noboot": 0, "boot2": 0x2000, "boot4": 0x0C00}
-        
-        if options.bootloader: bootloader = options.bootloader[0]
-        else: bootloader = "boot2"  #Por defecto
+
+        if options.bootloader:
+            bootloader = options.bootloader[0]
+        else:
+            bootloader = "boot2"  # Por defecto
 
         curBoard.bldr = bootloader
-        curBoard.memstart = boots[bootloader] 
-            
+        curBoard.memstart = boots[bootloader]
+
         print "Board: " + curBoard.name
         print "Proc.: " + curBoard.proc
 
@@ -149,19 +143,19 @@ if __name__ == "__main__":
         print "File : " + filename
 
         setGui(False)
-        pobject=Pinguino(None)
-        
+        pobject = Pinguino(None)
+
         #Initialize vars
         pobject.rw = []
         pobject.regobject = []
         pobject.reservedword = []
         pobject.libinstructions = []
-        
+
         pobject.setOSvariables()
         pobject.readlib(curBoard)
-        
+
         print "preprocessing ..."
-        retour=pobject.preprocess(fname, curBoard)
+        retour = pobject.preprocess(fname, curBoard)
         if retour == "error":
             print "error while preprocessing " + filename
             sys.exit(1)
@@ -173,21 +167,21 @@ if __name__ == "__main__":
             sys.exit(1)
 
         print "linking ..."
-        retour=pobject.link(filename, curBoard)
+        retour = pobject.link(filename, curBoard)
 
         if curBoard.arch == 8:
-            MAIN_FILE="main.hex"
+            MAIN_FILE = "main.hex"
         else:
-            MAIN_FILE="main32.hex"
+            MAIN_FILE = "main32.hex"
 
-        if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE))!=True:
+        if os.path.exists(os.path.join(SOURCE_DIR, MAIN_FILE)) != True:
             print "error while linking "
             sys.exit(1)
 
         shutil.copy(os.path.join(SOURCE_DIR, MAIN_FILE), fname + ".hex")
         print "compilation done"
         print pobject.getCodeSize(fname, curBoard)
-        
+
         if options.upload != False:
             print "Uploading..."
             #Very ugly method to upload code
@@ -196,15 +190,11 @@ if __name__ == "__main__":
             pobject.displaymsg = lambda *x: sys.stdout.write(x[0])
             pobject.OnUpload(path=filename)
             #------------------------------------------
-        
+
         print "OK"
         os.remove(os.path.join(SOURCE_DIR, MAIN_FILE))
         #os.remove(fname + ".c")
-        
-        sys.exit(0)
 
-# ------------------------------------------------------------------------------
-# ---Graphic User Interface-----------------------------------------------------
-# ------------------------------------------------------------------------------
+        sys.exit(0)
 
     main()
