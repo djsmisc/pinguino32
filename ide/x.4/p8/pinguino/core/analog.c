@@ -151,7 +151,7 @@ u16 analogread(u8 channel)
             ADCON0 = channel << 2;      // A0=0 to A7=7
 
     #else
-        if(channel>=13 && channel<=17)
+        if(channel>=13 && channel<=20)
             ADCON0=(channel-13) << 2;   // A0 = 13, ..., A4 = 17
         else if(channel<=5)
             ADCON0 = channel << 2;      // A0 = 0, ..., A4 = 4
