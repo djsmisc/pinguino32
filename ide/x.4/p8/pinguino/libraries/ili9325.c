@@ -240,26 +240,28 @@ void ILI9325_init()
 
     DATA = 0x00;
 
-    ///---------- Reset LCD Driver
+    ///---------- Idle
 
-    //HighCS;
-
-    HighRST;
-    Delayms(100);
-    LowRST;
-    Delayms(5);
-    HighRST;
-    Delayms(100);
-
+    HighCS;
     HighRD; // Disable Read Mode
     HighWR; // Disable Write Mode
+
+    ///---------- Reset LCD Driver
+
+    HighRST;
+    Delayms(5);     // 1ms min.
+    LowRST;
+    Delayms(2);     // no min.
+    HighRST;
+    Delayms(100);   // 50ms min.
+
     LowCS;	// Enable LCD -> not needed if CS is connected to GND
 
     ///---------- Start Initial Sequence
 
     //---------- Start internal oscillator
-    //ILI9325_write(DriverCodeRead, 0x0001);
-    //Delayms(50);
+    ILI9325_write(DriverCodeRead, 0x0001);
+    Delayms(50);
 
     // SS  = 1 (shift dir. to the right)
     ILI9325_write(DriverOutputControl, 0x0100);
@@ -272,14 +274,13 @@ void ILI9325_init()
     // I/D = 11 (H and V increment)
     // BGR = 1  (Swap the RGB data to BGR in writing into GRAM)
     ILI9325_write(EntryMode, 0x1030);		    //set GRAM write direction and BGR=1 PORTRAIT MODE
-
-    ILI9325_write(DisplayControl2, 0x0302); // set the back and front porch to 4 lines
+    ILI9325_write(ResizingControlRegister, 0x0000);
+    ILI9325_write(DisplayControl2, 0x0202); // set the back and front porch to 4 lines
     ILI9325_write(DisplayControl3, 0x0000); // set non-display area refresh cycle ISC[3:0]
     ILI9325_write(DisplayControl4, 0x0000); // FMARK function
-
-    //ILI9325_write(RGBDisplayInterfaceControl1, 0x0000); // RGB interface setting
-    //ILI9325_write(FrameMarkerPosition, 0x0000); // Frame marker Position
-    //ILI9325_write(RGBDisplayInterfaceControl2, 0x0000); // RGB interface polarity
+    ILI9325_write(RGBDisplayInterfaceControl1, 0x0000); // RGB interface setting
+    ILI9325_write(FrameMarkerPosition, 0x0000); // Frame marker Position
+    ILI9325_write(RGBDisplayInterfaceControl2, 0x0000); // RGB interface polarity
 
     ///---------- Power On sequence
 
@@ -291,18 +292,16 @@ void ILI9325_init()
     Delayms(200); // Discharge capacitor power voltage
 
     ILI9325_write(PowerControl1, 0x14B0); // SAP=1, BT[3:0]=110, APE=1, AP=001, DSTB=0, SLP=0, STB=0
-    Delayms(50);
     ILI9325_write(PowerControl2, 0x0007); // DC1[2:0]=010, DC0[2:0]=010, VC[2:0]=000
     Delayms(50);
 
     ILI9325_write(PowerControl3, 0x008E); // External reference voltage= Vci;
+    Delayms(50);
+
     ILI9325_write(PowerControl4, 0x0C00); // R13=1200 when R12=009D;VDV[4:0] for VCOM amplitude
     ILI9325_write(PowerControl7, 0x0015); // R29=000C when R12=009D;VCM[5:0] for VCOMH
     //ILI9325_write(FrameRateandColorControl, 0x000D); // Set Frame Rate
     Delayms(50);
-
-    //ILI9325_write(GRAMHorizontalAddressSet, 0x0000); // GRAM horizontal Address
-    //ILI9325_write(GRAMVerticalAddressSet, 0x0000); // GRAM Vertical Address
 
     ///---------- Adjust the Gamma Curve
 
@@ -319,6 +318,8 @@ void ILI9325_init()
 
     ///---------- Set GRAM area
 
+    ILI9325_write(GRAMHorizontalAddressSet, 0x0000);     // GRAM horizontal Address
+    ILI9325_write(GRAMVerticalAddressSet, 0x0000);       // GRAM Vertical Address
     ILI9325_write(HorizontalRAMStartAddressPosition, 0); // Horizontal GRAM Start Address
     ILI9325_write(HorizontalRAMEndAddressPosition, 239); // Horizontal GRAM End Address
     ILI9325_write(VerticalRAMStartAddressPosition, 0);   // Vertical GRAM Start Address
@@ -356,8 +357,8 @@ void ILI9325_init()
     // PTDE[1:0] = 00, only base image is displayed
 
     ILI9325_write(DisplayControl1, 0x0133);
-    Delayms(50);
-    ILI9325_writeRegister(WriteDatatoGRAM);		// write GRAM
+    //Delayms(50);
+    //I9325_writeRegister(WriteDatatoGRAM);		// write GRAM
 
     //HighCS;	// Disable LCD
 
@@ -442,20 +443,20 @@ void ILI9325_setBackgroundColor(u16 color)
 
 void ILI9325_test(void)
 {
-    u32 i,j;
+    u16 x,y;
 
     ILI9325_setCursor(0,0);	// set cursor home
 
     //LowCS;	// Enable LCD
 
     ILI9325_writeRegister(WriteDatatoGRAM);		// write GRAM
-    for (i=ILI9325.screen.starty; i<ILI9325.screen.endy; i++)
+    for (y=ILI9325.screen.starty; y<ILI9325.screen.endy; y++)
     {
-        for (j=ILI9325.screen.startx; j<ILI9325.screen.endx; j++)
+        for (x=ILI9325.screen.startx; x<ILI9325.screen.endx; x++)
         {
-            if (i>213) ILI9325_writeData(Red);
-            else if(i>106) ILI9325_writeData(White);
-            else ILI9325_writeData(Blue);
+            if      (y>213) ILI9325_writeData(Red);
+            else if (y>106) ILI9325_writeData(White);
+            else            ILI9325_writeData(Blue);
         }
     }
 
