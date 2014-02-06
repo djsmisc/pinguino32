@@ -23,7 +23,7 @@ void loop()
 {
     if (IRremote.decode(&results))
     {
-        //lcd.print(results.value, HEX);
+        //lcd.printf("%x", results.value);
         IRremote.resume(); // Receive the next value
     }
 }
