@@ -95,7 +95,6 @@
 #endif
 
 {
-    /*
     #if defined(__18f25k50) || defined(__18f45k50) || \
         defined(__18f26j50) || defined(__18f46j50) || \
         defined(__18f26j53) || defined(__18f46j53) || \
@@ -104,7 +103,7 @@
         u16 pll_startup_counter = 600;
 
     #endif
-    */
+
     /// ----------------------------------------------------------------
     /// If we start from a Power-on reset, set NOT_POR bit to 1
     /// ----------------------------------------------------------------
@@ -115,7 +114,6 @@
                                 // enable priority levels on interrupts
     }
     
-/*  ALREADY DONE IN THE BOOTLOADER CODE
     /// ----------------------------------------------------------------
     /// Perform a loop for some processors until their frequency is stable
     /// ----------------------------------------------------------------
@@ -152,7 +150,7 @@
         while (pll_startup_counter--);
 
     #endif
-*/
+
     /// ----------------------------------------------------------------
     /// Init. all flag/interrupt
     /// ----------------------------------------------------------------
@@ -281,7 +279,8 @@
      defined(USERINT)       || defined(INT0INT)     || defined(I2CINT)      || \
      defined(__SERIAL__)    || defined(ON_EVENT)    || defined(__MILLIS__)  || \
      defined(SERVOSLIBRARY) || defined(__PS2KEYB__) || defined(__DCF77__)   || \
-     defined(RTCCALARMINTENABLE) || defined(__STEPPER__) // || defined(__MICROSTEPPING__)
+     defined(__IRREMOTE__)  || defined(RTCCALARMINTENABLE) || defined(__STEPPER__)
+     // || defined(__MICROSTEPPING__)
 
 /*  ----------------------------------------------------------------------------
     High Interrupt Vector
@@ -342,6 +341,10 @@ void high_priority_isr(void) __interrupt 1
     dcf77_interrupt();
     #endif
 
+    #ifdef __IRREMOTE__
+    irremote_interrupt();
+    #endif
+    
     //#ifdef __MICROSTEPPING__
     #ifdef __STEPPER__
     stepper_interrupt();
