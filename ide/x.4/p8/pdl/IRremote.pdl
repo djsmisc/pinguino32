@@ -1,4 +1,4 @@
-IRremote.init IRrecv_init#include <IRremote.c>
+IRremote.init IRrecv_init#include <IRremote.c>#define __IRREMOTE__
 IRremote.sendNEC IRsend_sendNEC#include <IRremote.c>
 IRremote.sendSony IRsend_sendSony#include <IRremote.c>
 IRremote.sendRaw IRsend_sendRaw#include <IRremote.c>

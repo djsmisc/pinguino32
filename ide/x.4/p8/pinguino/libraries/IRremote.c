@@ -16,9 +16,13 @@
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
 
+#ifndef IRREMOTE_C
+#define IRREMOTE_C
+
 #include <IRremote.h>
 #include <IRremoteInt.h>
 #include <macro.h>
+#include <pin.h>
 #include <interrupt.h>
 #include <digitalw.c>
 #include <delay.c>
@@ -27,9 +31,10 @@
 
 volatile unsigned int _t3_reload_val;   // Timer3 reload value
 volatile irparams_t irparams;
+volatile uint8_t irdata;
 //volatile decode_results_t results;
 
-#define __IRREMOTE__        // used in main.c to init. the interrupt routine
+//#define __IRREMOTE__        // used in main.c to init. the interrupt routine
 
 // Macros
 #define ENABLE_PWM    PWM_setPercentDutyCycle(irparams.outpin, 50) // duty cycle = 50% = Enable PWM output
@@ -314,21 +319,21 @@ void IRrecv_init(int recvpin, int outpin)
 // initialization
 void IRrecv_enableIRIn()
 {
-/*
-  cli();
-  // setup pulse clock timer interrupt
-  //Prescale /8 (16M/8 = 0.5 microseconds per tick)
-  // Therefore, the timer interval can range from 0.5 to 128 microseconds
-  // depending on the reset value (255 to 0)
-  TIMER_CONFIG_NORMAL();
+    /*
+    cli();
+    // setup pulse clock timer interrupt
+    //Prescale /8 (16M/8 = 0.5 microseconds per tick)
+    // Therefore, the timer interval can range from 0.5 to 128 microseconds
+    // depending on the reset value (255 to 0)
+    TIMER_CONFIG_NORMAL();
 
-  //Timer2 Overflow Interrupt Enable
-  TIMER_ENABLE_INTR;
+    //Timer2 Overflow Interrupt Enable
+    TIMER_ENABLE_INTR;
 
-  TIMER_RESET;
+    TIMER_RESET;
 
-  sei();  // enable interrupts
-*/
+    sei();  // enable interrupts
+    */
 
     // Configure Timer3 to overload every 50us
 
@@ -338,7 +343,7 @@ void IRrecv_enableIRIn()
     // nb cycles for 50us
     _t3_reload_val *= 50;
     _t3_reload_val = 0xFFFF - _t3_reload_val;
-    T3CON = T3_OFF | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_RUN_FROM_OSC;
+    T3CON = T3_ON | T3_16BIT | T3_SYNC_EXT_OFF | T3_OSC_OFF | T3_PS_1_1 | T3_RUN_FROM_OSC;
     IPR2bits.TMR3IP = INT_LOW_PRIORITY;
     TMR3H = high8(_t3_reload_val);
     TMR3L =  low8(_t3_reload_val);
@@ -347,12 +352,12 @@ void IRrecv_enableIRIn()
     INTCONbits.GIEH    = 1;   // Enable global HP interrupts
     INTCONbits.GIEL    = 1;   // Enable global LP interrupts
 
-  // initialize state machine variables
-  irparams.rcvstate = STATE_IDLE;
-  irparams.rawlen = 0;
+    // initialize state machine variables
+    irparams.rcvstate = STATE_IDLE;
+    irparams.rawlen = 0;
 
-  // set pin modes
-  pinmode(irparams.recvpin, INPUT);
+    // set pin modes
+    pinmode(irparams.recvpin, INPUT);
 }
 
 // enable/disable blinking of USERLED on IR processing
@@ -373,8 +378,6 @@ void IRrecv_blink13(int blinkflag)
 
 void irremote_interrupt() // called from main.c
 {
-    volatile uint8_t irdata;
-
     if (PIR2bits.TMR3IF) // Timer3 interrupt ?
     {
         //TIMER_RESET;
@@ -384,69 +387,78 @@ void irremote_interrupt() // called from main.c
         irdata = (uint8_t)digitalread(irparams.recvpin);
 
         irparams.timer++; // One more 50us tick
-        if (irparams.rawlen >= RAWBUF) {
-        // Buffer overflow
-        irparams.rcvstate = STATE_STOP;
-        }
-        switch(irparams.rcvstate) {
-        case STATE_IDLE: // In the middle of a gap
-        if (irdata == MARK) {
-          if (irparams.timer < GAP_TICKS) {
-            // Not big enough to be a gap.
-            irparams.timer = 0;
-          } 
-          else {
-            // gap just ended, record duration and start recording transmission
-            irparams.rawlen = 0;
-            irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-            irparams.timer = 0;
-            irparams.rcvstate = STATE_MARK;
-          }
-        }
-        break;
-        case STATE_MARK: // timing MARK
-        if (irdata == SPACE) {   // MARK ended, record time
-          irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-          irparams.timer = 0;
-          irparams.rcvstate = STATE_SPACE;
-        }
-        break;
-        case STATE_SPACE: // timing SPACE
-        if (irdata == MARK) { // SPACE just ended, record it
-          irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-          irparams.timer = 0;
-          irparams.rcvstate = STATE_MARK;
-        } 
-        else { // SPACE
-          if (irparams.timer > GAP_TICKS) {
-            // big SPACE, indicates gap between codes
-            // Mark current code as ready for processing
-            // Switch to STOP
-            // Don't reset timer; keep counting space width
+        if (irparams.rawlen >= RAWBUF)
+        {
+            // Buffer overflow
             irparams.rcvstate = STATE_STOP;
-          } 
-        }
-        break;
-        case STATE_STOP: // waiting, measuring gap
-        if (irdata == MARK) { // reset gap timer
-          irparams.timer = 0;
-        }
-        break;
         }
 
-        if (irparams.blinkflag) {
-        if (irdata == MARK) {
-          digitalwrite(USERLED, 1);  // turn USERLED on
-        } 
-        else {
-          digitalwrite(USERLED, 0);  // turn USERLED off
+        switch(irparams.rcvstate)
+        {
+
+            case STATE_IDLE: // In the middle of a gap
+                if (irdata == MARK) {
+                  if (irparams.timer < GAP_TICKS) {
+                    // Not big enough to be a gap.
+                    irparams.timer = 0;
+                  } 
+                  else {
+                    // gap just ended, record duration and start recording transmission
+                    irparams.rawlen = 0;
+                    irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+                    irparams.timer = 0;
+                    irparams.rcvstate = STATE_MARK;
+                  }
+                }
+                break;
+
+            case STATE_MARK: // timing MARK
+                if (irdata == SPACE) {   // MARK ended, record time
+                  irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+                  irparams.timer = 0;
+                  irparams.rcvstate = STATE_SPACE;
+                }
+                break;
+
+            case STATE_SPACE: // timing SPACE
+                if (irdata == MARK) { // SPACE just ended, record it
+                  irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+                  irparams.timer = 0;
+                  irparams.rcvstate = STATE_MARK;
+                } 
+                else { // SPACE
+                  if (irparams.timer > GAP_TICKS) {
+                    // big SPACE, indicates gap between codes
+                    // Mark current code as ready for processing
+                    // Switch to STOP
+                    // Don't reset timer; keep counting space width
+                    irparams.rcvstate = STATE_STOP;
+                  } 
+                }
+                break;
+
+            case STATE_STOP: // waiting, measuring gap
+                if (irdata == MARK) { // reset gap timer
+                  irparams.timer = 0;
+                }
+                break;
         }
+
+        if (irparams.blinkflag)
+        {
+            if (irdata == MARK) {
+              digitalwrite(USERLED, 1);  // turn USERLED on
+            } 
+            else {
+              digitalwrite(USERLED, 0);  // turn USERLED off
+            }
         }
         PIR2bits.TMR3IF = 0;
     }
 }
 
-void IRrecv_resume() {
+void IRrecv_resume()
+{
   irparams.rcvstate = STATE_IDLE;
   irparams.rawlen = 0;
 }
@@ -454,76 +466,78 @@ void IRrecv_resume() {
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
-int IRrecv_decode(decode_results *results) {
-  results->rawbuf = irparams.rawbuf;
-  results->rawlen = irparams.rawlen;
-  if (irparams.rcvstate != STATE_STOP) {
+int IRrecv_decode(decode_results *results)
+{
+    results->rawbuf = irparams.rawbuf;
+    results->rawlen = irparams.rawlen;
+    if (irparams.rcvstate != STATE_STOP) {
     return ERR;
-  }
-#ifdef DEBUG
-  Serial_println("Attempting NEC decode");
-#endif
-  if (IRrecv_decodeNEC(results)) {
+    }
+    #ifdef DEBUG
+    Serial_println("Attempting NEC decode");
+    #endif
+    if (IRrecv_decodeNEC(results)) {
     return DECODED;
-  }
-#ifdef DEBUG
-  Serial_println("Attempting Sony decode");
-#endif
-  if (IRrecv_decodeSony(results)) {
+    }
+    #ifdef DEBUG
+    Serial_println("Attempting Sony decode");
+    #endif
+    if (IRrecv_decodeSony(results)) {
     return DECODED;
-  }
-#ifdef DEBUG
-  Serial_println("Attempting Sanyo decode");
-#endif
-  if (IRrecv_decodeSanyo(results)) {
+    }
+    #ifdef DEBUG
+    Serial_println("Attempting Sanyo decode");
+    #endif
+    if (IRrecv_decodeSanyo(results)) {
     return DECODED;
-  }
-#ifdef DEBUG
-  Serial_println("Attempting Mitsubishi decode");
-#endif
-  if (IRrecv_decodeMitsubishi(results)) {
+    }
+    #ifdef DEBUG
+    Serial_println("Attempting Mitsubishi decode");
+    #endif
+    if (IRrecv_decodeMitsubishi(results)) {
     return DECODED;
-  }
-#ifdef DEBUG
-  Serial_println("Attempting RC5 decode");
-#endif  
-  if (IRrecv_decodeRC5(results)) {
+    }
+    #ifdef DEBUG
+    Serial_println("Attempting RC5 decode");
+    #endif  
+    if (IRrecv_decodeRC5(results)) {
     return DECODED;
-  }
-#ifdef DEBUG
-  Serial_println("Attempting RC6 decode");
-#endif 
-  if (IRrecv_decodeRC6(results)) {
+    }
+    #ifdef DEBUG
+    Serial_println("Attempting RC6 decode");
+    #endif 
+    if (IRrecv_decodeRC6(results)) {
     return DECODED;
-  }
-#ifdef DEBUG
+    }
+    #ifdef DEBUG
     Serial_println("Attempting Panasonic decode");
-#endif 
+    #endif 
     if (IRrecv_decodePanasonic(results)) {
         return DECODED;
     }
-#ifdef DEBUG
+    #ifdef DEBUG
     Serial_println("Attempting JVC decode");
-#endif 
+    #endif 
     if (IRrecv_decodeJVC(results)) {
         return DECODED;
     }
-  // decodeHash returns a hash on any input.
-  // Thus, it needs to be last in the list.
-  // If you add any decodes, add them before this.
-  if (IRrecv_decodeHash(results)) {
+    // decodeHash returns a hash on any input.
+    // Thus, it needs to be last in the list.
+    // If you add any decodes, add them before this.
+    if (IRrecv_decodeHash(results)) {
     return DECODED;
-  }
-  // Throw away and start over
-  IRrecv_resume();
-  return ERR;
+    }
+    // Throw away and start over
+    IRrecv_resume();
+    return ERR;
 }
 
 // NECs have a repeat only 4 items long
-long IRrecv_decodeNEC(decode_results *results) {
-  long data = 0;
-  int offset = 1; // Skip first space
-  int i;
+long IRrecv_decodeNEC(decode_results *results)
+{
+    long data = 0;
+    int offset = 1; // Skip first space
+    int i;
   // Initial mark
   if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK)) {
     return ERR;
@@ -570,7 +584,8 @@ long IRrecv_decodeNEC(decode_results *results) {
   return DECODED;
 }
 
-long IRrecv_decodeSony(decode_results *results) {
+long IRrecv_decodeSony(decode_results *results)
+{
   long data = 0;
   int offset = 0; // Dont skip first space, check its size
 
@@ -625,7 +640,8 @@ long IRrecv_decodeSony(decode_results *results) {
 
 // I think this is a Sanyo decoder - serial = SA 8650B
 // Looks like Sony except for timings, 48 chars of data and time/space different
-long IRrecv_decodeSanyo(decode_results *results) {
+long IRrecv_decodeSanyo(decode_results *results)
+{
   long data = 0;
   int offset = 0; // Skip first space
 
@@ -689,7 +705,8 @@ long IRrecv_decodeSanyo(decode_results *results) {
 }
 
 // Looks like Sony except for timings, 48 chars of data and time/space different
-long IRrecv_decodeMitsubishi(decode_results *results) {
+long IRrecv_decodeMitsubishi(decode_results *results)
+{
   // Serial_print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;
   int offset = 0; // Skip first space
@@ -761,7 +778,8 @@ long IRrecv_decodeMitsubishi(decode_results *results) {
 // offset and used are updated to keep track of the current position.
 // t1 is the time interval for a single bit in microseconds.
 // Returns -1 for error (measured time interval is not a multiple of t1).
-int IRrecv_getRClevel(decode_results *results, int *offset, int *used, int t1) {
+int IRrecv_getRClevel(decode_results *results, int *offset, int *used, int t1)
+{
   int width, val, correction, avail;
 
   if (*offset >= results->rawlen) {
@@ -801,7 +819,8 @@ int IRrecv_getRClevel(decode_results *results, int *offset, int *used, int t1) {
   return val;   
 }
 
-long IRrecv_decodeRC5(decode_results *results) {
+long IRrecv_decodeRC5(decode_results *results)
+{
   int offset = 1; // Skip gap space
   long data = 0;
   int used = 0;
@@ -839,7 +858,8 @@ long IRrecv_decodeRC5(decode_results *results) {
   return DECODED;
 }
 
-long IRrecv_decodeRC6(decode_results *results) {
+long IRrecv_decodeRC6(decode_results *results)
+{
   int offset = 1; // Skip first space
   long data = 0;
   int used = 0;
@@ -892,7 +912,8 @@ long IRrecv_decodeRC6(decode_results *results) {
   return DECODED;
 }
 
-long IRrecv_decodePanasonic(decode_results *results) {
+long IRrecv_decodePanasonic(decode_results *results)
+{
     //unsigned long long data = 0; // PIC18F don't have 64-bit type
     unsigned long data = 0;
     int offset = 1;
@@ -927,7 +948,9 @@ long IRrecv_decodePanasonic(decode_results *results) {
     results->bits = PANASONIC_BITS;
     return DECODED;
 }
-long IRrecv_decodeJVC(decode_results *results) {
+
+long IRrecv_decodeJVC(decode_results *results)
+{
     long data = 0;
     int offset = 1; // Skip first space
     int i;
@@ -997,7 +1020,8 @@ long IRrecv_decodeJVC(decode_results *results) {
 // Compare two tick values, returning 0 if newval is shorter,
 // 1 if newval is equal, and 2 if newval is longer
 // Use a tolerance of 20%
-int IRrecv_compare(unsigned int oldval, unsigned int newval) {
+int IRrecv_compare(unsigned int oldval, unsigned int newval)
+{
   if (newval < oldval * .8) {
     return 0;
   } 
@@ -1017,7 +1041,8 @@ int IRrecv_compare(unsigned int oldval, unsigned int newval) {
  * Hopefully this code is unique for each button.
  * This isn't a "real" decoding, just an arbitrary value.
  */
-long IRrecv_decodeHash(decode_results *results) {
+long IRrecv_decodeHash(decode_results *results)
+{
   int i;
   int value;
   long hash;
@@ -1061,7 +1086,8 @@ i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
 linked LIRC file.
 */
 
-void IRsend_sendSharp(unsigned long data, int nbits) {
+void IRsend_sendSharp(unsigned long data, int nbits)
+{
   unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
   int i;
   IRsend_enableIROut(38);
@@ -1117,3 +1143,5 @@ void IRsend_sendDISH(unsigned long data, int nbits)
     data <<= 1;
   }
 }
+
+#endif /* IRREMOTE_C */
