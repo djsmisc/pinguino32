@@ -12,8 +12,8 @@
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
 
-#ifndef IRremote_h
-#define IRremote_h
+#ifndef IRREMOTE_H
+#define IRREMOTE_H
 
 // The following are compile-time library options.
 // If you change them, recompile the library.
@@ -104,4 +104,4 @@ void IRsend_sendJVC(unsigned long data, int nbits, int repeat); // *Note instead
 // when received due to sensor lag.
 #define MARK_EXCESS 100
 
-#endif /* IRremote_h */
+#endif /* IRREMOTE_H */
