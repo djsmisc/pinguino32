@@ -3,8 +3,8 @@
     PROJECT:		pinguino
     PURPOSE:
     PROGRAMER:		jean-pierre mandon <jp.mandon@gmail.com>
-    FIRST RELEASE:	02 dec. 2010
-    LAST RELEASE:	30 jan. 2012
+    FIRST RELEASE:	02 Dec. 2010
+    LAST RELEASE:	02 Dec. 2013
     ----------------------------------------------------------------------------
     CHANGELOG:
     [02-12-10][jp.mandon@gmail.com][tested from 0 to 31 OK except PORTA pin]
@@ -40,7 +40,7 @@
 #define __DIGITALW_C
 
 #include <p32xxxx.h>
-#include <typedef.h>
+//#include <typedef.h>
 
 #define pA	0
 #define pB	1
@@ -71,14 +71,14 @@
 
 #if defined(PIC32_PINGUINO)
 
-const u32 portmask[]=
+const int portmask[]=
                  {pD,pD,pD,pD,pD,pD,pD,pD,	// 0-7
                   pB,pB,pG,pG,pG,pG,pB,pB,	// 8-15
                   pB,pB,pD,pD,pB,pB,pE,pE,	// 16-23
                   pE,pE,pE,pE,pE,pE,pD,pF,	// 24-31
                   pF};				// 32
 
-const u32 pinmask[]={_2,_3,_0,_5,_6,_7,_8,_11,		// 0-7
+const int pinmask[]={_2,_3,_0,_5,_6,_7,_8,_11,		// 0-7
                   _14,_15,_9,_8,_7,_6,_1,_2,	// 8-15
                   _3,_4,_9,_10,_11,_10,_0,_1,		// 16-23
                   _2,_3,_4,_5,_6,_7,_1,_1,			// 24-31
@@ -88,33 +88,35 @@ const u32 pinmask[]={_2,_3,_0,_5,_6,_7,_8,_11,		// 0-7
 
 #elif defined(PIC32_PINGUINO_T795)
 
-const u32 portmask[]=
-                 {pB,pB,pB,pB,pB,pB,pD,pD,	// 0-7
+const int portmask[]= {
+                  pB,pB,pB,pB,pB,pB,pD,pD,	// 0-7
                   pD,pD,pE,pE,pE,pE,pE,pE,	// 8-15
                   pE,pE,pB,pB,pF,pD,pD,pD,	// 16-23
                   pD,pD,pD,pD,pD,pF,pF,pF,	// 24-31
                   pF,pB,pB,pB,pB,pG,pG,pG,	// 32-39
-                  pG,pB,pB,pB,pB};              // 40-44
+                  pG,pB,pB,pB,pB};          // 40-44
 
-const u32 pinmask[]=            {_3,_4,_6,_7,_9,_10,_11,_3,	// 0-7
-                         _2,_1,_0,_1,_2,_3,_4,_5,	// 8-15
-                         _6,_7,_11,_12,_3,_8,_9,_10,   // 16-23
-                         _0,_4,_5,_6,_7,_0,_1,_5,      // 24-31
-                         _4,_8,_14,_13,_15,_6,_7,_8,   // 32-39
-                         _9,_5,_2,_1,_0};              // 40-44
+const int pinmask[]= {
+                  _3,_4,_6,_7,_9,_10,_11,_3,	// 0-7
+                  _2,_1,_0,_1,_2,_3,_4,_5,	    // 8-15
+                  _6,_7,_11,_12,_3,_8,_9,_10,   // 16-23
+                  _0,_4,_5,_6,_7,_0,_1,_5,      // 24-31
+                  _4,_8,_14,_13,_15,_6,_7,_8,   // 32-39
+                  _9,_5,_2,_1,_0};              // 40-44
 
 //----------------------------------------------------------------------
 
 #elif defined(PIC32_PINGUINO_OTG)
 
-const u32 portmask[]=
-                 {pD,pD,pD,pD,pD,pD,pD,pD,	// 0-7
+const int portmask[]= {
+                  pD,pD,pD,pD,pD,pD,pD,pD,	// 0-7
                   pB,pB,pG,pG,pG,pG,pB,pB,	// 8-15
                   pB,pB,pD,pD,pB,pB,pE,pE,	// 16-23
                   pE,pE,pE,pE,pE,pE,pD,pF,	// 24-31
                   pF};				// 32
 
-const u32 pinmask[]={_2,_3,_0,_5,_6,_7,_8,_11,		// 0-7
+const int pinmask[]= {
+                  _2,_3,_0,_5,_6,_7,_8,_11,		// 0-7
                   _13,_14,_9,_8,_7,_6,_1,_2,	// 8-15
                   _3,_4,_9,_10,_11,_10,_0,_1,		// 16-23
                   _2,_3,_4,_5,_6,_7,_1,_1,			// 24-31
@@ -124,14 +126,14 @@ const u32 pinmask[]={_2,_3,_0,_5,_6,_7,_8,_11,		// 0-7
 
 #elif defined(PIC32_PINGUINO_MICRO)
 
-const u32 portmask[]= {	 pB,  pB,  pB,  pB,  pB,  pB,  pB,  pB,	// 0-7
+const int portmask[]= {	 pB,  pB,  pB,  pB,  pB,  pB,  pB,  pB,	// 0-7
                          pB,  pB,  pD,  pD,  pD,  pD,  pD,  pD,	// 8-15
                          pB,  pD,  pD,  pD,  pG,  pF,  pE,  pE,	// 16-23
                          pE,  pE,  pE,  pE,  pE,  pE,  pC,  pC,	// 24-31
                          pG,  pF,  pF,  pD,  pD,  pG,  pG,  pF, // 32-39
                          pB,  pD };								// 40-41  P41 strapped with P13
 
-const u32 pinmask[]=  {  _1,  _2,  _3,  _4,  _8,  _9, _10, _11,	// 0-7
+const int pinmask[]=  {  _1,  _2,  _3,  _4,  _8,  _9, _10, _11,	// 0-7
                         _12, _14,  _1,  _2,  _3,  _4,  _5,  _6,	// 8-15
                          _0,  _7,  _8, _11,  _9,  _1,  _7,  _6,	// 16-23
                          _5,  _4,  _3,  _2,  _1,  _0, _13, _14,	// 24-31
@@ -142,12 +144,12 @@ const u32 pinmask[]=  {  _1,  _2,  _3,  _4,  _8,  _9, _10, _11,	// 0-7
 
 #elif (PIC32_PINGUINO_220)
 
-const u32 portmask[]={	pC,pC,pC,pC,pC,pC,pC,pC,	// D0-D7	: C8,C9,C2,C3,C4,C5,C6,C7
+const int portmask[]={	pC,pC,pC,pC,pC,pC,pC,pC,	// D0-D7	: C8,C9,C2,C3,C4,C5,C6,C7
                         pB,pA,pA,pB,pB,pB,			// D8-D13	: B7,A10,A1,B5,B13,B15
                         pC,pC,pB,pB,pB,pB,			// D14-D19
                         pA,pB,pB };					// D20 (UEXT_CS),D21 (SDA1 UEXT), D22 (SCL1 UEXT)
 
-const u32 pinmask[]={	_8,_9,_2,_3,_4,_5,_6,_7,	// D0-D7	: C8,C9,C2,C3,C4,C5,C6,C7
+const int pinmask[]={	_8,_9,_2,_3,_4,_5,_6,_7,	// D0-D7	: C8,C9,C2,C3,C4,C5,C6,C7
                         _7,_10,_1,_5,_13,_15,		// D8-D13	: B7,A10,A1,B5,B13,B15
                         _0,_1,_0,_1,_2,_3,			// A0-A5	: C0,C1,B0,B1,B2,B3
                         _7,_9,_8 };					// D20		: A7,B9,B8
@@ -156,11 +158,11 @@ const u32 pinmask[]={	_8,_9,_2,_3,_4,_5,_6,_7,	// D0-D7	: C8,C9,C2,C3,C4,C5,C6,C
 
 #elif defined(PINGUINO32MX220) || defined(PINGUINO32MX250)
 
-const u32 portmask[]={	pB,pB,pB,pB,pB,pB,pB,pA,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
+const int portmask[]={	pB,pB,pB,pB,pB,pB,pB,pA,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
                         pB,pB,pB,pB,pB,pA,			// D8-D13	: B4,B3,B2,B1,B0,A0
                         pA };						// D14 		: A1
 
-const u32 pinmask[]={	_15,_14,_13,_9,_8,_7,_5,_4,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
+const int pinmask[]={	_15,_14,_13,_9,_8,_7,_5,_4,	// D0-D7	: B15,B14,B13,B9,B8,B7,B5,A4
                         _4,_3,_2,_1,_0,_0,			// D8-D13	: B4,B3,B2,B1,B0,A0
                         _1 };						// D14 		: A1
 
@@ -168,7 +170,7 @@ const u32 pinmask[]={	_15,_14,_13,_9,_8,_7,_5,_4,	// D0-D7	: B15,B14,B13,B9,B8,B
 
 #elif defined(EMPEROR460) || defined(EMPEROR795)
 
-const u32 portmask[]=
+const int portmask[]=
                  {pC,pG,pG,pG,pG,pA,pE,pE,			//0-7
                   pB,pB,pB,pB,pB,pB,pA,pA,			//8-15
                   pB,pB,pB,pB,pA,pF,pF,pB,			//16-23
@@ -180,7 +182,7 @@ const u32 portmask[]=
                   pD,pD,pD,pD,pD,pD,pC,pC,			//64-71
                   pD,pD,pD,pD,pD,pB,pB};			//72-78
 
-const u32 pinmask[]={_4,_6,_7,_8,_9,_0,_8,_9,		//0-7		: E8=6,E9=7
+const int pinmask[]={_4,_6,_7,_8,_9,_0,_8,_9,		//0-7		: E8=6,E9=7
                   _5,_4,_3,_2,_1,_0,_9,_10,			//8-15
                   _8,_9,_10,_11,_1,_13,_12,_12,		//16-23
                   _13,_14,_15,_14,_15,_4,_5,_3,		//24-31
@@ -196,7 +198,7 @@ const u32 pinmask[]={_4,_6,_7,_8,_9,_0,_8,_9,		//0-7		: E8=6,E9=7
 
 #elif defined(UBW32_460) || defined(UBW32_795)
 
-const u32 portmask[]=
+const int portmask[]=
                  {pC,pG,pG,pG,pG,pA,pE,pE, 			//0-7
                   pB,pB,pB,pA,pA,pB,pB,pB, 			//8-15
                   pB,pA,pF,pF,pB,pB,pB,pB,			//16-23
@@ -209,7 +211,7 @@ const u32 portmask[]=
                   pC,pB,pB,pB,pB,pB,pF};			//72-78
 
 
-const u32 pinmask[]={_4,_6,_7,_8,_9,_0,_8,_9,		//0-7
+const int pinmask[]={_4,_6,_7,_8,_9,_0,_8,_9,		//0-7
                   _5,_4,_3,_9,_10,_8,_9,_10,		//8-15
                   _11,_1,_13,_12,_12,_13,_14,_15, 	//16-23
                   _14,_15,_4,_5,_2,_8,_2,_3,		//24-31
@@ -224,7 +226,7 @@ const u32 pinmask[]={_4,_6,_7,_8,_9,_0,_8,_9,		//0-7
 
 //----------------------------------------------------------------------
 
-void pinmode(u8 pin,u8 state)
+void pinmode(int pin, int state)
 {
     switch (portmask[pin])
     {
@@ -266,9 +268,9 @@ void pinmode(u8 pin,u8 state)
     }
 }
 
-u8 pinread(u8 pin)
+int pinread(int pin)
 {
-    u32 reg = 0;
+    int reg = 0;
 
     switch (portmask[pin])
     {
@@ -314,7 +316,7 @@ u8 pinread(u8 pin)
         return 0;
 }
 
-void digitalwrite(u8 pin,u8 state)
+void digitalwrite(int pin, int state)
 {
     switch (portmask[pin])
     {
@@ -356,7 +358,7 @@ void digitalwrite(u8 pin,u8 state)
     }
 }
 
-u8 digitalread(u8 pin)
+u8 digitalread(int pin)
 {
     switch (portmask[pin])
     {
@@ -394,7 +396,7 @@ u8 digitalread(u8 pin)
     return 255;
 }
 
-void toggle(u8 pin)
+void toggle(int pin)
 {
     //digitalwrite(pin, digitalread(pin)^1);
 
