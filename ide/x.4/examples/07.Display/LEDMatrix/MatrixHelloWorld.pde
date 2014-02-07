@@ -22,9 +22,9 @@ void setup()
 
 void loop()
 { 
-    LedControl.writeString(" Hello World! ");
-    delay(1000);
-    LedControl.scroll(" Hello World! ");
-    delay(1000);
+    /* display the string char by char */
+    //LedControl.writeString(" Hello World! ");
+    //delay(1000);
+    /* scroll the string 1 pixel to the left */
     LedControl.scroll(" www.pinguino.cc ");
 }
