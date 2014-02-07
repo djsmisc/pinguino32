@@ -288,60 +288,55 @@ u8 LedControl_getCharArrayPosition(char input)
 // Scroll Message
 // d'après : http://breizhmakers.over-blog.com/article-un-peu-d-animation-ou-le-scrolling-a-base-de-max7219-105669349.html
 #if defined(SCROLL)
-void LedControl_scroll(char * displayString)
+void LedControl_scroll(const char * displayString)
 {
-    u8 i;        //bit à partir duquel on commence à afficher
-    u8 b;        //octet suivant celui en cours d'affichage
-    u8 r;        //ligne
-    u8 c;        //caractere courant
-    u8 octet=0;  //octet en cours d'affichage
-    u8 offset=0; //nombre de bits à prendre dans l'octet suivant
-    u8 row[8];
-    u8 scroll = 8 * max(maxDevices, strlen(displayString));
+    u8 nextchar;   // next char to display
+    u8 r;          // current row
+    u8 ascii;     // current ASCII code
+    u8 curchar;    // current displayed char
+    u8 offset;     // nombre de bits à prendre dans l'octet suivant
+    u8 row[8];     //
+    u8 scrollmax = 8 * max(maxDevices, strlen(displayString));
     
-    // on a maxDevices * 8 bits à afficher
-    //for(i=0; i<(maxDevices*8); i++)
-    for(i=0; i<scroll; i++)
+    // octet de départ
+    curchar = scroll / 8;
+
+    // nombre de bits à prendre dans l'octet suivant
+    offset = scroll % 8;
+
+    // for every row of the matrix
+    for(r=0; r<8; r++)
     {
-        // octet de départ
-        octet = i / 8;
-        // nombre de bits à prendre dans l'octet suivant
-        offset = i % 8;
-        // pour chaque ligne de la matrice
-        for(r=0; r<8; r++)
+        row[r]=0;
+
+        // matrix = current char shifted by offset
+
+        ascii = displayString[curchar]-32;
+        row[r] |= ( alphabetBitmap[ascii][r] >> offset );
+
+        // si on n'est pas sur le premier bit d'un octet il faut prendre les bits qui restent à
+        // afficher dans l'octet suivant
+
+        if (offset > 0) 
         {
-            row[r]=0;
-
-            // on transfert dans la matrice l'octet de départ décalé de l'offset (on décale le caractère
-            // de N crans vers la  droite de la matrice)
-
-            c = displayString[octet]-32;
-            row[r] |= ( alphabetBitmap[c][r] >> offset );
-
-            // si on n'est pas sur le premier bit d'un octet il faut prendre les bits qui restent à
-            // afficher dans l'octet suivant
-
-            if (offset > 0) 
+            ascii = displayString[curchar+1]-32;
+            if (ascii >= 0x20 && ascii <= 0x7F)
             {
-                c = displayString[octet+1]-32;
-                if (c >= 0x20 && c <= 0x7F)
-                {
-                    b = alphabetBitmap[c][r];
-                    row[r] |=  b << (8-offset);
-                }
+                nextchar = alphabetBitmap[ascii][r];
+                row[r] |=  nextchar << (8-offset);
             }
         }
-
-        // on a calculé la matrice à afficher, reste plus qu'à la transférer ligne par ligne
-        // dans le Max7219
-
-        for (r=0; r<8; r++)
-        {
-          LedControl_setColumn(0, 7-r, row[r]);     
-        }
-        
-        Delayms(50);
     }
+
+    // Display the new matrix
+    for (r=0; r<8; r++)
+        LedControl_setColumn(0, 7-r, row[r]);     
+
+    // and wait a bit
+    Delayms(50);
+
+    // Do we cover the whole scroll area ?
+    scroll = (scroll+1) % scrollmax;
 }
 #endif
 

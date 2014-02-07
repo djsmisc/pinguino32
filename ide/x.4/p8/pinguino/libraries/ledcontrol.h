@@ -32,16 +32,6 @@
 #if defined(SCROLL) || defined(WRITESTRING) || defined(DISPLAYCHAR)
     #include <fonts/font8x8.h>
     u8 (*alphabetBitmap)[8] = font;
-    u8 scrollBuffer[8][8] = {
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0}
-        };
 #endif
 
 #define LSBFIRST 100
@@ -76,7 +66,7 @@ const static u8 charTable[128] = {
 /// private:
 
 #if defined(SCROLL)
-    u8 scroll = 0;
+    int scroll = 0;
 #endif
 
 /* The array for shifting the data to the devices */
@@ -209,11 +199,11 @@ void LedControl_setChar(u8 matrix, u8 digit, char value, boolean dp);
 //Returns the array number in the alphabetBitmap array 
 //u8 LedControl_getCharArrayPosition(char c);
 
-void LedControl_writeString(char * displayString);
+void LedControl_writeString(const char * displayString);
 void LedControl_displayChar(u8 matrix, u8 charIndex);
 
 #if defined(SCROLL)
-void LedControl_scroll(char * displayString);
+void LedControl_scroll(const char * displayString);
 #endif
 
 #endif	//LedControl.h
