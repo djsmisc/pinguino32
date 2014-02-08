@@ -55,11 +55,11 @@ typedef struct
 
 // main class for receiving IR
 //void IRrecv_IRrecv(int recvpin);
-void IRrecv_init(int recvpin, int outpin);
+//void IRrecv_init(int recvpin, int outpin);
 
-void IRrecv_blink13(int blinkflag);
+void IRrecv_blink13(u8 blinkflag);
 int IRrecv_decode(decode_results *results);
-void IRrecv_enableIRIn();
+void IRrecv_enableIRIn(u8 recvpin);
 void IRrecv_resume();
 
 // These are called by decode
@@ -76,9 +76,9 @@ long IRrecv_decodeHash(decode_results *results);
 int IRrecv_compare(unsigned int oldval, unsigned int newval);
 
 // private:
-void IRsend_enableIROut(int khz);
-void IRsend_mark(int usec);
-void IRsend_space(int usec);
+void IRsend_enableIROut(u8 outpin);
+void IRsend_mark(unsigned int usec);
+void IRsend_space(unsigned int usec);
 
 void IRsend_IRsend();
 void IRsend_sendNEC(unsigned long data, int nbits);
