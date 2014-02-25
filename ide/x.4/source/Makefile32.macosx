@@ -29,6 +29,12 @@ LIBDIRS		=	-L$(OBJDIR)/usb
 
 # ------------------------------------------------------------------------------
 # unsupported record in hex file / Jean-pierre Mandon 2012
+# 04       : 4 bytes
+# 0000     : address
+# 05       : record type = Start_Linear_Address_Record
+# 9D004000 : address where the user program should start
+#          : _RESET_ADDR (see lkr/procdefs.ld)
+# 1A       : checksum
 # ------------------------------------------------------------------------------
 
 BADRECORD='^:040000059D006000FA'
@@ -93,8 +99,9 @@ CFLAGS		=	-fdollars-in-identifiers $(INCLUDEDIRS)
 
 LDFLAGS		=	$(LIBDIRS) $(LIBS)
 
-ELF_FLAGS	=	-EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc\
+ELF_FLAGS	=	-EL -Os -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc\
 					-msoft-float\
+                    -minterlink-mips16\
 					-Wl,--defsym,_min_heap_size=$(HEAP_SIZE)\
 					-Wl,-Map=$(SRCDIR)/output.map\
 					-Wl,-L$(OBJDIR)/\
