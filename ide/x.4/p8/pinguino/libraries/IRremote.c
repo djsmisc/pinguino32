@@ -16,6 +16,11 @@
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
 
+ /*
+  * Test version by PinguPlus 2014-02-16
+  * 
+ */
+ 
 #ifndef IRREMOTE_C
 #define IRREMOTE_C
 
@@ -26,12 +31,15 @@
 #include <IRremote.h>
 #include <IRremoteInt.h>
 
+#include <pwm.c>
 #include <digitalw.c>
 #include <delay.c>
-#include <pwm.c>
 #include <oscillator.c>
+//Test og
+#include <delay.c>
 
-#define _1us_ { nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); }
+//#define _1us_ { nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); }
+#define _1us_ { nop(); nop(); nop(); nop(); }
 
 volatile unsigned int _t3_reload_val;   // Timer3 reload value
 volatile irparams_t irparams;
@@ -159,6 +167,7 @@ void IRsend_sendRC5(unsigned long data, int nbits)
     PWM_setFrequency(36000);
     PWM_setPercentDutyCycle(irparams.outpin, 50);
     data = data << (32 - nbits);
+
     IRsend_mark(RC5_T1); // First start bit
     IRsend_space(RC5_T1); // Second start bit
     IRsend_mark(RC5_T1); // Second start bit
@@ -281,17 +290,31 @@ void IRsend_sendJVC(unsigned long data, int nbits, int repeat)
 
 void IRsend_mark(unsigned int time)
 {
-    int i;
+    unsigned int i;
     // Sends an IR mark for the specified number of microseconds.
     // The mark output is modulated at the PWM frequency.
 
     // duty cycle = 50% = Enable PWM output
     PWM_setPercentDutyCycle(irparams.outpin, 50);
-
+    
+    // loopcounter i = time - correction factor
+    // Without the NOPs the loop has an execution time of ~13 microseconds
+    i = time-13;
+    
+    // while () {} needs much less time than for (;;) {}
+    // for loop without NOPs : ~ 1,3 ms (889 iterations on 18f26j50)
+    // while loop without NOPs: ~ 712 µs (889 Iterations on 18f26j50)
+    while (i) {
+      _1us_
+      i--;
+    }
+    
+/*
     for (i=0; i<time; i++)
     {
-        _1us_
+;        _1us_
     }
+*/
 }
 
 /* Leave pin off for time (given in microseconds) */
@@ -304,10 +327,20 @@ void IRsend_space(unsigned int time)
     // duty cycle = 0% = Disable PWM output
     PWM_setPercentDutyCycle(irparams.outpin, 0);
 
+    // loopcounter i = time - correction factor
+    // without the NOPs the loop has an execution time of ~70 microseconds
+  
+    i = time - 70; // correction factor: 13 microseconds
+    while (i) {
+      _1us_
+      i--;
+    }
+/*
     for (i=0; i<time; i++)
     {
         _1us_
     }
+*/
 }
 
 //#define TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
