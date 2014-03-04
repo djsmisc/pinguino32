@@ -235,8 +235,8 @@
 	// run led pin
 //	#define RA4		20
 	#define RUNLED	20
-	#define LED1	20
-	#define USERLED	20
+	#define LED1	13
+	#define USERLED	13
 
 #elif defined(PINGUINO2455)  || defined(PINGUINO4455)  || \
       defined(PINGUINO2550)  || defined(PINGUINO4550)  || \
@@ -379,7 +379,10 @@
         #define POSITIONSENSOR 2
         #define TEMPSENSOR 3
         #define POWERSENSOR 4
+        #define IRSENSOR 9  // RC7
         #define BUZZER  19
+        #define CCP1        12
+        #define CCP2        11
         
     #elif defined(PINGUINO4550) || defined(PINGUINO45K50) || defined(PINGUINO4455)
     

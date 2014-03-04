@@ -1,10 +1,12 @@
-CDC.write CDCwrite#include <__cdc.c>
-CDC.print CDCprint#include <__cdc.c>
-CDC.println CDCprintln#include <__cdc.c>
-CDC.printf CDCprintf#include <__cdc.c>
-CDC.read CDCgets#include <__cdc.c>
-CDC.getKey CDCgetkey#include <__cdc.c>
-CDC.getString CDCgetstring#include <__cdc.c>
+CDC.write CDCwrite#include <__cdc.c>#define CDCWRITE
+CDC.print CDCprint#include <__cdc.c>#define CDCPRINT
+CDC.printNumber CDCprintNumber#include <__cdc.c>#define CDCPRINTNUMBER
+CDC.printFloat CDCprintFloat#include <__cdc.c>#define CDCPRINTFLOAT
+CDC.println CDCprintln#include <__cdc.c>#define CDCPRINTLN
+CDC.printf CDCprintf#include <__cdc.c>#define CDCPRINTF
+CDC.read CDCgets#include <__cdc.c>#define CDCGETS
+CDC.getKey CDCgetkey#include <__cdc.c>#define CDCGETKEY
+CDC.getString CDCgetstring#include <__cdc.c>#define CDCGETSTRING
 
 BULK.read BULK_read#include <__bulk.c>
 BULK.write BULK_write#include <__bulk.c>
