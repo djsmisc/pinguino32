@@ -52,7 +52,8 @@ void IOsetSpecial()
 void IOsetDigital()
 {
 	#if defined(__32MX220F032D__)||defined(__32MX250F128B__)||defined(__32MX220F032B__)
-			DDPCONbits.JTAGEN=0;		// check : already in system.c
+			DDPCONbits.JTAGEN=0;    // check : already in system.c (SystemConfig)
+            //CFGCONbits.JTAGEN=0;  // Disable the JTAG port
 			ANSELA = 0;
 			ANSELB = 0;
 			#if defined(__32MX220F032D__)
