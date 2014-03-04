@@ -1,5 +1,17 @@
-// cdc module for Pinguino - Jean-Pierre Mandon 2010
-// printf, println, print, write, getKey, getString - Régis Blanchot 2011
+/*	--------------------------------------------------------------------
+    FILE:  			__cdc.c
+    PROJECT: 		pinguino8
+    PURPOSE: 		USB CDC routines for use with pinguino board, 
+    PROGRAMER: 		Jean-Pierre Mandon 2010
+    CHANGELOG:
+    --------------------------------------------------------------------
+    14 Jun 2011 - Regis Blanchot (rblanchot@gmail.com) added :
+                  printf, println, print, write, getKey, getString
+    05 Feb 2013 - Regis Blanchot (rblanchot@gmail.com) moved :
+                  interrupt routine
+    04 Mar 2014 - Regis Blanchot (rblanchot@gmail.com) added :
+                  print, printNumber and printFloat
+    ------------------------------------------------------------------*/
 
 #ifndef __USBCDC
 #define __USBCDC
@@ -13,8 +25,11 @@
 #include <usb/usb_cdc.c>
 #include <typedef.h>
 #include <delay.c>
-#include <stdio.c>                  // Pinguino printf
-#include <stdarg.h>
+
+#if defined(CDCPRINTF)
+    #include <stdio.c>                  // Pinguino printf
+    #include <stdarg.h>
+#endif
 
 // CDC buffer length
 #ifndef _CDCBUFFERLENGTH_
@@ -22,6 +37,10 @@
 #endif
 
 u8 _cdc_buffer[_CDCBUFFERLENGTH_];  // usb buffer
+
+/***********************************************************************
+ * USB CDC init routine
+ **********************************************************************/
 
 void CDC_init(void)
 {
@@ -69,15 +88,134 @@ void CDC_init(void)
     INTCONbits.GIEL = 1;   // Enable global LP interrupts
 }
 
-// added by regis blanchot 14/06/2011
+/***********************************************************************
+ * USB CDC write routine (CDC.write)
+ * added by regis blanchot 14/06/2011
+ * write 1 char on CDC port
+ **********************************************************************/
 
-// CDC.write
+//#if defined(CDCWRITE)
 void CDCwrite(u8 c)
 {
     CDCputs(&c, 1);
 }
+//#endif
 
-// CDC.printf
+/***********************************************************************
+ * USB CDC print routine (CDC.print)
+ * added by regis blanchot 04/03/2014
+ * write a string on CDC port
+ **********************************************************************/
+
+#if defined(CDCPRINT) || defined(CDCPRINTLN)
+void CDCprint(char *string)
+{
+	u8 i;
+	for( i=0; string[i]; i++)
+		CDCwrite(string[i]);
+}
+#endif
+
+/***********************************************************************
+ * USB CDC print routine (CDC.println)
+ * added by regis blanchot 04/03/2014
+ * write a string followed by a carriage return character (ASCII 13, or '\r')
+ * and a newline character (ASCII 10, or '\n') on CDC port
+ **********************************************************************/
+
+#if defined(CDCPRINTLN)
+void CDCprintln(char *string)
+{
+    CDCprint(string);
+    CDCprint("\n\r");
+}
+#endif
+
+/***********************************************************************
+ * USB CDC printNumber routine (CDC.printNumber)
+ * added by regis blanchot 14/06/2011
+ * write a number on CDC port
+ * base : see const.h (DEC, BIN, HEXA, OCTO, ...)
+ **********************************************************************/
+
+#if defined(CDCPRINTNUMBER) || defined(CDCPRINTFLOAT)
+void CDCprintNumber(u16 n, u8 base)
+{  
+    u8 buf[8 * sizeof(long)]; // Assumes 8-bit chars. 
+    u16 i = 0;
+
+    if (n == 0)
+    {
+        CDCwrite('0');
+        return;
+    } 
+
+    while (n > 0)
+    {
+        buf[i++] = n % base;
+        n /= base;
+    }
+
+    for (; i > 0; i--)
+        CDCwrite((char) (buf[i - 1] < 10 ? '0' + buf[i - 1] : 'A' + buf[i - 1] - 10));
+}
+#endif
+
+/***********************************************************************
+ * USB CDC printFloat routine (CDC.printFloat)
+ * added by regis blanchot 14/06/2011
+ * write a float number on CDC port
+ * base : see const.h (DEC, BIN, HEXA, OCTO, ...)
+ **********************************************************************/
+
+#if defined(CDCPRINTFLOAT)
+void CDCprintFloat(float number, u8 digits)
+{ 
+	u8 i, toPrint;
+	u16 int_part;
+	float rounding, remainder;
+
+	// Handle negative numbers
+	if (number < 0.0)
+	{
+		CDCwrite('-');
+		number = -number;
+	}
+
+	// Round correctly so that print(1.999, 2) prints as "2.00"  
+	rounding = 0.5;
+	for (i=0; i<digits; ++i)
+		rounding /= 10.0;
+
+	number += rounding;
+
+	// Extract the integer part of the number and print it  
+	int_part = (u16)number;
+	remainder = number - (float)int_part;
+	CDCprintNumber(int_part, 10);
+
+	// Print the decimal point, but only if there are digits beyond
+	if (digits > 0)
+		CDCwrite('.'); 
+
+	// Extract digits from the remainder one at a time
+	while (digits-- > 0)
+	{
+		remainder *= 10.0;
+		toPrint = (unsigned int)remainder; //Integer part without use of math.h lib, I think better! (Fazzi)
+		CDCprintNumber(toPrint, 10);
+		remainder -= toPrint; 
+	}
+}
+#endif
+
+/***********************************************************************
+ * USB CDC printf routine (CDC.printf)
+ * added by regis blanchot 14/06/2011
+ * write a formated string on CDC port
+ **********************************************************************/
+
+#if defined(CDCPRINTF)
 void CDCprintf(const u8 *fmt, ...)
 {
     //u8 buffer[80];
@@ -90,6 +228,73 @@ void CDCprintf(const u8 *fmt, ...)
     CDCputs(_cdc_buffer,length);
     va_end(args);
 }
+#endif
+
+/***********************************************************************
+ * USB CDC getKey routine (CDC.getKey)
+ * added by regis blanchot 14/06/2011
+ * wait and return a char from CDC port
+ **********************************************************************/
+
+#if defined(CDCGETKEY)
+u8 CDCgetkey(void)
+{
+    u8 buffer[64];		// always get a full packet
+
+    while (!CDCgets(buffer));
+    return (buffer[0]);	// return only the first character
+}
+#endif
+
+/***********************************************************************
+ * USB CDC getString routine (CDC.getString)
+ * added by regis blanchot 14/06/2011
+ * wait and return a string from CDC port
+ **********************************************************************/
+
+#if defined(CDCGETSTRING)
+u8 * CDCgetstring(void)
+{
+    u8 c, i = 0;
+    static u8 buffer[80];	// Needs static buffer at least.
+
+    do {
+        c = CDCgetkey();
+        //CDCprintf("%c", c); // replaced by CDCwrite to spare memory space
+        CDCwrite(c);
+        buffer[i++] = c;
+    } while (c != '\r');
+    buffer[i] = '\0';
+    return buffer;
+}
+#endif
+
+/***********************************************************************
+ * USB CDC interrupt routine
+ * added by regis blanchot 05/02/2013
+ **********************************************************************/
+ 
+void CDC_interrupt(void)
+{
+    #if defined(__18f25k50) || defined(__18f45k50)
+    if(PIR3bits.USBIF)
+    {
+        PIR3bits.USBIF = 0;
+    #else
+    if(PIR2bits.USBIF)
+    {
+        PIR2bits.USBIF = 0;
+    #endif
+        ProcessUSBTransactions();
+        UIRbits.SOFIF = 0;
+        UIRbits.URSTIF = 0;
+
+        UEIR = 0;
+    }
+}
+
+#endif /* __USBCDC */
+
 /*
 // CDC.print
 #define CDCprint(m,type)	{ CDCprint_##type(m);  }
@@ -106,9 +311,8 @@ void CDCprint_BIN(u16 m)    { CDCprintf("%b",m); }
  * In case CDCprint("some string"), va_arg(args, u32) will return a unexpected invalid value. 
  * by avrin */
 
-//#if 0
-
-// last is a string (char *) or an integer
+/*
+#if defined(CDCPRINT)
 void CDCprint(const u8 *fmt, ...)
 {
     u8 s;
@@ -116,6 +320,7 @@ void CDCprint(const u8 *fmt, ...)
     va_start(args, fmt);					// initialize the list
     s = (u8) va_arg(args, u32);				// get the first variable arg.
 
+    // last is a string (char *) or an integer
     //switch (*args)
     switch (s)
     {
@@ -144,8 +349,10 @@ void CDCprint(const u8 *fmt, ...)
     }
     va_end(args);
 }
+#endif
 
 //CDC.println
+#if defined(CDCPRINTLN)
 void CDCprintln(const u8 *fmt, ...)
 {
     va_list args;							// a list of arguments
@@ -154,52 +361,6 @@ void CDCprintln(const u8 *fmt, ...)
     CDCprintf(fmt, args);
     CDCprintf("\n\r");
 }
-
-//#endif
-
-// CDC.getKey
-u8 CDCgetkey(void)
-{
-    u8 buffer[64];		// always get a full packet
-
-    while (!CDCgets(buffer));
-    return (buffer[0]);	// return only the first character
-}
-
-// CDC.getString
-u8 * CDCgetstring(void)
-{
-    u8 c, i = 0;
-    static u8 buffer[80];	// Needs static buffer at least.
-
-    do {
-        c = CDCgetkey();
-        CDCprintf("%c", c);
-        buffer[i++] = c;
-    } while (c != '\r');
-    buffer[i] = '\0';
-    return buffer;
-}
-
-// added by regis blanchot 05/02/2013
-
-void CDC_interrupt(void)
-{
-    #if defined(__18f25k50) || defined(__18f45k50)
-    if(PIR3bits.USBIF)
-    {
-        PIR3bits.USBIF = 0;
-    #else
-    if(PIR2bits.USBIF)
-    {
-        PIR2bits.USBIF = 0;
-    #endif
-        ProcessUSBTransactions();
-        UIRbits.SOFIF = 0;
-        UIRbits.URSTIF = 0;
-
-        UEIR = 0;
-    }
-}
-
 #endif
+*/
+
