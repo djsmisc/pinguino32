@@ -687,14 +687,14 @@ u8 MCP23S17_digitalRead(u8 Pin, MCP23S17 * Mcp)
   return(0xFF);
  if (Pin < 8)
   {
-   if (MCP23S17_read_B(Mcp,MCP23017_GPIOA,&(Mcp->GINP.B[0])) == FALSE)
+   if (MCP23S17_read_B(Mcp,MCP23S17_GPIOA,&(Mcp->GINP.B[0])) == FALSE)
     return(0xFF);
    return ((Mcp->GINP.B[0] >> Pin) & 0x1);
   }
  else
   {
    Pin -= 8;
-   if (MCP23S17_read_B(Mcp,MCP23017_GPIOB,&(Mcp->GINP.B[1])) == FALSE)
+   if (MCP23S17_read_B(Mcp,MCP23S17_GPIOB,&(Mcp->GINP.B[1])) == FALSE)
     return(0xFF);
    return ((Mcp->GINP.B[1] >> Pin) & 0x1);
   }
