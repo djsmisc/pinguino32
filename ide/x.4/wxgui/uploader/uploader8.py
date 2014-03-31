@@ -334,7 +334,7 @@ class uploader8(baseUploader):
         # --------------------------------------------------------------
 
         # Pinguino x6j50 or x7j53, erased blocks are 1024-byte long
-        if "j" in board.proc :
+        if "j" or "J" in board.proc :
             erasedBlockSize = 1024
 
         # Pinguino x455, x550 or x5k50, erased blocks are 64-byte long
@@ -498,6 +498,7 @@ class uploader8(baseUploader):
 
         memfree = self.board.memend - self.board.memstart;
         self.txtWrite(" - with %d bytes free (%d KB)" % (memfree, memfree/1024))
+        self.txtWrite("   from 0x%05X to 0x%05X" % (self.board.memstart, self.board.memend))
 
         # find out bootloader version
         # --------------------------------------------------------------

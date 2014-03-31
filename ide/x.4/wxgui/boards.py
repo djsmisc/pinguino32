@@ -307,7 +307,7 @@ class PIC32_Pinguino_T795:
     longarg='--olimexT795'
 
 class PIC32_Pinguino_220:
-    name='PIC32 Pinguino 220'
+    name='PIC32 Pinguino MX220'
     arch=32
     bldr='microchip'
     proc='32MX220F032D'
