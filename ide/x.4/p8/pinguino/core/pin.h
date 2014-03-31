@@ -464,6 +464,21 @@
     #define D5          29
     #define D6          30
     #define D7          31
+    /*
+    #define PMD0        24
+    #define PMD1        25
+    #define PMD2        26
+    #define PMD3        27
+    #define PMD4        28
+    #define PMD5        29
+    #define PMD6        30
+    #define PMD7        31
+
+    #define PMWR        14 // RE1
+    #define PMRD        13 // RE0
+    #define PMBE        1  // RB1
+    #define PMCS        15 // RE2
+    */
 
 #endif
 

@@ -11,6 +11,10 @@
                   interrupt routine
     04 Mar 2014 - Regis Blanchot (rblanchot@gmail.com) added :
                   print, printNumber and printFloat
+    10 Mar 2014 - Regis Blanchot (rblanchot@gmail.com) fixed :
+                  printNumber, getKey and getString
+                  printFloat still to do
+                  init optimized
     ------------------------------------------------------------------*/
 
 #ifndef __USBCDC
@@ -24,7 +28,10 @@
 #include <usb/picUSB.c>
 #include <usb/usb_cdc.c>
 #include <typedef.h>
-#include <delay.c>
+
+#ifdef boot2
+    #include <delay.c>
+#endif
 
 #if defined(CDCPRINTF)
     #include <stdio.c>                  // Pinguino printf
@@ -40,6 +47,7 @@ u8 _cdc_buffer[_CDCBUFFERLENGTH_];  // usb buffer
 
 /***********************************************************************
  * USB CDC init routine
+ * called from main.c
  **********************************************************************/
 
 void CDC_init(void)
@@ -50,6 +58,8 @@ void CDC_init(void)
     INTCONbits.GIEL = 0;
     //INTCON2=0xC0;               // set RBPU and INTEDG0 ???
 
+    #ifdef boot2
+
     UCON=0;
     UCFG=0;
 
@@ -59,6 +69,8 @@ void CDC_init(void)
     
     // and wait 2 seconds
     Delayms(2000);
+
+    #endif
 
     // Initialize USB for CDC
     UCFG = 0x14; 				// Enable pullup resistors; full speed mode
@@ -94,12 +106,7 @@ void CDC_init(void)
  * write 1 char on CDC port
  **********************************************************************/
 
-//#if defined(CDCWRITE)
-void CDCwrite(u8 c)
-{
-    CDCputs(&c, 1);
-}
-//#endif
+//#define CDCwrite(c) CDCputs(c, 1)
 
 /***********************************************************************
  * USB CDC print routine (CDC.print)
@@ -110,9 +117,7 @@ void CDCwrite(u8 c)
 #if defined(CDCPRINT) || defined(CDCPRINTLN)
 void CDCprint(char *string)
 {
-	u8 i;
-	for( i=0; string[i]; i++)
-		CDCwrite(string[i]);
+    CDCputs(string, strlen(string));
 }
 #endif
 
@@ -139,25 +144,59 @@ void CDCprintln(char *string)
  **********************************************************************/
 
 #if defined(CDCPRINTNUMBER) || defined(CDCPRINTFLOAT)
-void CDCprintNumber(u16 n, u8 base)
+void CDCprintNumber(long value, u8 base)
 {  
-    u8 buf[8 * sizeof(long)]; // Assumes 8-bit chars. 
-    u16 i = 0;
+    u8 sign;
+    u8 length;
 
-    if (n == 0)
+    long i;
+    unsigned long v;    // absolute value
+
+    u8 tmp[12];
+    u8 *tp = tmp;       // pointer on tmp
+
+    u8 string[12];
+    u8 *sp = string;    // pointer on string
+
+    if (value==0)
     {
-        CDCwrite('0');
+        CDCputs("0", 1);
         return;
-    } 
+    }
+    
+    sign = ( (base == 10) && (value < 0) );
 
-    while (n > 0)
+    if (sign)
+        v = -value;
+    else
+        v = (unsigned long)value;
+
+    //while (v || tp == tmp)
+    while (v)
     {
-        buf[i++] = n % base;
-        n /= base;
+        i = v % base;
+        v = v / base;
+        
+        if (i < 10)
+            *tp++ = i + '0';
+        else
+            *tp++ = i + 'A' - 10;
     }
 
-    for (; i > 0; i--)
-        CDCwrite((char) (buf[i - 1] < 10 ? '0' + buf[i - 1] : 'A' + buf[i - 1] - 10));
+    // start of string
+    if (sign)
+        *sp++ = '-';
+
+    length = sign + tp - tmp + 1;
+
+    // backwards writing 
+    while (tp > tmp)
+        *sp++ = *--tp;
+
+    // end of string
+    *sp = 0;
+
+    CDCputs(string, length);
 }
 #endif
 
@@ -178,7 +217,7 @@ void CDCprintFloat(float number, u8 digits)
 	// Handle negative numbers
 	if (number < 0.0)
 	{
-		CDCwrite('-');
+		CDCputs('-', 1);
 		number = -number;
 	}
 
@@ -196,7 +235,7 @@ void CDCprintFloat(float number, u8 digits)
 
 	// Print the decimal point, but only if there are digits beyond
 	if (digits > 0)
-		CDCwrite('.'); 
+		CDCputs('.', 1); 
 
 	// Extract digits from the remainder one at a time
 	while (digits-- > 0)
@@ -218,14 +257,12 @@ void CDCprintFloat(float number, u8 digits)
 #if defined(CDCPRINTF)
 void CDCprintf(const u8 *fmt, ...)
 {
-    //u8 buffer[80];
-    //char *buffer;
     u8 length;
     va_list	args;
 
     va_start(args, fmt);
     length = psprintf2(_cdc_buffer, fmt, args);
-    CDCputs(_cdc_buffer,length);
+    CDCputs(_cdc_buffer, length);
     va_end(args);
 }
 #endif
@@ -236,10 +273,10 @@ void CDCprintf(const u8 *fmt, ...)
  * wait and return a char from CDC port
  **********************************************************************/
 
-#if defined(CDCGETKEY)
+#if defined(CDCGETKEY) || defined(CDCGETSTRING)
 u8 CDCgetkey(void)
 {
-    u8 buffer[64];		// always get a full packet
+    u8 buffer[_CDCBUFFERLENGTH_];		// always get a full packet
 
     while (!CDCgets(buffer));
     return (buffer[0]);	// return only the first character
@@ -256,13 +293,12 @@ u8 CDCgetkey(void)
 u8 * CDCgetstring(void)
 {
     u8 c, i = 0;
-    static u8 buffer[80];	// Needs static buffer at least.
-
+    static u8 buffer[_CDCBUFFERLENGTH_];	// Needs static buffer at least.
+    
     do {
         c = CDCgetkey();
-        //CDCprintf("%c", c); // replaced by CDCwrite to spare memory space
-        CDCwrite(c);
         buffer[i++] = c;
+        CDCputs(&buffer[i-1], 1);
     } while (c != '\r');
     buffer[i] = '\0';
     return buffer;
@@ -272,6 +308,7 @@ u8 * CDCgetstring(void)
 /***********************************************************************
  * USB CDC interrupt routine
  * added by regis blanchot 05/02/2013
+ * called from main.c
  **********************************************************************/
  
 void CDC_interrupt(void)
