@@ -118,8 +118,8 @@
     /// Disables all interrupt
     /// ----------------------------------------------------------------
 
-    INTCONbits.GIEH     = 0;        // Disables all HP interrupts
-    INTCONbits.GIEL     = 0;        // Disables all LP interrupts
+    //INTCONbits.GIEH     = 0;        // Disables all HP interrupts
+    //INTCONbits.GIEL     = 0;        // Disables all LP interrupts
 
     /// ----------------------------------------------------------------
     /// Perform a loop for some processors until their frequency is stable

@@ -99,7 +99,8 @@ CFLAGS		=	-fdollars-in-identifiers $(INCLUDEDIRS)
 
 LDFLAGS		=	$(LIBDIRS) $(LIBS)
 
-ELF_FLAGS	=	-EL -Os -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc\
+# -Os option leads to errors when non-zero initialized static variable are defined
+ELF_FLAGS	=	-EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc\
 					-msoft-float\
                     -minterlink-mips16\
 					-Wl,--defsym,_min_heap_size=$(HEAP_SIZE)\
