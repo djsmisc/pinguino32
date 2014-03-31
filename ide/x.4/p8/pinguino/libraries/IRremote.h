@@ -15,6 +15,16 @@
 #ifndef IRREMOTE_H
 #define IRREMOTE_H
 
+#ifndef DIGITALWRITE
+#define DIGITALWRITE
+#endif
+
+#ifndef DIGITALREAD
+#define DIGITALREAD
+#endif
+
+#include <typedef.h>
+
 // The following are compile-time library options.
 // If you change them, recompile the library.
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
@@ -169,13 +179,13 @@
 
 #define LTOL (1.0 - TOLERANCE/100.) 
 #define UTOL (1.0 + TOLERANCE/100.) 
-#define TICKS_LOW(us) (int) (((us)*LTOL/USECPERTICK))
-#define TICKS_HIGH(us) (int) (((us)*UTOL/USECPERTICK + 1))
+#define TICKS_LOW(us) (u16) (((us)*LTOL/USECPERTICK))
+#define TICKS_HIGH(us) (u16) (((us)*UTOL/USECPERTICK + 1))
 
 #ifndef DEBUG
-int MATCH(int measured, int desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
-int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
-int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
+u16 MATCH(u16 measured, u16 desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
+u16 MATCH_MARK(u16 measured_ticks, u16 desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
+u16 MATCH_SPACE(u16 measured_ticks, u16 desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
 // Debugging versions are in IRremote.c
 #endif
 
@@ -186,12 +196,12 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks
 // Results returned from the decoder
 typedef struct
 {
-	int decode_type; // NEC, SONY, RC5, UNKNOWN
-	unsigned int panasonicAddress; // This is only used for decoding Panasonic data
-	unsigned long value; // Decoded value
-	int bits; // Number of bits in decoded value
-	volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
-	int rawlen; // Number of records in rawbuf.
+	u16 decode_type; // NEC, SONY, RC5, UNKNOWN
+	u16 panasonicAddress; // This is only used for decoding Panasonic data
+	u32 value; // Decoded value
+	u16 bits; // Number of bits in decoded value
+	volatile u16 *rawbuf; // Raw intervals in .5 us ticks
+	u16 rawlen; // Number of records in rawbuf.
 } decode_results;//_t;
 
 // information for the interrupt handler
@@ -217,44 +227,44 @@ extern volatile irparams_t irparams;
 ***********************************************************************/
 
 // main class for receiving IR
-//void IRrecv_IRrecv(int recvpin);
-//void IRrecv_init(int recvpin, int outpin);
+//void IRrecv_IRrecv(u16 recvpin);
+//void IRrecv_init(u16 recvpin, u16 outpin);
 
 void IRrecv_blink13(u8 blinkflag);
-int IRrecv_decode(decode_results *results);
+u16 IRrecv_decode(decode_results *results);
 void IRrecv_enableIRIn(u8 recvpin);
 void IRrecv_resume();
 
 // These are called by decode
-int IRrecv_getRClevel(decode_results *results, int *offset, int *used, int t1);
-long IRrecv_decodeNEC(decode_results *results);
-long IRrecv_decodeSony(decode_results *results);
-long IRrecv_decodeSanyo(decode_results *results);
-long IRrecv_decodeMitsubishi(decode_results *results);
-long IRrecv_decodeRC5(decode_results *results);
-long IRrecv_decodeRC6(decode_results *results);
-long IRrecv_decodePanasonic(decode_results *results);
-long IRrecv_decodeJVC(decode_results *results);
-long IRrecv_decodeHash(decode_results *results);
-int IRrecv_compare(unsigned int oldval, unsigned int newval);
+u16 IRrecv_getRClevel(decode_results *results, u16 *offset, u16 *used, u16 t1);
+u32 IRrecv_decodeNEC(decode_results *results);
+u32 IRrecv_decodeSony(decode_results *results);
+u32 IRrecv_decodeSanyo(decode_results *results);
+u32 IRrecv_decodeMitsubishi(decode_results *results);
+u32 IRrecv_decodeRC5(decode_results *results);
+u32 IRrecv_decodeRC6(decode_results *results);
+u32 IRrecv_decodePanasonic(decode_results *results);
+u32 IRrecv_decodeJVC(decode_results *results);
+u32 IRrecv_decodeHash(decode_results *results);
+u16 IRrecv_compare(u16 oldval, u16 newval);
 
 // private:
 void IRsend_enableIROut(u8 outpin);
-void IRsend_mark(unsigned int usec);
-void IRsend_space(unsigned int usec);
+void IRsend_mark(u16 usec);
+void IRsend_space(u16 usec);
 
 void IRsend_IRsend();
-void IRsend_sendNEC(unsigned long data, int nbits);
-void IRsend_sendSony(unsigned long data, int nbits);
+void IRsend_sendNEC(u32 data, u16 nbits);
+void IRsend_sendSony(u32 data, u16 nbits);
 // Neither Sanyo nor Mitsubishi send is implemented yet
-//  void sendSanyo(unsigned long data, int nbits);
-//  void sendMitsubishi(unsigned long data, int nbits);
-void IRsend_sendRaw(unsigned int buf[], int len, int hz);
-void IRsend_sendRC5(unsigned long data, int nbits);
-void IRsend_sendRC6(unsigned long data, int nbits);
-void IRsend_sendDISH(unsigned long data, int nbits);
-void IRsend_sendSharp(unsigned long data, int nbits);
-void IRsend_sendPanasonic(unsigned int address, unsigned long data);
-void IRsend_sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+//  void sendSanyo(u32 data, u16 nbits);
+//  void sendMitsubishi(u32 data, u16 nbits);
+void IRsend_sendRaw(u16 buf[], u16 len, u16 hz);
+void IRsend_sendRC5(u32 data, u16 nbits);
+void IRsend_sendRC6(u32 data, u16 nbits);
+void IRsend_sendDISH(u32 data, u16 nbits);
+void IRsend_sendSharp(u32 data, u16 nbits);
+void IRsend_sendPanasonic(u16 address, u32 data);
+void IRsend_sendJVC(u32 data, u16 nbits, u16 repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
 
 #endif /* IRREMOTE_H */

@@ -30,7 +30,6 @@
 #include <interrupt.h>
 #include <IRremote.h>
 //#include <IRremoteInt.h>      // moved content in IRremote.h
-
 #include <pwm.c>
 #include <digitalw.c>
 #include <delay.c>
@@ -39,7 +38,7 @@
 //#define _1us_ { nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); nop(); }
 #define _1us_ { nop(); nop(); nop(); nop(); }
 
-volatile unsigned int _t3_reload_val;   // Timer3 reload value
+volatile u16 _t3_reload_val;   // Timer3 reload value
 volatile irparams_t irparams;
 volatile u8 irdata;
 //u8 d1; // used by delay50us assembly routine
@@ -50,7 +49,7 @@ volatile u8 irdata;
 // To use them, set DEBUG in IRremoteInt.h
 // Normally macros are used for efficiency
 #ifdef DEBUG
-int MATCH(int measured, int desired) {
+u16 MATCH(u16 measured, u16 desired) {
   serial_print("Testing: ");
   serial_print(TICKS_LOW(desired), DEC);
   serial_print(" <= ");
@@ -60,7 +59,7 @@ int MATCH(int measured, int desired) {
   return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);
 }
 
-int MATCH_MARK(int measured_ticks, int desired_us) {
+u16 MATCH_MARK(u16 measured_ticks, u16 desired_us) {
   Serial_print("Testing mark ");
   Serial_print(measured_ticks * USECPERTICK, DEC);
   Serial_print(" vs ");
@@ -74,7 +73,7 @@ int MATCH_MARK(int measured_ticks, int desired_us) {
   return measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS);
 }
 
-int MATCH_SPACE(int measured_ticks, int desired_us) {
+u16 MATCH_SPACE(u16 measured_ticks, u16 desired_us) {
   Serial_print("Testing space ");
   Serial_print(measured_ticks * USECPERTICK, DEC);
   Serial_print(" vs ");
@@ -90,9 +89,9 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
 #endif
 
 #if defined(IRSEND_SENDNEC)
-void IRsend_sendNEC(unsigned long data, int nbits)
+void IRsend_sendNEC(u32 data, u16 nbits)
 {
-  int i;
+  u16 i;
   
   PWM_setFrequency(38000);
   IRsend_mark(NEC_HDR_MARK);
@@ -115,8 +114,8 @@ void IRsend_sendNEC(unsigned long data, int nbits)
 #endif
 
 #if defined(IRSEND_SENDSONY)
-void IRsend_sendSony(unsigned long data, int nbits) {
-  int i; 
+void IRsend_sendSony(u32 data, u16 nbits) {
+  u16 i; 
   
   PWM_setFrequency(40000);
   IRsend_mark(SONY_HDR_MARK);
@@ -138,9 +137,9 @@ void IRsend_sendSony(unsigned long data, int nbits) {
 #endif
 
 #if defined(IRSEND_SENDRAW)
-void IRsend_sendRaw(unsigned int buf[], int len, int hz)
+void IRsend_sendRaw(u16 buf[], u16 len, u16 hz)
 {
-    int i;
+    u16 i;
 
     PWM_setFrequency(hz);
 
@@ -158,9 +157,9 @@ void IRsend_sendRaw(unsigned int buf[], int len, int hz)
 
 #if defined(IRSEND_SENDRC5)
 // Note: first bit must be a one (start bit)
-void IRsend_sendRC5(unsigned long data, int nbits)
+void IRsend_sendRC5(u32 data, u16 nbits)
 { 
-    int i;
+    u16 i;
 
     PWM_setFrequency(36000);
     PWM_setPercentDutyCycle(irparams.outpin, 50);
@@ -191,10 +190,10 @@ void IRsend_sendRC5(unsigned long data, int nbits)
 
 #if defined(IRSEND_SENDRC6)
 // Caller needs to take care of flipping the toggle bit
-void IRsend_sendRC6(unsigned long data, int nbits)
+void IRsend_sendRC6(u32 data, u16 nbits)
 {
-  int t;
-  int i;
+  u16 t;
+  u16 i;
   
   PWM_setFrequency(36000);
   data = data << (32 - nbits);
@@ -227,8 +226,8 @@ void IRsend_sendRC6(unsigned long data, int nbits)
 #endif
 
 #if defined(IRSEND_SENDPANASONIC)
-void IRsend_sendPanasonic(unsigned int address, unsigned long data) {
-    int i;
+void IRsend_sendPanasonic(u16 address, u32 data) {
+    u16 i;
 	
 	PWM_setFrequency(35000);
     IRsend_mark(PANASONIC_HDR_MARK);
@@ -259,9 +258,9 @@ void IRsend_sendPanasonic(unsigned int address, unsigned long data) {
 #endif
 
 #if defined(IRSEND_SENDJVC)
-void IRsend_sendJVC(unsigned long data, int nbits, int repeat)
+void IRsend_sendJVC(u32 data, u16 nbits, u16 repeat)
 {
-	int i;
+	u16 i;
 	
     PWM_setFrequency(38000);
     data = data << (32 - nbits);
@@ -286,9 +285,9 @@ void IRsend_sendJVC(unsigned long data, int nbits, int repeat)
 }
 #endif
 
-void IRsend_mark(unsigned int time)
+void IRsend_mark(u16 time)
 {
-    unsigned int i;
+    u16 i;
     // Sends an IR mark for the specified number of microseconds.
     // The mark output is modulated at the PWM frequency.
 
@@ -316,9 +315,9 @@ void IRsend_mark(unsigned int time)
 }
 
 /* Leave pin off for time (given in microseconds) */
-void IRsend_space(unsigned int time)
+void IRsend_space(u16 time)
 {
-    unsigned int i;
+    u16 i;
     // Sends an IR space for the specified number of microseconds.
     // A space is no output, so the PWM output is disabled.
 
@@ -520,7 +519,7 @@ void IRrecv_resume()
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
-int IRrecv_decode(decode_results *results)
+u16 IRrecv_decode(decode_results *results)
 {
     results->rawbuf = irparams.rawbuf;
     results->rawlen = irparams.rawlen;
@@ -589,11 +588,11 @@ int IRrecv_decode(decode_results *results)
 
 #if defined(IRRECV_DECODENEC) || defined(IRRECV_DECODE)
 // NECs have a repeat only 4 items long
-long IRrecv_decodeNEC(decode_results *results)
+u32 IRrecv_decodeNEC(decode_results *results)
 {
-    long data = 0;
-    int offset = 1; // Skip first space
-    int i;
+    u32 data = 0;
+    u16 offset = 1; // Skip first space
+    u16 i;
   // Initial mark
   if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK)) {
     return ERR;
@@ -642,10 +641,10 @@ long IRrecv_decodeNEC(decode_results *results)
 #endif
 
 #if defined(IRRECV_DECODESONY) || defined(IRRECV_DECODE)
-long IRrecv_decodeSony(decode_results *results)
+u32 IRrecv_decodeSony(decode_results *results)
 {
-    long data = 0;
-    int offset = 0; // Dont skip first space, check its size
+    u32 data = 0;
+    u16 offset = 0; // Dont skip first space, check its size
 
     if (irparams.rawlen < 2 * SONY_BITS + 2) return ERR;
 
@@ -698,10 +697,10 @@ long IRrecv_decodeSony(decode_results *results)
 #if defined(IRRECV_DECODESANYO) || defined(IRRECV_DECODE)
 // I think this is a Sanyo decoder - serial = SA 8650B
 // Looks like Sony except for timings, 48 chars of data and time/space different
-long IRrecv_decodeSanyo(decode_results *results)
+u32 IRrecv_decodeSanyo(decode_results *results)
 {
-  long data = 0;
-  int offset = 0; // Skip first space
+  u32 data = 0;
+  u16 offset = 0; // Skip first space
 
   if (irparams.rawlen < 2 * SANYO_BITS + 2) {
     return ERR;
@@ -765,11 +764,11 @@ long IRrecv_decodeSanyo(decode_results *results)
 
 #if defined(IRRECV_DECODEMITSUBISHI) || defined(IRRECV_DECODE)
 // Looks like Sony except for timings, 48 chars of data and time/space different
-long IRrecv_decodeMitsubishi(decode_results *results)
+u32 IRrecv_decodeMitsubishi(decode_results *results)
 {
   // Serial_print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
-  long data = 0;
-  int offset = 0; // Skip first space
+  u32 data = 0;
+  u16 offset = 0; // Skip first space
 
   if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2) {
     return ERR;
@@ -840,9 +839,9 @@ long IRrecv_decodeMitsubishi(decode_results *results)
 // offset and used are updated to keep track of the current position.
 // t1 is the time interval for a single bit in microseconds.
 // Returns -1 for error (measured time interval is not a multiple of t1).
-int IRrecv_getRClevel(decode_results *results, int *offset, int *used, int t1)
+u16 IRrecv_getRClevel(decode_results *results, u16 *offset, u16 *used, u16 t1)
 {
-  int width, val, correction, avail;
+  u16 width, val, correction, avail;
 
   if (*offset >= results->rawlen) {
     // After end of recorded buffer, assume SPACE.
@@ -883,13 +882,13 @@ int IRrecv_getRClevel(decode_results *results, int *offset, int *used, int t1)
 #endif
 
 #if defined(IRRECV_DECODERC5) || defined(IRRECV_DECODE)
-long IRrecv_decodeRC5(decode_results *results)
+u32 IRrecv_decodeRC5(decode_results *results)
 {
-    int offset = 1; // Skip gap space
-    long data = 0;
-    int used = 0;
-    int nbits;
-    int levelA, levelB;
+    u16 offset = 1; // Skip gap space
+    u32 data = 0;
+    u16 used = 0;
+    u16 nbits;
+    u16 levelA, levelB;
 
     if (irparams.rawlen < MIN_RC5_SAMPLES + 2) return ERR;
 
@@ -930,13 +929,13 @@ long IRrecv_decodeRC5(decode_results *results)
 #endif
 
 #if defined(IRRECV_DECODERC6) || defined(IRRECV_DECODE)
-long IRrecv_decodeRC6(decode_results *results)
+u32 IRrecv_decodeRC6(decode_results *results)
 {
-    int offset = 1; // Skip first space
-    long data = 0;
-    int used = 0;
-    int nbits;
-    int levelA, levelB; // Next two levels
+    u16 offset = 1; // Skip first space
+    u32 data = 0;
+    u16 used = 0;
+    u16 nbits;
+    u16 levelA, levelB; // Next two levels
 
     if (results->rawlen < MIN_RC6_SAMPLES) return ERR;
     // Initial mark
@@ -987,12 +986,12 @@ long IRrecv_decodeRC6(decode_results *results)
 #endif
 
 #if defined(IRRECV_DECODEPANASONIC) || defined(IRRECV_DECODE)
-long IRrecv_decodePanasonic(decode_results *results)
+u32 IRrecv_decodePanasonic(decode_results *results)
 {
-    //unsigned long long data = 0; // PIC18F don't have 64-bit type
-    unsigned long data = 0;
-    int offset = 1;
-    int i;
+    //u32 long data = 0; // PIC18F don't have 64-bit type
+    u32 data = 0;
+    u16 offset = 1;
+    u16 i;
 	
     if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_HDR_MARK)) {
         return ERR;
@@ -1017,8 +1016,8 @@ long IRrecv_decodePanasonic(decode_results *results)
         }
         offset++;
     }
-    results->value = (unsigned long)data;
-    results->panasonicAddress = (unsigned int)(data >> 32);
+    results->value = (u32)data;
+    results->panasonicAddress = (u16)(data >> 32);
     results->decode_type = PANASONIC;
     results->bits = PANASONIC_BITS;
     return DECODED;
@@ -1026,11 +1025,11 @@ long IRrecv_decodePanasonic(decode_results *results)
 #endif
 
 #if defined(IRRECV_DECODEJVC) || defined(IRRECV_DECODE)
-long IRrecv_decodeJVC(decode_results *results)
+u32 IRrecv_decodeJVC(decode_results *results)
 {
-    long data = 0;
-    int offset = 1; // Skip first space
-    int i;
+    u32 data = 0;
+    u16 offset = 1; // Skip first space
+    u16 i;
 	// Check for repeat
     if (irparams.rawlen - 1 == 33 &&
         MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK) &&
@@ -1099,7 +1098,7 @@ long IRrecv_decodeJVC(decode_results *results)
 // Compare two tick values, returning 0 if newval is shorter,
 // 1 if newval is equal, and 2 if newval is longer
 // Use a tolerance of 20%
-int IRrecv_compare(unsigned int oldval, unsigned int newval)
+u16 IRrecv_compare(u16 oldval, u16 newval)
 {
   if (newval < oldval * .8) {
     return 0;
@@ -1122,11 +1121,11 @@ int IRrecv_compare(unsigned int oldval, unsigned int newval)
  * Hopefully this code is unique for each button.
  * This isn't a "real" decoding, just an arbitrary value.
  */
-long IRrecv_decodeHash(decode_results *results)
+u32 IRrecv_decodeHash(decode_results *results)
 {
-  int i;
-  int value;
-  long hash;
+  u16 i;
+  u16 value;
+  u32 hash;
   
   // Require at least 6 samples to prevent triggering on noise
   if (results->rawlen < 6) {
@@ -1169,10 +1168,10 @@ linked LIRC file.
 */
 
 #if defined(IRSEND_SENDSHARP)
-void IRsend_sendSharp(unsigned long data, int nbits)
+void IRsend_sendSharp(u32 data, u16 nbits)
 {
-  unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
-  int i;
+  u32 invertdata = data ^ SHARP_TOGGLE_MASK;
+  u16 i;
   PWM_setFrequency(38000);
   
   for (i = 0; i < nbits; i++) {
@@ -1209,9 +1208,9 @@ void IRsend_sendSharp(unsigned long data, int nbits)
 #endif
 
 #if defined(IRSEND_SENDDISH)
-void IRsend_sendDISH(unsigned long data, int nbits)
+void IRsend_sendDISH(u32 data, u16 nbits)
 {
-  int i;
+  u16 i;
   PWM_setFrequency(56000);
   IRsend_mark(DISH_HDR_MARK);
   IRsend_space(DISH_HDR_SPACE);

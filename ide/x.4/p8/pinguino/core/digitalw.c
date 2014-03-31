@@ -173,28 +173,28 @@ const unsigned char port[19]={
 /**********************************************************************/
 
 #if defined(PICUNOV1) // Early version of PICUNO_EQUO (BLUE PCB)
-const unsigned char mask[14]={
+const unsigned char mask[22]={
                     _7,_6,_4,_0,_1,_2,_3,_4,        // 0 - 7
                     _5,_6,_7,_0,_1,_2,              // 8 - 13
                     _0,_1,_2,_3,_5,_0,_1,_2         // 14 - 21
                     };
                     
-const unsigned char port[14]={
+const unsigned char port[22]={
                     pC, pC, pA, pB, pB, pB, pB, pB,
                     pB, pB, pB, pC, pC, pC,
                     pA, pA, pA, pA, pA, pE, pE, pE
                     };
 #else                // Second and last version (BLACK PCB)
-const unsigned char mask[14]={
+const unsigned char mask[21]={
                     _7,_6,_2,_3,_0,_2,_1,_1,        // 0 - 7
                     _2,_3,_4,_5,_6,_7,              // 8 - 13
-                    _0,_1,_2,_3,_5,_0,_1,_2         // 14 - 21
+                    _0,_1,_2,_5,_0,_1,_4            // 14 - 20
                     };
                     
-const unsigned char port[14]={
+const unsigned char port[21]={
                     pC, pC, pB, pB, pD, pC, pC, pD,
                     pD, pD, pD, pD, pD, pD,
-                    pA, pA, pA, pA, pA, pE, pE, pE
+                    pA, pA, pA, pA, pE, pE, pA
                     };
 #endif
 
@@ -262,6 +262,7 @@ void pwmclose(unsigned char pin)
 }
 #endif
 
+#if defined(DIGITALWRITE) || defined(TOGGLE)
 void digitalwrite(unsigned char pin, unsigned char state)
 {
     #if defined(ANALOGWRITE) || defined(__PWM__)
@@ -307,7 +308,9 @@ void digitalwrite(unsigned char pin, unsigned char state)
         *pLAT &= (255-b);      // clear bit
 */
 }
+#endif
 
+#if defined(DIGITALREAD) || defined(TOGGLE)
 unsigned char digitalread(unsigned char pin)
 {
     #if defined(ANALOGWRITE) || defined(__PWM__)
@@ -354,7 +357,9 @@ unsigned char digitalread(unsigned char pin)
         return 0;               // bit is not set
 */
 }
+#endif
 
+#if defined(PINMODE)
 void pinmode(unsigned char pin, unsigned char state)
 {
     switch (port[pin])
@@ -396,9 +401,11 @@ void pinmode(unsigned char pin, unsigned char state)
         *pLAT &= (255-b);      // clear bit
 */
 }
+#endif
 
 //  pLAT = address of PORTx
 // *pLAT = content of PORTx
+#if defined(TOGGLE)
 void toggle(unsigned char pin)
 {
     /* VERSION 1
@@ -434,5 +441,6 @@ void toggle(unsigned char pin)
         *pLAT |= b;            // set bit
     */
 }
+#endif
 
 #endif /* __DIGITALW__ */
