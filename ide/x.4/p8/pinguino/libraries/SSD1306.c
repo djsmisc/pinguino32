@@ -58,9 +58,9 @@ BS2     0       1       1       0       0
 
 // Screen buffer
 #if (DISPLAY & SSD1306_128X64)
-    #include <pinguino128x64.h>
+    #include <logo/pinguino128x64.h>
 #else
-    #include <pinguino128x32.h>        // to do
+    #include <logo/pinguino128x32.h>        // to do
 #endif
 
 // Pinguino standards
