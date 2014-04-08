@@ -69,6 +69,7 @@ BS2     0       1       1       0       0
 #include <typedef.h>
 #include <macro.h>
 #include <delay.c>
+#include <string.h>             // memset
 
 // Printf
 #ifdef SSD1306PRINTF
@@ -477,10 +478,12 @@ void SSD1306_refresh()
 void SSD1306_clearScreen(void)
 {
     u16 i;
-
+/*
     for (i = 0; i < DISPLAY_SIZE; i++)
         SSD1306_buffer[i] = 0;
-        
+*/
+    memset(SSD1306_buffer, 0, DISPLAY_SIZE);
+
     SSD1306.cursor.x    = 0;
     SSD1306.cursor.y    = 0;
     SSD1306.cursor.page = 0;
@@ -599,6 +602,7 @@ void SSD1306_scrollUp()
         }
     }
 
+    // memset ?
     for (x = 0; x < 128; x++)
     {
         SSD1306_buffer[x + 128 * 7] = 0;
@@ -854,7 +858,8 @@ void SSD1306_drawPixel(u8 x, u8 y)
 {
     if ( x >= DISPLAY_WIDTH || y >= (DISPLAY_HEIGHT) ) return;
 
-    SSD1306_buffer[x + (y / DISPLAY_ROWS) * DISPLAY_WIDTH] |= 1 << (y % DISPLAY_ROWS);
+    SSD1306_buffer[x + (y>>DISPLAY_ROW_BITS) * DISPLAY_WIDTH] |= 1 << (y % DISPLAY_ROWS);
+    //SSD1306_buffer[x + (y / DISPLAY_ROWS) * DISPLAY_WIDTH] |= 1 << (y % DISPLAY_ROWS);
 }
 
 void SSD1306_clearPixel(u8 x, u8 y)
@@ -903,12 +908,6 @@ u8 SSD1306_getColor(u8 x, u8 y)
     }
 }
 
-/*
-void SSD1306_drawBitmap(u16 x, u16 y, u16 w, u16 h, u16* bitmap)
-{
-}
-*/
-
 /*	--------------------------------------------------------------------
     DESCRIPTION:
         Graphic routines based on drawPixel in graphics.c
@@ -936,5 +935,11 @@ void SSD1306_drawLine(u16 x0, u16 y0, u16 x1, u16 y1)
 {
     drawLine(x0, y0, x1, y1);
 }
+
+/*
+void SSD1306_drawBitmap(u16 x, u16 y, u16 w, u16 h, u16* bitmap)
+{
+}
+*/
 
 #endif /* __SSD1306_C */
