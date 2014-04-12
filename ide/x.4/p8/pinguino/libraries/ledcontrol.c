@@ -2,6 +2,9 @@
  *    LedControl.cpp - A library for controling Leds with a MAX7219/MAX7221
  *    Copyright (c) 2007 Eberhard Fahle
  * 
+ *    Feb. 2014 - Regis Blanchot - adapted to Pinguino 
+ *    Feb. 2014 - Regis Blanchot - added scroll functions 
+ * 
  *    Permission is hereby granted, free of charge, to any person
  *    obtaining a copy of this software and associated documentation
  *    files (the "Software"), to deal in the Software without

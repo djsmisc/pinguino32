@@ -100,9 +100,19 @@
 
 #define __STEPPER__
 
+/*
 #ifndef ANALOGWRITE
 #define ANALOGWRITE
 #endif
+
+#ifndef DIGITALWRITE
+#define DIGITALWRITE
+#endif
+
+#ifndef PINMODE
+#define PINMODE
+#endif
+*/
 
 #include <system.c>                 // oscillator routines
 #include <digitalw.c>               // pin definitions
