@@ -262,7 +262,7 @@ void pwmclose(unsigned char pin)
 }
 #endif
 
-#if defined(DIGITALWRITE) || defined(TOGGLE)
+//#if defined(DIGITALWRITE) || defined(TOGGLE)
 void digitalwrite(unsigned char pin, unsigned char state)
 {
     #if defined(ANALOGWRITE) || defined(__PWM__)
@@ -308,9 +308,9 @@ void digitalwrite(unsigned char pin, unsigned char state)
         *pLAT &= (255-b);      // clear bit
 */
 }
-#endif
+//#endif
 
-#if defined(DIGITALREAD) || defined(TOGGLE)
+//#if defined(DIGITALREAD) || defined(TOGGLE)
 unsigned char digitalread(unsigned char pin)
 {
     #if defined(ANALOGWRITE) || defined(__PWM__)
@@ -357,9 +357,9 @@ unsigned char digitalread(unsigned char pin)
         return 0;               // bit is not set
 */
 }
-#endif
+//#endif
 
-#if defined(PINMODE)
+//#if defined(PINMODE)
 void pinmode(unsigned char pin, unsigned char state)
 {
     switch (port[pin])
@@ -401,11 +401,11 @@ void pinmode(unsigned char pin, unsigned char state)
         *pLAT &= (255-b);      // clear bit
 */
 }
-#endif
+//#endif
 
 //  pLAT = address of PORTx
 // *pLAT = content of PORTx
-#if defined(TOGGLE)
+//#if defined(TOGGLE)
 void toggle(unsigned char pin)
 {
     /* VERSION 1
@@ -441,6 +441,6 @@ void toggle(unsigned char pin)
         *pLAT |= b;            // set bit
     */
 }
-#endif
+//#endif
 
 #endif /* __DIGITALW__ */

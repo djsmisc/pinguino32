@@ -55,8 +55,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <logo/pinguino84x48.h> // Pinguino Logo
 
 #if !(PCD8544_INTERFACE & PCD8544_PORTB)
-    #define DIGITALWRITE
-    #define PINMODE
+/*
+    #ifdef DIGITALWRITE
+        #define DIGITALWRITE
+    #endif
+    #ifdef PINMODE
+        #define PINMODE
+    #endif
+*/
     #include <digitalw.c>       // pinmode, digitalwrite
 #endif
 
@@ -71,7 +77,21 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #if (PCD8544_INTERFACE & PCD8544_SPIHW)
-#include <spi.c>
+/*
+    #ifdef SPIBEGIN
+        #define SPIBEGIN
+    #endif
+    #ifdef SPISETMODE
+        #define SPISETMODE
+    #endif
+    #ifdef SPISETDATAMODE
+        #define SPISETDATAMODE
+    #endif
+    #ifdef SPIWRITE
+        #define SPIWRITE
+    #endif
+*/
+    #include <spi.c>
 #endif
 
 ///	--------------------------------------------------------------------
@@ -240,7 +260,8 @@ static void PCD8544_updateBoundingBox(u8 xmin, u8 ymin, u8 xmax, u8 ymax)
             pinmode(PCD8544._rst,  OUTPUT);
         // SPI_MASTER_FOSC_4, SPI_MODE0, SPI_SMPEND;
         SPI_setMode(SPI_MASTER_FOSC_16);
-        SPI_init();
+        SPI_setDataMode(SPI_MODE0);
+        SPI_begin();
     #endif
 
     // toggle RST low to reset

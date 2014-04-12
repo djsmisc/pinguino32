@@ -125,12 +125,12 @@
 
 /// Prototypes
 
+void SPI_begin();
+void SPI_init(u8 sync_mode, u8 bus_mode, u8 smp_phase);
 void SPI_setMode(u8 mode);
 void SPI_setBitOrder(u8 bitorder);
 void SPI_setDataMode(u8 mode);
 void SPI_setClockDivider(u8 clock);
-//void SPI_init(u8 sync_mode, u8 bus_mode, u8 smp_phase);
-void SPI_init();
 u8 SPI_write(u8 datax);
 u8 SPI_read(void);
 void SPI_interrupt();
