@@ -62,7 +62,9 @@ void IOsetDigital()
 
 void IOsetSpecial()
 {
+    #if !defined(PIC32_PINGUINO_MICRO)
     TRISA  = 0;
+    #endif
     TRISB  = 0;
 
     #if !defined(__32MX250F128B__) && !defined(__32MX220F032B__)
