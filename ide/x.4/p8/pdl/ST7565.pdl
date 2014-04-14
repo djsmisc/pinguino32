@@ -1,0 +1,11 @@
+glcd.Begin begin#include <ST7565.c>
+glcd.Clear clear#include <ST7565.c>
+glcd.Display display#include <ST7565.c>
+glcd.SetPixel setpixel#include <ST7565.c>
+glcd.FillCircle fillcircle#include <ST7565.c>
+glcd.DrawChar drawchar#include <ST7565.c>
+glcd.DrawString drawstring#include <ST7565.c>
+glcd.DrawLine drawline#include <ST7565.c>
+glcd.DrawRect drawrect#include <ST7565.c>
+glcd.FillRect fillrect#include <ST7565.c>
+glcd.DrawBitmap drawbitmap#include <ST7565.c>

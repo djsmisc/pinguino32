@@ -46,58 +46,67 @@ void setup()
     glcd(SID, SCLK, RS, RST, CS); 
     // Now we initialize the LCD with this function, the parameter defines contrast (0x00 to 0xFF). 
     // Good value = 0x18
-    glcd.begin(0x18);
-    glcd.clear(); // LCD buffer starts being filled with Adafruit logo. We use this function to clear the screen.
-    glcd.display(); // We call this function every time we make a change on the buffer, 
+    glcd.Begin(0x18);
+    glcd.Clear(); // LCD buffer starts being filled with Adafruit logo. We use this function to clear the screen.
+    glcd.Display(); // We call this function every time we make a change on the buffer, 
                    // to actually reflect that change on the screen.
 
-//  To draw a single pixel, we use: glcd.setpixel( x, y, color); The color can be BLACK o WHITE.
-//  glcd.setpixel(10, 10, BLACK);
-//  glcd.display();
+/*	To draw a single pixel, we use: glcd.SetPixel( x, y, color); The color can be BLACK o WHITE. */
+
+//	glcd.SetPixel(10, 10, BLACK);
+//  glcd.Display();
 
   
-//  To draw a circle, we use: glcd.fillcircle( x, y, radio, color); 
-//  Coordinates are not the center, but the top-left pixel of a square containing the circle.
-//  glcd.fillcircle(32, 32, 10, BLACK);
-//  glcd.display();
+/*	To draw a circle, we use: glcd.FillCircle( x, y, radio, color); 
+	Coordinates are not the center, but the top-left pixel of a square containing the circle. */
+
+//  glcd.FillCircle(32, 32, 10, BLACK);
+//  glcd.Display();
 
 
-//  To write a single letter, we use: glcd.drawchar(x, line, letter between ' and ')
-//  We have VERTICALSIZEOFSCREEN/8 horizontal lines to write, starting from 0.
-//  It starts to write on the x pixel of the chosen line, x>=0.
-//  glcd.drawchar(0, 1, 'a');
-//  glcd.display();
+/*  To write a single letter, we use: glcd.DrawChar(x, line, letter between ' and ')
+	We have VERTICALSIZEOFSCREEN/8 horizontal lines to write, starting from 0.
+	It starts to write on the x pixel of the chosen line, x>=0. */
+
+//  glcd.DrawChar(0, 1, 'a');
+//  glcd.Display();
 
 
-//  To write a sentence, we use glcd.drawstring(x, line, sentence between " and ").
-//  We have VERTICALSIZEOFSCREEN/8 horizontal lines to write, starting from 0.
-//  It starts to write on the x pixel of the chosen line, x>=0.
-//  glcd.drawstring(0, 0, "Hello world.");
-//  glcd.display();
+/*  To write a sentence, we use glcd.DrawString(x, line, sentence between " and ").
+	We have VERTICALSIZEOFSCREEN/8 horizontal lines to write, starting from 0.
+	It starts to write on the x pixel of the chosen line, x>=0. */
+
+//  glcd.DrawString(0, 0, "Hello world.");
+//  glcd.Display();
 
 
-//  To draw a straight line from (x0,y0) to (x1,y1) we use: glcd.drawline(x0, y0, x1, y1, color);
-//  It can be used to draw a line from right to left or from botton to top, no problems there.
-//  glcd.drawline(0, 0, 127, 63, BLACK);
-//  glcd.display();
+/*  To draw a straight line from (x0,y0) to (x1,y1) we use: glcd.DrawLine(x0, y0, x1, y1, color);
+	It can be used to draw a line from right to left or from botton to top, no problems there. */
+
+//  glcd.DrawLine(0, 0, 127, 63, BLACK);
+//  glcd.Display();
 
 
-//  To draw a rectangle with no fill which top-left corner were (x0,y0) and which has w of width and h of height,
-//  we use glcd.drawrect(x0, y0, w, h, color).
-//  glcd.drawrect(0, 0, 127, 63, BLACK);
-//  glcd.display();
+/*	To draw a rectangle with no fill which top-left corner were (x0,y0) and which has w of width and h of height,
+	we use glcd.DrawRect(x0, y0, w, h, color). */
+
+//  glcd.DrawRect(0, 0, 127, 63, BLACK);
+//  glcd.Display();
 
 
-//  To draw a filled rectangle which top-left corner were (x0,y0) and which has w of width and h of height,
-//  we use glcd.fillrect(x0, y0, w, h, BLACK);
-//  glcd.fillrect(0, 0, 127, 63, BLACK);
-//  glcd.display();
+/*	To draw a filled rectangle which top-left corner were (x0,y0) and which has w of width and h of height,
+	we use glcd.FillRect(x0, y0, w, h, BLACK);*/
+	
+//  glcd.FillRect(0, 0, 127, 63, BLACK);
+//  glcd.Display();
 
 
-// To draw a bitmap defined on the top of the code starting from point (x,y) to bottom-right, 
-// we use the function glcd.drawbitmap(x, y, picture, pictureheight, picturewidth, color);
-//  glcd.drawbitmap(0, 0, dibujo, ALTURABITMAP, ANCHURABITMAP, BLACK);
-//  glcd.display();
+/*	To draw a bitmap defined on the top of the code starting from point (x,y) to bottom-right, 
+	we use the function glcd.DrawBitmap(x, y, picture, picture_height, picture_width, color); 
+	where "picture" is an unsigned char array as the one above.*/
+
+//  glcd.DrawBitmap(0, 0, picture, BITMAP_HEIGHT, BITMAP_WIDTH, BLACK);
+//  glcd.Display();
 }
 
 void loop()
