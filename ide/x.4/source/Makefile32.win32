@@ -53,6 +53,7 @@ HEAP_SIZE = 16384
 CDCLIBRARY = libcdc.a
 __MIPS16_ENABLE__ = false
 BADRECORD='^:040000059D006000FA'
+OF = -O3
 
 # TO BE TESTED (Regis Blanchot 2014)
 # Makes's logical OR
@@ -77,6 +78,11 @@ ifeq ($(BOARD),PINGUINO32MX220)
     CDCLIBRARY = libcdc220.a
     __MIPS16_ENABLE__ = true
     BADRECORD = '^:040000059D0040001A'
+endif
+
+ifeq ($(BOARD),PIC32_PINGUINO_MICRO)
+    __MIPS16_ENABLE__ = true
+    OF = -Os
 endif
 
 REMOVE = grep --binary --invert-match $(BADRECORD) $(SRCDIR)/main32.hex > $(SRCDIR)/temp.hex
@@ -104,17 +110,17 @@ MV				=	@move
 #					-pedantic -Wall\
 #					-std=c99 
 
-ifdef __MIPS16_ENABLE__
+#ifeq (__MIPS16_ENABLE__, true)
 	MIPS16_INTER = -minterlink-mips16
 	MIPS16_OPT   = -mips16
-endif
+#endif
 
 CFLAGS		=	-fdollars-in-identifiers $(INCLUDEDIRS) -msoft-float -ffunction-sections -fdata-sections 
 
 LDFLAGS		=	$(LIBDIRS) $(LIBS)
 
 # -Os option leads to errors when non-zero initialized static variable are defined
-ELF_FLAGS	=	-EL -O3 -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc \
+ELF_FLAGS	=	-EL $(OF) -ffunction-sections -fdata-sections -Wl,--gc-sections -march=24kc \
 				-msoft-float \
 				$(MIPS16_INTER)  \
 				-Wl,-L$(OBJDIR) \
@@ -156,4 +162,4 @@ exec:
 	
 correct:
 	$(CP) $(SRCDIR)\main32.hex $(SRCDIR)\main32tmp.hex > nul
-
+ 
