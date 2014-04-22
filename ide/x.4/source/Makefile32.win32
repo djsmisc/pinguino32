@@ -80,7 +80,7 @@ ifeq ($(BOARD),PINGUINO32MX220)
     BADRECORD = '^:040000059D0040001A'
 endif
 
-ifeq ($(BOARD),PIC32_PINGUINO_MICRO)
+ifeq ($(PROC),32MX440F256H)
     __MIPS16_ENABLE__ = true
     OF = -Os
 endif
